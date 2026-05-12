@@ -82,7 +82,7 @@ export const mockPublicPeople: PublicPerson[] = [
 export const mockPublicCompanies: PublicCompany[] = [
   {
     company_id: 'company-example-a',
-    unified_business_no: '90000001',
+    unified_business_no: null,
     name: '範例公司甲',
     representative_name: '範例代表甲',
     status: '正常營運',
@@ -92,7 +92,7 @@ export const mockPublicCompanies: PublicCompany[] = [
   },
   {
     company_id: 'company-example-b',
-    unified_business_no: '90000002',
+    unified_business_no: null,
     name: '範例公司乙',
     representative_name: '範例代表乙',
     status: '正常營運',
@@ -317,10 +317,10 @@ export const mockPublicRelationDetails: PublicRelationDetail[] = [
     person_district: '北部都會區',
     company_id: 'company-example-a',
     company_name: '範例公司甲',
-    unified_business_no: '90000001',
+    unified_business_no: null,
     relation_type: 'ManualResearchLead',
     confidence_level: 'B',
-    evidence_text: '範例資料：公開頁面中顯示人物與公司存在可驗證任職紀錄。',
+    evidence_text: '範例資料：此為 UI 測試用的虛構來源說明，不代表真實人物、公司或關係。',
     source_document_id: 'source-document-example-a',
     source_name: '範例來源頁',
     source_url: 'https://example.com/evidence/example-a',

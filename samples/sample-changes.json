@@ -1,0 +1,57 @@
+{
+  "runDate": "2026-05-12",
+  "generatedBy": "OpenClaw",
+  "summary": {
+    "newCandidates": 2,
+    "updateCandidates": 1,
+    "rejectedCandidates": 1,
+    "highRiskItems": 1
+  },
+  "changes": [
+    {
+      "action": "create_relation_candidate",
+      "personName": "林建明",
+      "companyName": "晨星顧問股份有限公司",
+      "unifiedBusinessNo": "12345678",
+      "guessedRelationType": "SelfDeclaredInvestment",
+      "confidenceSuggestion": "A",
+      "evidenceText": "財產申報資料列有晨星顧問股份有限公司事業投資。",
+      "sourceName": "監察院財產申報公告",
+      "sourceUrl": "https://example.com/assets",
+      "sourceType": "asset_declaration",
+      "reviewStatus": "pending",
+      "isPublic": false,
+      "riskFlags": ["needs_identity_check"]
+    },
+    {
+      "action": "create_relation_candidate",
+      "personName": "陳雅雯",
+      "companyName": "海川建設股份有限公司",
+      "unifiedBusinessNo": "87654321",
+      "guessedRelationType": "CompanyDirector",
+      "confidenceSuggestion": "C",
+      "evidenceText": "公司董監事資料出現同名人員，需進一步比對。",
+      "sourceName": "經濟部商工登記公示資料",
+      "sourceUrl": "https://example.com/company",
+      "sourceType": "company_registry",
+      "reviewStatus": "pending",
+      "isPublic": false,
+      "riskFlags": ["same_name_risk"]
+    },
+    {
+      "action": "create_company_candidate",
+      "personName": "",
+      "companyName": "曙光開發有限公司",
+      "unifiedBusinessNo": "11223344",
+      "guessedRelationType": "ManualResearchLead",
+      "confidenceSuggestion": "C",
+      "evidenceText": "最新公司登記資料顯示代表人為王志遠。",
+      "sourceName": "經濟部商工登記公示資料",
+      "sourceUrl": "https://example.com/company-update",
+      "sourceType": "company_registry",
+      "reviewStatus": "pending",
+      "isPublic": false,
+      "riskFlags": []
+    }
+  ]
+}

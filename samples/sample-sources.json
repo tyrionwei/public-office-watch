@@ -1,0 +1,21 @@
+{
+  "runDate": "2026-05-12",
+  "sources": [
+    {
+      "sourceType": "asset_declaration",
+      "sourceName": "監察院財產申報公告",
+      "sourceUrl": "https://example.com/assets",
+      "fetchedAt": "2026-05-12T10:00:00+08:00",
+      "snapshotHash": "sha256:example-asset-hash",
+      "notes": "測試資料"
+    },
+    {
+      "sourceType": "company_registry",
+      "sourceName": "經濟部商工登記公示資料",
+      "sourceUrl": "https://example.com/company",
+      "fetchedAt": "2026-05-12T10:20:00+08:00",
+      "snapshotHash": "sha256:example-company-hash",
+      "notes": "測試資料"
+    }
+  ]
+}

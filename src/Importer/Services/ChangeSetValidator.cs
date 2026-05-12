@@ -6,59 +6,74 @@ namespace PublicOfficialInterest.Importer.Services;
 
 public sealed class ChangeSetValidator
 {
-    private static readonly HashSet<string> AllowedActions =
-    [
-        "create_raw_source_record",
-        "create_relation_candidate",
-        "create_company_candidate",
-        "create_person_candidate"
-    ];
-
     private static readonly HashSet<string> AllowedConfidence = ["A", "B", "C", "D"];
+    private static readonly HashSet<string> AllowedReviewStatus = ["pending"];
+    private static readonly Regex UnifiedBusinessNoPattern = new(@"^\d{8}$", RegexOptions.Compiled);
     private readonly PrivacyRiskValidator _privacyRiskValidator = new();
 
-    public IReadOnlyList<string> Validate(ChangeSet changeSet)
+    public ValidationResult Validate(ChangeSet changeSet)
     {
-        var errors = new List<string>();
+        var result = new ValidationResult();
 
         if (string.IsNullOrWhiteSpace(changeSet.RunDate))
-            errors.Add("runDate is required.");
+            result.Errors.Add("runDate is required.");
 
-        foreach (var item in changeSet.Changes)
+        if (string.IsNullOrWhiteSpace(changeSet.GeneratedBy))
+            result.Errors.Add("generatedBy is required.");
+
+        if (changeSet.Changes.Count == 0)
+            result.Errors.Add("changes must contain at least one item.");
+
+        for (var i = 0; i < changeSet.Changes.Count; i++)
         {
-            ValidateItem(item, errors);
+            ValidateItem(changeSet.Changes[i], i, result.Errors);
         }
 
-        return errors;
+        return result;
     }
 
-    private void ValidateItem(ChangeItem item, List<string> errors)
+    private void ValidateItem(ChangeItem item, int index, List<string> errors)
     {
-        if (!AllowedActions.Contains(item.Action))
-            errors.Add($"Action not allowed: {item.Action}");
+        var prefix = $"changes[{index}]";
+
+        if (!AllowedActions.Values.Contains(item.Action))
+            errors.Add($"{prefix}: action not allowed: {item.Action}");
 
         if (item.Action == "create_relation_candidate" && string.IsNullOrWhiteSpace(item.PersonName))
-            errors.Add("personName is required for create_relation_candidate.");
+            errors.Add($"{prefix}: personName is required for create_relation_candidate.");
 
-        if (string.IsNullOrWhiteSpace(item.CompanyName))
-            errors.Add("companyName is required.");
+        if (item.Action == "create_person_candidate" && string.IsNullOrWhiteSpace(item.PersonName))
+            errors.Add($"{prefix}: personName is required for create_person_candidate.");
+
+        if ((item.Action == "create_relation_candidate" || item.Action == "create_company_candidate") && string.IsNullOrWhiteSpace(item.CompanyName))
+            errors.Add($"{prefix}: companyName is required.");
 
         if (string.IsNullOrWhiteSpace(item.EvidenceText))
-            errors.Add("evidenceText is required.");
+            errors.Add($"{prefix}: evidenceText is required.");
 
         if (string.IsNullOrWhiteSpace(item.SourceName) && string.IsNullOrWhiteSpace(item.SourceUrl))
-            errors.Add("sourceName or sourceUrl is required.");
+            errors.Add($"{prefix}: sourceName or sourceUrl is required.");
+
+        if (string.IsNullOrWhiteSpace(item.SourceType))
+            errors.Add($"{prefix}: sourceType is required.");
 
         if (!AllowedConfidence.Contains(item.ConfidenceSuggestion))
-            errors.Add($"confidenceSuggestion must be A/B/C/D: {item.ConfidenceSuggestion}");
+            errors.Add($"{prefix}: confidenceSuggestion must be A/B/C/D: {item.ConfidenceSuggestion}");
 
-        if (!string.Equals(item.ReviewStatus, "pending", StringComparison.OrdinalIgnoreCase))
-            errors.Add("reviewStatus must be pending.");
+        if (!AllowedReviewStatus.Contains(item.ReviewStatus))
+            errors.Add($"{prefix}: reviewStatus must be pending.");
 
         if (item.IsPublic)
-            errors.Add("isPublic must be false.");
+            errors.Add($"{prefix}: isPublic must be false.");
 
-        if (_privacyRiskValidator.ContainsSensitiveData(item))
-            errors.Add($"Sensitive data detected in item: {item.CompanyName}");
+        if (!string.IsNullOrWhiteSpace(item.GuessedRelationType) && !RelationTypes.Allowed.Contains(item.GuessedRelationType))
+            errors.Add($"{prefix}: guessedRelationType is not in whitelist: {item.GuessedRelationType}");
+
+        if (!string.IsNullOrWhiteSpace(item.UnifiedBusinessNo) && !UnifiedBusinessNoPattern.IsMatch(item.UnifiedBusinessNo))
+            errors.Add($"{prefix}: unifiedBusinessNo must be 8 digits.");
+
+        var riskScan = _privacyRiskValidator.Scan(item);
+        if (riskScan.HasRisk)
+            errors.Add($"{prefix}: sensitive data detected ({string.Join(", ", riskScan.MatchedRules)})");
     }
 }

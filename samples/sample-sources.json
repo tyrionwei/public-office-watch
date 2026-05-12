@@ -3,7 +3,7 @@
   "sources": [
     {
       "sourceType": "asset_declaration",
-      "sourceName": "監察院財產申報公告",
+      "sourceName": "測試來源一",
       "sourceUrl": "https://example.com/assets",
       "fetchedAt": "2026-05-12T10:00:00+08:00",
       "snapshotHash": "sha256:example-asset-hash",
@@ -11,7 +11,7 @@
     },
     {
       "sourceType": "company_registry",
-      "sourceName": "經濟部商工登記公示資料",
+      "sourceName": "測試來源二",
       "sourceUrl": "https://example.com/company",
       "fetchedAt": "2026-05-12T10:20:00+08:00",
       "snapshotHash": "sha256:example-company-hash",

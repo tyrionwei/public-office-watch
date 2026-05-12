@@ -5,7 +5,6 @@ ALTER TABLE source_documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE relation_candidates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE person_company_relations ENABLE ROW LEVEL SECURITY;
 
--- Public read policies
 CREATE POLICY public_read_people
     ON people
     FOR SELECT

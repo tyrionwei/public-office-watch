@@ -16,6 +16,7 @@ coverage/
 *.bak
 *.sqlite
 *.db
+*.tsbuildinfo
 gitleaks-report.json
 local-data/
 logs/

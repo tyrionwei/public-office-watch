@@ -120,33 +120,26 @@ log 檔案若有需要，請放在本地 `logs/` 或 `local-data/logs/`，不要
 ### 需求
 
 - Docker
-- Supabase CLI（本專案可用 `npx supabase ...`）
+- Node.js 20+
+- npm
+- .NET 8 SDK
+- Supabase CLI（本專案以 `devDependency` 固定版本，請使用 `npx supabase ...`）
 
-### 初始化
+### 首次建立專案才需要初始化
 
 ```bash
 npx supabase init
 ```
 
-### 啟動 local Supabase
+### Clone 既有 repo 通常不需要再 init
 
 ```bash
 npx supabase start
-```
-
-### 套用 migration
-
-```bash
 npx supabase migration up
+npx supabase status
 ```
 
 如果 CLI 版本不支援上述命令，請使用等效的 local migration 指令，並以成功建立 schema 為準。
-
-### 檢查狀態
-
-```bash
-npx supabase status
-```
 
 ### 設定 Importer 測試連線
 
@@ -172,6 +165,8 @@ dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --ex
 
 ### 驗證 SQL
 
+請執行 `database/queries/verify_staging_import.sql`，或參考以下查詢：
+
 ```sql
 SELECT COUNT(*) FROM raw_source_records;
 SELECT COUNT(*) FROM source_documents;
@@ -184,6 +179,8 @@ WHERE verification_status = 'verified' OR is_public = TRUE;
 ```
 
 Phase 2 測試後，最後一個查詢應為 `0`。
+
+詳細步驟可參考 `docs/local-supabase.md`。
 
 ### 注意事項
 

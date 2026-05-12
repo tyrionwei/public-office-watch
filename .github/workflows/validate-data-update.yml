@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-      - chore/**
   workflow_dispatch:
 
 jobs:
@@ -23,7 +22,7 @@ jobs:
         run: dotnet restore src/Importer/PublicOfficialInterest.Importer.csproj
 
       - name: Build
-        run: dotnet build src/Importer/PublicOfficialInterest.Importer.csproj --no-restore --configuration Release
+        run: dotnet build src/Importer/PublicOfficialInterest.Importer.csproj --configuration Release --no-restore
 
       - name: Importer dry-run sample
         run: dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- samples/sample-changes.json

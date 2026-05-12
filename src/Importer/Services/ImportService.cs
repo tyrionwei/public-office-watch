@@ -22,10 +22,24 @@ public sealed class ImportService
         Console.WriteLine($"RunDate: {changeSet.RunDate}");
         Console.WriteLine($"GeneratedBy: {changeSet.GeneratedBy}");
         Console.WriteLine($"Changes to import: {changeSet.Changes.Count}");
+        Console.WriteLine();
 
         foreach (var item in changeSet.Changes)
         {
-            Console.WriteLine($"[DRY-RUN] {item.Action}: {item.PersonName} -> {item.CompanyName} ({item.GuessedRelationType}, {item.ConfidenceSuggestion})");
+            Console.WriteLine($"[DRY-RUN] action={item.Action}");
+            Console.WriteLine($"  personName={item.PersonName}");
+            Console.WriteLine($"  companyName={item.CompanyName}");
+            Console.WriteLine($"  relationType={item.GuessedRelationType}");
+            Console.WriteLine($"  confidence={item.ConfidenceSuggestion}");
+            Console.WriteLine($"  sourceType={item.SourceType}");
+            Console.WriteLine($"  sourceName={item.SourceName}");
+            Console.WriteLine($"  reviewStatus={item.ReviewStatus}");
+            Console.WriteLine($"  isPublic={item.IsPublic}");
+            if (item.RiskFlags.Count > 0)
+            {
+                Console.WriteLine($"  riskFlags={string.Join(", ", item.RiskFlags)}");
+            }
+            Console.WriteLine();
         }
     }
 }

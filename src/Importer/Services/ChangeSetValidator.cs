@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using PublicOfficialInterest.Importer.Models;
 using PublicOfficialInterest.Importer.Validators;
 
@@ -15,6 +14,7 @@ public sealed class ChangeSetValidator
     ];
 
     private static readonly HashSet<string> AllowedConfidence = ["A", "B", "C", "D"];
+    private static readonly HashSet<string> AllowedReviewStatus = ["pending"];
     private readonly PrivacyRiskValidator _privacyRiskValidator = new();
 
     public IReadOnlyList<string> Validate(ChangeSet changeSet)
@@ -24,41 +24,55 @@ public sealed class ChangeSetValidator
         if (string.IsNullOrWhiteSpace(changeSet.RunDate))
             errors.Add("runDate is required.");
 
-        foreach (var item in changeSet.Changes)
+        if (string.IsNullOrWhiteSpace(changeSet.GeneratedBy))
+            errors.Add("generatedBy is required.");
+
+        if (changeSet.Changes.Count == 0)
+            errors.Add("changes must contain at least one item.");
+
+        for (var i = 0; i < changeSet.Changes.Count; i++)
         {
-            ValidateItem(item, errors);
+            ValidateItem(changeSet.Changes[i], i, errors);
         }
 
         return errors;
     }
 
-    private void ValidateItem(ChangeItem item, List<string> errors)
+    private void ValidateItem(ChangeItem item, int index, List<string> errors)
     {
+        var prefix = $"changes[{index}]";
+
         if (!AllowedActions.Contains(item.Action))
-            errors.Add($"Action not allowed: {item.Action}");
+            errors.Add($"{prefix}: action not allowed: {item.Action}");
 
         if (item.Action == "create_relation_candidate" && string.IsNullOrWhiteSpace(item.PersonName))
-            errors.Add("personName is required for create_relation_candidate.");
+            errors.Add($"{prefix}: personName is required for create_relation_candidate.");
 
-        if (string.IsNullOrWhiteSpace(item.CompanyName))
-            errors.Add("companyName is required.");
+        if (item.Action == "create_person_candidate" && string.IsNullOrWhiteSpace(item.PersonName))
+            errors.Add($"{prefix}: personName is required for create_person_candidate.");
+
+        if ((item.Action == "create_relation_candidate" || item.Action == "create_company_candidate") && string.IsNullOrWhiteSpace(item.CompanyName))
+            errors.Add($"{prefix}: companyName is required.");
 
         if (string.IsNullOrWhiteSpace(item.EvidenceText))
-            errors.Add("evidenceText is required.");
+            errors.Add($"{prefix}: evidenceText is required.");
 
         if (string.IsNullOrWhiteSpace(item.SourceName) && string.IsNullOrWhiteSpace(item.SourceUrl))
-            errors.Add("sourceName or sourceUrl is required.");
+            errors.Add($"{prefix}: sourceName or sourceUrl is required.");
+
+        if (string.IsNullOrWhiteSpace(item.SourceType))
+            errors.Add($"{prefix}: sourceType is required.");
 
         if (!AllowedConfidence.Contains(item.ConfidenceSuggestion))
-            errors.Add($"confidenceSuggestion must be A/B/C/D: {item.ConfidenceSuggestion}");
+            errors.Add($"{prefix}: confidenceSuggestion must be A/B/C/D: {item.ConfidenceSuggestion}");
 
-        if (!string.Equals(item.ReviewStatus, "pending", StringComparison.OrdinalIgnoreCase))
-            errors.Add("reviewStatus must be pending.");
+        if (!AllowedReviewStatus.Contains(item.ReviewStatus))
+            errors.Add($"{prefix}: reviewStatus must be pending.");
 
         if (item.IsPublic)
-            errors.Add("isPublic must be false.");
+            errors.Add($"{prefix}: isPublic must be false.");
 
         if (_privacyRiskValidator.ContainsSensitiveData(item))
-            errors.Add($"Sensitive data detected in item: {item.CompanyName}");
+            errors.Add($"{prefix}: sensitive data detected in item related to {item.CompanyName}");
     }
 }

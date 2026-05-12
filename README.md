@@ -160,6 +160,14 @@ export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;U
 - 目前不抓真實人物照片
 - 前端若沒有照片，應顯示預設 avatar
 
+## Frontend design direction
+
+前端視覺與資訊架構方向文件：
+- `docs/frontend-design-direction.md`
+
+目前尚未實作前端 UI。
+下一步將建立 React / Vite 前端骨架。
+
 ## 尚未完成
 
 - promote candidate CLI 的進一步 admin tooling

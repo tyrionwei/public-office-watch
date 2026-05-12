@@ -7,7 +7,13 @@ import { SearchCommand } from './components/SearchCommand';
 import { SelectedRegionHud } from './components/SelectedRegionHud';
 import { TaiwanStageSelect } from './components/TaiwanStageSelect';
 import { UpcomingElectionCards } from './components/UpcomingElectionCards';
-import { dataPrinciples, nextEvent, regions, upcomingRaces } from './data/mockHomeData';
+import {
+  dataPrinciples,
+  nextEvent,
+  regions,
+  stageSelectRegions,
+  upcomingRaces,
+} from './data/mockHomeData';
 
 function App() {
   const [selectedRegionId, setSelectedRegionId] = useState(regions[0]?.id ?? '');
@@ -20,32 +26,44 @@ function App() {
 
   return (
     <div className="min-h-screen bg-bg text-white">
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="arcade-radial absolute left-[8%] top-[-8rem] h-72 w-72 rounded-full" />
+        <div className="arcade-radial arcade-radial-pink absolute bottom-[-10rem] right-[6%] h-96 w-96 rounded-full" />
+        <div className="scanline-overlay absolute inset-0 opacity-50" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <AppHeader />
 
-        <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex-1">
+        <div className="mt-6 flex flex-col gap-4 xl:flex-row xl:items-stretch">
+          <div className="min-w-0 flex-1">
             <NextEventTicker {...nextEvent} />
           </div>
-          <BgmToggle enabled={bgmEnabled} onToggle={() => setBgmEnabled((value) => !value)} />
+          <div className="xl:w-[220px]">
+            <BgmToggle enabled={bgmEnabled} onToggle={() => setBgmEnabled((value) => !value)} />
+          </div>
         </div>
 
-        <div className="mt-6 grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
-          <div className="space-y-6">
-            <SearchCommand />
+        <main className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+          <section className="space-y-6">
             <TaiwanStageSelect
               regions={regions}
               selectedRegionId={selectedRegionId}
               onSelect={setSelectedRegionId}
+              stageRegions={stageSelectRegions}
             />
-            <UpcomingElectionCards races={upcomingRaces} />
-          </div>
+          </section>
 
-          <div className="space-y-6">
-            {selectedRegion ? <SelectedRegionHud region={selectedRegion} /> : null}
+          <section className="space-y-6">
+            <SelectedRegionHud region={selectedRegion} />
+            <SearchCommand />
             <DataPrinciplesPanel principles={dataPrinciples} />
-          </div>
-        </div>
+          </section>
+        </main>
+
+        <section className="mt-6">
+          <UpcomingElectionCards races={upcomingRaces} />
+        </section>
       </div>
     </div>
   );

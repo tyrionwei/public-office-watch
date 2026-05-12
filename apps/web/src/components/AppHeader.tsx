@@ -1,16 +1,31 @@
 export function AppHeader() {
   return (
-    <header className="flex flex-col gap-3 border-b border-line/60 pb-4 md:flex-row md:items-end md:justify-between">
-      <div>
-        <p className="font-display text-xs uppercase tracking-[0.3em] text-signal">Arcade Civic Data</p>
-        <h1 className="mt-2 font-display text-3xl text-white md:text-4xl">公職資料觀測站</h1>
-        <p className="mt-2 max-w-2xl text-sm text-slate-300 md:text-base">
-          選舉地圖 × 公開資料 × 可驗證關聯
-        </p>
-      </div>
-      <div className="rounded-sm border border-line bg-panelAlt/80 px-4 py-3 text-sm text-slate-300">
-        <p className="font-display text-xs uppercase tracking-[0.2em] text-accent">Neutral public data platform</p>
-        <p className="mt-1">視覺採 arcade 語言，資料呈現維持中性、可追溯、可讀。</p>
+    <header className="pixel-corners relative overflow-hidden border border-line/70 bg-panel/70 px-4 py-5 shadow-pixel backdrop-blur-sm sm:px-6 sm:py-6">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(56,189,248,0.06),transparent_42%,rgba(244,114,182,0.07))]" />
+
+      <div className="relative flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+        <div className="min-w-0">
+          <p className="font-display text-[11px] uppercase tracking-[0.35em] text-signal sm:text-xs">
+            Arcade Civic Data
+          </p>
+          <h1 className="mt-3 font-display text-3xl leading-none text-white sm:text-4xl lg:text-5xl">
+            公職資料觀測站
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm text-slate-300 sm:text-base">
+            選舉地圖 × 公開資料 × 可驗證關聯
+          </p>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:w-[420px]">
+          <div className="pixel-corners border border-line/70 bg-bg/40 px-4 py-3">
+            <p className="font-display text-[11px] uppercase tracking-[0.28em] text-accent">Signal</p>
+            <p className="mt-2 text-sm text-slate-200">首頁以夜間 HUD 視覺呈現，但資訊表達維持中性可讀。</p>
+          </div>
+          <div className="pixel-corners border border-line/70 bg-bg/40 px-4 py-3">
+            <p className="font-display text-[11px] uppercase tracking-[0.28em] text-accent">Read Scope</p>
+            <p className="mt-2 text-sm text-slate-200">前端目前只展示 mock public views 形狀，不連資料庫。</p>
+          </div>
+        </div>
       </div>
     </header>
   );

@@ -12,6 +12,7 @@ node_modules/
 *.bak
 *.sqlite
 *.db
+gitleaks-report.json
 local-data/
 logs/
 supabase/.branches/

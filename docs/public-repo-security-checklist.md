@@ -28,7 +28,7 @@
 在 repo 根目錄執行：
 
 ```bash
-git grep -n -Ei "service_role|SUPABASE_SERVICE_ROLE_KEY|DATABASE_CONNECTION_STRING|OPENAI_API_KEY|JWT_SECRET|PRIVATE_KEY|BEGIN .*PRIVATE KEY|ghp_|github_pat_|sk-|xoxb-|xoxp-|AKIA|password=|Password=|apikey|api_key|secret|token" || true
+git grep -n -Ei "service_role|SUPABASE_SERVICE_ROLE_KEY|DATABASE_CONNECTION_STRING|OPENAI_API_KEY|JWT_SECRET|PRIVATE_KEY|BEGIN .*PRIVATE KEY|ghp_|github_pat_|sk-|xoxb-|xoxp-|AKIA|pass(word)?=|api[_-]?key|secret|token" || true
 ```
 
 補充檢查個資相關關鍵詞：

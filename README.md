@@ -84,6 +84,31 @@ execute 模式只允許寫入：
 - `verified`
 - `is_public = true`
 
+## Promote candidate
+
+promote 是人工審核通過後，將單筆 `relation_candidates` 正式轉成公開資料的受控動作。
+
+- 只支援人工指定單筆 `candidateId`
+- 不支援 promote all
+- `confidence_suggestion = D` 不可 promote
+- promote 成功後才會進入 `public_*` views
+- 前端未來只讀 `public_*` views，不讀 `relation_candidates`
+- promote execute 必須帶 `--confirm`
+- promote 需要 `DATABASE_CONNECTION_STRING`
+- promote 目前只建議在 local Supabase 測試，不連 production
+
+promote dry-run：
+
+```bash
+dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --promote-candidate <candidateId> --dry-run
+```
+
+promote execute：
+
+```bash
+dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --promote-candidate <candidateId> --confirm
+```
+
 ## Local Supabase
 
 clone 既有 repo 後通常不需要重新 init，直接：
@@ -97,7 +122,7 @@ npx supabase status
 local Supabase only example，不可用於 production：
 
 ```bash
-export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;Username=postgres;Password=postgres"
+export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;Username=postgres;Password=<local-password>"
 ```
 
 實際連線資訊以 `npx supabase status` 顯示為準。
@@ -113,8 +138,8 @@ export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;U
 
 ## 尚未完成
 
-- promote candidate CLI
-- public views
+- promote candidate CLI 的進一步 admin tooling
+- public views 後續前端串接
 - 前端網站
 - 真實資料小範圍測試
 - production Supabase 部署

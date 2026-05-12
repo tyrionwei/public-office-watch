@@ -66,7 +66,7 @@ npx supabase status
 範例：
 
 ```bash
-export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;Username=postgres;Password=postgres"
+export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;Username=postgres;Password=<local-password>"
 ```
 
 - 不要把這個值寫進 repo
@@ -169,4 +169,4 @@ WHERE verification_status = 'verified' OR is_public = TRUE;
 
 - 確認 `npx supabase start` 是否成功
 - 確認 `npx supabase status` 顯示 DB 正在執行
-- 確認 `DATABASE_CONNECTION_STRING` 的 host / port / user / password 是否與狀態輸出一致
+- 確認 `DATABASE_CONNECTION_STRING` 的 host / port / user / credential 是否與狀態輸出一致

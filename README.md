@@ -44,10 +44,11 @@
 ## 結構
 
 - `docs/`：政策、流程、資料來源說明
-- `database/schema.sql`：完整 schema 快照
-- `database/rls-policies.sql`：完整 RLS 快照
-- `database/migrations/*`：實際建置資料庫時使用的版本化 SQL
+- `database/schema.sql`：可讀 schema snapshot
+- `database/rls-policies.sql`：可讀 RLS snapshot
+- `database/migrations/*`：專案內保留的版本化 SQL snapshot
 - `database/queries/`：驗證與檢查查詢
+- `supabase/migrations/*`：Supabase local / future deploy 使用的 migration
 - `samples/`：範例報告與 JSON
 - `data-updates/`：每次更新產物
 - `src/Importer/`：.NET 8 匯入工具
@@ -83,6 +84,14 @@ DATABASE_CONNECTION_STRING
 
 此環境變數不得寫入 repo。
 
+本地 Supabase 範例：
+
+```bash
+export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;Username=postgres;Password=postgres"
+```
+
+實際連線資訊仍以 `npx supabase status` 顯示為準。
+
 ## execute 模式保證
 
 `--execute` 只允許寫入：
@@ -105,6 +114,84 @@ DATABASE_CONNECTION_STRING
 
 執行後可輸出 console summary。
 log 檔案若有需要，請放在本地 `logs/` 或 `local-data/logs/`，不要提交到 Git。
+
+## Local Supabase Setup
+
+### 需求
+
+- Docker
+- Supabase CLI（本專案可用 `npx supabase ...`）
+
+### 初始化
+
+```bash
+npx supabase init
+```
+
+### 啟動 local Supabase
+
+```bash
+npx supabase start
+```
+
+### 套用 migration
+
+```bash
+npx supabase migration up
+```
+
+如果 CLI 版本不支援上述命令，請使用等效的 local migration 指令，並以成功建立 schema 為準。
+
+### 檢查狀態
+
+```bash
+npx supabase status
+```
+
+### 設定 Importer 測試連線
+
+```bash
+export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;Username=postgres;Password=postgres"
+```
+
+實際連線資訊以 `npx supabase status` 顯示為準，不要把 secrets 寫進 repo。
+
+### Importer 測試
+
+dry-run：
+
+```bash
+dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --dry-run samples/sample-changes.json
+```
+
+execute：
+
+```bash
+dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --execute samples/sample-changes.json
+```
+
+### 驗證 SQL
+
+```sql
+SELECT COUNT(*) FROM raw_source_records;
+SELECT COUNT(*) FROM source_documents;
+SELECT COUNT(*) FROM relation_candidates;
+SELECT * FROM relation_candidates ORDER BY created_at DESC LIMIT 20;
+
+SELECT COUNT(*)
+FROM person_company_relations
+WHERE verification_status = 'verified' OR is_public = TRUE;
+```
+
+Phase 2 測試後，最後一個查詢應為 `0`。
+
+### 注意事項
+
+- 不連正式 Supabase cloud project
+- 不使用 production secrets
+- 不抓取真實政治人物資料
+- 不公開任何未審核資料
+- 不做前端 UI
 
 ## 目前狀態
 

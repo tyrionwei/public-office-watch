@@ -29,6 +29,7 @@
 - GitHub Actions dry-run
 - Public repo security checklist
 - Gitleaks 掃描流程
+- Election / Region / Race / Candidate schema
 
 ## 資料流程
 
@@ -135,6 +136,19 @@ export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;U
 - 不提交真實政治人物測試資料
 - 不提交 `logs/` / `local-data/`
 - 若 secret 曾被 push，必須 rotate secret，再清 history
+
+## Phase 3B：Election / Region schema
+
+本階段新增 Election / Region / Race / Candidate schema，供未來以下功能使用：
+
+- 台灣地圖
+- 縣市頁
+- 選舉項目頁
+- 候選人列表
+
+目前仍然：
+- 不做前端 UI
+- 不匯入真實候選人資料
 
 ## 尚未完成
 

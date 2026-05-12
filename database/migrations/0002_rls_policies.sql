@@ -4,6 +4,10 @@ ALTER TABLE raw_source_records ENABLE ROW LEVEL SECURITY;
 ALTER TABLE source_documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE relation_candidates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE person_company_relations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE regions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE elections ENABLE ROW LEVEL SECURITY;
+ALTER TABLE races ENABLE ROW LEVEL SECURITY;
+ALTER TABLE candidates ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY public_read_people
     ON people
@@ -90,6 +94,36 @@ CREATE POLICY admin_manage_relations
     USING (TRUE)
     WITH CHECK (TRUE);
 
+CREATE POLICY admin_manage_regions
+    ON regions
+    FOR ALL
+    TO admin_role
+    USING (TRUE)
+    WITH CHECK (TRUE);
+
+CREATE POLICY admin_manage_elections
+    ON elections
+    FOR ALL
+    TO admin_role
+    USING (TRUE)
+    WITH CHECK (TRUE);
+
+CREATE POLICY admin_manage_races
+    ON races
+    FOR ALL
+    TO admin_role
+    USING (TRUE)
+    WITH CHECK (TRUE);
+
+CREATE POLICY admin_manage_candidates
+    ON candidates
+    FOR ALL
+    TO admin_role
+    USING (TRUE)
+    WITH CHECK (TRUE);
+
 -- Public publication remains admin-controlled only:
 --   verification_status = 'verified'
 --   is_public = TRUE
+--   candidates.is_public must remain FALSE until manually confirmed
+-- Frontend should read public_* views only, not relation_candidates/raw_source_records/candidates base tables.

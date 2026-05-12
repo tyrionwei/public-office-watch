@@ -1,0 +1,12 @@
+{
+  "runDate": "2026-05-12",
+  "rejected": [
+    {
+      "personName": "張家豪",
+      "companyName": "城峰投資有限公司",
+      "reason": "僅姓名相同，缺少其他佐證。",
+      "sourceUrl": "https://example.com/reject",
+      "riskFlags": ["same_name_risk"]
+    }
+  ]
+}

@@ -10,3 +10,14 @@ node_modules/
 *.log
 secrets.json
 appsettings.Development.json
+
+# Local-only research artifacts
+local-data/
+raw-data/
+cache/
+logs/
+snapshots/
+*.sqlite
+*.db
+*.csv
+*.tmp

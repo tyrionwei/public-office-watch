@@ -30,6 +30,7 @@
 - Public repo security checklist
 - Gitleaks 掃描流程
 - Election / Region / Race / Candidate schema
+- Person media schema
 
 ## 資料流程
 
@@ -149,6 +150,15 @@ export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;U
 目前仍然：
 - 不做前端 UI
 - 不匯入真實候選人資料
+
+## Phase 3C：Person media
+
+本階段新增 `person_media`，供未來人物頁、候選人列表、搜尋結果顯示照片或 avatar。
+
+- 照片必須有來源、授權、審核狀態
+- 未通過審核或授權不明的照片不得公開
+- 目前不抓真實人物照片
+- 前端若沒有照片，應顯示預設 avatar
 
 ## 尚未完成
 

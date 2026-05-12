@@ -214,12 +214,17 @@ SELECT
     c.candidate_no,
     c.registration_status,
     c.source_name,
-    c.source_url
+    c.source_url,
+    ph.photo_url AS primary_photo_url,
+    ph.thumbnail_url AS primary_photo_thumbnail_url,
+    ph.attribution AS photo_attribution,
+    ph.license_type AS photo_license_type
 FROM candidates c
 JOIN people p ON p.id = c.person_id AND p.is_public = TRUE
 JOIN races r ON r.id = c.race_id AND r.is_public = TRUE
 JOIN elections e ON e.id = r.election_id AND e.is_public = TRUE
 LEFT JOIN regions rg ON rg.id = r.region_id
+LEFT JOIN public_person_primary_photos ph ON ph.person_id = p.id
 WHERE c.is_public = TRUE
   AND (r.region_id IS NULL OR rg.is_public = TRUE);
 

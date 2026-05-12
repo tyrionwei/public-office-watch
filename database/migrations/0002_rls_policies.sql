@@ -8,6 +8,7 @@ ALTER TABLE regions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE elections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE races ENABLE ROW LEVEL SECURITY;
 ALTER TABLE candidates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE person_media ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY public_read_people
     ON people
@@ -117,6 +118,13 @@ CREATE POLICY admin_manage_races
 
 CREATE POLICY admin_manage_candidates
     ON candidates
+    FOR ALL
+    TO admin_role
+    USING (TRUE)
+    WITH CHECK (TRUE);
+
+CREATE POLICY admin_manage_person_media
+    ON person_media
     FOR ALL
     TO admin_role
     USING (TRUE)

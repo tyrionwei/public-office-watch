@@ -175,16 +175,24 @@ CREATE UNIQUE INDEX uq_person_company_relations_official_relation
 
 CREATE VIEW public_people AS
 SELECT
-    id AS person_id,
-    name,
-    alias,
-    party,
-    position,
-    election_year,
-    district,
-    updated_at
-FROM people
-WHERE is_public = TRUE;
+    p.id AS person_id,
+    p.name,
+    p.alias,
+    p.party,
+    p.position,
+    p.election_year,
+    p.district,
+    p.updated_at,
+    ph.photo_url AS primary_photo_url,
+    ph.thumbnail_url AS primary_photo_thumbnail_url,
+    ph.source_name AS photo_source_name,
+    ph.source_url AS photo_source_url,
+    ph.license_type AS photo_license_type,
+    ph.license_url AS photo_license_url,
+    ph.attribution AS photo_attribution
+FROM people p
+LEFT JOIN public_person_primary_photos ph ON ph.person_id = p.id
+WHERE p.is_public = TRUE;
 
 CREATE VIEW public_companies AS
 SELECT
@@ -444,12 +452,17 @@ SELECT
     c.candidate_no,
     c.registration_status,
     c.source_name,
-    c.source_url
+    c.source_url,
+    ph.photo_url AS primary_photo_url,
+    ph.thumbnail_url AS primary_photo_thumbnail_url,
+    ph.attribution AS photo_attribution,
+    ph.license_type AS photo_license_type
 FROM candidates c
 JOIN people p ON p.id = c.person_id AND p.is_public = TRUE
 JOIN races r ON r.id = c.race_id AND r.is_public = TRUE
 JOIN elections e ON e.id = r.election_id AND e.is_public = TRUE
 LEFT JOIN regions rg ON rg.id = r.region_id
+LEFT JOIN public_person_primary_photos ph ON ph.person_id = p.id
 WHERE c.is_public = TRUE
   AND (r.region_id IS NULL OR rg.is_public = TRUE);
 
@@ -502,3 +515,74 @@ WHERE is_public = TRUE
   AND status IN ('announced', 'upcoming', 'active')
   AND voting_date IS NOT NULL
 ORDER BY voting_date ASC;
+
+CREATE TABLE person_media (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    person_id UUID NOT NULL REFERENCES people(id),
+    media_type TEXT NOT NULL CHECK (
+        media_type IN ('photo')
+    ),
+    url TEXT NOT NULL,
+    thumbnail_url TEXT,
+    source_name TEXT NOT NULL,
+    source_url TEXT NOT NULL,
+    license_type TEXT NOT NULL CHECK (
+        license_type IN (
+            'government_open_data',
+            'creative_commons',
+            'official_site_permission',
+            'wikimedia_commons',
+            'self_provided',
+            'placeholder',
+            'unknown'
+        )
+    ),
+    license_url TEXT,
+    attribution TEXT,
+    is_primary BOOLEAN DEFAULT FALSE,
+    verification_status TEXT NOT NULL DEFAULT 'pending' CHECK (
+        verification_status IN ('pending', 'verified', 'rejected', 'archived')
+    ),
+    is_public BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    CHECK (NOT (is_public = TRUE AND verification_status <> 'verified')),
+    CHECK (NOT (is_public = TRUE AND license_type = 'unknown'))
+);
+
+CREATE UNIQUE INDEX ux_person_media_primary_public
+    ON person_media(person_id)
+    WHERE is_primary = TRUE
+      AND is_public = TRUE
+      AND verification_status = 'verified';
+
+CREATE INDEX idx_person_media_person_id
+    ON person_media(person_id);
+
+CREATE INDEX idx_person_media_verification_public
+    ON person_media(verification_status, is_public);
+
+CREATE INDEX idx_person_media_is_primary
+    ON person_media(is_primary);
+
+CREATE INDEX idx_person_media_license_type
+    ON person_media(license_type);
+
+CREATE VIEW public_person_primary_photos AS
+SELECT
+    pm.person_id,
+    pm.id AS media_id,
+    pm.url AS photo_url,
+    pm.thumbnail_url,
+    pm.source_name,
+    pm.source_url,
+    pm.license_type,
+    pm.license_url,
+    pm.attribution
+FROM person_media pm
+JOIN people p ON p.id = pm.person_id
+WHERE pm.verification_status = 'verified'
+  AND pm.is_public = TRUE
+  AND pm.is_primary = TRUE
+  AND pm.license_type <> 'unknown'
+  AND p.is_public = TRUE;

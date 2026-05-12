@@ -6,12 +6,17 @@
 bin/
 obj/
 node_modules/
+dist/
+coverage/
+.vite/
+*.local
 .DS_Store
 *.log
 *.tmp
 *.bak
 *.sqlite
 *.db
+*.tsbuildinfo
 gitleaks-report.json
 local-data/
 logs/

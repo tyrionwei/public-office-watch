@@ -1,0 +1,26 @@
+{
+  "name": "public-office-watch",
+  "version": "1.0.0",
+  "description": "台灣民代、候選人與其可驗證公司關聯的官方資料整理專案。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tyrionwei/public-office-watch.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tyrionwei/public-office-watch/issues"
+  },
+  "homepage": "https://github.com/tyrionwei/public-office-watch#readme",
+  "devDependencies": {
+    "supabase": "^2.98.2"
+  }
+}

@@ -8,5 +8,9 @@ obj/
 node_modules/
 .DS_Store
 *.log
+local-data/
+logs/
+supabase/.branches/
+supabase/.temp/
 secrets.json
 appsettings.Development.json

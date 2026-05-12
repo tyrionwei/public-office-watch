@@ -79,6 +79,9 @@ Data update YYYY-MM-DD
 
 ## 目前狀態
 
-- 已完成第一階段文件、schema、samples
-- 已完成 Importer 骨架與 dry-run 驗證
-- 已建立 PR template 與 GitHub Actions dry-run 草案
+1. 第一階段仍只做 dry-run。
+2. `main` 已包含 samples、Importer、GitHub Actions。
+3. database schema / RLS 已完成安全硬化。
+4. 尚未連接 Supabase。
+5. 尚未開始真實資料蒐集。
+6. 尚未做前端 UI。

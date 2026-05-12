@@ -56,6 +56,7 @@ export const regions: RegionCard[] = mockPublicRegionElectionSummary.map((summar
 
 export const upcomingRaces: UpcomingRace[] = mockPublicRaces.map((race) => {
   const partyTag = partyByRaceId[race.race_id] ?? 'unknown';
+
   return {
     id: race.race_id,
     title: race.title,
@@ -74,7 +75,8 @@ export const stageSelectRegions = mockPublicRegions.map((region) => ({
 
 export const dataPrinciples = [
   '只呈現公開且可追溯的資料。',
-  '證據頁以來源、信心等級與更新時間優先。',
+  '人工審核與來源紀錄優先於視覺效果。',
   '前端僅讀 public views，不讀未審核資料。',
-  '視覺風格可帶 arcade 語言，但資料表達保持中性。',
+  '介面可帶 arcade 語言，但資料表達保持中性。',
+  '首頁目前只使用 mock public view 型別資料。',
 ];

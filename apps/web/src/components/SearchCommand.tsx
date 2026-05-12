@@ -2,26 +2,34 @@ import { PixelFrame } from './PixelFrame';
 
 export function SearchCommand() {
   return (
-    <PixelFrame title="Search Command">
-      <div className="space-y-3">
-        <label className="block text-sm text-slate-300" htmlFor="search-command">
-          搜尋人物、公司、選舉項目
-        </label>
-        <div className="flex flex-col gap-3 md:flex-row">
+    <PixelFrame
+      title="Search Command"
+      action={
+        <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">mock input only</span>
+      }
+    >
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <label className="block text-sm text-slate-300" htmlFor="search-command">
+            搜尋人物、公司、選舉項目
+          </label>
+          <p className="text-xs text-slate-500">目前僅展示 HUD 搜尋介面，不連接任何實際查詢 API。</p>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
           <input
             id="search-command"
             type="text"
-            placeholder="例如：範例市長選舉、測試人物A、北部都會區"
-            className="w-full rounded-sm border border-line bg-bg px-4 py-3 text-sm text-white outline-none ring-0 placeholder:text-slate-500 focus:border-accent"
+            placeholder="例如：範例市長選舉、範例公司甲、北部都會區"
+            className="pixel-corners w-full border border-line bg-bg/80 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-accent focus:ring-2 focus:ring-accent/20"
           />
           <button
             type="button"
-            className="rounded-sm border border-accent bg-accent/10 px-5 py-3 font-display text-sm uppercase tracking-[0.18em] text-accent"
+            className="pixel-corners border border-accent/70 bg-accent/12 px-5 py-3 font-display text-sm uppercase tracking-[0.24em] text-accent transition hover:bg-accent/20 focus:outline-none focus:ring-2 focus:ring-accent/20"
           >
             Search
           </button>
         </div>
-        <p className="text-xs text-slate-400">目前為前端骨架 placeholder，未連接任何實際查詢 API。</p>
       </div>
     </PixelFrame>
   );

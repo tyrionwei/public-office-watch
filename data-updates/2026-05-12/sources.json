@@ -1,0 +1,21 @@
+{
+  "runDate": "2026-05-12",
+  "sources": [
+    {
+      "sourceType": "asset_declaration",
+      "sourceName": "測試來源一",
+      "sourceUrl": "https://example.com/assets",
+      "fetchedAt": "2026-05-12T10:00:00+08:00",
+      "snapshotHash": "sha256:example-asset-hash",
+      "notes": "測試資料"
+    },
+    {
+      "sourceType": "company_registry",
+      "sourceName": "測試來源二",
+      "sourceUrl": "https://example.com/company",
+      "fetchedAt": "2026-05-12T10:20:00+08:00",
+      "snapshotHash": "sha256:example-company-hash",
+      "notes": "測試資料"
+    }
+  ]
+}

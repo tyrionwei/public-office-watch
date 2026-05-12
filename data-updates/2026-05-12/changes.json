@@ -1,0 +1,57 @@
+{
+  "runDate": "2026-05-12",
+  "generatedBy": "OpenClaw",
+  "summary": {
+    "newCandidates": 2,
+    "updateCandidates": 1,
+    "rejectedCandidates": 1,
+    "highRiskItems": 1
+  },
+  "changes": [
+    {
+      "action": "create_relation_candidate",
+      "personName": "測試人物A",
+      "companyName": "測試公司甲股份有限公司",
+      "unifiedBusinessNo": "12345678",
+      "guessedRelationType": "SelfDeclaredInvestment",
+      "confidenceSuggestion": "A",
+      "evidenceText": "測試資料顯示測試人物A與測試公司甲股份有限公司存在候選投資關係。",
+      "sourceName": "測試來源一",
+      "sourceUrl": "https://example.com/assets",
+      "sourceType": "asset_declaration",
+      "reviewStatus": "pending",
+      "isPublic": false,
+      "riskFlags": ["needs_identity_check"]
+    },
+    {
+      "action": "create_relation_candidate",
+      "personName": "測試人物B",
+      "companyName": "測試公司乙建設股份有限公司",
+      "unifiedBusinessNo": "87654321",
+      "guessedRelationType": "CompanyDirector",
+      "confidenceSuggestion": "C",
+      "evidenceText": "測試資料顯示測試人物B出現在測試公司乙建設股份有限公司的候選董監事資料中。",
+      "sourceName": "測試來源二",
+      "sourceUrl": "https://example.com/company",
+      "sourceType": "company_registry",
+      "reviewStatus": "pending",
+      "isPublic": false,
+      "riskFlags": ["same_name_risk"]
+    },
+    {
+      "action": "create_company_candidate",
+      "personName": "",
+      "companyName": "測試公司丙開發有限公司",
+      "unifiedBusinessNo": "11223344",
+      "guessedRelationType": "ManualResearchLead",
+      "confidenceSuggestion": "C",
+      "evidenceText": "測試資料顯示測試公司丙開發有限公司代表人欄位有候選更新。",
+      "sourceName": "測試來源三",
+      "sourceUrl": "https://example.com/company-update",
+      "sourceType": "company_registry",
+      "reviewStatus": "pending",
+      "isPublic": false,
+      "riskFlags": []
+    }
+  ]
+}

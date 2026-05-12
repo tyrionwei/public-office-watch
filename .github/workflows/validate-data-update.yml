@@ -25,7 +25,7 @@ jobs:
         run: dotnet build src/Importer/PublicOfficialInterest.Importer.csproj --configuration Release --no-restore
 
       - name: Importer dry-run sample
-        run: dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- samples/sample-changes.json
+        run: dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --dry-run samples/sample-changes.json
 
       - name: Importer dry-run latest data-update changes when present
         shell: bash
@@ -34,7 +34,7 @@ jobs:
             latest=$(find data-updates -mindepth 2 -maxdepth 2 -name changes.json | sort | tail -n 1)
             if [ -n "$latest" ]; then
               echo "Running dry-run for $latest"
-              dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- "$latest"
+              dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --dry-run "$latest"
             else
               echo "No data-updates changes.json found, skipping."
             fi
@@ -44,5 +44,5 @@ jobs:
 
       - name: Safety note
         run: |
-          echo "Phase 1 only performs dry-run validation."
+          echo "Phase 2 CI still performs dry-run validation only."
           echo "No Supabase connection and no production database writes occur here."

@@ -32,7 +32,7 @@ export function TaiwanStageSelect({
                 Taiwan stage select
               </p>
               <p className="mt-1 text-xs text-slate-500">
-                區塊式 map placeholder，只作 UI 導覽，不代表正式選區邊界。
+                目前為 UI 測試資料，下一階段將接入真實縣市 / 鄉鎮市區邊界資料。行政區邊界不等於正式選舉選區。
               </p>
             </div>
             <span className="rounded-sm border border-signal/30 bg-signal/10 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-signal">

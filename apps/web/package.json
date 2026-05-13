@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "smoke:public-views": "node scripts/smoke-public-views.mjs",
-    "check:data-boundary": "node scripts/check-public-data-boundary.mjs"
+    "check:data-boundary": "node scripts/check-public-data-boundary.mjs",
+    "check:public-view-contracts": "node scripts/check-public-view-contracts.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",

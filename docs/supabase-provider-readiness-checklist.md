@@ -22,6 +22,7 @@
 - raw、staging、review tables 不得被 anon key 讀取。
 - RLS 與 grants 已完成檢查。
 - smoke script 對所有 allowed public views 通過。
+- public view contract check 通過，或在缺 env 時中性 skip。
 - 已確認 anon key 只能讀取 allowed public views。
 - page empty state 與 fallback 已確認。
 - gitleaks 通過。
@@ -58,3 +59,4 @@
 - 切換 provider 必須集中在 `publicData.ts` 或明確 provider factory。
 - 必須保留 mock fallback 或 safe empty state。
 - 切換前須先完成 PR review。
+- production provider 啟用應走獨立 PR。

@@ -49,6 +49,7 @@ npm run smoke:public-views
 - 可搭配 `npm run check:data-boundary` 檢查 page 是否繞過 `publicDataProvider`。
 - CI 應執行 `npm run check:data-boundary`。
 - CI 可執行 `npm run smoke:public-views`，但不得配置 service role key。
+- 可執行 `npm run check:public-view-contracts`，缺 env 時應中性 skip。
 
 ## Local provider toggle
 
@@ -65,3 +66,4 @@ npm run smoke:public-views
 - 前端只允許讀取 public views。
 - 必須保留 fallback 與 empty state。
 - readiness checklist：`docs/supabase-provider-readiness-checklist.md`
+- pre-production bundle：`docs/pre-production-readiness.md`

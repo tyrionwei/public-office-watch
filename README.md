@@ -178,6 +178,7 @@ npm run build
 npm run lint
 npm run smoke:public-views
 npm run check:data-boundary
+npm run check:public-view-contracts
 ```
 
 - `VITE_PUBLIC_DATA_PROVIDER=mock` 是安全預設
@@ -190,6 +191,8 @@ npm run check:data-boundary
 - `check:data-boundary` 會檢查 page 是否繞過 `publicDataProvider`
 - `check:data-boundary` 也會檢查前端是否誤用 raw / staging / secret
 - 不要提交 `.env.local`
+- production 前檢查：`docs/pre-production-readiness.md`
+- production provider 啟用應走獨立 PR
 
 ## 尚未完成
 

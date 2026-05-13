@@ -11,18 +11,33 @@ import {
   dataPrinciples,
   nextEvent,
   regions,
-  stageSelectRegions,
+  stageRegionNodes,
+  stageRegionSummaries,
   upcomingRaces,
 } from './data/mockHomeData';
 
 function App() {
-  const [selectedRegionId, setSelectedRegionId] = useState(regions[0]?.id ?? '');
+  const [selectedRegionId, setSelectedRegionId] = useState(stageRegionNodes[0]?.id ?? '');
   const [bgmEnabled, setBgmEnabled] = useState(false);
 
-  const selectedRegion = useMemo(
-    () => regions.find((region) => region.id === selectedRegionId) ?? regions[0],
+  const selectedRegionNode = useMemo(
+    () => stageRegionNodes.find((region) => region.id === selectedRegionId) ?? stageRegionNodes[0],
     [selectedRegionId],
   );
+
+  const selectedRegionSummary = useMemo(
+    () => stageRegionSummaries.find((summary) => summary.regionId === selectedRegionId) ?? stageRegionSummaries[0],
+    [selectedRegionId],
+  );
+
+  const selectedRegion = useMemo(() => {
+    const baseRegionId = selectedRegionNode?.publicRegionId
+      ? regions.find((region) => region.id === selectedRegionNode.publicRegionId?.replace('region-', ''))?.id ??
+        selectedRegionNode.publicRegionId.replace('region-', '')
+      : selectedRegionSummary?.regionId;
+
+    return regions.find((region) => region.id === baseRegionId) ?? regions[0];
+  }, [selectedRegionNode, selectedRegionSummary]);
 
   return (
     <div className="min-h-screen bg-bg text-white">
@@ -47,22 +62,26 @@ function App() {
         <main className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
           <section className="space-y-6">
             <TaiwanStageSelect
-              regions={regions}
+              regions={stageRegionNodes}
               selectedRegionId={selectedRegionId}
-              onSelect={setSelectedRegionId}
-              stageRegions={stageSelectRegions}
+              onSelectRegion={setSelectedRegionId}
             />
           </section>
 
           <section className="space-y-6">
-            <SelectedRegionHud region={selectedRegion} />
-            <SearchCommand />
+            <SelectedRegionHud region={selectedRegion} regionNode={selectedRegionNode} regionSummary={selectedRegionSummary} />
+            <SearchCommand selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? '未指定區域'} />
             <DataPrinciplesPanel principles={dataPrinciples} />
           </section>
         </main>
 
         <section className="mt-6">
-          <UpcomingElectionCards races={upcomingRaces} />
+          <UpcomingElectionCards
+            races={upcomingRaces}
+            selectedRegionId={selectedRegionId}
+            selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? '未指定區域'}
+            selectedPublicRegionId={selectedRegionNode?.publicRegionId ?? null}
+          />
         </section>
       </div>
     </div>

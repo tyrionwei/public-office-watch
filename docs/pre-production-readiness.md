@@ -18,6 +18,7 @@ npm run lint
 npm run check:data-boundary
 npm run smoke:public-views
 npm run check:public-view-contracts
+npm run preflight:production-readiness
 ```
 
 ## Production 前安全檢查
@@ -55,6 +56,9 @@ npm run check:public-view-contracts
 - `pending` / `rejected` data source
 - service role key
 - `DATABASE_CONNECTION_STRING`
+
+- local validation runbook：`docs/local-supabase-validation.md`
+- production enable plan：`docs/production-provider-enable-plan.md`
 
 ## Production provider 啟用前最後門檻
 

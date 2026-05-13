@@ -1,12 +1,15 @@
 import type { RegionCard } from '../data/mockHomeData';
+import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import { PixelFrame } from './PixelFrame';
 
 type SelectedRegionHudProps = {
   region: RegionCard | undefined;
+  regionNode: StageRegionNode | undefined;
+  regionSummary: StageRegionSummary | undefined;
 };
 
-export function SelectedRegionHud({ region }: SelectedRegionHudProps) {
-  if (!region) {
+export function SelectedRegionHud({ region, regionNode, regionSummary }: SelectedRegionHudProps) {
+  if (!regionSummary || !regionNode) {
     return null;
   }
 
@@ -24,12 +27,16 @@ export function SelectedRegionHud({ region }: SelectedRegionHudProps) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-[11px] uppercase tracking-[0.22em] text-slate-500">selected region</p>
-            <p className="mt-2 font-display text-2xl text-white">{region.name}</p>
-            <p className="mt-2 max-w-md text-sm text-slate-400">{region.tone}</p>
+            <p className="mt-2 font-display text-2xl text-white">{regionSummary.label}</p>
+            <p className="mt-2 max-w-md text-sm text-slate-400">
+              {region?.tone ?? 'UI 測試用區域摘要'}
+            </p>
           </div>
           <button
             type="button"
-            className="pixel-corners border border-accent/70 bg-accent/12 px-4 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent transition hover:bg-accent/20"
+            disabled
+            aria-disabled="true"
+            className="pixel-corners border border-accent/40 bg-accent/8 px-4 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent/70 opacity-90"
           >
             查看區域資料
           </button>
@@ -38,19 +45,29 @@ export function SelectedRegionHud({ region }: SelectedRegionHudProps) {
         <dl className="grid gap-3 sm:grid-cols-2">
           <div className="pixel-corners border border-line/70 bg-bg/38 p-3">
             <dt className="text-[11px] uppercase tracking-[0.22em] text-slate-500">最近選舉</dt>
-            <dd className="mt-2 text-sm text-white">{region.electionName}</dd>
+            <dd className="mt-2 text-sm text-white">{regionSummary.nearestElectionName}</dd>
           </div>
           <div className="pixel-corners border border-line/70 bg-bg/38 p-3">
             <dt className="text-[11px] uppercase tracking-[0.22em] text-slate-500">投票日</dt>
-            <dd className="mt-2 font-display text-xl text-signal">{region.nextVotingDate}</dd>
+            <dd className="mt-2 font-display text-xl text-signal">{regionSummary.nearestElectionDate}</dd>
           </div>
           <div className="pixel-corners border border-line/70 bg-bg/38 p-3">
             <dt className="text-[11px] uppercase tracking-[0.22em] text-slate-500">upcoming race count</dt>
-            <dd className="mt-2 text-white">{region.upcomingRaceCount} 項公開選舉項目</dd>
+            <dd className="mt-2 text-white">{regionSummary.upcomingRaceCount} 項公開選舉項目</dd>
           </div>
           <div className="pixel-corners border border-line/70 bg-bg/38 p-3">
             <dt className="text-[11px] uppercase tracking-[0.22em] text-slate-500">資料來源提示</dt>
-            <dd className="mt-2 text-slate-300">依公開公告整理的 mock public view 介面資料。</dd>
+            <dd className="mt-2 text-slate-300">{regionSummary.sourceNote}</dd>
+          </div>
+          <div className="pixel-corners border border-line/70 bg-bg/38 p-3 sm:col-span-2">
+            <dt className="text-[11px] uppercase tracking-[0.22em] text-slate-500">boundary note</dt>
+            <dd className="mt-2 text-slate-300">{regionSummary.boundaryNote}</dd>
+          </div>
+          <div className="pixel-corners border border-line/70 bg-bg/38 p-3 sm:col-span-2">
+            <dt className="text-[11px] uppercase tracking-[0.22em] text-slate-500">placeholder status</dt>
+            <dd className="mt-2 text-slate-300">
+              {regionNode.isPlaceholder ? '此區域為 placeholder UI 測試資料。' : '非 placeholder'}
+            </dd>
           </div>
         </dl>
       </div>

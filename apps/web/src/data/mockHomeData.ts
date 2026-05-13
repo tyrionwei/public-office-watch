@@ -1,10 +1,11 @@
 import { partyTheme, type PartyThemeKey } from '../styles/partyThemes';
+import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import {
   mockPublicHomeElectionTicker,
   mockPublicRaces,
   mockPublicRegionElectionSummary,
-  mockPublicRegions,
 } from './mockPublicViews';
+import { mockStageRegionNodes, mockStageRegionSummaries } from './mockStageMap';
 
 export type RegionCard = {
   id: string;
@@ -19,6 +20,7 @@ export type UpcomingRace = {
   id: string;
   title: string;
   region: string;
+  regionId: string;
   date: string;
   status: string;
   partyTag: PartyThemeKey;
@@ -61,6 +63,7 @@ export const upcomingRaces: UpcomingRace[] = mockPublicRaces.map((race) => {
     id: race.race_id,
     title: race.title,
     region: race.region_name ?? '未指定區域',
+    regionId: race.region_slug ?? 'unknown-region',
     date: race.voting_date ?? '待公告',
     status: race.status,
     partyTag,
@@ -68,10 +71,8 @@ export const upcomingRaces: UpcomingRace[] = mockPublicRaces.map((race) => {
   };
 });
 
-export const stageSelectRegions = mockPublicRegions.map((region) => ({
-  id: region.slug,
-  name: region.name,
-}));
+export const stageRegionNodes: StageRegionNode[] = mockStageRegionNodes;
+export const stageRegionSummaries: StageRegionSummary[] = mockStageRegionSummaries;
 
 export const dataPrinciples = [
   '只呈現公開且可追溯的資料。',

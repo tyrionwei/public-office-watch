@@ -1,90 +1,20 @@
-import { useMemo, useState } from 'react';
-import { AppHeader } from './components/AppHeader';
-import { BgmToggle } from './components/BgmToggle';
-import { DataPrinciplesPanel } from './components/DataPrinciplesPanel';
-import { NextEventTicker } from './components/NextEventTicker';
-import { SearchCommand } from './components/SearchCommand';
-import { SelectedRegionHud } from './components/SelectedRegionHud';
-import { TaiwanStageSelect } from './components/TaiwanStageSelect';
-import { UpcomingElectionCards } from './components/UpcomingElectionCards';
-import {
-  dataPrinciples,
-  nextEvent,
-  regions,
-  stageRegionNodes,
-  stageRegionSummaries,
-  upcomingRaces,
-} from './data/mockHomeData';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ElectionPage } from './pages/ElectionPage';
+import { HomePage } from './pages/HomePage';
+import { NotFoundPage } from './pages/NotFoundPage';
+import { RegionPage } from './pages/RegionPage';
+import { homePath } from './routes/routePaths';
 
 function App() {
-  const [selectedRegionId, setSelectedRegionId] = useState(stageRegionNodes[0]?.id ?? '');
-  const [bgmEnabled, setBgmEnabled] = useState(false);
-
-  const selectedRegionNode = useMemo(
-    () => stageRegionNodes.find((region) => region.id === selectedRegionId) ?? stageRegionNodes[0],
-    [selectedRegionId],
-  );
-
-  const selectedRegionSummary = useMemo(
-    () => stageRegionSummaries.find((summary) => summary.regionId === selectedRegionId) ?? stageRegionSummaries[0],
-    [selectedRegionId],
-  );
-
-  const selectedRegion = useMemo(() => {
-    const baseRegionId = selectedRegionNode?.publicRegionId
-      ? regions.find((region) => region.id === selectedRegionNode.publicRegionId?.replace('region-', ''))?.id ??
-        selectedRegionNode.publicRegionId.replace('region-', '')
-      : selectedRegionSummary?.regionId;
-
-    return regions.find((region) => region.id === baseRegionId) ?? regions[0];
-  }, [selectedRegionNode, selectedRegionSummary]);
-
   return (
-    <div className="min-h-screen bg-bg text-white">
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="arcade-radial absolute left-[8%] top-[-8rem] h-72 w-72 rounded-full" />
-        <div className="arcade-radial arcade-radial-pink absolute bottom-[-10rem] right-[6%] h-96 w-96 rounded-full" />
-        <div className="scanline-overlay absolute inset-0 opacity-50" />
-      </div>
-
-      <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <AppHeader />
-
-        <div className="mt-6 flex flex-col gap-4 xl:flex-row xl:items-stretch">
-          <div className="min-w-0 flex-1">
-            <NextEventTicker {...nextEvent} />
-          </div>
-          <div className="xl:w-[220px]">
-            <BgmToggle enabled={bgmEnabled} onToggle={() => setBgmEnabled((value) => !value)} />
-          </div>
-        </div>
-
-        <main className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-          <section className="space-y-6">
-            <TaiwanStageSelect
-              regions={stageRegionNodes}
-              selectedRegionId={selectedRegionId}
-              onSelectRegion={setSelectedRegionId}
-            />
-          </section>
-
-          <section className="space-y-6">
-            <SelectedRegionHud region={selectedRegion} regionNode={selectedRegionNode} regionSummary={selectedRegionSummary} />
-            <SearchCommand selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? '未指定區域'} />
-            <DataPrinciplesPanel principles={dataPrinciples} />
-          </section>
-        </main>
-
-        <section className="mt-6">
-          <UpcomingElectionCards
-            races={upcomingRaces}
-            selectedRegionId={selectedRegionId}
-            selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? '未指定區域'}
-            selectedPublicRegionId={selectedRegionNode?.publicRegionId ?? null}
-          />
-        </section>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path={homePath()} element={<HomePage />} />
+        <Route path="/regions/:regionId" element={<RegionPage />} />
+        <Route path="/elections/:electionId" element={<ElectionPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import type { RegionCard } from '../data/mockHomeData';
+import { regionPath } from '../routes/routePaths';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import { PixelFrame } from './PixelFrame';
 
@@ -28,18 +30,25 @@ export function SelectedRegionHud({ region, regionNode, regionSummary }: Selecte
           <div>
             <p className="text-[11px] uppercase tracking-[0.22em] text-slate-500">selected region</p>
             <p className="mt-2 font-display text-2xl text-white">{regionSummary.label}</p>
-            <p className="mt-2 max-w-md text-sm text-slate-400">
-              {region?.tone ?? 'UI 測試用區域摘要'}
-            </p>
+            <p className="mt-2 max-w-md text-sm text-slate-400">{region?.tone ?? 'UI 測試用區域摘要'}</p>
           </div>
-          <button
-            type="button"
-            disabled
-            aria-disabled="true"
-            className="pixel-corners border border-accent/40 bg-accent/8 px-4 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent/70 opacity-90"
-          >
-            查看區域資料
-          </button>
+          {regionNode.id ? (
+            <Link
+              to={regionPath(regionNode.id)}
+              className="pixel-corners inline-flex border border-accent/70 bg-accent/12 px-4 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent transition hover:bg-accent/20 focus:outline-none focus:ring-2 focus:ring-accent/35"
+            >
+              查看區域資料
+            </Link>
+          ) : (
+            <button
+              type="button"
+              disabled
+              aria-disabled="true"
+              className="pixel-corners border border-accent/40 bg-accent/8 px-4 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent/70 opacity-90"
+            >
+              查看區域資料
+            </button>
+          )}
         </div>
 
         <dl className="grid gap-3 sm:grid-cols-2">

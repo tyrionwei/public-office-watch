@@ -1,3 +1,6 @@
+import { Link } from 'react-router-dom';
+import { homePath } from '../routes/routePaths';
+
 export function AppHeader() {
   return (
     <header className="pixel-corners relative overflow-hidden border border-line/70 bg-panel/70 px-4 py-5 shadow-pixel backdrop-blur-sm sm:px-6 sm:py-6">
@@ -8,9 +11,11 @@ export function AppHeader() {
           <p className="font-display text-[11px] uppercase tracking-[0.35em] text-signal sm:text-xs">
             Arcade Civic Data
           </p>
-          <h1 className="mt-3 font-display text-3xl leading-none text-white sm:text-4xl lg:text-5xl">
-            公職資料觀測站
-          </h1>
+          <Link to={homePath()} className="inline-block focus:outline-none focus:ring-2 focus:ring-accent/35">
+            <h1 className="mt-3 font-display text-3xl leading-none text-white sm:text-4xl lg:text-5xl">
+              公職資料觀測站
+            </h1>
+          </Link>
           <p className="mt-3 max-w-2xl text-sm text-slate-300 sm:text-base">
             選舉地圖 × 公開資料 × 可驗證關聯
           </p>

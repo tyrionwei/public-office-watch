@@ -177,10 +177,13 @@ npm run dev
 npm run build
 npm run lint
 npm run smoke:public-views
+npm run check:data-boundary
 ```
 
 - app 目前仍使用 mock provider
 - smoke script 只測 Supabase public views
+- `check:data-boundary` 會檢查 page 是否繞過 `publicDataProvider`
+- `check:data-boundary` 也會檢查前端是否誤用 raw / staging / secret
 - 不要提交 `.env.local`
 
 ## 尚未完成

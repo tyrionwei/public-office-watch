@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import type { UpcomingRace } from '../data/mockHomeData';
+import { electionPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import { PixelFrame } from './PixelFrame';
 
@@ -47,9 +49,7 @@ export function UpcomingElectionCards({
               key={race.id}
               className={[
                 'pixel-corners relative overflow-hidden border bg-bg/55 p-4 transition hover:-translate-y-0.5 hover:border-white/20',
-                isRelated
-                  ? 'border-accent shadow-[0_0_24px_rgba(103,232,249,0.12)]'
-                  : 'border-line/80',
+                isRelated ? 'border-accent shadow-[0_0_24px_rgba(103,232,249,0.12)]' : 'border-line/80',
               ].join(' ')}
             >
               <div
@@ -85,9 +85,27 @@ export function UpcomingElectionCards({
                   <dt className="text-slate-500">狀態</dt>
                   <dd>{statusLabels[race.status] ?? race.status}</dd>
                 </div>
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center justify-between gap-3 border-b border-line/40 pb-2">
                   <dt className="text-slate-500">區域關聯</dt>
                   <dd>{isRelated ? '目前選取區域相關' : '其他 mock 區域'}</dd>
+                </div>
+                <div className="pt-1">
+                  {race.electionId ? (
+                    <Link
+                      to={electionPath(race.electionId)}
+                      className="inline-flex rounded-sm border border-accent/60 bg-accent/10 px-3 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent focus:outline-none focus:ring-2 focus:ring-accent/35"
+                    >
+                      查看選舉資訊
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled
+                      className="rounded-sm border border-accent/30 bg-accent/8 px-3 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent/60"
+                    >
+                      查看選舉資訊
+                    </button>
+                  )}
                 </div>
               </dl>
             </article>

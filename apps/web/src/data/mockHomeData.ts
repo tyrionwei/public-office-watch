@@ -18,6 +18,7 @@ export type RegionCard = {
 
 export type UpcomingRace = {
   id: string;
+  electionId: string;
   title: string;
   region: string;
   regionId: string;
@@ -61,6 +62,7 @@ export const upcomingRaces: UpcomingRace[] = mockPublicRaces.map((race) => {
 
   return {
     id: race.race_id,
+    electionId: race.election_id,
     title: race.title,
     region: race.region_name ?? '未指定區域',
     regionId: race.region_slug ?? 'unknown-region',

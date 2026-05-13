@@ -168,6 +168,21 @@ export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;U
 目前尚未實作前端 UI。
 下一步將建立 React / Vite 前端骨架。
 
+## Frontend web app
+
+```bash
+cd apps/web
+npm install
+npm run dev
+npm run build
+npm run lint
+npm run smoke:public-views
+```
+
+- app 目前仍使用 mock provider
+- smoke script 只測 Supabase public views
+- 不要提交 `.env.local`
+
 ## 尚未完成
 
 - promote candidate CLI 的進一步 admin tooling

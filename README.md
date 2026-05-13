@@ -180,6 +180,8 @@ npm run smoke:public-views
 npm run check:data-boundary
 ```
 
+- `VITE_PUBLIC_DATA_PROVIDER=mock` 是安全預設
+- local Supabase provider smoke 需 `.env.local`，且不得提交
 - app 目前仍使用 mock provider
 - GitHub Actions 會在 PR 與 main push 執行 web checks
 - checks 包含 build、lint、data boundary check、public views smoke script

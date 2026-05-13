@@ -2,8 +2,9 @@
 
 ## 目前狀態
 
-- 前端目前仍使用 `mockPublicDataProvider`。
+- 前端目前仍使用 `mockPublicDataProvider` 作為安全預設。
 - `supabasePublicDataProvider` mapping 已存在，但目前仍未啟用為預設 provider。
+- local provider factory 已存在，可用於本機 smoke / readiness validation。
 - `HomePage`、`RegionPage`、`ElectionPage` 仍透過 `publicDataProvider` 讀資料。
 
 ## 允許前端讀取的 public views
@@ -49,9 +50,17 @@ npm run smoke:public-views
 - CI 應執行 `npm run check:data-boundary`。
 - CI 可執行 `npm run smoke:public-views`，但不得配置 service role key。
 
+## Local provider toggle
+
+- 預設仍是 `VITE_PUBLIC_DATA_PROVIDER=mock`。
+- 本機 smoke 時才可在 `.env.local` 設成 `VITE_PUBLIC_DATA_PROVIDER=supabase`。
+- page 仍只能透過 `publicDataProvider`。
+- 不得在 page 直接 import Supabase client。
+- `.env.local` 不得 commit。
+
 ## Provider 切換規劃
 
-- Phase 4K 仍不切換 provider。
+- Phase 4N 仍不切換 production / CI 預設 provider。
 - 未來要切換到 Supabase 前，必須先完成 RLS、grants、public views 檢查。
 - 前端只允許讀取 public views。
 - 必須保留 fallback 與 empty state。

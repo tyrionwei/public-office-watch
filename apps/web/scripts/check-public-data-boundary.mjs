@@ -41,6 +41,7 @@ const blockedTermAllowlist = {
 };
 const allowedCreateClientFile = path.join(srcRoot, 'lib', 'supabasePublicClient.ts');
 const allowedSupabaseImportFiles = new Set([allowedCreateClientFile]);
+const allowedProviderFactoryFile = path.join(srcRoot, 'lib', 'publicDataProviderFactory.ts');
 const publicDataPath = path.join(srcRoot, 'lib', 'publicData.ts');
 
 function walk(dir) {
@@ -130,12 +131,29 @@ for (const dir of scanDirs) {
     if (content.includes("@supabase/supabase-js") && !allowedSupabaseImportFiles.has(filePath)) {
       addIssue(issues, 'supabase-import-location', filePath, '@supabase/supabase-js import is only allowed in src/lib/supabasePublicClient.ts');
     }
+
+    if (pageDirs.some((dirPath) => filePath.startsWith(dirPath)) && content.includes('supabasePublicDataProvider')) {
+      addIssue(issues, 'pages-no-direct-supabase-provider', filePath, 'Pages must not import supabasePublicDataProvider directly.');
+    }
+
+    if ((pageDirs.some((dirPath) => filePath.startsWith(dirPath)) || componentDirs.some((dirPath) => filePath.startsWith(dirPath))) && content.includes('supabasePublicClient')) {
+      addIssue(issues, 'ui-no-direct-supabase-client', filePath, 'Pages and components must not import supabasePublicClient directly.');
+    }
   }
 }
 
 const publicDataContent = fs.readFileSync(publicDataPath, 'utf8');
-if (!publicDataContent.includes('mockPublicDataProvider') || !publicDataContent.includes('export const publicDataProvider = mockPublicDataProvider')) {
-  addIssue(issues, 'public-data-provider-must-remain-mock', publicDataPath, 'publicDataProvider must remain wired to mockPublicDataProvider.');
+if (!publicDataContent.includes('createPublicDataProvider') || !publicDataContent.includes('export const publicDataProvider = createPublicDataProvider()')) {
+  addIssue(issues, 'public-data-provider-must-use-factory', publicDataPath, 'publicDataProvider must be created through createPublicDataProvider().');
+}
+
+if (publicDataContent.includes('export const publicDataProvider = supabasePublicDataProvider')) {
+  addIssue(issues, 'public-data-provider-no-direct-supabase', publicDataPath, 'publicDataProvider must not hard-switch directly to supabasePublicDataProvider.');
+}
+
+const providerFactoryContent = fs.readFileSync(allowedProviderFactoryFile, 'utf8');
+if (!providerFactoryContent.includes('mockPublicDataProvider') || !providerFactoryContent.includes('supabasePublicDataProvider')) {
+  addIssue(issues, 'provider-factory-must-handle-fallback', allowedProviderFactoryFile, 'Provider factory must keep mock fallback and local-only Supabase toggle.');
 }
 
 if (issues.length > 0) {

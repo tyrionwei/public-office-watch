@@ -5,47 +5,38 @@ import { SearchCommand } from '../components/SearchCommand';
 import { SelectedRegionHud } from '../components/SelectedRegionHud';
 import { TaiwanStageSelect } from '../components/TaiwanStageSelect';
 import { UpcomingElectionCards } from '../components/UpcomingElectionCards';
-import {
-  dataPrinciples,
-  nextEvent,
-  regions,
-  stageRegionNodes,
-  stageRegionSummaries,
-  upcomingRaces,
-} from '../data/mockHomeData';
+import { publicDataProvider } from '../lib/publicData';
 
 export function HomePage() {
-  const [selectedRegionId, setSelectedRegionId] = useState(stageRegionNodes[0]?.id ?? '');
+  const [selectedRegionId, setSelectedRegionId] = useState(publicDataProvider.getStageRegions()[0]?.id ?? '');
   const [bgmEnabled, setBgmEnabled] = useState(false);
 
+  const homeData = publicDataProvider.getHomePageData();
+
   const selectedRegionNode = useMemo(
-    () => stageRegionNodes.find((region) => region.id === selectedRegionId) ?? stageRegionNodes[0],
-    [selectedRegionId],
+    () => publicDataProvider.getStageRegion(selectedRegionId) ?? homeData.stageRegions[0],
+    [homeData.stageRegions, selectedRegionId],
   );
 
   const selectedRegionSummary = useMemo(
-    () => stageRegionSummaries.find((summary) => summary.regionId === selectedRegionId) ?? stageRegionSummaries[0],
-    [selectedRegionId],
+    () => publicDataProvider.getRegionSummary(selectedRegionId) ?? homeData.stageRegionSummaries[0],
+    [homeData.stageRegionSummaries, selectedRegionId],
   );
 
-  const selectedRegion = useMemo(() => {
-    const baseRegionId = selectedRegionNode?.publicRegionId
-      ? regions.find((region) => region.id === selectedRegionNode.publicRegionId?.replace('region-', ''))?.id ??
-        selectedRegionNode.publicRegionId.replace('region-', '')
-      : selectedRegionSummary?.regionId;
-
-    return regions.find((region) => region.id === baseRegionId) ?? regions[0];
-  }, [selectedRegionNode, selectedRegionSummary]);
+  const selectedRegion = useMemo(
+    () => publicDataProvider.getRegionCardByStageRegionId(selectedRegionId) ?? homeData.regions[0],
+    [homeData.regions, selectedRegionId],
+  );
 
   return (
     <AppShell
-      ticker={nextEvent}
+      ticker={homeData.ticker}
       headerRight={<AppShellBgmToggle enabled={bgmEnabled} onToggle={() => setBgmEnabled((value) => !value)} />}
     >
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
         <section className="space-y-6">
           <TaiwanStageSelect
-            regions={stageRegionNodes}
+            regions={homeData.stageRegions}
             selectedRegionId={selectedRegionId}
             onSelectRegion={setSelectedRegionId}
           />
@@ -58,13 +49,13 @@ export function HomePage() {
             regionSummary={selectedRegionSummary}
           />
           <SearchCommand selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? '未指定區域'} />
-          <DataPrinciplesPanel principles={dataPrinciples} />
+          <DataPrinciplesPanel principles={homeData.dataPrinciples} />
         </section>
       </div>
 
       <section className="mt-6">
         <UpcomingElectionCards
-          races={upcomingRaces}
+          races={homeData.upcomingRaces}
           selectedRegionId={selectedRegionId}
           selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? '未指定區域'}
           selectedPublicRegionId={selectedRegionNode?.publicRegionId ?? null}

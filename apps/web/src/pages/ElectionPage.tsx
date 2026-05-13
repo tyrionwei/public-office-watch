@@ -6,8 +6,7 @@ import { PageNotice } from '../components/PageNotice';
 import { PixelFrame } from '../components/PixelFrame';
 import { PollComparisonPanel } from '../components/PollComparisonPanel';
 import { SectionPanel } from '../components/SectionPanel';
-import { mockPollComparisons } from '../data/mockPolling';
-import { mockPublicCandidates, mockPublicElections, mockPublicRaces } from '../data/mockPublicViews';
+import { publicDataProvider } from '../lib/publicData';
 import { homePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 
@@ -20,10 +19,11 @@ const registrationStatusLabels: Record<string, string> = {
 
 export function ElectionPage() {
   const { electionId } = useParams();
-  const election = mockPublicElections.find((item) => item.election_id === electionId);
-  const races = mockPublicRaces.filter((race) => race.election_id === electionId);
-  const candidates = mockPublicCandidates.filter((candidate) => candidate.election_id === electionId);
-  const pollComparison = mockPollComparisons.find((comparison) => comparison.electionId === electionId);
+  const safeElectionId = electionId ?? '';
+  const election = publicDataProvider.getElectionById(safeElectionId);
+  const races = publicDataProvider.getRacesByElectionId(safeElectionId);
+  const candidates = publicDataProvider.getCandidatesByElectionId(safeElectionId);
+  const pollComparison = publicDataProvider.getPollComparisonByElectionId(safeElectionId);
 
   return (
     <AppShell>

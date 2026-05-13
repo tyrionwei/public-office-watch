@@ -37,3 +37,6 @@ jobs:
 
       - name: Smoke public views
         run: npm run smoke:public-views
+
+      - name: Check public view contracts
+        run: npm run check:public-view-contracts

@@ -45,10 +45,12 @@ npm run smoke:public-views
 - 不得使用 service role key。
 - smoke script 只測試允許的 public views。
 - smoke script 不會印出資料內容。
+- 可搭配 `npm run check:data-boundary` 檢查 page 是否繞過 `publicDataProvider`。
 
 ## Provider 切換規劃
 
-- Phase 4J 不切換 provider。
+- Phase 4K 仍不切換 provider。
 - 未來要切換到 Supabase 前，必須先完成 RLS、grants、public views 檢查。
 - 前端只允許讀取 public views。
 - 必須保留 fallback 與 empty state。
+- readiness checklist：`docs/supabase-provider-readiness-checklist.md`

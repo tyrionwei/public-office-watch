@@ -5,20 +5,17 @@ import { MockDataBadge } from '../components/MockDataBadge';
 import { PageNotice } from '../components/PageNotice';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
-import { regions, upcomingRaces } from '../data/mockHomeData';
-import { mockStageRegionNodes, mockStageRegionSummaries } from '../data/mockStageMap';
+import { publicDataProvider } from '../lib/publicData';
 import { electionPath, homePath, regionPath } from '../routes/routePaths';
 
 export function RegionPage() {
   const { regionId } = useParams();
-  const regionNode = mockStageRegionNodes.find((region) => region.id === regionId);
-  const regionSummary = mockStageRegionSummaries.find((summary) => summary.regionId === regionId);
-  const baseRegionId = regionNode?.publicRegionId?.replace('region-', '') ?? regionSummary?.regionId;
-  const regionCard = regions.find((region) => region.id === baseRegionId);
-  const childRegions = regionNode
-    ? mockStageRegionNodes.filter((region) => region.parentId === regionNode.id)
-    : [];
-  const relatedRaces = upcomingRaces.filter((race) => race.regionId === baseRegionId);
+  const safeRegionId = regionId ?? '';
+  const regionNode = publicDataProvider.getStageRegion(safeRegionId);
+  const regionSummary = publicDataProvider.getRegionSummary(safeRegionId);
+  const regionCard = publicDataProvider.getRegionCardByStageRegionId(safeRegionId);
+  const childRegions = regionNode ? publicDataProvider.getChildStageRegions(regionNode.id) : [];
+  const relatedRaces = publicDataProvider.getRelatedRacesByRegionId(safeRegionId);
 
   return (
     <AppShell>

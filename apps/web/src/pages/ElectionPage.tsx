@@ -4,7 +4,9 @@ import { HudStatCard } from '../components/HudStatCard';
 import { MockDataBadge } from '../components/MockDataBadge';
 import { PageNotice } from '../components/PageNotice';
 import { PixelFrame } from '../components/PixelFrame';
+import { PollComparisonPanel } from '../components/PollComparisonPanel';
 import { SectionPanel } from '../components/SectionPanel';
+import { mockPollComparisons } from '../data/mockPolling';
 import { mockPublicCandidates, mockPublicElections, mockPublicRaces } from '../data/mockPublicViews';
 import { homePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
@@ -21,6 +23,7 @@ export function ElectionPage() {
   const election = mockPublicElections.find((item) => item.election_id === electionId);
   const races = mockPublicRaces.filter((race) => race.election_id === electionId);
   const candidates = mockPublicCandidates.filter((candidate) => candidate.election_id === electionId);
+  const pollComparison = mockPollComparisons.find((comparison) => comparison.electionId === electionId);
 
   return (
     <AppShell>
@@ -61,6 +64,15 @@ export function ElectionPage() {
                 />
               </dl>
             </section>
+
+            {pollComparison ? (
+              <PollComparisonPanel comparison={pollComparison} />
+            ) : (
+              <PageNotice
+                title="Poll Comparison"
+                bullets={['目前沒有這個選舉的民調焦點比較 mock module。', '尚未接入正式資料。']}
+              />
+            )}
 
             <SectionPanel title="Race Overview" eyebrow="related races">
               {races.length > 0 ? (

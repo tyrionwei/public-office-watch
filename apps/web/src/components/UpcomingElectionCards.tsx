@@ -1,11 +1,22 @@
 import { Link } from 'react-router-dom';
-import type { UpcomingRace } from '../data/mockHomeData';
 import { electionPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import { PixelFrame } from './PixelFrame';
 
+type UpcomingElectionCardRace = {
+  id: string;
+  title: string;
+  region: string;
+  regionId: string;
+  date: string;
+  status: string;
+  partyTag: keyof typeof partyTheme;
+  partyLabel: string;
+  electionId?: string;
+};
+
 type UpcomingElectionCardsProps = {
-  races: UpcomingRace[];
+  races: UpcomingElectionCardRace[];
   selectedRegionId: string;
   selectedRegionLabel: string;
   selectedPublicRegionId: string | null;

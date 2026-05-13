@@ -181,6 +181,9 @@ npm run check:data-boundary
 ```
 
 - app 目前仍使用 mock provider
+- GitHub Actions 會在 PR 與 main push 執行 web checks
+- checks 包含 build、lint、data boundary check、public views smoke script
+- smoke script 在沒有 env 時會中性跳過
 - smoke script 只測 Supabase public views
 - `check:data-boundary` 會檢查 page 是否繞過 `publicDataProvider`
 - `check:data-boundary` 也會檢查前端是否誤用 raw / staging / secret

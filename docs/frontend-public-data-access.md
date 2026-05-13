@@ -46,6 +46,8 @@ npm run smoke:public-views
 - smoke script 只測試允許的 public views。
 - smoke script 不會印出資料內容。
 - 可搭配 `npm run check:data-boundary` 檢查 page 是否繞過 `publicDataProvider`。
+- CI 應執行 `npm run check:data-boundary`。
+- CI 可執行 `npm run smoke:public-views`，但不得配置 service role key。
 
 ## Provider 切換規劃
 

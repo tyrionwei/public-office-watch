@@ -26,11 +26,19 @@ const mockImportPatterns = [
 
 const secretTerms = ['SUPABASE_SERVICE_ROLE_KEY', 'DATABASE_CONNECTION_STRING'];
 const blockedQueryTerms = ['raw_source_records', 'relation_candidates', 'source_documents', 'person_media', 'pending', 'rejected'];
-const allowedBlockedTermFiles = new Set([
-  path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
-  path.join(srcRoot, 'types', 'publicViews.ts'),
-  path.join(srcRoot, 'pages', 'ElectionPage.tsx'),
-]);
+const blockedTermAllowlist = {
+  raw_source_records: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
+  relation_candidates: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
+  source_documents: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
+  person_media: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
+  pending: new Set([
+    path.join(srcRoot, 'types', 'publicViews.ts'),
+    path.join(srcRoot, 'pages', 'ElectionPage.tsx'),
+    path.join(srcRoot, 'lib', 'supabasePublicViewMappers.ts'),
+    path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
+  ]),
+  rejected: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
+};
 const allowedCreateClientFile = path.join(srcRoot, 'lib', 'supabasePublicClient.ts');
 const allowedSupabaseImportFiles = new Set([allowedCreateClientFile]);
 const publicDataPath = path.join(srcRoot, 'lib', 'publicData.ts');
@@ -109,7 +117,8 @@ for (const dir of scanDirs) {
     }
 
     for (const term of blockedQueryTerms) {
-      if (content.includes(term) && !allowedBlockedTermFiles.has(filePath)) {
+      const allowedFiles = blockedTermAllowlist[term] ?? new Set();
+      if (content.includes(term) && !allowedFiles.has(filePath)) {
         addIssue(issues, 'blocked-query-source-reference', filePath, `Found blocked data source term outside allowlist: ${term}`);
       }
     }

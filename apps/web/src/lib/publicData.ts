@@ -1,12 +1,9 @@
-import { mockPublicDataProvider, validatePublicDataBoundary } from './mockPublicDataProvider';
-import { getPublicDataProviderMode } from './supabaseEnv';
+import { validatePublicDataBoundary } from './mockPublicDataProvider';
+import { createPublicDataProvider } from './publicDataProviderFactory';
 
-// 目前使用 mock provider。
-// 未來只能改接 Supabase public views。
-// 不得讀 raw / staging / candidate review tables。
-// Supabase provider skeleton exists but is intentionally not enabled in Phase 4I.
-// Production wiring must only read public views with anon key.
+// Mock remains the safe default.
+// Supabase provider is local-only until the readiness checklist is completed.
+// Frontend may only read approved public views through anon key.
 validatePublicDataBoundary();
-void getPublicDataProviderMode();
 
-export const publicDataProvider = mockPublicDataProvider;
+export const publicDataProvider = createPublicDataProvider();

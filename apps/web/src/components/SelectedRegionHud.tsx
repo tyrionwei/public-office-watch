@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
-import type { RegionCard } from '../data/mockHomeData';
 import { regionPath } from '../routes/routePaths';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import { PixelFrame } from './PixelFrame';
 
+type SelectedRegionHudRegion = {
+  tone: string;
+};
+
 type SelectedRegionHudProps = {
-  region: RegionCard | undefined;
+  region: SelectedRegionHudRegion | undefined;
   regionNode: StageRegionNode | undefined;
   regionSummary: StageRegionSummary | undefined;
 };

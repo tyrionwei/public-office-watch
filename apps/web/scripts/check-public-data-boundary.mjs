@@ -10,6 +10,11 @@ const pageDirs = [path.join(srcRoot, 'pages')];
 const componentDirs = [path.join(srcRoot, 'components')];
 const libDirs = [path.join(srcRoot, 'lib')];
 const scanDirs = [...pageDirs, ...componentDirs, ...libDirs];
+const dataDrivenPages = new Set([
+  path.join(srcRoot, 'pages', 'HomePage.tsx'),
+  path.join(srcRoot, 'pages', 'RegionPage.tsx'),
+  path.join(srcRoot, 'pages', 'ElectionPage.tsx'),
+]);
 
 const mockImportPatterns = [
   '../data/mockHomeData',
@@ -73,8 +78,8 @@ for (const dir of pageDirs) {
       addIssue(issues, 'pages-no-direct-mock-import', filePath, 'Pages must read data through publicDataProvider.');
     }
 
-    if (!content.includes('publicDataProvider')) {
-      addIssue(issues, 'pages-must-use-public-data-provider', filePath, 'Page is expected to read data through publicDataProvider.');
+    if (dataDrivenPages.has(filePath) && !content.includes('publicDataProvider')) {
+      addIssue(issues, 'pages-must-use-public-data-provider', filePath, 'Data-driven pages must read data through publicDataProvider.');
     }
   }
 }

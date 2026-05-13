@@ -4,6 +4,7 @@
 
 - app 仍使用 `mockPublicDataProvider`。
 - Supabase provider skeleton 已存在。
+- Supabase provider mapping 已建立，但仍未啟用。
 - local smoke script 已存在。
 - data boundary check script 已存在。
 
@@ -12,12 +13,14 @@
 - Supabase local public views 已存在。
 - production public views 已存在。
 - public view 欄位契約已與 `apps/web/src/types/publicViews.ts` 對齊。
+- 已實測 Supabase provider mapping 與 finalized public view 欄位契約一致。
 - anon key 只能讀取 public views。
 - service role key 不得進前端。
 - `DATABASE_CONNECTION_STRING` 不得進前端。
 - raw、staging、review tables 不得被 anon key 讀取。
 - RLS 與 grants 已完成檢查。
 - smoke script 對所有 allowed public views 通過。
+- 已確認 anon key 只能讀取 allowed public views。
 - page empty state 與 fallback 已確認。
 - gitleaks 通過。
 - `npm run build`、`npm run lint`、`npm run check:data-boundary` 通過。

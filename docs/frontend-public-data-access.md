@@ -3,7 +3,7 @@
 ## 目前狀態
 
 - 前端目前仍使用 `mockPublicDataProvider`。
-- `supabasePublicDataProvider` skeleton 已存在，但在 Phase 4J 尚未啟用。
+- `supabasePublicDataProvider` mapping 已存在，但目前仍未啟用為預設 provider。
 - `HomePage`、`RegionPage`、`ElectionPage` 仍透過 `publicDataProvider` 讀資料。
 
 ## 允許前端讀取的 public views

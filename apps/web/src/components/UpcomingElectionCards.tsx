@@ -53,12 +53,59 @@ export function UpcomingElectionCards({
           const theme = partyTheme[race.partyTag];
           const isRelated = race.regionId === normalizedPublicRegionId || race.regionId === selectedRegionId;
 
+          if (compact) {
+            return (
+              <article
+                key={race.id}
+                className={[
+                  'pixel-corners relative overflow-hidden border bg-bg/55 p-3 transition hover:border-white/20',
+                  isRelated ? 'border-accent shadow-[0_0_18px_rgba(103,232,249,0.12)]' : 'border-line/80',
+                ].join(' ')}
+              >
+                <div
+                  className="pointer-events-none absolute inset-y-3 left-0 w-1"
+                  style={{ backgroundColor: theme.primary }}
+                  aria-hidden="true"
+                />
+                <div className="flex gap-3 pl-2">
+                  <div
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-sm border bg-bg/70 font-display text-lg"
+                    style={{ borderColor: theme.primary, color: theme.text }}
+                    aria-hidden="true"
+                  >
+                    ▣
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-display text-sm leading-tight text-white">{race.title}</p>
+                        <p className="mt-1 text-xs text-slate-400">{race.region}</p>
+                      </div>
+                      <span className="shrink-0 text-[11px] text-signal">{race.date}</span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between gap-3">
+                      <span className="text-xs text-slate-500">{statusLabels[race.status] ?? race.status}</span>
+                      {race.electionId ? (
+                        <Link
+                          to={electionPath(race.electionId)}
+                          className="rounded-sm border border-accent/45 bg-accent/8 px-2 py-1 text-[11px] text-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+                        >
+                          查看選舉項目
+                        </Link>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          }
+
           return (
             <article
               key={race.id}
               className={[
                 'pixel-corners relative overflow-hidden border bg-bg/55 transition hover:-translate-y-0.5 hover:border-white/20',
-                compact ? 'p-3' : 'p-4 xl:max-h-[240px] xl:overflow-auto',
+                'p-4 xl:max-h-[240px] xl:overflow-auto',
                 isRelated ? 'border-accent shadow-[0_0_24px_rgba(103,232,249,0.12)]' : 'border-line/80',
               ].join(' ')}
             >
@@ -98,7 +145,7 @@ export function UpcomingElectionCards({
                 </span>
               </div>
 
-              <dl className={compact ? 'mt-3 grid gap-2 text-sm text-slate-300' : 'mt-4 grid gap-3 text-sm text-slate-300'}>
+              <dl className="mt-4 grid gap-3 text-sm text-slate-300">
                 <div className="flex items-center justify-between gap-3 border-b border-line/40 pb-2">
                   <dt className="text-slate-500">投票日</dt>
                   <dd>{race.date}</dd>

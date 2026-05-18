@@ -4,7 +4,7 @@ export const mockPollComparisons: PollComparison[] = [
   {
     electionId: 'election-local-2026',
     title: '民調焦點比較',
-    summary: '以 UI 測試資料模擬前兩位候選人的支持度比較版面。',
+    summary: '比較目前關注度最高的兩位候選人支持度。',
     leadingCandidates: [
       {
         candidateId: 'candidate-example-a',

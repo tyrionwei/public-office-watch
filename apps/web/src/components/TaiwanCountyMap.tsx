@@ -140,12 +140,9 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">County boundary map</p>
-          <p className="mt-1 text-xs text-slate-400">
-            地圖資料來源為官方縣市界線轉換資料，目前仍是 local validation 階段。
-          </p>
         </div>
         <span className="rounded-sm border border-line/70 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-          19 main + 3 offshore
+          本島19縣市 + 離島3縣市
         </span>
       </div>
 
@@ -267,11 +264,6 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
         </div>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-400">
-        <span className="rounded-sm border border-line/60 px-2 py-1">本島 19 縣市</span>
-        <span className="rounded-sm border border-line/60 px-2 py-1">離島 inset</span>
-        <span className="rounded-sm border border-line/60 px-2 py-1">行政區導覽，不等於選區</span>
-      </div>
     </div>
   );
 }

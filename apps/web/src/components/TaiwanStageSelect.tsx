@@ -1,4 +1,3 @@
-import { countyCityBoundarySource } from '../data/taiwanMapSources';
 import { taiwanCountyPaths } from '../data/generated/taiwanCountyMap';
 import type { StageRegionNode } from '../types/stageMap';
 import { PixelFrame } from './PixelFrame';
@@ -76,25 +75,10 @@ export function TaiwanStageSelect({
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <p className="font-display text-sm uppercase tracking-[0.24em] text-slate-200">Taiwan stage select</p>
-              <p className="mt-1 text-xs text-slate-500">
-                目前已切換為真實縣市 metadata 基礎。行政區邊界不等於正式選舉選區，僅作區域導覽與公開資料索引。
-              </p>
             </div>
             <span className="rounded-sm border border-signal/30 bg-signal/10 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-signal">
               County level
             </span>
-          </div>
-
-          <div className="mb-4 text-xs text-slate-400">
-            <p>
-              地圖來源：{countyCityBoundarySource.provider} / {countyCityBoundarySource.title}
-            </p>
-            <p className="mt-1">行政區邊界不等於正式選舉選區，目前仍是 local validation / public data index 階段。</p>
-            {!hasCountyPaths ? (
-              <p className="mt-2 text-[11px] text-signal">
-                尚未在 repo 內生成官方縣市 SVG path，請以 local-data raw 檔跑 prepare script 後再補上視覺地圖。
-              </p>
-            ) : null}
           </div>
 
           {hasCountyPaths ? (

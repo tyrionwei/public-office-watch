@@ -10,7 +10,7 @@ const navItems = [
   { label: '首頁', mark: '⌂', active: true },
   { label: '選舉地圖', mark: '▧' },
   { label: '搜尋', mark: '⌕' },
-  { label: '資料來源', mark: '▣' },
+  { label: '資料原則', mark: '▣' },
   { label: '可信度分級', mark: '★' },
   { label: '關於本站', mark: 'i' },
 ];

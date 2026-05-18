@@ -1,4 +1,5 @@
-import { partyTheme, type PartyThemeKey } from '../styles/partyThemes';
+import { pickDefaultCandidateSprite, unknownCandidateSprite } from '../data/defaultCharacterAssets';
+import type { PartyThemeKey } from '../styles/partyThemes';
 
 type PixelCandidateSpriteProps = {
   displayName: string;
@@ -15,29 +16,21 @@ export function PixelCandidateSprite({
   variant,
   align = 'left',
 }: PixelCandidateSpriteProps) {
-  const theme = partyTheme[partyKey];
+  const spriteSrc = partyKey === 'unknown' ? unknownCandidateSprite : pickDefaultCandidateSprite(`${displayName}-${variant}`);
 
   return (
     <div className={`flex ${align === 'right' ? 'justify-end' : 'justify-start'}`}>
       <div className="inline-flex items-center gap-3">
         <div
-          className="pixel-corners relative h-24 w-20 shrink-0 border p-2"
-          style={{ borderColor: theme.primary, background: `linear-gradient(180deg, ${theme.primary}20, rgba(15,23,42,0.9))` }}
+          className="relative flex h-28 w-24 shrink-0 items-end justify-center overflow-visible"
           aria-hidden="true"
         >
-          <div className="grid h-full grid-cols-4 gap-1">
-            {Array.from({ length: 16 }).map((_, index) => {
-              const active = [1, 2, 4, 5, 6, 8, 9, 10, 13, 14].includes(index);
-              const accent = variant === 'pulse-b' ? theme.accent : theme.primary;
-              return (
-                <div
-                  key={`${variant}-${index}`}
-                  className="rounded-none"
-                  style={{ backgroundColor: active ? accent : 'rgba(255,255,255,0.06)' }}
-                />
-              );
-            })}
-          </div>
+          <img
+            src={spriteSrc}
+            alt=""
+            className="h-full w-auto object-contain object-bottom drop-shadow-[0_10px_8px_rgba(0,0,0,0.42)] [image-rendering:pixelated]"
+            draggable={false}
+          />
         </div>
         <div className="min-w-0">
           <p className="font-display text-sm text-white">{displayName}</p>

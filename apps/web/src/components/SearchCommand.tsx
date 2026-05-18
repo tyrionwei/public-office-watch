@@ -10,9 +10,6 @@ export function SearchCommand({ selectedRegionLabel }: SearchCommandProps) {
   return (
     <PixelFrame
       title="Search Command"
-      action={
-        <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">mock input only</span>
-      }
     >
       <div className="space-y-3">
         <label className="sr-only" htmlFor="search-command">

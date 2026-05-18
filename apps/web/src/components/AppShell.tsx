@@ -16,7 +16,7 @@ export function AppShell({ headerRight, ticker, children }: AppShellProps) {
         <div className="scanline-overlay absolute inset-0 opacity-50" />
       </div>
 
-      <div className="relative mx-auto w-full max-w-[1640px] px-3 py-4 sm:px-4 lg:px-5">
+      <div className="relative w-full px-3 py-4 sm:px-4 lg:px-5 2xl:px-6">
         <AppHeader rightSlot={headerRight} />
 
         {ticker ? <div className="mt-3">{<NextEventTicker {...ticker} />}</div> : null}

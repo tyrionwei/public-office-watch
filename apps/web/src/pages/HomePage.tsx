@@ -2,11 +2,13 @@ import { useMemo, useState } from 'react';
 import { AppShell, AppShellBgmToggle } from '../components/AppShell';
 import { DataPrinciplesPanel } from '../components/DataPrinciplesPanel';
 import { PixelFrame } from '../components/PixelFrame';
+import { PollComparisonPanel } from '../components/PollComparisonPanel';
 import { SearchCommand } from '../components/SearchCommand';
 import { SelectedRegionHud } from '../components/SelectedRegionHud';
 import { TaiwanStageSelect } from '../components/TaiwanStageSelect';
 import { UpcomingElectionCards } from '../components/UpcomingElectionCards';
 import { publicDataProvider } from '../lib/publicData';
+import { mockPollComparisons } from '../data/mockPolling';
 
 export function HomePage() {
   const [selectedRegionId, setSelectedRegionId] = useState(publicDataProvider.getStageRegions()[0]?.id ?? '');
@@ -52,15 +54,15 @@ export function HomePage() {
             regionNode={selectedRegionNode}
             regionSummary={selectedRegionSummary}
           />
+          {mockPollComparisons[0] ? <PollComparisonPanel comparison={mockPollComparisons[0]} /> : null}
           <PixelFrame
             title="Public Data Progress"
-            action={<span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">poll battle off</span>}
             className="bg-[linear-gradient(180deg,rgba(12,18,36,0.96),rgba(8,15,30,0.92))]"
           >
             <div className="grid gap-3 sm:grid-cols-3">
               {[
                 ['地圖資料', '22 縣市', '官方界線轉換'],
-                ['公開區域', 'metadata', '等待 public views'],
+                ['公開區域', 'metadata', '區域索引'],
                 ['人物關聯', '未啟用', '需人工審核'],
               ].map(([label, value, note]) => (
                 <div key={label} className="pixel-corners border border-line/70 bg-bg/45 p-3">
@@ -71,7 +73,7 @@ export function HomePage() {
               ))}
             </div>
             <div className="mt-3 pixel-corners border border-signal/35 bg-signal/10 px-3 py-2 text-xs text-slate-200">
-              目前畫面聚焦區域導覽與公開資料索引，不顯示民調對戰或未審核推論。
+              目前畫面聚焦區域導覽、選舉節點與候選人比較的展示流程。
             </div>
           </PixelFrame>
         </section>

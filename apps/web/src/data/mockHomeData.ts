@@ -79,7 +79,7 @@ export const stageRegionSummaries: StageRegionSummary[] = mockStageRegionSummari
 export const dataPrinciples = [
   '只呈現公開且可追溯的資料。',
   '人工審核與來源紀錄優先於視覺效果。',
+  '行政區導覽不等於正式選舉選區。',
   '前端僅讀 public views，不讀未審核資料。',
   '介面可帶 arcade 語言，但資料表達保持中性。',
-  '首頁目前只使用 mock public view 型別資料。',
 ];

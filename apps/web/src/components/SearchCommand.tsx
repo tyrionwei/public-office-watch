@@ -5,6 +5,8 @@ type SearchCommandProps = {
 };
 
 export function SearchCommand({ selectedRegionLabel }: SearchCommandProps) {
+  const quickSearches = ['台北市長', '新北市長', '測試人物A', '測試公司甲', '12345678'];
+
   return (
     <PixelFrame
       title="Search Command"
@@ -12,28 +14,33 @@ export function SearchCommand({ selectedRegionLabel }: SearchCommandProps) {
         <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">mock input only</span>
       }
     >
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <label className="block text-sm text-slate-300" htmlFor="search-command">
-            搜尋人物、公司、選舉項目、地區
-          </label>
-          <p className="text-xs text-slate-500">目前僅展示 HUD 搜尋介面，不連接任何實際查詢 API。</p>
-          <p className="text-xs text-accent">目前範圍：{selectedRegionLabel}</p>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+      <div className="space-y-3">
+        <label className="sr-only" htmlFor="search-command">
+          搜尋人物、公司、選舉項目、地區
+        </label>
+        <div className="grid gap-2">
           <input
             id="search-command"
             type="text"
-            placeholder="例如：範例市長選舉、範例公司甲、北部都會區"
+            placeholder="搜尋人物、公司、統編、選舉項目..."
             className="pixel-corners w-full border border-line bg-bg/80 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-accent focus:ring-2 focus:ring-accent/20"
           />
-          <button
-            type="button"
-            className="pixel-corners border border-accent/70 bg-accent/12 px-5 py-3 font-display text-sm uppercase tracking-[0.24em] text-accent transition hover:bg-accent/20 focus:outline-none focus:ring-2 focus:ring-accent/20"
-          >
-            Search
-          </button>
+          <p className="text-xs text-accent">目前範圍：{selectedRegionLabel}</p>
+        </div>
+
+        <div>
+          <p className="mb-2 text-[11px] uppercase tracking-[0.2em] text-success">熱門搜尋</p>
+          <div className="flex flex-wrap gap-2">
+            {quickSearches.map((item) => (
+              <button
+                key={item}
+                type="button"
+                className="pixel-corners border border-line/80 bg-bg/55 px-3 py-1.5 text-xs text-slate-200 transition hover:border-accent/60 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/25"
+              >
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </PixelFrame>

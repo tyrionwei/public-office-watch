@@ -3,7 +3,8 @@
 ## 目標
 
 - 導入第一批低風險真實公開資料。
-- 優先導入地區與選舉 metadata。
+- 第一批先限 public_regions / map metadata。
+- 選舉 metadata 下一階段。
 - 不先導入人物關係、公司關係、民調。
 
 ## 第一批資料範圍
@@ -11,10 +12,11 @@
 建議順序：
 
 1. `public_regions`：縣市 / 鄉鎮市區
-2. `public_elections`：選舉名稱、日期、類型、狀態
-3. `public_races`：選舉項目 / 區域
-4. `public_candidates`：只限官方候選人公開資料，且需來源與審核
-5. person / company / relation 資料延後
+2. map source metadata：來源、授權、轉換紀錄
+3. `public_elections`：選舉名稱、日期、類型、狀態
+4. `public_races`：選舉項目 / 區域
+5. `public_candidates`：只限官方候選人公開資料，且需來源與審核
+6. person / company / relation / polling 資料延後
 
 ## 來源
 

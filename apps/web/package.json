@@ -11,7 +11,8 @@
     "smoke:public-views": "node scripts/smoke-public-views.mjs",
     "check:data-boundary": "node scripts/check-public-data-boundary.mjs",
     "check:public-view-contracts": "node scripts/check-public-view-contracts.mjs",
-    "preflight:production-readiness": "node scripts/preflight-production-readiness.mjs"
+    "preflight:production-readiness": "node scripts/preflight-production-readiness.mjs",
+    "prepare:tw-map:counties": "node scripts/prepare-taiwan-county-map.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",

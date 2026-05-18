@@ -1,142 +1,147 @@
+import { countyCityBoundarySource } from '../data/taiwanMapSources';
+import { taiwanCountyPaths } from '../data/generated/taiwanCountyMap';
 import type { StageRegionNode } from '../types/stageMap';
 import { PixelFrame } from './PixelFrame';
+import { TaiwanCountyMap } from './TaiwanCountyMap';
 
 type TaiwanStageSelectProps = {
   regions: StageRegionNode[];
   selectedRegionId: string;
   onSelectRegion: (regionId: string) => void;
+  hideQuickSelect?: boolean;
 };
+
+type CompactCountyQuickSelectProps = {
+  regions: StageRegionNode[];
+  selectedRegionId: string;
+  onSelectRegion: (regionId: string) => void;
+};
+
+export function CompactCountyQuickSelect({
+  regions,
+  selectedRegionId,
+  onSelectRegion,
+}: CompactCountyQuickSelectProps) {
+  const topLevelRegions = regions.filter((region) => region.level === 'county_city');
+
+  return (
+    <div className="pixel-corners border border-line/70 bg-panelAlt/35 px-3 py-3">
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">Compact county quick select</p>
+        <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">chip wall fallback</span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {topLevelRegions.map((region) => {
+          const selected = selectedRegionId === region.id;
+          return (
+            <button
+              key={region.id}
+              type="button"
+              onClick={() => onSelectRegion(region.id)}
+              aria-current={selected ? 'true' : undefined}
+              className={[
+                'pixel-corners inline-flex items-center gap-2 border px-3 py-1.5 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
+                selected
+                  ? 'border-accent bg-accent/14 text-white shadow-[0_0_18px_rgba(103,232,249,0.14)]'
+                  : 'border-line bg-panelAlt/70 text-slate-200 hover:border-accent/55',
+              ].join(' ')}
+            >
+              <span className="font-display text-[11px] uppercase tracking-[0.14em]">{region.label}</span>
+              <span className="text-[10px] uppercase tracking-[0.16em] text-slate-500">{region.stageLabel}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export function TaiwanStageSelect({
   regions,
   selectedRegionId,
   onSelectRegion,
+  hideQuickSelect = false,
 }: TaiwanStageSelectProps) {
   const topLevelRegions = regions.filter((region) => region.level === 'county_city');
-  const districtRegions = regions.filter((region) => region.level === 'district');
+  const hasCountyPaths = taiwanCountyPaths.length > 0;
 
   return (
     <PixelFrame
-      title="Stage Select Placeholder"
-      action={
-        <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">
-          not geographic boundaries
-        </span>
-      }
+      title="Stage Select"
+      action={<span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">county level</span>}
+      className="h-full"
     >
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(260px,0.9fr)]">
-        <div className="pixel-corners border border-line/70 bg-bg/55 p-4">
+      <div className="space-y-4">
+        <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(7,22,45,0.96),rgba(8,27,52,0.94)_55%,rgba(7,18,38,0.96))] p-3 sm:p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="font-display text-sm uppercase tracking-[0.24em] text-slate-200">
-                Taiwan stage select
-              </p>
+              <p className="font-display text-sm uppercase tracking-[0.24em] text-slate-200">Taiwan stage select</p>
               <p className="mt-1 text-xs text-slate-500">
-                目前為 UI 測試資料，下一階段將接入真實縣市 / 鄉鎮市區邊界資料。行政區邊界不等於正式選舉選區。
+                目前已切換為真實縣市 metadata 基礎。行政區邊界不等於正式選舉選區，僅作區域導覽與公開資料索引。
               </p>
             </div>
             <span className="rounded-sm border border-signal/30 bg-signal/10 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-signal">
-              Placeholder
+              County level
             </span>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-            {regions.map((region) => {
-              const selected = selectedRegionId === region.id;
-              const blockClasses = selected
-                ? 'border-accent bg-accent/20 text-white shadow-[0_0_18px_rgba(103,232,249,0.18)]'
-                : 'border-line bg-panelAlt/55 text-slate-300 hover:border-accent/55 hover:text-white';
-
-              return (
-                <button
-                  key={region.id}
-                  type="button"
-                  onClick={() => onSelectRegion(region.id)}
-                  aria-pressed={selected}
-                  className={[
-                    'pixel-corners min-h-[76px] border p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
-                    blockClasses,
-                  ].join(' ')}
-                >
-                  <span className="block font-display text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                    {region.stageLabel}
-                  </span>
-                  <span className="mt-2 block text-sm font-medium leading-snug">{region.label}</span>
-                  <span className="mt-2 block text-[11px] text-slate-500">
-                    {region.level === 'district' ? 'district placeholder' : 'region placeholder'}
-                  </span>
-                </button>
-              );
-            })}
+          <div className="mb-4 text-xs text-slate-400">
+            <p>
+              地圖來源：{countyCityBoundarySource.provider} / {countyCityBoundarySource.title}
+            </p>
+            <p className="mt-1">行政區邊界不等於正式選舉選區，目前仍是 local validation / public data index 階段。</p>
+            {!hasCountyPaths ? (
+              <p className="mt-2 text-[11px] text-signal">
+                尚未在 repo 內生成官方縣市 SVG path，請以 local-data raw 檔跑 prepare script 後再補上視覺地圖。
+              </p>
+            ) : null}
           </div>
-        </div>
 
-        <div className="grid gap-3">
-          <div className="pixel-corners border border-line/70 bg-panelAlt/50 px-4 py-3">
-            <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">Top level</p>
-            <div className="mt-3 grid gap-2">
+          {hasCountyPaths ? (
+            <TaiwanCountyMap
+              regions={topLevelRegions}
+              selectedRegionId={selectedRegionId}
+              onSelectRegion={onSelectRegion}
+            />
+          ) : (
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
               {topLevelRegions.map((region) => {
                 const selected = selectedRegionId === region.id;
-                return (
-                  <button
-                    key={region.id}
-                    type="button"
-                    onClick={() => onSelectRegion(region.id)}
-                    aria-current={selected ? 'true' : undefined}
-                    className={[
-                      'pixel-corners border px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
-                      selected
-                        ? 'border-accent bg-accent/14 text-white shadow-[0_0_18px_rgba(103,232,249,0.14)]'
-                        : 'border-line bg-panelAlt/70 text-slate-200 hover:border-accent/55',
-                    ].join(' ')}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-display text-sm uppercase tracking-[0.16em]">{region.label}</p>
-                        <p className="mt-1 text-xs text-slate-400">{region.note}</p>
-                      </div>
-                      <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">
-                        {region.stageLabel}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+                const blockClasses = selected
+                  ? 'border-accent bg-accent/20 text-white shadow-[0_0_18px_rgba(103,232,249,0.18)]'
+                  : 'border-line bg-panelAlt/55 text-slate-300 hover:border-accent/55 hover:text-white';
 
-          <div className="pixel-corners border border-line/70 bg-panelAlt/50 px-4 py-3">
-            <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">District placeholders</p>
-            <div className="mt-3 grid gap-2">
-              {districtRegions.map((region) => {
-                const selected = selectedRegionId === region.id;
                 return (
                   <button
                     key={region.id}
                     type="button"
                     onClick={() => onSelectRegion(region.id)}
-                    aria-current={selected ? 'true' : undefined}
+                    aria-pressed={selected}
                     className={[
-                      'pixel-corners border px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
-                      selected
-                        ? 'border-accent bg-accent/14 text-white shadow-[0_0_18px_rgba(103,232,249,0.14)]'
-                        : 'border-line bg-panelAlt/70 text-slate-200 hover:border-accent/55',
+                      'pixel-corners min-h-[76px] border p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
+                      blockClasses,
                     ].join(' ')}
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-display text-sm uppercase tracking-[0.16em]">{region.label}</p>
-                        <p className="mt-1 text-xs text-slate-400">不代表正式選區邊界</p>
-                      </div>
-                      <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">
-                        {region.stageLabel}
-                      </span>
-                    </div>
+                    <span className="block font-display text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                      {region.stageLabel}
+                    </span>
+                    <span className="mt-2 block text-sm font-medium leading-snug">{region.label}</span>
+                    <span className="mt-2 block text-[11px] text-slate-500">COUNTYCODE {region.stageLabel}</span>
                   </button>
                 );
               })}
             </div>
-          </div>
+          )}
+
+          {!hideQuickSelect ? (
+            <div className="mt-5">
+              <CompactCountyQuickSelect
+                regions={regions}
+                selectedRegionId={selectedRegionId}
+                onSelectRegion={onSelectRegion}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
     </PixelFrame>

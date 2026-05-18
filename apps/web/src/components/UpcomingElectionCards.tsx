@@ -20,6 +20,7 @@ type UpcomingElectionCardsProps = {
   selectedRegionId: string;
   selectedRegionLabel: string;
   selectedPublicRegionId: string | null;
+  compact?: boolean;
 };
 
 const statusLabels: Record<string, string> = {
@@ -34,23 +35,20 @@ export function UpcomingElectionCards({
   selectedRegionId,
   selectedRegionLabel,
   selectedPublicRegionId,
+  compact = false,
 }: UpcomingElectionCardsProps) {
   const normalizedPublicRegionId = selectedPublicRegionId?.replace('region-', '') ?? null;
 
   return (
     <PixelFrame
-      title="Upcoming Election Cards"
+      title={compact ? '即將到來的選舉' : '熱門選舉項目'}
       action={
-        <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">
+        <span className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
           目前選取區域：{selectedRegionLabel}
         </span>
       }
     >
-      <div className="mb-4 rounded-sm border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-400">
-        目前高亮與 {selectedRegionLabel} 有關的 mock 選舉卡片，其他卡片仍保留供 UI 測試。
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className={compact ? 'grid gap-3' : 'grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'}>
         {races.map((race, index) => {
           const theme = partyTheme[race.partyTag];
           const isRelated = race.regionId === normalizedPublicRegionId || race.regionId === selectedRegionId;
@@ -59,7 +57,8 @@ export function UpcomingElectionCards({
             <article
               key={race.id}
               className={[
-                'pixel-corners relative overflow-hidden border bg-bg/55 p-4 transition hover:-translate-y-0.5 hover:border-white/20',
+                'pixel-corners relative overflow-hidden border bg-bg/55 transition hover:-translate-y-0.5 hover:border-white/20',
+                compact ? 'p-3' : 'p-4 xl:max-h-[240px] xl:overflow-auto',
                 isRelated ? 'border-accent shadow-[0_0_24px_rgba(103,232,249,0.12)]' : 'border-line/80',
               ].join(' ')}
             >
@@ -70,9 +69,21 @@ export function UpcomingElectionCards({
               />
 
               <div className="flex items-start justify-between gap-3">
+                <div
+                  className="grid h-14 w-14 shrink-0 grid-cols-4 gap-0.5 rounded-sm border p-1"
+                  style={{ borderColor: theme.primary, backgroundColor: `${theme.primary}20` }}
+                  aria-hidden="true"
+                >
+                  {Array.from({ length: 16 }).map((_, pixel) => (
+                    <span
+                      key={pixel}
+                      style={{ backgroundColor: [1, 2, 4, 5, 6, 9, 10, 13].includes(pixel) ? theme.primary : 'rgba(255,255,255,0.06)' }}
+                    />
+                  ))}
+                </div>
                 <div className="min-w-0">
                   <p className="text-[11px] uppercase tracking-[0.22em] text-slate-500">Card {index + 1}</p>
-                  <p className="mt-2 font-display text-lg leading-tight text-white">{race.title}</p>
+                  <p className="mt-1 font-display text-base leading-tight text-white">{race.title}</p>
                   <p className="mt-1 text-sm text-slate-400">{race.region}</p>
                 </div>
                 <span
@@ -87,7 +98,7 @@ export function UpcomingElectionCards({
                 </span>
               </div>
 
-              <dl className="mt-4 grid gap-3 text-sm text-slate-300">
+              <dl className={compact ? 'mt-3 grid gap-2 text-sm text-slate-300' : 'mt-4 grid gap-3 text-sm text-slate-300'}>
                 <div className="flex items-center justify-between gap-3 border-b border-line/40 pb-2">
                   <dt className="text-slate-500">投票日</dt>
                   <dd>{race.date}</dd>
@@ -98,7 +109,7 @@ export function UpcomingElectionCards({
                 </div>
                 <div className="flex items-center justify-between gap-3 border-b border-line/40 pb-2">
                   <dt className="text-slate-500">區域關聯</dt>
-                  <dd>{isRelated ? '目前選取區域相關' : '其他 mock 區域'}</dd>
+                  <dd>{isRelated ? '目前選取區域相關' : '示範卡片'}</dd>
                 </div>
                 <div className="pt-1">
                   {race.electionId ? (

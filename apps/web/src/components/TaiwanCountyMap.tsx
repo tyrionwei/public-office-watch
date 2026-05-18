@@ -21,7 +21,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
     taiwanCountyMapBounds.fullViewBox;
 
   return (
-    <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(11,18,34,0.85),rgba(10,18,38,0.72))] p-4">
+    <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(0,48,88,0.92),rgba(3,28,55,0.88)_58%,rgba(4,18,38,0.94))] p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">County boundary map</p>
@@ -34,12 +34,13 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
         </span>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[140px_minmax(0,1fr)] 2xl:grid-cols-[152px_minmax(0,1fr)]">
-        <div className="flex items-center justify-center overflow-hidden rounded-sm border border-line/60 bg-[radial-gradient(circle_at_50%_20%,rgba(34,211,238,0.08),transparent_35%),linear-gradient(180deg,rgba(2,8,23,0.92),rgba(15,23,42,0.88))] p-2 min-h-[560px] xl:order-2 xl:min-h-[640px] 2xl:min-h-[700px]">
+      <div className="grid gap-3 xl:grid-cols-[112px_minmax(0,1fr)] 2xl:grid-cols-[124px_minmax(0,1fr)]">
+        <div className="relative flex items-center justify-center overflow-hidden rounded-sm border border-accent/25 bg-[radial-gradient(circle_at_50%_22%,rgba(125,211,252,0.22),transparent_30%),linear-gradient(180deg,rgba(0,93,146,0.58),rgba(2,44,80,0.62)_52%,rgba(0,28,60,0.8))] p-2 min-h-[500px] xl:order-2 xl:min-h-[610px] 2xl:min-h-[660px]">
+          <div className="pointer-events-none absolute inset-0 opacity-40 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:18px_18px]" />
           <svg
             viewBox={mainIslandViewBox ?? undefined}
             preserveAspectRatio="xMidYMid meet"
-            className="block h-[560px] w-full max-w-full xl:h-[640px] 2xl:h-[700px]"
+            className="relative block h-[500px] w-full max-w-full drop-shadow-[0_18px_18px_rgba(0,0,0,0.28)] xl:h-[610px] 2xl:h-[660px]"
             role="img"
             aria-label="台灣縣市地圖輪廓，選取不同縣市作為 stage region"
           >
@@ -64,13 +65,37 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                     }
                   }}
                   className="cursor-pointer outline-none transition-opacity focus:opacity-100 hover:opacity-95"
-                  fill={selected ? 'rgba(34,211,238,0.44)' : 'rgba(51,65,85,0.96)'}
-                  stroke={selected ? 'rgb(250,204,21)' : 'rgba(241,245,249,0.95)'}
-                  strokeWidth={selected ? 1.25 : 0.72}
+                  fill={selected ? 'rgba(244,211,94,0.92)' : 'rgba(88,171,78,0.96)'}
+                  stroke={selected ? 'rgb(255,244,184)' : 'rgba(13,50,31,0.95)'}
+                  strokeWidth={selected ? 1.55 : 0.82}
                   vectorEffect="non-scaling-stroke"
                 >
                   <title>{county.name}</title>
                 </path>
+              );
+            })}
+            {mainIslandCounties.map((county) => {
+              if (!county.displayCentroid) {
+                return null;
+              }
+              const regionId = getRegionIdByCountyCode(regions, county.code);
+              const selected = selectedRegionId === regionId;
+              return (
+                <text
+                  key={`${county.code}-label`}
+                  x={county.displayCentroid.x}
+                  y={county.displayCentroid.y}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  className="pointer-events-none select-none font-display"
+                  fill={selected ? '#0f172a' : '#f8fafc'}
+                  stroke={selected ? '#f4d35e' : '#0f172a'}
+                  strokeWidth={selected ? 0.55 : 0.75}
+                  paintOrder="stroke"
+                  fontSize={selected ? 9.5 : 8}
+                >
+                  {county.name.replace('臺', '台')}
+                </text>
               );
             })}
           </svg>
@@ -104,14 +129,14 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                   <svg
                     viewBox="0 0 92 92"
                     preserveAspectRatio="xMidYMid meet"
-                    className="block h-20 w-full"
+                    className="block h-16 w-full"
                     role="img"
                     aria-label={`${county.name} inset map`}
                   >
                     <path
                       d={county.displayPath}
-                      fill={selected ? 'rgba(34,211,238,0.38)' : 'rgba(30,41,59,0.92)'}
-                      stroke={selected ? 'rgb(250,204,21)' : 'rgba(226,232,240,0.92)'}
+                      fill={selected ? 'rgba(244,211,94,0.82)' : 'rgba(88,171,78,0.88)'}
+                      stroke={selected ? 'rgb(255,244,184)' : 'rgba(226,232,240,0.92)'}
                       strokeWidth={selected ? 1.8 : 1.2}
                       vectorEffect="non-scaling-stroke"
                     />

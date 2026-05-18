@@ -19,7 +19,7 @@ export function DataPrinciplesPanel({ principles }: DataPrinciplesPanelProps) {
       action={<span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">evidence first</span>}
     >
       <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2">
           {fixedNotes.map((note) => (
             <span
               key={note}
@@ -30,7 +30,7 @@ export function DataPrinciplesPanel({ principles }: DataPrinciplesPanelProps) {
           ))}
         </div>
 
-        <ul className="space-y-3 text-sm text-slate-300">
+        <ul className="space-y-2 text-sm text-slate-300">
           {principles.map((principle) => (
             <li key={principle} className="flex gap-3">
               <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-none bg-signal" aria-hidden="true" />

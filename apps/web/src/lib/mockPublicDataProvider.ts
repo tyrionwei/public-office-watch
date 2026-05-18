@@ -1,11 +1,5 @@
-import {
-  dataPrinciples,
-  nextEvent,
-  regions,
-  stageRegionNodes,
-  stageRegionSummaries,
-  upcomingRaces,
-} from '../data/mockHomeData';
+import { dataPrinciples, nextEvent, regions, upcomingRaces } from '../data/mockHomeData';
+import { taiwanStageRegionNodes, taiwanStageRegionSummaries } from '../data/taiwanRegions';
 import { mockPollComparisons } from '../data/mockPolling';
 import { mockPublicCandidates, mockPublicElections, mockPublicRaces } from '../data/mockPublicViews';
 import { assertPublicViewName, allowedPublicViews } from './publicViewRegistry';
@@ -29,7 +23,7 @@ export function validatePublicDataBoundary() {
 }
 
 function getBaseRegionId(regionId: string) {
-  const stageRegion = stageRegionNodes.find((region) => region.id === regionId);
+  const stageRegion = taiwanStageRegionNodes.find((region) => region.id === regionId);
   return stageRegion?.publicRegionId?.replace('region-', '') ?? regionId;
 }
 
@@ -42,8 +36,8 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return {
       ticker: nextEvent,
       regions,
-      stageRegions: stageRegionNodes,
-      stageRegionSummaries,
+      stageRegions: taiwanStageRegionNodes,
+      stageRegionSummaries: taiwanStageRegionSummaries,
       upcomingRaces,
       dataPrinciples,
     };
@@ -54,7 +48,7 @@ export const mockPublicDataProvider: PublicDataProvider = {
   },
 
   getRegionSummary(regionId: string) {
-    return stageRegionSummaries.find((summary) => summary.regionId === regionId) ?? null;
+    return taiwanStageRegionSummaries.find((summary) => summary.regionId === regionId) ?? null;
   },
 
   getRegionCardByStageRegionId(regionId: string) {
@@ -63,15 +57,15 @@ export const mockPublicDataProvider: PublicDataProvider = {
   },
 
   getStageRegions() {
-    return stageRegionNodes;
+    return taiwanStageRegionNodes;
   },
 
   getStageRegion(regionId: string) {
-    return stageRegionNodes.find((region) => region.id === regionId) ?? null;
+    return taiwanStageRegionNodes.find((region) => region.id === regionId) ?? null;
   },
 
   getChildStageRegions(parentId: string) {
-    return stageRegionNodes.filter((region) => region.parentId === parentId);
+    return taiwanStageRegionNodes.filter((region) => region.parentId === parentId);
   },
 
   getUpcomingRaces() {

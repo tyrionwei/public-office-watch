@@ -51,6 +51,7 @@ export interface PublicDataProvider {
   getRelatedRacesByRegionId(regionId: string): UpcomingRace[];
   getElectionById(electionId: string): PublicElection | null;
   getRacesByElectionId(electionId: string): PublicRace[];
+  getCandidates(): PublicCandidate[];
   getCandidatesByElectionId(electionId: string): PublicCandidate[];
   getPollComparisonByElectionId(electionId: string): PollComparison | null;
   getPeople(): PublicPerson[];

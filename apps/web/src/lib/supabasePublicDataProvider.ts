@@ -314,6 +314,10 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     return getSnapshot()?.races.filter((race) => race.election_id === electionId) ?? [];
   },
 
+  getCandidates() {
+    return getSnapshot()?.candidates ?? [];
+  },
+
   getCandidatesByElectionId(electionId: string) {
     return getSnapshot()?.candidates.filter((candidate) => candidate.election_id === electionId) ?? [];
   },

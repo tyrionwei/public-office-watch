@@ -106,6 +106,10 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return mockPublicRaces.filter((race) => race.election_id === electionId);
   },
 
+  getCandidates() {
+    return mockPublicCandidates;
+  },
+
   getCandidatesByElectionId(electionId: string) {
     return mockPublicCandidates.filter((candidate) => candidate.election_id === electionId);
   },

@@ -188,6 +188,7 @@ export type PublicParty = {
   slug: string;
   theme_key: PartyThemeKey;
   official_site_url: string | null;
+  chairperson_name: string | null;
   status: 'active' | 'inactive' | 'unknown';
   source_name: string | null;
   source_url: string | null;

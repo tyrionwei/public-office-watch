@@ -75,14 +75,18 @@ export function PartiesPage() {
                       <h3 className="mt-2 font-display text-xl text-white group-hover:text-accent">{party.name}</h3>
                     </div>
                     <span
-                      className="rounded-sm border px-2 py-1 text-xs font-semibold"
-                      style={{ borderColor: theme.primary, color: theme.text, backgroundColor: `${theme.primary}33` }}
+                      className="rounded-sm border bg-bg/85 px-2 py-1 text-xs font-semibold text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.04)]"
+                      style={{ borderColor: theme.accent }}
                     >
                       {theme.label}
                     </span>
                   </div>
 
                   <dl className="mt-5 grid gap-2 text-sm text-slate-300">
+                    <div className="flex justify-between gap-3">
+                      <dt className="text-slate-500">負責人 / 主席</dt>
+                      <dd className="text-right">{party.chairperson_name ?? '待官方名冊同步'}</dd>
+                    </div>
                     <div className="flex justify-between gap-3">
                       <dt className="text-slate-500">年度收入</dt>
                       <dd>{latestFinance ? formatCurrency(latestFinance.income_total) : '待整理'}</dd>

@@ -1,6 +1,7 @@
 import type { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 import { AppHeader } from './AppHeader';
 import { BgmToggle } from './BgmToggle';
+import { useBgm } from './BgmContext';
 import { NextEventTicker } from './NextEventTicker';
 
 type AppShellProps = PropsWithChildren<{
@@ -9,6 +10,14 @@ type AppShellProps = PropsWithChildren<{
 }>;
 
 export function AppShell({ headerRight, ticker, children }: AppShellProps) {
+  const bgm = useBgm();
+  const headerControl = (
+    <div className="grid gap-2">
+      {headerRight}
+      <AppShellBgmToggle enabled={bgm.enabled} onToggle={bgm.toggle} />
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-bg text-white">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -17,7 +26,7 @@ export function AppShell({ headerRight, ticker, children }: AppShellProps) {
       </div>
 
       <div className="relative w-full px-3 py-4 sm:px-4 lg:px-5 2xl:px-6">
-        <AppHeader rightSlot={headerRight} />
+        <AppHeader rightSlot={headerControl} />
 
         {ticker ? <div className="mt-3">{<NextEventTicker {...ticker} />}</div> : null}
 

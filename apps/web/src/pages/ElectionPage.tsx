@@ -119,11 +119,9 @@ export function ElectionPage() {
                             <p className="mt-1 text-sm text-slate-400">{candidate.race_title}</p>
                           </div>
                           <span
-                            className="rounded-sm px-2 py-1 text-xs font-semibold"
+                            className="rounded-sm border bg-bg/85 px-2 py-1 text-xs font-semibold text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.04)]"
                             style={{
-                              backgroundColor: `${theme.primary}26`,
-                              color: theme.text,
-                              border: `1px solid ${theme.primary}`,
+                              borderColor: theme.accent,
                             }}
                           >
                             {theme.label}

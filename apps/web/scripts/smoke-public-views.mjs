@@ -14,6 +14,9 @@ const allowedPublicViews = [
   'public_home_election_ticker',
   'public_region_election_summary',
   'public_person_primary_photos',
+  'public_parties',
+  'public_party_finance_summaries',
+  'public_party_company_contribution_summaries',
 ];
 
 const blockedTerms = [

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "name": "real-public-data-foundation",
+  "updatedAt": "2026-05-19",
+  "sources": [
+    {
+      "id": "data-gov-tw-county-boundary-7442",
+      "type": "region-boundary",
+      "name": "政府資料開放平台：直轄市、縣市界線(TWD97經緯度)",
+      "url": "https://data.gov.tw/dataset/7442",
+      "refreshCadence": "weekly",
+      "notes": "用於縣市 public_regions 種子與地圖來源追溯；不 commit 原始 SHP/ZIP。"
+    },
+    {
+      "id": "cec-election-data",
+      "type": "election-metadata",
+      "name": "中央選舉委員會選舉資料庫",
+      "url": "https://db.cec.gov.tw/",
+      "refreshCadence": "daily",
+      "notes": "第一批只同步選舉事件與 race metadata，不同步候選人或得票明細。"
+    },
+    {
+      "id": "moi-party-registry",
+      "type": "party-registry",
+      "name": "內政部政黨名冊",
+      "url": "https://data.gov.tw/dataset/31973",
+      "downloadUrl": "https://data.moi.gov.tw/MoiOD/System/DownloadFile.aspx?DATA=55514697-A736-4FE0-AFA4-61EC85F82929",
+      "refreshCadence": "daily",
+      "notes": "每日同步完整政黨名冊；欄位包含政黨名稱、成立日期、負責人、地址、電話與備案日期。"
+    },
+    {
+      "id": "control-yuan-political-contribution-search",
+      "type": "political-contribution",
+      "name": "監察院政治獻金公開查閱平台",
+      "url": "https://ardata.cy.gov.tw/home",
+      "refreshCadence": "weekly",
+      "notes": "第一批只監測來源可用性與資料版本；政黨年度摘要需確認欄位後才寫入。"
+    },
+    {
+      "id": "data-gov-tw-party-contribution-6562003",
+      "type": "political-contribution",
+      "name": "政府資料開放平台：113年度政黨政治獻金會計報告書",
+      "url": "https://data.gov.tw/dataset/6562003",
+      "refreshCadence": "weekly",
+      "notes": "作為政黨層級政治獻金摘要候選來源；不公開個人捐贈明細。"
+    }
+  ],
+  "regions": [
+    { "externalId": "tw", "slug": "taiwan", "name": "臺灣", "regionType": "country", "officialCode": "TW", "mapCode": "TW", "displayOrder": 0, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-63000", "slug": "taipei-city", "name": "臺北市", "regionType": "municipality", "parentExternalId": "tw", "officialCode": "63000", "mapCode": "63000", "displayOrder": 10, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-65000", "slug": "new-taipei-city", "name": "新北市", "regionType": "municipality", "parentExternalId": "tw", "officialCode": "65000", "mapCode": "65000", "displayOrder": 20, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-68000", "slug": "taoyuan-city", "name": "桃園市", "regionType": "municipality", "parentExternalId": "tw", "officialCode": "68000", "mapCode": "68000", "displayOrder": 30, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-66000", "slug": "taichung-city", "name": "臺中市", "regionType": "municipality", "parentExternalId": "tw", "officialCode": "66000", "mapCode": "66000", "displayOrder": 40, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-67000", "slug": "tainan-city", "name": "臺南市", "regionType": "municipality", "parentExternalId": "tw", "officialCode": "67000", "mapCode": "67000", "displayOrder": 50, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-64000", "slug": "kaohsiung-city", "name": "高雄市", "regionType": "municipality", "parentExternalId": "tw", "officialCode": "64000", "mapCode": "64000", "displayOrder": 60, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10017", "slug": "keelung-city", "name": "基隆市", "regionType": "city", "parentExternalId": "tw", "officialCode": "10017", "mapCode": "10017", "displayOrder": 70, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10018", "slug": "hsinchu-city", "name": "新竹市", "regionType": "city", "parentExternalId": "tw", "officialCode": "10018", "mapCode": "10018", "displayOrder": 80, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10020", "slug": "chiayi-city", "name": "嘉義市", "regionType": "city", "parentExternalId": "tw", "officialCode": "10020", "mapCode": "10020", "displayOrder": 90, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10002", "slug": "yilan-county", "name": "宜蘭縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10002", "mapCode": "10002", "displayOrder": 100, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10004", "slug": "hsinchu-county", "name": "新竹縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10004", "mapCode": "10004", "displayOrder": 110, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10005", "slug": "miaoli-county", "name": "苗栗縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10005", "mapCode": "10005", "displayOrder": 120, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10007", "slug": "changhua-county", "name": "彰化縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10007", "mapCode": "10007", "displayOrder": 130, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10008", "slug": "nantou-county", "name": "南投縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10008", "mapCode": "10008", "displayOrder": 140, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10009", "slug": "yunlin-county", "name": "雲林縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10009", "mapCode": "10009", "displayOrder": 150, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10010", "slug": "chiayi-county", "name": "嘉義縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10010", "mapCode": "10010", "displayOrder": 160, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10013", "slug": "pingtung-county", "name": "屏東縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10013", "mapCode": "10013", "displayOrder": 170, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10014", "slug": "taitung-county", "name": "臺東縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10014", "mapCode": "10014", "displayOrder": 180, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10015", "slug": "hualien-county", "name": "花蓮縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10015", "mapCode": "10015", "displayOrder": 190, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-10016", "slug": "penghu-county", "name": "澎湖縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "10016", "mapCode": "10016", "displayOrder": 200, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-09020", "slug": "kinmen-county", "name": "金門縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "09020", "mapCode": "09020", "displayOrder": 210, "sourceId": "data-gov-tw-county-boundary-7442" },
+    { "externalId": "tw-county-09007", "slug": "lienchiang-county", "name": "連江縣", "regionType": "county", "parentExternalId": "tw", "officialCode": "09007", "mapCode": "09007", "displayOrder": 220, "sourceId": "data-gov-tw-county-boundary-7442" }
+  ],
+  "elections": [
+    { "externalId": "cec-2024-president-vice-president", "name": "第16任總統副總統選舉", "year": 2024, "electionType": "presidential", "votingDate": "2024-01-13", "status": "completed", "sourceId": "cec-election-data" },
+    { "externalId": "cec-2024-legislative-yuan", "name": "第11屆立法委員選舉", "year": 2024, "electionType": "legislative", "votingDate": "2024-01-13", "status": "completed", "sourceId": "cec-election-data" }
+  ],
+  "races": [
+    { "externalId": "cec-2024-president-national", "electionExternalId": "cec-2024-president-vice-president", "regionExternalId": "tw", "raceType": "president", "title": "總統副總統全國選舉", "votingDate": "2024-01-13", "status": "completed", "sourceId": "cec-election-data" },
+    { "externalId": "cec-2024-legislative-party-list", "electionExternalId": "cec-2024-legislative-yuan", "regionExternalId": "tw", "raceType": "party_list_legislator", "title": "全國不分區及僑居國外國民立法委員選舉", "votingDate": "2024-01-13", "status": "completed", "sourceId": "cec-election-data" }
+  ],
+  "parties": [
+    { "externalId": "party-dpp", "name": "民主進步黨", "shortName": "民進黨", "slug": "dpp", "themeKey": "dpp", "officialSiteUrl": "https://www.dpp.org.tw/", "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-kmt", "name": "中國國民黨", "shortName": "國民黨", "slug": "kmt", "themeKey": "kmt", "officialSiteUrl": "https://www.kmt.org.tw/", "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-tpp", "name": "台灣民眾黨", "shortName": "民眾黨", "slug": "tpp", "themeKey": "tpp", "officialSiteUrl": "https://www.tpp.org.tw/", "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-npp", "name": "時代力量", "shortName": "時力", "slug": "npp", "themeKey": "npp", "officialSiteUrl": "https://www.newpowerparty.tw/", "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-tsp", "name": "台灣基進", "shortName": "基進", "slug": "tsp", "themeKey": "tsp", "officialSiteUrl": "https://www.statebuilding.tw/", "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-pfp", "name": "親民黨", "shortName": "親民黨", "slug": "pfp", "themeKey": "pfp", "officialSiteUrl": null, "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-new", "name": "新黨", "shortName": "新黨", "slug": "new-party", "themeKey": "unknown", "officialSiteUrl": null, "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-tsu", "name": "台灣團結聯盟", "shortName": "台聯", "slug": "tsu", "themeKey": "unknown", "officialSiteUrl": null, "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-sdp", "name": "社會民主黨", "shortName": "社民黨", "slug": "sdp", "themeKey": "unknown", "officialSiteUrl": null, "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-green", "name": "綠黨", "shortName": "綠黨", "slug": "green-party", "themeKey": "unknown", "officialSiteUrl": null, "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" },
+    { "externalId": "party-obasang", "name": "小民參政歐巴桑聯盟", "shortName": "小歐盟", "slug": "obasang-alliance", "themeKey": "unknown", "officialSiteUrl": null, "chairpersonName": null, "status": "active", "sourceId": "moi-party-registry" }
+  ],
+  "partyFinanceSummaries": [],
+  "partyCompanyContributionSummaries": []
+}

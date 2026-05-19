@@ -69,8 +69,8 @@ export function UpcomingElectionCards({
                 />
                 <div className="flex gap-3 pl-2">
                   <div
-                    className="grid h-11 w-11 shrink-0 place-items-center rounded-sm border bg-bg/70 font-display text-lg"
-                    style={{ borderColor: theme.primary, color: theme.text }}
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-sm border bg-bg/80 font-display text-lg text-white"
+                    style={{ borderColor: theme.accent }}
                     aria-hidden="true"
                   >
                     ▣
@@ -134,11 +134,9 @@ export function UpcomingElectionCards({
                   <p className="mt-1 text-sm text-slate-400">{race.region}</p>
                 </div>
                 <span
-                  className="shrink-0 rounded-sm px-2 py-1 text-xs font-semibold"
+                  className="shrink-0 rounded-sm border bg-bg/85 px-2 py-1 text-xs font-semibold text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.04)]"
                   style={{
-                    backgroundColor: `${theme.primary}26`,
-                    color: theme.text,
-                    border: `1px solid ${theme.primary}`,
+                    borderColor: theme.accent,
                   }}
                 >
                   {race.partyLabel}

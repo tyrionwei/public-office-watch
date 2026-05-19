@@ -7,7 +7,10 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sync:real-data:dry-run": "node scripts/sync-real-public-data.mjs --weekly",
+    "sync:real-data:daily": "node scripts/sync-real-public-data.mjs --daily",
+    "sync:real-data:write": "node scripts/sync-real-public-data.mjs --weekly --write --record-run"
   },
   "repository": {
     "type": "git",

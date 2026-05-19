@@ -290,6 +290,7 @@ export function mapPublicPartyRow(row: PartialRow<PublicParty>): PublicParty {
     slug: asString(row?.slug, asString(row?.party_id, 'unknown-party')),
     theme_key: asPartyThemeKey(row?.theme_key),
     official_site_url: asNullableString(row?.official_site_url),
+    chairperson_name: asNullableString(row?.chairperson_name),
     status: ['active', 'inactive', 'unknown'].includes(asString(row?.status))
       ? (row?.status as PublicParty['status'])
       : 'unknown',

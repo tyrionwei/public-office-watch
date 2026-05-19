@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { AppShell, AppShellBgmToggle } from '../components/AppShell';
+import { AppShell } from '../components/AppShell';
 import { DataPrinciplesPanel } from '../components/DataPrinciplesPanel';
 import { PixelFrame } from '../components/PixelFrame';
 import { PollComparisonPanel } from '../components/PollComparisonPanel';
@@ -10,7 +10,6 @@ import { publicDataProvider } from '../lib/publicData';
 
 export function HomePage() {
   const [selectedRegionId, setSelectedRegionId] = useState(publicDataProvider.getStageRegions()[0]?.id ?? '');
-  const [bgmEnabled, setBgmEnabled] = useState(false);
 
   const homeData = publicDataProvider.getHomePageData();
   const pollComparison = publicDataProvider.getPollComparisonByElectionId(homeData.upcomingRaces[0]?.electionId ?? '');
@@ -31,10 +30,7 @@ export function HomePage() {
   );
 
   return (
-    <AppShell
-      ticker={homeData.ticker}
-      headerRight={<AppShellBgmToggle enabled={bgmEnabled} onToggle={() => setBgmEnabled((value) => !value)} />}
-    >
+    <AppShell ticker={homeData.ticker}>
       <div className="grid gap-3 xl:grid-cols-[minmax(420px,0.98fr)_minmax(390px,0.92fr)_minmax(300px,0.62fr)]">
         <section className="min-w-0">
           <div className="min-w-0 xl:h-full">

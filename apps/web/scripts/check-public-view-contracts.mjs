@@ -14,7 +14,7 @@ const allowedPublicViews = {
   public_home_election_ticker: ['election_id', 'election_name', 'voting_date', 'status'],
   public_region_election_summary: ['region_id', 'region_name', 'region_slug', 'upcoming_race_count'],
   public_person_primary_photos: ['person_id', 'media_id', 'photo_url', 'source_name'],
-  public_parties: ['party_id', 'name', 'slug', 'theme_key', 'updated_at'],
+  public_parties: ['party_id', 'name', 'slug', 'theme_key', 'chairperson_name', 'updated_at'],
   public_party_finance_summaries: ['party_id', 'party_name', 'report_year', 'income_total', 'expense_total'],
   public_party_company_contribution_summaries: ['party_id', 'company_id', 'report_year', 'amount_total', 'confidence_level'],
 };

@@ -8,20 +8,23 @@ import { PartiesPage } from './pages/PartiesPage';
 import { PartyPage } from './pages/PartyPage';
 import { RegionPage } from './pages/RegionPage';
 import { aboutPath, dataGuidancePath, homePath, partiesPath } from './routes/routePaths';
+import { BgmProvider } from './components/BgmProvider';
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path={homePath()} element={<HomePage />} />
-        <Route path={partiesPath()} element={<PartiesPage />} />
-        <Route path="/parties/:partySlug" element={<PartyPage />} />
-        <Route path={dataGuidancePath()} element={<DataGuidancePage />} />
-        <Route path={aboutPath()} element={<AboutPage />} />
-        <Route path="/regions/:regionId" element={<RegionPage />} />
-        <Route path="/elections/:electionId" element={<ElectionPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <BgmProvider>
+        <Routes>
+          <Route path={homePath()} element={<HomePage />} />
+          <Route path={partiesPath()} element={<PartiesPage />} />
+          <Route path="/parties/:partySlug" element={<PartyPage />} />
+          <Route path={dataGuidancePath()} element={<DataGuidancePage />} />
+          <Route path={aboutPath()} element={<AboutPage />} />
+          <Route path="/regions/:regionId" element={<RegionPage />} />
+          <Route path="/elections/:electionId" element={<ElectionPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </BgmProvider>
     </BrowserRouter>
   );
 }

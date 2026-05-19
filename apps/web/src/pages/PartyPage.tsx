@@ -71,6 +71,7 @@ export function PartyPage() {
                   value={<span className="font-display text-xl text-white">{latestFinance ? formatCurrency(latestFinance.balance_amount) : '待整理'}</span>}
                 />
                 <HudStatCard label="company summaries" value={`${companySummaries.length} 筆已審核摘要`} />
+                <HudStatCard label="chairperson / representative" value={party.chairperson_name ?? '待官方名冊同步'} />
               </dl>
             </section>
 

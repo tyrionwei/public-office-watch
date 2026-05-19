@@ -81,7 +81,25 @@
       "nextParserNotes": [
         "Prefer official export/download endpoints when available.",
         "Separate election event metadata from candidate rows.",
+        "Populate people first, then candidates linked by personExternalId and raceExternalId.",
+        "Use registration_status=registered for official registration lists and qualified for confirmed eligible lists.",
         "Candidate ingestion should populate public_candidates only after source fields are verified."
+      ]
+    },
+    {
+      "id": "current-officeholders",
+      "status": "planned",
+      "sourceUrl": null,
+      "cadence": "weekly",
+      "format": "official-source-mix",
+      "targetTables": ["people"],
+      "targetPublicViews": ["public_people"],
+      "currentUse": "The party detail page already reads officeholders from public_people. The sync script can upsert people by external_id.",
+      "nextParserNotes": [
+        "Prefer an official bulk source for Legislative Yuan members and local officeholders.",
+        "Do not infer current office from old election results without a freshness check.",
+        "Store role text in position and district or constituency text in district.",
+        "Use source-specific external IDs rather than names alone whenever available."
       ]
     },
     {

@@ -9,6 +9,8 @@ For source-specific fetching and parsing recipes, see `docs/public-data-fetch-re
 - `regions`: Taiwan plus 22 county/city records.
 - `elections`: 2024 presidential and legislative election events.
 - `races`: national presidential and party-list legislative races.
+- `people`: sync-ready public person records for officeholders and candidates. The seed is empty until official fields are confirmed.
+- `candidates`: sync-ready candidate records linked to `people` and `races`. The seed is empty until official candidate fields are confirmed.
 - `parties`: core party records used by the party/contribution UI.
 - `parties`: the sync first tries to fetch the Ministry of the Interior party registry. It reads registry number, party name, founded date, filed date, headquarters address, contact phone, and representative/chairperson. If the registry is temporarily unavailable, dry-run falls back to the seed parties and reports that fallback explicitly.
 - `party_finance_summaries`: schema and pipeline are ready, but the seed leaves totals empty until official fields are confirmed.
@@ -53,6 +55,7 @@ Apply:
 It adds:
 
 - `external_id` fields on regions/elections/races for idempotent upserts.
+- `external_id` fields on people/candidates for idempotent upserts.
 - `parties`
 - party registry profile fields on `parties`: registry number, founded date text, filed date text, headquarters address, contact phone, and representative/chairperson.
 - `party_finance_summaries`

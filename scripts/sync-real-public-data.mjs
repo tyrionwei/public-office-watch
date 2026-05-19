@@ -292,9 +292,11 @@ function validateSeed(seed) {
   const sourceIds = new Set(seed.sources.map((source) => source.id));
   const regionIds = new Set(seed.regions.map((region) => region.externalId));
   const electionIds = new Set(seed.elections.map((election) => election.externalId));
+  const raceIds = new Set(seed.races.map((race) => race.externalId));
+  const personIds = new Set((seed.people ?? []).map((person) => person.externalId));
   const partyIds = new Set(seed.parties.map((party) => party.externalId));
 
-  for (const collection of ['regions', 'elections', 'races', 'parties']) {
+  for (const collection of ['regions', 'elections', 'races', 'parties', 'people', 'candidates']) {
     if (!Array.isArray(seed[collection])) {
       throw new Error(`Seed collection must be an array: ${collection}`);
     }
@@ -321,6 +323,20 @@ function validateSeed(seed) {
 
   for (const party of seed.parties) {
     if (!sourceIds.has(party.sourceId)) throw new Error(`Party ${party.externalId} has unknown sourceId.`);
+  }
+
+  for (const person of seed.people ?? []) {
+    if (!sourceIds.has(person.sourceId)) throw new Error(`Person ${person.externalId} has unknown sourceId.`);
+  }
+
+  for (const candidate of seed.candidates ?? []) {
+    if (!sourceIds.has(candidate.sourceId)) throw new Error(`Candidate ${candidate.externalId} has unknown sourceId.`);
+    if (!personIds.has(candidate.personExternalId)) {
+      throw new Error(`Candidate ${candidate.externalId} has unknown personExternalId.`);
+    }
+    if (!raceIds.has(candidate.raceExternalId)) {
+      throw new Error(`Candidate ${candidate.externalId} has unknown raceExternalId.`);
+    }
   }
 
   for (const summary of seed.partyFinanceSummaries ?? []) {
@@ -468,6 +484,46 @@ async function writeSeed(seed, hash, args) {
 
   await upsertOrThrow(env, 'races', raceRows, { onConflict: 'external_id' });
 
+  const raceRefresh = await selectOrThrow(env, 'races', 'id,external_id');
+  const raceByExternalId = new Map(raceRefresh.map((race) => [race.external_id, race]));
+
+  const personRows = (seed.people ?? []).map((person) => {
+    const source = getSource(seed, person.sourceId);
+    return {
+      external_id: person.externalId,
+      name: person.name,
+      alias: person.alias ?? null,
+      party: person.party ?? null,
+      position: person.position ?? null,
+      election_year: person.electionYear ?? null,
+      district: person.district ?? null,
+      source_url: person.sourceUrl ?? source.url,
+      is_public: person.isPublic ?? true,
+      updated_at: startedAt,
+    };
+  });
+
+  const people = await upsertOrThrow(env, 'people', personRows, { onConflict: 'external_id' });
+  const personByExternalId = new Map(people.map((person) => [person.external_id, person]));
+
+  const candidateRows = (seed.candidates ?? []).map((candidate) => {
+    const source = getSource(seed, candidate.sourceId);
+    return {
+      external_id: candidate.externalId,
+      person_id: personByExternalId.get(candidate.personExternalId)?.id,
+      race_id: raceByExternalId.get(candidate.raceExternalId)?.id,
+      party: candidate.party ?? null,
+      candidate_no: candidate.candidateNo ?? null,
+      registration_status: candidate.registrationStatus ?? 'unknown',
+      source_name: source.name,
+      source_url: candidate.sourceUrl ?? source.url,
+      is_public: candidate.isPublic ?? true,
+      updated_at: startedAt,
+    };
+  });
+
+  await upsertOrThrow(env, 'candidates', candidateRows, { onConflict: 'external_id' });
+
   const partyRows = seed.parties.map((party) => {
     const source = getSource(seed, party.sourceId);
     return {
@@ -527,7 +583,14 @@ async function writeSeed(seed, hash, args) {
           mode: args.write ? 'write' : 'dry-run',
           status: 'ok',
           source_hash: hash,
-          source_count: seed.regions.length + seed.elections.length + seed.races.length + seed.parties.length + financeRows.length,
+          source_count:
+            seed.regions.length +
+            seed.elections.length +
+            seed.races.length +
+            (seed.people?.length ?? 0) +
+            (seed.candidates?.length ?? 0) +
+            seed.parties.length +
+            financeRows.length,
           started_at: startedAt,
           finished_at: new Date().toISOString(),
           report_json: buildReport(seed, hash, args, args.livePartyRegistry),
@@ -548,6 +611,8 @@ function buildReport(seed, hash, args, livePartyRegistry) {
       regions: seed.regions.length,
       elections: seed.elections.length,
       races: seed.races.length,
+      people: seed.people?.length ?? 0,
+      candidates: seed.candidates?.length ?? 0,
       parties: seed.parties.length,
       partyFinanceSummaries: seed.partyFinanceSummaries?.length ?? 0,
       partyCompanyContributionSummaries: seed.partyCompanyContributionSummaries?.length ?? 0,

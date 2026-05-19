@@ -91,12 +91,45 @@ Source:
 Current state:
 
 - The seed contains 2024 presidential and legislative metadata only.
+- The sync script has empty `people` and `candidates` seed entry points.
+- `people.external_id` and `candidates.external_id` exist so future official candidate syncs can upsert safely.
 
 Next parser notes:
 
 - Prefer official export/download endpoints over browser scraping.
 - Separate election event metadata from race rows and candidate rows.
+- Candidate ingestion should populate `people` first, then `candidates`.
+- Candidate rows should link by `personExternalId` and `raceExternalId`.
 - Candidate ingestion should populate `public_candidates` only after source fields and status mapping are verified.
+- Use `registration_status = registered` for official registration lists and `qualified` for confirmed eligible lists.
+
+## Planned: Current Officeholders
+
+Potential sources:
+
+- Legislative Yuan member data for sitting legislators.
+- Executive/local government official pages for mayors and councilors when official bulk data is unavailable.
+- CEC election result data for elected candidates, with an additional freshness check before treating them as current.
+
+Target table:
+
+- `people`
+
+Target public view:
+
+- `public_people`
+
+Current state:
+
+- The party detail page can already show officeholders from `public_people`.
+- The sync script can upsert `people` by `external_id`.
+
+Next parser notes:
+
+- Do not infer current office from old election results alone after a new election cycle or resignation period.
+- Store role text in `position` and district/constituency in `district`.
+- Keep `source_url` on the base person row for traceability.
+- Use source-specific external IDs, not names alone, whenever an official ID exists.
 
 ## Planned: Political Contributions
 

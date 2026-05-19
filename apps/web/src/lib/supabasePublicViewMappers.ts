@@ -2,8 +2,13 @@ import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
 import { partyTheme, type PartyThemeKey } from '../styles/partyThemes';
 import type {
   PublicCandidate,
+  PublicCompany,
   PublicElection,
   PublicHomeElectionTicker,
+  PublicParty,
+  PublicPartyCompanyContributionSummary,
+  PublicPartyFinanceSummary,
+  PublicPerson,
   PublicPersonPrimaryPhoto,
   PublicRace,
   PublicRegion,
@@ -29,6 +34,10 @@ function asNumber(value: unknown, fallback = 0) {
 
 function asNullableNumber(value: unknown) {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function asPartyThemeKey(value: unknown): PartyThemeKey {
+  return typeof value === 'string' && value in partyTheme ? (value as PartyThemeKey) : 'unknown';
 }
 
 function asElectionType(value: unknown): PublicElection['election_type'] {
@@ -144,6 +153,39 @@ export function mapPublicElectionRow(row: PartialRow<PublicElection>): PublicEle
   };
 }
 
+export function mapPublicPersonRow(row: PartialRow<PublicPerson>): PublicPerson {
+  return {
+    person_id: asString(row?.person_id, ''),
+    name: asString(row?.name, '未命名人物'),
+    alias: asNullableString(row?.alias),
+    party: asNullableString(row?.party),
+    position: asNullableString(row?.position),
+    election_year: asNullableNumber(row?.election_year),
+    district: asNullableString(row?.district),
+    updated_at: asString(row?.updated_at, ''),
+    primary_photo_url: asNullableString(row?.primary_photo_url),
+    primary_photo_thumbnail_url: asNullableString(row?.primary_photo_thumbnail_url),
+    photo_source_name: asNullableString(row?.photo_source_name),
+    photo_source_url: asNullableString(row?.photo_source_url),
+    photo_license_type: asNullableString(row?.photo_license_type),
+    photo_license_url: asNullableString(row?.photo_license_url),
+    photo_attribution: asNullableString(row?.photo_attribution),
+  };
+}
+
+export function mapPublicCompanyRow(row: PartialRow<PublicCompany>): PublicCompany {
+  return {
+    company_id: asString(row?.company_id, ''),
+    unified_business_no: asNullableString(row?.unified_business_no),
+    name: asString(row?.name, '未命名公司'),
+    representative_name: asNullableString(row?.representative_name),
+    status: asNullableString(row?.status),
+    capital: asNullableNumber(row?.capital),
+    address_region: asNullableString(row?.address_region),
+    updated_at: asString(row?.updated_at, ''),
+  };
+}
+
 export function mapPublicRaceRow(row: PartialRow<PublicRace>): PublicRace {
   return {
     race_id: asString(row?.race_id, ''),
@@ -237,6 +279,66 @@ export function mapPublicPersonPrimaryPhotoRow(row: PartialRow<PublicPersonPrima
     license_type: asPhotoLicenseType(row?.license_type),
     license_url: asNullableString(row?.license_url),
     attribution: asNullableString(row?.attribution),
+  };
+}
+
+export function mapPublicPartyRow(row: PartialRow<PublicParty>): PublicParty {
+  return {
+    party_id: asString(row?.party_id, ''),
+    name: asString(row?.name, '未命名政黨'),
+    short_name: asNullableString(row?.short_name),
+    slug: asString(row?.slug, asString(row?.party_id, 'unknown-party')),
+    theme_key: asPartyThemeKey(row?.theme_key),
+    official_site_url: asNullableString(row?.official_site_url),
+    status: ['active', 'inactive', 'unknown'].includes(asString(row?.status))
+      ? (row?.status as PublicParty['status'])
+      : 'unknown',
+    source_name: asNullableString(row?.source_name),
+    source_url: asNullableString(row?.source_url),
+    updated_at: asString(row?.updated_at, ''),
+  };
+}
+
+export function mapPublicPartyFinanceSummaryRow(
+  row: PartialRow<PublicPartyFinanceSummary>,
+): PublicPartyFinanceSummary {
+  return {
+    party_id: asString(row?.party_id, ''),
+    party_name: asString(row?.party_name, '未命名政黨'),
+    report_year: asNumber(row?.report_year, 0),
+    income_total: asNumber(row?.income_total, 0),
+    expense_total: asNumber(row?.expense_total, 0),
+    balance_amount: asNumber(row?.balance_amount, 0),
+    individual_donation_total: asNumber(row?.individual_donation_total, 0),
+    business_donation_total: asNumber(row?.business_donation_total, 0),
+    civil_group_donation_total: asNumber(row?.civil_group_donation_total, 0),
+    anonymous_donation_total: asNumber(row?.anonymous_donation_total, 0),
+    other_income_total: asNumber(row?.other_income_total, 0),
+    source_name: asNullableString(row?.source_name),
+    source_url: asNullableString(row?.source_url),
+    updated_at: asString(row?.updated_at, ''),
+  };
+}
+
+export function mapPublicPartyCompanyContributionSummaryRow(
+  row: PartialRow<PublicPartyCompanyContributionSummary>,
+): PublicPartyCompanyContributionSummary {
+  const confidenceLevels: PublicPartyCompanyContributionSummary['confidence_level'][] = ['A', 'B', 'C', 'D'];
+
+  return {
+    party_id: asString(row?.party_id, ''),
+    company_id: asString(row?.company_id, ''),
+    company_name: asString(row?.company_name, '未命名公司'),
+    report_year: asNumber(row?.report_year, 0),
+    amount_total: asNumber(row?.amount_total, 0),
+    donation_count: asNumber(row?.donation_count, 0),
+    confidence_level:
+      typeof row?.confidence_level === 'string' && confidenceLevels.includes(row.confidence_level)
+        ? row.confidence_level
+        : 'D',
+    source_name: asNullableString(row?.source_name),
+    source_url: asNullableString(row?.source_url),
+    reviewed_at: asNullableString(row?.reviewed_at),
   };
 }
 

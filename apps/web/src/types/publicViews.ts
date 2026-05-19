@@ -1,3 +1,5 @@
+import type { PartyThemeKey } from '../styles/partyThemes';
+
 export type PublicPerson = {
   person_id: string;
   name: string;
@@ -177,4 +179,47 @@ export type PublicPersonPrimaryPhoto = {
     | 'placeholder';
   license_url: string | null;
   attribution: string | null;
+};
+
+export type PublicParty = {
+  party_id: string;
+  name: string;
+  short_name: string | null;
+  slug: string;
+  theme_key: PartyThemeKey;
+  official_site_url: string | null;
+  status: 'active' | 'inactive' | 'unknown';
+  source_name: string | null;
+  source_url: string | null;
+  updated_at: string;
+};
+
+export type PublicPartyFinanceSummary = {
+  party_id: string;
+  party_name: string;
+  report_year: number;
+  income_total: number;
+  expense_total: number;
+  balance_amount: number;
+  individual_donation_total: number;
+  business_donation_total: number;
+  civil_group_donation_total: number;
+  anonymous_donation_total: number;
+  other_income_total: number;
+  source_name: string | null;
+  source_url: string | null;
+  updated_at: string;
+};
+
+export type PublicPartyCompanyContributionSummary = {
+  party_id: string;
+  company_id: string;
+  company_name: string;
+  report_year: number;
+  amount_total: number;
+  donation_count: number;
+  confidence_level: PublicRelationDetail['confidence_level'];
+  source_name: string | null;
+  source_url: string | null;
+  reviewed_at: string | null;
 };

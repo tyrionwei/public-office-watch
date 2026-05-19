@@ -1,21 +1,32 @@
 import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
 import type {
   PublicCandidate,
+  PublicCompany,
   PublicElection,
   PublicHomeElectionTicker,
+  PublicParty,
+  PublicPartyCompanyContributionSummary,
+  PublicPartyFinanceSummary,
+  PublicPerson,
   PublicRace,
   PublicRegion,
   PublicRegionElectionSummary,
 } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import type { PollComparison } from '../types/polling';
-import type { HomePageData, HomeTicker, PublicDataProvider } from './publicDataProvider';
+import { electionPath, partyPath, regionPath } from '../routes/routePaths';
+import type { HomePageData, HomeTicker, PublicDataProvider, PublicSearchResult } from './publicDataProvider';
 import { type AllowedPublicViewName, assertPublicViewName } from './publicViewRegistry';
 import { getSupabasePublicClient } from './supabasePublicClient';
 import {
   mapPublicCandidateRow,
+  mapPublicCompanyRow,
   mapPublicElectionRow,
   mapPublicHomeElectionTickerRow,
+  mapPublicPartyCompanyContributionSummaryRow,
+  mapPublicPartyFinanceSummaryRow,
+  mapPublicPartyRow,
+  mapPublicPersonRow,
   mapPublicRaceRow,
   mapPublicRegionElectionSummaryRow,
   mapPublicRegionRow,
@@ -51,9 +62,14 @@ type SupabasePublicSnapshot = {
   stageRegions: StageRegionNode[];
   stageRegionSummaries: StageRegionSummary[];
   upcomingRaces: UpcomingRace[];
+  people: PublicPerson[];
+  companies: PublicCompany[];
   elections: PublicElection[];
   races: PublicRace[];
   candidates: PublicCandidate[];
+  parties: PublicParty[];
+  partyFinanceSummaries: PublicPartyFinanceSummary[];
+  partyCompanyContributionSummaries: PublicPartyCompanyContributionSummary[];
 };
 
 let snapshotCache: SupabasePublicSnapshot | null = null;
@@ -101,9 +117,14 @@ function buildSnapshot(params: {
   tickerRows: unknown[];
   regionSummaryRows: unknown[];
   regionRows: unknown[];
+  personRows: unknown[];
+  companyRows: unknown[];
   electionRows: unknown[];
   raceRows: unknown[];
   candidateRows: unknown[];
+  partyRows: unknown[];
+  partyFinanceRows: unknown[];
+  partyCompanyContributionRows: unknown[];
 }): SupabasePublicSnapshot {
   const homeTickerRow = params.tickerRows[0];
   const regionSummaries = params.regionSummaryRows.map((row) => mapPublicRegionElectionSummaryRow(row as PublicRegionElectionSummary));
@@ -111,10 +132,19 @@ function buildSnapshot(params: {
   const stageRegionSummaries = regionSummaries.map((row) => mapRegionSummaryToStageRegionSummary(row));
   const regions = params.regionRows.map((row) => mapPublicRegionRow(row as PublicRegion));
   const stageRegions = buildStageRegions(regions);
+  const people = params.personRows.map((row) => mapPublicPersonRow(row as PublicPerson));
+  const companies = params.companyRows.map((row) => mapPublicCompanyRow(row as PublicCompany));
   const elections = params.electionRows.map((row) => mapPublicElectionRow(row as PublicElection));
   const races = params.raceRows.map((row) => mapPublicRaceRow(row as PublicRace));
   const candidates = params.candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate));
   const upcomingRaces = races.map((race) => mapRaceToUpcomingRace(race));
+  const parties = params.partyRows.map((row) => mapPublicPartyRow(row as PublicParty));
+  const partyFinanceSummaries = params.partyFinanceRows.map((row) =>
+    mapPublicPartyFinanceSummaryRow(row as PublicPartyFinanceSummary),
+  );
+  const partyCompanyContributionSummaries = params.partyCompanyContributionRows.map((row) =>
+    mapPublicPartyCompanyContributionSummaryRow(row as PublicPartyCompanyContributionSummary),
+  );
 
   return {
     homeTicker: homeTickerRow ? mapTickerToHomeTicker(mapPublicHomeElectionTickerRow(homeTickerRow as PublicHomeElectionTicker)) : emptyHomeTicker,
@@ -122,9 +152,14 @@ function buildSnapshot(params: {
     stageRegions,
     stageRegionSummaries,
     upcomingRaces,
+    people,
+    companies,
     elections,
     races,
     candidates,
+    parties,
+    partyFinanceSummaries,
+    partyCompanyContributionSummaries,
   };
 }
 
@@ -134,16 +169,45 @@ export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePubli
     return null;
   }
 
-  const [tickerRows, regionSummaryRows, regionRows, electionRows, raceRows, candidateRows] = await Promise.all([
+  const [
+    tickerRows,
+    regionSummaryRows,
+    regionRows,
+    personRows,
+    companyRows,
+    electionRows,
+    raceRows,
+    candidateRows,
+    partyRows,
+    partyFinanceRows,
+    partyCompanyContributionRows,
+  ] = await Promise.all([
     fetchRows('public_home_election_ticker'),
     fetchRows('public_region_election_summary'),
     fetchRows('public_regions'),
+    fetchRows('public_people'),
+    fetchRows('public_companies'),
     fetchRows('public_elections'),
     fetchRows('public_races'),
     fetchRows('public_candidates'),
+    fetchRows('public_parties'),
+    fetchRows('public_party_finance_summaries'),
+    fetchRows('public_party_company_contribution_summaries'),
   ]);
 
-  snapshotCache = buildSnapshot({ tickerRows, regionSummaryRows, regionRows, electionRows, raceRows, candidateRows });
+  snapshotCache = buildSnapshot({
+    tickerRows,
+    regionSummaryRows,
+    regionRows,
+    personRows,
+    companyRows,
+    electionRows,
+    raceRows,
+    candidateRows,
+    partyRows,
+    partyFinanceRows,
+    partyCompanyContributionRows,
+  });
   return snapshotCache;
 }
 
@@ -161,6 +225,10 @@ function toRegionLookupKeys(regionId: string, stageRegions: StageRegionNode[]) {
   }
 
   return keys;
+}
+
+function includesQuery(value: string | null | undefined, normalizedQuery: string) {
+  return value?.toLowerCase().includes(normalizedQuery) ?? false;
 }
 
 export const supabasePublicDataProvider: PublicDataProvider = {
@@ -253,5 +321,101 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   getPollComparisonByElectionId(): PollComparison | null {
     // TODO: Add a mapped poll comparison source after an approved public poll view exists.
     return null;
+  },
+
+  getPeople() {
+    return getSnapshot()?.people ?? [];
+  },
+
+  getCompanies() {
+    return getSnapshot()?.companies ?? [];
+  },
+
+  getParties() {
+    return getSnapshot()?.parties ?? [];
+  },
+
+  getPartyBySlug(partySlug: string) {
+    return getSnapshot()?.parties.find((party) => party.slug === partySlug) ?? null;
+  },
+
+  getPartyFinanceSummaries(partyId: string) {
+    return getSnapshot()?.partyFinanceSummaries.filter((summary) => summary.party_id === partyId) ?? [];
+  },
+
+  getPartyCompanyContributionSummaries(partyId: string) {
+    return getSnapshot()?.partyCompanyContributionSummaries.filter((summary) => summary.party_id === partyId) ?? [];
+  },
+
+  searchPublicRecords(query: string) {
+    const snapshot = getSnapshot();
+    const normalizedQuery = query.trim().toLowerCase();
+
+    if (!snapshot || normalizedQuery.length < 2) {
+      return [];
+    }
+
+    const results: PublicSearchResult[] = [
+      ...snapshot.parties
+        .filter((party) => [party.name, party.short_name].some((value) => includesQuery(value, normalizedQuery)))
+        .map((party) => ({
+          id: party.party_id,
+          type: 'party' as const,
+          label: '政黨',
+          title: party.name,
+          subtitle: party.short_name ? `簡稱 ${party.short_name}` : '政黨與政治獻金摘要',
+          href: partyPath(party.slug),
+        })),
+      ...snapshot.elections
+        .filter((election) => [election.name, election.election_type, election.status].some((value) => includesQuery(value, normalizedQuery)))
+        .map((election) => ({
+          id: election.election_id,
+          type: 'election' as const,
+          label: '選舉',
+          title: election.name,
+          subtitle: [election.year?.toString(), election.voting_date, election.status].filter(Boolean).join(' · '),
+          href: electionPath(election.election_id),
+        })),
+      ...snapshot.stageRegions
+        .filter((region) => [region.label, region.stageLabel, region.note].some((value) => includesQuery(value, normalizedQuery)))
+        .map((region) => ({
+          id: region.id,
+          type: 'region' as const,
+          label: '地區',
+          title: region.label,
+          subtitle: region.level === 'county_city' ? '縣市地圖區域' : '公開區域導覽',
+          href: regionPath(region.id),
+        })),
+      ...snapshot.people
+        .filter((person) =>
+          [person.name, person.alias, person.party, person.position, person.district].some((value) =>
+            includesQuery(value, normalizedQuery),
+          ),
+        )
+        .map((person) => ({
+          id: person.person_id,
+          type: 'person' as const,
+          label: '人物',
+          title: person.name,
+          subtitle: [person.party, person.position, person.district].filter(Boolean).join(' · ') || '公開人物資料',
+          href: null,
+        })),
+      ...snapshot.companies
+        .filter((company) =>
+          [company.name, company.unified_business_no, company.representative_name, company.address_region].some((value) =>
+            includesQuery(value, normalizedQuery),
+          ),
+        )
+        .map((company) => ({
+          id: company.company_id,
+          type: 'company' as const,
+          label: '公司',
+          title: company.name,
+          subtitle: [company.representative_name, company.address_region].filter(Boolean).join(' · ') || '公開公司資料',
+          href: null,
+        })),
+    ];
+
+    return results.slice(0, 12);
   },
 };

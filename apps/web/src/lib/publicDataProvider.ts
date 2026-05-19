@@ -1,6 +1,15 @@
 import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
 import type { PollComparison } from '../types/polling';
-import type { PublicCandidate, PublicElection, PublicRace } from '../types/publicViews';
+import type {
+  PublicCandidate,
+  PublicCompany,
+  PublicElection,
+  PublicParty,
+  PublicPartyCompanyContributionSummary,
+  PublicPartyFinanceSummary,
+  PublicPerson,
+  PublicRace,
+} from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 
 export type HomeTicker = {
@@ -18,6 +27,17 @@ export type HomePageData = {
   dataPrinciples: string[];
 };
 
+export type PublicSearchResultType = 'person' | 'company' | 'party' | 'election' | 'region';
+
+export type PublicSearchResult = {
+  id: string;
+  type: PublicSearchResultType;
+  label: string;
+  title: string;
+  subtitle: string;
+  href: string | null;
+};
+
 export interface PublicDataProvider {
   getHomeTicker(): HomeTicker;
   getHomePageData(): HomePageData;
@@ -33,4 +53,11 @@ export interface PublicDataProvider {
   getRacesByElectionId(electionId: string): PublicRace[];
   getCandidatesByElectionId(electionId: string): PublicCandidate[];
   getPollComparisonByElectionId(electionId: string): PollComparison | null;
+  getPeople(): PublicPerson[];
+  getCompanies(): PublicCompany[];
+  getParties(): PublicParty[];
+  getPartyBySlug(partySlug: string): PublicParty | null;
+  getPartyFinanceSummaries(partyId: string): PublicPartyFinanceSummary[];
+  getPartyCompanyContributionSummaries(partyId: string): PublicPartyCompanyContributionSummary[];
+  searchPublicRecords(query: string): PublicSearchResult[];
 }

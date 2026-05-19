@@ -9,6 +9,9 @@ export const allowedPublicViews = [
   'public_home_election_ticker',
   'public_region_election_summary',
   'public_person_primary_photos',
+  'public_parties',
+  'public_party_finance_summaries',
+  'public_party_company_contribution_summaries',
 ] as const;
 
 export type AllowedPublicViewName = (typeof allowedPublicViews)[number];
@@ -18,6 +21,8 @@ export const blockedInternalTables = [
   'raw_source_records',
   'source_documents',
   'person_media',
+  'party_finance_reports',
+  'party_company_contributions',
   'pending',
   'rejected',
 ] as const;

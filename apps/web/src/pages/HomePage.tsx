@@ -3,18 +3,17 @@ import { AppShell, AppShellBgmToggle } from '../components/AppShell';
 import { DataPrinciplesPanel } from '../components/DataPrinciplesPanel';
 import { PixelFrame } from '../components/PixelFrame';
 import { PollComparisonPanel } from '../components/PollComparisonPanel';
-import { SearchCommand } from '../components/SearchCommand';
 import { SelectedRegionHud } from '../components/SelectedRegionHud';
 import { TaiwanStageSelect } from '../components/TaiwanStageSelect';
 import { UpcomingElectionCards } from '../components/UpcomingElectionCards';
 import { publicDataProvider } from '../lib/publicData';
-import { mockPollComparisons } from '../data/mockPolling';
 
 export function HomePage() {
   const [selectedRegionId, setSelectedRegionId] = useState(publicDataProvider.getStageRegions()[0]?.id ?? '');
   const [bgmEnabled, setBgmEnabled] = useState(false);
 
   const homeData = publicDataProvider.getHomePageData();
+  const pollComparison = publicDataProvider.getPollComparisonByElectionId(homeData.upcomingRaces[0]?.electionId ?? '');
 
   const selectedRegionNode = useMemo(
     () => publicDataProvider.getStageRegion(selectedRegionId) ?? homeData.stageRegions[0],
@@ -54,7 +53,7 @@ export function HomePage() {
             regionNode={selectedRegionNode}
             regionSummary={selectedRegionSummary}
           />
-          {mockPollComparisons[0] ? <PollComparisonPanel comparison={mockPollComparisons[0]} /> : null}
+          {pollComparison ? <PollComparisonPanel comparison={pollComparison} /> : null}
           <PixelFrame
             title="Public Data Progress"
             className="bg-[linear-gradient(180deg,rgba(12,18,36,0.96),rgba(8,15,30,0.92))]"
@@ -79,7 +78,6 @@ export function HomePage() {
         </section>
 
         <section className="space-y-3">
-          <SearchCommand selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? '未指定區域'} />
           <div className="xl:max-h-[360px] xl:overflow-auto">
             <UpcomingElectionCards
               races={homeData.upcomingRaces}

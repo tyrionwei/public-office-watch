@@ -88,6 +88,10 @@ export function PartiesPage() {
                       <dd className="text-right">{party.chairperson_name ?? '待官方名冊同步'}</dd>
                     </div>
                     <div className="flex justify-between gap-3">
+                      <dt className="text-slate-500">成立日期</dt>
+                      <dd className="text-right">{party.founded_date_text ?? '待官方名冊同步'}</dd>
+                    </div>
+                    <div className="flex justify-between gap-3">
                       <dt className="text-slate-500">年度收入</dt>
                       <dd>{latestFinance ? formatCurrency(latestFinance.income_total) : '待整理'}</dd>
                     </div>

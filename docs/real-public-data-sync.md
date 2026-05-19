@@ -8,7 +8,7 @@ This branch introduces the first real-data ingestion path. It is intentionally s
 - `elections`: 2024 presidential and legislative election events.
 - `races`: national presidential and party-list legislative races.
 - `parties`: core party records used by the party/contribution UI.
-- `parties`: the sync first tries to fetch the complete Ministry of the Interior party registry CSV. If the registry is temporarily unavailable, dry-run falls back to the seed parties and reports that fallback explicitly.
+- `parties`: the sync first tries to fetch the Ministry of the Interior party registry. It reads registry number, party name, founded date, filed date, headquarters address, contact phone, and representative/chairperson. If the registry is temporarily unavailable, dry-run falls back to the seed parties and reports that fallback explicitly.
 - `party_finance_summaries`: schema and pipeline are ready, but the seed leaves totals empty until official fields are confirmed.
 
 Personal donation details and company contribution summaries are not published by this sync.
@@ -17,7 +17,7 @@ Personal donation details and company contribution summaries are not published b
 
 1. Source metadata and seed records live in `data-sources/real-public-data.seed.json`.
 2. `scripts/sync-real-public-data.mjs` reads the seed, validates references, and calculates a SHA-256 source hash.
-3. Unless `--skip-live-fetch` is provided, the script downloads the official MOI party registry CSV and replaces the seed party fallback with the full registry.
+3. Unless `--skip-live-fetch` is provided, the script downloads the official MOI party registry and replaces the seed party fallback with the filtered registry profile rows.
 4. Dry-run mode prints a JSON report only:
 
 ```bash
@@ -52,6 +52,7 @@ It adds:
 
 - `external_id` fields on regions/elections/races for idempotent upserts.
 - `parties`
+- party registry profile fields on `parties`: registry number, founded date text, filed date text, headquarters address, contact phone, and representative/chairperson.
 - `party_finance_summaries`
 - `party_company_contribution_summaries`
 - `data_sync_runs`

@@ -72,8 +72,27 @@ export function PartyPage() {
                 />
                 <HudStatCard label="company summaries" value={`${companySummaries.length} 筆已審核摘要`} />
                 <HudStatCard label="chairperson / representative" value={party.chairperson_name ?? '待官方名冊同步'} />
+                <HudStatCard label="founded" value={party.founded_date_text ?? '待官方名冊同步'} />
               </dl>
             </section>
+
+            <SectionPanel title="官方名冊資料" eyebrow="MOI party registry">
+              <dl className="grid gap-3 text-sm text-slate-300 md:grid-cols-2 xl:grid-cols-3">
+                {[
+                  ['政黨編號', party.registry_no ?? '待官方名冊同步'],
+                  ['備案日期', party.filed_date_text ?? '待官方名冊同步'],
+                  ['主事務所地址', party.headquarters_address ?? '待官方名冊同步'],
+                  ['通訊電話', party.contact_phone ?? '待官方名冊同步'],
+                  ['資料來源', party.source_name ?? '待補來源'],
+                  ['更新時間', party.updated_at || '待同步'],
+                ].map(([label, value]) => (
+                  <div key={label} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                    <dt className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</dt>
+                    <dd className="mt-2 break-words text-white">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </SectionPanel>
 
             {latestFinance ? (
               <SectionPanel title={`${latestFinance.report_year} 年度政治獻金摘要`} eyebrow="summary only">

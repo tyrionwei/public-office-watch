@@ -91,11 +91,20 @@ function slugifyPartyName(name) {
   return `moi-party-${hashId(name)}`;
 }
 
-function parseCsv(content) {
+function detectDelimiter(headerLine) {
+  const candidates = [',', ';', '\t'];
+  return candidates
+    .map((delimiter) => ({ delimiter, count: headerLine.split(delimiter).length }))
+    .sort((left, right) => right.count - left.count)[0].delimiter;
+}
+
+function parseDelimited(content) {
   const rows = [];
   let current = '';
   let row = [];
   let inQuotes = false;
+  const headerLine = content.split(/\r?\n/, 1)[0] ?? '';
+  const delimiter = detectDelimiter(headerLine);
 
   for (let index = 0; index < content.length; index += 1) {
     const char = content[index];
@@ -112,7 +121,7 @@ function parseCsv(content) {
       continue;
     }
 
-    if (char === ',' && !inQuotes) {
+    if (char === delimiter && !inQuotes) {
       row.push(current.trim());
       current = '';
       continue;
@@ -197,12 +206,22 @@ async function enrichSeedWithLivePartyRegistry(seed, args) {
 
   try {
     const csv = await fetchText(registrySource.downloadUrl);
-    const rows = parseCsv(csv);
+    const rows = parseDelimited(csv);
+    const seenNames = new Set();
     const parties = rows
-      .map((row) => pickField(row, ['政黨名稱', '名稱', '黨名', 'political_party_name']))
-      .filter((name, index, names) => name && names.indexOf(name) === index)
-      .filter((name) => relevantPartyNames.has(name))
-      .map((name) => {
+      .map((row) => ({
+        row,
+        name: pickField(row, ['政黨名稱', '名稱', '黨名', 'political_party_name']),
+      }))
+      .filter(({ name }) => {
+        if (!name || seenNames.has(name) || !relevantPartyNames.has(name)) {
+          return false;
+        }
+
+        seenNames.add(name);
+        return true;
+      })
+      .map(({ row, name }) => {
         const known = knownPartyProfiles[name] ?? {};
         return {
           externalId: `moi-party-${hashId(name)}`,
@@ -211,6 +230,11 @@ async function enrichSeedWithLivePartyRegistry(seed, args) {
           slug: slugifyPartyName(name),
           themeKey: known.themeKey ?? 'unknown',
           officialSiteUrl: known.officialSiteUrl ?? null,
+          registryNo: pickField(row, ['政黨編號', '編號', 'registry_no', 'party_no']),
+          foundedDateText: pickField(row, ['成立日期', 'founded_date']),
+          filedDateText: pickField(row, ['備案日期', 'filed_date', 'registration_date']),
+          headquartersAddress: pickField(row, ['主事務所地址', '地址', 'headquarters_address']),
+          contactPhone: pickField(row, ['通訊電話', '電話', 'contact_phone']),
           chairpersonName: pickField(row, ['負責人', '主任委員', '黨主席', 'chairperson', 'leader']),
           status: 'active',
           sourceId: 'moi-party-registry',
@@ -454,6 +478,11 @@ async function writeSeed(seed, hash, args) {
       theme_key: party.themeKey,
       official_site_url: party.officialSiteUrl ?? null,
       chairperson_name: party.chairpersonName ?? null,
+      registry_no: party.registryNo ?? null,
+      founded_date_text: party.foundedDateText ?? null,
+      filed_date_text: party.filedDateText ?? null,
+      headquarters_address: party.headquartersAddress ?? null,
+      contact_phone: party.contactPhone ?? null,
       status: party.status,
       source_name: source.name,
       source_url: source.url,

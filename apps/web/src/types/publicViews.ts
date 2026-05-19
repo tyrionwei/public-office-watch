@@ -189,6 +189,11 @@ export type PublicParty = {
   theme_key: PartyThemeKey;
   official_site_url: string | null;
   chairperson_name: string | null;
+  registry_no: string | null;
+  founded_date_text: string | null;
+  filed_date_text: string | null;
+  headquarters_address: string | null;
+  contact_phone: string | null;
   status: 'active' | 'inactive' | 'unknown';
   source_name: string | null;
   source_url: string | null;

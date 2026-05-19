@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "lastUpdated": "2026-05-19",
+  "purpose": "Machine-readable notes for repeatable public data ingestion jobs. Keep this in sync with docs/public-data-fetch-recipes.md and data-sources/real-public-data.seed.json.",
+  "sharedRules": {
+    "httpTimeoutMs": 30000,
+    "encoding": {
+      "default": "utf-8",
+      "fallback": "big5",
+      "fallbackTrigger": "Decode as UTF-8 first; if replacement characters are common, retry Big5."
+    },
+    "delimitedText": {
+      "delimiterDetection": "Detect delimiter from the header row. Supported delimiters: comma, semicolon, tab.",
+      "bomHandling": "Trim UTF-8 BOM from the first header.",
+      "quoteHandling": "Support double-quoted fields and escaped double quotes."
+    },
+    "writeBoundary": "Write only to base tables. Frontend reads only approved public views."
+  },
+  "sources": [
+    {
+      "id": "moi-party-registry",
+      "status": "implemented",
+      "sourceUrl": "https://data.gov.tw/dataset/31973",
+      "downloadUrl": "https://data.moi.gov.tw/MoiOD/System/DownloadFile.aspx?DATA=55514697-A736-4FE0-AFA4-61EC85F82929",
+      "cadence": "daily",
+      "format": "delimited-text",
+      "parser": "parseDelimited + pickField in scripts/sync-real-public-data.mjs",
+      "targetTables": ["parties"],
+      "targetPublicViews": ["public_parties"],
+      "primaryKey": "external_id = moi-party-${sha1(name).slice(0, 12)}",
+      "filtering": {
+        "mode": "allowlist",
+        "reason": "The official registry includes many inactive or low-signal parties. Product UI currently shows politically meaningful parties only.",
+        "field": "政黨名稱",
+        "allowlistOwner": "scripts/sync-real-public-data.mjs relevantPartyNames"
+      },
+      "fieldCandidates": {
+        "name": ["政黨名稱", "名稱", "黨名", "political_party_name"],
+        "registryNo": ["政黨編號", "編號", "registry_no", "party_no"],
+        "foundedDateText": ["成立日期", "founded_date"],
+        "filedDateText": ["備案日期", "filed_date", "registration_date"],
+        "headquartersAddress": ["主事務所地址", "地址", "headquarters_address"],
+        "contactPhone": ["通訊電話", "電話", "contact_phone"],
+        "chairpersonName": ["負責人", "主任委員", "黨主席", "chairperson", "leader"]
+      },
+      "fallback": {
+        "mode": "seed",
+        "seedPath": "data-sources/real-public-data.seed.json",
+        "reportStatus": "fallback",
+        "notes": "If the live download fails, keep the seed parties and include livePartyRegistry.error in the report."
+      },
+      "knownIssues": [
+        "The MOI download endpoint may return network-level fetch failed locally.",
+        "Do not block daily dry-runs on this source; fallback is expected and should be reported."
+      ]
+    },
+    {
+      "id": "data-gov-tw-county-boundary-7442",
+      "status": "planned",
+      "sourceUrl": "https://data.gov.tw/dataset/7442",
+      "cadence": "weekly",
+      "format": "geospatial-archive",
+      "targetTables": ["regions"],
+      "targetPublicViews": ["public_regions", "public_region_election_summary"],
+      "currentUse": "Seed references Taiwan plus 22 county/city records. Do not commit raw SHP/ZIP artifacts.",
+      "nextParserNotes": [
+        "Download to tmp/ only.",
+        "Convert official county/city code, name, and geometry into normalized region records.",
+        "Keep map simplification output separate from source provenance."
+      ]
+    },
+    {
+      "id": "cec-election-data",
+      "status": "planned",
+      "sourceUrl": "https://db.cec.gov.tw/",
+      "cadence": "daily",
+      "format": "web-database",
+      "targetTables": ["elections", "races", "candidates"],
+      "targetPublicViews": ["public_elections", "public_races", "public_candidates"],
+      "currentUse": "Seed contains 2024 presidential and legislative metadata only.",
+      "nextParserNotes": [
+        "Prefer official export/download endpoints when available.",
+        "Separate election event metadata from candidate rows.",
+        "Candidate ingestion should populate public_candidates only after source fields are verified."
+      ]
+    },
+    {
+      "id": "control-yuan-political-contribution-search",
+      "status": "planned",
+      "sourceUrl": "https://ardata.cy.gov.tw/home",
+      "cadence": "weekly",
+      "format": "web-search-platform",
+      "targetTables": ["party_finance_summaries", "party_company_contribution_summaries"],
+      "targetPublicViews": ["public_party_finance_summaries", "public_party_company_contribution_summaries"],
+      "privacyBoundary": "Do not publish personal donation details. Company-level summaries require review before is_public=true.",
+      "nextParserNotes": [
+        "First automate source availability and version checks.",
+        "Then map party-level annual totals.",
+        "Delay company relationship publication until the review workflow exists."
+      ]
+    },
+    {
+      "id": "data-gov-tw-party-contribution-6562003",
+      "status": "planned",
+      "sourceUrl": "https://data.gov.tw/dataset/6562003",
+      "cadence": "weekly",
+      "format": "open-data-package",
+      "targetTables": ["party_finance_summaries"],
+      "targetPublicViews": ["public_party_finance_summaries"],
+      "privacyBoundary": "Use party-level annual summaries only. Do not expose personal donation detail rows.",
+      "nextParserNotes": [
+        "Inspect package resources before writing parser assumptions.",
+        "Normalize ROC years to Gregorian years if present.",
+        "Write only aggregate totals after field verification."
+      ]
+    }
+  ],
+  "verification": [
+    "node scripts/sync-real-public-data.mjs --weekly --skip-live-fetch",
+    "node scripts/sync-real-public-data.mjs --weekly",
+    "cd apps/web && node node_modules/typescript/bin/tsc -b",
+    "cd apps/web && node scripts/check-public-data-boundary.mjs",
+    "cd apps/web && node scripts/check-public-view-contracts.mjs"
+  ]
+}

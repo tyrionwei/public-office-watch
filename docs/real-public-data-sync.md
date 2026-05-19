@@ -2,6 +2,8 @@
 
 This branch introduces the first real-data ingestion path. It is intentionally small and repeatable.
 
+For source-specific fetching and parsing recipes, see `docs/public-data-fetch-recipes.md` and `data-sources/source-fetch-recipes.json`.
+
 ## What It Syncs
 
 - `regions`: Taiwan plus 22 county/city records.

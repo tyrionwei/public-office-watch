@@ -480,6 +480,31 @@ async function supabaseRequest(env, table, { method = 'GET', rows, onConflict, s
   return Array.isArray(body) ? body : [];
 }
 
+async function supabasePatch(env, table, filters, row) {
+  const url = new URL(`${env.url}/rest/v1/${table}`);
+
+  for (const [key, value] of Object.entries(filters)) {
+    url.searchParams.set(key, `eq.${value}`);
+  }
+
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: {
+      apikey: env.serviceKey,
+      authorization: `Bearer ${env.serviceKey}`,
+      'content-type': 'application/json',
+      prefer: 'return=minimal',
+    },
+    body: JSON.stringify(row),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    const body = text ? JSON.parse(text) : null;
+    throw new Error(`${table} PATCH failed: ${body?.message ?? response.statusText}`);
+  }
+}
+
 async function upsertOrThrow(env, table, rows, options = {}) {
   if (rows.length === 0) {
     return [];
@@ -515,6 +540,10 @@ async function writeSeed(seed, hash, args) {
     };
   });
 
+  for (const region of seed.regions) {
+    await supabasePatch(env, 'regions', { slug: region.slug }, { external_id: region.externalId });
+  }
+
   const regions = await upsertOrThrow(env, 'regions', regionRows, { onConflict: 'external_id' });
   const regionByExternalId = new Map(regions.map((region) => [region.external_id, region]));
 
@@ -522,6 +551,14 @@ async function writeSeed(seed, hash, args) {
     .filter((region) => region.parentExternalId)
     .map((region) => ({
       external_id: region.externalId,
+      name: region.name,
+      slug: region.slug,
+      region_type: region.regionType,
+      official_code: region.officialCode ?? null,
+      map_code: region.mapCode ?? null,
+      display_order: region.displayOrder ?? null,
+      is_public: true,
+      updated_at: startedAt,
       parent_region_id: regionByExternalId.get(region.parentExternalId)?.id ?? null,
     }));
 

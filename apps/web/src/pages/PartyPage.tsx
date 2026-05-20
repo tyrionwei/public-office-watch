@@ -29,6 +29,10 @@ function isAnnouncedCandidate(candidate: PublicCandidate) {
   return ['registered', 'qualified'].includes(candidate.registration_status);
 }
 
+function isCurrentOfficeholder(person: PublicPerson) {
+  return Boolean(person.position) && !person.position?.startsWith('範例') && !person.name.startsWith('測試');
+}
+
 function PersonMiniCard({ person }: { person: PublicPerson }) {
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
@@ -63,7 +67,7 @@ export function PartyPage() {
   const officeholders = party
     ? publicDataProvider
         .getPeople()
-        .filter((person) => matchesPartyLabel(person.party, party) && Boolean(person.position))
+        .filter((person) => matchesPartyLabel(person.party, party) && isCurrentOfficeholder(person))
     : [];
   const announcedCandidates = party
     ? publicDataProvider

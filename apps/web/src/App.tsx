@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BgmProvider } from './components/BgmProvider';
+import { publicDataReadyEvent } from './lib/publicDataProviderFactory';
 import { AboutPage } from './pages/AboutPage';
 import { DataGuidancePage } from './pages/DataGuidancePage';
 import { ElectionPage } from './pages/ElectionPage';
@@ -8,9 +11,16 @@ import { PartiesPage } from './pages/PartiesPage';
 import { PartyPage } from './pages/PartyPage';
 import { RegionPage } from './pages/RegionPage';
 import { aboutPath, dataGuidancePath, homePath, partiesPath } from './routes/routePaths';
-import { BgmProvider } from './components/BgmProvider';
 
 function App() {
+  const [, setPublicDataVersion] = useState(0);
+
+  useEffect(() => {
+    const handlePublicDataReady = () => setPublicDataVersion((version) => version + 1);
+    window.addEventListener(publicDataReadyEvent, handlePublicDataReady);
+    return () => window.removeEventListener(publicDataReadyEvent, handlePublicDataReady);
+  }, []);
+
   return (
     <BrowserRouter>
       <BgmProvider>

@@ -3,6 +3,8 @@ import { mockPublicDataProvider } from './mockPublicDataProvider';
 import { getPublicDataProviderMode, getSupabasePublicEnv } from './supabaseEnv';
 import { refreshSupabasePublicDataSnapshot, supabasePublicDataProvider } from './supabasePublicDataProvider';
 
+export const publicDataReadyEvent = 'public-data-ready';
+
 function isLocalToggleAllowed() {
   return import.meta.env.DEV;
 }
@@ -22,6 +24,8 @@ export function createPublicDataProvider(): PublicDataProvider {
     return mockPublicDataProvider;
   }
 
-  void refreshSupabasePublicDataSnapshot();
+  void refreshSupabasePublicDataSnapshot().then(() => {
+    window.dispatchEvent(new Event(publicDataReadyEvent));
+  });
   return supabasePublicDataProvider;
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { BgmProvider } from './components/BgmProvider';
 import { publicDataReadyEvent } from './lib/publicDataProviderFactory';
+import { refreshSupabasePublicDataSnapshot } from './lib/supabasePublicDataProvider';
 import { AboutPage } from './pages/AboutPage';
 import { DataGuidancePage } from './pages/DataGuidancePage';
 import { ElectionPage } from './pages/ElectionPage';
@@ -18,6 +19,11 @@ function App() {
   useEffect(() => {
     const handlePublicDataReady = () => setPublicDataVersion((version) => version + 1);
     window.addEventListener(publicDataReadyEvent, handlePublicDataReady);
+
+    void refreshSupabasePublicDataSnapshot().then(() => {
+      setPublicDataVersion((version) => version + 1);
+    });
+
     return () => window.removeEventListener(publicDataReadyEvent, handlePublicDataReady);
   }, []);
 

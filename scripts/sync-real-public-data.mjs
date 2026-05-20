@@ -270,6 +270,92 @@ async function enrichSeedWithLivePartyRegistry(seed, args) {
   }
 }
 
+function parseJsonPayload(content) {
+  const startIndex = content.indexOf('{');
+  const endIndex = content.lastIndexOf('}');
+
+  if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+    throw new Error('No JSON object was found in response payload.');
+  }
+
+  return JSON.parse(content.slice(startIndex, endIndex + 1));
+}
+
+function getLegislatorCodeFromPhotoUrl(picUrl) {
+  const match = picUrl.match(/\/(\d+)\.[a-z]+$/i);
+  return match?.[1] ?? '';
+}
+
+async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
+  const source = seed.sources.find((item) => item.id === 'ly-current-legislators');
+
+  if (args.skipLiveFetch || !source?.downloadUrl) {
+    return {
+      seed,
+      liveCurrentOfficeholders: {
+        status: 'skipped',
+        count: seed.people?.length ?? 0,
+        url: source?.downloadUrl ?? null,
+      },
+    };
+  }
+
+  try {
+    const payload = parseJsonPayload(await fetchText(source.downloadUrl));
+    const rows = Array.isArray(payload.dataList) ? payload.dataList : [];
+    const officeholders = rows
+      .filter((row) => pickField(row, ['leaveFlag']) === '否')
+      .map((row) => {
+        const term = pickField(row, ['term']) || '11';
+        const name = pickField(row, ['name']);
+        const party = pickField(row, ['partyGroup', 'party']);
+        const areaName = pickField(row, ['areaName']);
+        const onboardDate = pickField(row, ['onboardDate']);
+        const legislatorCode = getLegislatorCodeFromPhotoUrl(pickField(row, ['picUrl']));
+        return {
+          externalId: `ly-legislator-${term}-${legislatorCode || hashId([name, party, areaName, onboardDate].join('|'))}`,
+          name,
+          alias: pickField(row, ['ename']) || null,
+          party,
+          position: `第${term}屆立法委員`,
+          electionYear: 2024,
+          district: areaName,
+          sourceUrl: source.url,
+          isPublic: true,
+          sourceId: 'ly-current-legislators',
+        };
+      })
+      .filter((person) => person.name);
+
+    if (officeholders.length === 0) {
+      throw new Error('JSON parsed successfully but no current legislators were found.');
+    }
+
+    return {
+      seed: {
+        ...seed,
+        people: officeholders,
+      },
+      liveCurrentOfficeholders: {
+        status: 'ok',
+        count: officeholders.length,
+        url: source.downloadUrl,
+      },
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return {
+      seed,
+      liveCurrentOfficeholders: {
+        status: 'fallback',
+        count: seed.people?.length ?? 0,
+        url: source?.downloadUrl ?? null,
+        error: message,
+      },
+    };
+  }
+}
+
 function readSeed(seedPath) {
   const content = fs.readFileSync(seedPath, 'utf8');
   return {
@@ -593,14 +679,14 @@ async function writeSeed(seed, hash, args) {
             financeRows.length,
           started_at: startedAt,
           finished_at: new Date().toISOString(),
-          report_json: buildReport(seed, hash, args, args.livePartyRegistry),
+          report_json: buildReport(seed, hash, args, args.livePartyRegistry, args.liveCurrentOfficeholders),
         },
       ],
     );
   }
 }
 
-function buildReport(seed, hash, args, livePartyRegistry) {
+function buildReport(seed, hash, args, livePartyRegistry, liveCurrentOfficeholders) {
   return {
     syncName: 'real-public-data-foundation',
     mode: args.write ? 'write' : 'dry-run',
@@ -618,6 +704,7 @@ function buildReport(seed, hash, args, livePartyRegistry) {
       partyCompanyContributionSummaries: seed.partyCompanyContributionSummaries?.length ?? 0,
     },
     livePartyRegistry,
+    liveCurrentOfficeholders,
     skipped: {
       personalDonationDetails: true,
       companyContributionSummaries: 'requires later review flow before publication',
@@ -628,13 +715,15 @@ function buildReport(seed, hash, args, livePartyRegistry) {
 async function main() {
   const args = parseArgs(process.argv);
   const { seed: baseSeed } = readSeed(args.seedPath);
-  const enriched = await enrichSeedWithLivePartyRegistry(baseSeed, args);
-  const seed = enriched.seed;
+  const partyEnriched = await enrichSeedWithLivePartyRegistry(baseSeed, args);
+  const officeholderEnriched = await enrichSeedWithLiveCurrentOfficeholders(partyEnriched.seed, args);
+  const seed = officeholderEnriched.seed;
   const hash = crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex');
   validateSeed(seed);
 
-  const report = buildReport(seed, hash, args, enriched.livePartyRegistry);
-  args.livePartyRegistry = enriched.livePartyRegistry;
+  const report = buildReport(seed, hash, args, partyEnriched.livePartyRegistry, officeholderEnriched.liveCurrentOfficeholders);
+  args.livePartyRegistry = partyEnriched.livePartyRegistry;
+  args.liveCurrentOfficeholders = officeholderEnriched.liveCurrentOfficeholders;
 
   if (args.write) {
     await writeSeed(seed, hash, args);

@@ -88,18 +88,34 @@
     },
     {
       "id": "current-officeholders",
-      "status": "planned",
-      "sourceUrl": null,
-      "cadence": "weekly",
-      "format": "official-source-mix",
+      "status": "implemented",
+      "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16",
+      "downloadUrl": "https://data.ly.gov.tw/odw/ID16Action.action?name=&sex=&party=&partyGroup=&areaName=&term=11&fileType=json",
+      "cadence": "daily",
+      "format": "json-wrapped-in-html-whitespace",
       "targetTables": ["people"],
       "targetPublicViews": ["public_people"],
-      "currentUse": "The party detail page already reads officeholders from public_people. The sync script can upsert people by external_id.",
+      "currentUse": "The sync script fetches the Legislative Yuan term 11 member dataset and writes rows with leaveFlag=否 into people.",
+      "parser": "parseJsonPayload + enrichSeedWithLiveCurrentOfficeholders in scripts/sync-real-public-data.mjs",
+      "fieldCandidates": {
+        "name": ["name"],
+        "alias": ["ename"],
+        "party": ["partyGroup", "party"],
+        "district": ["areaName"],
+        "onboardDate": ["onboardDate"],
+        "leaveFlag": ["leaveFlag"]
+      },
+      "primaryKey": "external_id = ly-legislator-${term}-${picUrl filename code, fallback sha1(name|party|areaName|onboardDate).slice(0, 12)}",
+      "filtering": {
+        "mode": "current-only",
+        "field": "leaveFlag",
+        "acceptedValue": "否"
+      },
       "nextParserNotes": [
-        "Prefer an official bulk source for Legislative Yuan members and local officeholders.",
-        "Do not infer current office from old election results without a freshness check.",
+        "Extend this source family later for local officeholders; keep Legislative Yuan sync separate from local officials.",
         "Store role text in position and district or constituency text in district.",
-        "Use source-specific external IDs rather than names alone whenever available."
+        "Use source-specific external IDs rather than names alone whenever available.",
+        "If the live download fails, keep seed people rows and report liveCurrentOfficeholders.status=fallback."
       ]
     },
     {

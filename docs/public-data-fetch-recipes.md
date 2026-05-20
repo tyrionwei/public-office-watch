@@ -103,33 +103,49 @@ Next parser notes:
 - Candidate ingestion should populate `public_candidates` only after source fields and status mapping are verified.
 - Use `registration_status = registered` for official registration lists and `qualified` for confirmed eligible lists.
 
-## Planned: Current Officeholders
+## Implemented: Current Legislative Yuan Officeholders
 
-Potential sources:
+Source:
 
-- Legislative Yuan member data for sitting legislators.
-- Executive/local government official pages for mayors and councilors when official bulk data is unavailable.
-- CEC election result data for elected candidates, with an additional freshness check before treating them as current.
+- Dataset page: `https://data.ly.gov.tw/getds.action?id=16`
+- Current download URL: `https://data.ly.gov.tw/odw/ID16Action.action?name=&sex=&party=&partyGroup=&areaName=&term=11&fileType=json`
+- Current script: `scripts/sync-real-public-data.mjs`
+- Target table: `people`
+- Target public view: `public_people`
 
-Target table:
+Fetch method:
 
-- `people`
-
-Target public view:
-
-- `public_people`
+1. Download the term 11 JSON feed.
+2. The response may include leading/trailing HTML whitespace, so parse the substring between the first `{` and last `}`.
+3. Read `dataList`.
+4. Keep only rows where `leaveFlag` is `否`.
+5. Write rows to `people` with `position = 第11屆立法委員`.
 
 Current state:
 
 - The party detail page can already show officeholders from `public_people`.
 - The sync script can upsert `people` by `external_id`.
 
+Useful field candidates:
+
+| Target field | Source header candidates |
+| --- | --- |
+| `name` | `name` |
+| `alias` | `ename` |
+| `party` | `partyGroup`, `party` |
+| `district` | `areaName` |
+| `source freshness` | `onboardDate`, `leaveFlag`, `leaveDate` |
+
+Fallback:
+
+- If the live download fails, keep seed `people` rows.
+- The report should set `liveCurrentOfficeholders.status` to `fallback` and include `liveCurrentOfficeholders.error`.
+
 Next parser notes:
 
-- Do not infer current office from old election results alone after a new election cycle or resignation period.
-- Store role text in `position` and district/constituency in `district`.
+- Extend this source family later for local officeholders; keep Legislative Yuan sync separate from local officials.
+- Do not infer current local office from old election results alone after a new election cycle or resignation period.
 - Keep `source_url` on the base person row for traceability.
-- Use source-specific external IDs, not names alone, whenever an official ID exists.
 
 ## Planned: Political Contributions
 

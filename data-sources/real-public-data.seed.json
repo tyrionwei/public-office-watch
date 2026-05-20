@@ -20,6 +20,15 @@
       "notes": "第一批只同步選舉事件與 race metadata，不同步候選人或得票明細。"
     },
     {
+      "id": "ly-current-legislators",
+      "type": "current-officeholders",
+      "name": "立法院開放資料：歷屆委員資料",
+      "url": "https://data.ly.gov.tw/getds.action?id=16",
+      "downloadUrl": "https://data.ly.gov.tw/odw/ID16Action.action?name=&sex=&party=&partyGroup=&areaName=&term=11&fileType=json",
+      "refreshCadence": "daily",
+      "notes": "用於同步第11屆現任立法委員；只取 leaveFlag 為否的委員作為目前就職中資料。"
+    },
+    {
       "id": "moi-party-registry",
       "type": "party-registry",
       "name": "內政部政黨名冊",

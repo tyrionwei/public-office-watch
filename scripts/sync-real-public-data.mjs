@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import zlib from 'node:zlib';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultSeedPath = path.join(repoRoot, 'data-sources', 'real-public-data.seed.json');
@@ -99,12 +100,23 @@ function detectDelimiter(headerLine) {
 }
 
 function parseDelimited(content) {
+  const rows = parseDelimitedRows(content);
+
+  if (rows.length === 0) {
+    return [];
+  }
+
+  const headers = rows[0].map((header) => header.replace(/^\uFEFF/, '').trim());
+  return rows.slice(1).map((cells) => Object.fromEntries(headers.map((header, index) => [header, cells[index] ?? ''])));
+}
+
+function parseDelimitedRows(content, delimiterOverride = null) {
   const rows = [];
   let current = '';
   let row = [];
   let inQuotes = false;
   const headerLine = content.split(/\r?\n/, 1)[0] ?? '';
-  const delimiter = detectDelimiter(headerLine);
+  const delimiter = delimiterOverride ?? detectDelimiter(headerLine);
 
   for (let index = 0; index < content.length; index += 1) {
     const char = content[index];
@@ -149,12 +161,7 @@ function parseDelimited(content) {
     rows.push(row);
   }
 
-  if (rows.length === 0) {
-    return [];
-  }
-
-  const headers = rows[0].map((header) => header.replace(/^\uFEFF/, '').trim());
-  return rows.slice(1).map((cells) => Object.fromEntries(headers.map((header, index) => [header, cells[index] ?? ''])));
+  return rows;
 }
 
 function pickField(row, candidates) {
@@ -188,6 +195,218 @@ async function fetchText(url) {
   }
 
   return utf8;
+}
+
+async function fetchBytes(url) {
+  const response = await fetch(url, { signal: AbortSignal.timeout(60000) });
+
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.statusText}`);
+  }
+
+  return Buffer.from(await response.arrayBuffer());
+}
+
+const zipPathDecoder = new TextDecoder('big5', { fatal: false });
+
+function findZipEndOfCentralDirectory(buffer) {
+  const signature = 0x06054b50;
+  const minOffset = Math.max(0, buffer.length - 65557);
+
+  for (let offset = buffer.length - 22; offset >= minOffset; offset -= 1) {
+    if (buffer.readUInt32LE(offset) === signature) {
+      return offset;
+    }
+  }
+
+  throw new Error('ZIP end of central directory was not found.');
+}
+
+function listZipEntries(buffer) {
+  const endOffset = findZipEndOfCentralDirectory(buffer);
+  const entryCount = buffer.readUInt16LE(endOffset + 10);
+  const centralDirectoryOffset = buffer.readUInt32LE(endOffset + 16);
+  const entries = [];
+  let offset = centralDirectoryOffset;
+
+  for (let index = 0; index < entryCount; index += 1) {
+    if (buffer.readUInt32LE(offset) !== 0x02014b50) {
+      throw new Error('Invalid ZIP central directory entry.');
+    }
+
+    const compressionMethod = buffer.readUInt16LE(offset + 10);
+    const compressedSize = buffer.readUInt32LE(offset + 20);
+    const uncompressedSize = buffer.readUInt32LE(offset + 24);
+    const fileNameLength = buffer.readUInt16LE(offset + 28);
+    const extraFieldLength = buffer.readUInt16LE(offset + 30);
+    const fileCommentLength = buffer.readUInt16LE(offset + 32);
+    const localHeaderOffset = buffer.readUInt32LE(offset + 42);
+    const fileNameBytes = buffer.subarray(offset + 46, offset + 46 + fileNameLength);
+
+    entries.push({
+      name: zipPathDecoder.decode(fileNameBytes),
+      compressionMethod,
+      compressedSize,
+      uncompressedSize,
+      localHeaderOffset,
+    });
+
+    offset += 46 + fileNameLength + extraFieldLength + fileCommentLength;
+  }
+
+  return entries;
+}
+
+function extractZipEntry(buffer, entry) {
+  const offset = entry.localHeaderOffset;
+
+  if (buffer.readUInt32LE(offset) !== 0x04034b50) {
+    throw new Error(`Invalid ZIP local header for ${entry.name}.`);
+  }
+
+  const fileNameLength = buffer.readUInt16LE(offset + 26);
+  const extraFieldLength = buffer.readUInt16LE(offset + 28);
+  const dataOffset = offset + 30 + fileNameLength + extraFieldLength;
+  const compressed = buffer.subarray(dataOffset, dataOffset + entry.compressedSize);
+
+  if (entry.compressionMethod === 0) {
+    return compressed;
+  }
+
+  if (entry.compressionMethod === 8) {
+    return zlib.inflateRawSync(compressed, { finishFlush: zlib.constants.Z_SYNC_FLUSH });
+  }
+
+  throw new Error(`Unsupported ZIP compression method ${entry.compressionMethod} for ${entry.name}.`);
+}
+
+function readZipTextBySuffix(buffer, suffix) {
+  const entry = listZipEntries(buffer).find((item) => item.name.endsWith(suffix));
+
+  if (!entry) {
+    throw new Error(`ZIP entry not found: ${suffix}`);
+  }
+
+  const bytes = extractZipEntry(buffer, entry);
+
+  if (entry.uncompressedSize && bytes.length !== entry.uncompressedSize) {
+    throw new Error(`ZIP entry size mismatch: ${suffix}`);
+  }
+
+  return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+}
+
+function normalizePartyName(name) {
+  if (name === '臺灣民眾黨') return '台灣民眾黨';
+  if (name === '臺灣基進') return '台灣基進';
+  if (name === '台灣綠黨') return '綠黨';
+  if (name === '臺灣社會民主黨') return '社會民主黨';
+  if (name === '無黨籍及未經政黨推薦') return '無黨籍';
+  return name;
+}
+
+function mergeByExternalId(collections) {
+  const merged = new Map();
+
+  for (const collection of collections) {
+    for (const item of collection ?? []) {
+      merged.set(item.externalId, item);
+    }
+  }
+
+  return Array.from(merged.values());
+}
+
+async function enrichSeedWithLiveCecCandidates(seed, args) {
+  const source = seed.sources.find((item) => item.id === 'cec-2024-votedata');
+
+  if (args.skipLiveFetch || !source?.downloadUrl) {
+    return {
+      seed,
+      liveCecCandidates: {
+        status: 'skipped',
+        count: seed.candidates?.length ?? 0,
+        url: source?.downloadUrl ?? null,
+      },
+    };
+  }
+
+  try {
+    const zipBuffer = await fetchBytes(source.downloadUrl);
+    const partyRows = parseDelimitedRows(readZipTextBySuffix(zipBuffer, '2024總統立委/總統/elpaty.csv'), ',');
+    const candidateRows = parseDelimitedRows(readZipTextBySuffix(zipBuffer, '2024總統立委/總統/elcand.csv'), ',');
+    const partyByCode = new Map(partyRows.map((row) => [row[0], normalizePartyName(row[1] ?? '')]));
+    const electedCandidateNos = new Set(candidateRows.filter((row) => row[14]?.trim() === '*').map((row) => row[5]));
+    const people = [];
+    const candidates = [];
+
+    for (const row of candidateRows) {
+      const candidateNo = row[5];
+      const name = row[6];
+      const party = normalizePartyName(partyByCode.get(row[7]) ?? '');
+      const role = row[15]?.trim() === 'Y' ? '副總統候選人' : '總統候選人';
+      const personExternalId = `cec-2024-president-person-${hashId([candidateNo, name, role].join('|'))}`;
+      const candidateExternalId = `cec-2024-president-candidate-${candidateNo}-${hashId([name, role].join('|'))}`;
+
+      if (!name) {
+        continue;
+      }
+
+      people.push({
+        externalId: personExternalId,
+        name,
+        alias: null,
+        party,
+        position: `第16任${role}`,
+        electionYear: 2024,
+        district: '全國',
+        sourceUrl: source.url,
+        isPublic: true,
+        sourceId: 'cec-2024-votedata',
+      });
+
+      candidates.push({
+        externalId: candidateExternalId,
+        personExternalId,
+        raceExternalId: 'cec-2024-president-national',
+        party,
+        candidateNo,
+        registrationStatus: electedCandidateNos.has(candidateNo) ? 'elected' : 'not_elected',
+        sourceUrl: source.url,
+        isPublic: true,
+        sourceId: 'cec-2024-votedata',
+      });
+    }
+
+    if (candidates.length === 0) {
+      throw new Error('CEC ZIP parsed successfully but no presidential candidate rows were found.');
+    }
+
+    return {
+      seed: {
+        ...seed,
+        people: mergeByExternalId([seed.people, people]),
+        candidates: mergeByExternalId([seed.candidates, candidates]),
+      },
+      liveCecCandidates: {
+        status: 'ok',
+        count: candidates.length,
+        url: source.downloadUrl,
+        scope: '2024 presidential and vice-presidential candidates',
+      },
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return {
+      seed,
+      liveCecCandidates: {
+        status: 'fallback',
+        count: seed.candidates?.length ?? 0,
+        url: source.downloadUrl,
+        error: message,
+      },
+    };
+  }
 }
 
 async function enrichSeedWithLivePartyRegistry(seed, args) {
@@ -334,7 +553,7 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
     return {
       seed: {
         ...seed,
-        people: officeholders,
+        people: mergeByExternalId([seed.people, officeholders]),
       },
       liveCurrentOfficeholders: {
         status: 'ok',
@@ -723,7 +942,7 @@ async function writeSeed(seed, hash, args) {
   }
 }
 
-function buildReport(seed, hash, args, livePartyRegistry, liveCurrentOfficeholders) {
+function buildReport(seed, hash, args, livePartyRegistry, liveCurrentOfficeholders, liveCecCandidates) {
   return {
     syncName: 'real-public-data-foundation',
     mode: args.write ? 'write' : 'dry-run',
@@ -742,6 +961,7 @@ function buildReport(seed, hash, args, livePartyRegistry, liveCurrentOfficeholde
     },
     livePartyRegistry,
     liveCurrentOfficeholders,
+    liveCecCandidates,
     skipped: {
       personalDonationDetails: true,
       companyContributionSummaries: 'requires later review flow before publication',
@@ -754,13 +974,22 @@ async function main() {
   const { seed: baseSeed } = readSeed(args.seedPath);
   const partyEnriched = await enrichSeedWithLivePartyRegistry(baseSeed, args);
   const officeholderEnriched = await enrichSeedWithLiveCurrentOfficeholders(partyEnriched.seed, args);
-  const seed = officeholderEnriched.seed;
+  const candidateEnriched = await enrichSeedWithLiveCecCandidates(officeholderEnriched.seed, args);
+  const seed = candidateEnriched.seed;
   const hash = crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex');
   validateSeed(seed);
 
-  const report = buildReport(seed, hash, args, partyEnriched.livePartyRegistry, officeholderEnriched.liveCurrentOfficeholders);
+  const report = buildReport(
+    seed,
+    hash,
+    args,
+    partyEnriched.livePartyRegistry,
+    officeholderEnriched.liveCurrentOfficeholders,
+    candidateEnriched.liveCecCandidates,
+  );
   args.livePartyRegistry = partyEnriched.livePartyRegistry;
   args.liveCurrentOfficeholders = officeholderEnriched.liveCurrentOfficeholders;
+  args.liveCecCandidates = candidateEnriched.liveCecCandidates;
 
   if (args.write) {
     await writeSeed(seed, hash, args);

@@ -80,19 +80,30 @@ Next parser notes:
 - Keep geometry simplification output separate from source provenance.
 - Use official code as the stable external ID when possible.
 
-## Planned: CEC Election Database
+## Implemented First Slice: CEC Election Database
 
 Source:
 
 - `https://db.cec.gov.tw/`
+- Open data package: `https://data.gov.tw/dataset/13119`
+- ZIP download: `https://data.cec.gov.tw/選舉資料庫/votedata.zip`
 - Target tables: `elections`, `races`, `candidates`
 - Target public views: `public_elections`, `public_races`, `public_candidates`
 
 Current state:
 
 - The seed contains 2024 presidential and legislative metadata only.
-- The sync script has empty `people` and `candidates` seed entry points.
+- The sync script imports the 2024 presidential and vice-presidential candidate rows from `2024總統立委/總統/elcand.csv`.
+- Party code labels are mapped through `2024總統立委/總統/elpaty.csv`.
 - `people.external_id` and `candidates.external_id` exist so future official candidate syncs can upsert safely.
+
+Fetch method:
+
+1. Download the official CEC `votedata.zip` archive.
+2. Decode ZIP entry names as Big5/CP950.
+3. Read `elpaty.csv` for party code labels.
+4. Read `elcand.csv` for candidate number, name, party code, elected marker, and vice-president marker.
+5. Populate `people`, then populate `candidates` linked to `cec-2024-president-national`.
 
 Next parser notes:
 
@@ -101,7 +112,8 @@ Next parser notes:
 - Candidate ingestion should populate `people` first, then `candidates`.
 - Candidate rows should link by `personExternalId` and `raceExternalId`.
 - Candidate ingestion should populate `public_candidates` only after source fields and status mapping are verified.
-- Use `registration_status = registered` for official registration lists and `qualified` for confirmed eligible lists.
+- The current completed 2024 presidential slice treats a candidate number as elected when any row in that president/vice-president pair has `*` in the elected marker field.
+- Add regional legislative race rows before importing 2024 district legislator candidate rows.
 
 ## Implemented: Current Legislative Yuan Officeholders
 

@@ -87,6 +87,43 @@
       ]
     },
     {
+      "id": "cec-2024-votedata",
+      "status": "implemented-first-slice",
+      "sourceUrl": "https://data.gov.tw/dataset/13119",
+      "downloadUrl": "https://data.cec.gov.tw/選舉資料庫/votedata.zip",
+      "cadence": "weekly",
+      "format": "zip-csv",
+      "parser": "fetchBytes + minimal ZIP central-directory reader + parseDelimitedRows in scripts/sync-real-public-data.mjs",
+      "targetTables": ["people", "candidates"],
+      "targetPublicViews": ["public_people", "public_candidates"],
+      "currentUse": "First slice syncs 2024 presidential and vice-presidential candidate rows from 2024總統立委/總統/elcand.csv and maps party codes through elpaty.csv.",
+      "zipNotes": {
+        "filenameEncoding": "Big5/CP950 paths in the ZIP central directory are decoded with TextDecoder('big5').",
+        "candidateEntry": "votedata/votedata/voteData/2024總統立委/總統/elcand.csv",
+        "partyCodeEntry": "votedata/votedata/voteData/2024總統立委/總統/elpaty.csv"
+      },
+      "fieldPositions": {
+        "candidateNo": 5,
+        "personName": 6,
+        "partyCode": 7,
+        "electedMark": 14,
+        "vicePresidentMark": 15
+      },
+      "primaryKeys": {
+        "people": "external_id = cec-2024-president-person-${sha1(candidateNo|name|role).slice(0, 12)}",
+        "candidates": "external_id = cec-2024-president-candidate-${candidateNo}-${sha1(name|role).slice(0, 12)}"
+      },
+      "statusMapping": {
+        "candidateNoWithAnyElectedMark": "elected",
+        "candidateNoWithoutElectedMark": "not_elected"
+      },
+      "nextParserNotes": [
+        "Add 2024 regional legislator races before importing 2024區域立委候選人 rows.",
+        "Keep presidential and legislative candidate ingestion separated so future elections can be refreshed independently.",
+        "Do not use historical completed candidates as future announced-candidate data."
+      ]
+    },
+    {
       "id": "current-officeholders",
       "status": "implemented",
       "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16",

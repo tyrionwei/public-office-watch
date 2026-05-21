@@ -22,6 +22,7 @@ coverage/
 gitleaks-report.json
 local-data/
 logs/
+tmp/
 supabase/.branches/
 supabase/.temp/
 secrets.json

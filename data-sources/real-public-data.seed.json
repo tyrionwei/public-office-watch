@@ -20,6 +20,15 @@
       "notes": "第一批只同步選舉事件與 race metadata，不同步候選人或得票明細。"
     },
     {
+      "id": "cec-2024-votedata",
+      "type": "candidate-registry",
+      "name": "中央選舉委員會選舉資料庫：2024總統立委",
+      "url": "https://data.gov.tw/dataset/13119",
+      "downloadUrl": "https://data.cec.gov.tw/選舉資料庫/votedata.zip",
+      "refreshCadence": "weekly",
+      "notes": "同步官方 2024 總統副總統候選人名冊；ZIP 原始檔只放暫存資料夾，不 commit。"
+    },
+    {
       "id": "ly-current-legislators",
       "type": "current-officeholders",
       "name": "立法院開放資料：歷屆委員資料",

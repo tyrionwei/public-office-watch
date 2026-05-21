@@ -1,7 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
-import { MockDataBadge } from '../components/MockDataBadge';
 import { PageNotice } from '../components/PageNotice';
 import { PixelFrame } from '../components/PixelFrame';
 import { PollComparisonPanel } from '../components/PollComparisonPanel';
@@ -14,6 +13,10 @@ const registrationStatusLabels: Record<string, string> = {
   registered: '已登記',
   qualified: '已完成資格確認',
   pending: '待確認',
+  elected: '當選',
+  not_elected: '未當選',
+  disqualified: '資格不符',
+  withdrawn: '已撤回',
   unknown: '未知',
 };
 
@@ -40,17 +43,16 @@ export function ElectionPage() {
             <section className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(11,19,38,0.94),rgba(15,24,46,0.88))] p-5">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="space-y-3">
-                  <MockDataBadge />
                   <div>
                     <p className="text-xs uppercase tracking-[0.22em] text-slate-500">election hero / hud</p>
                     <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">{election.name}</h2>
-                    <p className="mt-2 text-sm text-slate-400">尚未接入正式資料，目前只顯示 mock public views 形狀資料。</p>
+                    <p className="mt-2 text-sm text-slate-400">此頁透過公開資料介面顯示選舉、選區與候選人資料。</p>
                   </div>
                 </div>
 
                 <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-3 text-sm text-slate-300 lg:w-[300px]">
-                  <p className="text-xs uppercase tracking-[0.22em] text-slate-500">mock data notice</p>
-                  <p className="mt-2">目前頁面內容為 UI 測試資料，並非正式選舉結果。</p>
+                  <p className="text-xs uppercase tracking-[0.22em] text-slate-500">data notice</p>
+                  <p className="mt-2">正式資料會標示來源；尚未同步的欄位會保留空狀態。</p>
                 </div>
               </div>
 
@@ -97,7 +99,7 @@ export function ElectionPage() {
               )}
             </SectionPanel>
 
-            <SectionPanel title="Candidate List Placeholder" eyebrow="mock candidates only">
+            <SectionPanel title="Candidate List" eyebrow="public candidate records">
               {candidates.length > 0 ? (
                 <div className="grid gap-4 lg:grid-cols-2">
                   {candidates.map((candidate) => {
@@ -129,24 +131,24 @@ export function ElectionPage() {
                         </div>
                         <dl className="mt-4 grid gap-2 text-sm text-slate-300">
                           <div className="flex justify-between gap-3"><dt className="text-slate-500">registration status</dt><dd>{registrationStatusLabels[candidate.registration_status] ?? candidate.registration_status}</dd></div>
-                          <div className="flex justify-between gap-3"><dt className="text-slate-500">data note</dt><dd>UI 測試資料 / placeholder</dd></div>
+                          <div className="flex justify-between gap-3"><dt className="text-slate-500">source</dt><dd>{candidate.source_name ?? '待補來源'}</dd></div>
                         </dl>
                       </article>
                     );
                   })}
                 </div>
               ) : (
-                <p className="text-sm text-slate-400">目前沒有候選人 placeholder 資料。</p>
+                <p className="text-sm text-slate-400">目前沒有公開候選人資料。</p>
               )}
             </SectionPanel>
 
             <PageNotice
               title="Election Data Boundary Notice"
               bullets={[
-                '資料來源為 mock public views。',
-                '尚未接正式 public views。',
-                '候選人與 race 資料需人工審核後才會公開。',
-                '目前不是正式選舉結果。',
+                '頁面只讀取 approved public views。',
+                '候選人資料以官方公開名冊為優先。',
+                '尚未同步的選區或年份會顯示空狀態。',
+                '政治獻金與公司關係仍需另外的審核流程。',
               ]}
             />
           </div>

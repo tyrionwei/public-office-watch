@@ -25,8 +25,19 @@ function matchesPartyLabel(value: string | null | undefined, party: PublicParty)
   return labels.some((label) => value === label || value.includes(label) || label.includes(value));
 }
 
-function isAnnouncedCandidate(candidate: PublicCandidate) {
-  return ['registered', 'qualified'].includes(candidate.registration_status);
+const candidateStatusLabels: Record<PublicCandidate['registration_status'], string> = {
+  pending: '待確認',
+  registered: '已登記',
+  qualified: '資格確認',
+  disqualified: '資格不符',
+  withdrawn: '已撤回',
+  elected: '當選',
+  not_elected: '未當選',
+  unknown: '未知',
+};
+
+function isPublishedCandidate(candidate: PublicCandidate) {
+  return !['disqualified', 'withdrawn', 'unknown'].includes(candidate.registration_status);
 }
 
 function isCurrentOfficeholder(person: PublicPerson) {
@@ -46,7 +57,9 @@ function PersonMiniCard({ person }: { person: PublicPerson }) {
 function CandidateMiniCard({ candidate }: { candidate: PublicCandidate }) {
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
-      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{candidate.registration_status}</p>
+      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+        {candidateStatusLabels[candidate.registration_status] ?? candidate.registration_status}
+      </p>
       <h3 className="mt-2 font-display text-lg text-white">{candidate.person_name}</h3>
       <p className="mt-2 text-sm text-slate-400">
         {[candidate.race_title, candidate.region_name, candidate.candidate_no ? `#${candidate.candidate_no}` : null]
@@ -74,7 +87,7 @@ export function PartyPage() {
         .getCandidates()
         .filter(
           (candidate) =>
-            isAnnouncedCandidate(candidate) &&
+            isPublishedCandidate(candidate) &&
             (matchesPartyLabel(candidate.party, party) || matchesPartyLabel(candidate.person_party, party)),
         )
     : [];
@@ -150,7 +163,7 @@ export function PartyPage() {
               </dl>
             </SectionPanel>
 
-            <SectionPanel title="黨籍人物與候選人" eyebrow="officeholders and announced candidates">
+            <SectionPanel title="黨籍人物與候選人" eyebrow="officeholders and public candidates">
               <div className="grid gap-4 xl:grid-cols-2">
                 <div>
                   <div className="mb-3 flex items-center justify-between gap-3">
@@ -172,7 +185,7 @@ export function PartyPage() {
 
                 <div>
                   <div className="mb-3 flex items-center justify-between gap-3">
-                    <h3 className="font-display text-lg text-white">已宣布參選</h3>
+                    <h3 className="font-display text-lg text-white">候選人資料</h3>
                     <span className="text-xs uppercase tracking-[0.2em] text-slate-500">{announcedCandidates.length} candidates</span>
                   </div>
                   {announcedCandidates.length > 0 ? (
@@ -183,7 +196,7 @@ export function PartyPage() {
                     </div>
                   ) : (
                     <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
-                      目前沒有已公開的候選人宣布或登記資料。
+                      目前沒有已公開的候選人資料。
                     </p>
                   )}
                 </div>

@@ -10,8 +10,7 @@ For source-specific fetching and parsing recipes, see `docs/public-data-fetch-re
 - `elections`: 2024 presidential and legislative election events.
 - `races`: national presidential and party-list legislative races.
 - `people`: current Legislative Yuan officeholders from the official Legislative Yuan open data feed. Only rows with `leaveFlag = 否` are treated as current.
-- `candidates`: sync-ready candidate records linked to `people` and `races`. The seed is empty until official candidate fields are confirmed.
-- `parties`: core party records used by the party/contribution UI.
+- `candidates`: 2024 presidential and vice-presidential official candidate rows from the CEC open data ZIP, linked to `people` and the national presidential race.
 - `parties`: the sync first tries to fetch the Ministry of the Interior party registry. It reads registry number, party name, founded date, filed date, headquarters address, contact phone, and representative/chairperson. If the registry is temporarily unavailable, dry-run falls back to the seed parties and reports that fallback explicitly.
 - `party_finance_summaries`: schema and pipeline are ready, but the seed leaves totals empty until official fields are confirmed.
 
@@ -21,14 +20,15 @@ Personal donation details and company contribution summaries are not published b
 
 1. Source metadata and seed records live in `data-sources/real-public-data.seed.json`.
 2. `scripts/sync-real-public-data.mjs` reads the seed, validates references, and calculates a SHA-256 source hash.
-3. Unless `--skip-live-fetch` is provided, the script downloads the official MOI party registry and replaces the seed party fallback with the filtered registry profile rows.
-4. Dry-run mode prints a JSON report only:
+3. Unless `--skip-live-fetch` is provided, the script downloads the official MOI party registry, Legislative Yuan current-officeholder feed, and the CEC 2024 election data ZIP.
+4. The CEC ZIP reader decodes Big5/CP950 file names, maps party codes from `elpaty.csv`, and imports the presidential candidate rows from `elcand.csv`.
+5. Dry-run mode prints a JSON report only:
 
 ```bash
 npm run sync:real-data:dry-run
 ```
 
-5. Write mode requires Supabase write secrets:
+6. Write mode requires Supabase write secrets:
 
 ```bash
 SUPABASE_URL="https://..." \
@@ -36,8 +36,8 @@ SUPABASE_SERVICE_ROLE_KEY="..." \
 npm run sync:real-data:write
 ```
 
-6. The script upserts base tables by `external_id`, then public views expose only `is_public = TRUE` rows.
-7. The frontend still reads only public views through `publicDataProvider`.
+7. The script upserts base tables by `external_id`, then public views expose only `is_public = TRUE` rows.
+8. The frontend still reads only public views through `publicDataProvider`.
 
 ## Automation
 

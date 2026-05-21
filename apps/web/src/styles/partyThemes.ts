@@ -16,9 +16,9 @@ export const partyTheme = {
   tpp: {
     key: 'tpp',
     label: '台灣民眾黨',
-    primary: '#7BE7F3',
-    accent: '#E9FDFF',
-    text: '#10343A',
+    primary: '#1B98A7',
+    accent: '#8FF2FA',
+    text: '#F3FEFF',
   },
   npp: {
     key: 'npp',

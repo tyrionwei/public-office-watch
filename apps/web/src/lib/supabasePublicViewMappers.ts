@@ -431,6 +431,7 @@ export function mapRaceToUpcomingRace(row: PartialRow<PublicRace>): UpcomingRace
     regionId: race.region_slug ?? race.region_id ?? 'unknown-region',
     date: race.voting_date ?? '待公告',
     status: race.status,
+    raceType: race.race_type,
     partyTag,
     partyLabel: partyTheme[partyTag].label,
   };

@@ -11,13 +11,16 @@ import {
   mockPublicPeople,
   mockPublicRaces,
 } from '../data/mockPublicViews';
-import { electionPath, partyPath, regionPath } from '../routes/routePaths';
+import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
+import { buildLocalOfficeSummary, buildPersonListItems, buildPersonProfile, filterPersonListItems } from './personData';
 import { assertPublicViewName, allowedPublicViews } from './publicViewRegistry';
 import type { PublicDataProvider, PublicSearchResult } from './publicDataProvider';
 
 const providerViews = [
   'public_home_election_ticker',
   'public_region_election_summary',
+  'public_people',
+  'public_companies',
   'public_regions',
   'public_elections',
   'public_races',
@@ -38,6 +41,17 @@ export function validatePublicDataBoundary() {
 function getBaseRegionId(regionId: string) {
   const stageRegion = taiwanStageRegionNodes.find((region) => region.id === regionId);
   return stageRegion?.publicRegionId?.replace('region-', '') ?? regionId;
+}
+
+function isNationalUpcomingRace(race: (typeof upcomingRaces)[number]) {
+  return (
+    race.raceType === 'president' ||
+    race.raceType === 'vice_president' ||
+    race.raceType === 'party_list_legislator' ||
+    race.raceType === 'referendum' ||
+    ['taiwan', 'region-taiwan', '全國', '臺灣', '台灣'].includes(race.regionId) ||
+    ['全國', '臺灣', '台灣'].includes(race.region)
+  );
 }
 
 function includesQuery(value: string | null | undefined, normalizedQuery: string) {
@@ -95,7 +109,7 @@ export const mockPublicDataProvider: PublicDataProvider = {
 
   getRelatedRacesByRegionId(regionId: string) {
     const baseRegionId = getBaseRegionId(regionId);
-    return upcomingRaces.filter((race) => race.regionId === baseRegionId);
+    return upcomingRaces.filter((race) => race.regionId === baseRegionId || isNationalUpcomingRace(race));
   },
 
   getElectionById(electionId: string) {
@@ -120,6 +134,22 @@ export const mockPublicDataProvider: PublicDataProvider = {
 
   getPeople() {
     return mockPublicPeople;
+  },
+
+  getPeopleByFilters(filters = {}) {
+    return filterPersonListItems(buildPersonListItems(mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes), filters);
+  },
+
+  getPersonById(personId: string) {
+    return mockPublicPeople.find((person) => person.person_id === personId) ?? null;
+  },
+
+  getPersonProfile(personId: string) {
+    return buildPersonProfile(personId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes);
+  },
+
+  getLocalOfficeSummaryByRegionId(regionId: string) {
+    return buildLocalOfficeSummary(regionId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes);
   },
 
   getCompanies() {
@@ -161,7 +191,7 @@ export const mockPublicDataProvider: PublicDataProvider = {
         label: '人物',
         title: person.name,
         subtitle: [person.party, person.position, person.district].filter(Boolean).join(' · ') || '公開人物資料',
-        href: null,
+        href: personPath(person.person_id),
       }));
 
     const companyResults: PublicSearchResult[] = mockPublicCompanies

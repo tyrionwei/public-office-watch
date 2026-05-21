@@ -14,8 +14,14 @@ import type {
 } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import type { PollComparison } from '../types/polling';
-import { electionPath, partyPath, regionPath } from '../routes/routePaths';
+import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
 import type { HomePageData, HomeTicker, PublicDataProvider, PublicSearchResult } from './publicDataProvider';
+import {
+  buildLocalOfficeSummary,
+  buildPersonListItems,
+  buildPersonProfile,
+  filterPersonListItems,
+} from './personData';
 import { type AllowedPublicViewName, assertPublicViewName } from './publicViewRegistry';
 import { getSupabasePublicClient } from './supabasePublicClient';
 import {
@@ -239,8 +245,45 @@ function toRegionLookupKeys(regionId: string, stageRegions: StageRegionNode[]) {
   return keys;
 }
 
+function toRegionAndDescendantLookupKeys(regionId: string, stageRegions: StageRegionNode[]) {
+  const keys = toRegionLookupKeys(regionId, stageRegions);
+  const nationalRegions = stageRegions.filter((region) => region.level === 'country' || region.id === 'taiwan' || region.label === '臺灣');
+  const queuedRegionIds = [regionId];
+
+  for (const nationalRegion of nationalRegions) {
+    for (const key of toRegionLookupKeys(nationalRegion.id, stageRegions)) {
+      keys.add(key);
+    }
+  }
+
+  while (queuedRegionIds.length > 0) {
+    const parentId = queuedRegionIds.shift();
+    const children = stageRegions.filter((region) => region.parentId === parentId);
+
+    for (const child of children) {
+      for (const key of toRegionLookupKeys(child.id, stageRegions)) {
+        keys.add(key);
+      }
+      queuedRegionIds.push(child.id);
+    }
+  }
+
+  return keys;
+}
+
 function includesQuery(value: string | null | undefined, normalizedQuery: string) {
   return value?.toLowerCase().includes(normalizedQuery) ?? false;
+}
+
+function isNationalUpcomingRace(race: UpcomingRace) {
+  return (
+    race.raceType === 'president' ||
+    race.raceType === 'vice_president' ||
+    race.raceType === 'party_list_legislator' ||
+    race.raceType === 'referendum' ||
+    ['taiwan', 'region-taiwan', '全國', '臺灣', '台灣'].includes(race.regionId) ||
+    ['全國', '臺灣', '台灣'].includes(race.region)
+  );
 }
 
 export const supabasePublicDataProvider: PublicDataProvider = {
@@ -314,8 +357,8 @@ export const supabasePublicDataProvider: PublicDataProvider = {
       return [];
     }
 
-    const keys = toRegionLookupKeys(regionId, snapshot.stageRegions);
-    return snapshot.upcomingRaces.filter((race) => keys.has(race.regionId));
+    const keys = toRegionAndDescendantLookupKeys(regionId, snapshot.stageRegions);
+    return snapshot.upcomingRaces.filter((race) => keys.has(race.regionId) || isNationalUpcomingRace(race));
   },
 
   getElectionById(electionId: string) {
@@ -341,6 +384,27 @@ export const supabasePublicDataProvider: PublicDataProvider = {
 
   getPeople() {
     return getSnapshot()?.people ?? [];
+  },
+
+  getPeopleByFilters(filters = {}) {
+    const snapshot = getSnapshot();
+    return snapshot ? filterPersonListItems(buildPersonListItems(snapshot.people, snapshot.candidates, snapshot.stageRegions), filters) : [];
+  },
+
+  getPersonById(personId: string) {
+    return getSnapshot()?.people.find((person) => person.person_id === personId) ?? null;
+  },
+
+  getPersonProfile(personId: string) {
+    const snapshot = getSnapshot();
+    return snapshot ? buildPersonProfile(personId, snapshot.people, snapshot.candidates, snapshot.stageRegions) : null;
+  },
+
+  getLocalOfficeSummaryByRegionId(regionId: string) {
+    const snapshot = getSnapshot();
+    return snapshot
+      ? buildLocalOfficeSummary(regionId, snapshot.people, snapshot.candidates, snapshot.stageRegions)
+      : buildLocalOfficeSummary(regionId, [], [], []);
   },
 
   getCompanies() {
@@ -414,7 +478,7 @@ export const supabasePublicDataProvider: PublicDataProvider = {
           label: '人物',
           title: person.name,
           subtitle: [person.party, person.position, person.district].filter(Boolean).join(' · ') || '公開人物資料',
-          href: null,
+          href: personPath(person.person_id),
         })),
       ...snapshot.companies
         .filter((company) =>

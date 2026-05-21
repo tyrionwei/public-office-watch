@@ -10,8 +10,10 @@ import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PartiesPage } from './pages/PartiesPage';
 import { PartyPage } from './pages/PartyPage';
+import { PeoplePage } from './pages/PeoplePage';
+import { PersonPage } from './pages/PersonPage';
 import { RegionPage } from './pages/RegionPage';
-import { aboutPath, dataGuidancePath, homePath, partiesPath } from './routes/routePaths';
+import { aboutPath, dataGuidancePath, homePath, partiesPath, peoplePath } from './routes/routePaths';
 
 function App() {
   const [, setPublicDataVersion] = useState(0);
@@ -32,6 +34,8 @@ function App() {
       <BgmProvider>
         <Routes>
           <Route path={homePath()} element={<HomePage />} />
+          <Route path={peoplePath()} element={<PeoplePage />} />
+          <Route path="/people/:personId" element={<PersonPage />} />
           <Route path={partiesPath()} element={<PartiesPage />} />
           <Route path="/parties/:partySlug" element={<PartyPage />} />
           <Route path={dataGuidancePath()} element={<DataGuidancePage />} />

@@ -4,10 +4,14 @@ import type {
   PublicCandidate,
   PublicCompany,
   PublicElection,
+  PublicLocalOfficeSummary,
   PublicParty,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPerson,
+  PublicPersonFilters,
+  PublicPersonListItem,
+  PublicPersonProfile,
   PublicRace,
 } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
@@ -55,6 +59,10 @@ export interface PublicDataProvider {
   getCandidatesByElectionId(electionId: string): PublicCandidate[];
   getPollComparisonByElectionId(electionId: string): PollComparison | null;
   getPeople(): PublicPerson[];
+  getPeopleByFilters(filters?: PublicPersonFilters): PublicPersonListItem[];
+  getPersonById(personId: string): PublicPerson | null;
+  getPersonProfile(personId: string): PublicPersonProfile | null;
+  getLocalOfficeSummaryByRegionId(regionId: string): PublicLocalOfficeSummary;
   getCompanies(): PublicCompany[];
   getParties(): PublicParty[];
   getPartyBySlug(partySlug: string): PublicParty | null;

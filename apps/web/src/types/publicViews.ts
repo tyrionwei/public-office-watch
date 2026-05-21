@@ -229,3 +229,63 @@ export type PublicPartyCompanyContributionSummary = {
   source_url: string | null;
   reviewed_at: string | null;
 };
+
+export type PublicPersonStatus = 'current' | 'candidate' | 'former' | 'other';
+
+export type PublicPersonRole =
+  | 'president'
+  | 'vice_president'
+  | 'legislator'
+  | 'local_chief'
+  | 'local_deputy'
+  | 'agency_head'
+  | 'councilor'
+  | 'party_officer'
+  | 'candidate'
+  | 'other';
+
+export type PublicPersonFilters = {
+  query?: string;
+  regionId?: string;
+  party?: string;
+  role?: PublicPersonRole;
+  status?: PublicPersonStatus;
+};
+
+export type PublicPersonListItem = PublicPerson & {
+  role: PublicPersonRole;
+  role_label: string;
+  status: PublicPersonStatus;
+  status_label: string;
+  region_id: string | null;
+  region_name: string | null;
+  candidate_count: number;
+};
+
+export type PublicCouncilorPartyCount = {
+  party: string;
+  count: number;
+};
+
+export type PublicLocalOfficeSummary = {
+  region_id: string;
+  region_name: string;
+  chief_executive: PublicPersonListItem | null;
+  deputies: PublicPersonListItem[];
+  agency_heads: PublicPersonListItem[];
+  councilor_party_counts: PublicCouncilorPartyCount[];
+  councilor_total: number;
+  data_status: {
+    label: string;
+    status: 'available' | 'partial' | 'todo';
+    note: string;
+  }[];
+};
+
+export type PublicPersonProfile = {
+  person: PublicPersonListItem;
+  candidate_records: PublicCandidate[];
+  experience_status: 'available' | 'todo';
+  contribution_status: 'available' | 'summary_only' | 'todo';
+  platform_status: 'available' | 'todo';
+};

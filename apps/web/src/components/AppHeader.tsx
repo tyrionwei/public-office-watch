@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { aboutPath, dataGuidancePath, homePath, partiesPath } from '../routes/routePaths';
+import { aboutPath, dataGuidancePath, homePath, partiesPath, peoplePath } from '../routes/routePaths';
 import { GlobalSearch } from './GlobalSearch';
 
 type AppHeaderProps = {
@@ -9,6 +9,7 @@ type AppHeaderProps = {
 
 const navItems = [
   { label: '首頁', mark: '⌂', to: homePath(), end: true },
+  { label: '人物', mark: '◎', to: peoplePath() },
   { label: '政黨與獻金', mark: '▧', to: partiesPath() },
   { label: '資料說明', mark: '▣', to: dataGuidancePath() },
   { label: '關於本站', mark: 'i', to: aboutPath() },
@@ -45,7 +46,7 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
             <GlobalSearch />
           </div>
 
-          <nav className="grid grid-cols-2 gap-2 sm:grid-cols-4 2xl:flex 2xl:items-stretch" aria-label="主導覽">
+          <nav className="grid grid-cols-2 gap-2 sm:grid-cols-5 2xl:flex 2xl:items-stretch" aria-label="主導覽">
             {navItems.map((item) => (
               <NavLink
                 key={item.label}

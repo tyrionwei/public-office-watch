@@ -1,4 +1,5 @@
 import { partyTheme, type PartyThemeKey } from '../styles/partyThemes';
+import type { PublicRace } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import {
   mockPublicHomeElectionTicker,
@@ -24,6 +25,7 @@ export type UpcomingRace = {
   regionId: string;
   date: string;
   status: string;
+  raceType: PublicRace['race_type'];
   partyTag: PartyThemeKey;
   partyLabel: string;
 };
@@ -68,6 +70,7 @@ export const upcomingRaces: UpcomingRace[] = mockPublicRaces.map((race) => {
     regionId: race.region_slug ?? 'unknown-region',
     date: race.voting_date ?? '待公告',
     status: race.status,
+    raceType: race.race_type,
     partyTag,
     partyLabel: partyTheme[partyTag].label,
   };

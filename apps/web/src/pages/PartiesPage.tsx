@@ -117,7 +117,7 @@ export function PartiesPage() {
             <p className="pixel-corners border border-line/70 bg-bg/35 p-4">g0v/Ronny 資料站作為呈現參考，正式接入前需確認授權。</p>
           </div>
           <p className="mt-3 text-xs text-slate-500">
-            Mock business donation total: {formatCurrency(totalBusinessDonations)}
+            營利事業捐贈合計：{formatCurrency(totalBusinessDonations)}
           </p>
         </SectionPanel>
       </div>

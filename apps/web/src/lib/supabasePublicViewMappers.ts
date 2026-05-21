@@ -351,7 +351,7 @@ export function mapPublicPartyCompanyContributionSummaryRow(
 export function mapTickerToHomeTicker(row: PartialRow<PublicHomeElectionTicker>): HomeTicker {
   const ticker = mapPublicHomeElectionTickerRow(row);
   return {
-    title: ticker.election_name || '範例公開選舉',
+    title: ticker.election_name || '尚無公開選舉資料',
     subtitle: '依公開公告整理的下一個重點選舉節點',
     date: ticker.voting_date || '待公告',
   };

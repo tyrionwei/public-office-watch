@@ -5,7 +5,7 @@ type SearchCommandProps = {
 };
 
 export function SearchCommand({ selectedRegionLabel }: SearchCommandProps) {
-  const quickSearches = ['台北市長', '新北市長', '測試人物A', '測試公司甲', '12345678'];
+  const quickSearches = ['臺北市長', '新北市長', '立法委員', '民主進步黨', '中國國民黨'];
 
   return (
     <PixelFrame

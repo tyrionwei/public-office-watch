@@ -58,9 +58,10 @@
       "id": "data-gov-tw-party-contribution-6562003",
       "type": "political-contribution",
       "name": "政府資料開放平台：113年度政黨政治獻金會計報告書",
-      "url": "https://data.gov.tw/dataset/6562003",
+      "url": "https://data.gov.tw/dataset/175227",
+      "downloadUrl": "https://ardata.cy.gov.tw/api/v1/Search/download?AccountNumber=&DownloadType=3&ElectionArea=&ElectionName=&SearchType=4&Version=&YearOrSerial=113",
       "refreshCadence": "weekly",
-      "notes": "作為政黨層級政治獻金摘要候選來源；不公開個人捐贈明細。"
+      "notes": "同步政黨層級年度收入支出摘要；不公開 incomes/expenditures 明細、個人捐贈資料或公司關係摘要。"
     }
   ],
   "regions": [

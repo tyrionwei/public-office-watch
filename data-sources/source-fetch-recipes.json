@@ -207,17 +207,41 @@
     },
     {
       "id": "data-gov-tw-party-contribution-6562003",
-      "status": "planned",
-      "sourceUrl": "https://data.gov.tw/dataset/6562003",
+      "status": "implemented",
+      "sourceUrl": "https://data.gov.tw/dataset/175227",
+      "downloadUrl": "https://ardata.cy.gov.tw/api/v1/Search/download?AccountNumber=&DownloadType=3&ElectionArea=&ElectionName=&SearchType=4&Version=&YearOrSerial=113",
       "cadence": "weekly",
-      "format": "open-data-package",
+      "format": "zip-csv",
+      "parser": "fetchBytes + ZIP reader + parseDelimited in scripts/sync-real-public-data.mjs",
       "targetTables": ["party_finance_summaries"],
       "targetPublicViews": ["public_party_finance_summaries"],
       "privacyBoundary": "Use party-level annual summaries only. Do not expose personal donation detail rows.",
+      "currentUse": "Reads political party_incomes and expenditures.csv from the official 113年度政黨政治獻金會計報告書 ZIP and maps rows to parties already included in public_parties.",
+      "zipEntries": {
+        "summary": "political party_incomes and expenditures.csv",
+        "balance": "political party_balance.csv",
+        "incomeDetailsSkipped": "incomes.csv",
+        "expenditureDetailsSkipped": "expenditures.csv"
+      },
+      "fieldMapping": {
+        "reportYear": "申報年度, ROC year converted to Gregorian",
+        "incomeTotal": "收入合計",
+        "expenseTotal": "支出合計",
+        "balanceAmount": "本期結餘",
+        "individualDonationTotal": "個人捐贈收入",
+        "businessDonationTotal": "營利事業捐贈收入",
+        "civilGroupDonationTotal": "人民團體捐贈收入",
+        "anonymousDonationTotal": "匿名捐贈收入",
+        "otherIncomeTotal": "其他收入"
+      },
+      "skipped": {
+        "detailRows": "incomes.csv and expenditures.csv contain personal or transaction-level details and are not written.",
+        "unlistedParties": "Rows for parties outside the current public party allowlist are not written until the product includes those parties."
+      },
       "nextParserNotes": [
-        "Inspect package resources before writing parser assumptions.",
-        "Normalize ROC years to Gregorian years if present.",
-        "Write only aggregate totals after field verification."
+        "Consider storing all official parties before widening summaries beyond the current party allowlist.",
+        "Add extra public fields only if UI needs audit dates or accountant metadata.",
+        "Company-level contribution summaries still need review workflow before publication."
       ]
     }
   ],

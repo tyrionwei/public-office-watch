@@ -40,15 +40,15 @@ export function PartiesPage() {
         <PixelFrame title="Parties & Contributions">
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-accent">public-view-shaped mock data</p>
+              <p className="text-xs uppercase tracking-[0.22em] text-accent">public contribution summaries</p>
               <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">政黨與政治獻金</h2>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-                第一版只呈現政黨層級的政治獻金摘要與已審核公司關係摘要，不公開個人捐贈明細。正式資料未來以監察院與政府開放資料為優先來源。
+                目前只呈現政黨層級的政治獻金摘要與已審核公司關係摘要，不公開個人捐贈明細。
               </p>
             </div>
             <dl className="grid gap-3">
               <HudStatCard label="party count" value={<span className="font-display text-2xl text-white">{parties.length}</span>} />
-              <HudStatCard label="mock income total" value={<span className="font-display text-2xl text-signal">{formatCurrency(totalIncome)}</span>} />
+              <HudStatCard label="income total" value={<span className="font-display text-2xl text-signal">{formatCurrency(totalIncome)}</span>} />
               <HudStatCard label="company summary total" value={<span className="font-display text-2xl text-white">{companyRelationCount}</span>} />
             </dl>
           </div>

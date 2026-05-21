@@ -120,7 +120,7 @@ export function PartyPage() {
                   <p className="text-xs uppercase tracking-[0.22em] text-slate-500">party finance summary</p>
                   <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">{party.name}</h2>
                   <p className="mt-2 text-sm text-slate-400">
-                    {party.short_name ? `簡稱 ${party.short_name}。` : ''}此頁目前顯示 public-view-shaped mock 摘要。
+                    {party.short_name ? `簡稱 ${party.short_name}。` : ''}此頁顯示已公開的政黨名冊與年度政治獻金摘要。
                   </p>
                 </div>
                 <Link
@@ -225,7 +225,7 @@ export function PartyPage() {
                   ))}
                 </div>
                 <p className="mt-4 text-xs text-slate-500">
-                  來源：{latestFinance.source_name ?? '待補來源'}。目前為 UI 測試資料，不代表真實政治獻金數字。
+                  來源：{latestFinance.source_name ?? '待補來源'}。目前只顯示政黨層級年度摘要，不公開個人捐贈明細。
                 </p>
               </SectionPanel>
             ) : null}

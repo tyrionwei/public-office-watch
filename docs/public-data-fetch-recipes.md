@@ -167,12 +167,13 @@ Next parser notes:
 - Do not infer current local office from old election results alone after a new election cycle or resignation period.
 - Keep `source_url` on the base person row for traceability.
 
-## Planned: Political Contributions
+## Implemented First Slice: Political Contributions
 
 Official sources:
 
 - Control Yuan public search: `https://ardata.cy.gov.tw/home`
-- Data.gov party contribution package: `https://data.gov.tw/dataset/6562003`
+- Data.gov party contribution package: `https://data.gov.tw/dataset/175227`
+- ZIP download: `https://ardata.cy.gov.tw/api/v1/Search/download?AccountNumber=&DownloadType=3&ElectionArea=&ElectionName=&SearchType=4&Version=&YearOrSerial=113`
 
 Target tables:
 
@@ -191,11 +192,30 @@ Rules:
 - Company-level summaries must remain `is_public = FALSE` until review workflow exists.
 - g0v/Ronny data may inform field design, but do not write it as official data until licensing and transformation rules are confirmed.
 
+Current state:
+
+- The sync reads `political party_incomes and expenditures.csv` from the official 113年度政黨政治獻金 ZIP.
+- ROC year `113` is normalized to Gregorian year `2024`.
+- Only rows matching parties already included in `public_parties` are written.
+- `incomes.csv` and `expenditures.csv` are intentionally skipped because they contain personal or transaction-level details.
+
+Field mapping:
+
+| Target field | Source column |
+| --- | --- |
+| `income_total` | `收入合計` |
+| `expense_total` | `支出合計` |
+| `balance_amount` | `本期結餘` |
+| `individual_donation_total` | `個人捐贈收入` |
+| `business_donation_total` | `營利事業捐贈收入` |
+| `civil_group_donation_total` | `人民團體捐贈收入` |
+| `anonymous_donation_total` | `匿名捐贈收入` |
+| `other_income_total` | `其他收入` |
+
 Next parser notes:
 
-- First automate source availability and version checks.
-- Then map annual party-level totals.
-- Normalize ROC years to Gregorian years where needed.
+- Consider storing all official parties before widening summaries beyond the current party allowlist.
+- Add audit dates or accountant metadata only if the UI needs them.
 - Delay company relationship publication until review tooling exists.
 
 ## Verification Checklist

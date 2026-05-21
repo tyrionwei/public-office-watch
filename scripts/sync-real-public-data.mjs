@@ -305,6 +305,23 @@ function normalizePartyName(name) {
   return name;
 }
 
+function toGregorianYear(value) {
+  const year = Number.parseInt(String(value ?? '').trim(), 10);
+
+  if (!Number.isFinite(year)) {
+    return null;
+  }
+
+  return year < 1911 ? year + 1911 : year;
+}
+
+function parseAmount(value) {
+  const normalized = String(value ?? '').replaceAll(',', '').trim();
+  const amount = Number.parseFloat(normalized);
+
+  return Number.isFinite(amount) ? amount : 0;
+}
+
 function mergeByExternalId(collections) {
   const merged = new Map();
 
@@ -926,6 +943,81 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
   }
 }
 
+async function enrichSeedWithLivePartyFinanceSummaries(seed, args) {
+  const source = seed.sources.find((item) => item.id === 'data-gov-tw-party-contribution-6562003');
+
+  if (args.skipLiveFetch || !source?.downloadUrl) {
+    return {
+      seed,
+      livePartyFinanceSummaries: {
+        status: 'skipped',
+        count: seed.partyFinanceSummaries?.length ?? 0,
+        url: source?.downloadUrl ?? null,
+      },
+    };
+  }
+
+  try {
+    const zipBuffer = await fetchBytes(source.downloadUrl);
+    const financeRows = parseDelimited(readZipTextBySuffix(zipBuffer, 'political party_incomes and expenditures.csv'));
+    const partyByName = new Map(seed.parties.map((party) => [normalizePartyName(party.name), party]));
+    const summaries = financeRows
+      .map((row) => {
+        const partyName = normalizePartyName(pickField(row, ['政黨名稱']));
+        const party = partyByName.get(partyName);
+        const reportYear = toGregorianYear(pickField(row, ['申報年度']));
+
+        if (!party || !reportYear) {
+          return null;
+        }
+
+        return {
+          partyExternalId: party.externalId,
+          reportYear,
+          incomeTotal: parseAmount(row['收入合計']),
+          expenseTotal: parseAmount(row['支出合計']),
+          balanceAmount: parseAmount(row['本期結餘']),
+          individualDonationTotal: parseAmount(row['個人捐贈收入']),
+          businessDonationTotal: parseAmount(row['營利事業捐贈收入']),
+          civilGroupDonationTotal: parseAmount(row['人民團體捐贈收入']),
+          anonymousDonationTotal: parseAmount(row['匿名捐贈收入']),
+          otherIncomeTotal: parseAmount(row['其他收入']),
+          sourceId: source.id,
+        };
+      })
+      .filter((summary) => summary !== null);
+
+    if (summaries.length === 0) {
+      throw new Error('Political contribution ZIP parsed successfully but no party summaries matched current parties.');
+    }
+
+    return {
+      seed: {
+        ...seed,
+        partyFinanceSummaries: summaries,
+      },
+      livePartyFinanceSummaries: {
+        status: 'ok',
+        count: summaries.length,
+        sourceRowCount: Math.max(0, financeRows.length),
+        url: source.downloadUrl,
+        privacyBoundary: 'party-level annual summaries only; detail income/expenditure rows are not written',
+      },
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return {
+      seed,
+      livePartyFinanceSummaries: {
+        status: 'fallback',
+        count: seed.partyFinanceSummaries?.length ?? 0,
+        url: source.downloadUrl,
+        error: message,
+      },
+    };
+  }
+}
+
 function readSeed(seedPath) {
   const content = fs.readFileSync(seedPath, 'utf8');
   return {
@@ -1286,14 +1378,22 @@ async function writeSeed(seed, hash, args) {
             financeRows.length,
           started_at: startedAt,
           finished_at: new Date().toISOString(),
-          report_json: buildReport(seed, hash, args, args.livePartyRegistry, args.liveCurrentOfficeholders),
+          report_json: buildReport(
+            seed,
+            hash,
+            args,
+            args.livePartyRegistry,
+            args.liveCurrentOfficeholders,
+            args.liveCecCandidates,
+            args.livePartyFinanceSummaries,
+          ),
         },
       ],
     );
   }
 }
 
-function buildReport(seed, hash, args, livePartyRegistry, liveCurrentOfficeholders, liveCecCandidates) {
+function buildReport(seed, hash, args, livePartyRegistry, liveCurrentOfficeholders, liveCecCandidates, livePartyFinanceSummaries) {
   return {
     syncName: 'real-public-data-foundation',
     mode: args.write ? 'write' : 'dry-run',
@@ -1313,6 +1413,7 @@ function buildReport(seed, hash, args, livePartyRegistry, liveCurrentOfficeholde
     livePartyRegistry,
     liveCurrentOfficeholders,
     liveCecCandidates,
+    livePartyFinanceSummaries,
     skipped: {
       personalDonationDetails: true,
       companyContributionSummaries: 'requires later review flow before publication',
@@ -1326,7 +1427,8 @@ async function main() {
   const partyEnriched = await enrichSeedWithLivePartyRegistry(baseSeed, args);
   const officeholderEnriched = await enrichSeedWithLiveCurrentOfficeholders(partyEnriched.seed, args);
   const candidateEnriched = await enrichSeedWithLiveCecCandidates(officeholderEnriched.seed, args);
-  const seed = candidateEnriched.seed;
+  const financeEnriched = await enrichSeedWithLivePartyFinanceSummaries(candidateEnriched.seed, args);
+  const seed = financeEnriched.seed;
   const hash = crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex');
   validateSeed(seed);
 
@@ -1337,10 +1439,12 @@ async function main() {
     partyEnriched.livePartyRegistry,
     officeholderEnriched.liveCurrentOfficeholders,
     candidateEnriched.liveCecCandidates,
+    financeEnriched.livePartyFinanceSummaries,
   );
   args.livePartyRegistry = partyEnriched.livePartyRegistry;
   args.liveCurrentOfficeholders = officeholderEnriched.liveCurrentOfficeholders;
   args.liveCecCandidates = candidateEnriched.liveCecCandidates;
+  args.livePartyFinanceSummaries = financeEnriched.livePartyFinanceSummaries;
 
   if (args.write) {
     await writeSeed(seed, hash, args);

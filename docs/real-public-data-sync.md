@@ -12,25 +12,27 @@ For source-specific fetching and parsing recipes, see `docs/public-data-fetch-re
 - `people`: current Legislative Yuan officeholders from the official Legislative Yuan open data feed. Only rows with `leaveFlag = 否` are treated as current. 2022 elected mayors and councilors are also exposed as local officeholders for the current term.
 - `candidates`: 2024 presidential/legislative official candidate rows plus 2022 direct municipality mayor, county/city mayor, and councilor official candidate rows from the CEC open data ZIP.
 - `parties`: the sync first tries to fetch the Ministry of the Interior party registry. It reads registry number, party name, founded date, filed date, headquarters address, contact phone, and representative/chairperson. If the registry is temporarily unavailable, dry-run falls back to the seed parties and reports that fallback explicitly.
-- `party_finance_summaries`: schema and pipeline are ready, but the seed leaves totals empty until official fields are confirmed.
+- `party_finance_summaries`: 113年度政黨政治獻金會計報告書的政黨年度收入支出摘要。Only party-level totals are written.
 
 Personal donation details and company contribution summaries are not published by this sync.
 The 2024 `不分區政黨/elcand.csv` rows are party ballot choices, not individual candidate records, so they are not written into the current person-candidate schema.
 The 2022 township mayors, representatives, and village chiefs are intentionally skipped in this slice.
+Political contribution `incomes.csv` and `expenditures.csv` detail rows are intentionally skipped because they contain personal or transaction-level details.
 
 ## Flow
 
 1. Source metadata and seed records live in `data-sources/real-public-data.seed.json`.
 2. `scripts/sync-real-public-data.mjs` reads the seed, validates references, and calculates a SHA-256 source hash.
-3. Unless `--skip-live-fetch` is provided, the script downloads the official MOI party registry, Legislative Yuan current-officeholder feed, and the CEC 2024 election data ZIP.
+3. Unless `--skip-live-fetch` is provided, the script downloads the official MOI party registry, Legislative Yuan current-officeholder feed, CEC election data ZIP, and Control Yuan party contribution ZIP.
 4. The CEC ZIP reader decodes Big5/CP950 file names, maps party codes from `elpaty.csv`, creates legislative/local race records, and imports person-candidate rows from the presidential, legislative, mayor, and councilor `elcand.csv` files.
-5. Dry-run mode prints a JSON report only:
+5. The political contribution parser reads `political party_incomes and expenditures.csv`, converts ROC years to Gregorian years, and writes only party-level annual totals.
+6. Dry-run mode prints a JSON report only:
 
 ```bash
 npm run sync:real-data:dry-run
 ```
 
-6. Write mode requires Supabase write secrets:
+7. Write mode requires Supabase write secrets:
 
 ```bash
 SUPABASE_URL="https://..." \
@@ -38,8 +40,8 @@ SUPABASE_SERVICE_ROLE_KEY="..." \
 npm run sync:real-data:write
 ```
 
-7. The script upserts base tables by `external_id`, then public views expose only `is_public = TRUE` rows.
-8. The frontend still reads only public views through `publicDataProvider`.
+8. The script upserts base tables by `external_id`, then public views expose only `is_public = TRUE` rows.
+9. The frontend still reads only public views through `publicDataProvider`.
 
 ## Automation
 

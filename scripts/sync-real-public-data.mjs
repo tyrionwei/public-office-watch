@@ -317,6 +317,74 @@ function mergeByExternalId(collections) {
   return Array.from(merged.values());
 }
 
+function toCecCountyKey(countyCode, countySubCode) {
+  if (countyCode === '09' || countyCode === '10') {
+    return `${countyCode}${countySubCode}`;
+  }
+
+  return `${countyCode}000`;
+}
+
+function toCecRaceTitle(regionName, districtCode) {
+  return `${regionName}第${Number(districtCode)}選舉區立法委員選舉`;
+}
+
+function buildCecRegionByCountyKey(seed) {
+  return new Map(
+    seed.regions
+      .filter((region) => region.officialCode)
+      .map((region) => [region.officialCode, region]),
+  );
+}
+
+function toLegislativeCandidateRows({ rows, partyByCode, raceExternalIdForRow, districtNameForRow, roleLabel, source }) {
+  return rows
+    .map((row) => {
+      const candidateNo = row[5];
+      const name = row[6];
+      const party = normalizePartyName(partyByCode.get(row[7]) ?? '');
+      const gender = row[8] === '2' ? 'female' : row[8] === '1' ? 'male' : 'unknown';
+      const incumbent = row[13]?.trim() === 'Y';
+      const elected = row[14]?.trim() === '*';
+      const raceExternalId = raceExternalIdForRow(row);
+      const districtName = districtNameForRow(row);
+      const personExternalId = `cec-2024-${roleLabel}-person-${hashId([raceExternalId, candidateNo, name].join('|'))}`;
+      const candidateExternalId = `cec-2024-${roleLabel}-candidate-${hashId([raceExternalId, candidateNo, name].join('|'))}`;
+
+      if (!name || !raceExternalId) {
+        return null;
+      }
+
+      return {
+        person: {
+          externalId: personExternalId,
+          name,
+          alias: null,
+          party,
+          position: `第11屆立法委員${incumbent ? '候選人（現任）' : '候選人'}`,
+          electionYear: 2024,
+          district: districtName,
+          sourceUrl: source.url,
+          isPublic: true,
+          sourceId: 'cec-2024-votedata',
+          gender,
+        },
+        candidate: {
+          externalId: candidateExternalId,
+          personExternalId,
+          raceExternalId,
+          party,
+          candidateNo,
+          registrationStatus: elected ? 'elected' : 'not_elected',
+          sourceUrl: source.url,
+          isPublic: true,
+          sourceId: 'cec-2024-votedata',
+        },
+      };
+    })
+    .filter((item) => item !== null);
+}
+
 async function enrichSeedWithLiveCecCandidates(seed, args) {
   const source = seed.sources.find((item) => item.id === 'cec-2024-votedata');
 
@@ -337,8 +405,10 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
     const candidateRows = parseDelimitedRows(readZipTextBySuffix(zipBuffer, '2024總統立委/總統/elcand.csv'), ',');
     const partyByCode = new Map(partyRows.map((row) => [row[0], normalizePartyName(row[1] ?? '')]));
     const electedCandidateNos = new Set(candidateRows.filter((row) => row[14]?.trim() === '*').map((row) => row[5]));
+    const regionByCountyKey = buildCecRegionByCountyKey(seed);
     const people = [];
     const candidates = [];
+    const races = [];
 
     for (const row of candidateRows) {
       const candidateNo = row[5];
@@ -378,13 +448,97 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
       });
     }
 
+    const regionalCandidateRows = parseDelimitedRows(readZipTextBySuffix(zipBuffer, '2024總統立委/區域立委/elcand.csv'), ',');
+    const regionalRaceKeys = new Set();
+
+    for (const row of regionalCandidateRows) {
+      const countyKey = toCecCountyKey(row[0], row[1]);
+      const region = regionByCountyKey.get(countyKey);
+      const districtCode = row[2];
+
+      if (!region || regionalRaceKeys.has(`${countyKey}-${districtCode}`)) {
+        continue;
+      }
+
+      regionalRaceKeys.add(`${countyKey}-${districtCode}`);
+      races.push({
+        externalId: `cec-2024-legislative-district-${countyKey}-${districtCode}`,
+        electionExternalId: 'cec-2024-legislative-yuan',
+        regionExternalId: region.externalId,
+        raceType: 'legislator',
+        title: toCecRaceTitle(region.name, districtCode),
+        votingDate: '2024-01-13',
+        status: 'completed',
+        sourceId: 'cec-2024-votedata',
+      });
+    }
+
+    const regionalCandidates = toLegislativeCandidateRows({
+      rows: regionalCandidateRows,
+      partyByCode,
+      source,
+      roleLabel: 'legislative-district',
+      raceExternalIdForRow: (row) => `cec-2024-legislative-district-${toCecCountyKey(row[0], row[1])}-${row[2]}`,
+      districtNameForRow: (row) => {
+        const countyKey = toCecCountyKey(row[0], row[1]);
+        const region = regionByCountyKey.get(countyKey);
+        return region ? `${region.name}第${Number(row[2])}選舉區` : `第${Number(row[2])}選舉區`;
+      },
+    });
+
+    const indigenousRaces = [
+      {
+        kind: 'plain-indigenous',
+        suffix: '2024總統立委/平地立委/elcand.csv',
+        title: '平地原住民立法委員選舉',
+        districtName: '平地原住民',
+      },
+      {
+        kind: 'mountain-indigenous',
+        suffix: '2024總統立委/山地立委/elcand.csv',
+        title: '山地原住民立法委員選舉',
+        districtName: '山地原住民',
+      },
+    ];
+
+    for (const race of indigenousRaces) {
+      const raceExternalId = `cec-2024-legislative-${race.kind}`;
+      races.push({
+        externalId: raceExternalId,
+        electionExternalId: 'cec-2024-legislative-yuan',
+        regionExternalId: 'tw',
+        raceType: 'legislator',
+        title: race.title,
+        votingDate: '2024-01-13',
+        status: 'completed',
+        sourceId: 'cec-2024-votedata',
+      });
+
+      const indigenousCandidateRows = parseDelimitedRows(readZipTextBySuffix(zipBuffer, race.suffix), ',');
+      const indigenousCandidates = toLegislativeCandidateRows({
+        rows: indigenousCandidateRows,
+        partyByCode,
+        source,
+        roleLabel: `legislative-${race.kind}`,
+        raceExternalIdForRow: () => raceExternalId,
+        districtNameForRow: () => race.districtName,
+      });
+
+      people.push(...indigenousCandidates.map((item) => item.person));
+      candidates.push(...indigenousCandidates.map((item) => item.candidate));
+    }
+
+    people.push(...regionalCandidates.map((item) => item.person));
+    candidates.push(...regionalCandidates.map((item) => item.candidate));
+
     if (candidates.length === 0) {
-      throw new Error('CEC ZIP parsed successfully but no presidential candidate rows were found.');
+      throw new Error('CEC ZIP parsed successfully but no candidate rows were found.');
     }
 
     return {
       seed: {
         ...seed,
+        races: mergeByExternalId([seed.races, races]),
         people: mergeByExternalId([seed.people, people]),
         candidates: mergeByExternalId([seed.candidates, candidates]),
       },
@@ -392,7 +546,12 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
         status: 'ok',
         count: candidates.length,
         url: source.downloadUrl,
-        scope: '2024 presidential and vice-presidential candidates',
+        raceCount: races.length,
+        skippedPartyListBallotChoices: parseDelimitedRows(
+          readZipTextBySuffix(zipBuffer, '2024總統立委/不分區政黨/elcand.csv'),
+          ',',
+        ).length,
+        scope: '2024 presidential, regional legislator, and indigenous legislator candidates',
       },
     };
   } catch (error) {

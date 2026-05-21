@@ -26,7 +26,7 @@
       "url": "https://data.gov.tw/dataset/13119",
       "downloadUrl": "https://data.cec.gov.tw/選舉資料庫/votedata.zip",
       "refreshCadence": "weekly",
-      "notes": "同步官方 2024 總統副總統候選人名冊；ZIP 原始檔只放暫存資料夾，不 commit。"
+      "notes": "同步官方 2024 總統副總統、區域立委、平地原住民與山地原住民候選人名冊；ZIP 原始檔只放暫存資料夾，不 commit。"
     },
     {
       "id": "ly-current-legislators",

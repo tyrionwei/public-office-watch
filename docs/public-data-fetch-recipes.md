@@ -93,8 +93,10 @@ Source:
 Current state:
 
 - The seed contains 2024 presidential and legislative metadata only.
-- The sync script imports the 2024 presidential and vice-presidential candidate rows from `2024總統立委/總統/elcand.csv`.
+- The sync script imports 2024 presidential, vice-presidential, regional legislator, plain indigenous legislator, and mountain indigenous legislator candidate rows.
 - Party code labels are mapped through `2024總統立委/總統/elpaty.csv`.
+- The sync script dynamically creates 73 regional legislator races plus plain/mountain indigenous legislator races before writing candidates.
+- `不分區政黨/elcand.csv` contains party ballot choices rather than individual nominee rows, so it is recorded as skipped for the current person-candidate schema.
 - `people.external_id` and `candidates.external_id` exist so future official candidate syncs can upsert safely.
 
 Fetch method:
@@ -103,7 +105,8 @@ Fetch method:
 2. Decode ZIP entry names as Big5/CP950.
 3. Read `elpaty.csv` for party code labels.
 4. Read `elcand.csv` for candidate number, name, party code, elected marker, and vice-president marker.
-5. Populate `people`, then populate `candidates` linked to `cec-2024-president-national`.
+5. Create regional and indigenous legislator race records for the 2024 legislative election.
+6. Populate `people`, then populate `candidates` linked to the presidential, regional legislator, and indigenous legislator races.
 
 Next parser notes:
 
@@ -113,7 +116,8 @@ Next parser notes:
 - Candidate rows should link by `personExternalId` and `raceExternalId`.
 - Candidate ingestion should populate `public_candidates` only after source fields and status mapping are verified.
 - The current completed 2024 presidential slice treats a candidate number as elected when any row in that president/vice-president pair has `*` in the elected marker field.
-- Add regional legislative race rows before importing 2024 district legislator candidate rows.
+- Legislative rows map `*` directly to `registration_status = elected`; blank rows become `not_elected`.
+- Add a dedicated party-list ballot-choice model before showing `不分區政黨` rows as election choices.
 
 ## Implemented: Current Legislative Yuan Officeholders
 

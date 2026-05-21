@@ -41,7 +41,12 @@ function isPublishedCandidate(candidate: PublicCandidate) {
 }
 
 function isCurrentOfficeholder(person: PublicPerson) {
-  return Boolean(person.position) && !person.position?.startsWith('範例') && !person.name.startsWith('測試');
+  return (
+    Boolean(person.position) &&
+    !person.position?.startsWith('範例') &&
+    !person.position?.includes('候選人') &&
+    !person.name.startsWith('測試')
+  );
 }
 
 function PersonMiniCard({ person }: { person: PublicPerson }) {

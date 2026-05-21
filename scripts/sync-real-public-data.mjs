@@ -385,6 +385,63 @@ function toLegislativeCandidateRows({ rows, partyByCode, raceExternalIdForRow, d
     .filter((item) => item !== null);
 }
 
+function toLocalMayorOfficeTitle(region) {
+  return region.regionType === 'municipality' || region.regionType === 'city' ? `${region.name}市長` : `${region.name}縣長`;
+}
+
+function toLocalCouncilorOfficeTitle(region, kindLabel = '') {
+  return `${region.name}${kindLabel}議員`;
+}
+
+function toLocalCouncilorRaceType(region) {
+  return region.regionType === 'county' ? 'county_councilor' : 'city_councilor';
+}
+
+function toLocalCandidateRows({ rows, partyByCode, source, roleLabel, raceExternalIdForRow, districtNameForRow, officeTitleForRow }) {
+  return rows
+    .map((row) => {
+      const candidateNo = row[5];
+      const name = row[6];
+      const party = normalizePartyName(partyByCode.get(row[7]) ?? '');
+      const elected = row[14]?.trim() === '*';
+      const raceExternalId = raceExternalIdForRow(row);
+      const officeTitle = officeTitleForRow(row);
+      const personExternalId = `cec-2022-${roleLabel}-person-${hashId([raceExternalId, candidateNo, name].join('|'))}`;
+      const candidateExternalId = `cec-2022-${roleLabel}-candidate-${hashId([raceExternalId, candidateNo, name].join('|'))}`;
+
+      if (!name || !raceExternalId || !officeTitle) {
+        return null;
+      }
+
+      return {
+        person: {
+          externalId: personExternalId,
+          name,
+          alias: null,
+          party,
+          position: elected ? officeTitle : `${officeTitle}候選人`,
+          electionYear: 2022,
+          district: districtNameForRow(row),
+          sourceUrl: source.url,
+          isPublic: true,
+          sourceId: source.id,
+        },
+        candidate: {
+          externalId: candidateExternalId,
+          personExternalId,
+          raceExternalId,
+          party,
+          candidateNo,
+          registrationStatus: elected ? 'elected' : 'not_elected',
+          sourceUrl: source.url,
+          isPublic: true,
+          sourceId: source.id,
+        },
+      };
+    })
+    .filter((item) => item !== null);
+}
+
 async function enrichSeedWithLiveCecCandidates(seed, args) {
   const source = seed.sources.find((item) => item.id === 'cec-2024-votedata');
 
@@ -406,6 +463,17 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
     const partyByCode = new Map(partyRows.map((row) => [row[0], normalizePartyName(row[1] ?? '')]));
     const electedCandidateNos = new Set(candidateRows.filter((row) => row[14]?.trim() === '*').map((row) => row[5]));
     const regionByCountyKey = buildCecRegionByCountyKey(seed);
+    const elections = [
+      {
+        externalId: 'cec-2022-local-public-officials',
+        name: '111年地方公職人員選舉',
+        year: 2022,
+        electionType: 'local',
+        votingDate: '2022-11-26',
+        status: 'completed',
+        sourceId: source.id,
+      },
+    ];
     const people = [];
     const candidates = [];
     const races = [];
@@ -531,6 +599,124 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
     people.push(...regionalCandidates.map((item) => item.person));
     candidates.push(...regionalCandidates.map((item) => item.candidate));
 
+    const mayorCandidateRows = [
+      ...parseDelimitedRows(readZipTextBySuffix(zipBuffer, '2022-111年地方公職人員選舉/C1/prv/elcand.csv'), ','),
+      ...parseDelimitedRows(readZipTextBySuffix(zipBuffer, '2022-111年地方公職人員選舉/C1/city/elcand.csv'), ','),
+    ];
+    const mayorRaceKeys = new Set();
+
+    for (const row of mayorCandidateRows) {
+      const countyKey = toCecCountyKey(row[0], row[1]);
+      const region = regionByCountyKey.get(countyKey);
+
+      if (!region || mayorRaceKeys.has(countyKey)) {
+        continue;
+      }
+
+      mayorRaceKeys.add(countyKey);
+      races.push({
+        externalId: `cec-2022-local-mayor-${countyKey}`,
+        electionExternalId: 'cec-2022-local-public-officials',
+        regionExternalId: region.externalId,
+        raceType: region.regionType === 'municipality' ? 'municipality_mayor' : 'county_mayor',
+        title: `${toLocalMayorOfficeTitle(region)}選舉`,
+        votingDate: '2022-11-26',
+        status: 'completed',
+        sourceId: source.id,
+      });
+    }
+
+    const mayorCandidates = toLocalCandidateRows({
+      rows: mayorCandidateRows,
+      partyByCode,
+      source,
+      roleLabel: 'local-mayor',
+      raceExternalIdForRow: (row) => `cec-2022-local-mayor-${toCecCountyKey(row[0], row[1])}`,
+      districtNameForRow: (row) => regionByCountyKey.get(toCecCountyKey(row[0], row[1]))?.name ?? '地方首長',
+      officeTitleForRow: (row) => {
+        const region = regionByCountyKey.get(toCecCountyKey(row[0], row[1]));
+        return region ? toLocalMayorOfficeTitle(region) : '';
+      },
+    });
+
+    people.push(...mayorCandidates.map((item) => item.person));
+    candidates.push(...mayorCandidates.map((item) => item.candidate));
+
+    const councilorSources = [
+      {
+        kind: 'regional',
+        label: '',
+        suffixes: [
+          '2022-111年地方公職人員選舉/T1/prv/elcand.csv',
+          '2022-111年地方公職人員選舉/T1/city/elcand.csv',
+        ],
+      },
+      {
+        kind: 'plain-indigenous',
+        label: '平地原住民',
+        suffixes: [
+          '2022-111年地方公職人員選舉/T2/prv/elcand.csv',
+          '2022-111年地方公職人員選舉/T2/city/elcand.csv',
+        ],
+      },
+      {
+        kind: 'mountain-indigenous',
+        label: '山地原住民',
+        suffixes: [
+          '2022-111年地方公職人員選舉/T3/prv/elcand.csv',
+          '2022-111年地方公職人員選舉/T3/city/elcand.csv',
+        ],
+      },
+    ];
+
+    for (const sourceConfig of councilorSources) {
+      const councilorRows = sourceConfig.suffixes.flatMap((suffix) => parseDelimitedRows(readZipTextBySuffix(zipBuffer, suffix), ','));
+      const councilorRaceKeys = new Set();
+
+      for (const row of councilorRows) {
+        const countyKey = toCecCountyKey(row[0], row[1]);
+        const region = regionByCountyKey.get(countyKey);
+        const districtCode = row[2];
+        const raceKey = `${sourceConfig.kind}-${countyKey}-${districtCode}`;
+
+        if (!region || councilorRaceKeys.has(raceKey)) {
+          continue;
+        }
+
+        councilorRaceKeys.add(raceKey);
+        races.push({
+          externalId: `cec-2022-local-councilor-${raceKey}`,
+          electionExternalId: 'cec-2022-local-public-officials',
+          regionExternalId: region.externalId,
+          raceType: toLocalCouncilorRaceType(region),
+          title: `${region.name}第${Number(districtCode)}選舉區${sourceConfig.label}議員選舉`,
+          votingDate: '2022-11-26',
+          status: 'completed',
+          sourceId: source.id,
+        });
+      }
+
+      const councilorCandidates = toLocalCandidateRows({
+        rows: councilorRows,
+        partyByCode,
+        source,
+        roleLabel: `local-councilor-${sourceConfig.kind}`,
+        raceExternalIdForRow: (row) =>
+          `cec-2022-local-councilor-${sourceConfig.kind}-${toCecCountyKey(row[0], row[1])}-${row[2]}`,
+        districtNameForRow: (row) => {
+          const region = regionByCountyKey.get(toCecCountyKey(row[0], row[1]));
+          return region ? `${region.name}第${Number(row[2])}選舉區` : `第${Number(row[2])}選舉區`;
+        },
+        officeTitleForRow: (row) => {
+          const region = regionByCountyKey.get(toCecCountyKey(row[0], row[1]));
+          return region ? toLocalCouncilorOfficeTitle(region, sourceConfig.label) : '';
+        },
+      });
+
+      people.push(...councilorCandidates.map((item) => item.person));
+      candidates.push(...councilorCandidates.map((item) => item.candidate));
+    }
+
     if (candidates.length === 0) {
       throw new Error('CEC ZIP parsed successfully but no candidate rows were found.');
     }
@@ -538,6 +724,7 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
     return {
       seed: {
         ...seed,
+        elections: mergeByExternalId([seed.elections, elections]),
         races: mergeByExternalId([seed.races, races]),
         people: mergeByExternalId([seed.people, people]),
         candidates: mergeByExternalId([seed.candidates, candidates]),
@@ -547,11 +734,16 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
         count: candidates.length,
         url: source.downloadUrl,
         raceCount: races.length,
+        localElectionCandidateCount: mayorCandidateRows.length + councilorSources.reduce((count, sourceConfig) => {
+          return count + sourceConfig.suffixes.reduce((innerCount, suffix) => {
+            return innerCount + parseDelimitedRows(readZipTextBySuffix(zipBuffer, suffix), ',').length;
+          }, 0);
+        }, 0),
         skippedPartyListBallotChoices: parseDelimitedRows(
           readZipTextBySuffix(zipBuffer, '2024總統立委/不分區政黨/elcand.csv'),
           ',',
         ).length,
-        scope: '2024 presidential, regional legislator, and indigenous legislator candidates',
+        scope: '2024 national candidates plus 2022 local mayors and councilors',
       },
     };
   } catch (error) {

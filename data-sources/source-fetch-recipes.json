@@ -88,7 +88,7 @@
     },
     {
       "id": "cec-2024-votedata",
-      "status": "implemented-first-slice",
+      "status": "implemented",
       "sourceUrl": "https://data.gov.tw/dataset/13119",
       "downloadUrl": "https://data.cec.gov.tw/選舉資料庫/votedata.zip",
       "cadence": "weekly",
@@ -96,13 +96,25 @@
       "parser": "fetchBytes + minimal ZIP central-directory reader + parseDelimitedRows in scripts/sync-real-public-data.mjs",
       "targetTables": ["people", "candidates"],
       "targetPublicViews": ["public_people", "public_candidates"],
-      "currentUse": "Syncs 2024 presidential, vice-presidential, regional legislator, plain indigenous legislator, and mountain indigenous legislator candidate rows. Party codes are mapped through elpaty.csv.",
+      "currentUse": "Syncs 2024 presidential/legislative candidate rows plus 2022 direct municipality mayor, county/city mayor, and councilor rows. Party codes are mapped through elpaty.csv.",
       "zipNotes": {
         "filenameEncoding": "Big5/CP950 paths in the ZIP central directory are decoded with TextDecoder('big5').",
         "candidateEntry": "votedata/votedata/voteData/2024總統立委/總統/elcand.csv",
         "regionalLegislatorEntry": "votedata/votedata/voteData/2024總統立委/區域立委/elcand.csv",
         "plainIndigenousLegislatorEntry": "votedata/votedata/voteData/2024總統立委/平地立委/elcand.csv",
         "mountainIndigenousLegislatorEntry": "votedata/votedata/voteData/2024總統立委/山地立委/elcand.csv",
+        "localMayorEntries": [
+          "votedata/votedata/voteData/2022-111年地方公職人員選舉/C1/prv/elcand.csv",
+          "votedata/votedata/voteData/2022-111年地方公職人員選舉/C1/city/elcand.csv"
+        ],
+        "localCouncilorEntries": [
+          "votedata/votedata/voteData/2022-111年地方公職人員選舉/T1/prv/elcand.csv",
+          "votedata/votedata/voteData/2022-111年地方公職人員選舉/T1/city/elcand.csv",
+          "votedata/votedata/voteData/2022-111年地方公職人員選舉/T2/prv/elcand.csv",
+          "votedata/votedata/voteData/2022-111年地方公職人員選舉/T2/city/elcand.csv",
+          "votedata/votedata/voteData/2022-111年地方公職人員選舉/T3/prv/elcand.csv",
+          "votedata/votedata/voteData/2022-111年地方公職人員選舉/T3/city/elcand.csv"
+        ],
         "partyCodeEntry": "votedata/votedata/voteData/2024總統立委/總統/elpaty.csv",
         "partyListBallotChoiceEntry": "votedata/votedata/voteData/2024總統立委/不分區政黨/elcand.csv"
       },
@@ -124,7 +136,11 @@
         "legislativePeople": "external_id = cec-2024-${roleLabel}-person-${sha1(raceExternalId|candidateNo|name).slice(0, 12)}",
         "legislativeCandidates": "external_id = cec-2024-${roleLabel}-candidate-${sha1(raceExternalId|candidateNo|name).slice(0, 12)}",
         "regionalRaces": "external_id = cec-2024-legislative-district-${countyKey}-${districtCode}",
-        "indigenousRaces": "external_id = cec-2024-legislative-${plain-indigenous|mountain-indigenous}"
+        "indigenousRaces": "external_id = cec-2024-legislative-${plain-indigenous|mountain-indigenous}",
+        "localPeople": "external_id = cec-2022-${roleLabel}-person-${sha1(raceExternalId|candidateNo|name).slice(0, 12)}",
+        "localCandidates": "external_id = cec-2022-${roleLabel}-candidate-${sha1(raceExternalId|candidateNo|name).slice(0, 12)}",
+        "localMayoralRaces": "external_id = cec-2022-local-mayor-${countyKey}",
+        "localCouncilorRaces": "external_id = cec-2022-local-councilor-${regional|plain-indigenous|mountain-indigenous}-${countyKey}-${districtCode}"
       },
       "statusMapping": {
         "candidateNoWithAnyElectedMark": "elected",
@@ -132,10 +148,12 @@
         "rowWithoutElectedMark": "not_elected"
       },
       "skipped": {
-        "partyListBallotChoices": "不分區政黨 elcand.csv rows are party ballot choices, not individual candidate records, so they are not written to the people/candidates schema."
+        "partyListBallotChoices": "不分區政黨 elcand.csv rows are party ballot choices, not individual candidate records, so they are not written to the people/candidates schema.",
+        "townshipAndVillageLocalRaces": "2022 township mayors, representatives, and village chiefs are intentionally skipped in this slice."
       },
       "nextParserNotes": [
         "Create a dedicated party ballot-choice model if the UI needs to show 不分區政黨票 as election choices.",
+        "2022 elected local officials are treated as current for the 2022-2026 term; later resignations, recalls, or by-elections need a separate update source.",
         "Keep presidential and legislative candidate ingestion separated so future elections can be refreshed independently.",
         "Do not use historical completed candidates as future announced-candidate data."
       ]

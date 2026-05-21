@@ -7,22 +7,23 @@ For source-specific fetching and parsing recipes, see `docs/public-data-fetch-re
 ## What It Syncs
 
 - `regions`: Taiwan plus 22 county/city records.
-- `elections`: 2024 presidential and legislative election events.
-- `races`: national presidential, party-list legislative, 73 regional legislative, and two indigenous legislative races.
-- `people`: current Legislative Yuan officeholders from the official Legislative Yuan open data feed. Only rows with `leaveFlag = 否` are treated as current.
-- `candidates`: 2024 presidential, vice-presidential, regional legislator, plain indigenous legislator, and mountain indigenous legislator official candidate rows from the CEC open data ZIP.
+- `elections`: 2024 presidential/legislative election events plus the 2022 local election event.
+- `races`: national presidential, party-list legislative, 73 regional legislative, two indigenous legislative, 2022 mayor, and 2022 councilor races.
+- `people`: current Legislative Yuan officeholders from the official Legislative Yuan open data feed. Only rows with `leaveFlag = 否` are treated as current. 2022 elected mayors and councilors are also exposed as local officeholders for the current term.
+- `candidates`: 2024 presidential/legislative official candidate rows plus 2022 direct municipality mayor, county/city mayor, and councilor official candidate rows from the CEC open data ZIP.
 - `parties`: the sync first tries to fetch the Ministry of the Interior party registry. It reads registry number, party name, founded date, filed date, headquarters address, contact phone, and representative/chairperson. If the registry is temporarily unavailable, dry-run falls back to the seed parties and reports that fallback explicitly.
 - `party_finance_summaries`: schema and pipeline are ready, but the seed leaves totals empty until official fields are confirmed.
 
 Personal donation details and company contribution summaries are not published by this sync.
 The 2024 `不分區政黨/elcand.csv` rows are party ballot choices, not individual candidate records, so they are not written into the current person-candidate schema.
+The 2022 township mayors, representatives, and village chiefs are intentionally skipped in this slice.
 
 ## Flow
 
 1. Source metadata and seed records live in `data-sources/real-public-data.seed.json`.
 2. `scripts/sync-real-public-data.mjs` reads the seed, validates references, and calculates a SHA-256 source hash.
 3. Unless `--skip-live-fetch` is provided, the script downloads the official MOI party registry, Legislative Yuan current-officeholder feed, and the CEC 2024 election data ZIP.
-4. The CEC ZIP reader decodes Big5/CP950 file names, maps party codes from `elpaty.csv`, creates legislative race records, and imports person-candidate rows from the presidential, regional legislator, plain indigenous legislator, and mountain indigenous legislator `elcand.csv` files.
+4. The CEC ZIP reader decodes Big5/CP950 file names, maps party codes from `elpaty.csv`, creates legislative/local race records, and imports person-candidate rows from the presidential, legislative, mayor, and councilor `elcand.csv` files.
 5. Dry-run mode prints a JSON report only:
 
 ```bash

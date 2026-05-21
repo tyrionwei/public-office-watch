@@ -22,11 +22,11 @@
     {
       "id": "cec-2024-votedata",
       "type": "candidate-registry",
-      "name": "中央選舉委員會選舉資料庫：2024總統立委",
+      "name": "中央選舉委員會選舉資料庫：公開資料包",
       "url": "https://data.gov.tw/dataset/13119",
       "downloadUrl": "https://data.cec.gov.tw/選舉資料庫/votedata.zip",
       "refreshCadence": "weekly",
-      "notes": "同步官方 2024 總統副總統、區域立委、平地原住民與山地原住民候選人名冊；ZIP 原始檔只放暫存資料夾，不 commit。"
+      "notes": "同步官方 2024 總統立委候選人，以及 2022 直轄市長、縣市長、直轄市/縣市議員候選人與當選者；ZIP 原始檔只放暫存資料夾，不 commit。"
     },
     {
       "id": "ly-current-legislators",

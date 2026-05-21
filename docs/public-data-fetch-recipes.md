@@ -92,10 +92,12 @@ Source:
 
 Current state:
 
-- The seed contains 2024 presidential and legislative metadata only.
+- The seed contains 2024 presidential and legislative metadata. The sync also creates a 2022 local election event from the official archive.
 - The sync script imports 2024 presidential, vice-presidential, regional legislator, plain indigenous legislator, and mountain indigenous legislator candidate rows.
+- The sync script imports 2022 direct municipality mayor, county/city mayor, and councilor candidate rows. Township mayors, representatives, and village chiefs are intentionally skipped in this slice.
 - Party code labels are mapped through `2024總統立委/總統/elpaty.csv`.
 - The sync script dynamically creates 73 regional legislator races plus plain/mountain indigenous legislator races before writing candidates.
+- The sync script dynamically creates 2022 mayor and councilor races before writing local candidates.
 - `不分區政黨/elcand.csv` contains party ballot choices rather than individual nominee rows, so it is recorded as skipped for the current person-candidate schema.
 - `people.external_id` and `candidates.external_id` exist so future official candidate syncs can upsert safely.
 
@@ -106,7 +108,8 @@ Fetch method:
 3. Read `elpaty.csv` for party code labels.
 4. Read `elcand.csv` for candidate number, name, party code, elected marker, and vice-president marker.
 5. Create regional and indigenous legislator race records for the 2024 legislative election.
-6. Populate `people`, then populate `candidates` linked to the presidential, regional legislator, and indigenous legislator races.
+6. Create mayor and councilor race records for the 2022 local election.
+7. Populate `people`, then populate `candidates` linked to the presidential, legislative, mayor, and councilor races.
 
 Next parser notes:
 
@@ -117,6 +120,7 @@ Next parser notes:
 - Candidate ingestion should populate `public_candidates` only after source fields and status mapping are verified.
 - The current completed 2024 presidential slice treats a candidate number as elected when any row in that president/vice-president pair has `*` in the elected marker field.
 - Legislative rows map `*` directly to `registration_status = elected`; blank rows become `not_elected`.
+- 2022 elected mayor/councilor rows are treated as current local officeholders for the 2022-2026 term. Later resignations, recalls, or by-elections need a separate update source.
 - Add a dedicated party-list ballot-choice model before showing `不分區政黨` rows as election choices.
 
 ## Implemented: Current Legislative Yuan Officeholders

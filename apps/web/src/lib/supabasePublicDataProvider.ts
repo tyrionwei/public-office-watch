@@ -86,19 +86,31 @@ function fromPublicView(viewName: AllowedPublicViewName) {
 }
 
 async function fetchRows<T>(viewName: AllowedPublicViewName): Promise<T[]> {
-  const query = fromPublicView(viewName);
+  const pageSize = 1000;
+  const rows: T[] = [];
+  let offset = 0;
 
-  if (!query) {
-    return [];
+  while (true) {
+    const query = fromPublicView(viewName);
+
+    if (!query) {
+      return [];
+    }
+
+    const { data, error } = await query.select('*').range(offset, offset + pageSize - 1);
+
+    if (error || !Array.isArray(data)) {
+      return [];
+    }
+
+    rows.push(...(data as T[]));
+
+    if (data.length < pageSize) {
+      return rows;
+    }
+
+    offset += pageSize;
   }
-
-  const { data, error } = await query.select('*');
-
-  if (error || !Array.isArray(data)) {
-    return [];
-  }
-
-  return data as T[];
 }
 
 function buildStageRegions(regions: PublicRegion[]) {

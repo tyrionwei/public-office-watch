@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastUpdated": "2026-05-19",
+  "lastUpdated": "2026-05-21",
   "purpose": "Machine-readable notes for repeatable public data ingestion jobs. Keep this in sync with docs/public-data-fetch-recipes.md and data-sources/real-public-data.seed.json.",
   "sharedRules": {
     "httpTimeoutMs": 30000,
@@ -17,6 +17,29 @@
     "writeBoundary": "Write only to base tables. Frontend reads only approved public views."
   },
   "sources": [
+    {
+      "id": "cec-2026-local-election-calendar",
+      "status": "implemented",
+      "sourceUrl": "https://www.cec.gov.tw/",
+      "cadence": "weekly",
+      "format": "derived-race-shells",
+      "parser": "enrichSeedWithPlannedLocalElections in scripts/sync-real-public-data.mjs",
+      "targetTables": ["elections", "races"],
+      "targetPublicViews": ["public_elections", "public_races", "public_region_election_summary", "public_home_election_ticker"],
+      "currentUse": "Creates 115年地方公職人員選舉 and 2026 mayor/councilor race shells so upcoming-election UI does not depend on old sample rows.",
+      "derivation": {
+        "baseElectionExternalId": "cec-2022-local-public-officials",
+        "includedRaceTypes": ["municipality_mayor", "county_mayor", "city_councilor", "county_councilor"],
+        "votingDate": "2026-11-28",
+        "status": "announced",
+        "primaryKey": "external_id = planned-2026-local-from-${sourceRace.externalId}"
+      },
+      "knownBoundary": "This is planned election/race structure only. Do not create future candidates from historical candidates.",
+      "nextParserNotes": [
+        "When CEC publishes final 2026 race metadata, replace or reconcile these planned shell rows by stable external_id.",
+        "Township, village, and representative races stay out of this slice until the UI needs them."
+      ]
+    },
     {
       "id": "moi-party-registry",
       "status": "implemented",

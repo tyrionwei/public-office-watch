@@ -123,6 +123,35 @@ Next parser notes:
 - 2022 elected mayor/councilor rows are treated as current local officeholders for the 2022-2026 term. Later resignations, recalls, or by-elections need a separate update source.
 - Add a dedicated party-list ballot-choice model before showing `不分區政黨` rows as election choices.
 
+## Implemented: Planned 2026 Local Race Shells
+
+Source:
+
+- CEC public site: `https://www.cec.gov.tw/`
+- Derived base: `cec-2022-local-public-officials`
+- Current script: `scripts/sync-real-public-data.mjs`
+- Target tables: `elections`, `races`
+- Target public views: `public_elections`, `public_races`, `public_region_election_summary`, `public_home_election_ticker`
+
+Current state:
+
+- The sync creates `115年地方公職人員選舉` as a planned 2026 local election event.
+- Mayor and councilor race shells are copied from completed 2022 local race districts.
+- Included race types are `municipality_mayor`, `county_mayor`, `city_councilor`, and `county_councilor`.
+- Voting date is currently stored as `2026-11-28`.
+- These rows are election/race shells only. Do not create future candidates from 2022 candidate data.
+
+Reasoning:
+
+- CEC may publish candidate and final district details later than the product needs an upcoming election surface.
+- Local mayor and councilor district structures usually remain stable enough to use the completed 2022 structure as a default shell.
+- When official 2026 race metadata is available, reconcile or replace these rows by stable `external_id`.
+
+Public cleanup:
+
+- Old `example.invalid` sample election, race, candidate, person, and media rows are marked `is_public = FALSE` by migration.
+- Local sample seed files still exist for smoke testing, but they no longer create public-facing sample records.
+
 ## Implemented: Current Legislative Yuan Officeholders
 
 Source:

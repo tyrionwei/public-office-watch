@@ -24,6 +24,6 @@ VALUES (
     'Placeholder image for UI testing only',
     TRUE,
     'verified',
-    TRUE
+    FALSE
 )
 ON CONFLICT DO NOTHING;

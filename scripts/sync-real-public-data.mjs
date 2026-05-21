@@ -334,6 +334,61 @@ function mergeByExternalId(collections) {
   return Array.from(merged.values());
 }
 
+const plannedLocalElection = {
+  externalId: 'planned-2026-local-public-officials',
+  name: '115年地方公職人員選舉',
+  year: 2026,
+  electionType: 'local',
+  votingDate: '2026-11-28',
+  status: 'announced',
+  sourceId: 'cec-2026-local-election-calendar',
+};
+
+const plannedLocalRaceTypes = new Set(['municipality_mayor', 'county_mayor', 'city_councilor', 'county_councilor']);
+
+function toPlannedLocalRaceExternalId(sourceRace) {
+  return `planned-2026-local-from-${sourceRace.externalId}`;
+}
+
+function enrichSeedWithPlannedLocalElections(seed) {
+  const baseRaces = (seed.races ?? [])
+    .filter((race) => {
+      return (
+        race.electionExternalId === 'cec-2022-local-public-officials' &&
+        race.status === 'completed' &&
+        plannedLocalRaceTypes.has(race.raceType) &&
+        race.externalId
+      );
+    })
+    .sort((left, right) => left.externalId.localeCompare(right.externalId));
+
+  const plannedRaces = baseRaces.map((race) => ({
+    externalId: toPlannedLocalRaceExternalId(race),
+    electionExternalId: plannedLocalElection.externalId,
+    regionExternalId: race.regionExternalId,
+    raceType: race.raceType,
+    title: race.title,
+    votingDate: plannedLocalElection.votingDate,
+    status: 'announced',
+    sourceId: plannedLocalElection.sourceId,
+  }));
+
+  return {
+    seed: {
+      ...seed,
+      elections: mergeByExternalId([seed.elections, [plannedLocalElection]]),
+      races: mergeByExternalId([seed.races, plannedRaces]),
+    },
+    plannedLocalElections: {
+      status: plannedRaces.length > 0 ? 'ok' : 'fallback',
+      count: plannedRaces.length,
+      baseElectionExternalId: 'cec-2022-local-public-officials',
+      votingDate: plannedLocalElection.votingDate,
+      scope: 'planned 2026 mayor and councilor race shells copied from completed 2022 local race districts',
+    },
+  };
+}
+
 function toCecCountyKey(countyCode, countySubCode) {
   if (countyCode === '09' || countyCode === '10') {
     return `${countyCode}${countySubCode}`;
@@ -1385,6 +1440,7 @@ async function writeSeed(seed, hash, args) {
             args.livePartyRegistry,
             args.liveCurrentOfficeholders,
             args.liveCecCandidates,
+            args.plannedLocalElections,
             args.livePartyFinanceSummaries,
           ),
         },
@@ -1393,7 +1449,16 @@ async function writeSeed(seed, hash, args) {
   }
 }
 
-function buildReport(seed, hash, args, livePartyRegistry, liveCurrentOfficeholders, liveCecCandidates, livePartyFinanceSummaries) {
+function buildReport(
+  seed,
+  hash,
+  args,
+  livePartyRegistry,
+  liveCurrentOfficeholders,
+  liveCecCandidates,
+  plannedLocalElections,
+  livePartyFinanceSummaries,
+) {
   return {
     syncName: 'real-public-data-foundation',
     mode: args.write ? 'write' : 'dry-run',
@@ -1413,6 +1478,7 @@ function buildReport(seed, hash, args, livePartyRegistry, liveCurrentOfficeholde
     livePartyRegistry,
     liveCurrentOfficeholders,
     liveCecCandidates,
+    plannedLocalElections,
     livePartyFinanceSummaries,
     skipped: {
       personalDonationDetails: true,
@@ -1427,7 +1493,8 @@ async function main() {
   const partyEnriched = await enrichSeedWithLivePartyRegistry(baseSeed, args);
   const officeholderEnriched = await enrichSeedWithLiveCurrentOfficeholders(partyEnriched.seed, args);
   const candidateEnriched = await enrichSeedWithLiveCecCandidates(officeholderEnriched.seed, args);
-  const financeEnriched = await enrichSeedWithLivePartyFinanceSummaries(candidateEnriched.seed, args);
+  const plannedElectionEnriched = enrichSeedWithPlannedLocalElections(candidateEnriched.seed);
+  const financeEnriched = await enrichSeedWithLivePartyFinanceSummaries(plannedElectionEnriched.seed, args);
   const seed = financeEnriched.seed;
   const hash = crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex');
   validateSeed(seed);
@@ -1439,11 +1506,13 @@ async function main() {
     partyEnriched.livePartyRegistry,
     officeholderEnriched.liveCurrentOfficeholders,
     candidateEnriched.liveCecCandidates,
+    plannedElectionEnriched.plannedLocalElections,
     financeEnriched.livePartyFinanceSummaries,
   );
   args.livePartyRegistry = partyEnriched.livePartyRegistry;
   args.liveCurrentOfficeholders = officeholderEnriched.liveCurrentOfficeholders;
   args.liveCecCandidates = candidateEnriched.liveCecCandidates;
+  args.plannedLocalElections = plannedElectionEnriched.plannedLocalElections;
   args.livePartyFinanceSummaries = financeEnriched.livePartyFinanceSummaries;
 
   if (args.write) {

@@ -29,6 +29,14 @@
       "notes": "同步官方 2024 總統立委候選人，以及 2022 直轄市長、縣市長、直轄市/縣市議員候選人與當選者；ZIP 原始檔只放暫存資料夾，不 commit。"
     },
     {
+      "id": "cec-2026-local-election-calendar",
+      "type": "election-metadata",
+      "name": "中央選舉委員會：115年地方公職人員選舉時程",
+      "url": "https://www.cec.gov.tw/",
+      "refreshCadence": "weekly",
+      "notes": "用於 2026 地方公職選舉殼層資料；正式公告選區與候選人前，選區結構先沿用 2022 已完成地方公職選舉。"
+    },
+    {
       "id": "ly-current-legislators",
       "type": "current-officeholders",
       "name": "立法院開放資料：歷屆委員資料",

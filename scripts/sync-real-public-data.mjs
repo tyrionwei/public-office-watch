@@ -1238,9 +1238,38 @@ async function selectOrThrow(env, table, select) {
   return supabaseRequest(env, table, { method: 'GET', select });
 }
 
+async function hideKnownSamplePublicRows(env) {
+  const sampleRaceSourceUrls = [
+    'https://example.invalid/races/taipei-mayor',
+    'https://example.invalid/races/taipei-councilor',
+    'https://example.invalid/races/daan-village-chief',
+    'https://example.invalid/races/new-taipei-mayor',
+  ];
+
+  const sampleCandidateSourceUrls = [
+    'https://example.invalid/candidates/test-a',
+    'https://example.invalid/candidates/test-b',
+  ];
+
+  for (const sourceUrl of sampleCandidateSourceUrls) {
+    await supabasePatch(env, 'candidates', { source_url: sourceUrl }, { is_public: false });
+  }
+
+  for (const sourceUrl of sampleRaceSourceUrls) {
+    await supabasePatch(env, 'races', { source_url: sourceUrl }, { is_public: false });
+  }
+
+  await supabasePatch(env, 'elections', { source_url: 'https://example.invalid/ccec/2026-local-election' }, { is_public: false });
+  await supabasePatch(env, 'people', { name: '測試人物A' }, { is_public: false });
+  await supabasePatch(env, 'people', { name: '測試人物B' }, { is_public: false });
+  await supabasePatch(env, 'person_media', { source_url: 'https://example.com/placeholder' }, { is_public: false });
+}
+
 async function writeSeed(seed, hash, args) {
   const env = getSupabaseEnv();
   const startedAt = new Date().toISOString();
+
+  await hideKnownSamplePublicRows(env);
 
   const regionRows = seed.regions.map((region) => {
     return {

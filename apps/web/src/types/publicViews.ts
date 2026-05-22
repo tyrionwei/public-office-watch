@@ -4,10 +4,13 @@ export type PublicPerson = {
   person_id: string;
   name: string;
   alias: string | null;
+  gender: 'male' | 'female' | 'unknown' | null;
   party: string | null;
   position: string | null;
   election_year: number | null;
   district: string | null;
+  education: string | null;
+  experience: string | null;
   updated_at: string;
   primary_photo_url: string | null;
   primary_photo_thumbnail_url: string | null;
@@ -288,4 +291,6 @@ export type PublicPersonProfile = {
   experience_status: 'available' | 'todo';
   contribution_status: 'available' | 'summary_only' | 'todo';
   platform_status: 'available' | 'todo';
+  legal_record_status: 'review_required' | 'todo';
+  family_relation_status: 'review_required' | 'todo';
 };

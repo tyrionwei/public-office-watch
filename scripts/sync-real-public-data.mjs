@@ -322,6 +322,13 @@ function parseAmount(value) {
   return Number.isFinite(amount) ? amount : 0;
 }
 
+function normalizeGender(value) {
+  const text = String(value ?? '').trim();
+  if (text === '1' || text === '男' || text.toLowerCase() === 'male') return 'male';
+  if (text === '2' || text === '女' || text.toLowerCase() === 'female') return 'female';
+  return 'unknown';
+}
+
 function mergeByExternalId(collections) {
   const merged = new Map();
 
@@ -415,7 +422,7 @@ function toLegislativeCandidateRows({ rows, partyByCode, raceExternalIdForRow, d
       const candidateNo = row[5];
       const name = row[6];
       const party = normalizePartyName(partyByCode.get(row[7]) ?? '');
-      const gender = row[8] === '2' ? 'female' : row[8] === '1' ? 'male' : 'unknown';
+      const gender = normalizeGender(row[8]);
       const incumbent = row[13]?.trim() === 'Y';
       const elected = row[14]?.trim() === '*';
       const raceExternalId = raceExternalIdForRow(row);
@@ -475,6 +482,7 @@ function toLocalCandidateRows({ rows, partyByCode, source, roleLabel, raceExtern
       const candidateNo = row[5];
       const name = row[6];
       const party = normalizePartyName(partyByCode.get(row[7]) ?? '');
+      const gender = normalizeGender(row[8]);
       const elected = row[14]?.trim() === '*';
       const raceExternalId = raceExternalIdForRow(row);
       const officeTitle = officeTitleForRow(row);
@@ -497,6 +505,7 @@ function toLocalCandidateRows({ rows, partyByCode, source, roleLabel, raceExtern
           sourceUrl: source.url,
           isPublic: true,
           sourceId: source.id,
+          gender,
         },
         candidate: {
           externalId: candidateExternalId,
@@ -554,6 +563,7 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
       const candidateNo = row[5];
       const name = row[6];
       const party = normalizePartyName(partyByCode.get(row[7]) ?? '');
+      const gender = normalizeGender(row[8]);
       const role = row[15]?.trim() === 'Y' ? '副總統候選人' : '總統候選人';
       const personExternalId = `cec-2024-president-person-${hashId([candidateNo, name, role].join('|'))}`;
       const candidateExternalId = `cec-2024-president-candidate-${candidateNo}-${hashId([name, role].join('|'))}`;
@@ -573,6 +583,7 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
         sourceUrl: source.url,
         isPublic: true,
         sourceId: 'cec-2024-votedata',
+        gender,
       });
 
       candidates.push({
@@ -954,14 +965,19 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
         const areaName = pickField(row, ['areaName']);
         const onboardDate = pickField(row, ['onboardDate']);
         const legislatorCode = getLegislatorCodeFromPhotoUrl(pickField(row, ['picUrl']));
+        const degree = pickField(row, ['degree']);
+        const experience = pickField(row, ['experience']);
         return {
           externalId: `ly-legislator-${term}-${legislatorCode || hashId([name, party, areaName, onboardDate].join('|'))}`,
           name,
           alias: pickField(row, ['ename']) || null,
+          gender: normalizeGender(pickField(row, ['sex'])),
           party,
           position: `第${term}屆立法委員`,
           electionYear: 2024,
           district: areaName,
+          education: degree || null,
+          experience: experience || null,
           sourceUrl: source.url,
           isPublic: true,
           sourceId: 'ly-current-legislators',
@@ -1366,6 +1382,9 @@ async function writeSeed(seed, hash, args) {
       position: person.position ?? null,
       election_year: person.electionYear ?? null,
       district: person.district ?? null,
+      gender: person.gender ?? 'unknown',
+      education: person.education ?? null,
+      experience: person.experience ?? null,
       source_url: person.sourceUrl ?? source.url,
       is_public: person.isPublic ?? true,
       updated_at: startedAt,

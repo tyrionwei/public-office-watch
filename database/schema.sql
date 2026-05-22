@@ -8,6 +8,9 @@ CREATE TABLE people (
     position TEXT,
     election_year INT,
     district TEXT,
+    gender TEXT DEFAULT 'unknown' CHECK (gender IN ('male', 'female', 'unknown')),
+    education TEXT,
+    experience TEXT,
     source_url TEXT,
     is_public BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -189,7 +192,10 @@ SELECT
     ph.source_url AS photo_source_url,
     ph.license_type AS photo_license_type,
     ph.license_url AS photo_license_url,
-    ph.attribution AS photo_attribution
+    ph.attribution AS photo_attribution,
+    p.gender,
+    p.education,
+    p.experience
 FROM people p
 LEFT JOIN public_person_primary_photos ph ON ph.person_id = p.id
 WHERE p.is_public = TRUE;

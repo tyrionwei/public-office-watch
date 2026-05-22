@@ -95,6 +95,7 @@ Current state:
 - The seed contains 2024 presidential and legislative metadata. The sync also creates a 2022 local election event from the official archive.
 - The sync script imports 2024 presidential, vice-presidential, regional legislator, plain indigenous legislator, and mountain indigenous legislator candidate rows.
 - The sync script imports 2022 direct municipality mayor, county/city mayor, and councilor candidate rows. Township mayors, representatives, and village chiefs are intentionally skipped in this slice.
+- Candidate gender codes are mapped from `elcand.csv` into `people.gender` for default character selection.
 - Party code labels are mapped through `2024總統立委/總統/elpaty.csv`.
 - The sync script dynamically creates 73 regional legislator races plus plain/mountain indigenous legislator races before writing candidates.
 - The sync script dynamically creates 2022 mayor and councilor races before writing local candidates.
@@ -122,6 +123,7 @@ Next parser notes:
 - Legislative rows map `*` directly to `registration_status = elected`; blank rows become `not_elected`.
 - 2022 elected mayor/councilor rows are treated as current local officeholders for the 2022-2026 term. Later resignations, recalls, or by-elections need a separate update source.
 - Add a dedicated party-list ballot-choice model before showing `不分區政黨` rows as election choices.
+- Gender code mapping: `1` is stored as `male`, `2` as `female`, anything else as `unknown`.
 
 ## Implemented: Planned 2026 Local Race Shells
 
@@ -174,6 +176,7 @@ Current state:
 
 - The party detail page can already show officeholders from `public_people`.
 - The sync script can upsert `people` by `external_id`.
+- The feed includes `sex`, `degree`, and `experience`; these now populate public profile fields where available.
 
 Useful field candidates:
 
@@ -183,6 +186,9 @@ Useful field candidates:
 | `alias` | `ename` |
 | `party` | `partyGroup`, `party` |
 | `district` | `areaName` |
+| `gender` | `sex` |
+| `education` | `degree` |
+| `experience` | `experience` |
 | `source freshness` | `onboardDate`, `leaveFlag`, `leaveDate` |
 
 Fallback:

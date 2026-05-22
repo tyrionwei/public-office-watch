@@ -170,6 +170,9 @@
         "rowWithElectedMark": "elected",
         "rowWithoutElectedMark": "not_elected"
       },
+      "profileFields": {
+        "gender": "elcand.csv column 8; 1=male, 2=female, other=unknown"
+      },
       "skipped": {
         "partyListBallotChoices": "不分區政黨 elcand.csv rows are party ballot choices, not individual candidate records, so they are not written to the people/candidates schema.",
         "townshipAndVillageLocalRaces": "2022 township mayors, representatives, and village chiefs are intentionally skipped in this slice."
@@ -197,6 +200,9 @@
         "alias": ["ename"],
         "party": ["partyGroup", "party"],
         "district": ["areaName"],
+        "gender": ["sex"],
+        "education": ["degree"],
+        "experience": ["experience"],
         "onboardDate": ["onboardDate"],
         "leaveFlag": ["leaveFlag"]
       },

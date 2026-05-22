@@ -36,6 +36,10 @@ function asNullableNumber(value: unknown) {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
+function asPersonGender(value: unknown): PublicPerson['gender'] {
+  return value === 'male' || value === 'female' || value === 'unknown' ? value : null;
+}
+
 function asPartyThemeKey(value: unknown): PartyThemeKey {
   return typeof value === 'string' && value in partyTheme ? (value as PartyThemeKey) : 'unknown';
 }
@@ -158,10 +162,13 @@ export function mapPublicPersonRow(row: PartialRow<PublicPerson>): PublicPerson 
     person_id: asString(row?.person_id, ''),
     name: asString(row?.name, '未命名人物'),
     alias: asNullableString(row?.alias),
+    gender: asPersonGender(row?.gender),
     party: asNullableString(row?.party),
     position: asNullableString(row?.position),
     election_year: asNullableNumber(row?.election_year),
     district: asNullableString(row?.district),
+    education: asNullableString(row?.education),
+    experience: asNullableString(row?.experience),
     updated_at: asString(row?.updated_at, ''),
     primary_photo_url: asNullableString(row?.primary_photo_url),
     primary_photo_thumbnail_url: asNullableString(row?.primary_photo_thumbnail_url),

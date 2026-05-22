@@ -167,12 +167,14 @@ export function toPartyThemeKey(partyLabel: string | null | undefined): PartyThe
 }
 
 export function getPersonRole(position: string | null | undefined, candidateRecords: PublicCandidate[] = []): PublicPersonRole {
-  const text = [position, ...candidateRecords.flatMap((candidate) => [candidate.person_position, candidate.race_title])]
+  const personText = [position, ...candidateRecords.map((candidate) => candidate.person_position)]
     .filter(Boolean)
     .join(' ');
+  const raceText = candidateRecords.map((candidate) => candidate.race_title).filter(Boolean).join(' ');
 
-  if (text.includes('副總統')) return 'vice_president';
-  if (text.includes('總統')) return 'president';
+  if (personText.includes('副總統')) return 'vice_president';
+  if (personText.includes('總統')) return 'president';
+  const text = [personText, raceText].join(' ');
   if (text.includes('立法委員') || text.includes('立委')) return 'legislator';
   if (text.includes('議員')) return 'councilor';
   if (text.includes('副市長') || text.includes('副縣長') || text.includes('副縣市長')) return 'local_deputy';
@@ -249,6 +251,10 @@ function inferRegionForPerson(person: PublicPerson, candidateRecords: PublicCand
 
 function candidateRecordsFor(personId: string, candidates: PublicCandidate[]) {
   return candidates.filter((candidate) => candidate.person_id === personId);
+}
+
+function hasText(value: string | null | undefined) {
+  return Boolean(value && value.trim().length > 0);
 }
 
 export function buildPersonListItems(
@@ -390,8 +396,10 @@ export function buildPersonProfile(
   return {
     person,
     candidate_records: candidateRecordsFor(personId, candidates),
-    experience_status: 'todo',
+    experience_status: hasText(person.experience) ? 'available' : 'todo',
     contribution_status: 'todo',
     platform_status: 'todo',
+    legal_record_status: 'todo',
+    family_relation_status: 'todo',
   };
 }

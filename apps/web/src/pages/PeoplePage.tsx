@@ -7,6 +7,8 @@ import { peoplePath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicPersonFilters, PublicPersonRole, PublicPersonStatus } from '../types/publicViews';
 
+const PAGE_SIZE = 25;
+
 const roleOptions: { value: PublicPersonRole; label: string }[] = [
   { value: 'president', label: '總統' },
   { value: 'vice_president', label: '副總統' },
@@ -35,6 +37,11 @@ function getFilters(searchParams: URLSearchParams): PublicPersonFilters {
     role: (searchParams.get('role') as PublicPersonRole | null) ?? undefined,
     status: (searchParams.get('status') as PublicPersonStatus | null) ?? undefined,
   };
+}
+
+function getPage(searchParams: URLSearchParams) {
+  const page = Number.parseInt(searchParams.get('page') ?? '1', 10);
+  return Number.isFinite(page) && page > 0 ? page : 1;
 }
 
 function SelectFilter({
@@ -71,6 +78,11 @@ export function PeoplePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = getFilters(searchParams);
   const people = publicDataProvider.getPeopleByFilters(filters);
+  const requestedPage = getPage(searchParams);
+  const pageCount = Math.max(1, Math.ceil(people.length / PAGE_SIZE));
+  const currentPage = Math.min(requestedPage, pageCount);
+  const pageStart = (currentPage - 1) * PAGE_SIZE;
+  const visiblePeople = people.slice(pageStart, pageStart + PAGE_SIZE);
   const allPeople = publicDataProvider.getPeopleByFilters();
   const regionOptions = publicDataProvider
     .getStageRegions()
@@ -87,6 +99,20 @@ export function PeoplePage() {
       nextParams.set(key, value);
     } else {
       nextParams.delete(key);
+    }
+
+    nextParams.delete('page');
+    setSearchParams(nextParams);
+  };
+
+  const updatePage = (page: number) => {
+    const nextParams = new URLSearchParams(searchParams);
+    const nextPage = Math.min(Math.max(page, 1), pageCount);
+
+    if (nextPage <= 1) {
+      nextParams.delete('page');
+    } else {
+      nextParams.set('page', String(nextPage));
     }
 
     setSearchParams(nextParams);
@@ -125,7 +151,11 @@ export function PeoplePage() {
 
         <PixelFrame
           title="人物與候選人"
-          action={<span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">{people.length} records</span>}
+          action={
+            <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">
+              {people.length} records · page {currentPage}/{pageCount}
+            </span>
+          }
         >
           <div className="mb-4 pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300">
             預設依現任優先、職位層級、姓氏筆劃排序。從首頁政黨小卡進入時，會自動帶入縣市、政黨與職位條件。
@@ -141,7 +171,7 @@ export function PeoplePage() {
                 <span>status</span>
               </div>
               <div className="divide-y divide-line/60">
-                {people.map((person) => {
+                {visiblePeople.map((person) => {
                   const theme = partyTheme[toPartyThemeKey(person.party)];
                   return (
                     <Link
@@ -176,6 +206,35 @@ export function PeoplePage() {
               沒有符合目前篩選條件的人物資料。
             </div>
           )}
+
+          {people.length > PAGE_SIZE ? (
+            <div className="mt-4 flex flex-col gap-3 border-t border-line/60 pt-4 text-sm text-slate-300 sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                顯示 {pageStart + 1}-{Math.min(pageStart + PAGE_SIZE, people.length)} / {people.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => updatePage(currentPage - 1)}
+                  disabled={currentPage <= 1}
+                  className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  prev
+                </button>
+                <span className="pixel-corners border border-line/70 bg-bg/55 px-3 py-2 text-xs text-white">
+                  {currentPage}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => updatePage(currentPage + 1)}
+                  disabled={currentPage >= pageCount}
+                  className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  next
+                </button>
+              </div>
+            </div>
+          ) : null}
         </PixelFrame>
       </div>
     </AppShell>

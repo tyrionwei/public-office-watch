@@ -21,6 +21,19 @@ const candidateStatusLabels: Record<PublicCandidate['registration_status'], stri
   unknown: '未知',
 };
 
+const genderLabels = {
+  male: '男',
+  female: '女',
+  unknown: '未知',
+};
+
+function splitProfileText(value: string | null | undefined) {
+  return value
+    ?.split(/[;；]/)
+    .map((item) => item.trim())
+    .filter(Boolean) ?? [];
+}
+
 function EmptyInfo({ children }: { children: string }) {
   return (
     <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-5 text-sm text-slate-300">
@@ -50,7 +63,7 @@ export function PersonPage() {
             <section className="grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
               <div className="pixel-corners flex min-h-[220px] items-end justify-center border border-line/70 bg-bg/40 p-4">
                 <img
-                  src={person.primary_photo_thumbnail_url ?? person.primary_photo_url ?? pickDefaultCandidateSprite(person.name)}
+                  src={person.primary_photo_thumbnail_url ?? person.primary_photo_url ?? pickDefaultCandidateSprite(person.name, person.gender)}
                   alt={person.primary_photo_url ? person.name : ''}
                   className="max-h-[190px] w-auto object-contain object-bottom [image-rendering:pixelated]"
                 />
@@ -86,6 +99,7 @@ export function PersonPage() {
                 {[
                   ['姓名', person.name],
                   ['別名', person.alias ?? '無公開別名'],
+                  ['性別', person.gender ? genderLabels[person.gender] : '待補'],
                   ['政黨', normalizePartyLabel(person.party)],
                   ['職位', person.position ?? '待補'],
                   ['所處區域', person.region_name ?? person.district ?? '未指定'],
@@ -127,13 +141,45 @@ export function PersonPage() {
 
             <div className="grid gap-4 lg:grid-cols-3">
               <SectionPanel title="經歷" eyebrow="experience">
-                <EmptyInfo>經歷資料來源待同步，暫不手動推論。</EmptyInfo>
+                {splitProfileText(person.experience).length > 0 ? (
+                  <ul className="space-y-2 text-sm text-slate-300">
+                    {splitProfileText(person.experience).map((item) => (
+                      <li key={item} className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <EmptyInfo>經歷資料來源待同步，暫不手動推論。</EmptyInfo>
+                )}
+              </SectionPanel>
+              <SectionPanel title="學歷" eyebrow="education">
+                {splitProfileText(person.education).length > 0 ? (
+                  <ul className="space-y-2 text-sm text-slate-300">
+                    {splitProfileText(person.education).map((item) => (
+                      <li key={item} className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <EmptyInfo>學歷資料待接官方公報或機關名冊。</EmptyInfo>
+                )}
               </SectionPanel>
               <SectionPanel title="政治獻金" eyebrow="contributions">
                 <EmptyInfo>此頁不顯示個人捐贈明細；後續僅放可公開摘要或已審核關係。</EmptyInfo>
               </SectionPanel>
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-3">
               <SectionPanel title="政見" eyebrow="platform">
                 <EmptyInfo>政見資料待接官方公告或公開政見來源。</EmptyInfo>
+              </SectionPanel>
+              <SectionPanel title="司法 / 爭議紀錄" eyebrow="legal records">
+                <EmptyInfo>此區只預留已審核公開摘要；法院判決書與媒體/民團整理需比對同一人後才可公開。</EmptyInfo>
+              </SectionPanel>
+              <SectionPanel title="政治家族關係" eyebrow="family network">
+                <EmptyInfo>政二代、親屬任公職或政治家族關係需來源佐證與人工覆核，暫不自動推論。</EmptyInfo>
               </SectionPanel>
             </div>
           </div>

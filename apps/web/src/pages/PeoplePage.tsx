@@ -182,6 +182,12 @@ export function PeoplePage() {
                       <div>
                         <p className="font-display text-lg text-white">{person.name}</p>
                         <p className="mt-1 text-xs text-slate-500">{person.position ?? '公開人物資料'}</p>
+                        {person.merged_role_labels.length > 1 || person.merged_candidate_count > person.candidate_count ? (
+                          <p className="mt-2 text-xs text-accent">
+                            另有 {person.merged_role_labels.filter((label) => label !== person.role_label).join('、') || '其他'} 身分
+                            {person.merged_candidate_count > 0 ? ` · ${person.merged_candidate_count} 筆參選紀錄` : ''}
+                          </p>
+                        ) : null}
                       </div>
                       <div>
                         <span

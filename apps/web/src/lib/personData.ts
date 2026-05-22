@@ -273,7 +273,7 @@ function profileCompletenessScore(person: PublicPersonListItem) {
     person.education,
     person.experience,
     person.primary_photo_url,
-  ].filter(Boolean).length + person.candidate_count;
+  ].filter(Boolean).length + person.merged_candidate_count;
 }
 
 function comparePreferredDuplicate(left: PublicPersonListItem, right: PublicPersonListItem) {
@@ -293,12 +293,48 @@ function dedupePersonListItems(items: PublicPersonListItem[]) {
     const key = dedupeKeyFor(item);
     const existing = byKey.get(key);
 
-    if (!existing || comparePreferredDuplicate(item, existing) < 0) {
+    if (!existing) {
       byKey.set(key, item);
+      continue;
     }
+
+    const preferred = comparePreferredDuplicate(item, existing) < 0 ? item : existing;
+    const secondary = preferred === item ? existing : item;
+
+    byKey.set(key, {
+      ...preferred,
+      merged_person_ids: Array.from(new Set([...preferred.merged_person_ids, ...secondary.merged_person_ids])),
+      merged_role_labels: Array.from(new Set([...preferred.merged_role_labels, ...secondary.merged_role_labels])),
+      merged_candidate_count: preferred.merged_candidate_count + secondary.merged_candidate_count,
+    });
   }
 
   return Array.from(byKey.values());
+}
+
+function candidateRoleLabel(candidate: PublicCandidate) {
+  const text = [candidate.person_position, candidate.race_title].filter(Boolean).join(' ');
+  const role = getPersonRole(candidate.person_position, [candidate]);
+  const label = roleLabels[role];
+
+  if (label !== '其他公眾人物') {
+    return label;
+  }
+
+  return text.includes('候選人') ? '候選人' : null;
+}
+
+function mergedRoleLabelsFor(roleLabel: string, candidateRecords: PublicCandidate[]) {
+  const labels = new Set<string>([roleLabel]);
+
+  for (const candidate of candidateRecords) {
+    const label = candidateRoleLabel(candidate);
+    if (label) {
+      labels.add(label);
+    }
+  }
+
+  return Array.from(labels);
 }
 
 export function buildPersonListItems(
@@ -321,6 +357,9 @@ export function buildPersonListItems(
       region_id: region?.id ?? candidateRecords[0]?.region_id ?? null,
       region_name: region?.label ?? person.district ?? candidateRecords[0]?.region_name ?? null,
       candidate_count: candidateRecords.length,
+      merged_person_ids: [person.person_id],
+      merged_role_labels: mergedRoleLabelsFor(roleLabels[role], candidateRecords),
+      merged_candidate_count: candidateRecords.length,
     };
   });
 }

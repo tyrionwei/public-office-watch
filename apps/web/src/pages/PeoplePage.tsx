@@ -7,7 +7,7 @@ import { peoplePath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicPersonFilters, PublicPersonRole, PublicPersonStatus } from '../types/publicViews';
 
-const PAGE_SIZE = 25;
+const PAGE_SIZE = 20;
 
 const roleOptions: { value: PublicPersonRole; label: string }[] = [
   { value: 'president', label: '總統' },

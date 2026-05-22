@@ -41,15 +41,15 @@ const statusRank: Record<PublicPersonStatus, number> = {
 
 const roleRank: Record<PublicPersonRole, number> = {
   president: 0,
-  vice_president: 0,
-  legislator: 1,
-  local_chief: 2,
-  local_deputy: 3,
-  councilor: 4,
-  party_officer: 5,
-  agency_head: 5,
-  candidate: 6,
-  other: 7,
+  vice_president: 1,
+  legislator: 2,
+  local_chief: 3,
+  local_deputy: 4,
+  councilor: 5,
+  party_officer: 6,
+  agency_head: 6,
+  candidate: 7,
+  other: 8,
 };
 
 const awaitingCandidateStatus = `${'pen'}${'ding'}` as PublicCandidate['registration_status'];
@@ -257,6 +257,50 @@ function hasText(value: string | null | undefined) {
   return Boolean(value && value.trim().length > 0);
 }
 
+function dedupeKeyFor(person: PublicPersonListItem) {
+  return [
+    person.name,
+    normalizePartyLabel(person.party),
+    person.region_name ?? person.district ?? '',
+  ].join('|');
+}
+
+function profileCompletenessScore(person: PublicPersonListItem) {
+  return [
+    person.position,
+    person.district,
+    person.gender && person.gender !== 'unknown' ? person.gender : null,
+    person.education,
+    person.experience,
+    person.primary_photo_url,
+  ].filter(Boolean).length + person.candidate_count;
+}
+
+function comparePreferredDuplicate(left: PublicPersonListItem, right: PublicPersonListItem) {
+  const statusDiff = statusRank[left.status] - statusRank[right.status];
+  if (statusDiff !== 0) return statusDiff;
+
+  const roleDiff = roleRank[left.role] - roleRank[right.role];
+  if (roleDiff !== 0) return roleDiff;
+
+  return profileCompletenessScore(right) - profileCompletenessScore(left);
+}
+
+function dedupePersonListItems(items: PublicPersonListItem[]) {
+  const byKey = new Map<string, PublicPersonListItem>();
+
+  for (const item of items) {
+    const key = dedupeKeyFor(item);
+    const existing = byKey.get(key);
+
+    if (!existing || comparePreferredDuplicate(item, existing) < 0) {
+      byKey.set(key, item);
+    }
+  }
+
+  return Array.from(byKey.values());
+}
+
 export function buildPersonListItems(
   people: PublicPerson[],
   candidates: PublicCandidate[],
@@ -296,7 +340,7 @@ export function sortPersonListItems(items: PublicPersonListItem[]) {
 export function filterPersonListItems(items: PublicPersonListItem[], filters: PublicPersonFilters = {}) {
   const query = filters.query?.trim().toLowerCase() ?? '';
   return sortPersonListItems(
-    items.filter((person) => {
+    dedupePersonListItems(items).filter((person) => {
       if (query && ![person.name, person.alias, person.party, person.position, person.district].some((value) => matchesText(value, query))) {
         return false;
       }

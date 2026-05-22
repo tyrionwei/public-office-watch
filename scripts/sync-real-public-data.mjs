@@ -565,6 +565,8 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
       const party = normalizePartyName(partyByCode.get(row[7]) ?? '');
       const gender = normalizeGender(row[8]);
       const role = row[15]?.trim() === 'Y' ? '副總統候選人' : '總統候選人';
+      const elected = electedCandidateNos.has(candidateNo);
+      const publicPosition = elected ? role.replace('候選人', '') : role;
       const personExternalId = `cec-2024-president-person-${hashId([candidateNo, name, role].join('|'))}`;
       const candidateExternalId = `cec-2024-president-candidate-${candidateNo}-${hashId([name, role].join('|'))}`;
 
@@ -577,7 +579,7 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
         name,
         alias: null,
         party,
-        position: `第16任${role}`,
+        position: `第16任${publicPosition}`,
         electionYear: 2024,
         district: '全國',
         sourceUrl: source.url,

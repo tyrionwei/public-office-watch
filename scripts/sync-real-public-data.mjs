@@ -509,6 +509,38 @@ function toCecCountyKey(countyCode, countySubCode) {
   return `${countyCode}000`;
 }
 
+const historicalCecCountyNameByKey = {
+  '01000': '臺北市',
+  '02000': '新北市',
+  '03000': '臺中市',
+  '04000': '臺南市',
+  '05000': '高雄市',
+  '06000': '桃園市',
+  '07000': '基隆市',
+  '09007': '連江縣',
+  '09020': '金門縣',
+  '10002': '宜蘭縣',
+  '10004': '新竹縣',
+  '10005': '苗栗縣',
+  '10007': '彰化縣',
+  '10008': '南投縣',
+  '10009': '雲林縣',
+  '10010': '嘉義縣',
+  '10013': '屏東縣',
+  '10014': '臺東縣',
+  '10015': '花蓮縣',
+  '10016': '澎湖縣',
+  '10017': '基隆市',
+  '10018': '新竹市',
+  '10020': '嘉義市',
+  '63000': '臺北市',
+  '64000': '高雄市',
+  '65000': '新北市',
+  '66000': '臺中市',
+  '67000': '臺南市',
+  '68000': '桃園市',
+};
+
 function cleanCecCell(value) {
   return String(value ?? '').trim().replace(/^'+/, '');
 }
@@ -646,19 +678,20 @@ function toHistoricalCecDistrictName(row, classification, regionByCountyKey) {
 
   const countyKey = toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1]));
   const region = regionByCountyKey.get(countyKey);
+  const regionName = region?.name ?? historicalCecCountyNameByKey[countyKey] ?? null;
   const districtCode = Number(cleanCecCell(row[2]));
 
   if (classification.kind === 'legislator-district') {
-    return region ? `${region.name}第${districtCode}選舉區` : `縣市代碼${countyKey}第${districtCode}選舉區`;
+    return regionName ? `${regionName}第${districtCode}選舉區` : `縣市代碼${countyKey}第${districtCode}選舉區`;
   }
 
   if (classification.kind === 'local-mayor') {
-    return region?.name ?? `縣市代碼${countyKey}`;
+    return regionName ?? `縣市代碼${countyKey}`;
   }
 
   if (classification.kind.startsWith('local-councilor')) {
     const suffix = classification.districtLabel ? `${classification.districtLabel}議員` : '議員';
-    return region ? `${region.name}第${districtCode}選舉區${suffix}` : `縣市代碼${countyKey}第${districtCode}選舉區${suffix}`;
+    return regionName ? `${regionName}第${districtCode}選舉區${suffix}` : `縣市代碼${countyKey}第${districtCode}選舉區${suffix}`;
   }
 
   return null;
@@ -673,15 +706,19 @@ function toHistoricalCecPosition(row, classification, regionByCountyKey) {
   }
 
   if (classification.kind === 'local-mayor') {
-    const region = regionByCountyKey.get(toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1])));
-    const officeTitle = region ? toLocalMayorOfficeTitle(region) : '縣市首長';
+    const countyKey = toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1]));
+    const region = regionByCountyKey.get(countyKey);
+    const regionName = region?.name ?? historicalCecCountyNameByKey[countyKey] ?? null;
+    const officeTitle = region ? toLocalMayorOfficeTitle(region) : regionName ? `${regionName}首長` : '縣市首長';
     return elected ? officeTitle : `${officeTitle}候選人`;
   }
 
   if (classification.kind.startsWith('local-councilor')) {
-    const region = regionByCountyKey.get(toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1])));
+    const countyKey = toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1]));
+    const region = regionByCountyKey.get(countyKey);
+    const regionName = region?.name ?? historicalCecCountyNameByKey[countyKey] ?? null;
     const kindLabel = classification.districtLabel ?? '';
-    const officeTitle = region ? toLocalCouncilorOfficeTitle(region, kindLabel) : `${kindLabel}議員`;
+    const officeTitle = region ? toLocalCouncilorOfficeTitle(region, kindLabel) : `${regionName ?? ''}${kindLabel}議員`;
     return elected ? officeTitle : `${officeTitle}候選人`;
   }
 
@@ -1694,6 +1731,90 @@ function buildIdentityMatchRows(seed, sourcePersonByKey, personByExternalId, sta
     .filter((row) => row !== null);
 }
 
+function buildProbableIdentityMatchRows(seed, sourcePersonByKey, canonicalPeople, startedAt) {
+  const peopleByNormalizedName = new Map();
+
+  for (const person of canonicalPeople) {
+    const normalizedName = normalizeSourcePersonName(person.name);
+    const group = peopleByNormalizedName.get(normalizedName) ?? [];
+    group.push(person);
+    peopleByNormalizedName.set(normalizedName, group);
+  }
+
+  const rows = [];
+
+  for (const sourcePerson of seed.sourcePeople ?? []) {
+    const sourceRow = sourcePersonByKey.get(sourcePerson.sourcePersonKey);
+    const candidates = peopleByNormalizedName.get(normalizeSourcePersonName(sourcePerson.rawName)) ?? [];
+
+    if (!sourceRow || candidates.length === 0) {
+      continue;
+    }
+
+    const sourceRole = sourcePerson.normalizedRole ?? normalizedRoleForPosition(sourcePerson.position);
+    const sourceParty = normalizeIdentityText(sourcePerson.party);
+    const sourceDistrict = normalizeIdentityText(sourcePerson.district);
+    const sourceGender = sourcePerson.gender ?? 'unknown';
+
+    const scoredCandidates = candidates
+      .map((person) => {
+        let score = 60;
+        const reasons = ['normalized name matched'];
+
+        if (sourceGender !== 'unknown' && person.gender === sourceGender) {
+          score += 10;
+          reasons.push('gender matched');
+        }
+
+        if (sourceParty && sourceParty === normalizeIdentityText(person.party)) {
+          score += 10;
+          reasons.push('party matched');
+        }
+
+        if (sourceRole !== 'other' && sourceRole === normalizedRoleForPosition(person.position)) {
+          score += 10;
+          reasons.push('role matched');
+        }
+
+        if (sourceDistrict && normalizeIdentityText(person.district).includes(sourceDistrict.slice(0, 3))) {
+          score += 5;
+          reasons.push('region hint matched');
+        }
+
+        return { person, score, reasons };
+      })
+      .filter((item) => item.score >= 75)
+      .sort((left, right) => right.score - left.score);
+
+    const best = scoredCandidates[0];
+
+    if (!best) {
+      continue;
+    }
+
+    rows.push({
+      source_person_id: sourceRow.id,
+      person_id: best.person.id,
+      match_status: 'probable_match',
+      score: best.score,
+      match_method: 'name_party_role_scoring',
+      match_reason: best.reasons.join('; '),
+      evidence_json: {
+        sourcePersonKey: sourcePerson.sourcePersonKey,
+        sourceElectionYear: sourcePerson.electionYear ?? null,
+        sourceParty: sourcePerson.party ?? null,
+        sourcePosition: sourcePerson.position ?? null,
+        canonicalExternalId: best.person.external_id ?? null,
+        canonicalParty: best.person.party ?? null,
+        canonicalPosition: best.person.position ?? null,
+      },
+      updated_at: startedAt,
+    });
+  }
+
+  return rows;
+}
+
 function toClaimValue(value) {
   if (value === null || value === undefined) return '';
   return String(value).trim();
@@ -2002,6 +2123,9 @@ async function writeSeed(seed, hash, args) {
   const identityMatchRows = buildIdentityMatchRows(seed, sourcePersonByKey, personByExternalId, startedAt);
   await upsertOrThrow(env, 'person_identity_matches', identityMatchRows, { onConflict: 'source_person_id,person_id' });
 
+  const probableIdentityMatchRows = buildProbableIdentityMatchRows(seed, sourcePersonByKey, people, startedAt);
+  await upsertOrThrow(env, 'person_identity_matches', probableIdentityMatchRows, { onConflict: 'source_person_id,person_id' });
+
   const personClaimRows = buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt);
   await upsertOrThrow(env, 'person_claims', personClaimRows, { onConflict: 'claim_key' });
 
@@ -2071,6 +2195,7 @@ async function writeSeed(seed, hash, args) {
             (seed.people?.length ?? 0) +
             sourcePersonRows.length +
             identityMatchRows.length +
+            probableIdentityMatchRows.length +
             personClaimRows.length +
             (seed.candidates?.length ?? 0) +
             seed.parties.length +
@@ -2119,6 +2244,7 @@ function buildReport(
       historicalSourcePeople: seed.sourcePeople?.length ?? 0,
       sourcePeople: (seed.people?.length ?? 0) + (seed.sourcePeople?.length ?? 0),
       autoIdentityMatches: seed.people?.length ?? 0,
+      probableIdentityMatches: 'computed-on-write',
       personClaimsEstimate: estimatePersonClaimCount(seed),
       candidates: seed.candidates?.length ?? 0,
       parties: seed.parties.length,

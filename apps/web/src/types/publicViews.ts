@@ -184,6 +184,66 @@ export type PublicPersonPrimaryPhoto = {
   attribution: string | null;
 };
 
+export type PublicPersonIdentitySource = {
+  identity_source_id: string;
+  person_id: string;
+  person_name: string;
+  source_type:
+    | 'official_election'
+    | 'official_officeholder'
+    | 'official_party_finance'
+    | 'government_open_data'
+    | 'court_document'
+    | 'media_guide'
+    | 'wikipedia'
+    | 'wikidata'
+    | 'official_site'
+    | 'social_media'
+    | 'other';
+  source_name: string;
+  source_url: string | null;
+  raw_name: string;
+  normalized_name: string;
+  party: string | null;
+  position: string | null;
+  district: string | null;
+  match_status: 'auto_matched';
+  match_score: number;
+  confidence_suggestion: PublicRelationDetail['confidence_level'];
+  updated_at: string;
+};
+
+export type PublicPersonClaim = {
+  claim_id: string;
+  person_id: string;
+  claim_type:
+    | 'name'
+    | 'alias'
+    | 'gender'
+    | 'birth_date'
+    | 'party'
+    | 'position'
+    | 'office'
+    | 'candidacy'
+    | 'district'
+    | 'education'
+    | 'experience'
+    | 'platform'
+    | 'finance_summary'
+    | 'legal_case'
+    | 'family_relation'
+    | 'media'
+    | 'external_id'
+    | 'other';
+  claim_value: string | null;
+  claim_json: Record<string, unknown>;
+  confidence_level: PublicRelationDetail['confidence_level'];
+  source_name: string | null;
+  source_url: string | null;
+  observed_at: string | null;
+  updated_at: string;
+};
+
 export type PublicParty = {
   party_id: string;
   name: string;

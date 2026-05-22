@@ -329,6 +329,50 @@ function normalizeGender(value) {
   return 'unknown';
 }
 
+function normalizeIdentityText(value) {
+  return String(value ?? '')
+    .trim()
+    .replace(/[臺]/g, '台')
+    .replace(/[‧·．・･•]/g, '')
+    .replace(/[\s\u00A0\u3000]+/g, '')
+    .toLowerCase();
+}
+
+function normalizeSourcePersonName(name) {
+  return normalizeIdentityText(name);
+}
+
+function sourcePersonKeyFor(person) {
+  return `${person.sourceId}:${person.externalId}`;
+}
+
+function sourceTypeForSourceId(sourceId) {
+  if (sourceId.includes('cec')) return 'official_election';
+  if (sourceId.includes('ly')) return 'official_officeholder';
+  if (sourceId.includes('cy') || sourceId.includes('political-finance')) return 'official_party_finance';
+  if (sourceId.includes('moi')) return 'government_open_data';
+  return 'other';
+}
+
+function confidenceForSourceId(sourceId) {
+  return sourceTypeForSourceId(sourceId).startsWith('official') || sourceTypeForSourceId(sourceId) === 'government_open_data'
+    ? 'A'
+    : 'D';
+}
+
+function normalizedRoleForPosition(position) {
+  const text = String(position ?? '');
+  if (text.includes('副總統')) return 'vice_president';
+  if (text.includes('總統')) return 'president';
+  if (text.includes('立法委員') || text.includes('立委')) return 'legislator';
+  if (text.includes('議員')) return 'councilor';
+  if (text.includes('副市長') || text.includes('副縣長') || text.includes('副縣市長')) return 'local_deputy';
+  if (text.includes('市長') || text.includes('縣長')) return 'local_chief';
+  if (text.includes('黨主席') || text.includes('主席') || text.includes('秘書長')) return 'party_officer';
+  if (text.includes('候選人')) return 'candidate';
+  return 'other';
+}
+
 function mergeByExternalId(collections) {
   const merged = new Map();
 
@@ -1256,6 +1300,137 @@ async function selectOrThrow(env, table, select) {
   return supabaseRequest(env, table, { method: 'GET', select });
 }
 
+function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
+  return (seed.people ?? []).map((person) => {
+    const source = getSource(seed, person.sourceId);
+    const sourceType = sourceTypeForSourceId(person.sourceId);
+    return {
+      source_person_key: sourcePersonKeyFor(person),
+      source_type: sourceType,
+      source_id: person.sourceId,
+      source_name: source.name,
+      source_url: person.sourceUrl ?? source.url,
+      raw_name: person.name,
+      normalized_name: normalizeSourcePersonName(person.name),
+      alias: person.alias ?? null,
+      gender: person.gender ?? 'unknown',
+      party: person.party ?? null,
+      normalized_party: person.party ? normalizeIdentityText(normalizePartyName(person.party)) : null,
+      position: person.position ?? null,
+      normalized_role: normalizedRoleForPosition(person.position),
+      district: person.district ?? null,
+      normalized_region: person.district ? normalizeIdentityText(person.district) : null,
+      election_year: person.electionYear ?? null,
+      external_person_id: person.externalId,
+      external_record_id: person.externalId,
+      source_payload: {
+        externalId: person.externalId,
+        sourceId: person.sourceId,
+        sourceType,
+      },
+      confidence_suggestion: confidenceForSourceId(person.sourceId),
+      ingest_batch_key: ingestBatchKey,
+      is_public: person.isPublic ?? true,
+      updated_at: startedAt,
+    };
+  });
+}
+
+function buildIdentityMatchRows(seed, sourcePersonByKey, personByExternalId, startedAt) {
+  return (seed.people ?? [])
+    .map((person) => {
+      const sourcePerson = sourcePersonByKey.get(sourcePersonKeyFor(person));
+      const canonicalPerson = personByExternalId.get(person.externalId);
+
+      if (!sourcePerson || !canonicalPerson) {
+        return null;
+      }
+
+      return {
+        source_person_id: sourcePerson.id,
+        person_id: canonicalPerson.id,
+        match_status: 'auto_matched',
+        score: 100,
+        match_method: 'external_id',
+        match_reason: 'The source person was imported from the same external_id that upserts the canonical public person.',
+        evidence_json: {
+          externalId: person.externalId,
+          normalizedName: normalizeSourcePersonName(person.name),
+          sourceId: person.sourceId,
+        },
+        updated_at: startedAt,
+      };
+    })
+    .filter((row) => row !== null);
+}
+
+function toClaimValue(value) {
+  if (value === null || value === undefined) return '';
+  return String(value).trim();
+}
+
+function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt) {
+  const rows = [];
+
+  for (const person of seed.people ?? []) {
+    const source = getSource(seed, person.sourceId);
+    const sourcePerson = sourcePersonByKey.get(sourcePersonKeyFor(person));
+    const canonicalPerson = personByExternalId.get(person.externalId);
+
+    if (!sourcePerson || !canonicalPerson) {
+      continue;
+    }
+
+    const confidence = confidenceForSourceId(person.sourceId);
+    const base = {
+      person_id: canonicalPerson.id,
+      source_person_id: sourcePerson.id,
+      confidence_level: confidence,
+      review_status: confidence === 'A' ? 'verified' : 'pending',
+      visibility: confidence === 'A' ? 'public' : 'review_only',
+      source_name: source.name,
+      source_url: person.sourceUrl ?? source.url,
+      observed_at: startedAt,
+      is_public: confidence === 'A',
+      updated_at: startedAt,
+    };
+
+    const claims = [
+      ['name', person.name],
+      ['alias', person.alias],
+      ['gender', person.gender],
+      ['party', person.party],
+      ['position', person.position],
+      ['district', person.district],
+      ['education', person.education],
+      ['experience', person.experience],
+      ['external_id', person.externalId],
+    ];
+
+    for (const [claimType, rawValue] of claims) {
+      const value = toClaimValue(rawValue);
+
+      if (!value || value === 'unknown') {
+        continue;
+      }
+
+      rows.push({
+        ...base,
+        claim_key: `${sourcePersonKeyFor(person)}:${claimType}:${hashId(value)}`,
+        claim_type: claimType,
+        claim_value: value,
+        claim_json: {
+          value,
+          personExternalId: person.externalId,
+          sourcePersonKey: sourcePersonKeyFor(person),
+        },
+      });
+    }
+  }
+
+  return rows;
+}
+
 async function hideKnownSamplePublicRows(env) {
   const sampleRaceSourceUrls = [
     'https://example.invalid/races/taipei-mayor',
@@ -1396,6 +1571,10 @@ async function writeSeed(seed, hash, args) {
   const people = await upsertOrThrow(env, 'people', personRows, { onConflict: 'external_id' });
   const personByExternalId = new Map(people.map((person) => [person.external_id, person]));
 
+  const sourcePersonRows = buildSourcePersonRows(seed, startedAt, hash);
+  const sourcePeople = await upsertOrThrow(env, 'source_people', sourcePersonRows, { onConflict: 'source_person_key' });
+  const sourcePersonByKey = new Map(sourcePeople.map((sourcePerson) => [sourcePerson.source_person_key, sourcePerson]));
+
   const candidateRows = (seed.candidates ?? []).map((candidate) => {
     const source = getSource(seed, candidate.sourceId);
     return {
@@ -1413,6 +1592,12 @@ async function writeSeed(seed, hash, args) {
   });
 
   await upsertOrThrow(env, 'candidates', candidateRows, { onConflict: 'external_id' });
+
+  const identityMatchRows = buildIdentityMatchRows(seed, sourcePersonByKey, personByExternalId, startedAt);
+  await upsertOrThrow(env, 'person_identity_matches', identityMatchRows, { onConflict: 'source_person_id,person_id' });
+
+  const personClaimRows = buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt);
+  await upsertOrThrow(env, 'person_claims', personClaimRows, { onConflict: 'claim_key' });
 
   const partyRows = seed.parties.map((party) => {
     const source = getSource(seed, party.sourceId);
@@ -1478,6 +1663,9 @@ async function writeSeed(seed, hash, args) {
             seed.elections.length +
             seed.races.length +
             (seed.people?.length ?? 0) +
+            sourcePersonRows.length +
+            identityMatchRows.length +
+            personClaimRows.length +
             (seed.candidates?.length ?? 0) +
             seed.parties.length +
             financeRows.length,
@@ -1520,6 +1708,17 @@ function buildReport(
       elections: seed.elections.length,
       races: seed.races.length,
       people: seed.people?.length ?? 0,
+      sourcePeople: seed.people?.length ?? 0,
+      autoIdentityMatches: seed.people?.length ?? 0,
+      personClaimsEstimate: (seed.people ?? []).reduce((count, person) => {
+        return (
+          count +
+          ['name', 'alias', 'gender', 'party', 'position', 'district', 'education', 'experience', 'externalId'].filter((field) => {
+            const value = field === 'externalId' ? person.externalId : person[field];
+            return value && String(value).trim() && String(value).trim() !== 'unknown';
+          }).length
+        );
+      }, 0),
       candidates: seed.candidates?.length ?? 0,
       parties: seed.parties.length,
       partyFinanceSummaries: seed.partyFinanceSummaries?.length ?? 0,

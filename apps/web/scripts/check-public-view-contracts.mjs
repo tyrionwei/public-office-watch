@@ -14,7 +14,7 @@ const allowedPublicViews = {
   public_home_election_ticker: ['election_id', 'election_name', 'voting_date', 'status'],
   public_region_election_summary: ['region_id', 'region_name', 'region_slug', 'upcoming_race_count'],
   public_person_primary_photos: ['person_id', 'media_id', 'photo_url', 'source_name'],
-  public_person_identity_sources: ['identity_source_id', 'person_id', 'source_type', 'source_name', 'match_status', 'match_score'],
+  public_person_identity_sources: ['identity_source_id', 'person_id', 'source_type', 'source_name', 'election_year', 'match_status', 'match_score'],
   public_person_claims: ['claim_id', 'person_id', 'claim_type', 'confidence_level', 'source_name'],
   public_parties: [
     'party_id',

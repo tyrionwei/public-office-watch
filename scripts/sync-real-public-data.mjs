@@ -14,6 +14,7 @@ function parseArgs(argv) {
     recordRun: false,
     mode: 'weekly',
     skipLiveFetch: false,
+    includeHistoricalCec: false,
   };
 
   for (let index = 2; index < argv.length; index += 1) {
@@ -31,6 +32,11 @@ function parseArgs(argv) {
 
     if (arg === '--skip-live-fetch') {
       args.skipLiveFetch = true;
+      continue;
+    }
+
+    if (arg === '--include-historical-cec') {
+      args.includeHistoricalCec = true;
       continue;
     }
 
@@ -296,6 +302,27 @@ function readZipTextBySuffix(buffer, suffix) {
   return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
 }
 
+function readZipTextByEntry(buffer, entryName) {
+  const entry = listZipEntries(buffer).find((item) => item.name === entryName);
+
+  if (!entry) {
+    throw new Error(`ZIP entry not found: ${entryName}`);
+  }
+
+  const bytes = extractZipEntry(buffer, entry);
+
+  if (entry.uncompressedSize && bytes.length !== entry.uncompressedSize) {
+    throw new Error(`ZIP entry size mismatch: ${entryName}`);
+  }
+
+  return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+}
+
+function zipDirname(entryName) {
+  const index = entryName.lastIndexOf('/');
+  return index === -1 ? '' : entryName.slice(0, index);
+}
+
 function normalizePartyName(name) {
   if (name === '臺灣民眾黨') return '台灣民眾黨';
   if (name === '臺灣基進') return '台灣基進';
@@ -313,6 +340,28 @@ function toGregorianYear(value) {
   }
 
   return year < 1911 ? year + 1911 : year;
+}
+
+function inferCecYearFromPath(entryName) {
+  const gregorian = entryName.match(/(?:^|\/)((?:19|20)\d{2})/);
+
+  if (gregorian) {
+    return Number.parseInt(gregorian[1], 10);
+  }
+
+  const rocYear = entryName.match(/(?:^|\/)(\d{2,3})年/);
+
+  if (rocYear) {
+    return toGregorianYear(rocYear[1]);
+  }
+
+  const prefixedRocYear = entryName.match(/(?:^|\/)\d{4}-(\d{2,3})年/);
+
+  if (prefixedRocYear) {
+    return toGregorianYear(prefixedRocYear[1]);
+  }
+
+  return null;
 }
 
 function parseAmount(value) {
@@ -385,6 +434,18 @@ function mergeByExternalId(collections) {
   return Array.from(merged.values());
 }
 
+function mergeBySourcePersonKey(collections) {
+  const merged = new Map();
+
+  for (const collection of collections) {
+    for (const item of collection ?? []) {
+      merged.set(item.sourcePersonKey, item);
+    }
+  }
+
+  return Array.from(merged.values());
+}
+
 const plannedLocalElection = {
   externalId: 'planned-2026-local-public-officials',
   name: '115年地方公職人員選舉',
@@ -446,6 +507,10 @@ function toCecCountyKey(countyCode, countySubCode) {
   }
 
   return `${countyCode}000`;
+}
+
+function cleanCecCell(value) {
+  return String(value ?? '').trim().replace(/^'+/, '');
 }
 
 function toCecRaceTitle(regionName, districtCode) {
@@ -518,6 +583,188 @@ function toLocalCouncilorOfficeTitle(region, kindLabel = '') {
 
 function toLocalCouncilorRaceType(region) {
   return region.regionType === 'county' ? 'county_councilor' : 'city_councilor';
+}
+
+function classifyHistoricalCecCandidateEntry(entryName) {
+  if (!entryName.endsWith('/elcand.csv')) {
+    return null;
+  }
+
+  if (entryName.includes('不分區政黨')) {
+    return null;
+  }
+
+  if (entryName.includes('2024總統立委') || entryName.includes('2022-111年地方公職人員選舉')) {
+    return null;
+  }
+
+  const year = inferCecYearFromPath(entryName);
+
+  if (!year || year < 1989) {
+    return null;
+  }
+
+  if (entryName.includes('/總統/')) {
+    return { year, kind: 'president', districtLabel: '全國', roleLabel: '總統' };
+  }
+
+  if (entryName.includes('/區域立委/')) {
+    return { year, kind: 'legislator-district', roleLabel: '立法委員' };
+  }
+
+  if (entryName.includes('/平地立委/')) {
+    return { year, kind: 'legislator-plain-indigenous', districtLabel: '平地原住民', roleLabel: '立法委員' };
+  }
+
+  if (entryName.includes('/山地立委/')) {
+    return { year, kind: 'legislator-mountain-indigenous', districtLabel: '山地原住民', roleLabel: '立法委員' };
+  }
+
+  if (entryName.includes('/C1/')) {
+    return { year, kind: 'local-mayor', roleLabel: '縣市首長' };
+  }
+
+  if (entryName.includes('/T1/')) {
+    return { year, kind: 'local-councilor-regional', roleLabel: '議員' };
+  }
+
+  if (entryName.includes('/T2/')) {
+    return { year, kind: 'local-councilor-plain-indigenous', districtLabel: '平地原住民', roleLabel: '議員' };
+  }
+
+  if (entryName.includes('/T3/')) {
+    return { year, kind: 'local-councilor-mountain-indigenous', districtLabel: '山地原住民', roleLabel: '議員' };
+  }
+
+  return null;
+}
+
+function toHistoricalCecDistrictName(row, classification, regionByCountyKey) {
+  if (classification.districtLabel) {
+    return classification.districtLabel;
+  }
+
+  const countyKey = toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1]));
+  const region = regionByCountyKey.get(countyKey);
+  const districtCode = Number(cleanCecCell(row[2]));
+
+  if (classification.kind === 'legislator-district') {
+    return region ? `${region.name}第${districtCode}選舉區` : `縣市代碼${countyKey}第${districtCode}選舉區`;
+  }
+
+  if (classification.kind === 'local-mayor') {
+    return region?.name ?? `縣市代碼${countyKey}`;
+  }
+
+  if (classification.kind.startsWith('local-councilor')) {
+    const suffix = classification.districtLabel ? `${classification.districtLabel}議員` : '議員';
+    return region ? `${region.name}第${districtCode}選舉區${suffix}` : `縣市代碼${countyKey}第${districtCode}選舉區${suffix}`;
+  }
+
+  return null;
+}
+
+function toHistoricalCecPosition(row, classification, regionByCountyKey) {
+  const elected = cleanCecCell(row[14]) === '*';
+
+  if (classification.kind === 'president') {
+    const role = cleanCecCell(row[15]) === 'Y' ? '副總統' : '總統';
+    return elected ? `${classification.year}年${role}當選人` : `${classification.year}年${role}候選人`;
+  }
+
+  if (classification.kind === 'local-mayor') {
+    const region = regionByCountyKey.get(toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1])));
+    const officeTitle = region ? toLocalMayorOfficeTitle(region) : '縣市首長';
+    return elected ? officeTitle : `${officeTitle}候選人`;
+  }
+
+  if (classification.kind.startsWith('local-councilor')) {
+    const region = regionByCountyKey.get(toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1])));
+    const kindLabel = classification.districtLabel ?? '';
+    const officeTitle = region ? toLocalCouncilorOfficeTitle(region, kindLabel) : `${kindLabel}議員`;
+    return elected ? officeTitle : `${officeTitle}候選人`;
+  }
+
+  return elected ? `${classification.year}年立法委員當選人` : `${classification.year}年立法委員候選人`;
+}
+
+function toHistoricalCecSourcePeople({ zipBuffer, source, seed }) {
+  const regionByCountyKey = buildCecRegionByCountyKey(seed);
+  const entries = listZipEntries(zipBuffer);
+  const sourcePeople = [];
+  const skippedEntries = [];
+
+  for (const entry of entries) {
+    const classification = classifyHistoricalCecCandidateEntry(entry.name);
+
+    if (!classification) {
+      continue;
+    }
+
+    const partyEntryName = `${zipDirname(entry.name)}/elpaty.csv`;
+    const partyEntry = entries.find((item) => item.name === partyEntryName);
+
+    if (!partyEntry) {
+      skippedEntries.push({ entry: entry.name, reason: 'missing elpaty.csv' });
+      continue;
+    }
+
+    const partyRows = parseDelimitedRows(readZipTextByEntry(zipBuffer, partyEntry.name), ',');
+    const candidateRows = parseDelimitedRows(readZipTextByEntry(zipBuffer, entry.name), ',');
+    const partyByCode = new Map(partyRows.map((row) => [cleanCecCell(row[0]), normalizePartyName(cleanCecCell(row[1]))]));
+
+    for (const row of candidateRows) {
+      const candidateNo = cleanCecCell(row[5]);
+      const name = cleanCecCell(row[6]);
+
+      if (!candidateNo || !name || name === '姓名') {
+        continue;
+      }
+
+      const countyCode = cleanCecCell(row[0]);
+      const countySubCode = cleanCecCell(row[1]);
+      const districtCode = cleanCecCell(row[2]);
+      const partyCode = cleanCecCell(row[7]);
+      const vicePresident = cleanCecCell(row[15]) === 'Y';
+      const elected = cleanCecCell(row[14]) === '*';
+      const party = normalizePartyName(partyByCode.get(partyCode) ?? '');
+      const countyKey = toCecCountyKey(countyCode, countySubCode);
+      const sourcePersonKey = `cec-historical:${hashId([entry.name, candidateNo, name, row[0], row[1], row[2], row[15]].join('|'))}`;
+
+      sourcePeople.push({
+        sourcePersonKey,
+        sourceType: 'official_election',
+        sourceId: source.id,
+        sourceName: source.name,
+        sourceUrl: source.url,
+        rawName: name,
+        alias: null,
+        gender: normalizeGender(cleanCecCell(row[8])),
+        party,
+        position: toHistoricalCecPosition(row, classification, regionByCountyKey),
+        normalizedRole: normalizedRoleForPosition(toHistoricalCecPosition(row, classification, regionByCountyKey)),
+        district: toHistoricalCecDistrictName(row, classification, regionByCountyKey),
+        electionYear: classification.year,
+        externalRecordId: sourcePersonKey,
+        sourcePayload: {
+          zipEntry: entry.name,
+          candidateNo,
+          countyCode,
+          countySubCode,
+          countyKey,
+          districtCode,
+          partyCode,
+          elected,
+          vicePresident,
+          kind: classification.kind,
+        },
+        confidenceSuggestion: 'A',
+        isPublic: false,
+      });
+    }
+  }
+
+  return { sourcePeople, skippedEntries };
 }
 
 function toLocalCandidateRows({ rows, partyByCode, source, roleLabel, raceExternalIdForRow, districtNameForRow, officeTitleForRow }) {
@@ -889,6 +1136,51 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
   }
 }
 
+async function enrichSeedWithHistoricalCecSourcePeople(seed, args) {
+  const source = seed.sources.find((item) => item.id === 'cec-2024-votedata');
+
+  if (!args.includeHistoricalCec || args.skipLiveFetch || !source?.downloadUrl) {
+    return {
+      seed,
+      historicalCecSourcePeople: {
+        status: args.includeHistoricalCec ? 'skipped' : 'disabled',
+        count: seed.sourcePeople?.length ?? 0,
+        url: source?.downloadUrl ?? null,
+      },
+    };
+  }
+
+  try {
+    const zipBuffer = await fetchBytes(source.downloadUrl);
+    const { sourcePeople, skippedEntries } = toHistoricalCecSourcePeople({ zipBuffer, source, seed });
+
+    return {
+      seed: {
+        ...seed,
+        sourcePeople: mergeBySourcePersonKey([seed.sourcePeople, sourcePeople]),
+      },
+      historicalCecSourcePeople: {
+        status: 'ok',
+        count: sourcePeople.length,
+        url: source.downloadUrl,
+        skippedEntryCount: skippedEntries.length,
+        scope: 'historical CEC candidate source people since 1989, excluding current baseline 2024 national and 2022 local imports',
+      },
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return {
+      seed,
+      historicalCecSourcePeople: {
+        status: 'fallback',
+        count: seed.sourcePeople?.length ?? 0,
+        url: source.downloadUrl,
+        error: message,
+      },
+    };
+  }
+}
+
 async function enrichSeedWithLivePartyRegistry(seed, args) {
   const registrySource = seed.sources.find((source) => source.id === 'moi-party-registry');
 
@@ -1194,6 +1486,12 @@ function validateSeed(seed) {
     if (!sourceIds.has(person.sourceId)) throw new Error(`Person ${person.externalId} has unknown sourceId.`);
   }
 
+  for (const sourcePerson of seed.sourcePeople ?? []) {
+    if (!sourceIds.has(sourcePerson.sourceId)) {
+      throw new Error(`Source person ${sourcePerson.sourcePersonKey} has unknown sourceId.`);
+    }
+  }
+
   for (const candidate of seed.candidates ?? []) {
     if (!sourceIds.has(candidate.sourceId)) throw new Error(`Candidate ${candidate.externalId} has unknown sourceId.`);
     if (!personIds.has(candidate.personExternalId)) {
@@ -1301,7 +1599,7 @@ async function selectOrThrow(env, table, select) {
 }
 
 function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
-  return (seed.people ?? []).map((person) => {
+  const canonicalRows = (seed.people ?? []).map((person) => {
     const source = getSource(seed, person.sourceId);
     const sourceType = sourceTypeForSourceId(person.sourceId);
     return {
@@ -1334,6 +1632,38 @@ function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
       updated_at: startedAt,
     };
   });
+
+  const sourceOnlyRows = (seed.sourcePeople ?? []).map((person) => {
+    const source = getSource(seed, person.sourceId);
+    const sourceType = person.sourceType ?? sourceTypeForSourceId(person.sourceId);
+    return {
+      source_person_key: person.sourcePersonKey,
+      source_type: sourceType,
+      source_id: person.sourceId,
+      source_name: person.sourceName ?? source.name,
+      source_url: person.sourceUrl ?? source.url,
+      raw_name: person.rawName,
+      normalized_name: normalizeSourcePersonName(person.rawName),
+      alias: person.alias ?? null,
+      gender: person.gender ?? 'unknown',
+      party: person.party ?? null,
+      normalized_party: person.party ? normalizeIdentityText(normalizePartyName(person.party)) : null,
+      position: person.position ?? null,
+      normalized_role: person.normalizedRole ?? normalizedRoleForPosition(person.position),
+      district: person.district ?? null,
+      normalized_region: person.district ? normalizeIdentityText(person.district) : null,
+      election_year: person.electionYear ?? null,
+      external_person_id: person.externalPersonId ?? null,
+      external_record_id: person.externalRecordId ?? person.sourcePersonKey,
+      source_payload: person.sourcePayload ?? {},
+      confidence_suggestion: person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId),
+      ingest_batch_key: ingestBatchKey,
+      is_public: person.isPublic ?? false,
+      updated_at: startedAt,
+    };
+  });
+
+  return [...canonicalRows, ...sourceOnlyRows];
 }
 
 function buildIdentityMatchRows(seed, sourcePersonByKey, personByExternalId, startedAt) {
@@ -1428,7 +1758,83 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
     }
   }
 
+  for (const person of seed.sourcePeople ?? []) {
+    const source = getSource(seed, person.sourceId);
+    const sourcePerson = sourcePersonByKey.get(person.sourcePersonKey);
+
+    if (!sourcePerson) {
+      continue;
+    }
+
+    const base = {
+      person_id: null,
+      source_person_id: sourcePerson.id,
+      confidence_level: person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId),
+      review_status: 'pending',
+      visibility: 'review_only',
+      source_name: person.sourceName ?? source.name,
+      source_url: person.sourceUrl ?? source.url,
+      observed_at: startedAt,
+      is_public: false,
+      updated_at: startedAt,
+    };
+
+    const claims = [
+      ['name', person.rawName],
+      ['alias', person.alias],
+      ['gender', person.gender],
+      ['party', person.party],
+      ['position', person.position],
+      ['district', person.district],
+      ['external_id', person.externalRecordId],
+    ];
+
+    for (const [claimType, rawValue] of claims) {
+      const value = toClaimValue(rawValue);
+
+      if (!value || value === 'unknown') {
+        continue;
+      }
+
+      rows.push({
+        ...base,
+        claim_key: `${person.sourcePersonKey}:${claimType}:${hashId(value)}`,
+        claim_type: claimType,
+        claim_value: value,
+        claim_json: {
+          value,
+          sourcePersonKey: person.sourcePersonKey,
+          sourcePayload: person.sourcePayload ?? {},
+        },
+      });
+    }
+  }
+
   return rows;
+}
+
+function estimatePersonClaimCount(seed) {
+  const canonicalCount = (seed.people ?? []).reduce((count, person) => {
+    return (
+      count +
+      ['name', 'alias', 'gender', 'party', 'position', 'district', 'education', 'experience', 'externalId'].filter((field) => {
+        const value = field === 'externalId' ? person.externalId : person[field];
+        return value && String(value).trim() && String(value).trim() !== 'unknown';
+      }).length
+    );
+  }, 0);
+
+  const sourceOnlyCount = (seed.sourcePeople ?? []).reduce((count, person) => {
+    return (
+      count +
+      ['rawName', 'alias', 'gender', 'party', 'position', 'district', 'externalRecordId'].filter((field) => {
+        const value = person[field];
+        return value && String(value).trim() && String(value).trim() !== 'unknown';
+      }).length
+    );
+  }, 0);
+
+  return canonicalCount + sourceOnlyCount;
 }
 
 async function hideKnownSamplePublicRows(env) {
@@ -1678,6 +2084,7 @@ async function writeSeed(seed, hash, args) {
             args.livePartyRegistry,
             args.liveCurrentOfficeholders,
             args.liveCecCandidates,
+            args.historicalCecSourcePeople,
             args.plannedLocalElections,
             args.livePartyFinanceSummaries,
           ),
@@ -1694,6 +2101,7 @@ function buildReport(
   livePartyRegistry,
   liveCurrentOfficeholders,
   liveCecCandidates,
+  historicalCecSourcePeople,
   plannedLocalElections,
   livePartyFinanceSummaries,
 ) {
@@ -1708,17 +2116,10 @@ function buildReport(
       elections: seed.elections.length,
       races: seed.races.length,
       people: seed.people?.length ?? 0,
-      sourcePeople: seed.people?.length ?? 0,
+      historicalSourcePeople: seed.sourcePeople?.length ?? 0,
+      sourcePeople: (seed.people?.length ?? 0) + (seed.sourcePeople?.length ?? 0),
       autoIdentityMatches: seed.people?.length ?? 0,
-      personClaimsEstimate: (seed.people ?? []).reduce((count, person) => {
-        return (
-          count +
-          ['name', 'alias', 'gender', 'party', 'position', 'district', 'education', 'experience', 'externalId'].filter((field) => {
-            const value = field === 'externalId' ? person.externalId : person[field];
-            return value && String(value).trim() && String(value).trim() !== 'unknown';
-          }).length
-        );
-      }, 0),
+      personClaimsEstimate: estimatePersonClaimCount(seed),
       candidates: seed.candidates?.length ?? 0,
       parties: seed.parties.length,
       partyFinanceSummaries: seed.partyFinanceSummaries?.length ?? 0,
@@ -1727,6 +2128,7 @@ function buildReport(
     livePartyRegistry,
     liveCurrentOfficeholders,
     liveCecCandidates,
+    historicalCecSourcePeople,
     plannedLocalElections,
     livePartyFinanceSummaries,
     skipped: {
@@ -1742,7 +2144,8 @@ async function main() {
   const partyEnriched = await enrichSeedWithLivePartyRegistry(baseSeed, args);
   const officeholderEnriched = await enrichSeedWithLiveCurrentOfficeholders(partyEnriched.seed, args);
   const candidateEnriched = await enrichSeedWithLiveCecCandidates(officeholderEnriched.seed, args);
-  const plannedElectionEnriched = enrichSeedWithPlannedLocalElections(candidateEnriched.seed);
+  const historicalCecEnriched = await enrichSeedWithHistoricalCecSourcePeople(candidateEnriched.seed, args);
+  const plannedElectionEnriched = enrichSeedWithPlannedLocalElections(historicalCecEnriched.seed);
   const financeEnriched = await enrichSeedWithLivePartyFinanceSummaries(plannedElectionEnriched.seed, args);
   const seed = financeEnriched.seed;
   const hash = crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex');
@@ -1755,12 +2158,14 @@ async function main() {
     partyEnriched.livePartyRegistry,
     officeholderEnriched.liveCurrentOfficeholders,
     candidateEnriched.liveCecCandidates,
+    historicalCecEnriched.historicalCecSourcePeople,
     plannedElectionEnriched.plannedLocalElections,
     financeEnriched.livePartyFinanceSummaries,
   );
   args.livePartyRegistry = partyEnriched.livePartyRegistry;
   args.liveCurrentOfficeholders = officeholderEnriched.liveCurrentOfficeholders;
   args.liveCecCandidates = candidateEnriched.liveCecCandidates;
+  args.historicalCecSourcePeople = historicalCecEnriched.historicalCecSourcePeople;
   args.plannedLocalElections = plannedElectionEnriched.plannedLocalElections;
   args.livePartyFinanceSummaries = financeEnriched.livePartyFinanceSummaries;
 

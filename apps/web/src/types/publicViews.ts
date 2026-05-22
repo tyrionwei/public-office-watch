@@ -207,6 +207,7 @@ export type PublicPersonIdentitySource = {
   party: string | null;
   position: string | null;
   district: string | null;
+  election_year: number | null;
   match_status: 'auto_matched';
   match_score: number;
   confidence_suggestion: PublicRelationDetail['confidence_level'];

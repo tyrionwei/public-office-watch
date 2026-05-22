@@ -12,7 +12,7 @@
     "sync:real-data:historical-dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-historical-cec",
     "sync:real-data:daily": "node scripts/sync-real-public-data.mjs --daily",
     "sync:real-data:write": "node scripts/sync-real-public-data.mjs --weekly --write --record-run",
-    "sync:real-data:historical-write": "node scripts/sync-real-public-data.mjs --weekly --include-historical-cec --write --record-run"
+    "sync:real-data:historical-write": "node scripts/sync-real-public-data.mjs --weekly --include-historical-cec --auto-approve-review --identity-auto-approve-threshold 90 --claim-auto-approve-threshold 90 --write --record-run"
   },
   "repository": {
     "type": "git",

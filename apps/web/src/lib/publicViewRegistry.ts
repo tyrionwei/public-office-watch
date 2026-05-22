@@ -27,6 +27,8 @@ export const blockedInternalTables = [
   'person_identity_matches',
   'person_claims',
   'identity_unmatched_source_people',
+  'identity_probable_match_queue',
+  'person_claim_review_queue',
   'party_finance_reports',
   'party_company_contributions',
   'pending',

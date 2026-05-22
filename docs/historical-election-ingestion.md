@@ -42,4 +42,5 @@
 - 標準化姓名相同作為基本條件。
 - 性別、政黨、角色、地區線索加權。
 - 分數達 75 以上才寫入 `probable_match`。
-- 不直接更新 `people`，仍需後續審核或更嚴格規則確認。
+- `historical-write` 會啟用自動過審：90 分以上升為 `auto_matched`，並把對應低歧義 claims 標為 verified/public。
+- 75-89 分仍維持 `probable_match`，留給 review queue。

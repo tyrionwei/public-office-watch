@@ -15,6 +15,9 @@ function parseArgs(argv) {
     mode: 'weekly',
     skipLiveFetch: false,
     includeHistoricalCec: false,
+    autoApproveReview: false,
+    identityAutoApproveThreshold: 90,
+    claimAutoApproveThreshold: 90,
   };
 
   for (let index = 2; index < argv.length; index += 1) {
@@ -37,6 +40,23 @@ function parseArgs(argv) {
 
     if (arg === '--include-historical-cec') {
       args.includeHistoricalCec = true;
+      continue;
+    }
+
+    if (arg === '--auto-approve-review') {
+      args.autoApproveReview = true;
+      continue;
+    }
+
+    if (arg === '--identity-auto-approve-threshold') {
+      args.identityAutoApproveThreshold = Number.parseInt(argv[index + 1] ?? '', 10);
+      index += 1;
+      continue;
+    }
+
+    if (arg === '--claim-auto-approve-threshold') {
+      args.claimAutoApproveThreshold = Number.parseInt(argv[index + 1] ?? '', 10);
+      index += 1;
       continue;
     }
 
@@ -407,6 +427,52 @@ function confidenceForSourceId(sourceId) {
   return sourceTypeForSourceId(sourceId).startsWith('official') || sourceTypeForSourceId(sourceId) === 'government_open_data'
     ? 'A'
     : 'D';
+}
+
+const reviewScoringVersion = '2026-05-23-v1';
+
+function scoreClaim({ claimType, sourceType, confidenceLevel, hasMatchedPerson }) {
+  let score = 0;
+  const reasons = [];
+
+  if (confidenceLevel === 'A') {
+    score += 45;
+    reasons.push('A-level source');
+  } else if (confidenceLevel === 'B') {
+    score += 35;
+    reasons.push('B-level source');
+  } else if (confidenceLevel === 'C') {
+    score += 20;
+    reasons.push('C-level source');
+  } else {
+    score += 10;
+    reasons.push('D-level source');
+  }
+
+  if (sourceType.startsWith('official') || sourceType === 'government_open_data') {
+    score += 25;
+    reasons.push('official structured source');
+  }
+
+  if (hasMatchedPerson) {
+    score += 15;
+    reasons.push('linked to canonical person');
+  }
+
+  if (['name', 'gender', 'party', 'position', 'district', 'external_id'].includes(claimType)) {
+    score += 10;
+    reasons.push('low-ambiguity identity field');
+  }
+
+  if (['legal_case', 'family_relation'].includes(claimType)) {
+    score -= 25;
+    reasons.push('sensitive claim requires stronger evidence');
+  }
+
+  return {
+    score: Math.max(0, Math.min(100, score)),
+    reasons,
+  };
 }
 
 function normalizedRoleForPosition(position) {
@@ -1731,7 +1797,7 @@ function buildIdentityMatchRows(seed, sourcePersonByKey, personByExternalId, sta
     .filter((row) => row !== null);
 }
 
-function buildProbableIdentityMatchRows(seed, sourcePersonByKey, canonicalPeople, startedAt) {
+function buildProbableIdentityMatchRows(seed, sourcePersonByKey, canonicalPeople, startedAt, args) {
   const peopleByNormalizedName = new Map();
 
   for (const person of canonicalPeople) {
@@ -1792,13 +1858,15 @@ function buildProbableIdentityMatchRows(seed, sourcePersonByKey, canonicalPeople
       continue;
     }
 
+    const autoApproved = args.autoApproveReview && best.score >= args.identityAutoApproveThreshold;
+
     rows.push({
       source_person_id: sourceRow.id,
       person_id: best.person.id,
-      match_status: 'probable_match',
+      match_status: autoApproved ? 'auto_matched' : 'probable_match',
       score: best.score,
-      match_method: 'name_party_role_scoring',
-      match_reason: best.reasons.join('; '),
+      match_method: autoApproved ? 'auto_approved_name_party_role_scoring' : 'name_party_role_scoring',
+      match_reason: `${best.reasons.join('; ')}${autoApproved ? '; auto-approved by threshold' : ''}`,
       evidence_json: {
         sourcePersonKey: sourcePerson.sourcePersonKey,
         sourceElectionYear: sourcePerson.electionYear ?? null,
@@ -1808,6 +1876,8 @@ function buildProbableIdentityMatchRows(seed, sourcePersonByKey, canonicalPeople
         canonicalParty: best.person.party ?? null,
         canonicalPosition: best.person.position ?? null,
       },
+      reviewed_by: autoApproved ? 'system:auto-review' : null,
+      reviewed_at: autoApproved ? startedAt : null,
       updated_at: startedAt,
     });
   }
@@ -1820,7 +1890,7 @@ function toClaimValue(value) {
   return String(value).trim();
 }
 
-function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt) {
+function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt, autoApprovedPersonBySourceKey = new Map(), args = {}) {
   const rows = [];
 
   for (const person of seed.people ?? []) {
@@ -1833,12 +1903,11 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
     }
 
     const confidence = confidenceForSourceId(person.sourceId);
+    const sourceType = sourceTypeForSourceId(person.sourceId);
     const base = {
       person_id: canonicalPerson.id,
       source_person_id: sourcePerson.id,
       confidence_level: confidence,
-      review_status: confidence === 'A' ? 'verified' : 'pending',
-      visibility: confidence === 'A' ? 'public' : 'review_only',
       source_name: source.name,
       source_url: person.sourceUrl ?? source.url,
       observed_at: startedAt,
@@ -1865,11 +1934,26 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
         continue;
       }
 
+      const scoring = scoreClaim({
+        claimType,
+        sourceType,
+        confidenceLevel: confidence,
+        hasMatchedPerson: true,
+      });
+      const autoApproved = scoring.score >= (args.claimAutoApproveThreshold ?? 90);
+
       rows.push({
         ...base,
-        claim_key: `${sourcePersonKeyFor(person)}:${claimType}:${hashId(value)}`,
+        claim_key: `${sourcePersonKeyFor(person)}:${claimType}`,
         claim_type: claimType,
         claim_value: value,
+        review_status: autoApproved ? 'verified' : 'pending',
+        visibility: autoApproved ? 'public' : 'review_only',
+        is_public: autoApproved,
+        review_score: scoring.score,
+        scoring_version: reviewScoringVersion,
+        scoring_reasons: scoring.reasons,
+        auto_reviewed_at: autoApproved ? startedAt : null,
         claim_json: {
           value,
           personExternalId: person.externalId,
@@ -1882,17 +1966,18 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
   for (const person of seed.sourcePeople ?? []) {
     const source = getSource(seed, person.sourceId);
     const sourcePerson = sourcePersonByKey.get(person.sourcePersonKey);
+    const approvedPerson = autoApprovedPersonBySourceKey.get(person.sourcePersonKey) ?? null;
 
     if (!sourcePerson) {
       continue;
     }
 
+    const confidence = person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId);
+    const sourceType = person.sourceType ?? sourceTypeForSourceId(person.sourceId);
     const base = {
-      person_id: null,
+      person_id: approvedPerson?.id ?? null,
       source_person_id: sourcePerson.id,
-      confidence_level: person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId),
-      review_status: 'pending',
-      visibility: 'review_only',
+      confidence_level: confidence,
       source_name: person.sourceName ?? source.name,
       source_url: person.sourceUrl ?? source.url,
       observed_at: startedAt,
@@ -1917,11 +2002,26 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
         continue;
       }
 
+      const scoring = scoreClaim({
+        claimType,
+        sourceType,
+        confidenceLevel: confidence,
+        hasMatchedPerson: Boolean(approvedPerson),
+      });
+      const autoApproved = Boolean(approvedPerson) && scoring.score >= (args.claimAutoApproveThreshold ?? 90);
+
       rows.push({
         ...base,
-        claim_key: `${person.sourcePersonKey}:${claimType}:${hashId(value)}`,
+        claim_key: `${person.sourcePersonKey}:${claimType}`,
         claim_type: claimType,
         claim_value: value,
+        review_status: autoApproved ? 'verified' : 'pending',
+        visibility: autoApproved ? 'public' : 'review_only',
+        is_public: autoApproved,
+        review_score: scoring.score,
+        scoring_version: reviewScoringVersion,
+        scoring_reasons: scoring.reasons,
+        auto_reviewed_at: autoApproved ? startedAt : null,
         claim_json: {
           value,
           sourcePersonKey: person.sourcePersonKey,
@@ -2123,10 +2223,21 @@ async function writeSeed(seed, hash, args) {
   const identityMatchRows = buildIdentityMatchRows(seed, sourcePersonByKey, personByExternalId, startedAt);
   await upsertOrThrow(env, 'person_identity_matches', identityMatchRows, { onConflict: 'source_person_id,person_id' });
 
-  const probableIdentityMatchRows = buildProbableIdentityMatchRows(seed, sourcePersonByKey, people, startedAt);
+  const probableIdentityMatchRows = buildProbableIdentityMatchRows(seed, sourcePersonByKey, people, startedAt, args);
   await upsertOrThrow(env, 'person_identity_matches', probableIdentityMatchRows, { onConflict: 'source_person_id,person_id' });
 
-  const personClaimRows = buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt);
+  const autoApprovedPersonBySourceKey = new Map(
+    probableIdentityMatchRows
+      .filter((match) => match.match_status === 'auto_matched')
+      .map((match) => {
+        const person = people.find((item) => item.id === match.person_id);
+        const sourcePerson = sourcePeople.find((item) => item.id === match.source_person_id);
+        return sourcePerson && person ? [sourcePerson.source_person_key, person] : null;
+      })
+      .filter((item) => item !== null),
+  );
+
+  const personClaimRows = buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt, autoApprovedPersonBySourceKey, args);
   await upsertOrThrow(env, 'person_claims', personClaimRows, { onConflict: 'claim_key' });
 
   const partyRows = seed.parties.map((party) => {

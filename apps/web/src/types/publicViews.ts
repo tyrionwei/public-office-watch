@@ -239,6 +239,7 @@ export type PublicPersonClaim = {
   claim_value: string | null;
   claim_json: Record<string, unknown>;
   confidence_level: PublicRelationDetail['confidence_level'];
+  review_score: number;
   source_name: string | null;
   source_url: string | null;
   observed_at: string | null;

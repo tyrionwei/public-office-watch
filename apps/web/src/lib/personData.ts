@@ -232,6 +232,18 @@ function matchesText(value: string | null | undefined, query: string) {
   return value?.toLowerCase().includes(query) ?? false;
 }
 
+function normalizePersonNameForDedupe(name: string) {
+  const chinesePrefix = name.match(/^[\u3400-\u9fff]+/)?.[0] ?? name;
+  return chinesePrefix.replace(/\s+/g, '').trim();
+}
+
+function normalizeRegionForDedupe(value: string | null | undefined) {
+  return value
+    ?.replace(/選舉區/g, '')
+    .replace(/\s+/g, '')
+    .trim() ?? '';
+}
+
 function regionKeysFor(region: StageRegionNode) {
   return [region.id, region.publicRegionId, region.label, region.stageLabel].filter(Boolean) as string[];
 }
@@ -259,9 +271,9 @@ function hasText(value: string | null | undefined) {
 
 function dedupeKeyFor(person: PublicPersonListItem) {
   return [
-    person.name,
+    normalizePersonNameForDedupe(person.name),
     normalizePartyLabel(person.party),
-    person.region_name ?? person.district ?? '',
+    normalizeRegionForDedupe(person.region_name ?? person.district),
   ].join('|');
 }
 

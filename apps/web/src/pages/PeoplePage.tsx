@@ -44,6 +44,19 @@ function getPage(searchParams: URLSearchParams) {
   return Number.isFinite(page) && page > 0 ? page : 1;
 }
 
+function getVisiblePageNumbers(currentPage: number, pageCount: number) {
+  const visibleCount = Math.min(5, pageCount);
+  const halfWindow = Math.floor(visibleCount / 2);
+  let start = Math.max(1, currentPage - halfWindow);
+  const endOverflow = start + visibleCount - 1 - pageCount;
+
+  if (endOverflow > 0) {
+    start = Math.max(1, start - endOverflow);
+  }
+
+  return Array.from({ length: visibleCount }, (_, index) => start + index);
+}
+
 function SelectFilter({
   label,
   value,
@@ -83,6 +96,7 @@ export function PeoplePage() {
   const currentPage = Math.min(requestedPage, pageCount);
   const pageStart = (currentPage - 1) * PAGE_SIZE;
   const visiblePeople = people.slice(pageStart, pageStart + PAGE_SIZE);
+  const visiblePageNumbers = getVisiblePageNumbers(currentPage, pageCount);
   const allPeople = publicDataProvider.getPeopleByFilters();
   const regionOptions = publicDataProvider
     .getStageRegions()
@@ -221,22 +235,50 @@ export function PeoplePage() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
+                  onClick={() => updatePage(1)}
+                  disabled={currentPage <= 1}
+                  className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  頭
+                </button>
+                <button
+                  type="button"
                   onClick={() => updatePage(currentPage - 1)}
                   disabled={currentPage <= 1}
                   className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  prev
+                  上一頁
                 </button>
-                <span className="pixel-corners border border-line/70 bg-bg/55 px-3 py-2 text-xs text-white">
-                  {currentPage}
-                </span>
+                {visiblePageNumbers.map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    type="button"
+                    onClick={() => updatePage(pageNumber)}
+                    aria-current={pageNumber === currentPage ? 'page' : undefined}
+                    className={
+                      pageNumber === currentPage
+                        ? 'pixel-corners border border-accent bg-accent/20 px-3 py-2 text-xs text-white'
+                        : 'pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white'
+                    }
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
                 <button
                   type="button"
                   onClick={() => updatePage(currentPage + 1)}
                   disabled={currentPage >= pageCount}
                   className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  next
+                  下一頁
+                </button>
+                <button
+                  type="button"
+                  onClick={() => updatePage(pageCount)}
+                  disabled={currentPage >= pageCount}
+                  className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  底
                 </button>
               </div>
             </div>

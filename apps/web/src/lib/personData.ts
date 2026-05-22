@@ -5,6 +5,7 @@ import type {
   PublicLocalOfficeSummary,
   PublicPerson,
   PublicPersonFilters,
+  PublicPersonIdentityRecord,
   PublicPersonListItem,
   PublicPersonProfile,
   PublicPersonRole,
@@ -273,7 +274,7 @@ function dedupeKeyFor(person: PublicPersonListItem) {
   return [
     normalizePersonNameForDedupe(person.name),
     normalizePartyLabel(person.party),
-    normalizeRegionForDedupe(person.region_name ?? person.district),
+    normalizeRegionForDedupe(person.district ?? person.region_name),
   ].join('|');
 }
 
@@ -417,6 +418,20 @@ export function filterPersonListItems(items: PublicPersonListItem[], filters: Pu
   );
 }
 
+function identityRecordsFor(personIds: string[], items: PublicPersonListItem[]): PublicPersonIdentityRecord[] {
+  return items
+    .filter((item) => personIds.includes(item.person_id))
+    .map((item) => ({
+      person_id: item.person_id,
+      name: item.name,
+      party: item.party,
+      position: item.position,
+      district: item.district,
+      role_label: item.role_label,
+      status_label: item.status_label,
+    }));
+}
+
 export function buildLocalOfficeSummary(
   regionId: string,
   people: PublicPerson[],
@@ -482,15 +497,20 @@ export function buildPersonProfile(
   candidates: PublicCandidate[],
   stageRegions: StageRegionNode[],
 ): PublicPersonProfile | null {
-  const person = buildPersonListItems(people, candidates, stageRegions).find((item) => item.person_id === personId);
+  const allItems = buildPersonListItems(people, candidates, stageRegions);
+  const mergedItems = dedupePersonListItems(allItems);
+  const person = mergedItems.find((item) => item.person_id === personId || item.merged_person_ids.includes(personId));
 
   if (!person) {
     return null;
   }
 
+  const mergedPersonIds = person.merged_person_ids;
+
   return {
     person,
-    candidate_records: candidateRecordsFor(personId, candidates),
+    identity_records: identityRecordsFor(mergedPersonIds, allItems),
+    candidate_records: candidates.filter((candidate) => mergedPersonIds.includes(candidate.person_id)),
     experience_status: hasText(person.experience) ? 'available' : 'todo',
     contribution_status: 'todo',
     platform_status: 'todo',

@@ -273,6 +273,16 @@ export type PublicCouncilorPartyCount = {
   count: number;
 };
 
+export type PublicPersonIdentityRecord = {
+  person_id: string;
+  name: string;
+  party: string | null;
+  position: string | null;
+  district: string | null;
+  role_label: string;
+  status_label: string;
+};
+
 export type PublicLocalOfficeSummary = {
   region_id: string;
   region_name: string;
@@ -290,6 +300,7 @@ export type PublicLocalOfficeSummary = {
 
 export type PublicPersonProfile = {
   person: PublicPersonListItem;
+  identity_records: PublicPersonIdentityRecord[];
   candidate_records: PublicCandidate[];
   experience_status: 'available' | 'todo';
   contribution_status: 'available' | 'summary_only' | 'todo';

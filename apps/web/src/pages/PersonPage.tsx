@@ -113,6 +113,22 @@ export function PersonPage() {
               </dl>
             </SectionPanel>
 
+            {profile.identity_records.length > 1 ? (
+              <SectionPanel title="身分摘要" eyebrow="merged profile">
+                <div className="grid gap-3 md:grid-cols-2">
+                  {profile.identity_records.map((identity) => (
+                    <article key={identity.person_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{identity.status_label}</p>
+                      <h3 className="mt-2 font-display text-lg text-white">{identity.position ?? identity.role_label}</h3>
+                      <p className="mt-2 text-sm text-slate-400">
+                        {[normalizePartyLabel(identity.party), identity.district].filter(Boolean).join(' · ') || '公開人物資料'}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </SectionPanel>
+            ) : null}
+
             <SectionPanel title="參選紀錄" eyebrow="candidate records">
               {profile.candidate_records.length > 0 ? (
                 <div className="grid gap-3 md:grid-cols-2">

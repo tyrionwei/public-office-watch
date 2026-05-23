@@ -364,6 +364,7 @@ export type PublicPersonProfile = {
   person: PublicPersonListItem;
   identity_records: PublicPersonIdentityRecord[];
   candidate_records: PublicCandidate[];
+  public_claims: PublicPersonClaim[];
   experience_status: 'available' | 'todo';
   contribution_status: 'available' | 'summary_only' | 'todo';
   platform_status: 'available' | 'todo';

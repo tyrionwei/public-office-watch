@@ -145,7 +145,7 @@ export const mockPublicDataProvider: PublicDataProvider = {
   },
 
   getPersonProfile(personId: string) {
-    return buildPersonProfile(personId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes);
+    return buildPersonProfile(personId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes, []);
   },
 
   getLocalOfficeSummaryByRegionId(regionId: string) {

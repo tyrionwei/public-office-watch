@@ -9,6 +9,7 @@ import type {
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPerson,
+  PublicPersonClaim,
   PublicPersonPrimaryPhoto,
   PublicRace,
   PublicRegion,
@@ -286,6 +287,50 @@ export function mapPublicPersonPrimaryPhotoRow(row: PartialRow<PublicPersonPrima
     license_type: asPhotoLicenseType(row?.license_type),
     license_url: asNullableString(row?.license_url),
     attribution: asNullableString(row?.attribution),
+  };
+}
+
+export function mapPublicPersonClaimRow(row: PartialRow<PublicPersonClaim>): PublicPersonClaim {
+  const confidenceLevels: PublicPersonClaim['confidence_level'][] = ['A', 'B', 'C', 'D'];
+  const claimTypes: PublicPersonClaim['claim_type'][] = [
+    'name',
+    'alias',
+    'gender',
+    'birth_date',
+    'party',
+    'position',
+    'office',
+    'candidacy',
+    'district',
+    'education',
+    'experience',
+    'platform',
+    'finance_summary',
+    'legal_case',
+    'family_relation',
+    'media',
+    'external_id',
+    'other',
+  ];
+
+  return {
+    claim_id: asString(row?.claim_id, ''),
+    person_id: asString(row?.person_id, ''),
+    claim_type:
+      typeof row?.claim_type === 'string' && claimTypes.includes(row.claim_type)
+        ? row.claim_type
+        : 'other',
+    claim_value: asNullableString(row?.claim_value),
+    claim_json: typeof row?.claim_json === 'object' && row.claim_json !== null ? row.claim_json : {},
+    confidence_level:
+      typeof row?.confidence_level === 'string' && confidenceLevels.includes(row.confidence_level)
+        ? row.confidence_level
+        : 'D',
+    review_score: asNumber(row?.review_score, 0),
+    source_name: asNullableString(row?.source_name),
+    source_url: asNullableString(row?.source_url),
+    observed_at: asNullableString(row?.observed_at),
+    updated_at: asString(row?.updated_at, ''),
   };
 }
 

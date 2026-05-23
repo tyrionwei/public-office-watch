@@ -8,7 +8,7 @@ import { publicDataProvider } from '../lib/publicData';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicCandidate } from '../types/publicViews';
+import type { PublicCandidate, PublicPersonClaim } from '../types/publicViews';
 
 const candidateStatusLabels: Record<PublicCandidate['registration_status'], string> = {
   [`${'pen'}${'ding'}`]: '待公告',
@@ -27,6 +27,27 @@ const genderLabels = {
   unknown: '未知',
 };
 
+const claimTypeLabels: Record<PublicPersonClaim['claim_type'], string> = {
+  name: '姓名',
+  alias: '別名',
+  gender: '性別',
+  birth_date: '生日',
+  party: '政黨',
+  position: '職位',
+  office: '公職',
+  candidacy: '參選',
+  district: '地區',
+  education: '學歷',
+  experience: '經歷',
+  platform: '政見',
+  finance_summary: '政治獻金',
+  legal_case: '司法紀錄',
+  family_relation: '政治家族',
+  media: '媒體資料',
+  external_id: '外部 ID',
+  other: '其他',
+};
+
 function splitProfileText(value: string | null | undefined) {
   return value
     ?.split(/[;；]/)
@@ -42,11 +63,25 @@ function EmptyInfo({ children }: { children: string }) {
   );
 }
 
+function visibleProfileClaims(claims: PublicPersonClaim[]) {
+  const seen = new Set<string>();
+  return claims
+    .filter((claim) => !['name', 'external_id'].includes(claim.claim_type))
+    .filter((claim) => {
+      const key = `${claim.claim_type}:${claim.claim_value}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 12);
+}
+
 export function PersonPage() {
   const { personId } = useParams();
   const profile = publicDataProvider.getPersonProfile(personId ?? '');
   const person = profile?.person ?? null;
   const theme = partyTheme[toPartyThemeKey(person?.party)];
+  const publicClaims = profile ? visibleProfileClaims(profile.public_claims) : [];
 
   return (
     <AppShell>
@@ -152,6 +187,38 @@ export function PersonPage() {
                 </div>
               ) : (
                 <EmptyInfo>目前沒有可公開的參選紀錄。</EmptyInfo>
+              )}
+            </SectionPanel>
+
+            <SectionPanel title="公開資料線索" eyebrow="verified claims">
+              {publicClaims.length > 0 ? (
+                <div className="grid gap-3 md:grid-cols-2">
+                  {publicClaims.map((claim) => (
+                    <article key={claim.claim_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                            {claimTypeLabels[claim.claim_type]}
+                          </p>
+                          <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value ?? '未提供內容'}</h3>
+                        </div>
+                        <span className="text-xs text-signal">{claim.review_score}</span>
+                      </div>
+                      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                        <span className="pixel-corners border border-line/70 px-2 py-1">可信度 {claim.confidence_level}</span>
+                        {claim.source_url ? (
+                          <a href={claim.source_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
+                            {claim.source_name ?? '來源'}
+                          </a>
+                        ) : (
+                          <span>{claim.source_name ?? '來源待補'}</span>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <EmptyInfo>目前沒有已公開的補充資料線索。</EmptyInfo>
               )}
             </SectionPanel>
 

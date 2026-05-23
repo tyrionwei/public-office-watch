@@ -4,6 +4,7 @@ import type {
   PublicCouncilorPartyCount,
   PublicLocalOfficeSummary,
   PublicPerson,
+  PublicPersonClaim,
   PublicPersonFilters,
   PublicPersonIdentityRecord,
   PublicPersonListItem,
@@ -496,6 +497,7 @@ export function buildPersonProfile(
   people: PublicPerson[],
   candidates: PublicCandidate[],
   stageRegions: StageRegionNode[],
+  claims: PublicPersonClaim[] = [],
 ): PublicPersonProfile | null {
   const allItems = buildPersonListItems(people, candidates, stageRegions);
   const mergedItems = dedupePersonListItems(allItems);
@@ -511,6 +513,13 @@ export function buildPersonProfile(
     person,
     identity_records: identityRecordsFor(mergedPersonIds, allItems),
     candidate_records: candidates.filter((candidate) => mergedPersonIds.includes(candidate.person_id)),
+    public_claims: claims
+      .filter((claim) => mergedPersonIds.includes(claim.person_id))
+      .sort((left, right) => {
+        const scoreDiff = right.review_score - left.review_score;
+        if (scoreDiff !== 0) return scoreDiff;
+        return fallbackCollator.compare(left.claim_type, right.claim_type);
+      }),
     experience_status: hasText(person.experience) ? 'available' : 'todo',
     contribution_status: 'todo',
     platform_status: 'todo',

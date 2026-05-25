@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "name": "person-enrichment-claims",
+  "updatedAt": "2026-05-25",
+  "notes": "Reviewed-source supplemental person claims. Wikidata/Wikipedia-derived records are review-only by default.",
+  "personClaims": [
+    {
+      "personId": "fffb87ed-c28b-4c4a-9d54-022faefa8c1c",
+      "personName": "陳昭姿",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q85885131",
+      "claimJson": {
+        "wikidataQid": "Q85885131"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q85885131"
+    },
+    {
+      "personId": "fffb87ed-c28b-4c4a-9d54-022faefa8c1c",
+      "personName": "陳昭姿",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q85885131"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q85885131"
+    },
+    {
+      "personId": "fffb87ed-c28b-4c4a-9d54-022faefa8c1c",
+      "personName": "陳昭姿",
+      "claimType": "birth_date",
+      "claimValue": "1965-09-03",
+      "claimJson": {
+        "wikidataQid": "Q85885131"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q85885131"
+    },
+    {
+      "personId": "fffb87ed-c28b-4c4a-9d54-022faefa8c1c",
+      "personName": "陳昭姿",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學",
+      "claimJson": {
+        "wikidataQid": "Q85885131"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q85885131"
+    },
+    {
+      "personId": "fffb87ed-c28b-4c4a-9d54-022faefa8c1c",
+      "personName": "陳昭姿",
+      "claimType": "experience",
+      "claimValue": "政治人物",
+      "claimJson": {
+        "positions": [],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q85885131"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q85885131"
+    },
+    {
+      "personId": "bff8a992-de0f-432a-904a-5432b600530e",
+      "personName": "牛煦庭",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q56259834",
+      "claimJson": {
+        "wikidataQid": "Q56259834"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q56259834"
+    },
+    {
+      "personId": "bff8a992-de0f-432a-904a-5432b600530e",
+      "personName": "牛煦庭",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "wikidataQid": "Q56259834"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q56259834"
+    },
+    {
+      "personId": "bff8a992-de0f-432a-904a-5432b600530e",
+      "personName": "牛煦庭",
+      "claimType": "birth_date",
+      "claimValue": "1990-10-17",
+      "claimJson": {
+        "wikidataQid": "Q56259834"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q56259834"
+    },
+    {
+      "personId": "bff8a992-de0f-432a-904a-5432b600530e",
+      "personName": "牛煦庭",
+      "claimType": "education",
+      "claimValue": "倫敦政治經濟學院；桃園市立大有國民中學；桃園市立武陵高級中學；國立政治大學",
+      "claimJson": {
+        "wikidataQid": "Q56259834"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q56259834"
+    },
+    {
+      "personId": "bff8a992-de0f-432a-904a-5432b600530e",
+      "personName": "牛煦庭",
+      "claimType": "experience",
+      "claimValue": "桃園市議員；政治人物",
+      "claimJson": {
+        "positions": [
+          "桃園市議員",
+          "桃園市議員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q56259834"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q56259834"
+    },
+    {
+      "personId": "2bdf77fb-29a2-497d-bea1-a5af4dd89eaa",
+      "personName": "王鴻薇",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q9067119",
+      "claimJson": {
+        "wikidataQid": "Q9067119"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9067119"
+    },
+    {
+      "personId": "2bdf77fb-29a2-497d-bea1-a5af4dd89eaa",
+      "personName": "王鴻薇",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q9067119"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9067119"
+    },
+    {
+      "personId": "2bdf77fb-29a2-497d-bea1-a5af4dd89eaa",
+      "personName": "王鴻薇",
+      "claimType": "birth_date",
+      "claimValue": "1964-07-10",
+      "claimJson": {
+        "wikidataQid": "Q9067119"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9067119"
+    },
+    {
+      "personId": "2bdf77fb-29a2-497d-bea1-a5af4dd89eaa",
+      "personName": "王鴻薇",
+      "claimType": "education",
+      "claimValue": "國立政治大學；臺北市立第一女子高級中學；臺北市立仁愛國民中學",
+      "claimJson": {
+        "wikidataQid": "Q9067119"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9067119"
+    },
+    {
+      "personId": "2bdf77fb-29a2-497d-bea1-a5af4dd89eaa",
+      "personName": "王鴻薇",
+      "claimType": "experience",
+      "claimValue": "臺北市議員；立法委員；新聞工作者；政治人物；記者",
+      "claimJson": {
+        "positions": [
+          "臺北市議員",
+          "臺北市議員",
+          "臺北市議員",
+          "臺北市議員",
+          "臺北市議員",
+          "立法委員"
+        ],
+        "occupations": [
+          "新聞工作者",
+          "政治人物",
+          "記者"
+        ],
+        "wikidataQid": "Q9067119"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9067119"
+    }
+  ]
+}

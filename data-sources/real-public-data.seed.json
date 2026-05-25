@@ -86,6 +86,14 @@
       "url": "https://data.gov.tw/dataset/63205",
       "refreshCadence": "manual-review",
       "notes": "可作裁判書批次資料線索；公開前需比對身分、案由、判決狀態與來源連結。"
+    },
+    {
+      "id": "wikidata-person-enrichment",
+      "type": "person-enrichment",
+      "name": "Wikidata 人物補充資料",
+      "url": "https://www.wikidata.org/",
+      "refreshCadence": "weekly",
+      "notes": "用於大量補齊性別、生日、教育、職務與家族關係線索；預設只進 review queue，不直接公開。"
     }
   ],
   "regions": [

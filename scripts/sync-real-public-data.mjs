@@ -7,6 +7,7 @@ import zlib from 'node:zlib';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultSeedPath = path.join(repoRoot, 'data-sources', 'real-public-data.seed.json');
 const defaultLegalRecordLeadsPath = path.join(repoRoot, 'data-sources', 'legal-record-leads.seed.json');
+const defaultPersonEnrichmentClaimsPath = path.join(repoRoot, 'data-sources', 'person-enrichment-claims.seed.json');
 
 function parseArgs(argv) {
   const args = {
@@ -21,6 +22,8 @@ function parseArgs(argv) {
     claimAutoApproveThreshold: 90,
     includeLegalRecordLeads: false,
     legalRecordLeadsPath: defaultLegalRecordLeadsPath,
+    includePersonEnrichmentClaims: false,
+    personEnrichmentClaimsPath: defaultPersonEnrichmentClaimsPath,
   };
 
   for (let index = 2; index < argv.length; index += 1) {
@@ -56,6 +59,11 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (arg === '--include-person-enrichment-claims') {
+      args.includePersonEnrichmentClaims = true;
+      continue;
+    }
+
     if (arg === '--identity-auto-approve-threshold') {
       args.identityAutoApproveThreshold = Number.parseInt(argv[index + 1] ?? '', 10);
       index += 1;
@@ -81,6 +89,12 @@ function parseArgs(argv) {
 
     if (arg === '--legal-record-leads') {
       args.legalRecordLeadsPath = path.resolve(argv[index + 1] ?? '');
+      index += 1;
+      continue;
+    }
+
+    if (arg === '--person-enrichment-claims') {
+      args.personEnrichmentClaimsPath = path.resolve(argv[index + 1] ?? '');
       index += 1;
       continue;
     }
@@ -438,6 +452,7 @@ function sourceTypeForSourceId(sourceId) {
   if (sourceId.includes('cec')) return 'official_election';
   if (sourceId.includes('ly')) return 'official_officeholder';
   if (sourceId.includes('cy') || sourceId.includes('political-finance')) return 'official_party_finance';
+  if (sourceId.includes('wikidata')) return 'wikidata';
   if (sourceId.includes('moi')) return 'government_open_data';
   return 'other';
 }
@@ -445,6 +460,8 @@ function sourceTypeForSourceId(sourceId) {
 function confidenceForSourceId(sourceId) {
   return sourceTypeForSourceId(sourceId).startsWith('official') || sourceTypeForSourceId(sourceId) === 'government_open_data'
     ? 'A'
+    : sourceTypeForSourceId(sourceId) === 'wikidata'
+      ? 'C'
     : 'D';
 }
 
@@ -1719,6 +1736,61 @@ function enrichSeedWithLegalRecordLeads(seed, args) {
   };
 }
 
+function normalizePersonEnrichmentClaim(rawClaim, seed) {
+  const sourceId = rawClaim.sourceId ?? rawClaim.source_id ?? 'wikidata-person-enrichment';
+  const source = getSource(seed, sourceId);
+  const claimType = rawClaim.claimType ?? rawClaim.claim_type ?? 'other';
+  const claimValue = rawClaim.claimValue ?? rawClaim.claim_value ?? null;
+  const personName = rawClaim.personName ?? rawClaim.person_name ?? null;
+
+  return {
+    claimKey: rawClaim.claimKey ?? rawClaim.claim_key ?? null,
+    personId: rawClaim.personId ?? rawClaim.person_id ?? null,
+    personExternalId: rawClaim.personExternalId ?? rawClaim.person_external_id ?? null,
+    personName,
+    normalizedName: personName ? normalizeSourcePersonName(personName) : null,
+    claimType,
+    claimValue,
+    claimJson: rawClaim.claimJson ?? rawClaim.claim_json ?? {},
+    confidenceLevel: rawClaim.confidenceLevel ?? rawClaim.confidence_level ?? confidenceForSourceId(sourceId),
+    reviewStatus: rawClaim.reviewStatus ?? rawClaim.review_status ?? 'pending',
+    visibility: rawClaim.visibility ?? 'review_only',
+    sourceId,
+    sourceName: rawClaim.sourceName ?? rawClaim.source_name ?? source.name,
+    sourceUrl: rawClaim.sourceUrl ?? rawClaim.source_url ?? source.url,
+    observedAt: rawClaim.observedAt ?? rawClaim.observed_at ?? null,
+  };
+}
+
+function enrichSeedWithPersonEnrichmentClaims(seed, args) {
+  if (!args.includePersonEnrichmentClaims) {
+    return {
+      seed,
+      personEnrichmentClaims: {
+        status: 'disabled',
+        count: seed.personEnrichmentClaims?.length ?? 0,
+        path: args.personEnrichmentClaimsPath,
+      },
+    };
+  }
+
+  const enrichmentSeed = readOptionalJson(args.personEnrichmentClaimsPath, { personClaims: [] });
+  const personEnrichmentClaims = (enrichmentSeed.personClaims ?? []).map((claim) => normalizePersonEnrichmentClaim(claim, seed));
+
+  return {
+    seed: {
+      ...seed,
+      personEnrichmentClaims,
+    },
+    personEnrichmentClaims: {
+      status: 'ok',
+      count: personEnrichmentClaims.length,
+      path: args.personEnrichmentClaimsPath,
+      publicationBoundary: 'review-only by default; low-trust enrichment sources are not auto-published',
+    },
+  };
+}
+
 function validateSeed(seed) {
   const sourceIds = new Set(seed.sources.map((source) => source.id));
   const regionIds = new Set(seed.regions.map((region) => region.externalId));
@@ -1796,6 +1868,12 @@ function validateSeed(seed) {
   for (const lead of seed.legalRecordLeads ?? []) {
     if (!sourceIds.has(lead.sourceId)) {
       throw new Error(`Legal record lead ${lead.leadKey} has unknown sourceId.`);
+    }
+  }
+
+  for (const claim of seed.personEnrichmentClaims ?? []) {
+    if (!sourceIds.has(claim.sourceId)) {
+      throw new Error(`Person enrichment claim has unknown sourceId: ${claim.sourceId}`);
     }
   }
 }
@@ -2321,6 +2399,79 @@ function buildLegalRecordLeadRows(seed, canonicalPeople, startedAt) {
   });
 }
 
+function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt, args = {}) {
+  const peopleById = new Map(canonicalPeople.map((person) => [person.id, person]));
+  const peopleByExternalId = new Map(
+    canonicalPeople
+      .filter((person) => person.external_id)
+      .map((person) => [person.external_id, person]),
+  );
+  const peopleByNormalizedName = new Map();
+
+  for (const person of canonicalPeople) {
+    const normalizedName = normalizeSourcePersonName(person.name);
+    const group = peopleByNormalizedName.get(normalizedName) ?? [];
+    group.push(person);
+    peopleByNormalizedName.set(normalizedName, group);
+  }
+
+  return (seed.personEnrichmentClaims ?? [])
+    .map((claim) => {
+      const candidates = [
+        claim.personId ? peopleById.get(claim.personId) : null,
+        claim.personExternalId ? peopleByExternalId.get(claim.personExternalId) : null,
+        claim.normalizedName ? (peopleByNormalizedName.get(claim.normalizedName) ?? [])[0] : null,
+      ].filter(Boolean);
+      const person = candidates[0] ?? null;
+
+      if (!person) {
+        return null;
+      }
+
+      const sourceType = sourceTypeForSourceId(claim.sourceId);
+      const scoring = scoreClaim({
+        claimType: claim.claimType,
+        sourceType,
+        confidenceLevel: claim.confidenceLevel,
+        hasMatchedPerson: true,
+      });
+      const allowAutoPublic =
+        claim.visibility === 'public' &&
+        claim.reviewStatus === 'verified' &&
+        scoring.score >= (args.claimAutoApproveThreshold ?? 90) &&
+        !['legal_case', 'family_relation'].includes(claim.claimType);
+      const claimValue = toClaimValue(claim.claimValue);
+      const claimJson = claim.claimJson ?? {};
+      const claimHash = hashId(JSON.stringify({ claimValue, claimJson }));
+
+      return {
+        person_id: person.id,
+        source_person_id: null,
+        claim_key: claim.claimKey ?? `enrichment:${claim.sourceId}:${person.id}:${claim.claimType}:${claimHash}`,
+        claim_type: claim.claimType,
+        claim_value: claimValue || null,
+        claim_json: {
+          ...claimJson,
+          personName: claim.personName ?? person.name,
+          sourceId: claim.sourceId,
+        },
+        confidence_level: claim.confidenceLevel,
+        review_status: allowAutoPublic ? 'verified' : 'pending',
+        visibility: allowAutoPublic ? 'public' : 'review_only',
+        source_name: claim.sourceName,
+        source_url: claim.sourceUrl,
+        observed_at: claim.observedAt ?? startedAt,
+        is_public: allowAutoPublic,
+        review_score: scoring.score,
+        scoring_version: reviewScoringVersion,
+        scoring_reasons: scoring.reasons,
+        auto_reviewed_at: allowAutoPublic ? startedAt : null,
+        updated_at: startedAt,
+      };
+    })
+    .filter((row) => row !== null);
+}
+
 function estimatePersonClaimCount(seed) {
   const canonicalCount = (seed.people ?? []).reduce((count, person) => {
     return (
@@ -2548,6 +2699,9 @@ async function writeSeed(seed, hash, args) {
   const personClaimRows = buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt, autoApprovedPersonBySourceKey, args);
   await upsertOrThrow(env, 'person_claims', personClaimRows, { onConflict: 'claim_key' });
 
+  const personEnrichmentClaimRows = buildPersonEnrichmentClaimRows(seed, peopleRefresh, startedAt, args);
+  await upsertOrThrow(env, 'person_claims', personEnrichmentClaimRows, { onConflict: 'claim_key' });
+
   const legalRecordLeadRows = buildLegalRecordLeadRows(seed, peopleRefresh, startedAt);
   await upsertOrThrow(env, 'legal_record_leads', legalRecordLeadRows, { onConflict: 'lead_key' });
 
@@ -2649,6 +2803,7 @@ async function writeSeed(seed, hash, args) {
             identityMatchRows.length +
             probableIdentityMatchRows.length +
             personClaimRows.length +
+            personEnrichmentClaimRows.length +
             legalRecordLeadRows.length +
             (seed.candidates?.length ?? 0) +
             seed.parties.length +
@@ -2668,6 +2823,7 @@ async function writeSeed(seed, hash, args) {
             args.plannedLocalElections,
             args.livePartyFinanceSummaries,
             args.legalRecordLeads,
+            args.personEnrichmentClaims,
           ),
         },
       ],
@@ -2686,6 +2842,7 @@ function buildReport(
   plannedLocalElections,
   livePartyFinanceSummaries,
   legalRecordLeads,
+  personEnrichmentClaims,
 ) {
   return {
     syncName: 'real-public-data-foundation',
@@ -2703,6 +2860,7 @@ function buildReport(
       autoIdentityMatches: seed.people?.length ?? 0,
       probableIdentityMatches: 'computed-on-write',
       personClaimsEstimate: estimatePersonClaimCount(seed),
+      personEnrichmentClaims: seed.personEnrichmentClaims?.length ?? 0,
       legalRecordLeads: seed.legalRecordLeads?.length ?? 0,
       candidates: seed.candidates?.length ?? 0,
       parties: seed.parties.length,
@@ -2717,6 +2875,7 @@ function buildReport(
     plannedLocalElections,
     livePartyFinanceSummaries,
     legalRecordLeads,
+    personEnrichmentClaims,
     skipped: {
       personalDonationDetails: true,
       rawContributionRows: true,
@@ -2733,7 +2892,8 @@ async function main() {
   const historicalCecEnriched = await enrichSeedWithHistoricalCecSourcePeople(candidateEnriched.seed, args);
   const plannedElectionEnriched = enrichSeedWithPlannedLocalElections(historicalCecEnriched.seed);
   const financeEnriched = await enrichSeedWithLivePartyFinanceSummaries(plannedElectionEnriched.seed, args);
-  const legalEnriched = enrichSeedWithLegalRecordLeads(financeEnriched.seed, args);
+  const personEnrichmentEnriched = enrichSeedWithPersonEnrichmentClaims(financeEnriched.seed, args);
+  const legalEnriched = enrichSeedWithLegalRecordLeads(personEnrichmentEnriched.seed, args);
   const seed = legalEnriched.seed;
   const hash = crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex');
   validateSeed(seed);
@@ -2749,6 +2909,7 @@ async function main() {
     plannedElectionEnriched.plannedLocalElections,
     financeEnriched.livePartyFinanceSummaries,
     legalEnriched.legalRecordLeads,
+    personEnrichmentEnriched.personEnrichmentClaims,
   );
   args.livePartyRegistry = partyEnriched.livePartyRegistry;
   args.liveCurrentOfficeholders = officeholderEnriched.liveCurrentOfficeholders;
@@ -2757,6 +2918,7 @@ async function main() {
   args.plannedLocalElections = plannedElectionEnriched.plannedLocalElections;
   args.livePartyFinanceSummaries = financeEnriched.livePartyFinanceSummaries;
   args.legalRecordLeads = legalEnriched.legalRecordLeads;
+  args.personEnrichmentClaims = personEnrichmentEnriched.personEnrichmentClaims;
 
   if (args.write) {
     await writeSeed(seed, hash, args);

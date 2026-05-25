@@ -30,6 +30,13 @@ The CEC votedata package already exposes candidate gender codes in `elcand.csv`;
 6. Auto-publish only high-confidence public claims; keep weaker claims in review queues.
 7. Let public profile pages read only `public_people` and verified `public_person_claims`.
 
+## Bulk Enrichment Leads
+
+- `data-sources/person-enrichment-claims.seed.json` stores optional enrichment claims.
+- `scripts/fetch-wikidata-person-enrichment.mjs` can generate review-only gender, birth date, education, experience, and family relation leads from Wikidata.
+- `npm run sync:person-enrichment:write` writes those leads to `person_claims`.
+- Family relation leads, including political-family or second-generation-politician hints, are never auto-published.
+
 ## Reserved UI Modules
 
 - Platform / campaign promises: planned public module, source should be election bulletins or official campaign/public promise sources.

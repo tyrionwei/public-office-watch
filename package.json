@@ -13,6 +13,7 @@
     "sync:real-data:daily": "node scripts/sync-real-public-data.mjs --daily",
     "sync:real-data:write": "node scripts/sync-real-public-data.mjs --weekly --write --record-run",
     "sync:real-data:historical-write": "node scripts/sync-real-public-data.mjs --weekly --include-historical-cec --auto-approve-review --identity-auto-approve-threshold 90 --claim-auto-approve-threshold 90 --write --record-run",
+    "fetch:judicial-legal-leads": "node scripts/fetch-judicial-legal-record-leads.mjs",
     "sync:legal-leads:dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-legal-record-leads",
     "sync:legal-leads:write": "node scripts/sync-real-public-data.mjs --weekly --include-legal-record-leads --write --record-run"
   },

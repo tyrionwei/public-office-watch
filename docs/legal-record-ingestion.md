@@ -12,6 +12,16 @@ This document defines the first safe path for legal/criminal record data.
 
 ## Commands
 
+Fetch Judicial Yuan API leads into the private lead seed file:
+
+```bash
+JUDICIAL_OPEN_DATA_USER="..." \
+JUDICIAL_OPEN_DATA_PASSWORD="..." \
+npm run fetch:judicial-legal-leads -- \
+  --target-names ./data-sources/legal-record-target-names.example.json \
+  --max-docs 50
+```
+
 Dry-run:
 
 ```bash
@@ -69,5 +79,15 @@ Name-only matches are allowed only as private leads. They must not be published.
 ## Source Notes
 
 - Primary source planning target: Judicial Yuan open data platform.
+- The Judicial Yuan judgment API requires an account/password from the Judicial Yuan open data platform. Auth returns a token that is valid for 6 hours.
+- The official API service window is 00:00-06:00 Asia/Taipei. The fetcher enforces this by default.
+- The API provides a 7-days-prior judgment change list and individual judgment full text by `jid`.
 - The older data.gov.tw dataset `63205` is treated as historical reference because it has been marked for consolidation/removal.
 - If the Judicial Yuan API requires account-based access, fetch credentials should stay outside the repo and only normalized leads should be written.
+
+## Fetcher Boundary
+
+- `scripts/fetch-judicial-legal-record-leads.mjs` does not write to Supabase.
+- It requires an explicit target-name JSON file.
+- It only writes matched lead summaries to `data-sources/legal-record-leads.seed.json`.
+- It does not store complete judgment text; `summary` is capped for review context.

@@ -1665,6 +1665,235 @@
       "sourceId": "wikidata-person-enrichment",
       "sourceName": "Wikidata 人物補充資料",
       "sourceUrl": "https://www.wikidata.org/wiki/Q8357162"
+    },
+    {
+      "personId": "153a08a8-4a6c-443e-99b8-3bd0619cc428",
+      "personName": "邱鎮軍",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q50086854",
+      "claimJson": {
+        "wikidataQid": "Q50086854"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50086854"
+    },
+    {
+      "personId": "153a08a8-4a6c-443e-99b8-3bd0619cc428",
+      "personName": "邱鎮軍",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "wikidataQid": "Q50086854"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50086854"
+    },
+    {
+      "personId": "153a08a8-4a6c-443e-99b8-3bd0619cc428",
+      "personName": "邱鎮軍",
+      "claimType": "birth_date",
+      "claimValue": "1971-12-07",
+      "claimJson": {
+        "wikidataQid": "Q50086854"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50086854"
+    },
+    {
+      "personId": "153a08a8-4a6c-443e-99b8-3bd0619cc428",
+      "personName": "邱鎮軍",
+      "claimType": "education",
+      "claimValue": "國立暨南國際大學",
+      "claimJson": {
+        "wikidataQid": "Q50086854"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50086854"
+    },
+    {
+      "personId": "153a08a8-4a6c-443e-99b8-3bd0619cc428",
+      "personName": "邱鎮軍",
+      "claimType": "experience",
+      "claimValue": "苗栗縣議員；苗栗市市長；政治人物",
+      "claimJson": {
+        "positions": [
+          "苗栗縣議員",
+          "苗栗市市長"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q50086854"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50086854"
+    },
+    {
+      "personId": "408f4bf5-5a31-47b8-9a25-a1ef4fb59954",
+      "personName": "邱議瑩",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q8347775",
+      "claimJson": {
+        "wikidataQid": "Q8347775"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347775"
+    },
+    {
+      "personId": "408f4bf5-5a31-47b8-9a25-a1ef4fb59954",
+      "personName": "邱議瑩",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q8347775"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347775"
+    },
+    {
+      "personId": "408f4bf5-5a31-47b8-9a25-a1ef4fb59954",
+      "personName": "邱議瑩",
+      "claimType": "birth_date",
+      "claimValue": "1971-06-01",
+      "claimJson": {
+        "wikidataQid": "Q8347775"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347775"
+    },
+    {
+      "personId": "408f4bf5-5a31-47b8-9a25-a1ef4fb59954",
+      "personName": "邱議瑩",
+      "claimType": "education",
+      "claimValue": "加利福尼亞多明尼克大學；高雄市私立道明高級中學",
+      "claimJson": {
+        "wikidataQid": "Q8347775"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347775"
+    },
+    {
+      "personId": "408f4bf5-5a31-47b8-9a25-a1ef4fb59954",
+      "personName": "邱議瑩",
+      "claimType": "experience",
+      "claimValue": "立法委員；中華民國國民大會代表；政治人物",
+      "claimJson": {
+        "positions": [
+          "立法委員",
+          "立法委員",
+          "中華民國國民大會代表",
+          "立法委員",
+          "立法委員",
+          "立法委員",
+          "立法委員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q8347775"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347775"
+    },
+    {
+      "personId": "408f4bf5-5a31-47b8-9a25-a1ef4fb59954",
+      "personName": "邱議瑩",
+      "claimType": "family_relation",
+      "claimValue": "父親：邱茂男",
+      "claimJson": {
+        "relationType": "father",
+        "relationLabel": "父親",
+        "relativeQid": "Q16907425",
+        "relativeName": "邱茂男",
+        "relativeDescription": "台湾政治人物",
+        "wikidataQid": "Q8347775"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q16907425"
+    },
+    {
+      "personId": "408f4bf5-5a31-47b8-9a25-a1ef4fb59954",
+      "personName": "邱議瑩",
+      "claimType": "family_relation",
+      "claimValue": "配偶：李永得",
+      "claimJson": {
+        "relationType": "spouse",
+        "relationLabel": "配偶",
+        "relativeQid": "Q9206928",
+        "relativeName": "李永得",
+        "relativeDescription": "台灣政治人物、行政院政務委員",
+        "wikidataQid": "Q8347775"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9206928"
+    },
+    {
+      "personId": "408f4bf5-5a31-47b8-9a25-a1ef4fb59954",
+      "personName": "邱議瑩",
+      "claimType": "family_relation",
+      "claimValue": "手足：邱名璋",
+      "claimJson": {
+        "relationType": "sibling",
+        "relationLabel": "手足",
+        "relativeQid": "Q16259975",
+        "relativeName": "邱名璋",
+        "relativeDescription": "台湾政治人物",
+        "wikidataQid": "Q8347775"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q16259975"
     }
   ]
 }

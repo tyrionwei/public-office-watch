@@ -10,6 +10,7 @@ function parseArgs(argv) {
   const args = {
     outputPath: defaultOutputPath,
     targetNamesPath: null,
+    targetNamesFromSupabase: false,
     maxDocs: 50,
     requireServiceWindow: true,
     dryRun: false,
@@ -27,6 +28,11 @@ function parseArgs(argv) {
     if (arg === '--target-names') {
       args.targetNamesPath = path.resolve(argv[index + 1] ?? '');
       index += 1;
+      continue;
+    }
+
+    if (arg === '--target-names-from-supabase') {
+      args.targetNamesFromSupabase = true;
       continue;
     }
 
@@ -110,6 +116,52 @@ function loadTargetNames(filePath) {
 
   if (!Array.isArray(names) || names.length === 0) {
     throw new Error('Target names file must be a JSON array or an object with a non-empty names array.');
+  }
+
+  return Array.from(new Set(names.map((name) => String(name).trim()).filter(Boolean))).map((name) => ({
+    raw: name,
+    normalized: normalizeName(name),
+  }));
+}
+
+async function loadTargetNamesFromSupabase() {
+  const supabaseUrl = process.env.SUPABASE_URL?.trim() || process.env.VITE_SUPABASE_URL?.trim();
+  const anonKey = process.env.SUPABASE_ANON_KEY?.trim() || process.env.VITE_SUPABASE_ANON_KEY?.trim();
+
+  if (!supabaseUrl || !anonKey) {
+    throw new Error('Set SUPABASE_URL/VITE_SUPABASE_URL and SUPABASE_ANON_KEY/VITE_SUPABASE_ANON_KEY to load target names from public_people.');
+  }
+
+  const names = [];
+  const pageSize = 1000;
+  let offset = 0;
+
+  while (true) {
+    const url = new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/public_people`);
+    url.searchParams.set('select', 'name');
+    url.searchParams.set('order', 'name.asc');
+
+    const response = await fetch(url, {
+      headers: {
+        apikey: anonKey,
+        authorization: `Bearer ${anonKey}`,
+        range: `${offset}-${offset + pageSize - 1}`,
+      },
+      signal: AbortSignal.timeout(60000),
+    });
+    const rows = await response.json();
+
+    if (!response.ok || !Array.isArray(rows)) {
+      throw new Error(`Failed to fetch public_people target names: ${rows?.message ?? response.statusText}`);
+    }
+
+    names.push(...rows.map((row) => row.name).filter(Boolean));
+
+    if (rows.length < pageSize) {
+      break;
+    }
+
+    offset += pageSize;
   }
 
   return Array.from(new Set(names.map((name) => String(name).trim()).filter(Boolean))).map((name) => ({
@@ -202,7 +254,7 @@ async function main() {
     throw new Error('Set JUDICIAL_OPEN_DATA_USER and JUDICIAL_OPEN_DATA_PASSWORD before fetching.');
   }
 
-  const targetNames = loadTargetNames(args.targetNamesPath);
+  const targetNames = args.targetNamesFromSupabase ? await loadTargetNamesFromSupabase() : loadTargetNames(args.targetNamesPath);
   const authPayload = await postJson(authUrl, { user, password });
   const token = authPayload.Token;
 

@@ -22,6 +22,18 @@ npm run fetch:judicial-legal-leads -- \
   --max-docs 50
 ```
 
+Use public people from Supabase as target names:
+
+```bash
+JUDICIAL_OPEN_DATA_USER="..." \
+JUDICIAL_OPEN_DATA_PASSWORD="..." \
+SUPABASE_URL="http://127.0.0.1:54321" \
+SUPABASE_ANON_KEY="..." \
+npm run fetch:judicial-legal-leads -- \
+  --target-names-from-supabase \
+  --max-docs 50
+```
+
 Dry-run:
 
 ```bash
@@ -89,5 +101,6 @@ Name-only matches are allowed only as private leads. They must not be published.
 
 - `scripts/fetch-judicial-legal-record-leads.mjs` does not write to Supabase.
 - It requires an explicit target-name JSON file.
+- It can alternatively load target names from the `public_people` public view when Supabase public env vars are provided.
 - It only writes matched lead summaries to `data-sources/legal-record-leads.seed.json`.
 - It does not store complete judgment text; `summary` is capped for review context.

@@ -65,8 +65,17 @@ function EmptyInfo({ children }: { children: string }) {
 
 function visibleProfileClaims(claims: PublicPersonClaim[]) {
   const seen = new Set<string>();
+  const sectionClaimTypes: PublicPersonClaim['claim_type'][] = [
+    'education',
+    'experience',
+    'platform',
+    'finance_summary',
+    'legal_case',
+    'family_relation',
+  ];
+
   return claims
-    .filter((claim) => !['name', 'external_id'].includes(claim.claim_type))
+    .filter((claim) => !['name', 'external_id', ...sectionClaimTypes].includes(claim.claim_type))
     .filter((claim) => {
       const key = `${claim.claim_type}:${claim.claim_value}`;
       if (seen.has(key)) return false;
@@ -76,12 +85,60 @@ function visibleProfileClaims(claims: PublicPersonClaim[]) {
     .slice(0, 12);
 }
 
+function claimsByType(claims: PublicPersonClaim[], claimType: PublicPersonClaim['claim_type']) {
+  return claims.filter((claim) => claim.claim_type === claimType);
+}
+
+function ClaimCard({ claim }: { claim: PublicPersonClaim }) {
+  return (
+    <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            {claimTypeLabels[claim.claim_type]}
+          </p>
+          <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value ?? '未提供內容'}</h3>
+        </div>
+        <span className="text-xs text-signal">{claim.review_score}</span>
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+        <span className="pixel-corners border border-line/70 px-2 py-1">可信度 {claim.confidence_level}</span>
+        {claim.source_url ? (
+          <a href={claim.source_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
+            {claim.source_name ?? '來源'}
+          </a>
+        ) : (
+          <span>{claim.source_name ?? '來源待補'}</span>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function ClaimGrid({ claims, emptyText }: { claims: PublicPersonClaim[]; emptyText: string }) {
+  if (claims.length === 0) {
+    return <EmptyInfo>{emptyText}</EmptyInfo>;
+  }
+
+  return (
+    <div className="grid gap-3">
+      {claims.map((claim) => (
+        <ClaimCard key={claim.claim_id} claim={claim} />
+      ))}
+    </div>
+  );
+}
+
 export function PersonPage() {
   const { personId } = useParams();
   const profile = publicDataProvider.getPersonProfile(personId ?? '');
   const person = profile?.person ?? null;
   const theme = partyTheme[toPartyThemeKey(person?.party)];
   const publicClaims = profile ? visibleProfileClaims(profile.public_claims) : [];
+  const platformClaims = profile ? claimsByType(profile.public_claims, 'platform') : [];
+  const financeClaims = profile ? claimsByType(profile.public_claims, 'finance_summary') : [];
+  const legalClaims = profile ? claimsByType(profile.public_claims, 'legal_case') : [];
+  const familyClaims = profile ? claimsByType(profile.public_claims, 'family_relation') : [];
 
   return (
     <AppShell>
@@ -194,27 +251,7 @@ export function PersonPage() {
               {publicClaims.length > 0 ? (
                 <div className="grid gap-3 md:grid-cols-2">
                   {publicClaims.map((claim) => (
-                    <article key={claim.claim_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                            {claimTypeLabels[claim.claim_type]}
-                          </p>
-                          <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value ?? '未提供內容'}</h3>
-                        </div>
-                        <span className="text-xs text-signal">{claim.review_score}</span>
-                      </div>
-                      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                        <span className="pixel-corners border border-line/70 px-2 py-1">可信度 {claim.confidence_level}</span>
-                        {claim.source_url ? (
-                          <a href={claim.source_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
-                            {claim.source_name ?? '來源'}
-                          </a>
-                        ) : (
-                          <span>{claim.source_name ?? '來源待補'}</span>
-                        )}
-                      </div>
-                    </article>
+                    <ClaimCard key={claim.claim_id} claim={claim} />
                   ))}
                 </div>
               ) : (
@@ -250,19 +287,28 @@ export function PersonPage() {
                 )}
               </SectionPanel>
               <SectionPanel title="政治獻金" eyebrow="contributions">
-                <EmptyInfo>此頁不顯示個人捐贈明細；後續僅放可公開摘要或已審核關係。</EmptyInfo>
+                <ClaimGrid
+                  claims={financeClaims}
+                  emptyText="此頁不顯示個人捐贈明細；後續僅放可公開摘要或已審核關係。"
+                />
               </SectionPanel>
             </div>
 
             <div className="grid gap-4 lg:grid-cols-3">
               <SectionPanel title="政見" eyebrow="platform">
-                <EmptyInfo>政見資料待接官方公告或公開政見來源。</EmptyInfo>
+                <ClaimGrid claims={platformClaims} emptyText="政見資料待接官方公告或公開政見來源。" />
               </SectionPanel>
               <SectionPanel title="司法 / 爭議紀錄" eyebrow="legal records">
-                <EmptyInfo>此區只預留已審核公開摘要；法院判決書與媒體/民團整理需比對同一人後才可公開。</EmptyInfo>
+                <ClaimGrid
+                  claims={legalClaims}
+                  emptyText="此區只預留已審核公開摘要；法院判決書與媒體/民團整理需比對同一人後才可公開。"
+                />
               </SectionPanel>
               <SectionPanel title="政治家族關係" eyebrow="family network">
-                <EmptyInfo>政二代、親屬任公職或政治家族關係需來源佐證與人工覆核，暫不自動推論。</EmptyInfo>
+                <ClaimGrid
+                  claims={familyClaims}
+                  emptyText="政二代、親屬任公職或政治家族關係需來源佐證與人工覆核，暫不自動推論。"
+                />
               </SectionPanel>
             </div>
           </div>

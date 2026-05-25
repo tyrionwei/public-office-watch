@@ -271,6 +271,60 @@ function hasText(value: string | null | undefined) {
   return Boolean(value && value.trim().length > 0);
 }
 
+function claimText(claim: PublicPersonClaim) {
+  return claim.claim_value?.trim() || null;
+}
+
+function claimsForPerson(personId: string, claims: PublicPersonClaim[]) {
+  return claims.filter((claim) => claim.person_id === personId);
+}
+
+function profileClaimsFor(personIds: string[], claims: PublicPersonClaim[]) {
+  return claims
+    .filter((claim) => personIds.includes(claim.person_id))
+    .sort((left, right) => {
+      const scoreDiff = right.review_score - left.review_score;
+      if (scoreDiff !== 0) return scoreDiff;
+      return fallbackCollator.compare(left.claim_type, right.claim_type);
+    });
+}
+
+function firstClaimText(claims: PublicPersonClaim[], claimType: PublicPersonClaim['claim_type']) {
+  return claims.find((claim) => claim.claim_type === claimType && hasText(claim.claim_value))?.claim_value?.trim() ?? null;
+}
+
+function joinClaimTexts(claims: PublicPersonClaim[], claimType: PublicPersonClaim['claim_type']) {
+  const values = claims
+    .filter((claim) => claim.claim_type === claimType)
+    .map(claimText)
+    .filter(Boolean) as string[];
+
+  return Array.from(new Set(values)).join('；') || null;
+}
+
+function genderFromClaimText(value: string | null | undefined): PublicPerson['gender'] {
+  const normalized = value?.trim().toLowerCase();
+
+  if (!normalized) return null;
+  if (normalized === 'female' || normalized === 'f' || normalized.includes('女')) return 'female';
+  if (normalized === 'male' || normalized === 'm' || normalized.includes('男')) return 'male';
+  if (normalized === 'unknown' || normalized.includes('未知')) return 'unknown';
+  return null;
+}
+
+function applyClaimBackfill(person: PublicPerson, claims: PublicPersonClaim[]): PublicPerson {
+  const genderClaim = genderFromClaimText(firstClaimText(claims, 'gender'));
+  const educationClaim = joinClaimTexts(claims, 'education');
+  const experienceClaim = joinClaimTexts(claims, 'experience');
+
+  return {
+    ...person,
+    gender: person.gender && person.gender !== 'unknown' ? person.gender : genderClaim ?? person.gender,
+    education: hasText(person.education) ? person.education : educationClaim,
+    experience: hasText(person.experience) ? person.experience : experienceClaim,
+  };
+}
+
 function dedupeKeyFor(person: PublicPersonListItem) {
   return [
     normalizePersonNameForDedupe(person.name),
@@ -355,23 +409,25 @@ export function buildPersonListItems(
   people: PublicPerson[],
   candidates: PublicCandidate[],
   stageRegions: StageRegionNode[],
+  claims: PublicPersonClaim[] = [],
 ): PublicPersonListItem[] {
   return people.map((person) => {
+    const enrichedPerson = applyClaimBackfill(person, claimsForPerson(person.person_id, claims));
     const candidateRecords = candidateRecordsFor(person.person_id, candidates);
-    const role = getPersonRole(person.position, candidateRecords);
-    const status = getPersonStatus(person.position, role, candidateRecords);
-    const region = inferRegionForPerson(person, candidateRecords, stageRegions);
+    const role = getPersonRole(enrichedPerson.position, candidateRecords);
+    const status = getPersonStatus(enrichedPerson.position, role, candidateRecords);
+    const region = inferRegionForPerson(enrichedPerson, candidateRecords, stageRegions);
 
     return {
-      ...person,
+      ...enrichedPerson,
       role,
       role_label: roleLabels[role],
       status,
       status_label: statusLabels[status],
       region_id: region?.id ?? candidateRecords[0]?.region_id ?? null,
-      region_name: region?.label ?? person.district ?? candidateRecords[0]?.region_name ?? null,
+      region_name: region?.label ?? enrichedPerson.district ?? candidateRecords[0]?.region_name ?? null,
       candidate_count: candidateRecords.length,
-      merged_person_ids: [person.person_id],
+      merged_person_ids: [enrichedPerson.person_id],
       merged_role_labels: mergedRoleLabelsFor(roleLabels[role], candidateRecords),
       merged_candidate_count: candidateRecords.length,
     };
@@ -438,11 +494,12 @@ export function buildLocalOfficeSummary(
   people: PublicPerson[],
   candidates: PublicCandidate[],
   stageRegions: StageRegionNode[],
+  claims: PublicPersonClaim[] = [],
 ): PublicLocalOfficeSummary {
   const region = stageRegions.find((item) => item.id === regionId || item.publicRegionId === regionId);
   const resolvedRegionId = region?.id ?? regionId;
   const resolvedRegionName = region?.label ?? regionId;
-  const localPeople = filterPersonListItems(buildPersonListItems(people, candidates, stageRegions), {
+  const localPeople = filterPersonListItems(buildPersonListItems(people, candidates, stageRegions, claims), {
     regionId: resolvedRegionId,
     status: 'current',
   });
@@ -499,7 +556,7 @@ export function buildPersonProfile(
   stageRegions: StageRegionNode[],
   claims: PublicPersonClaim[] = [],
 ): PublicPersonProfile | null {
-  const allItems = buildPersonListItems(people, candidates, stageRegions);
+  const allItems = buildPersonListItems(people, candidates, stageRegions, claims);
   const mergedItems = dedupePersonListItems(allItems);
   const person = mergedItems.find((item) => item.person_id === personId || item.merged_person_ids.includes(personId));
 
@@ -508,22 +565,18 @@ export function buildPersonProfile(
   }
 
   const mergedPersonIds = person.merged_person_ids;
+  const publicClaims = profileClaimsFor(mergedPersonIds, claims);
+  const enrichedPerson = applyClaimBackfill(person, publicClaims) as PublicPersonListItem;
 
   return {
-    person,
+    person: enrichedPerson,
     identity_records: identityRecordsFor(mergedPersonIds, allItems),
     candidate_records: candidates.filter((candidate) => mergedPersonIds.includes(candidate.person_id)),
-    public_claims: claims
-      .filter((claim) => mergedPersonIds.includes(claim.person_id))
-      .sort((left, right) => {
-        const scoreDiff = right.review_score - left.review_score;
-        if (scoreDiff !== 0) return scoreDiff;
-        return fallbackCollator.compare(left.claim_type, right.claim_type);
-      }),
-    experience_status: hasText(person.experience) ? 'available' : 'todo',
-    contribution_status: 'todo',
-    platform_status: 'todo',
-    legal_record_status: 'todo',
-    family_relation_status: 'todo',
+    public_claims: publicClaims,
+    experience_status: hasText(enrichedPerson.experience) ? 'available' : 'todo',
+    contribution_status: publicClaims.some((claim) => claim.claim_type === 'finance_summary') ? 'summary_only' : 'todo',
+    platform_status: publicClaims.some((claim) => claim.claim_type === 'platform') ? 'available' : 'todo',
+    legal_record_status: publicClaims.some((claim) => claim.claim_type === 'legal_case') ? 'review_required' : 'todo',
+    family_relation_status: publicClaims.some((claim) => claim.claim_type === 'family_relation') ? 'review_required' : 'todo',
   };
 }

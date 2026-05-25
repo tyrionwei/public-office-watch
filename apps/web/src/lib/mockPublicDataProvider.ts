@@ -8,6 +8,7 @@ import {
   mockPublicParties,
   mockPublicPartyCompanyContributionSummaries,
   mockPublicPartyFinanceSummaries,
+  mockPublicPersonClaims,
   mockPublicPeople,
   mockPublicRaces,
 } from '../data/mockPublicViews';
@@ -25,6 +26,7 @@ const providerViews = [
   'public_elections',
   'public_races',
   'public_candidates',
+  'public_person_claims',
   'public_parties',
   'public_party_finance_summaries',
   'public_party_company_contribution_summaries',
@@ -137,7 +139,7 @@ export const mockPublicDataProvider: PublicDataProvider = {
   },
 
   getPeopleByFilters(filters = {}) {
-    return filterPersonListItems(buildPersonListItems(mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes), filters);
+    return filterPersonListItems(buildPersonListItems(mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes, mockPublicPersonClaims), filters);
   },
 
   getPersonById(personId: string) {
@@ -145,11 +147,11 @@ export const mockPublicDataProvider: PublicDataProvider = {
   },
 
   getPersonProfile(personId: string) {
-    return buildPersonProfile(personId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes, []);
+    return buildPersonProfile(personId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes, mockPublicPersonClaims);
   },
 
   getLocalOfficeSummaryByRegionId(regionId: string) {
-    return buildLocalOfficeSummary(regionId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes);
+    return buildLocalOfficeSummary(regionId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes, mockPublicPersonClaims);
   },
 
   getCompanies() {

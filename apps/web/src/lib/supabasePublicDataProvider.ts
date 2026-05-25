@@ -397,7 +397,9 @@ export const supabasePublicDataProvider: PublicDataProvider = {
 
   getPeopleByFilters(filters = {}) {
     const snapshot = getSnapshot();
-    return snapshot ? filterPersonListItems(buildPersonListItems(snapshot.people, snapshot.candidates, snapshot.stageRegions), filters) : [];
+    return snapshot
+      ? filterPersonListItems(buildPersonListItems(snapshot.people, snapshot.candidates, snapshot.stageRegions, snapshot.personClaims), filters)
+      : [];
   },
 
   getPersonById(personId: string) {
@@ -412,7 +414,7 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   getLocalOfficeSummaryByRegionId(regionId: string) {
     const snapshot = getSnapshot();
     return snapshot
-      ? buildLocalOfficeSummary(regionId, snapshot.people, snapshot.candidates, snapshot.stageRegions)
+      ? buildLocalOfficeSummary(regionId, snapshot.people, snapshot.candidates, snapshot.stageRegions, snapshot.personClaims)
       : buildLocalOfficeSummary(regionId, [], [], []);
   },
 

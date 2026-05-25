@@ -25,6 +25,7 @@ function parseArgs(argv) {
     outputPath: defaultOutputPath,
     targetNamesPath: null,
     targetNamesFromSupabase: false,
+    offset: 0,
     maxPeople: 25,
     searchLimit: 3,
     requestDelayMs: 1500,
@@ -58,6 +59,12 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (arg === '--offset') {
+      args.offset = Number.parseInt(argv[index + 1] ?? '', 10);
+      index += 1;
+      continue;
+    }
+
     if (arg === '--search-limit') {
       args.searchLimit = Number.parseInt(argv[index + 1] ?? '', 10);
       index += 1;
@@ -86,6 +93,10 @@ function parseArgs(argv) {
 
   if (!Number.isFinite(args.maxPeople) || args.maxPeople <= 0) {
     throw new Error('--max-people must be a positive number.');
+  }
+
+  if (!Number.isFinite(args.offset) || args.offset < 0) {
+    throw new Error('--offset must be zero or a positive number.');
   }
 
   return args;
@@ -416,7 +427,10 @@ function mergeClaims(existingPayload, newClaims) {
 
 async function main() {
   const args = parseArgs(process.argv);
-  const targets = (args.targetNamesFromSupabase ? await loadTargetNamesFromSupabase() : loadTargetNames(args.targetNamesPath)).slice(0, args.maxPeople);
+  const targets = (args.targetNamesFromSupabase ? await loadTargetNamesFromSupabase() : loadTargetNames(args.targetNamesPath)).slice(
+    args.offset,
+    args.offset + args.maxPeople,
+  );
   const allClaims = [];
   const skipped = [];
 
@@ -458,8 +472,9 @@ async function main() {
 
   console.log(JSON.stringify({
     status: 'ok',
-    targetCount: targets.length,
-    newClaimCount: allClaims.length,
+        targetCount: targets.length,
+        offset: args.offset,
+        newClaimCount: allClaims.length,
     skippedCount: skipped.length,
     outputPath: args.outputPath,
     dryRun: args.dryRun,

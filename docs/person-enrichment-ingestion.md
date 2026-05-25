@@ -20,6 +20,14 @@ npm run fetch:wikidata-person-enrichment -- \
   --max-people 25
 ```
 
+Resume from the tracked offset:
+
+```bash
+SUPABASE_URL="http://127.0.0.1:54321" \
+SUPABASE_ANON_KEY="..." \
+npm run fetch:wikidata-person-enrichment:resume
+```
+
 If Wikidata rate-limits the request, lower the batch size or increase delay:
 
 ```bash
@@ -43,3 +51,9 @@ npm run sync:person-enrichment:write
 - Wikidata gender, birth date, education, and office claims are review-only by default.
 - A shared surname or district must never create a family relation.
 - Public display requires a verified claim from `public_person_claims`.
+
+## Progress
+
+- `data-sources/person-enrichment-progress.json` records `nextOffset`.
+- The scheduled job should run the resume command, then `sync:person-enrichment:write`.
+- Keep batch size small because Wikidata rate-limits this workspace quickly.

@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const wikidataApiUrl = 'https://www.wikidata.org/w/api.php';
 const defaultOutputPath = path.resolve('data-sources/person-enrichment-claims.seed.json');
+const defaultProgressPath = path.resolve('data-sources/person-enrichment-progress.json');
 
 const relationProperties = {
   P22: 'father',
@@ -23,9 +24,11 @@ const relationLabels = {
 function parseArgs(argv) {
   const args = {
     outputPath: defaultOutputPath,
+    progressPath: defaultProgressPath,
     targetNamesPath: null,
     targetNamesFromSupabase: false,
     offset: 0,
+    resume: false,
     maxPeople: 25,
     searchLimit: 3,
     requestDelayMs: 1500,
@@ -38,6 +41,12 @@ function parseArgs(argv) {
 
     if (arg === '--output') {
       args.outputPath = path.resolve(argv[index + 1] ?? '');
+      index += 1;
+      continue;
+    }
+
+    if (arg === '--progress-file') {
+      args.progressPath = path.resolve(argv[index + 1] ?? '');
       index += 1;
       continue;
     }
@@ -62,6 +71,11 @@ function parseArgs(argv) {
     if (arg === '--offset') {
       args.offset = Number.parseInt(argv[index + 1] ?? '', 10);
       index += 1;
+      continue;
+    }
+
+    if (arg === '--resume') {
+      args.resume = true;
       continue;
     }
 
@@ -425,11 +439,25 @@ function mergeClaims(existingPayload, newClaims) {
   };
 }
 
+function readProgress(progressPath) {
+  if (!fs.existsSync(progressPath)) {
+    return { nextOffset: 0 };
+  }
+
+  return JSON.parse(fs.readFileSync(progressPath, 'utf8'));
+}
+
+function writeProgress(progressPath, progress) {
+  fs.writeFileSync(progressPath, `${JSON.stringify(progress, null, 2)}\n`);
+}
+
 async function main() {
   const args = parseArgs(process.argv);
+  const progress = args.resume ? readProgress(args.progressPath) : { nextOffset: args.offset };
+  const offset = args.resume ? Number(progress.nextOffset ?? 0) : args.offset;
   const targets = (args.targetNamesFromSupabase ? await loadTargetNamesFromSupabase() : loadTargetNames(args.targetNamesPath)).slice(
-    args.offset,
-    args.offset + args.maxPeople,
+    offset,
+    offset + args.maxPeople,
   );
   const allClaims = [];
   const skipped = [];
@@ -468,12 +496,21 @@ async function main() {
 
   if (!args.dryRun) {
     fs.writeFileSync(args.outputPath, `${JSON.stringify(nextPayload, null, 2)}\n`);
+    writeProgress(args.progressPath, {
+      nextOffset: offset + targets.length,
+      lastOffset: offset,
+      lastTargetCount: targets.length,
+      lastNewClaimCount: allClaims.length,
+      lastSkippedCount: skipped.length,
+      updatedAt: new Date().toISOString(),
+    });
   }
 
   console.log(JSON.stringify({
-    status: 'ok',
+        status: 'ok',
         targetCount: targets.length,
-        offset: args.offset,
+        offset,
+        nextOffset: offset + targets.length,
         newClaimCount: allClaims.length,
     skippedCount: skipped.length,
     outputPath: args.outputPath,

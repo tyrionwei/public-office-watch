@@ -64,4 +64,6 @@
 - 歷史選舉人物身份已支援自動過審門檻。
 - `person_claims` 已有 `review_score`、`scoring_version`、`scoring_reasons`、`auto_reviewed_at`。
 - `person_claim_review_queue` 與 `identity_probable_match_queue` 可用來抽查低分或爭議資料。
-- 司法/刑事資料尚未抓取；本規則先作為後續匯入器的安全邊界。
+- `legal_record_leads` 與 `legal_record_review_queue` 已建立，用於存放 private review-only 司法/刑事線索。
+- 司法/刑事線索目前不會自動公開，也不會自動產生 public `legal_case` claim。
+- 真正公開前必須由 review queue 確認同一人、來源連結、案由/摘要與判決狀態。

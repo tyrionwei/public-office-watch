@@ -6,6 +6,7 @@ import zlib from 'node:zlib';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultSeedPath = path.join(repoRoot, 'data-sources', 'real-public-data.seed.json');
+const defaultLegalRecordLeadsPath = path.join(repoRoot, 'data-sources', 'legal-record-leads.seed.json');
 
 function parseArgs(argv) {
   const args = {
@@ -18,6 +19,8 @@ function parseArgs(argv) {
     autoApproveReview: false,
     identityAutoApproveThreshold: 90,
     claimAutoApproveThreshold: 90,
+    includeLegalRecordLeads: false,
+    legalRecordLeadsPath: defaultLegalRecordLeadsPath,
   };
 
   for (let index = 2; index < argv.length; index += 1) {
@@ -48,6 +51,11 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (arg === '--include-legal-record-leads') {
+      args.includeLegalRecordLeads = true;
+      continue;
+    }
+
     if (arg === '--identity-auto-approve-threshold') {
       args.identityAutoApproveThreshold = Number.parseInt(argv[index + 1] ?? '', 10);
       index += 1;
@@ -67,6 +75,12 @@ function parseArgs(argv) {
 
     if (arg === '--seed') {
       args.seedPath = path.resolve(argv[index + 1] ?? '');
+      index += 1;
+      continue;
+    }
+
+    if (arg === '--legal-record-leads') {
+      args.legalRecordLeadsPath = path.resolve(argv[index + 1] ?? '');
       index += 1;
       continue;
     }
@@ -1413,6 +1427,7 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
         const legislatorCode = getLegislatorCodeFromPhotoUrl(pickField(row, ['picUrl']));
         const degree = pickField(row, ['degree']);
         const experience = pickField(row, ['experience']);
+        const birthDateText = pickField(row, ['birthday', 'birthDate', 'birth_date', '出生日期']);
         return {
           externalId: `ly-legislator-${term}-${legislatorCode || hashId([name, party, areaName, onboardDate].join('|'))}`,
           name,
@@ -1422,6 +1437,8 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
           position: `第${term}屆立法委員`,
           electionYear: 2024,
           district: areaName,
+          birthDate: normalizeDateText(birthDateText),
+          birthDateText: birthDateText || null,
           education: degree || null,
           experience: experience || null,
           sourceUrl: source.url,
@@ -1591,6 +1608,14 @@ function readSeed(seedPath) {
   };
 }
 
+function readOptionalJson(filePath, fallback) {
+  if (!fs.existsSync(filePath)) {
+    return fallback;
+  }
+
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
 function getSource(seed, sourceId) {
   const source = seed.sources.find((item) => item.id === sourceId);
 
@@ -1599,6 +1624,99 @@ function getSource(seed, sourceId) {
   }
 
   return source;
+}
+
+function normalizeLegalLeadDate(value) {
+  const text = String(value ?? '').trim();
+
+  if (!text) {
+    return null;
+  }
+
+  const compactRoc = text.match(/^(\d{2,3})(\d{2})(\d{2})$/);
+  if (compactRoc) {
+    return `${Number(compactRoc[1]) + 1911}-${compactRoc[2]}-${compactRoc[3]}`;
+  }
+
+  const separated = text.match(/^(\d{2,4})[/-](\d{1,2})[/-](\d{1,2})$/);
+  if (separated) {
+    const year = Number(separated[1]);
+    const gregorianYear = year < 1911 ? year + 1911 : year;
+    return `${gregorianYear}-${separated[2].padStart(2, '0')}-${separated[3].padStart(2, '0')}`;
+  }
+
+  return null;
+}
+
+function normalizeDateText(value) {
+  return normalizeLegalLeadDate(value);
+}
+
+function normalizeLegalRecordLead(rawLead, seed) {
+  const sourceId = rawLead.sourceId ?? rawLead.source_id ?? 'judicial-yuan-court-open-data-api';
+  const source = getSource(seed, sourceId);
+  const rawName = toClaimValue(rawLead.rawName ?? rawLead.raw_name ?? rawLead.personName ?? rawLead.person_name);
+  const sourceUrl = rawLead.sourceUrl ?? rawLead.source_url ?? source.url;
+  const courtName = toClaimValue(rawLead.courtName ?? rawLead.court_name);
+  const caseYear = toClaimValue(rawLead.caseYear ?? rawLead.case_year);
+  const caseCode = toClaimValue(rawLead.caseCode ?? rawLead.case_code);
+  const caseNumber = toClaimValue(rawLead.caseNumber ?? rawLead.case_number);
+  const judgmentDate = normalizeLegalLeadDate(rawLead.judgmentDate ?? rawLead.judgment_date);
+  const title = toClaimValue(rawLead.title);
+  const leadKey =
+    rawLead.leadKey ??
+    rawLead.lead_key ??
+    `legal:${hashId([sourceId, sourceUrl, courtName, caseYear, caseCode, caseNumber, judgmentDate, title, rawName].join('|'))}`;
+
+  return {
+    leadKey,
+    sourceId,
+    sourceType: rawLead.sourceType ?? rawLead.source_type ?? 'court_document',
+    sourceName: rawLead.sourceName ?? rawLead.source_name ?? source.name,
+    sourceUrl,
+    courtName: courtName || null,
+    caseYear: caseYear || null,
+    caseCode: caseCode || null,
+    caseNumber: caseNumber || null,
+    judgmentDate,
+    caseType: toClaimValue(rawLead.caseType ?? rawLead.case_type) || null,
+    reason: toClaimValue(rawLead.reason) || null,
+    title: title || null,
+    summary: toClaimValue(rawLead.summary) || null,
+    rawName: rawName || null,
+    normalizedName: rawName ? normalizeSourcePersonName(rawName) : null,
+    confidenceLevel: rawLead.confidenceLevel ?? rawLead.confidence_level ?? 'D',
+    sourcePayload: rawLead.sourcePayload ?? rawLead.source_payload ?? rawLead,
+  };
+}
+
+function enrichSeedWithLegalRecordLeads(seed, args) {
+  if (!args.includeLegalRecordLeads) {
+    return {
+      seed,
+      legalRecordLeads: {
+        status: 'disabled',
+        count: seed.legalRecordLeads?.length ?? 0,
+        path: args.legalRecordLeadsPath,
+      },
+    };
+  }
+
+  const legalSeed = readOptionalJson(args.legalRecordLeadsPath, { legalRecordLeads: [] });
+  const legalRecordLeads = (legalSeed.legalRecordLeads ?? []).map((lead) => normalizeLegalRecordLead(lead, seed));
+
+  return {
+    seed: {
+      ...seed,
+      legalRecordLeads,
+    },
+    legalRecordLeads: {
+      status: 'ok',
+      count: legalRecordLeads.length,
+      path: args.legalRecordLeadsPath,
+      publicationBoundary: 'private review-only leads; no public legal_case claim is created by this step',
+    },
+  };
 }
 
 function validateSeed(seed) {
@@ -1672,6 +1790,12 @@ function validateSeed(seed) {
 
     if (!companyUnifiedBusinessNos.has(summary.companyUnifiedBusinessNo)) {
       throw new Error(`Party company contribution summary has unknown companyUnifiedBusinessNo: ${summary.companyUnifiedBusinessNo}`);
+    }
+  }
+
+  for (const lead of seed.legalRecordLeads ?? []) {
+    if (!sourceIds.has(lead.sourceId)) {
+      throw new Error(`Legal record lead ${lead.leadKey} has unknown sourceId.`);
     }
   }
 }
@@ -1786,6 +1910,8 @@ function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
       district: person.district ?? null,
       normalized_region: person.district ? normalizeIdentityText(person.district) : null,
       election_year: person.electionYear ?? null,
+      birth_date: person.birthDate ?? null,
+      birth_date_text: person.birthDateText ?? null,
       external_person_id: person.externalId,
       external_record_id: person.externalId,
       source_payload: {
@@ -1820,6 +1946,8 @@ function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
       district: person.district ?? null,
       normalized_region: person.district ? normalizeIdentityText(person.district) : null,
       election_year: person.electionYear ?? null,
+      birth_date: person.birthDate ?? null,
+      birth_date_text: person.birthDateText ?? null,
       external_person_id: person.externalPersonId ?? null,
       external_record_id: person.externalRecordId ?? person.sourcePersonKey,
       source_payload: person.sourcePayload ?? {},
@@ -1986,6 +2114,7 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
       ['party', person.party],
       ['position', person.position],
       ['district', person.district],
+      ['birth_date', person.birthDate ?? person.birthDateText],
       ['education', person.education],
       ['experience', person.experience],
       ['external_id', person.externalId],
@@ -2056,6 +2185,7 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
       ['party', person.party],
       ['position', person.position],
       ['district', person.district],
+      ['birth_date', person.birthDate ?? person.birthDateText],
       ['external_id', person.externalRecordId],
     ];
 
@@ -2098,11 +2228,104 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
   return rows;
 }
 
+function scoreLegalLeadMatch(lead, person) {
+  if (!lead.normalizedName) {
+    return { score: 0, reasons: ['missing name in legal lead'] };
+  }
+
+  const personName = normalizeSourcePersonName(person.name);
+  const leadName = lead.normalizedName;
+
+  if (personName !== leadName) {
+    return { score: 0, reasons: ['name did not match'] };
+  }
+
+  let score = 45;
+  const reasons = ['normalized name matched'];
+
+  if (lead.sourceType === 'court_document' || lead.sourceType === 'judicial_api' || lead.sourceType === 'government_open_data') {
+    score += 15;
+    reasons.push('official legal source');
+  }
+
+  const evidenceText = normalizeIdentityText([lead.title, lead.summary, lead.reason].filter(Boolean).join(' '));
+  const personDistrict = normalizeIdentityText(person.district);
+  const personParty = normalizeIdentityText(person.party);
+  const personPosition = normalizeIdentityText(person.position);
+
+  if (personDistrict && evidenceText.includes(personDistrict.slice(0, 3))) {
+    score += 10;
+    reasons.push('district hint matched');
+  }
+
+  if (personParty && evidenceText.includes(personParty)) {
+    score += 5;
+    reasons.push('party hint matched');
+  }
+
+  if (personPosition && evidenceText.includes(personPosition.slice(0, 4))) {
+    score += 5;
+    reasons.push('position hint matched');
+  }
+
+  score -= 20;
+  reasons.push('legal record requires manual identity confirmation');
+
+  return { score: Math.max(0, Math.min(89, score)), reasons };
+}
+
+function buildLegalRecordLeadRows(seed, canonicalPeople, startedAt) {
+  const peopleByNormalizedName = new Map();
+
+  for (const person of canonicalPeople) {
+    const normalizedName = normalizeSourcePersonName(person.name);
+    const group = peopleByNormalizedName.get(normalizedName) ?? [];
+    group.push(person);
+    peopleByNormalizedName.set(normalizedName, group);
+  }
+
+  return (seed.legalRecordLeads ?? []).map((lead) => {
+    const candidates = lead.normalizedName ? peopleByNormalizedName.get(lead.normalizedName) ?? [] : [];
+    const best = candidates
+      .map((person) => ({ person, ...scoreLegalLeadMatch(lead, person) }))
+      .sort((left, right) => right.score - left.score)[0];
+    const matchStatus = best?.score >= 75 ? 'probable_match' : best?.score >= 50 ? 'possible_match' : 'unmatched';
+
+    return {
+      lead_key: lead.leadKey,
+      source_id: lead.sourceId,
+      source_type: lead.sourceType,
+      source_name: lead.sourceName,
+      source_url: lead.sourceUrl,
+      court_name: lead.courtName,
+      case_year: lead.caseYear,
+      case_code: lead.caseCode,
+      case_number: lead.caseNumber,
+      judgment_date: lead.judgmentDate,
+      case_type: lead.caseType,
+      reason: lead.reason,
+      title: lead.title,
+      summary: lead.summary,
+      raw_name: lead.rawName,
+      normalized_name: lead.normalizedName,
+      matched_person_id: best?.score > 0 ? best.person.id : null,
+      match_score: best?.score ?? 0,
+      match_status: matchStatus,
+      confidence_level: lead.confidenceLevel,
+      review_status: 'pending',
+      review_note: best?.reasons?.join('; ') ?? null,
+      source_payload: lead.sourcePayload ?? {},
+      is_public: false,
+      updated_at: startedAt,
+    };
+  });
+}
+
 function estimatePersonClaimCount(seed) {
   const canonicalCount = (seed.people ?? []).reduce((count, person) => {
     return (
       count +
-      ['name', 'alias', 'gender', 'party', 'position', 'district', 'education', 'experience', 'externalId'].filter((field) => {
+      ['name', 'alias', 'gender', 'party', 'position', 'district', 'birthDate', 'birthDateText', 'education', 'experience', 'externalId'].filter((field) => {
         const value = field === 'externalId' ? person.externalId : person[field];
         return value && String(value).trim() && String(value).trim() !== 'unknown';
       }).length
@@ -2112,7 +2335,7 @@ function estimatePersonClaimCount(seed) {
   const sourceOnlyCount = (seed.sourcePeople ?? []).reduce((count, person) => {
     return (
       count +
-      ['rawName', 'alias', 'gender', 'party', 'position', 'district', 'externalRecordId'].filter((field) => {
+      ['rawName', 'alias', 'gender', 'party', 'position', 'district', 'birthDate', 'birthDateText', 'externalRecordId'].filter((field) => {
         const value = person[field];
         return value && String(value).trim() && String(value).trim() !== 'unknown';
       }).length
@@ -2261,6 +2484,7 @@ async function writeSeed(seed, hash, args) {
 
   const people = await upsertOrThrow(env, 'people', personRows, { onConflict: 'external_id' });
   const personByExternalId = new Map(people.map((person) => [person.external_id, person]));
+  const peopleRefresh = await selectOrThrow(env, 'people', 'id,external_id,name,party,position,district,gender');
 
   const companyRows = (seed.companies ?? [])
     .filter((company) => company.unifiedBusinessNo)
@@ -2323,6 +2547,9 @@ async function writeSeed(seed, hash, args) {
 
   const personClaimRows = buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt, autoApprovedPersonBySourceKey, args);
   await upsertOrThrow(env, 'person_claims', personClaimRows, { onConflict: 'claim_key' });
+
+  const legalRecordLeadRows = buildLegalRecordLeadRows(seed, peopleRefresh, startedAt);
+  await upsertOrThrow(env, 'legal_record_leads', legalRecordLeadRows, { onConflict: 'lead_key' });
 
   const partyRows = seed.parties.map((party) => {
     const source = getSource(seed, party.sourceId);
@@ -2422,6 +2649,7 @@ async function writeSeed(seed, hash, args) {
             identityMatchRows.length +
             probableIdentityMatchRows.length +
             personClaimRows.length +
+            legalRecordLeadRows.length +
             (seed.candidates?.length ?? 0) +
             seed.parties.length +
             financeRows.length +
@@ -2439,6 +2667,7 @@ async function writeSeed(seed, hash, args) {
             args.historicalCecSourcePeople,
             args.plannedLocalElections,
             args.livePartyFinanceSummaries,
+            args.legalRecordLeads,
           ),
         },
       ],
@@ -2456,6 +2685,7 @@ function buildReport(
   historicalCecSourcePeople,
   plannedLocalElections,
   livePartyFinanceSummaries,
+  legalRecordLeads,
 ) {
   return {
     syncName: 'real-public-data-foundation',
@@ -2473,6 +2703,7 @@ function buildReport(
       autoIdentityMatches: seed.people?.length ?? 0,
       probableIdentityMatches: 'computed-on-write',
       personClaimsEstimate: estimatePersonClaimCount(seed),
+      legalRecordLeads: seed.legalRecordLeads?.length ?? 0,
       candidates: seed.candidates?.length ?? 0,
       parties: seed.parties.length,
       partyFinanceSummaries: seed.partyFinanceSummaries?.length ?? 0,
@@ -2485,6 +2716,7 @@ function buildReport(
     historicalCecSourcePeople,
     plannedLocalElections,
     livePartyFinanceSummaries,
+    legalRecordLeads,
     skipped: {
       personalDonationDetails: true,
       rawContributionRows: true,
@@ -2501,7 +2733,8 @@ async function main() {
   const historicalCecEnriched = await enrichSeedWithHistoricalCecSourcePeople(candidateEnriched.seed, args);
   const plannedElectionEnriched = enrichSeedWithPlannedLocalElections(historicalCecEnriched.seed);
   const financeEnriched = await enrichSeedWithLivePartyFinanceSummaries(plannedElectionEnriched.seed, args);
-  const seed = financeEnriched.seed;
+  const legalEnriched = enrichSeedWithLegalRecordLeads(financeEnriched.seed, args);
+  const seed = legalEnriched.seed;
   const hash = crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex');
   validateSeed(seed);
 
@@ -2515,6 +2748,7 @@ async function main() {
     historicalCecEnriched.historicalCecSourcePeople,
     plannedElectionEnriched.plannedLocalElections,
     financeEnriched.livePartyFinanceSummaries,
+    legalEnriched.legalRecordLeads,
   );
   args.livePartyRegistry = partyEnriched.livePartyRegistry;
   args.liveCurrentOfficeholders = officeholderEnriched.liveCurrentOfficeholders;
@@ -2522,6 +2756,7 @@ async function main() {
   args.historicalCecSourcePeople = historicalCecEnriched.historicalCecSourcePeople;
   args.plannedLocalElections = plannedElectionEnriched.plannedLocalElections;
   args.livePartyFinanceSummaries = financeEnriched.livePartyFinanceSummaries;
+  args.legalRecordLeads = legalEnriched.legalRecordLeads;
 
   if (args.write) {
     await writeSeed(seed, hash, args);

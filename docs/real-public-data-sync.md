@@ -15,11 +15,13 @@ For source-specific fetching and parsing recipes, see `docs/public-data-fetch-re
 - `companies`: business contributors from official political contribution income rows when an 8-digit unified business number is present.
 - `party_finance_summaries`: 113年度政黨政治獻金會計報告書的政黨年度收入支出摘要。Only party-level totals are written.
 - `party_company_contribution_summaries`: official company-level aggregate summaries from `incomes.csv` rows whose account is `營利事業捐贈收入`.
+- `legal_record_leads`: optional private review-only legal/court record leads when `--include-legal-record-leads` is provided.
 
 Personal donation details are not published by this sync.
 The 2024 `不分區政黨/elcand.csv` rows are party ballot choices, not individual candidate records, so they are not written into the current person-candidate schema.
 The 2022 township mayors, representatives, and village chiefs are intentionally skipped in this slice.
 Political contribution raw `incomes.csv` and `expenditures.csv` detail rows are intentionally not written because they contain personal or transaction-level details. The sync derives only aggregate company summaries from business donation rows with a valid unified business number.
+Legal record leads are not public views and do not create public `legal_case` claims automatically.
 
 ## Flow
 
@@ -46,6 +48,18 @@ npm run sync:real-data:write
 9. The script upserts base tables by `external_id` or stable natural keys, then public views expose only `is_public = TRUE` rows.
 10. The frontend still reads only public views through `publicDataProvider`.
 
+Legal lead mode:
+
+```bash
+npm run sync:legal-leads:dry-run
+```
+
+```bash
+SUPABASE_URL="https://..." \
+SUPABASE_SERVICE_ROLE_KEY="..." \
+npm run sync:legal-leads:write
+```
+
 ## Automation
 
 - `.github/workflows/sync-real-public-data.yml` runs a daily dry-run.
@@ -67,6 +81,8 @@ It adds:
 - party registry profile fields on `parties`: registry number, founded date text, filed date text, headquarters address, contact phone, and representative/chairperson.
 - `party_finance_summaries`
 - `party_company_contribution_summaries`
+- `legal_record_leads`
+- `legal_record_review_queue`
 - `data_sync_runs`
 - public views for party and contribution summaries.
 

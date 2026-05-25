@@ -7,6 +7,7 @@ This note records the next person-profile data direction before widening public 
 - `gender`: public `people` field for matching default pixel characters.
 - `education`: public text field, initially filled from Legislative Yuan current-member data when available.
 - `experience`: public text field, initially filled from Legislative Yuan current-member data when available.
+- `birth_date`: private/source claim field. It can be captured from official feeds when available, but should be reviewed before broad public display.
 
 The CEC votedata package already exposes candidate gender codes in `elcand.csv`; the sync maps `1` to `male`, `2` to `female`, and unknown values to `unknown`.
 
@@ -15,6 +16,7 @@ The CEC votedata package already exposes candidate gender codes in `elcand.csv`;
 - `public_people` remains the canonical public person row.
 - `public_person_claims` supplies reviewed supplemental facts from source ingestion.
 - The frontend may backfill missing `gender`, `education`, and `experience` from verified public claims when the base person row is empty or `unknown`.
+- Source ingestion can create `birth_date` claims, but they are not used for public profile display in this UI slice.
 - Profile modules for platform, finance summary, legal record, and family relationship only render public reviewed claims. If no claim exists, the UI shows an empty state instead of inferred content.
 - Legal/criminal and political-family claims should not be generated from name-only matches. They require explicit source evidence and a conservative confidence level.
 

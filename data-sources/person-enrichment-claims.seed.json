@@ -1894,6 +1894,169 @@
       "sourceId": "wikidata-person-enrichment",
       "sourceName": "Wikidata 人物補充資料",
       "sourceUrl": "https://www.wikidata.org/wiki/Q16259975"
+    },
+    {
+      "personId": "b1798903-0ce2-4e23-8f61-58f47ccc430c",
+      "personName": "邱志偉",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q8347718",
+      "claimJson": {
+        "wikidataQid": "Q8347718"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347718"
+    },
+    {
+      "personId": "b1798903-0ce2-4e23-8f61-58f47ccc430c",
+      "personName": "邱志偉",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "wikidataQid": "Q8347718"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347718"
+    },
+    {
+      "personId": "b1798903-0ce2-4e23-8f61-58f47ccc430c",
+      "personName": "邱志偉",
+      "claimType": "birth_date",
+      "claimValue": "1972-07-24",
+      "claimJson": {
+        "wikidataQid": "Q8347718"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347718"
+    },
+    {
+      "personId": "b1798903-0ce2-4e23-8f61-58f47ccc430c",
+      "personName": "邱志偉",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；國立臺南第一高級中學；淡江大學；國立中山大學",
+      "claimJson": {
+        "wikidataQid": "Q8347718"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347718"
+    },
+    {
+      "personId": "b1798903-0ce2-4e23-8f61-58f47ccc430c",
+      "personName": "邱志偉",
+      "claimType": "experience",
+      "claimValue": "立法委員；中華民國國民大會代表；政治人物",
+      "claimJson": {
+        "positions": [
+          "立法委員",
+          "立法委員",
+          "立法委員",
+          "中華民國國民大會代表"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q8347718"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347718"
+    },
+    {
+      "personId": "0d667f9b-02d2-4f7d-b0a1-e950ba0ec0c3",
+      "personName": "邱若華",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q124293466",
+      "claimJson": {
+        "wikidataQid": "Q124293466"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293466"
+    },
+    {
+      "personId": "0d667f9b-02d2-4f7d-b0a1-e950ba0ec0c3",
+      "personName": "邱若華",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q124293466"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293466"
+    },
+    {
+      "personId": "0d667f9b-02d2-4f7d-b0a1-e950ba0ec0c3",
+      "personName": "邱若華",
+      "claimType": "birth_date",
+      "claimValue": "1988-07-25",
+      "claimJson": {
+        "wikidataQid": "Q124293466"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293466"
+    },
+    {
+      "personId": "0d667f9b-02d2-4f7d-b0a1-e950ba0ec0c3",
+      "personName": "邱若華",
+      "claimType": "education",
+      "claimValue": "布萊頓大學",
+      "claimJson": {
+        "wikidataQid": "Q124293466"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293466"
+    },
+    {
+      "personId": "0d667f9b-02d2-4f7d-b0a1-e950ba0ec0c3",
+      "personName": "邱若華",
+      "claimType": "experience",
+      "claimValue": "政治人物",
+      "claimJson": {
+        "positions": [],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q124293466"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293466"
     }
   ]
 }

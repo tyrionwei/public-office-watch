@@ -45,6 +45,19 @@ SUPABASE_SERVICE_ROLE_KEY="..." \
 npm run sync:person-enrichment:write
 ```
 
+Run the complete local batch:
+
+```bash
+npm run run:person-enrichment-batch
+```
+
+The batch script:
+
+- resumes Wikidata enrichment from `person-enrichment-progress.json`
+- syncs enrichment claims into local Supabase
+- verifies Wikidata claims remain out of `public_person_claims`
+- optionally runs Judicial Yuan legal lead fetch during the official service window when credentials are available
+
 ## Safety Rules
 
 - Family relationships are never auto-published.
@@ -56,4 +69,5 @@ npm run sync:person-enrichment:write
 
 - `data-sources/person-enrichment-progress.json` records `nextOffset`.
 - The scheduled job should run the resume command, then `sync:person-enrichment:write`.
+- Prefer `npm run run:person-enrichment-batch` for automation so the command sequence stays deterministic.
 - Keep batch size small because Wikidata rate-limits this workspace quickly.

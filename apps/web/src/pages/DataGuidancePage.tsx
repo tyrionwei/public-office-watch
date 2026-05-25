@@ -17,6 +17,24 @@ const confidenceLevels = [
   ['D', '資訊不足或仍需補查，不應作為結論使用。'],
 ];
 
+const sourceLinks = [
+  {
+    label: '政治獻金公開查閱平台',
+    description: '政黨、政治團體與擬參選人政治獻金會計報告書；本站只公開摘要與公司層級彙總，不公開個人捐贈明細。',
+    href: 'https://ardata.cy.gov.tw/home',
+  },
+  {
+    label: '113年度政黨政治獻金會計報告書',
+    description: '目前政黨年度摘要與公司捐贈摘要的主要接入來源。',
+    href: 'https://data.gov.tw/dataset/175227',
+  },
+  {
+    label: '司法院裁判書開放資料',
+    description: '司法與犯罪紀錄只作為待審核來源線索；沒有同一人確認與來源佐證前不公開。',
+    href: 'https://opendata.judicial.gov.tw/api/',
+  },
+];
+
 export function DataGuidancePage() {
   return (
     <AppShell>
@@ -55,14 +73,31 @@ export function DataGuidancePage() {
         <SectionPanel title="政治獻金限制" eyebrow="political contribution policy">
           <div className="grid gap-3 text-sm leading-6 text-slate-300 lg:grid-cols-3">
             <p className="pixel-corners border border-line/70 bg-bg/35 p-4">
-              第一版只顯示政黨層級摘要，不公開個人捐贈明細，避免過早暴露高風險資料。
+              第一版只顯示政黨層級摘要與公司層級彙總，不公開個人捐贈明細，避免過早暴露高風險資料。
             </p>
             <p className="pixel-corners border border-line/70 bg-bg/35 p-4">
-              公司關係摘要需同時有來源、年度、金額摘要與人工審核紀錄，不能從未審核資料直接公開。
+              公司捐贈摘要需同時有來源、年度、金額、筆數與統一編號；未能辨識公司統編的交易不公開為公司摘要。
             </p>
             <p className="pixel-corners border border-line/70 bg-bg/35 p-4">
               官方資料來源優先；民間整理站可作呈現參考，正式接入前需確認授權與欄位處理方式。
             </p>
+          </div>
+        </SectionPanel>
+
+        <SectionPanel title="來源連結" eyebrow="source references">
+          <div className="grid gap-3 md:grid-cols-3">
+            {sourceLinks.map((source) => (
+              <a
+                key={source.href}
+                href={source.href}
+                target="_blank"
+                rel="noreferrer"
+                className="pixel-corners border border-line/70 bg-bg/35 p-4 transition hover:border-accent/55"
+              >
+                <h3 className="font-display text-lg text-white">{source.label}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-300">{source.description}</p>
+              </a>
+            ))}
           </div>
         </SectionPanel>
       </div>

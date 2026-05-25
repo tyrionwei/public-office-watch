@@ -220,12 +220,20 @@ export function PartyPage() {
                   ))}
                 </div>
                 <p className="mt-4 text-xs text-slate-500">
-                  來源：{latestFinance.source_name ?? '待補來源'}。目前只顯示政黨層級年度摘要，不公開個人捐贈明細。
+                  來源：
+                  {latestFinance.source_url ? (
+                    <a href={latestFinance.source_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
+                      {latestFinance.source_name ?? '政治獻金公開資料'}
+                    </a>
+                  ) : (
+                    latestFinance.source_name ?? '待補來源'
+                  )}
+                  。目前只顯示政黨層級年度摘要，不公開個人捐贈明細。
                 </p>
               </SectionPanel>
             ) : null}
 
-            <SectionPanel title="公司關係摘要" eyebrow="reviewed company-level summaries">
+            <SectionPanel title="公司捐贈摘要" eyebrow="official company-level summaries">
               {companySummaries.length > 0 ? (
                 <div className="grid gap-3 lg:grid-cols-2">
                   {companySummaries.map((summary) => (
@@ -249,15 +257,27 @@ export function PartyPage() {
                           <dd>{summary.donation_count}</dd>
                         </div>
                         <div className="flex justify-between gap-3">
-                          <dt className="text-slate-500">審核時間</dt>
-                          <dd>{summary.reviewed_at ?? '待審核'}</dd>
+                          <dt className="text-slate-500">來源</dt>
+                          <dd className="text-right">
+                            {summary.source_url ? (
+                              <a href={summary.source_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
+                                {summary.source_name ?? '政治獻金公開資料'}
+                              </a>
+                            ) : (
+                              summary.source_name ?? '待補來源'
+                            )}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between gap-3">
+                          <dt className="text-slate-500">確認時間</dt>
+                          <dd>{summary.reviewed_at ?? '來源待確認'}</dd>
                         </div>
                       </dl>
                     </article>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-slate-400">目前沒有已審核公司關係摘要。</p>
+                <p className="text-sm text-slate-400">目前沒有已公開公司捐贈摘要。</p>
               )}
             </SectionPanel>
           </div>

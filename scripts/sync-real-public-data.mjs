@@ -391,6 +391,11 @@ function parseAmount(value) {
   return Number.isFinite(amount) ? amount : 0;
 }
 
+function normalizeUnifiedBusinessNo(value) {
+  const normalized = String(value ?? '').replace(/\D/g, '');
+  return /^\d{8}$/.test(normalized) ? normalized : null;
+}
+
 function normalizeGender(value) {
   const text = String(value ?? '').trim();
   if (text === '1' || text === '男' || text.toLowerCase() === 'male') return 'male';
@@ -1472,6 +1477,7 @@ async function enrichSeedWithLivePartyFinanceSummaries(seed, args) {
   try {
     const zipBuffer = await fetchBytes(source.downloadUrl);
     const financeRows = parseDelimited(readZipTextBySuffix(zipBuffer, 'political party_incomes and expenditures.csv'));
+    const incomeRows = parseDelimited(readZipTextBySuffix(zipBuffer, 'incomes.csv'));
     const partyByName = new Map(seed.parties.map((party) => [normalizePartyName(party.name), party]));
     const summaries = financeRows
       .map((row) => {
@@ -1498,6 +1504,47 @@ async function enrichSeedWithLivePartyFinanceSummaries(seed, args) {
         };
       })
       .filter((summary) => summary !== null);
+    const companyByUnifiedBusinessNo = new Map(seed.companies?.map((company) => [company.unifiedBusinessNo, company]) ?? []);
+    const companyContributionByKey = new Map();
+
+    for (const row of incomeRows) {
+      const account = pickField(row, ['收支科目']);
+      const unifiedBusinessNo = normalizeUnifiedBusinessNo(pickField(row, ['身分證／統一編號']));
+      const partyName = normalizePartyName(pickField(row, ['擬參選人／政黨']));
+      const party = partyByName.get(partyName);
+      const donorName = pickField(row, ['捐贈者／支出對象']);
+      const reportYear = toGregorianYear(pickField(row, ['申報序號／年度']));
+      const amount = parseAmount(row['收入金額']);
+
+      if (account !== '營利事業捐贈收入' || !party || !unifiedBusinessNo || !donorName || !reportYear || amount <= 0) {
+        continue;
+      }
+
+      companyByUnifiedBusinessNo.set(unifiedBusinessNo, {
+        unifiedBusinessNo,
+        name: donorName,
+        status: null,
+        addressRegion: pickField(row, ['地址']).replace(/\*+/g, '').slice(0, 3) || null,
+        sourceUrl: source.url,
+        isPublic: true,
+      });
+
+      const contributionKey = `${party.externalId}:${unifiedBusinessNo}:${reportYear}`;
+      const existing = companyContributionByKey.get(contributionKey) ?? {
+        partyExternalId: party.externalId,
+        companyUnifiedBusinessNo: unifiedBusinessNo,
+        reportYear,
+        amountTotal: 0,
+        donationCount: 0,
+        confidenceLevel: 'A',
+        sourceId: source.id,
+        sourceUrl: source.url,
+      };
+
+      existing.amountTotal += amount;
+      existing.donationCount += 1;
+      companyContributionByKey.set(contributionKey, existing);
+    }
 
     if (summaries.length === 0) {
       throw new Error('Political contribution ZIP parsed successfully but no party summaries matched current parties.');
@@ -1507,13 +1554,19 @@ async function enrichSeedWithLivePartyFinanceSummaries(seed, args) {
       seed: {
         ...seed,
         partyFinanceSummaries: summaries,
+        companies: Array.from(companyByUnifiedBusinessNo.values()),
+        partyCompanyContributionSummaries: Array.from(companyContributionByKey.values()).sort((left, right) => {
+          return right.amountTotal - left.amountTotal || left.companyUnifiedBusinessNo.localeCompare(right.companyUnifiedBusinessNo);
+        }),
       },
       livePartyFinanceSummaries: {
         status: 'ok',
         count: summaries.length,
         sourceRowCount: Math.max(0, financeRows.length),
+        businessContributionSummaryCount: companyContributionByKey.size,
+        businessContributorCount: companyByUnifiedBusinessNo.size,
         url: source.downloadUrl,
-        privacyBoundary: 'party-level annual summaries only; detail income/expenditure rows are not written',
+        privacyBoundary: 'party-level annual summaries and company-level aggregate contribution summaries only; personal donation details and raw transaction rows are not written',
       },
     };
   } catch (error) {
@@ -1555,6 +1608,7 @@ function validateSeed(seed) {
   const raceIds = new Set(seed.races.map((race) => race.externalId));
   const personIds = new Set((seed.people ?? []).map((person) => person.externalId));
   const partyIds = new Set(seed.parties.map((party) => party.externalId));
+  const companyUnifiedBusinessNos = new Set((seed.companies ?? []).map((company) => company.unifiedBusinessNo).filter(Boolean));
 
   for (const collection of ['regions', 'elections', 'races', 'parties', 'people', 'candidates']) {
     if (!Array.isArray(seed[collection])) {
@@ -1608,6 +1662,16 @@ function validateSeed(seed) {
   for (const summary of seed.partyFinanceSummaries ?? []) {
     if (!partyIds.has(summary.partyExternalId)) {
       throw new Error(`Party finance summary has unknown partyExternalId: ${summary.partyExternalId}`);
+    }
+  }
+
+  for (const summary of seed.partyCompanyContributionSummaries ?? []) {
+    if (!partyIds.has(summary.partyExternalId)) {
+      throw new Error(`Party company contribution summary has unknown partyExternalId: ${summary.partyExternalId}`);
+    }
+
+    if (!companyUnifiedBusinessNos.has(summary.companyUnifiedBusinessNo)) {
+      throw new Error(`Party company contribution summary has unknown companyUnifiedBusinessNo: ${summary.companyUnifiedBusinessNo}`);
     }
   }
 }
@@ -2198,6 +2262,26 @@ async function writeSeed(seed, hash, args) {
   const people = await upsertOrThrow(env, 'people', personRows, { onConflict: 'external_id' });
   const personByExternalId = new Map(people.map((person) => [person.external_id, person]));
 
+  const companyRows = (seed.companies ?? [])
+    .filter((company) => company.unifiedBusinessNo)
+    .map((company) => {
+      return {
+        unified_business_no: company.unifiedBusinessNo,
+        name: company.name,
+        representative_name: company.representativeName ?? null,
+        status: company.status ?? null,
+        capital: company.capital ?? null,
+        address_region: company.addressRegion ?? null,
+        source_url: company.sourceUrl ?? null,
+        last_checked_at: startedAt,
+        is_public: company.isPublic ?? true,
+        updated_at: startedAt,
+      };
+    });
+
+  const companies = await upsertOrThrow(env, 'companies', companyRows, { onConflict: 'unified_business_no' });
+  const companyByUnifiedBusinessNo = new Map(companies.map((company) => [company.unified_business_no, company]));
+
   const sourcePersonRows = buildSourcePersonRows(seed, startedAt, hash);
   const sourcePeople = await upsertOrThrow(env, 'source_people', sourcePersonRows, { onConflict: 'source_person_key' });
   const sourcePersonByKey = new Map(sourcePeople.map((sourcePerson) => [sourcePerson.source_person_key, sourcePerson]));
@@ -2289,6 +2373,36 @@ async function writeSeed(seed, hash, args) {
 
   await upsertOrThrow(env, 'party_finance_summaries', financeRows, { onConflict: 'party_id,report_year' });
 
+  const companyContributionRows = (seed.partyCompanyContributionSummaries ?? [])
+    .map((summary) => {
+      const party = partyByExternalId.get(summary.partyExternalId);
+      const company = companyByUnifiedBusinessNo.get(summary.companyUnifiedBusinessNo);
+      const source = getSource(seed, summary.sourceId);
+
+      if (!party || !company) {
+        return null;
+      }
+
+      return {
+        party_id: party.id,
+        company_id: company.id,
+        report_year: summary.reportYear,
+        amount_total: summary.amountTotal ?? 0,
+        donation_count: summary.donationCount ?? 0,
+        confidence_level: summary.confidenceLevel ?? 'A',
+        source_name: source.name,
+        source_url: summary.sourceUrl ?? source.url,
+        reviewed_at: startedAt,
+        is_public: true,
+        updated_at: startedAt,
+      };
+    })
+    .filter((row) => row !== null);
+
+  await upsertOrThrow(env, 'party_company_contribution_summaries', companyContributionRows, {
+    onConflict: 'party_id,company_id,report_year',
+  });
+
   if (args.recordRun) {
     await upsertOrThrow(
       env,
@@ -2310,7 +2424,9 @@ async function writeSeed(seed, hash, args) {
             personClaimRows.length +
             (seed.candidates?.length ?? 0) +
             seed.parties.length +
-            financeRows.length,
+            financeRows.length +
+            companyRows.length +
+            companyContributionRows.length,
           started_at: startedAt,
           finished_at: new Date().toISOString(),
           report_json: buildReport(
@@ -2361,6 +2477,7 @@ function buildReport(
       parties: seed.parties.length,
       partyFinanceSummaries: seed.partyFinanceSummaries?.length ?? 0,
       partyCompanyContributionSummaries: seed.partyCompanyContributionSummaries?.length ?? 0,
+      companies: seed.companies?.length ?? 0,
     },
     livePartyRegistry,
     liveCurrentOfficeholders,
@@ -2370,7 +2487,7 @@ function buildReport(
     livePartyFinanceSummaries,
     skipped: {
       personalDonationDetails: true,
-      companyContributionSummaries: 'requires later review flow before publication',
+      rawContributionRows: true,
     },
   };
 }

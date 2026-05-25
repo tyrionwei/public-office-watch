@@ -69,7 +69,23 @@
       "url": "https://data.gov.tw/dataset/175227",
       "downloadUrl": "https://ardata.cy.gov.tw/api/v1/Search/download?AccountNumber=&DownloadType=3&ElectionArea=&ElectionName=&SearchType=4&Version=&YearOrSerial=113",
       "refreshCadence": "weekly",
-      "notes": "同步政黨層級年度收入支出摘要；不公開 incomes/expenditures 明細、個人捐贈資料或公司關係摘要。"
+      "notes": "同步政黨層級年度收入支出摘要與公司層級營利事業捐贈彙總；不公開 incomes/expenditures 原始交易列或個人捐贈明細。"
+    },
+    {
+      "id": "judicial-yuan-court-open-data-api",
+      "type": "legal-record-lead",
+      "name": "司法院裁判書開放資料 API",
+      "url": "https://opendata.judicial.gov.tw/api/",
+      "refreshCadence": "manual-review",
+      "notes": "只作為司法/犯罪紀錄待審核線索來源；姓名命中不可自動公開，需同一人確認與來源佐證。"
+    },
+    {
+      "id": "data-gov-tw-judicial-court-opinions-63205",
+      "type": "legal-record-lead",
+      "name": "政府資料開放平台：司法院裁判書資料",
+      "url": "https://data.gov.tw/dataset/63205",
+      "refreshCadence": "manual-review",
+      "notes": "可作裁判書批次資料線索；公開前需比對身分、案由、判決狀態與來源連結。"
     }
   ],
   "regions": [

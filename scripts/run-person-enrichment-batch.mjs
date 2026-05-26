@@ -53,6 +53,31 @@ async function countRows(viewName, sourceName) {
   return total === '*' || total === undefined ? 0 : Number.parseInt(total, 10);
 }
 
+async function countRowsByClaimType(viewName, sourceName, claimType) {
+  const url = new URL(`${localSupabaseUrl.replace(/\/$/, '')}/rest/v1/${viewName}`);
+  url.searchParams.set('select', 'claim_id');
+  url.searchParams.set('source_name', `eq.${sourceName}`);
+  url.searchParams.set('claim_type', `eq.${claimType}`);
+
+  const response = await fetch(url, {
+    method: 'HEAD',
+    headers: {
+      apikey: localAnonKey,
+      authorization: `Bearer ${localAnonKey}`,
+      prefer: 'count=exact',
+    },
+    signal: AbortSignal.timeout(30000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to count ${viewName}/${claimType}: ${response.status} ${response.statusText}`);
+  }
+
+  const range = response.headers.get('content-range') ?? '';
+  const total = range.split('/')[1];
+  return total === '*' || total === undefined ? 0 : Number.parseInt(total, 10);
+}
+
 function taipeiHour() {
   return Number(
     new Intl.DateTimeFormat('en-US', {
@@ -110,13 +135,23 @@ async function main() {
       SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,
     },
   });
+  await run('npm', ['run', 'review:person-claims:write'], {
+    env: {
+      SUPABASE_URL: localSupabaseUrl,
+      SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,
+    },
+  });
 
   const judicial = await maybeFetchJudicialLeads();
   const afterReviewCount = await countRows('person_claim_review_queue', wikidataSourceName);
   const afterPublicCount = await countRows('public_person_claims', wikidataSourceName);
+  const publicFamilyCount = await countRowsByClaimType('public_person_claims', wikidataSourceName, 'family_relation');
+  const publicLegalCount = await countRowsByClaimType('public_person_claims', wikidataSourceName, 'legal_case');
 
-  if (afterPublicCount !== 0) {
-    throw new Error(`Wikidata claims must remain private, but public_person_claims has ${afterPublicCount}.`);
+  if (publicFamilyCount !== 0 || publicLegalCount !== 0) {
+    throw new Error(
+      `Sensitive Wikidata claims must remain private, but public_person_claims has family=${publicFamilyCount}, legal=${publicLegalCount}.`,
+    );
   }
 
   console.log(JSON.stringify({
@@ -126,6 +161,8 @@ async function main() {
     wikidataReviewAdded: afterReviewCount - beforeReviewCount,
     wikidataPublicBefore: beforePublicCount,
     wikidataPublicAfter: afterPublicCount,
+    wikidataPublicFamily: publicFamilyCount,
+    wikidataPublicLegal: publicLegalCount,
     judicial,
   }, null, 2));
 }

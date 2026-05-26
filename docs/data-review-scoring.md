@@ -30,6 +30,15 @@
 - 低歧義欄位包含姓名、性別、黨籍、職位、選區、外部 ID。
 - 學歷、經歷、政見、照片等欄位若來自官方或本人來源可提高分數；來自媒體/百科則需保留來源與分數。
 
+## 低風險自動審核
+
+`scripts/auto-review-person-claims.mjs` 只處理低風險欄位，預設來源為 `Wikidata 人物補充資料`。
+
+- 可自動公開：`gender`、`external_id`，且 `review_score >= 45`、`confidence_level` 為 A/B/C。
+- 不自動公開：生日、學歷、經歷、政見、政治獻金、家族關係、司法/刑事紀錄。
+- 寫入時會標記 `review_status = verified`、`visibility = public`、`is_public = true`、`auto_reviewed_at`。
+- 批次腳本會檢查 Wikidata 的 `family_relation` 與 `legal_case` 仍不得進入 `public_person_claims`。
+
 ## 司法與刑事紀錄 claim
 
 司法/刑事紀錄屬高敏感資料，不能只靠姓名或單篇新聞自動定論。
@@ -67,3 +76,4 @@
 - `legal_record_leads` 與 `legal_record_review_queue` 已建立，用於存放 private review-only 司法/刑事線索。
 - 司法/刑事線索目前不會自動公開，也不會自動產生 public `legal_case` claim。
 - 真正公開前必須由 review queue 確認同一人、來源連結、案由/摘要與判決狀態。
+- 內部審核頁 `/internal/review-queue` 僅在 local development 註冊；production 目前不顯示，正式管理介面需再接帳號權限。

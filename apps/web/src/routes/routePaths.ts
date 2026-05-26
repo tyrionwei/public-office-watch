@@ -48,3 +48,7 @@ export function dataGuidancePath() {
 export function aboutPath() {
   return '/about';
 }
+
+export function internalReviewQueuePath() {
+  return '/internal/review-queue';
+}

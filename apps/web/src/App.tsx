@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { BgmProvider } from './components/BgmProvider';
 import { publicDataReadyEvent } from './lib/publicDataProviderFactory';
@@ -13,7 +13,11 @@ import { PartyPage } from './pages/PartyPage';
 import { PeoplePage } from './pages/PeoplePage';
 import { PersonPage } from './pages/PersonPage';
 import { RegionPage } from './pages/RegionPage';
-import { aboutPath, dataGuidancePath, homePath, partiesPath, peoplePath } from './routes/routePaths';
+import { aboutPath, dataGuidancePath, homePath, internalReviewQueuePath, partiesPath, peoplePath } from './routes/routePaths';
+
+const InternalReviewQueuePage = import.meta.env.DEV
+  ? lazy(() => import('./pages/InternalReviewQueuePage').then((module) => ({ default: module.InternalReviewQueuePage })))
+  : null;
 
 function App() {
   const [, setPublicDataVersion] = useState(0);
@@ -42,6 +46,16 @@ function App() {
           <Route path={aboutPath()} element={<AboutPage />} />
           <Route path="/regions/:regionId" element={<RegionPage />} />
           <Route path="/elections/:electionId" element={<ElectionPage />} />
+          {InternalReviewQueuePage ? (
+            <Route
+              path={internalReviewQueuePath()}
+              element={
+                <Suspense fallback={null}>
+                  <InternalReviewQueuePage />
+                </Suspense>
+              }
+            />
+          ) : null}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BgmProvider>

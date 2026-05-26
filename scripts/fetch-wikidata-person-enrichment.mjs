@@ -161,7 +161,7 @@ async function loadTargetNamesFromSupabase() {
 
   while (true) {
     const url = new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/public_people`);
-    url.searchParams.set('select', 'person_id,name,party,position,district');
+    url.searchParams.set('select', 'person_id,name,gender,party,position,district,education,experience');
     url.searchParams.set('order', 'updated_at.desc');
 
     const response = await fetch(url, {
@@ -181,9 +181,12 @@ async function loadTargetNamesFromSupabase() {
     people.push(...rows.map((row) => ({
       personId: row.person_id,
       name: row.name,
+      gender: row.gender,
       party: row.party,
       position: row.position,
       district: row.district,
+      education: row.education,
+      experience: row.experience,
     })).filter((row) => row.name));
 
     if (rows.length < pageSize) break;
@@ -302,7 +305,38 @@ function claimTimes(entity, property) {
   return (entity.claims?.[property] ?? []).map(timeFromClaim).filter(Boolean);
 }
 
-function isLikelySamePerson(target, entity, searchResult) {
+function normalizeGenderValue(value) {
+  const normalized = String(value ?? '').trim().toLowerCase();
+  if (normalized === 'male' || normalized === 'm' || normalized.includes('男')) return 'male';
+  if (normalized === 'female' || normalized === 'f' || normalized.includes('女')) return 'female';
+  return 'unknown';
+}
+
+function compactIdentityText(value) {
+  return normalizeName(value).toLowerCase();
+}
+
+function identityTokens(value) {
+  const normalized = compactIdentityText(value);
+  if (!normalized || normalized === 'unknown') return [];
+  return Array.from(new Set([
+    normalized,
+    ...normalized.split(/[;；,，、／/()（）\s]+/).filter((item) => item.length >= 2),
+  ]));
+}
+
+function hasTokenOverlap(leftValues, rightValues) {
+  const leftTokens = leftValues.flatMap(identityTokens);
+  const rightText = rightValues.map(compactIdentityText).join(' ');
+
+  return leftTokens.some((token) => token.length >= 2 && rightText.includes(token));
+}
+
+function entityGender(entity) {
+  return genderFromEntityId(claimEntityIds(entity, 'P21')[0]) ?? 'unknown';
+}
+
+function scoreEntityMatch(target, entity, searchResult, relatedEntities = {}) {
   const targetName = normalizeName(target.name);
   const labels = [
     getBestMonolingual(entity.labels),
@@ -311,25 +345,78 @@ function isLikelySamePerson(target, entity, searchResult) {
   ].filter(Boolean).map(normalizeName);
 
   if (!labels.includes(targetName)) {
-    return false;
+    return { matched: false, score: 0, reasons: ['name did not match'] };
   }
 
-  const description = [
+  const reasons = ['normalized name matched'];
+  let score = 50;
+  const targetGender = normalizeGenderValue(target.gender);
+  const wikidataGender = entityGender(entity);
+
+  if (targetGender === 'unknown') {
+    return { matched: false, score, reasons: [...reasons, 'target gender missing'] };
+  }
+
+  if (wikidataGender !== targetGender) {
+    return { matched: false, score, reasons: [...reasons, `gender mismatch: target=${targetGender}, wikidata=${wikidataGender}`] };
+  }
+
+  score += 25;
+  reasons.push('gender matched');
+
+  const entityDescription = [
     getBestMonolingual(entity.descriptions),
     searchResult.description,
-    target.party,
-    target.position,
-    target.district,
   ].filter(Boolean).join(' ');
+  const educationLabels = labelsForIds(relatedEntities, claimEntityIds(entity, 'P69')).map((item) => item.label);
+  const positionLabels = labelsForIds(relatedEntities, claimEntityIds(entity, 'P39')).map((item) => item.label);
+  const occupationLabels = labelsForIds(relatedEntities, claimEntityIds(entity, 'P106')).map((item) => item.label);
+  const wikidataEvidence = [entityDescription, ...positionLabels, ...occupationLabels, ...educationLabels];
+  const corroboratingSignals = [];
 
-  return /政治|政黨|立法|議員|市長|縣長|總統|候選|minister|politician|legislator|mayor|president/i.test(description);
+  if (/政治|政黨|立法|議員|市長|縣長|總統|候選|minister|politician|legislator|mayor|president/i.test(entityDescription)) {
+    score += 10;
+    corroboratingSignals.push('political description');
+  }
+
+  if (hasTokenOverlap([target.position], wikidataEvidence)) {
+    score += 10;
+    corroboratingSignals.push('position matched');
+  }
+
+  if (hasTokenOverlap([target.education], educationLabels)) {
+    score += 10;
+    corroboratingSignals.push('education matched');
+  }
+
+  if (hasTokenOverlap([target.experience], [...positionLabels, ...occupationLabels])) {
+    score += 10;
+    corroboratingSignals.push('experience matched');
+  }
+
+  if (hasTokenOverlap([target.district, target.party], [entityDescription])) {
+    score += 5;
+    corroboratingSignals.push('district or party hint matched');
+  }
+
+  if (corroboratingSignals.length === 0) {
+    return { matched: false, score, reasons: [...reasons, 'missing corroborating identity signal'] };
+  }
+
+  return {
+    matched: true,
+    score: Math.min(100, score),
+    reasons: [...reasons, ...corroboratingSignals],
+    gender: wikidataGender,
+    corroboratingSignals,
+  };
 }
 
 function sourceUrlFor(qid) {
   return `https://www.wikidata.org/wiki/${qid}`;
 }
 
-function claimRecord({ target, qid, claimType, claimValue, claimJson = {}, sourceUrl = sourceUrlFor(qid) }) {
+function claimRecord({ target, qid, claimType, claimValue, claimJson = {}, sourceUrl = sourceUrlFor(qid), matchEvidence = null }) {
   return {
     personId: target.personId ?? null,
     personName: target.name,
@@ -338,6 +425,7 @@ function claimRecord({ target, qid, claimType, claimValue, claimJson = {}, sourc
     claimJson: {
       ...claimJson,
       wikidataQid: qid,
+      identityMatch: matchEvidence,
     },
     confidenceLevel: 'C',
     reviewStatus: 'pending',
@@ -359,7 +447,7 @@ function labelsForIds(entities, ids) {
     .filter((item) => item.label);
 }
 
-function buildClaimsForTarget({ target, entity, qid, relatedEntities }) {
+function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvidence }) {
   const claims = [];
   const gender = genderFromEntityId(claimEntityIds(entity, 'P21')[0]);
   const birthDate = claimTimes(entity, 'P569')[0] ?? null;
@@ -367,18 +455,18 @@ function buildClaimsForTarget({ target, entity, qid, relatedEntities }) {
   const positions = labelsForIds(relatedEntities, claimEntityIds(entity, 'P39')).map((item) => item.label);
   const occupations = labelsForIds(relatedEntities, claimEntityIds(entity, 'P106')).map((item) => item.label);
 
-  claims.push(claimRecord({ target, qid, claimType: 'external_id', claimValue: `wikidata:${qid}` }));
+  claims.push(claimRecord({ target, qid, claimType: 'external_id', claimValue: `wikidata:${qid}`, matchEvidence }));
 
   if (gender) {
-    claims.push(claimRecord({ target, qid, claimType: 'gender', claimValue: gender }));
+    claims.push(claimRecord({ target, qid, claimType: 'gender', claimValue: gender, matchEvidence }));
   }
 
   if (birthDate) {
-    claims.push(claimRecord({ target, qid, claimType: 'birth_date', claimValue: birthDate }));
+    claims.push(claimRecord({ target, qid, claimType: 'birth_date', claimValue: birthDate, matchEvidence }));
   }
 
   if (education.length > 0) {
-    claims.push(claimRecord({ target, qid, claimType: 'education', claimValue: Array.from(new Set(education)).join('；') }));
+    claims.push(claimRecord({ target, qid, claimType: 'education', claimValue: Array.from(new Set(education)).join('；'), matchEvidence }));
   }
 
   if (positions.length > 0 || occupations.length > 0) {
@@ -388,6 +476,7 @@ function buildClaimsForTarget({ target, entity, qid, relatedEntities }) {
       claimType: 'experience',
       claimValue: Array.from(new Set([...positions, ...occupations])).slice(0, 12).join('；'),
       claimJson: { positions, occupations },
+      matchEvidence,
     }));
   }
 
@@ -406,6 +495,7 @@ function buildClaimsForTarget({ target, entity, qid, relatedEntities }) {
           relativeName: relative.label,
           relativeDescription: relative.description ?? null,
         },
+        matchEvidence,
       }));
     }
   }
@@ -466,17 +556,33 @@ async function main() {
     await sleep(args.requestDelayMs);
     const searchResults = await searchEntity(target.name, args.searchLimit, args);
     const entities = await getEntities(searchResults.map((result) => result.id), args);
-    const matched = searchResults.find((result) => {
+    const candidates = [];
+
+    for (const result of searchResults) {
       const entity = entities[result.id];
-      return entity && isLikelySamePerson(target, entity, result);
-    });
+      if (!entity) continue;
+      const relatedIds = [
+        ...claimEntityIds(entity, 'P21'),
+        ...claimEntityIds(entity, 'P69'),
+        ...claimEntityIds(entity, 'P39'),
+        ...claimEntityIds(entity, 'P106'),
+      ];
+      const relatedEntities = await getEntities(relatedIds, args);
+      const match = scoreEntityMatch(target, entity, result, relatedEntities);
+      candidates.push({ result, entity, relatedEntities, match });
+    }
+
+    const matched = candidates
+      .filter((candidate) => candidate.match.matched)
+      .sort((left, right) => right.match.score - left.match.score)[0];
 
     if (!matched) {
       skipped.push({ name: target.name, reason: 'no confident Wikidata entity match' });
       continue;
     }
 
-    const entity = entities[matched.id];
+    const entity = matched.entity;
+    const qid = matched.result.id;
     await sleep(args.requestDelayMs);
     const relatedIds = [
       ...claimEntityIds(entity, 'P21'),
@@ -486,7 +592,21 @@ async function main() {
       ...Object.keys(relationProperties).flatMap((property) => claimEntityIds(entity, property)),
     ];
     const relatedEntities = await getEntities(relatedIds, args);
-    allClaims.push(...buildClaimsForTarget({ target, entity, qid: matched.id, relatedEntities }));
+    allClaims.push(...buildClaimsForTarget({
+      target,
+      entity,
+      qid,
+      relatedEntities,
+      matchEvidence: {
+        version: 'wikidata-identity-v2',
+        status: 'matched',
+        score: matched.match.score,
+        reasons: matched.match.reasons,
+        targetGender: normalizeGenderValue(target.gender),
+        wikidataGender: matched.match.gender,
+        corroboratingSignals: matched.match.corroboratingSignals,
+      },
+    }));
   }
 
   const existingPayload = fs.existsSync(args.outputPath)

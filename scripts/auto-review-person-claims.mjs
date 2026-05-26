@@ -1,16 +1,16 @@
 const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || 'http://127.0.0.1:54321';
 const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || 'REDACTED_SUPABASE_SERVICE_ROLE_KEY';
 
-const allowedSourceName = 'Wikidata 人物補充資料';
-const autoReviewVersion = 'auto-low-risk-v1';
-const lowRiskClaimTypes = new Set(['gender', 'external_id']);
+const autoReviewVersion = 'auto-non-criminal-v1';
+const blockedClaimTypes = new Set(['legal_case']);
 
 function parseArgs(argv) {
   const options = {
     write: false,
     limit: 500,
-    minScore: 45,
-    sourceName: allowedSourceName,
+    maxBatches: 100,
+    minScore: 0,
+    sourceName: '',
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -22,6 +22,9 @@ function parseArgs(argv) {
       index += 1;
     } else if (arg === '--min-score') {
       options.minScore = Number.parseInt(argv[index + 1] ?? '', 10);
+      index += 1;
+    } else if (arg === '--max-batches') {
+      options.maxBatches = Number.parseInt(argv[index + 1] ?? '', 10);
       index += 1;
     } else if (arg === '--source-name') {
       options.sourceName = argv[index + 1] ?? '';
@@ -35,6 +38,10 @@ function parseArgs(argv) {
 
   if (!Number.isInteger(options.minScore) || options.minScore < 0 || options.minScore > 100) {
     throw new Error('--min-score must be an integer from 0 to 100');
+  }
+
+  if (!Number.isInteger(options.maxBatches) || options.maxBatches <= 0) {
+    throw new Error('--max-batches must be a positive integer');
   }
 
   return options;
@@ -71,9 +78,10 @@ async function fetchReviewCandidates(options) {
     'select',
     'claim_id,raw_name,claim_type,claim_value,confidence_level,review_score,source_name,source_url,scoring_reasons,updated_at',
   );
-  url.searchParams.set('source_name', `eq.${options.sourceName}`);
-  url.searchParams.set('claim_type', 'in.(gender,external_id)');
-  url.searchParams.set('confidence_level', 'in.(A,B,C)');
+  if (options.sourceName) {
+    url.searchParams.set('source_name', `eq.${options.sourceName}`);
+  }
+  url.searchParams.set('claim_type', 'not.eq.legal_case');
   url.searchParams.set('review_score', `gte.${options.minScore}`);
   url.searchParams.set('order', 'review_score.desc,updated_at.desc');
   url.searchParams.set('limit', String(options.limit));
@@ -84,7 +92,6 @@ async function fetchReviewCandidates(options) {
 async function countPublicClaimsByType(claimType) {
   const url = supabaseUrl('public_person_claims');
   url.searchParams.set('select', 'claim_id');
-  url.searchParams.set('source_name', `eq.${allowedSourceName}`);
   url.searchParams.set('claim_type', `eq.${claimType}`);
 
   const response = await fetch(url, {
@@ -106,12 +113,14 @@ async function countPublicClaimsByType(claimType) {
   return total === '*' || total === undefined ? 0 : Number.parseInt(total, 10);
 }
 
-function isEligibleClaim(claim) {
+function isEligibleClaim(claim, options) {
+  if (claim.source_name === 'Wikidata 人物補充資料' && claim.claim_json?.identityMatch?.status !== 'matched') {
+    return false;
+  }
+
   return (
-    claim.source_name === allowedSourceName &&
-    lowRiskClaimTypes.has(claim.claim_type) &&
-    Number(claim.review_score) >= 45 &&
-    ['A', 'B', 'C'].includes(claim.confidence_level)
+    !blockedClaimTypes.has(claim.claim_type) &&
+    Number(claim.review_score) >= options.minScore
   );
 }
 
@@ -121,7 +130,7 @@ function nextScoringReasons(claim) {
     ...existing,
     {
       version: autoReviewVersion,
-      reason: 'low-risk Wikidata claim type auto-approved for local review workflow',
+      reason: 'non-criminal Wikidata claim type auto-approved for local review workflow',
       reviewedAt: new Date().toISOString(),
     },
   ];
@@ -150,38 +159,66 @@ async function approveClaim(claim) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
-  const candidates = await fetchReviewCandidates(options);
-  const eligibleClaims = candidates.filter(isEligibleClaim);
   const sensitiveBefore = {
-    family_relation: await countPublicClaimsByType('family_relation'),
     legal_case: await countPublicClaimsByType('legal_case'),
   };
+  let totalScanned = 0;
+  let totalEligible = 0;
+  let totalUpdated = 0;
+  let totalSkipped = 0;
+  let batches = 0;
 
-  if (options.write) {
+  while (batches < options.maxBatches) {
+    const candidates = await fetchReviewCandidates(options);
+    const eligibleClaims = candidates.filter((claim) => isEligibleClaim(claim, options));
+    totalScanned += candidates.length;
+    totalEligible += eligibleClaims.length;
+    totalSkipped += candidates.length - eligibleClaims.length;
+
+    if (!options.write) {
+      break;
+    }
+
+    if (eligibleClaims.length === 0) {
+      break;
+    }
+
     for (const claim of eligibleClaims) {
       await approveClaim(claim);
+    }
+
+    totalUpdated += eligibleClaims.length;
+    batches += 1;
+
+    if (candidates.length < options.limit) {
+      break;
     }
   }
 
   const sensitiveAfter = {
-    family_relation: await countPublicClaimsByType('family_relation'),
     legal_case: await countPublicClaimsByType('legal_case'),
   };
 
-  if (sensitiveAfter.family_relation !== 0 || sensitiveAfter.legal_case !== 0) {
-    throw new Error(`sensitive Wikidata claims were public: ${JSON.stringify(sensitiveAfter)}`);
+  if (sensitiveAfter.legal_case > sensitiveBefore.legal_case) {
+    throw new Error(`criminal-record claims became public: ${JSON.stringify({ before: sensitiveBefore, after: sensitiveAfter })}`);
   }
 
   console.log(JSON.stringify({
     status: options.write ? 'updated' : 'dry-run',
-    sourceName: options.sourceName,
+    sourceName: options.sourceName || 'all',
     minScore: options.minScore,
-    scanned: candidates.length,
-    eligible: eligibleClaims.length,
-    updated: options.write ? eligibleClaims.length : 0,
-    skipped: candidates.length - eligibleClaims.length,
-    autoReviewedTypes: Array.from(lowRiskClaimTypes),
-    keptManualReview: ['birth_date', 'education', 'experience', 'platform', 'finance_summary', 'family_relation', 'legal_case'],
+    batchLimit: options.limit,
+    maxBatches: options.maxBatches,
+    batches,
+    scanned: totalScanned,
+    eligible: totalEligible,
+    updated: totalUpdated,
+    skipped: totalSkipped,
+    autoReviewedRule: 'all matching review claims except legal_case',
+    sourceSpecificRules: {
+      wikidata: 'requires claim_json.identityMatch.status=matched',
+    },
+    keptManualReview: Array.from(blockedClaimTypes),
     sensitivePublicBefore: sensitiveBefore,
     sensitivePublicAfter: sensitiveAfter,
   }, null, 2));

@@ -16,11 +16,18 @@
 3. 產生 `person_claims`，所有可用欄位先以 claim 形式保存。
 4. 執行身份比對：
    - 官方外部 ID 相同：`auto_matched`，分數 100。
-   - 姓名、性別、政黨、地區、職位高度一致：`probable_match`。
+   - 非外部 ID 匹配必須姓名與性別一致，且至少再有政黨、地區、職位、學歷、經歷等一項佐證，才可進 `probable_match`。
    - 只有姓名相同或缺少佐證：`possible_match`。
    - 已確認不同人：`rejected_match`。
    - 沒有候選對象：`unmatched`。
 5. 只有 `auto_matched` 或人工確認後的資料才更新 `people` 主檔；低可信度資料保留在 claim/review 區。
+
+## 中央來源可用比對欄位
+
+- 中選會選舉資料：姓名、性別、政黨、候選號、縣市/選區、選舉年、職位/選舉種類、當選狀態。
+- 立法院現任委員資料：姓名、性別、政黨、區域、生日、學歷、經歷、屆期、就職日期。
+- 這些欄位的最低使用規則是姓名與性別必須一致；姓名相同但性別缺漏或不一致，不得自動合併。
+- 通過姓名與性別後，還需要至少一個佐證訊號，例如政黨、地區、職位、學歷、經歷或官方外部 ID。
 
 ## 可信度與顯示規則
 
@@ -37,6 +44,7 @@
 - 每個已匯入的官方人物會建立 `auto_matched` identity match。
 - 姓名、性別、黨籍、職位、選區、學歷、經歷、外部 ID 會拆成 verified public claims。
 - `identity_unmatched_source_people` 是內部 review view，不列入前端 public view 白名單。
+- Wikidata 補充資料需寫入 `claim_json.identityMatch`，內容包含性別比對與至少一個佐證訊號；缺少 evidence 的舊式 Wikidata claim 不再寫入 `person_claims`。
 
 ## 後續擴充方向
 

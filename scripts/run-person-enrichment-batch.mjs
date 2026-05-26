@@ -145,13 +145,10 @@ async function main() {
   const judicial = await maybeFetchJudicialLeads();
   const afterReviewCount = await countRows('person_claim_review_queue', wikidataSourceName);
   const afterPublicCount = await countRows('public_person_claims', wikidataSourceName);
-  const publicFamilyCount = await countRowsByClaimType('public_person_claims', wikidataSourceName, 'family_relation');
   const publicLegalCount = await countRowsByClaimType('public_person_claims', wikidataSourceName, 'legal_case');
 
-  if (publicFamilyCount !== 0 || publicLegalCount !== 0) {
-    throw new Error(
-      `Sensitive Wikidata claims must remain private, but public_person_claims has family=${publicFamilyCount}, legal=${publicLegalCount}.`,
-    );
+  if (publicLegalCount !== 0) {
+    throw new Error(`Criminal-record Wikidata claims must remain private, but public_person_claims has legal=${publicLegalCount}.`);
   }
 
   console.log(JSON.stringify({
@@ -161,7 +158,6 @@ async function main() {
     wikidataReviewAdded: afterReviewCount - beforeReviewCount,
     wikidataPublicBefore: beforePublicCount,
     wikidataPublicAfter: afterPublicCount,
-    wikidataPublicFamily: publicFamilyCount,
     wikidataPublicLegal: publicLegalCount,
     judicial,
   }, null, 2));

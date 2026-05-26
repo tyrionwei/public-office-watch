@@ -15,9 +15,9 @@ const claimTypeLabels: Record<string, string> = {
 };
 
 const autoReviewPolicy = [
-  ['可批次處理', '性別、外部 ID 等低風險欄位，可在來源穩定且抽查通過後批次 verified。'],
-  ['需抽查', '生日、學歷、經歷可先用 Wikidata 當線索，但需和官方或本人來源交叉檢查。'],
-  ['保留人工', '家族關係、政二代、司法紀錄不自動公開，只能人工確認後轉為 public claim。'],
+  ['可批次處理', '除犯罪紀錄以外，Wikidata 人物補充 claim 先批次 verified，後續再抽查修正。'],
+  ['保留來源', '每筆公開 claim 仍保留來源連結、分數與 auto_reviewed_at，方便之後回溯。'],
+  ['保留人工', '司法/刑事紀錄不自動公開，只能人工確認後轉為 public claim。'],
 ];
 
 function isLocalReviewEnabled() {

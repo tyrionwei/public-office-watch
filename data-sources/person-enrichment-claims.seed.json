@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "person-enrichment-claims",
-  "updatedAt": "2026-05-25",
+  "updatedAt": "2026-05-26",
   "notes": "Reviewed-source supplemental person claims. Wikidata/Wikipedia-derived records are review-only by default.",
   "personClaims": [
     {
@@ -2057,6 +2057,1121 @@
       "sourceId": "wikidata-person-enrichment",
       "sourceName": "Wikidata 人物補充資料",
       "sourceUrl": "https://www.wikidata.org/wiki/Q124293466"
+    },
+    {
+      "personId": "ad976e88-70a2-49f4-ac79-56d0ac22e750",
+      "personName": "李彥秀",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q20063502",
+      "claimJson": {
+        "wikidataQid": "Q20063502"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q20063502"
+    },
+    {
+      "personId": "ad976e88-70a2-49f4-ac79-56d0ac22e750",
+      "personName": "李彥秀",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q20063502"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q20063502"
+    },
+    {
+      "personId": "ad976e88-70a2-49f4-ac79-56d0ac22e750",
+      "personName": "李彥秀",
+      "claimType": "birth_date",
+      "claimValue": "1971-12-18",
+      "claimJson": {
+        "wikidataQid": "Q20063502"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q20063502"
+    },
+    {
+      "personId": "ad976e88-70a2-49f4-ac79-56d0ac22e750",
+      "personName": "李彥秀",
+      "claimType": "education",
+      "claimValue": "加利福尼亞大學爾灣分校；臺北市南港區南港國民小學；臺北市立誠正國民中學；臺北市私立靜修高級中學",
+      "claimJson": {
+        "wikidataQid": "Q20063502"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q20063502"
+    },
+    {
+      "personId": "ad976e88-70a2-49f4-ac79-56d0ac22e750",
+      "personName": "李彥秀",
+      "claimType": "experience",
+      "claimValue": "立法委員；臺北市議員；政治人物",
+      "claimJson": {
+        "positions": [
+          "立法委員",
+          "臺北市議員",
+          "臺北市議員",
+          "臺北市議員",
+          "臺北市議員",
+          "臺北市議員",
+          "臺北市議員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q20063502"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q20063502"
+    },
+    {
+      "personId": "ad976e88-70a2-49f4-ac79-56d0ac22e750",
+      "personName": "李彥秀",
+      "claimType": "family_relation",
+      "claimValue": "配偶：侯冠群",
+      "claimJson": {
+        "relationType": "spouse",
+        "relationLabel": "配偶",
+        "relativeQid": "Q8970090",
+        "relativeName": "侯冠群",
+        "relativeDescription": "臺灣政治人物",
+        "wikidataQid": "Q20063502"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8970090"
+    },
+    {
+      "personId": "076e8ac7-73ca-4f8e-9cc6-c81b49511b26",
+      "personName": "林德福",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q8275203",
+      "claimJson": {
+        "wikidataQid": "Q8275203"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8275203"
+    },
+    {
+      "personId": "076e8ac7-73ca-4f8e-9cc6-c81b49511b26",
+      "personName": "林德福",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "wikidataQid": "Q8275203"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8275203"
+    },
+    {
+      "personId": "076e8ac7-73ca-4f8e-9cc6-c81b49511b26",
+      "personName": "林德福",
+      "claimType": "birth_date",
+      "claimValue": "1953-10-23",
+      "claimJson": {
+        "wikidataQid": "Q8275203"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8275203"
+    },
+    {
+      "personId": "076e8ac7-73ca-4f8e-9cc6-c81b49511b26",
+      "personName": "林德福",
+      "claimType": "education",
+      "claimValue": "臺北市私立開南高級中等學校；新北市永和區頂溪國民小學；新北市立板橋高級中學；國立政治大學",
+      "claimJson": {
+        "wikidataQid": "Q8275203"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8275203"
+    },
+    {
+      "personId": "076e8ac7-73ca-4f8e-9cc6-c81b49511b26",
+      "personName": "林德福",
+      "claimType": "experience",
+      "claimValue": "立法委員；政治人物",
+      "claimJson": {
+        "positions": [
+          "立法委員",
+          "立法委員",
+          "立法委員",
+          "立法委員",
+          "立法委員",
+          "立法委員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q8275203"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8275203"
+    },
+    {
+      "personId": "9e164e6f-04de-49ec-9d52-da48fca607ac",
+      "personName": "張雅琳",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q124293467",
+      "claimJson": {
+        "wikidataQid": "Q124293467"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293467"
+    },
+    {
+      "personId": "9e164e6f-04de-49ec-9d52-da48fca607ac",
+      "personName": "張雅琳",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q124293467"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293467"
+    },
+    {
+      "personId": "9e164e6f-04de-49ec-9d52-da48fca607ac",
+      "personName": "張雅琳",
+      "claimType": "birth_date",
+      "claimValue": "1980-08-29",
+      "claimJson": {
+        "wikidataQid": "Q124293467"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293467"
+    },
+    {
+      "personId": "9e164e6f-04de-49ec-9d52-da48fca607ac",
+      "personName": "張雅琳",
+      "claimType": "education",
+      "claimValue": "國立臺灣海洋大學；阿爾斯特大學",
+      "claimJson": {
+        "wikidataQid": "Q124293467"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293467"
+    },
+    {
+      "personId": "9e164e6f-04de-49ec-9d52-da48fca607ac",
+      "personName": "張雅琳",
+      "claimType": "experience",
+      "claimValue": "公關人員；政治人物",
+      "claimJson": {
+        "positions": [],
+        "occupations": [
+          "公關人員",
+          "政治人物"
+        ],
+        "wikidataQid": "Q124293467"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q124293467"
+    },
+    {
+      "personId": "36fd1ae0-76a8-46ac-81fd-f0952558a536",
+      "personName": "張嘉郡",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q8279212",
+      "claimJson": {
+        "wikidataQid": "Q8279212"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8279212"
+    },
+    {
+      "personId": "36fd1ae0-76a8-46ac-81fd-f0952558a536",
+      "personName": "張嘉郡",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q8279212"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8279212"
+    },
+    {
+      "personId": "36fd1ae0-76a8-46ac-81fd-f0952558a536",
+      "personName": "張嘉郡",
+      "claimType": "birth_date",
+      "claimValue": "1981-01-10",
+      "claimJson": {
+        "wikidataQid": "Q8279212"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8279212"
+    },
+    {
+      "personId": "36fd1ae0-76a8-46ac-81fd-f0952558a536",
+      "personName": "張嘉郡",
+      "claimType": "education",
+      "claimValue": "雲林縣私立正心高級中學；倫敦大學；南安普敦大學",
+      "claimJson": {
+        "wikidataQid": "Q8279212"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8279212"
+    },
+    {
+      "personId": "36fd1ae0-76a8-46ac-81fd-f0952558a536",
+      "personName": "張嘉郡",
+      "claimType": "experience",
+      "claimValue": "立法委員；政治人物",
+      "claimJson": {
+        "positions": [
+          "立法委員",
+          "立法委員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q8279212"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8279212"
+    },
+    {
+      "personId": "36fd1ae0-76a8-46ac-81fd-f0952558a536",
+      "personName": "張嘉郡",
+      "claimType": "family_relation",
+      "claimValue": "父親：張榮味",
+      "claimJson": {
+        "relationType": "father",
+        "relationLabel": "父親",
+        "relativeQid": "Q15909770",
+        "relativeName": "張榮味",
+        "relativeDescription": "臺灣政治人物",
+        "wikidataQid": "Q8279212"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15909770"
+    },
+    {
+      "personId": "36fd1ae0-76a8-46ac-81fd-f0952558a536",
+      "personName": "張嘉郡",
+      "claimType": "family_relation",
+      "claimValue": "手足：張鎔麒",
+      "claimJson": {
+        "relationType": "sibling",
+        "relationLabel": "手足",
+        "relativeQid": "Q109347090",
+        "relativeName": "張鎔麒",
+        "relativeDescription": "台灣政治人物",
+        "wikidataQid": "Q8279212"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q109347090"
+    },
+    {
+      "personId": "0d11b964-eecc-4e99-af33-4d5e513cd357",
+      "personName": "莊瑞雄",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q8351019",
+      "claimJson": {
+        "wikidataQid": "Q8351019"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8351019"
+    },
+    {
+      "personId": "0d11b964-eecc-4e99-af33-4d5e513cd357",
+      "personName": "莊瑞雄",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "wikidataQid": "Q8351019"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8351019"
+    },
+    {
+      "personId": "0d11b964-eecc-4e99-af33-4d5e513cd357",
+      "personName": "莊瑞雄",
+      "claimType": "birth_date",
+      "claimValue": "1963-04-20",
+      "claimJson": {
+        "wikidataQid": "Q8351019"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8351019"
+    },
+    {
+      "personId": "0d11b964-eecc-4e99-af33-4d5e513cd357",
+      "personName": "莊瑞雄",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；國立臺北大學",
+      "claimJson": {
+        "wikidataQid": "Q8351019"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8351019"
+    },
+    {
+      "personId": "0d11b964-eecc-4e99-af33-4d5e513cd357",
+      "personName": "莊瑞雄",
+      "claimType": "experience",
+      "claimValue": "立法委員；臺北市議員；政治人物",
+      "claimJson": {
+        "positions": [
+          "立法委員",
+          "立法委員",
+          "臺北市議員",
+          "立法委員",
+          "臺北市議員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q8351019"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8351019"
+    },
+    {
+      "personId": "56b5139b-1f17-4568-a929-f642aa380b67",
+      "personName": "許宇甄",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q117746504",
+      "claimJson": {
+        "wikidataQid": "Q117746504"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q117746504"
+    },
+    {
+      "personId": "56b5139b-1f17-4568-a929-f642aa380b67",
+      "personName": "許宇甄",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q117746504"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q117746504"
+    },
+    {
+      "personId": "56b5139b-1f17-4568-a929-f642aa380b67",
+      "personName": "許宇甄",
+      "claimType": "birth_date",
+      "claimValue": "1968-10-20",
+      "claimJson": {
+        "wikidataQid": "Q117746504"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q117746504"
+    },
+    {
+      "personId": "56b5139b-1f17-4568-a929-f642aa380b67",
+      "personName": "許宇甄",
+      "claimType": "education",
+      "claimValue": "國立雲林科技大學；輔仁大學",
+      "claimJson": {
+        "wikidataQid": "Q117746504"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q117746504"
+    },
+    {
+      "personId": "56b5139b-1f17-4568-a929-f642aa380b67",
+      "personName": "許宇甄",
+      "claimType": "experience",
+      "claimValue": "政治人物",
+      "claimJson": {
+        "positions": [],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q117746504"
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q117746504"
+    },
+    {
+      "personId": "15c24543-3dce-4ab6-8043-8d1a26a184a1",
+      "personName": "范雲",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q8954159",
+      "claimJson": {
+        "wikidataQid": "Q8954159",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8954159"
+    },
+    {
+      "personId": "15c24543-3dce-4ab6-8043-8d1a26a184a1",
+      "personName": "范雲",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q8954159",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8954159"
+    },
+    {
+      "personId": "15c24543-3dce-4ab6-8043-8d1a26a184a1",
+      "personName": "范雲",
+      "claimType": "birth_date",
+      "claimValue": "1968-07-09",
+      "claimJson": {
+        "wikidataQid": "Q8954159",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8954159"
+    },
+    {
+      "personId": "15c24543-3dce-4ab6-8043-8d1a26a184a1",
+      "personName": "范雲",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；新北市淡水區淡水國民小學；新北市立淡水國民中學；臺北市立第一女子高級中學；耶魯大學",
+      "claimJson": {
+        "wikidataQid": "Q8954159",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8954159"
+    },
+    {
+      "personId": "15c24543-3dce-4ab6-8043-8d1a26a184a1",
+      "personName": "范雲",
+      "claimType": "experience",
+      "claimValue": "立法委員；社會學者；政治人物；大學教師",
+      "claimJson": {
+        "positions": [
+          "立法委員"
+        ],
+        "occupations": [
+          "社會學者",
+          "政治人物",
+          "立法委員",
+          "大學教師"
+        ],
+        "wikidataQid": "Q8954159",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8954159"
+    },
+    {
+      "personId": "103b07ea-86ec-4f8d-9acf-e42c6a30615c",
+      "personName": "徐巧芯",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q15914861",
+      "claimJson": {
+        "wikidataQid": "Q15914861",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15914861"
+    },
+    {
+      "personId": "103b07ea-86ec-4f8d-9acf-e42c6a30615c",
+      "personName": "徐巧芯",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q15914861",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15914861"
+    },
+    {
+      "personId": "103b07ea-86ec-4f8d-9acf-e42c6a30615c",
+      "personName": "徐巧芯",
+      "claimType": "birth_date",
+      "claimValue": "1989-11-18",
+      "claimJson": {
+        "wikidataQid": "Q15914861",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15914861"
+    },
+    {
+      "personId": "103b07ea-86ec-4f8d-9acf-e42c6a30615c",
+      "personName": "徐巧芯",
+      "claimType": "education",
+      "claimValue": "國立政治大學；臺北市信義區光復國民小學；臺北市立中崙高級中學；國立臺灣師範大學；淡江大學",
+      "claimJson": {
+        "wikidataQid": "Q15914861",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15914861"
+    },
+    {
+      "personId": "103b07ea-86ec-4f8d-9acf-e42c6a30615c",
+      "personName": "徐巧芯",
+      "claimType": "experience",
+      "claimValue": "臺北市議員；政治人物",
+      "claimJson": {
+        "positions": [
+          "臺北市議員",
+          "臺北市議員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q15914861",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15914861"
+    },
+    {
+      "personId": "103b07ea-86ec-4f8d-9acf-e42c6a30615c",
+      "personName": "徐巧芯",
+      "claimType": "family_relation",
+      "claimValue": "配偶：劉彥澧",
+      "claimJson": {
+        "relationType": "spouse",
+        "relationLabel": "配偶",
+        "relativeQid": "Q112966263",
+        "relativeName": "劉彥澧",
+        "relativeDescription": "台灣網路媒體網路溫度計經營者",
+        "wikidataQid": "Q15914861",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q112966263"
+    },
+    {
+      "personId": "02826491-4272-4be2-96aa-84bbdd7dbce6",
+      "personName": "徐欣瑩",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q9141091",
+      "claimJson": {
+        "wikidataQid": "Q9141091",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "education matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description",
+            "education matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9141091"
+    },
+    {
+      "personId": "02826491-4272-4be2-96aa-84bbdd7dbce6",
+      "personName": "徐欣瑩",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q9141091",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "education matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description",
+            "education matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9141091"
+    },
+    {
+      "personId": "02826491-4272-4be2-96aa-84bbdd7dbce6",
+      "personName": "徐欣瑩",
+      "claimType": "birth_date",
+      "claimValue": "1972-04-23",
+      "claimJson": {
+        "wikidataQid": "Q9141091",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "education matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description",
+            "education matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9141091"
+    },
+    {
+      "personId": "02826491-4272-4be2-96aa-84bbdd7dbce6",
+      "personName": "徐欣瑩",
+      "claimType": "education",
+      "claimValue": "國立成功大學；國立交通大學；台北市立中山女子高級中學；新竹縣新豐鄉山崎國民小學",
+      "claimJson": {
+        "wikidataQid": "Q9141091",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "education matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description",
+            "education matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9141091"
+    },
+    {
+      "personId": "02826491-4272-4be2-96aa-84bbdd7dbce6",
+      "personName": "徐欣瑩",
+      "claimType": "experience",
+      "claimValue": "立法委員；新竹縣議員；政治人物",
+      "claimJson": {
+        "positions": [
+          "立法委員",
+          "新竹縣議員",
+          "新竹縣議員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q9141091",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "education matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description",
+            "education matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9141091"
+    },
+    {
+      "personId": "02826491-4272-4be2-96aa-84bbdd7dbce6",
+      "personName": "徐欣瑩",
+      "claimType": "family_relation",
+      "claimValue": "手足：徐世勲",
+      "claimJson": {
+        "relationType": "sibling",
+        "relationLabel": "手足",
+        "relativeQid": "Q22099965",
+        "relativeName": "徐世勲",
+        "relativeDescription": "台湾政治人物",
+        "wikidataQid": "Q9141091",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "education matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description",
+            "education matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q22099965"
     }
   ]
 }

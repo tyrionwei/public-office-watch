@@ -2094,27 +2094,38 @@ function buildProbableIdentityMatchRows(seed, sourcePersonByKey, canonicalPeople
 
     const scoredCandidates = candidates
       .map((person) => {
-        let score = 60;
+        let score = 45;
         const reasons = ['normalized name matched'];
+        let corroboratingSignalCount = 0;
 
         if (sourceGender !== 'unknown' && person.gender === sourceGender) {
-          score += 10;
+          score += 25;
           reasons.push('gender matched');
+        } else {
+          reasons.push(sourceGender === 'unknown' ? 'source gender missing' : 'gender mismatch');
+          return { person, score: 0, reasons };
         }
 
         if (sourceParty && sourceParty === normalizeIdentityText(person.party)) {
           score += 10;
           reasons.push('party matched');
+          corroboratingSignalCount += 1;
         }
 
         if (sourceRole !== 'other' && sourceRole === normalizedRoleForPosition(person.position)) {
           score += 10;
           reasons.push('role matched');
+          corroboratingSignalCount += 1;
         }
 
         if (sourceDistrict && normalizeIdentityText(person.district).includes(sourceDistrict.slice(0, 3))) {
           score += 5;
           reasons.push('region hint matched');
+          corroboratingSignalCount += 1;
+        }
+
+        if (corroboratingSignalCount === 0) {
+          return { person, score: 0, reasons: [...reasons, 'missing corroborating identity signal'] };
         }
 
         return { person, score, reasons };
@@ -2417,10 +2428,19 @@ function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt, args =
 
   return (seed.personEnrichmentClaims ?? [])
     .map((claim) => {
+      if (
+        claim.sourceId === 'wikidata-person-enrichment' &&
+        claim.claimJson?.identityMatch?.status !== 'matched'
+      ) {
+        return null;
+      }
+
       const candidates = [
         claim.personId ? peopleById.get(claim.personId) : null,
         claim.personExternalId ? peopleByExternalId.get(claim.personExternalId) : null,
-        claim.normalizedName ? (peopleByNormalizedName.get(claim.normalizedName) ?? [])[0] : null,
+        claim.normalizedName && claim.claimJson?.identityMatch?.status === 'matched'
+          ? (peopleByNormalizedName.get(claim.normalizedName) ?? [])[0]
+          : null,
       ].filter(Boolean);
       const person = candidates[0] ?? null;
 

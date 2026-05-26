@@ -40,4 +40,4 @@ OpenClaw 不得 ad hoc 直接把資料寫成：
 - `verified`
 - `is_public = true`
 
-唯一例外是可重跑、可檢查的自動審核腳本；目前只允許 `gender`、`external_id` 這類低風險欄位。
+唯一例外是可重跑、可檢查的自動審核腳本；目前允許除 `legal_case` 以外的人物補充 claim。

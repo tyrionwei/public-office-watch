@@ -239,13 +239,6 @@ function normalizePersonNameForDedupe(name: string) {
   return chinesePrefix.replace(/\s+/g, '').trim();
 }
 
-function normalizeRegionForDedupe(value: string | null | undefined) {
-  return value
-    ?.replace(/選舉區/g, '')
-    .replace(/\s+/g, '')
-    .trim() ?? '';
-}
-
 function regionKeysFor(region: StageRegionNode) {
   return [region.id, region.publicRegionId, region.label, region.stageLabel].filter(Boolean) as string[];
 }
@@ -325,12 +318,25 @@ function applyClaimBackfill(person: PublicPerson, claims: PublicPersonClaim[]): 
   };
 }
 
+function externalIdsForPerson(claims: PublicPersonClaim[]) {
+  return Array.from(new Set(
+    claims
+      .filter((claim) => claim.claim_type === 'external_id')
+      .flatMap((claim) => {
+        const wikidataQid = typeof claim.claim_json.wikidataQid === 'string' ? `wikidata:${claim.claim_json.wikidataQid}` : null;
+        return [claim.claim_value, wikidataQid].filter(Boolean) as string[];
+      })
+      .map((value) => value.trim())
+      .filter(Boolean),
+  )).sort();
+}
+
 function dedupeKeyFor(person: PublicPersonListItem) {
-  return [
-    normalizePersonNameForDedupe(person.name),
-    normalizePartyLabel(person.party),
-    normalizeRegionForDedupe(person.district ?? person.region_name),
-  ].join('|');
+  if (person.external_ids.length > 0) {
+    return `external:${person.external_ids[0]}`;
+  }
+
+  return [normalizePersonNameForDedupe(person.name), normalizePartyLabel(person.party)].join('|');
 }
 
 function profileCompletenessScore(person: PublicPersonListItem) {
@@ -371,6 +377,7 @@ function dedupePersonListItems(items: PublicPersonListItem[]) {
 
     byKey.set(key, {
       ...preferred,
+      external_ids: Array.from(new Set([...preferred.external_ids, ...secondary.external_ids])).sort(),
       merged_person_ids: Array.from(new Set([...preferred.merged_person_ids, ...secondary.merged_person_ids])),
       merged_role_labels: Array.from(new Set([...preferred.merged_role_labels, ...secondary.merged_role_labels])),
       merged_candidate_count: preferred.merged_candidate_count + secondary.merged_candidate_count,
@@ -412,7 +419,8 @@ export function buildPersonListItems(
   claims: PublicPersonClaim[] = [],
 ): PublicPersonListItem[] {
   return people.map((person) => {
-    const enrichedPerson = applyClaimBackfill(person, claimsForPerson(person.person_id, claims));
+    const personClaims = claimsForPerson(person.person_id, claims);
+    const enrichedPerson = applyClaimBackfill(person, personClaims);
     const candidateRecords = candidateRecordsFor(person.person_id, candidates);
     const role = getPersonRole(enrichedPerson.position, candidateRecords);
     const status = getPersonStatus(enrichedPerson.position, role, candidateRecords);
@@ -427,6 +435,7 @@ export function buildPersonListItems(
       region_id: region?.id ?? candidateRecords[0]?.region_id ?? null,
       region_name: region?.label ?? enrichedPerson.district ?? candidateRecords[0]?.region_name ?? null,
       candidate_count: candidateRecords.length,
+      external_ids: externalIdsForPerson(personClaims),
       merged_person_ids: [enrichedPerson.person_id],
       merged_role_labels: mergedRoleLabelsFor(roleLabels[role], candidateRecords),
       merged_candidate_count: candidateRecords.length,
@@ -449,7 +458,7 @@ export function sortPersonListItems(items: PublicPersonListItem[]) {
 export function filterPersonListItems(items: PublicPersonListItem[], filters: PublicPersonFilters = {}) {
   const query = filters.query?.trim().toLowerCase() ?? '';
   return sortPersonListItems(
-    dedupePersonListItems(items).filter((person) => {
+    dedupePersonListItems(items.filter((person) => {
       if (query && ![person.name, person.alias, person.party, person.position, person.district].some((value) => matchesText(value, query))) {
         return false;
       }
@@ -471,7 +480,7 @@ export function filterPersonListItems(items: PublicPersonListItem[], filters: Pu
       }
 
       return true;
-    }),
+    })),
   );
 }
 

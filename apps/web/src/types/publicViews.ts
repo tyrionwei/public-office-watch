@@ -325,6 +325,7 @@ export type PublicPersonListItem = PublicPerson & {
   region_id: string | null;
   region_name: string | null;
   candidate_count: number;
+  external_ids: string[];
   merged_person_ids: string[];
   merged_role_labels: string[];
   merged_candidate_count: number;

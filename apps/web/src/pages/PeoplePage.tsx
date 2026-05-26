@@ -29,6 +29,42 @@ const statusOptions: { value: PublicPersonStatus; label: string }[] = [
   { value: 'other', label: '其他' },
 ];
 
+const priorityPartyOrder = ['民主進步黨', '中國國民黨', '台灣民眾黨'];
+const independentPartyLabels = new Set(['無黨籍', '無黨籍及未經政黨推薦']);
+
+function normalizedPartySortLabel(party: string) {
+  if (party === '臺灣民眾黨') return '台灣民眾黨';
+  if (party === '臺灣基進') return '台灣基進';
+  return party;
+}
+
+function comparePartyOptions(left: string, right: string) {
+  const leftLabel = normalizedPartySortLabel(left);
+  const rightLabel = normalizedPartySortLabel(right);
+  const leftIndependent = independentPartyLabels.has(leftLabel);
+  const rightIndependent = independentPartyLabels.has(rightLabel);
+
+  if (leftIndependent !== rightIndependent) {
+    return leftIndependent ? 1 : -1;
+  }
+
+  const leftPriority = priorityPartyOrder.indexOf(leftLabel);
+  const rightPriority = priorityPartyOrder.indexOf(rightLabel);
+
+  if (leftPriority !== -1 || rightPriority !== -1) {
+    if (leftPriority === -1) return 1;
+    if (rightPriority === -1) return -1;
+    return leftPriority - rightPriority;
+  }
+
+  if (leftLabel === '未知政黨' || rightLabel === '未知政黨') {
+    if (leftLabel === rightLabel) return 0;
+    return leftLabel === '未知政黨' ? 1 : -1;
+  }
+
+  return leftLabel.localeCompare(rightLabel, 'zh-Hant-TW');
+}
+
 function getFilters(searchParams: URLSearchParams): PublicPersonFilters {
   return {
     query: searchParams.get('q') ?? undefined,
@@ -103,7 +139,7 @@ export function PeoplePage() {
     .filter((region) => region.level === 'county_city')
     .map((region) => ({ value: region.id, label: region.label }));
   const partyOptions = Array.from(new Set(allPeople.map((person) => normalizePartyLabel(person.party))))
-    .sort((left, right) => left.localeCompare(right, 'zh-Hant-TW'))
+    .sort(comparePartyOptions)
     .map((party) => ({ value: party, label: party }));
 
   const updateFilter = (key: string, value: string) => {

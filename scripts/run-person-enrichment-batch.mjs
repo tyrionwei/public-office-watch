@@ -1,8 +1,10 @@
 import { spawn } from 'node:child_process';
 
 const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || 'http://127.0.0.1:54321';
-const localAnonKey = process.env.SUPABASE_ANON_KEY?.trim() || 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH';
-const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || 'REDACTED_SUPABASE_SERVICE_ROLE_KEY';
+const localAnonKey =
+  process.env.SUPABASE_ANON_KEY?.trim() ||
+  (localSupabaseUrl.startsWith('http://127.0.0.1:54321') ? 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH' : '');
+const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 const wikidataSourceName = 'Wikidata 人物補充資料';
 
 function run(command, args, options = {}) {
@@ -120,6 +122,14 @@ async function maybeFetchJudicialLeads() {
 }
 
 async function main() {
+  if (!localAnonKey) {
+    throw new Error('Set SUPABASE_ANON_KEY for person enrichment batch.');
+  }
+
+  if (!localServiceRoleKey) {
+    throw new Error('Set SUPABASE_SERVICE_ROLE_KEY for person enrichment batch.');
+  }
+
   const beforeReviewCount = await countRows('person_claim_review_queue', wikidataSourceName);
   const beforePublicCount = await countRows('public_person_claims', wikidataSourceName);
 
@@ -130,6 +140,12 @@ async function main() {
     },
   });
   await run('npm', ['run', 'sync:person-enrichment:write'], {
+    env: {
+      SUPABASE_URL: localSupabaseUrl,
+      SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,
+    },
+  });
+  await run('npm', ['run', 'review:missing-identity-match:write'], {
     env: {
       SUPABASE_URL: localSupabaseUrl,
       SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,

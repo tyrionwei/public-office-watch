@@ -1,5 +1,5 @@
 const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || 'http://127.0.0.1:54321';
-const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || 'REDACTED_SUPABASE_SERVICE_ROLE_KEY';
+const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
 const autoReviewVersion = 'auto-non-criminal-v1';
 const blockedClaimTypes = new Set(['legal_case']);
@@ -163,6 +163,10 @@ async function approveClaim(claim) {
 }
 
 async function main() {
+  if (!localServiceRoleKey) {
+    throw new Error('Set SUPABASE_SERVICE_ROLE_KEY for auto review.');
+  }
+
   const options = parseArgs(process.argv.slice(2));
   const sensitiveBefore = {
     legal_case: await countPublicClaimsByType('legal_case'),

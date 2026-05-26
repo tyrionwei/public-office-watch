@@ -37,6 +37,7 @@
 - 可自動公開：除 `legal_case` 以外的 claim；預設 `review_score >= 0`，可用 `--min-score` 提高門檻。
 - 不自動公開：司法/刑事紀錄，也就是 `legal_case`。
 - Wikidata claim 另需 `claim_json.identityMatch.status = matched`；舊版缺少 identityMatch 的資料需降回 review-only。
+- Wikidata 的「政治人物描述」只作類型過濾，不可單獨當成身份佐證；身份佐證需來自職位、地區、學歷、經歷或其他可對齊欄位。
 - 寫入時會標記 `review_status = verified`、`visibility = public`、`is_public = true`、`auto_reviewed_at`。
 - 批次腳本會檢查 Wikidata 的 `legal_case` 仍不得進入 `public_person_claims`。
 

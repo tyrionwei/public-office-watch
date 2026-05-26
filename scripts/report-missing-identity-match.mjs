@@ -1,5 +1,5 @@
 const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || 'http://127.0.0.1:54321';
-const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || 'REDACTED_SUPABASE_SERVICE_ROLE_KEY';
+const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 const wikidataSourceName = 'Wikidata 人物補充資料';
 
 function parseArgs(argv) {
@@ -64,6 +64,10 @@ function increment(map, key) {
 }
 
 async function main() {
+  if (!localServiceRoleKey) {
+    throw new Error('Set SUPABASE_SERVICE_ROLE_KEY for missing identityMatch report.');
+  }
+
   const options = parseArgs(process.argv.slice(2));
   const claims = await fetchClaims(options);
   const missing = claims.filter((claim) => !claim.claim_json?.identityMatch);

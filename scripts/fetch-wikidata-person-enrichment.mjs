@@ -374,9 +374,11 @@ function scoreEntityMatch(target, entity, searchResult, relatedEntities = {}) {
   const wikidataEvidence = [entityDescription, ...positionLabels, ...occupationLabels, ...educationLabels];
   const corroboratingSignals = [];
 
-  if (/政治|政黨|立法|議員|市長|縣長|總統|候選|minister|politician|legislator|mayor|president/i.test(entityDescription)) {
-    score += 10;
-    corroboratingSignals.push('political description');
+  const hasPoliticalDescription =
+    /政治|政黨|立法|議員|市長|縣長|總統|候選|minister|politician|legislator|mayor|president/i.test(entityDescription);
+
+  if (!hasPoliticalDescription) {
+    return { matched: false, score, reasons: [...reasons, 'missing political/public-office description'] };
   }
 
   if (hasTokenOverlap([target.position], wikidataEvidence)) {

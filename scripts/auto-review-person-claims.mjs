@@ -1,8 +1,19 @@
 const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || 'http://127.0.0.1:54321';
 const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
-const autoReviewVersion = 'auto-non-criminal-v1';
-const blockedClaimTypes = new Set(['legal_case']);
+const autoReviewVersion = 'auto-verified-external-id-v1';
+const wikidataSourceName = 'Wikidata 人物補充資料';
+const blockedClaimTypes = new Set(['legal_case', 'family_relation']);
+const wikidataExternalIdUnlockedClaimTypes = new Set([
+  'gender',
+  'birth_date',
+  'education',
+  'experience',
+  'position',
+  'office',
+  'district',
+  'party',
+]);
 
 function parseArgs(argv) {
   const options = {
@@ -76,7 +87,7 @@ async function fetchReviewCandidates(options) {
   const url = supabaseUrl('person_claims');
   url.searchParams.set(
     'select',
-    'id,claim_type,claim_value,claim_json,confidence_level,review_score,source_name,source_url,scoring_reasons,updated_at',
+    'id,person_id,claim_type,claim_value,claim_json,confidence_level,review_score,source_name,source_url,scoring_reasons,updated_at',
   );
   if (options.sourceName) {
     url.searchParams.set('source_name', `eq.${options.sourceName}`);
@@ -91,6 +102,26 @@ async function fetchReviewCandidates(options) {
   return claims.map((claim) => ({
     ...claim,
     claim_id: claim.id,
+  }));
+}
+
+async function fetchVerifiedExternalIdKeys(sourceName) {
+  const url = supabaseUrl('person_claims');
+  url.searchParams.set('select', 'person_id,claim_value,claim_json');
+  url.searchParams.set('source_name', `eq.${sourceName}`);
+  url.searchParams.set('claim_type', 'eq.external_id');
+  url.searchParams.set('review_status', 'eq.verified');
+  url.searchParams.set('visibility', 'eq.public');
+  url.searchParams.set('is_public', 'eq.true');
+  url.searchParams.set('limit', '10000');
+
+  const rows = await supabaseJson(url);
+  return new Set(rows.flatMap((row) => {
+    const qidFromValue = String(row.claim_value ?? '').match(/^wikidata:(Q\d+)$/i)?.[1];
+    const qidFromJson = row.claim_json?.wikidataQid;
+    return [qidFromValue, qidFromJson]
+      .filter((qid) => row.person_id && typeof qid === 'string' && /^Q\d+$/i.test(qid))
+      .map((qid) => `${row.person_id}:wikidata:${qid.toUpperCase()}`);
   }));
 }
 
@@ -118,15 +149,46 @@ async function countPublicClaimsByType(claimType) {
   return total === '*' || total === undefined ? 0 : Number.parseInt(total, 10);
 }
 
-function isEligibleClaim(claim, options) {
-  if (claim.source_name === 'Wikidata 人物補充資料' && claim.claim_json?.identityMatch?.status !== 'matched') {
+async function countSensitivePublicClaims() {
+  const entries = await Promise.all(Array.from(blockedClaimTypes).map(async (claimType) => [
+    claimType,
+    await countPublicClaimsByType(claimType),
+  ]));
+  return Object.fromEntries(entries);
+}
+
+function verifiedExternalIdKeyForClaim(claim) {
+  const qid = claim.claim_json?.wikidataQid;
+  if (!claim.person_id || typeof qid !== 'string' || !/^Q\d+$/i.test(qid)) {
+    return null;
+  }
+
+  return `${claim.person_id}:wikidata:${qid.toUpperCase()}`;
+}
+
+function isEligibleClaim(claim, options, verifiedExternalIdKeys) {
+  if (blockedClaimTypes.has(claim.claim_type)) {
     return false;
   }
 
-  return (
-    !blockedClaimTypes.has(claim.claim_type) &&
-    Number(claim.review_score) >= options.minScore
-  );
+  if (Number(claim.review_score) < options.minScore) {
+    return false;
+  }
+
+  if (claim.source_name !== wikidataSourceName) {
+    return true;
+  }
+
+  if (claim.claim_json?.identityMatch?.status !== 'matched') {
+    return false;
+  }
+
+  if (!wikidataExternalIdUnlockedClaimTypes.has(claim.claim_type)) {
+    return false;
+  }
+
+  const externalIdKey = verifiedExternalIdKeyForClaim(claim);
+  return Boolean(externalIdKey && verifiedExternalIdKeys.has(externalIdKey));
 }
 
 function nextScoringReasons(claim) {
@@ -135,7 +197,7 @@ function nextScoringReasons(claim) {
     ...existing,
     {
       version: autoReviewVersion,
-      reason: 'non-criminal Wikidata claim type auto-approved for local review workflow',
+      reason: 'low-sensitivity claim auto-approved after verified external_id for the same person and source entity',
       reviewedAt: new Date().toISOString(),
     },
   ];
@@ -168,9 +230,8 @@ async function main() {
   }
 
   const options = parseArgs(process.argv.slice(2));
-  const sensitiveBefore = {
-    legal_case: await countPublicClaimsByType('legal_case'),
-  };
+  const sensitiveBefore = await countSensitivePublicClaims();
+  const verifiedExternalIdKeys = await fetchVerifiedExternalIdKeys(wikidataSourceName);
   let totalScanned = 0;
   let totalEligible = 0;
   let totalUpdated = 0;
@@ -179,7 +240,7 @@ async function main() {
 
   while (batches < options.maxBatches) {
     const candidates = await fetchReviewCandidates(options);
-    const eligibleClaims = candidates.filter((claim) => isEligibleClaim(claim, options));
+    const eligibleClaims = candidates.filter((claim) => isEligibleClaim(claim, options, verifiedExternalIdKeys));
     totalScanned += candidates.length;
     totalEligible += eligibleClaims.length;
     totalSkipped += candidates.length - eligibleClaims.length;
@@ -204,12 +265,12 @@ async function main() {
     }
   }
 
-  const sensitiveAfter = {
-    legal_case: await countPublicClaimsByType('legal_case'),
-  };
+  const sensitiveAfter = await countSensitivePublicClaims();
 
-  if (sensitiveAfter.legal_case > sensitiveBefore.legal_case) {
-    throw new Error(`criminal-record claims became public: ${JSON.stringify({ before: sensitiveBefore, after: sensitiveAfter })}`);
+  for (const claimType of blockedClaimTypes) {
+    if (sensitiveAfter[claimType] > sensitiveBefore[claimType]) {
+      throw new Error(`sensitive claims became public: ${JSON.stringify({ claimType, before: sensitiveBefore, after: sensitiveAfter })}`);
+    }
   }
 
   console.log(JSON.stringify({
@@ -223,9 +284,13 @@ async function main() {
     eligible: totalEligible,
     updated: totalUpdated,
     skipped: totalSkipped,
-    autoReviewedRule: 'all matching review claims except legal_case',
+    autoReviewedRule: 'non-Wikidata claims pass existing non-sensitive rule; Wikidata low-sensitivity claims require a verified external_id for the same person/QID',
     sourceSpecificRules: {
-      wikidata: 'requires claim_json.identityMatch.status=matched',
+      wikidata: {
+        requiresIdentityMatch: 'claim_json.identityMatch.status=matched',
+        requiresVerifiedExternalId: true,
+        autoClaimTypes: Array.from(wikidataExternalIdUnlockedClaimTypes),
+      },
     },
     keptManualReview: Array.from(blockedClaimTypes),
     sensitivePublicBefore: sensitiveBefore,

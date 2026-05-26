@@ -101,7 +101,8 @@ export function InternalReviewQueuePage() {
     }
 
     setClaims((current) => current.filter((item) => item.claim_id !== claim.claim_id));
-    setActionMessage(action === 'approve' ? `已通過：${claim.person_name ?? claim.claim_value}` : `已標記錯誤：${claim.person_name ?? claim.claim_value}`);
+    const cascadeText = result.relatedUpdated > 0 ? `，同步通過 ${result.relatedUpdated} 筆低敏感欄位` : '';
+    setActionMessage(action === 'approve' ? `已通過：${claim.person_name ?? claim.claim_value}${cascadeText}` : `已標記錯誤：${claim.person_name ?? claim.claim_value}`);
     setActionClaimId(null);
   }
 

@@ -166,29 +166,45 @@ function verifiedExternalIdKeyForClaim(claim) {
   return `${claim.person_id}:wikidata:${qid.toUpperCase()}`;
 }
 
-function isEligibleClaim(claim, options, verifiedExternalIdKeys) {
+function explainEligibility(claim, options, verifiedExternalIdKeys) {
   if (blockedClaimTypes.has(claim.claim_type)) {
-    return false;
+    return { eligible: false, reason: 'blocked-sensitive-claim-type' };
   }
 
   if (Number(claim.review_score) < options.minScore) {
-    return false;
+    return { eligible: false, reason: 'below-min-score' };
   }
 
   if (claim.source_name !== wikidataSourceName) {
-    return true;
-  }
-
-  if (claim.claim_json?.identityMatch?.status !== 'matched') {
-    return false;
+    return { eligible: true, reason: 'non-wikidata-non-sensitive' };
   }
 
   if (!wikidataExternalIdUnlockedClaimTypes.has(claim.claim_type)) {
-    return false;
+    return { eligible: false, reason: 'wikidata-claim-type-not-auto-unlocked' };
   }
 
   const externalIdKey = verifiedExternalIdKeyForClaim(claim);
-  return Boolean(externalIdKey && verifiedExternalIdKeys.has(externalIdKey));
+  if (!externalIdKey) {
+    return { eligible: false, reason: 'wikidata-missing-person-or-qid' };
+  }
+
+  if (!verifiedExternalIdKeys.has(externalIdKey)) {
+    return { eligible: false, reason: 'wikidata-external-id-not-verified' };
+  }
+
+  if (claim.claim_json?.identityMatch?.status !== 'matched') {
+    return { eligible: true, reason: 'wikidata-verified-external-id-unlocked-without-identity-match' };
+  }
+
+  return { eligible: true, reason: 'wikidata-verified-external-id-unlocked' };
+}
+
+function isEligibleClaim(claim, options, verifiedExternalIdKeys) {
+  return explainEligibility(claim, options, verifiedExternalIdKeys).eligible;
+}
+
+function incrementReason(reasonCounts, reason) {
+  reasonCounts[reason] = (reasonCounts[reason] ?? 0) + 1;
 }
 
 function nextScoringReasons(claim) {
@@ -236,10 +252,14 @@ async function main() {
   let totalEligible = 0;
   let totalUpdated = 0;
   let totalSkipped = 0;
+  const eligibilityReasonCounts = {};
   let batches = 0;
 
   while (batches < options.maxBatches) {
     const candidates = await fetchReviewCandidates(options);
+    for (const claim of candidates) {
+      incrementReason(eligibilityReasonCounts, explainEligibility(claim, options, verifiedExternalIdKeys).reason);
+    }
     const eligibleClaims = candidates.filter((claim) => isEligibleClaim(claim, options, verifiedExternalIdKeys));
     totalScanned += candidates.length;
     totalEligible += eligibleClaims.length;
@@ -284,10 +304,12 @@ async function main() {
     eligible: totalEligible,
     updated: totalUpdated,
     skipped: totalSkipped,
+    verifiedExternalIdKeyCount: verifiedExternalIdKeys.size,
+    eligibilityReasonCounts,
     autoReviewedRule: 'non-Wikidata claims pass existing non-sensitive rule; Wikidata low-sensitivity claims require a verified external_id for the same person/QID',
     sourceSpecificRules: {
       wikidata: {
-        requiresIdentityMatch: 'claim_json.identityMatch.status=matched',
+        requiresIdentityMatch: 'only when external_id has not been verified yet',
         requiresVerifiedExternalId: true,
         autoClaimTypes: Array.from(wikidataExternalIdUnlockedClaimTypes),
       },

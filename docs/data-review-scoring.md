@@ -36,8 +36,8 @@
 
 - 非 Wikidata 來源：除敏感 claim 以外，依既有分數門檻自動公開；預設 `review_score >= 0`，可用 `--min-score` 提高門檻。
 - 不自動公開：司法/刑事紀錄 `legal_case`、家族關係 `family_relation`。
-- Wikidata claim 另需 `claim_json.identityMatch.status = matched`；舊版缺少 identityMatch 的資料需降回 review-only。
-- Wikidata 的低敏感欄位需同一 `person_id` 已有 verified/public 的 `external_id = wikidata:Qxxx`，且 claim 的 `claim_json.wikidataQid` 相同，才可自動通過。
+- Wikidata claim 若尚未通過 external ID，需 `claim_json.identityMatch.status = matched` 才能進入審核候選；舊版缺少 identityMatch 的資料需維持 review-only。
+- Wikidata 的低敏感欄位若同一 `person_id` 已有 verified/public 的 `external_id = wikidata:Qxxx`，且 claim 的 `claim_json.wikidataQid` 相同，即可自動通過；這條規則可處理舊版缺少 `identityMatch` 但 QID 已由人工確認的 claim。
 - Wikidata 可由 verified external ID 解鎖的欄位：`gender`、`birth_date`、`education`、`experience`、`position`、`office`、`district`、`party`。
 - Wikidata 的 `external_id` 本身應先由 review 頁或其他明確流程確認，不靠這條 batch 規則自動通過。
 - Wikidata 的「政治人物描述」只作類型過濾，不可單獨當成身份佐證；身份佐證需來自職位、地區、學歷、經歷或其他可對齊欄位。

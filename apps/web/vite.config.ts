@@ -55,6 +55,17 @@ type SkippedPayload = {
   updatedAt?: string;
   skippedTargets?: SkippedTarget[];
 };
+const wikidataSourceName = 'Wikidata 人物補充資料';
+const wikidataExternalIdUnlockedClaimTypes = new Set([
+  'gender',
+  'birth_date',
+  'education',
+  'experience',
+  'position',
+  'office',
+  'district',
+  'party',
+]);
 
 function parseEnvFile(filePath: string): EnvMap {
   if (!fs.existsSync(filePath)) {
@@ -150,7 +161,7 @@ function writeSkippedRetryTarget(claim: InternalClaim, person: PersonRow | null)
   const qid = typeof claimJson.wikidataQid === 'string' ? claimJson.wikidataQid : null;
   const personName = typeof claimJson.personName === 'string' ? claimJson.personName : person?.name;
 
-  if (claim.source_name !== 'Wikidata 人物補充資料' || !qid || !personName) {
+  if (claim.source_name !== wikidataSourceName || !qid || !personName) {
     return;
   }
 
@@ -187,12 +198,69 @@ function writeSkippedRetryTarget(claim: InternalClaim, person: PersonRow | null)
   fs.writeFileSync(skippedPath, `${JSON.stringify({ ...payload, updatedAt: new Date().toISOString().slice(0, 10), skippedTargets }, null, 2)}\n`);
 }
 
+function wikidataQidForClaim(claim: InternalClaim) {
+  const qidFromJson = claim.claim_json?.wikidataQid;
+  if (typeof qidFromJson === 'string' && /^Q\d+$/i.test(qidFromJson)) {
+    return qidFromJson.toUpperCase();
+  }
+
+  const qidFromValue = String(claim.claim_value ?? '').match(/^wikidata:(Q\d+)$/i)?.[1];
+  return qidFromValue ? qidFromValue.toUpperCase() : null;
+}
+
+async function approveRelatedWikidataClaims(claim: InternalClaim, now: string) {
+  const qid = wikidataQidForClaim(claim);
+
+  if (
+    claim.source_name !== wikidataSourceName ||
+    claim.claim_type !== 'external_id' ||
+    !claim.person_id ||
+    !qid
+  ) {
+    return 0;
+  }
+
+  const relatedClaims = await supabaseRest(
+    `person_claims?select=id,claim_type,claim_json,scoring_reasons&person_id=eq.${encodeURIComponent(claim.person_id)}&source_name=eq.${encodeURIComponent(wikidataSourceName)}&review_status=in.(pending,needs_more_evidence)&limit=1000`,
+  ) as InternalClaim[];
+  const targets = relatedClaims.filter((relatedClaim) => (
+    wikidataExternalIdUnlockedClaimTypes.has(relatedClaim.claim_type) &&
+    wikidataQidForClaim(relatedClaim) === qid
+  ));
+
+  for (const target of targets) {
+    const scoringReasons = Array.isArray(target.scoring_reasons) ? target.scoring_reasons : [];
+    await supabaseRest(`person_claims?id=eq.${encodeURIComponent(target.id)}`, {
+      method: 'PATCH',
+      headers: { prefer: 'return=minimal' },
+      body: JSON.stringify({
+        review_status: 'verified',
+        visibility: 'public',
+        is_public: true,
+        auto_reviewed_at: now,
+        scoring_version: 'internal-review-ui-external-id-cascade-v1',
+        scoring_reasons: [
+          ...scoringReasons,
+          {
+            version: 'internal-review-ui-external-id-cascade-v1',
+            reason: 'low-sensitivity Wikidata claim approved after verified external_id for the same person and QID',
+            reviewedAt: now,
+          },
+        ],
+        updated_at: now,
+      }),
+    });
+  }
+
+  return targets.length;
+}
+
 function internalReviewApiPlugin(): Plugin {
   return {
     name: 'internal-review-api',
     configureServer(server) {
       server.middlewares.use('/internal-api/review-claim', async (request, response) => {
-          const devRequest = request as DevRequest;
+        const devRequest = request as DevRequest;
         if (devRequest.method !== 'POST') {
           jsonResponse(response, 405, { error: 'Method not allowed.' });
           return;
@@ -258,11 +326,15 @@ function internalReviewApiPlugin(): Plugin {
             body: JSON.stringify(patch),
           });
 
+          const relatedUpdated = action === 'approve'
+            ? await approveRelatedWikidataClaims(claim, now)
+            : 0;
+
           if (action === 'reject') {
             writeSkippedRetryTarget(claim, person);
           }
 
-          jsonResponse(response, 200, { status: 'ok', action });
+          jsonResponse(response, 200, { status: 'ok', action, relatedUpdated });
         } catch (error) {
           jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
         }

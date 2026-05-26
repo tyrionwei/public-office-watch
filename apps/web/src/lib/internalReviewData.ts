@@ -99,7 +99,7 @@ export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Pr
   };
 }
 
-export async function reviewInternalClaim(claimId: string, action: ReviewAction): Promise<{ error: string | null }> {
+export async function reviewInternalClaim(claimId: string, action: ReviewAction): Promise<{ relatedUpdated: number; error: string | null }> {
   const response = await fetch('/internal-api/review-claim', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
@@ -108,8 +108,8 @@ export async function reviewInternalClaim(claimId: string, action: ReviewAction)
   const body = await response.json().catch(() => null);
 
   if (!response.ok) {
-    return { error: body?.error ?? response.statusText };
+    return { relatedUpdated: 0, error: body?.error ?? response.statusText };
   }
 
-  return { error: null };
+  return { relatedUpdated: Number(body?.relatedUpdated ?? 0), error: null };
 }

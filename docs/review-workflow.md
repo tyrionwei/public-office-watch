@@ -35,7 +35,7 @@
 - `通過` 會把 claim 標記為 `verified` / `public` / `is_public = true`。
 - `標記錯誤` 會把 claim 標記為 `rejected` / `private` / `is_public = false`。
 - 若錯誤 claim 來自 Wikidata，dev API 會把該人物寫入 `data-sources/person-enrichment-skipped.json`，並記錄 rejected QID；之後 `fetch:wikidata-person-enrichment:retry` 會避開同一個 QID 再找。
-- 若通過的是 Wikidata `external_id`，後續 `review:person-claims:write` 可自動通過同一人物、同一 QID 的低敏感欄位；敏感欄位仍留在 review queue。
+- 若通過的是 Wikidata `external_id`，local review API 會立即通過同一人物、同一 QID 的低敏感欄位；`review:person-claims:write` 也會補跑同一條規則。敏感欄位仍留在 review queue。
 
 ## OpenClaw 限制
 

@@ -73,20 +73,25 @@ async function supabaseJson(url, init = {}) {
 }
 
 async function fetchReviewCandidates(options) {
-  const url = supabaseUrl('person_claim_review_queue');
+  const url = supabaseUrl('person_claims');
   url.searchParams.set(
     'select',
-    'claim_id,raw_name,claim_type,claim_value,confidence_level,review_score,source_name,source_url,scoring_reasons,updated_at',
+    'id,claim_type,claim_value,claim_json,confidence_level,review_score,source_name,source_url,scoring_reasons,updated_at',
   );
   if (options.sourceName) {
     url.searchParams.set('source_name', `eq.${options.sourceName}`);
   }
+  url.searchParams.set('review_status', 'in.(pending,needs_more_evidence)');
   url.searchParams.set('claim_type', 'not.eq.legal_case');
   url.searchParams.set('review_score', `gte.${options.minScore}`);
   url.searchParams.set('order', 'review_score.desc,updated_at.desc');
   url.searchParams.set('limit', String(options.limit));
 
-  return supabaseJson(url);
+  const claims = await supabaseJson(url);
+  return claims.map((claim) => ({
+    ...claim,
+    claim_id: claim.id,
+  }));
 }
 
 async function countPublicClaimsByType(claimType) {

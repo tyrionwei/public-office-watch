@@ -3172,6 +3172,527 @@
       "sourceId": "wikidata-person-enrichment",
       "sourceName": "Wikidata 人物補充資料",
       "sourceUrl": "https://www.wikidata.org/wiki/Q22099965"
+    },
+    {
+      "personId": "2839aac5-b194-4411-a75c-f153e76b1e9c",
+      "personName": "陳永康",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q16239618",
+      "claimJson": {
+        "wikidataQid": "Q16239618",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "experience matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "political description",
+            "experience matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q16239618"
+    },
+    {
+      "personId": "2839aac5-b194-4411-a75c-f153e76b1e9c",
+      "personName": "陳永康",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "wikidataQid": "Q16239618",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "experience matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "political description",
+            "experience matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q16239618"
+    },
+    {
+      "personId": "2839aac5-b194-4411-a75c-f153e76b1e9c",
+      "personName": "陳永康",
+      "claimType": "birth_date",
+      "claimValue": "1951-00-00",
+      "claimJson": {
+        "wikidataQid": "Q16239618",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "experience matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "political description",
+            "experience matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q16239618"
+    },
+    {
+      "personId": "2839aac5-b194-4411-a75c-f153e76b1e9c",
+      "personName": "陳永康",
+      "claimType": "education",
+      "claimValue": "中華民國海軍軍官學校",
+      "claimJson": {
+        "wikidataQid": "Q16239618",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "experience matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "political description",
+            "experience matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q16239618"
+    },
+    {
+      "personId": "2839aac5-b194-4411-a75c-f153e76b1e9c",
+      "personName": "陳永康",
+      "claimType": "experience",
+      "claimValue": "中華民國國防部軍政副部長；海軍軍官；政治人物",
+      "claimJson": {
+        "positions": [
+          "中華民國國防部軍政副部長"
+        ],
+        "occupations": [
+          "海軍軍官",
+          "政治人物"
+        ],
+        "wikidataQid": "Q16239618",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 95,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description",
+            "experience matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "political description",
+            "experience matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q16239618"
+    },
+    {
+      "personId": "a6981b25-a402-4b05-95cf-00717f1d984d",
+      "personName": "陳玉珍",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q48896684",
+      "claimJson": {
+        "wikidataQid": "Q48896684",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q48896684"
+    },
+    {
+      "personId": "a6981b25-a402-4b05-95cf-00717f1d984d",
+      "personName": "陳玉珍",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q48896684",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q48896684"
+    },
+    {
+      "personId": "a6981b25-a402-4b05-95cf-00717f1d984d",
+      "personName": "陳玉珍",
+      "claimType": "birth_date",
+      "claimValue": "1973-10-29",
+      "claimJson": {
+        "wikidataQid": "Q48896684",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q48896684"
+    },
+    {
+      "personId": "a6981b25-a402-4b05-95cf-00717f1d984d",
+      "personName": "陳玉珍",
+      "claimType": "education",
+      "claimValue": "九州大學；國立金門高級中學；國立臺灣大學；北京大學；哈佛大學",
+      "claimJson": {
+        "wikidataQid": "Q48896684",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q48896684"
+    },
+    {
+      "personId": "a6981b25-a402-4b05-95cf-00717f1d984d",
+      "personName": "陳玉珍",
+      "claimType": "experience",
+      "claimValue": "金門縣議員；立法委員；政治人物",
+      "claimJson": {
+        "positions": [
+          "金門縣議員",
+          "立法委員",
+          "立法委員",
+          "金門縣議員",
+          "金門縣議員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q48896684",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q48896684"
+    },
+    {
+      "personId": "e7fe261b-f06a-4261-abb0-9727667bd177",
+      "personName": "陳秀寳",
+      "claimType": "external_id",
+      "claimValue": "wikidata:Q50067722",
+      "claimJson": {
+        "wikidataQid": "Q50067722",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50067722"
+    },
+    {
+      "personId": "e7fe261b-f06a-4261-abb0-9727667bd177",
+      "personName": "陳秀寳",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "wikidataQid": "Q50067722",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50067722"
+    },
+    {
+      "personId": "e7fe261b-f06a-4261-abb0-9727667bd177",
+      "personName": "陳秀寳",
+      "claimType": "birth_date",
+      "claimValue": "1972-10-11",
+      "claimJson": {
+        "wikidataQid": "Q50067722",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50067722"
+    },
+    {
+      "personId": "e7fe261b-f06a-4261-abb0-9727667bd177",
+      "personName": "陳秀寳",
+      "claimType": "education",
+      "claimValue": "建國科技大學；彰化縣福興鄉西勢國民小學；彰化縣立福興國民中學；彰化縣私立精誠高級中學",
+      "claimJson": {
+        "wikidataQid": "Q50067722",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50067722"
+    },
+    {
+      "personId": "e7fe261b-f06a-4261-abb0-9727667bd177",
+      "personName": "陳秀寳",
+      "claimType": "experience",
+      "claimValue": "彰化縣議員；立法委員；政治人物",
+      "claimJson": {
+        "positions": [
+          "彰化縣議員",
+          "立法委員",
+          "彰化縣議員",
+          "彰化縣議員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q50067722",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q50067722"
+    },
+    {
+      "personId": "e7fe261b-f06a-4261-abb0-9727667bd177",
+      "personName": "陳秀寳",
+      "claimType": "family_relation",
+      "claimValue": "父親：陳進丁",
+      "claimJson": {
+        "relationType": "father",
+        "relationLabel": "父親",
+        "relativeQid": "Q8272339",
+        "relativeName": "陳進丁",
+        "relativeDescription": "台灣政治人物",
+        "wikidataQid": "Q50067722",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "political description"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "political description"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8272339"
     }
   ]
 }

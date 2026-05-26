@@ -101,6 +101,13 @@ Name-only matches are allowed only as private leads. They must not be published.
 
 - `scripts/fetch-judicial-legal-record-leads.mjs` does not write to Supabase.
 - It requires an explicit target-name JSON file.
-- It can alternatively load target names from the `public_people` public view when Supabase public env vars are provided.
+- It can alternatively load target identity records from the `public_people` public view when Supabase public env vars are provided.
+- Supabase targets include `person_id`, name, gender, party, position, district, education, and experience. The fetcher stores those hints in `source_payload.targetPerson` and records which non-name hints appeared in the court text.
 - It only writes matched lead summaries to `data-sources/legal-record-leads.seed.json`.
 - It does not store complete judgment text; `summary` is capped for review context.
+
+## Same-Name Handling
+
+- One court document can create separate private leads for same-name people because the lead key includes `person_id` when available.
+- Name-only official court matches remain below publication threshold.
+- Extra hints such as district, party, position, education, or experience can raise private `match_score`, but legal leads are still capped below auto-publication and remain review-only.

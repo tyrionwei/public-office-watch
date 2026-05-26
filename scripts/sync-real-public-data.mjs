@@ -2337,22 +2337,29 @@ function scoreLegalLeadMatch(lead, person) {
     reasons.push('official legal source');
   }
 
+  const matchedHints = lead.sourcePayload?.matchedHints ?? {};
+  const targetPersonId = lead.sourcePayload?.targetPerson?.personId ?? null;
   const evidenceText = normalizeIdentityText([lead.title, lead.summary, lead.reason].filter(Boolean).join(' '));
   const personDistrict = normalizeIdentityText(person.district);
   const personParty = normalizeIdentityText(person.party);
   const personPosition = normalizeIdentityText(person.position);
 
-  if (personDistrict && evidenceText.includes(personDistrict.slice(0, 3))) {
+  if (targetPersonId && targetPersonId === person.id) {
+    score += 5;
+    reasons.push('fetch target person matched canonical person');
+  }
+
+  if (matchedHints.district || (personDistrict && evidenceText.includes(personDistrict.slice(0, 3)))) {
     score += 10;
     reasons.push('district hint matched');
   }
 
-  if (personParty && evidenceText.includes(personParty)) {
+  if (matchedHints.party || (personParty && evidenceText.includes(personParty))) {
     score += 5;
     reasons.push('party hint matched');
   }
 
-  if (personPosition && evidenceText.includes(personPosition.slice(0, 4))) {
+  if (matchedHints.position || (personPosition && evidenceText.includes(personPosition.slice(0, 4)))) {
     score += 5;
     reasons.push('position hint matched');
   }

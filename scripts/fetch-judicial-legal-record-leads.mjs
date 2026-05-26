@@ -105,6 +105,47 @@ function normalizeName(value) {
     .replace(/[\s\u00A0\u3000]+/g, '');
 }
 
+function targetFromRecord(record) {
+  if (typeof record === 'string') {
+    return {
+      raw: record.trim(),
+      normalized: normalizeName(record),
+      personId: null,
+      gender: 'unknown',
+      party: '',
+      position: '',
+      district: '',
+      education: '',
+      experience: '',
+    };
+  }
+
+  if (record?.target) {
+    return targetFromRecord(record.target);
+  }
+
+  if (!record || typeof record !== 'object') {
+    return null;
+  }
+
+  const raw = String(record.raw ?? record.name ?? record.personName ?? '').trim();
+  if (!raw) {
+    return null;
+  }
+
+  return {
+    raw,
+    normalized: normalizeName(raw),
+    personId: record.personId ?? record.person_id ?? null,
+    gender: record.gender ?? 'unknown',
+    party: record.party ?? '',
+    position: record.position ?? '',
+    district: record.district ?? '',
+    education: record.education ?? '',
+    experience: record.experience ?? '',
+  };
+}
+
 function loadTargetNames(filePath) {
   if (!filePath) {
     throw new Error('Provide --target-names. The fetcher only creates leads for explicit target names.');
@@ -112,16 +153,23 @@ function loadTargetNames(filePath) {
 
   const content = fs.readFileSync(filePath, 'utf8');
   const parsed = JSON.parse(content);
-  const names = Array.isArray(parsed) ? parsed : parsed.names;
+  const records = Array.isArray(parsed)
+    ? parsed
+    : parsed.names ?? parsed.targets ?? parsed.people ?? parsed.skippedTargets;
 
-  if (!Array.isArray(names) || names.length === 0) {
-    throw new Error('Target names file must be a JSON array or an object with a non-empty names array.');
+  if (!Array.isArray(records) || records.length === 0) {
+    throw new Error('Target names file must be a JSON array or an object with non-empty names/targets.');
   }
 
-  return Array.from(new Set(names.map((name) => String(name).trim()).filter(Boolean))).map((name) => ({
-    raw: name,
-    normalized: normalizeName(name),
-  }));
+  const byTarget = new Map();
+  for (const record of records) {
+    const target = targetFromRecord(record);
+    if (target?.raw) {
+      byTarget.set(`${target.personId ?? 'name'}:${target.normalized}`, target);
+    }
+  }
+
+  return Array.from(byTarget.values());
 }
 
 async function loadTargetNamesFromSupabase() {
@@ -132,13 +180,13 @@ async function loadTargetNamesFromSupabase() {
     throw new Error('Set SUPABASE_URL/VITE_SUPABASE_URL and SUPABASE_ANON_KEY/VITE_SUPABASE_ANON_KEY to load target names from public_people.');
   }
 
-  const names = [];
+  const targets = [];
   const pageSize = 1000;
   let offset = 0;
 
   while (true) {
     const url = new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/public_people`);
-    url.searchParams.set('select', 'name');
+    url.searchParams.set('select', 'person_id,name,gender,party,position,district,education,experience');
     url.searchParams.set('order', 'name.asc');
 
     const response = await fetch(url, {
@@ -155,7 +203,16 @@ async function loadTargetNamesFromSupabase() {
       throw new Error(`Failed to fetch public_people target names: ${rows?.message ?? response.statusText}`);
     }
 
-    names.push(...rows.map((row) => row.name).filter(Boolean));
+    targets.push(...rows.map((row) => targetFromRecord({
+      personId: row.person_id,
+      name: row.name,
+      gender: row.gender,
+      party: row.party,
+      position: row.position,
+      district: row.district,
+      education: row.education,
+      experience: row.experience,
+    })).filter(Boolean));
 
     if (rows.length < pageSize) {
       break;
@@ -164,10 +221,12 @@ async function loadTargetNamesFromSupabase() {
     offset += pageSize;
   }
 
-  return Array.from(new Set(names.map((name) => String(name).trim()).filter(Boolean))).map((name) => ({
-    raw: name,
-    normalized: normalizeName(name),
-  }));
+  const byTarget = new Map();
+  for (const target of targets) {
+    byTarget.set(`${target.personId ?? 'name'}:${target.normalized}`, target);
+  }
+
+  return Array.from(byTarget.values());
 }
 
 function parseJid(jid) {
@@ -191,15 +250,45 @@ function titleForDoc(doc) {
     .join(' ');
 }
 
+function normalizedHint(value) {
+  return normalizeName(value).toLowerCase();
+}
+
+function hintTokens(value) {
+  const normalized = normalizedHint(value);
+  if (!normalized || normalized === 'unknown') return [];
+  return Array.from(new Set([
+    normalized,
+    ...normalized.split(/[;；,，、／/()（）\s]+/).filter((item) => item.length >= 2),
+  ]));
+}
+
+function includesAnyHint(searchableText, value) {
+  return hintTokens(value).some((token) => searchableText.includes(token));
+}
+
+function matchedIdentityHints(targetName, searchableText) {
+  return {
+    district: includesAnyHint(searchableText, targetName.district),
+    party: includesAnyHint(searchableText, targetName.party),
+    position: includesAnyHint(searchableText, targetName.position),
+    education: includesAnyHint(searchableText, targetName.education),
+    experience: includesAnyHint(searchableText, targetName.experience),
+  };
+}
+
 function leadFor({ doc, targetName }) {
   const jid = doc.JID ?? '';
   const parsedJid = parseJid(jid);
   const fullText = doc.JFULLX?.JFULLCONTENT ?? '';
+  const searchableText = normalizedHint([doc.JTITLE, fullText].filter(Boolean).join('\n'));
+  const matchedHints = matchedIdentityHints(targetName, searchableText);
+  const hasIdentityHint = Object.values(matchedHints).some(Boolean);
   const title = titleForDoc(doc);
   const sourceUrl = `https://data.judicial.gov.tw/jdg/api/JDoc/${encodeURIComponent(jid)}`;
 
   return {
-    leadKey: `judicial-jdoc:${jid}:${targetName.normalized}`,
+    leadKey: `judicial-jdoc:${jid}:${targetName.personId ?? targetName.normalized}`,
     sourceId: 'judicial-yuan-court-open-data-api',
     sourceType: 'court_document',
     sourceName: '司法院裁判書開放API',
@@ -214,11 +303,20 @@ function leadFor({ doc, targetName }) {
     title,
     summary: fullText.slice(0, 500),
     rawName: targetName.raw,
-    confidenceLevel: 'B',
+    confidenceLevel: hasIdentityHint ? 'B' : 'C',
     sourcePayload: {
       jid,
       jfullType: doc.JFULLX?.JFULLTYPE ?? null,
       attachmentCount: Array.isArray(doc.ATTACHMENTS) ? doc.ATTACHMENTS.length : 0,
+      targetPerson: {
+        personId: targetName.personId,
+        name: targetName.raw,
+        gender: targetName.gender,
+        party: targetName.party,
+        position: targetName.position,
+        district: targetName.district,
+      },
+      matchedHints,
     },
   };
 }

@@ -38,6 +38,7 @@
 - 不自動公開：司法/刑事紀錄，也就是 `legal_case`。
 - Wikidata claim 另需 `claim_json.identityMatch.status = matched`；舊版缺少 identityMatch 的資料需降回 review-only。
 - Wikidata 的「政治人物描述」只作類型過濾，不可單獨當成身份佐證；身份佐證需來自職位、地區、學歷、經歷或其他可對齊欄位。
+- 未能完成身份比對或發生單筆查詢錯誤的人物會寫入 `data-sources/person-enrichment-skipped.json`，後續用 retry 批次重跑，不讓大量補資料流程卡在單一人物。
 - 寫入時會標記 `review_status = verified`、`visibility = public`、`is_public = true`、`auto_reviewed_at`。
 - 批次腳本會檢查 Wikidata 的 `legal_case` 仍不得進入 `public_person_claims`。
 
@@ -56,6 +57,7 @@
 - 能連到明確人物身份佐證，例如生日、職位、選區、案件當事人描述、本人聲明或多個可靠來源交叉確認。
 - 若只有新聞報導，必須至少兩個可信媒體來源，且內容能回指到官方裁判或檢調文件。
 - 只是同名出現在裁判書、新聞、論壇或社群，一律不得自動通過。
+- 司法院 lead fetcher 會保留搜尋目標的 `person_id`、性別、黨籍、職位、地區等 hints；這些 hints 用於 review 與同名拆分，但不代表已確認司法紀錄。
 
 建議扣分：
 

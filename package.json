@@ -17,6 +17,7 @@
     "fetch:judicial-legal-leads": "node scripts/fetch-judicial-legal-record-leads.mjs",
     "fetch:wikidata-person-enrichment": "node scripts/fetch-wikidata-person-enrichment.mjs",
     "fetch:wikidata-person-enrichment:resume": "node scripts/fetch-wikidata-person-enrichment.mjs --target-names-from-supabase --resume --max-people 3 --request-delay-ms 5000 --retry-count 3",
+    "fetch:wikidata-person-enrichment:retry": "node scripts/fetch-wikidata-person-enrichment.mjs --target-names data-sources/person-enrichment-skipped.json --max-people 10 --request-delay-ms 5000 --retry-count 3",
     "run:person-enrichment-batch": "node scripts/run-person-enrichment-batch.mjs",
     "review:person-claims:dry-run": "node scripts/auto-review-person-claims.mjs",
     "review:person-claims:write": "node scripts/auto-review-person-claims.mjs --write",

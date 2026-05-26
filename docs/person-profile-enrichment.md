@@ -34,6 +34,7 @@ The CEC votedata package already exposes candidate gender codes in `elcand.csv`;
 
 - `data-sources/person-enrichment-claims.seed.json` stores optional enrichment claims.
 - `scripts/fetch-wikidata-person-enrichment.mjs` can generate review-only gender, birth date, education, experience, and family relation leads from Wikidata.
+- `data-sources/person-enrichment-skipped.json` stores targets that did not produce a confident Wikidata identity match or hit a per-target fetch error. It can be reused with `npm run fetch:wikidata-person-enrichment:retry`.
 - `npm run sync:person-enrichment:write` writes those leads to `person_claims`.
 - Family relation leads, including political-family or second-generation-politician hints, are never auto-published.
 

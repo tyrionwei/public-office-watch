@@ -4,6 +4,7 @@ import path from 'node:path';
 const wikidataApiUrl = 'https://www.wikidata.org/w/api.php';
 const defaultOutputPath = path.resolve('data-sources/person-enrichment-claims.seed.json');
 const defaultProgressPath = path.resolve('data-sources/person-enrichment-progress.json');
+const defaultSkippedPath = path.resolve('data-sources/person-enrichment-skipped.json');
 
 const relationProperties = {
   P22: 'father',
@@ -25,6 +26,7 @@ function parseArgs(argv) {
   const args = {
     outputPath: defaultOutputPath,
     progressPath: defaultProgressPath,
+    skippedOutputPath: defaultSkippedPath,
     targetNamesPath: null,
     targetNamesFromSupabase: false,
     offset: 0,
@@ -47,6 +49,12 @@ function parseArgs(argv) {
 
     if (arg === '--progress-file') {
       args.progressPath = path.resolve(argv[index + 1] ?? '');
+      index += 1;
+      continue;
+    }
+
+    if (arg === '--skipped-output') {
+      args.skippedOutputPath = path.resolve(argv[index + 1] ?? '');
       index += 1;
       continue;
     }
@@ -132,19 +140,55 @@ function getBestMonolingual(values, languages = ['zh-tw', 'zh-hant', 'zh', 'en']
   return Object.values(values ?? {})[0]?.value ?? null;
 }
 
+function targetFromRecord(record) {
+  if (typeof record === 'string') {
+    return { name: record.trim() };
+  }
+
+  if (record?.target) {
+    return targetFromRecord(record.target);
+  }
+
+  if (!record || typeof record !== 'object') {
+    return null;
+  }
+
+  const name = String(record.name ?? record.raw ?? record.personName ?? '').trim();
+  if (!name) {
+    return null;
+  }
+
+  return {
+    personId: record.personId ?? record.person_id ?? null,
+    name,
+    gender: record.gender ?? 'unknown',
+    party: record.party ?? '',
+    position: record.position ?? '',
+    district: record.district ?? '',
+    education: record.education ?? '',
+    experience: record.experience ?? '',
+  };
+}
+
+function targetKey(target) {
+  return `${target.personId ?? 'name'}:${normalizeName(target.name)}`;
+}
+
 function loadTargetNames(filePath) {
   if (!filePath) {
     throw new Error('Provide --target-names or --target-names-from-supabase.');
   }
 
   const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  const names = Array.isArray(parsed) ? parsed : parsed.names;
+  const records = Array.isArray(parsed)
+    ? parsed
+    : parsed.names ?? parsed.targets ?? parsed.people ?? parsed.skippedTargets ?? parsed.skipped;
 
-  if (!Array.isArray(names) || names.length === 0) {
-    throw new Error('Target names file must be a JSON array or an object with a non-empty names array.');
+  if (!Array.isArray(records) || records.length === 0) {
+    throw new Error('Target names file must be a JSON array or an object with non-empty names/targets/skippedTargets.');
   }
 
-  return names.map((name) => ({ name: String(name).trim() })).filter((item) => item.name);
+  return records.map(targetFromRecord).filter((item) => item?.name);
 }
 
 async function loadTargetNamesFromSupabase() {
@@ -543,6 +587,39 @@ function writeProgress(progressPath, progress) {
   fs.writeFileSync(progressPath, `${JSON.stringify(progress, null, 2)}\n`);
 }
 
+function writeSkippedTargets(skippedPath, skippedTargets, resolvedTargets) {
+  const existingPayload = fs.existsSync(skippedPath)
+    ? JSON.parse(fs.readFileSync(skippedPath, 'utf8'))
+    : { skippedTargets: [] };
+  const resolvedKeys = new Set(resolvedTargets.map(targetKey));
+  const byKey = new Map();
+
+  for (const skipped of existingPayload.skippedTargets ?? []) {
+    const target = targetFromRecord(skipped);
+    if (!target || resolvedKeys.has(targetKey(target))) continue;
+    byKey.set(targetKey(target), skipped);
+  }
+
+  for (const skipped of skippedTargets) {
+    byKey.set(targetKey(skipped.target), {
+      target: skipped.target,
+      name: skipped.target.name,
+      reason: skipped.reason,
+      checkedAt: new Date().toISOString(),
+    });
+  }
+
+  const nextPayload = {
+    schemaVersion: existingPayload.schemaVersion ?? 1,
+    name: existingPayload.name ?? 'person-enrichment-skipped-targets',
+    updatedAt: new Date().toISOString().slice(0, 10),
+    notes: existingPayload.notes ?? 'Targets that did not produce confident Wikidata enrichment claims. This file can be reused with --target-names.',
+    skippedTargets: Array.from(byKey.values()).sort((left, right) => String(left.name).localeCompare(String(right.name), 'zh-Hant-TW')),
+  };
+
+  fs.writeFileSync(skippedPath, `${JSON.stringify(nextPayload, null, 2)}\n`);
+}
+
 async function main() {
   const args = parseArgs(process.argv);
   const progress = args.resume ? readProgress(args.progressPath) : { nextOffset: args.offset };
@@ -553,62 +630,71 @@ async function main() {
   );
   const allClaims = [];
   const skipped = [];
+  const resolvedTargets = [];
 
   for (const target of targets) {
-    await sleep(args.requestDelayMs);
-    const searchResults = await searchEntity(target.name, args.searchLimit, args);
-    const entities = await getEntities(searchResults.map((result) => result.id), args);
-    const candidates = [];
+    try {
+      await sleep(args.requestDelayMs);
+      const searchResults = await searchEntity(target.name, args.searchLimit, args);
+      const entities = await getEntities(searchResults.map((result) => result.id), args);
+      const candidates = [];
 
-    for (const result of searchResults) {
-      const entity = entities[result.id];
-      if (!entity) continue;
+      for (const result of searchResults) {
+        const entity = entities[result.id];
+        if (!entity) continue;
+        const relatedIds = [
+          ...claimEntityIds(entity, 'P21'),
+          ...claimEntityIds(entity, 'P69'),
+          ...claimEntityIds(entity, 'P39'),
+          ...claimEntityIds(entity, 'P106'),
+        ];
+        const relatedEntities = await getEntities(relatedIds, args);
+        const match = scoreEntityMatch(target, entity, result, relatedEntities);
+        candidates.push({ result, entity, relatedEntities, match });
+      }
+
+      const matched = candidates
+        .filter((candidate) => candidate.match.matched)
+        .sort((left, right) => right.match.score - left.match.score)[0];
+
+      if (!matched) {
+        skipped.push({ target, reason: 'no confident Wikidata entity match' });
+        continue;
+      }
+
+      const entity = matched.entity;
+      const qid = matched.result.id;
+      await sleep(args.requestDelayMs);
       const relatedIds = [
         ...claimEntityIds(entity, 'P21'),
         ...claimEntityIds(entity, 'P69'),
         ...claimEntityIds(entity, 'P39'),
         ...claimEntityIds(entity, 'P106'),
+        ...Object.keys(relationProperties).flatMap((property) => claimEntityIds(entity, property)),
       ];
       const relatedEntities = await getEntities(relatedIds, args);
-      const match = scoreEntityMatch(target, entity, result, relatedEntities);
-      candidates.push({ result, entity, relatedEntities, match });
+      allClaims.push(...buildClaimsForTarget({
+        target,
+        entity,
+        qid,
+        relatedEntities,
+        matchEvidence: {
+          version: 'wikidata-identity-v2',
+          status: 'matched',
+          score: matched.match.score,
+          reasons: matched.match.reasons,
+          targetGender: normalizeGenderValue(target.gender),
+          wikidataGender: matched.match.gender,
+          corroboratingSignals: matched.match.corroboratingSignals,
+        },
+      }));
+      resolvedTargets.push(target);
+    } catch (error) {
+      skipped.push({
+        target,
+        reason: error instanceof Error ? error.message : String(error),
+      });
     }
-
-    const matched = candidates
-      .filter((candidate) => candidate.match.matched)
-      .sort((left, right) => right.match.score - left.match.score)[0];
-
-    if (!matched) {
-      skipped.push({ name: target.name, reason: 'no confident Wikidata entity match' });
-      continue;
-    }
-
-    const entity = matched.entity;
-    const qid = matched.result.id;
-    await sleep(args.requestDelayMs);
-    const relatedIds = [
-      ...claimEntityIds(entity, 'P21'),
-      ...claimEntityIds(entity, 'P69'),
-      ...claimEntityIds(entity, 'P39'),
-      ...claimEntityIds(entity, 'P106'),
-      ...Object.keys(relationProperties).flatMap((property) => claimEntityIds(entity, property)),
-    ];
-    const relatedEntities = await getEntities(relatedIds, args);
-    allClaims.push(...buildClaimsForTarget({
-      target,
-      entity,
-      qid,
-      relatedEntities,
-      matchEvidence: {
-        version: 'wikidata-identity-v2',
-        status: 'matched',
-        score: matched.match.score,
-        reasons: matched.match.reasons,
-        targetGender: normalizeGenderValue(target.gender),
-        wikidataGender: matched.match.gender,
-        corroboratingSignals: matched.match.corroboratingSignals,
-      },
-    }));
   }
 
   const existingPayload = fs.existsSync(args.outputPath)
@@ -618,6 +704,7 @@ async function main() {
 
   if (!args.dryRun) {
     fs.writeFileSync(args.outputPath, `${JSON.stringify(nextPayload, null, 2)}\n`);
+    writeSkippedTargets(args.skippedOutputPath, skipped, resolvedTargets);
     writeProgress(args.progressPath, {
       nextOffset: offset + targets.length,
       lastOffset: offset,
@@ -629,13 +716,14 @@ async function main() {
   }
 
   console.log(JSON.stringify({
-        status: 'ok',
-        targetCount: targets.length,
-        offset,
-        nextOffset: offset + targets.length,
-        newClaimCount: allClaims.length,
+    status: 'ok',
+    targetCount: targets.length,
+    offset,
+    nextOffset: offset + targets.length,
+    newClaimCount: allClaims.length,
     skippedCount: skipped.length,
     outputPath: args.outputPath,
+    skippedOutputPath: args.skippedOutputPath,
     dryRun: args.dryRun,
   }, null, 2));
 }

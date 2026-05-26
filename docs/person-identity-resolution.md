@@ -7,6 +7,7 @@
 - `source_people`：每個來源抓到的人物原始身份。中選會、立法院、監察院、司法院、Wikipedia、媒體選舉指南、候選人官網都先各自成為一筆 source person。
 - `person_identity_matches`：source person 與正式 `people` 的比對結果。第一版支援 `auto_matched`、`probable_match`、`possible_match`、`rejected_match`、`unmatched`。
 - `person_claims`：來源對人物欄位的宣稱，例如性別、黨籍、職位、選區、學歷、經歷、政見、司法線索、家族關係與外部 ID。
+- `person_merge_decisions`：正式 `people` 之間的可撤銷 canonical mapping。重複人物不直接刪列，而是把 duplicate 指到 canonical。
 - `people`：公開人物主檔，只放已整理後要作為主結論的資料。
 
 ## 新人物進來流程
@@ -37,6 +38,13 @@
 - D：同名風險高、缺少佐證或尚未完成比對的線索。
 
 `public_person_claims` 只公開 `verified + public + is_public` 的 claims。司法、犯罪紀錄、政二代關係等敏感資料可以入庫，但第一版不得直接產生強結論；必須保留來源、可信度與審核狀態。
+
+## 正式人物合併規則
+
+- `person_canonical_map` 是 public view 的人物 ID 轉換基礎；只有 `person_merge_decisions.status = verified` 才會讓 duplicate 對外併入 canonical。
+- `public_people`、`public_candidates`、`public_person_claims`、`public_relation_details`、`public_person_identity_sources` 都應回傳 canonical person id，避免前端各自做重複人物合併。
+- 自動 verified 僅限高可信規則：相同已驗證 Wikidata QID，或標準化姓名、政黨、選區都相同。只有姓名與政黨相同的結果保留在 `person_duplicate_review_queue`，不得自動合併。
+- canonical mapping 是非破壞性設計；若後續發現合併錯誤，將 decision 改成 `rejected` 或 `archived` 即可恢復分開顯示。
 
 ## 目前第一版落地
 

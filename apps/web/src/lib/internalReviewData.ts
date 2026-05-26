@@ -3,6 +3,10 @@ import { getSupabasePublicClient } from './supabasePublicClient';
 export type ReviewClaim = {
   claim_id: string;
   person_id: string | null;
+  person_name: string | null;
+  person_party: string | null;
+  person_position: string | null;
+  person_district: string | null;
   raw_name: string | null;
   claim_type: string;
   claim_value: string | null;
@@ -24,6 +28,16 @@ type ReviewClaimResult = {
   claims: ReviewClaim[];
   error: string | null;
 };
+
+type PublicPersonReviewSummary = {
+  person_id: string;
+  name: string;
+  party: string | null;
+  position: string | null;
+  district: string | null;
+};
+
+type ReviewAction = 'approve' | 'reject';
 
 export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Promise<ReviewClaimResult> {
   const client = getSupabasePublicClient();
@@ -49,5 +63,53 @@ export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Pr
   }
 
   const { data, error } = await query;
-  return { claims: (data ?? []) as ReviewClaim[], error: error?.message ?? null };
+  if (error) {
+    return { claims: [], error: error.message };
+  }
+
+  const rows = (data ?? []) as Omit<ReviewClaim, 'person_name' | 'person_party' | 'person_position' | 'person_district'>[];
+  const personIds = Array.from(new Set(rows.map((claim) => claim.person_id).filter((id): id is string => Boolean(id))));
+  let peopleById = new Map<string, PublicPersonReviewSummary>();
+
+  if (personIds.length > 0) {
+    const { data: people, error: peopleError } = await client
+      .from('public_people')
+      .select('person_id,name,party,position,district')
+      .in('person_id', personIds);
+
+    if (peopleError) {
+      return { claims: [], error: peopleError.message };
+    }
+
+    peopleById = new Map((people ?? []).map((person) => [person.person_id, person as PublicPersonReviewSummary]));
+  }
+
+  return {
+    claims: rows.map((claim) => {
+      const person = claim.person_id ? peopleById.get(claim.person_id) : null;
+      return {
+        ...claim,
+        person_name: person?.name ?? claim.raw_name ?? null,
+        person_party: person?.party ?? null,
+        person_position: person?.position ?? null,
+        person_district: person?.district ?? null,
+      };
+    }),
+    error: null,
+  };
+}
+
+export async function reviewInternalClaim(claimId: string, action: ReviewAction): Promise<{ error: string | null }> {
+  const response = await fetch('/internal-api/review-claim', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ claimId, action }),
+  });
+  const body = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    return { error: body?.error ?? response.statusText };
+  }
+
+  return { error: null };
 }

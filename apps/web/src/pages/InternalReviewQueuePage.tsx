@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
-import { fetchInternalReviewClaims, type ReviewClaim } from '../lib/internalReviewData';
+import { fetchInternalReviewClaims, reviewInternalClaim, type ReviewClaim } from '../lib/internalReviewData';
 
 const claimTypeLabels: Record<string, string> = {
   gender: '性別',
@@ -41,6 +41,8 @@ export function InternalReviewQueuePage() {
   const [claimType, setClaimType] = useState('');
   const [sourceName, setSourceName] = useState('Wikidata 人物補充資料');
   const [query, setQuery] = useState('');
+  const [actionClaimId, setActionClaimId] = useState<string | null>(null);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLocalReviewEnabled()) return;
@@ -63,7 +65,7 @@ export function InternalReviewQueuePage() {
     if (!normalizedQuery) return claims;
 
     return claims.filter((claim) =>
-      [claim.raw_name, claim.claim_type, claim.claim_value, claim.source_name].some((value) =>
+      [claim.person_name, claim.raw_name, claim.claim_type, claim.claim_value, claim.source_name].some((value) =>
         value?.toLowerCase().includes(normalizedQuery),
       ),
     );
@@ -85,6 +87,22 @@ export function InternalReviewQueuePage() {
         </PixelFrame>
       </AppShell>
     );
+  }
+
+  async function handleReviewAction(claim: ReviewClaim, action: 'approve' | 'reject') {
+    setActionClaimId(claim.claim_id);
+    setActionMessage(null);
+
+    const result = await reviewInternalClaim(claim.claim_id, action);
+    if (result.error) {
+      setActionMessage(result.error);
+      setActionClaimId(null);
+      return;
+    }
+
+    setClaims((current) => current.filter((item) => item.claim_id !== claim.claim_id));
+    setActionMessage(action === 'approve' ? `已通過：${claim.person_name ?? claim.claim_value}` : `已標記錯誤：${claim.person_name ?? claim.claim_value}`);
+    setActionClaimId(null);
   }
 
   return (
@@ -138,6 +156,9 @@ export function InternalReviewQueuePage() {
             {error ? (
               <p className="pixel-corners border border-rose-400/50 bg-rose-500/10 p-4 text-sm text-rose-300">{error}</p>
             ) : null}
+            {actionMessage ? (
+              <p className="pixel-corners border border-accent/50 bg-accent/10 p-4 text-sm text-accent">{actionMessage}</p>
+            ) : null}
             {!error && loading ? <p className="text-sm text-slate-400">載入中...</p> : null}
             {!error && !loading && filteredClaims.length === 0 ? (
               <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">沒有符合條件的待審核資料。</p>
@@ -156,14 +177,34 @@ export function InternalReviewQueuePage() {
                       </div>
                       <h3 className="mt-3 text-base font-semibold text-white">{claim.claim_value ?? '未提供內容'}</h3>
                       <p className="mt-2 text-sm text-slate-400">
-                        {[claim.raw_name ?? claim.person_id, claim.source_name].filter(Boolean).join(' · ') || '待補來源'}
+                        {[claim.person_name ?? claim.raw_name ?? '未知人物', claim.person_party, claim.person_position, claim.person_district, claim.source_name]
+                          .filter(Boolean)
+                          .join(' · ') || '待補來源'}
                       </p>
                     </div>
-                    {claim.source_url ? (
-                      <a href={claim.source_url} target="_blank" rel="noreferrer" className="text-sm text-accent hover:text-white">
-                        查看來源
-                      </a>
-                    ) : null}
+                    <div className="flex flex-wrap items-center gap-2">
+                      {claim.source_url ? (
+                        <a href={claim.source_url} target="_blank" rel="noreferrer" className="text-sm text-accent hover:text-white">
+                          查看來源
+                        </a>
+                      ) : null}
+                      <button
+                        type="button"
+                        disabled={actionClaimId === claim.claim_id}
+                        onClick={() => void handleReviewAction(claim, 'approve')}
+                        className="pixel-corners border border-signal/70 bg-signal/15 px-3 py-2 text-sm text-signal hover:bg-signal/25 disabled:cursor-wait disabled:opacity-60"
+                      >
+                        通過
+                      </button>
+                      <button
+                        type="button"
+                        disabled={actionClaimId === claim.claim_id}
+                        onClick={() => void handleReviewAction(claim, 'reject')}
+                        className="pixel-corners border border-rose-400/70 bg-rose-500/10 px-3 py-2 text-sm text-rose-300 hover:bg-rose-500/20 disabled:cursor-wait disabled:opacity-60"
+                      >
+                        標記錯誤
+                      </button>
+                    </div>
                   </div>
                 </article>
               ))}

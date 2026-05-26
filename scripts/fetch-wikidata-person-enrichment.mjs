@@ -167,6 +167,7 @@ function targetFromRecord(record) {
     district: record.district ?? '',
     education: record.education ?? '',
     experience: record.experience ?? '',
+    rejectedWikidataQids: record.rejectedWikidataQids ?? record.rejected_wikidata_qids ?? [],
   };
 }
 
@@ -640,6 +641,16 @@ async function main() {
       const candidates = [];
 
       for (const result of searchResults) {
+        if (target.rejectedWikidataQids?.includes(result.id)) {
+          candidates.push({
+            result,
+            entity: null,
+            relatedEntities: {},
+            match: { matched: false, score: 0, reasons: ['previously rejected Wikidata QID'] },
+          });
+          continue;
+        }
+
         const entity = entities[result.id];
         if (!entity) continue;
         const relatedIds = [

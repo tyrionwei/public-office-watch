@@ -31,7 +31,10 @@
 
 - `/internal/review-queue` 只在 Vite local development 顯示。
 - Production 不註冊此路由；正式上線若需要審核頁，必須先加帳號權限與操作紀錄。
-- 此頁只讀 `person_claim_review_queue`，用來抽查來源、分數與敏感欄位，不直接提供公開按鈕。
+- 此頁讀 `person_claim_review_queue` 並透過 Vite dev-only `/internal-api/review-claim` 更新本機 Supabase。
+- `通過` 會把 claim 標記為 `verified` / `public` / `is_public = true`。
+- `標記錯誤` 會把 claim 標記為 `rejected` / `private` / `is_public = false`。
+- 若錯誤 claim 來自 Wikidata，dev API 會把該人物寫入 `data-sources/person-enrichment-skipped.json`，並記錄 rejected QID；之後 `fetch:wikidata-person-enrichment:retry` 會避開同一個 QID 再找。
 
 ## OpenClaw 限制
 

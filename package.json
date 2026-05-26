@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "check": "npm --prefix apps/web run lint && npm --prefix apps/web run build && npm --prefix apps/web run check:data-boundary && npm --prefix apps/web run check:public-view-contracts",
+    "test": "npm run check",
     "sync:real-data:dry-run": "node scripts/sync-real-public-data.mjs --weekly",
     "sync:real-data:historical-dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-historical-cec",
     "sync:real-data:daily": "node scripts/sync-real-public-data.mjs --daily",

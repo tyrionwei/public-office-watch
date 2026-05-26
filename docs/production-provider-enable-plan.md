@@ -3,7 +3,7 @@
 ## 這不是目前已啟用
 
 - 目前 production provider 尚未啟用。
-- app safe default 仍是 mock / dev-only Supabase toggle。
+- app safe default 仍是 mock；production 需明確開啟 Supabase provider flag。
 - 真正 production enable 必須獨立 PR。
 
 ## Production enable 前必須完成
@@ -20,6 +20,7 @@
   - `VITE_SUPABASE_URL`
   - `VITE_SUPABASE_ANON_KEY`
   - `VITE_PUBLIC_DATA_PROVIDER=supabase`
+  - `VITE_ENABLE_SUPABASE_PROVIDER=true`
 - 不得放：
   - service role key
   - `DATABASE_CONNECTION_STRING`
@@ -27,7 +28,6 @@
 
 ## Production enable PR 預期修改
 
-- `publicDataProviderFactory` 的 production gating
 - hosting env 設定文件
 - deploy target 文件
 - smoke / contract check 結果摘要
@@ -36,6 +36,7 @@
 ## Rollback plan
 
 - 將 `VITE_PUBLIC_DATA_PROVIDER` 改回 `mock`
+- 或將 `VITE_ENABLE_SUPABASE_PROVIDER` 改回 `false`
 - 或移除 Supabase env
 - redeploy
 - 確認頁面回到 mock / safe fallback

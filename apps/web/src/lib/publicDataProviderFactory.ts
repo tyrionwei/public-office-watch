@@ -5,8 +5,8 @@ import { refreshSupabasePublicDataSnapshot, supabasePublicDataProvider } from '.
 
 export const publicDataReadyEvent = 'public-data-ready';
 
-function isLocalToggleAllowed() {
-  return import.meta.env.DEV;
+function isSupabaseProviderAllowed() {
+  return import.meta.env.DEV || import.meta.env.VITE_ENABLE_SUPABASE_PROVIDER === 'true';
 }
 
 export function createPublicDataProvider(): PublicDataProvider {
@@ -14,7 +14,7 @@ export function createPublicDataProvider(): PublicDataProvider {
     return mockPublicDataProvider;
   }
 
-  if (!isLocalToggleAllowed()) {
+  if (!isSupabaseProviderAllowed()) {
     return mockPublicDataProvider;
   }
 

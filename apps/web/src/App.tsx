@@ -13,10 +13,13 @@ import { PartyPage } from './pages/PartyPage';
 import { PeoplePage } from './pages/PeoplePage';
 import { PersonPage } from './pages/PersonPage';
 import { RegionPage } from './pages/RegionPage';
-import { aboutPath, dataGuidancePath, homePath, internalReviewQueuePath, partiesPath, peoplePath } from './routes/routePaths';
+import { aboutPath, dataGuidancePath, homePath, internalDataProgressPath, internalReviewQueuePath, partiesPath, peoplePath } from './routes/routePaths';
 
 const InternalReviewQueuePage = import.meta.env.DEV
   ? lazy(() => import('./pages/InternalReviewQueuePage').then((module) => ({ default: module.InternalReviewQueuePage })))
+  : null;
+const InternalDataProgressPage = import.meta.env.DEV
+  ? lazy(() => import('./pages/InternalDataProgressPage').then((module) => ({ default: module.InternalDataProgressPage })))
   : null;
 
 function App() {
@@ -52,6 +55,16 @@ function App() {
               element={
                 <Suspense fallback={null}>
                   <InternalReviewQueuePage />
+                </Suspense>
+              }
+            />
+          ) : null}
+          {InternalDataProgressPage ? (
+            <Route
+              path={internalDataProgressPath()}
+              element={
+                <Suspense fallback={null}>
+                  <InternalDataProgressPage />
                 </Suspense>
               }
             />

@@ -34,7 +34,9 @@ const blockedTermAllowlist = {
   pending: new Set([
     path.join(srcRoot, 'types', 'publicViews.ts'),
     path.join(srcRoot, 'pages', 'ElectionPage.tsx'),
+    path.join(srcRoot, 'pages', 'InternalDataProgressPage.tsx'),
     path.join(srcRoot, 'pages', 'PartyPage.tsx'),
+    path.join(srcRoot, 'lib', 'internalDataProgress.ts'),
     path.join(srcRoot, 'lib', 'supabasePublicViewMappers.ts'),
     path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
   ]),

@@ -52,3 +52,7 @@ export function aboutPath() {
 export function internalReviewQueuePath() {
   return '/internal/review-queue';
 }
+
+export function internalDataProgressPath() {
+  return '/internal/data-progress';
+}

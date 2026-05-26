@@ -34,8 +34,9 @@
 - 此頁讀 `person_claim_review_queue` 並透過 Vite dev-only `/internal-api/review-claim` 更新本機 Supabase。
 - `通過` 會把 claim 標記為 `verified` / `public` / `is_public = true`。
 - `標記錯誤` 會把 claim 標記為 `rejected` / `private` / `is_public = false`。
-- 若錯誤 claim 來自 Wikidata，dev API 會把該人物寫入 `data-sources/person-enrichment-skipped.json`，並記錄 rejected QID；之後 `fetch:wikidata-person-enrichment:retry` 會避開同一個 QID 再找。
+- 若錯誤 claim 來自 Wikidata，dev API 會把同一人物、同一 QID 的待審 claim 一起標記為 rejected，並把該人物寫入 `data-sources/person-enrichment-skipped.json`，記錄 rejected QID；之後 `fetch:wikidata-person-enrichment:retry` 會避開同一個 QID 再找。
 - 若通過的是 Wikidata `external_id`，local review API 會立即通過同一人物、同一 QID 的低敏感欄位；`review:person-claims:write` 也會補跑同一條規則。敏感欄位仍留在 review queue。
+- 資料 sync 重新 upsert `person_claims` 時，會保留既有 `verified`、`rejected`、`archived` 狀態，不得把已審核 claim 洗回 `pending`。
 
 ## OpenClaw 限制
 

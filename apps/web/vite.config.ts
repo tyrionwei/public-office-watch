@@ -255,6 +255,52 @@ async function approveRelatedWikidataClaims(claim: InternalClaim, now: string) {
   return targets.length;
 }
 
+async function rejectRelatedWikidataClaims(claim: InternalClaim, now: string) {
+  const qid = wikidataQidForClaim(claim);
+
+  if (claim.source_name !== wikidataSourceName || !claim.person_id || !qid) {
+    return 0;
+  }
+
+  const relatedClaims = await supabaseRest(
+    `person_claims?select=id,claim_type,claim_json,scoring_reasons&person_id=eq.${encodeURIComponent(claim.person_id)}&source_name=eq.${encodeURIComponent(wikidataSourceName)}&review_status=in.(pending,needs_more_evidence)&limit=1000`,
+  ) as InternalClaim[];
+  const targets = relatedClaims.filter((relatedClaim) => relatedClaim.id !== claim.id && wikidataQidForClaim(relatedClaim) === qid);
+
+  for (const target of targets) {
+    const scoringReasons = Array.isArray(target.scoring_reasons) ? target.scoring_reasons : [];
+    await supabaseRest(`person_claims?id=eq.${encodeURIComponent(target.id)}`, {
+      method: 'PATCH',
+      headers: { prefer: 'return=minimal' },
+      body: JSON.stringify({
+        review_status: 'rejected',
+        visibility: 'private',
+        is_public: false,
+        claim_json: {
+          ...(target.claim_json ?? {}),
+          reviewDecision: {
+            version: 'internal-review-ui-qid-reject-cascade-v1',
+            decision: 'reject',
+            reason: 'same Wikidata QID rejected for this person',
+            reviewedAt: now,
+          },
+        },
+        scoring_reasons: [
+          ...scoringReasons,
+          {
+            version: 'internal-review-ui-qid-reject-cascade-v1',
+            reason: 'same Wikidata QID rejected for this person',
+            reviewedAt: now,
+          },
+        ],
+        updated_at: now,
+      }),
+    });
+  }
+
+  return targets.length;
+}
+
 function internalReviewApiPlugin(): Plugin {
   return {
     name: 'internal-review-api',
@@ -328,7 +374,7 @@ function internalReviewApiPlugin(): Plugin {
 
           const relatedUpdated = action === 'approve'
             ? await approveRelatedWikidataClaims(claim, now)
-            : 0;
+            : await rejectRelatedWikidataClaims(claim, now);
 
           if (action === 'reject') {
             writeSkippedRetryTarget(claim, person);

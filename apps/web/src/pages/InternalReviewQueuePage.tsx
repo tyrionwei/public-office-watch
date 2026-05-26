@@ -101,8 +101,13 @@ export function InternalReviewQueuePage() {
     }
 
     setClaims((current) => current.filter((item) => item.claim_id !== claim.claim_id));
-    const cascadeText = result.relatedUpdated > 0 ? `，同步通過 ${result.relatedUpdated} 筆低敏感欄位` : '';
-    setActionMessage(action === 'approve' ? `已通過：${claim.person_name ?? claim.claim_value}${cascadeText}` : `已標記錯誤：${claim.person_name ?? claim.claim_value}`);
+    const approveCascadeText = result.relatedUpdated > 0 ? `，同步通過 ${result.relatedUpdated} 筆低敏感欄位` : '';
+    const rejectCascadeText = result.relatedUpdated > 0 ? `，同步標記 ${result.relatedUpdated} 筆同 QID 資料` : '';
+    setActionMessage(
+      action === 'approve'
+        ? `已通過：${claim.person_name ?? claim.claim_value}${approveCascadeText}`
+        : `已標記錯誤：${claim.person_name ?? claim.claim_value}${rejectCascadeText}`,
+    );
     setActionClaimId(null);
   }
 

@@ -1967,6 +1967,46 @@ async function selectOrThrow(env, table, select) {
   return supabaseRequest(env, table, { method: 'GET', select });
 }
 
+const terminalPersonClaimReviewStatuses = new Set(['verified', 'rejected', 'archived']);
+
+async function fetchExistingPersonClaimReviewStates(env) {
+  const rows = await selectOrThrow(
+    env,
+    'person_claims',
+    'claim_key,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json',
+  );
+
+  return new Map(
+    rows
+      .filter((row) => terminalPersonClaimReviewStatuses.has(row.review_status))
+      .map((row) => [row.claim_key, row]),
+  );
+}
+
+function preserveReviewedPersonClaimRows(rows, existingReviewStates) {
+  return rows.map((row) => {
+    const existing = existingReviewStates.get(row.claim_key);
+
+    if (!existing) {
+      return row;
+    }
+
+    return {
+      ...row,
+      review_status: existing.review_status,
+      visibility: existing.visibility,
+      is_public: existing.is_public,
+      auto_reviewed_at: existing.auto_reviewed_at,
+      scoring_version: existing.scoring_version ?? row.scoring_version,
+      scoring_reasons: existing.scoring_reasons ?? row.scoring_reasons,
+      claim_json: {
+        ...(row.claim_json ?? {}),
+        ...(existing.claim_json?.reviewDecision ? { reviewDecision: existing.claim_json.reviewDecision } : {}),
+      },
+    };
+  });
+}
+
 function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
   const canonicalRows = (seed.people ?? []).map((person) => {
     const source = getSource(seed, person.sourceId);
@@ -2723,10 +2763,17 @@ async function writeSeed(seed, hash, args) {
       .filter((item) => item !== null),
   );
 
-  const personClaimRows = buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt, autoApprovedPersonBySourceKey, args);
+  const existingPersonClaimReviewStates = await fetchExistingPersonClaimReviewStates(env);
+  const personClaimRows = preserveReviewedPersonClaimRows(
+    buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt, autoApprovedPersonBySourceKey, args),
+    existingPersonClaimReviewStates,
+  );
   await upsertOrThrow(env, 'person_claims', personClaimRows, { onConflict: 'claim_key' });
 
-  const personEnrichmentClaimRows = buildPersonEnrichmentClaimRows(seed, peopleRefresh, startedAt, args);
+  const personEnrichmentClaimRows = preserveReviewedPersonClaimRows(
+    buildPersonEnrichmentClaimRows(seed, peopleRefresh, startedAt, args),
+    existingPersonClaimReviewStates,
+  );
   await upsertOrThrow(env, 'person_claims', personEnrichmentClaimRows, { onConflict: 'claim_key' });
 
   const legalRecordLeadRows = buildLegalRecordLeadRows(seed, peopleRefresh, startedAt);

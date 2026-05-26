@@ -153,7 +153,13 @@ const fallbackCollator = new Intl.Collator('zh-Hant-TW');
 
 export function normalizePartyLabel(party: string | null | undefined) {
   const value = party?.trim();
-  return value && value.length > 0 ? value : '未知政黨';
+  if (!value) return '未知政黨';
+  if (value === '臺灣民眾黨') return '台灣民眾黨';
+  if (value === '臺灣基進') return '台灣基進';
+  if (value === '台灣綠黨') return '綠黨';
+  if (value === '臺灣社會民主黨') return '社會民主黨';
+  if (value === '無黨籍及未經政黨推薦') return '無黨籍';
+  return value;
 }
 
 export function toPartyThemeKey(partyLabel: string | null | undefined): PartyThemeKey {
@@ -331,12 +337,22 @@ function externalIdsForPerson(claims: PublicPersonClaim[]) {
   )).sort();
 }
 
-function dedupeKeyFor(person: PublicPersonListItem) {
-  if (person.external_ids.length > 0) {
-    return `external:${person.external_ids[0]}`;
+function normalizeExternalIdForDedupe(value: string) {
+  const normalized = value.trim();
+  const wikidataQid = normalized.match(/^wikidata:(Q\d+)$/i)?.[1];
+  return wikidataQid ? `wikidata:${wikidataQid.toUpperCase()}` : normalized.toLowerCase();
+}
+
+function dedupeKeysFor(person: PublicPersonListItem) {
+  const keys = new Set<string>([
+    ['name-party', normalizePersonNameForDedupe(person.name), normalizePartyLabel(person.party)].join('|'),
+  ]);
+
+  for (const externalId of person.external_ids) {
+    keys.add(`external:${normalizeExternalIdForDedupe(externalId)}`);
   }
 
-  return [normalizePersonNameForDedupe(person.name), normalizePartyLabel(person.party)].join('|');
+  return Array.from(keys);
 }
 
 function profileCompletenessScore(person: PublicPersonListItem) {
@@ -360,31 +376,42 @@ function comparePreferredDuplicate(left: PublicPersonListItem, right: PublicPers
   return profileCompletenessScore(right) - profileCompletenessScore(left);
 }
 
+function mergePersonListItems(left: PublicPersonListItem, right: PublicPersonListItem) {
+  const preferred = comparePreferredDuplicate(left, right) < 0 ? left : right;
+  const secondary = preferred === left ? right : left;
+
+  return {
+    ...preferred,
+    external_ids: Array.from(new Set([...preferred.external_ids, ...secondary.external_ids])).sort(),
+    merged_person_ids: Array.from(new Set([...preferred.merged_person_ids, ...secondary.merged_person_ids])),
+    merged_role_labels: Array.from(new Set([...preferred.merged_role_labels, ...secondary.merged_role_labels])),
+    merged_candidate_count: preferred.merged_candidate_count + secondary.merged_candidate_count,
+  };
+}
+
 function dedupePersonListItems(items: PublicPersonListItem[]) {
   const byKey = new Map<string, PublicPersonListItem>();
 
   for (const item of items) {
-    const key = dedupeKeyFor(item);
-    const existing = byKey.get(key);
+    const matchingItems = Array.from(new Set(dedupeKeysFor(item).map((key) => byKey.get(key)).filter(Boolean))) as PublicPersonListItem[];
 
-    if (!existing) {
-      byKey.set(key, item);
-      continue;
+    let mergedItem = item;
+    for (const existing of matchingItems) {
+      mergedItem = mergePersonListItems(mergedItem, existing);
     }
 
-    const preferred = comparePreferredDuplicate(item, existing) < 0 ? item : existing;
-    const secondary = preferred === item ? existing : item;
+    for (const [key, existing] of byKey.entries()) {
+      if (matchingItems.includes(existing)) {
+        byKey.delete(key);
+      }
+    }
 
-    byKey.set(key, {
-      ...preferred,
-      external_ids: Array.from(new Set([...preferred.external_ids, ...secondary.external_ids])).sort(),
-      merged_person_ids: Array.from(new Set([...preferred.merged_person_ids, ...secondary.merged_person_ids])),
-      merged_role_labels: Array.from(new Set([...preferred.merged_role_labels, ...secondary.merged_role_labels])),
-      merged_candidate_count: preferred.merged_candidate_count + secondary.merged_candidate_count,
-    });
+    for (const key of dedupeKeysFor(mergedItem)) {
+      byKey.set(key, mergedItem);
+    }
   }
 
-  return Array.from(byKey.values());
+  return Array.from(new Set(byKey.values()));
 }
 
 function candidateRoleLabel(candidate: PublicCandidate) {

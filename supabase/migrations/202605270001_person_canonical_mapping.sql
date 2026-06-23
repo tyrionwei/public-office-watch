@@ -52,7 +52,18 @@ LEFT JOIN person_merge_decisions m
    AND m.status = 'verified';
 
 CREATE OR REPLACE VIEW person_duplicate_review_queue AS
-WITH public_people_base AS (
+WITH verified_birth_dates AS (
+    SELECT
+        pc.person_id,
+        MIN(NULLIF(TRIM(COALESCE(pc.claim_value, pc.claim_json->>'value')), '')) AS birth_date
+    FROM person_claims pc
+    WHERE pc.claim_type = 'birth_date'
+      AND pc.review_status = 'verified'
+      AND pc.visibility = 'public'
+      AND pc.is_public = TRUE
+    GROUP BY pc.person_id
+),
+public_people_base AS (
     SELECT
         p.id,
         p.name,
@@ -60,6 +71,7 @@ WITH public_people_base AS (
         p.position,
         p.district,
         p.gender,
+        birth_dates.birth_date,
         p.education,
         p.experience,
         p.updated_at,
@@ -74,9 +86,10 @@ WITH public_people_base AS (
             CASE WHEN p.experience IS NOT NULL THEN 1 ELSE 0 END
         ) AS profile_score
     FROM people p
+    LEFT JOIN verified_birth_dates birth_dates ON birth_dates.person_id = p.id
     WHERE p.is_public = TRUE
 ),
-wikidata_external_ids AS (
+verified_external_ids AS (
     SELECT DISTINCT
         pc.person_id,
         lower(COALESCE(
@@ -91,21 +104,18 @@ wikidata_external_ids AS (
       AND pc.review_status = 'verified'
       AND pc.visibility = 'public'
       AND pc.is_public = TRUE
-      AND (
-          pc.claim_value ILIKE 'wikidata:%'
-          OR pc.claim_json ? 'wikidataQid'
-      )
+      AND pc.claim_value IS NOT NULL
 ),
 pair_candidates AS (
     SELECT
         LEAST(left_ids.person_id, right_ids.person_id) AS left_person_id,
         GREATEST(left_ids.person_id, right_ids.person_id) AS right_person_id,
-        'same Wikidata external ID' AS reason,
+        'same verified external ID' AS reason,
         'A'::TEXT AS confidence_level,
         100::NUMERIC AS score,
         jsonb_build_object('externalId', left_ids.external_id) AS evidence_json
-    FROM wikidata_external_ids left_ids
-    JOIN wikidata_external_ids right_ids
+    FROM verified_external_ids left_ids
+    JOIN verified_external_ids right_ids
       ON right_ids.external_id = left_ids.external_id
      AND right_ids.person_id > left_ids.person_id
 
@@ -114,39 +124,59 @@ pair_candidates AS (
     SELECT
         LEAST(left_person.id, right_person.id) AS left_person_id,
         GREATEST(left_person.id, right_person.id) AS right_person_id,
-        'same normalized name, party, and district' AS reason,
-        'B'::TEXT AS confidence_level,
-        90::NUMERIC AS score,
+        'same normalized name, gender, and birth date' AS reason,
+        'A'::TEXT AS confidence_level,
+        95::NUMERIC AS score,
         jsonb_build_object(
             'normalizedName', left_person.normalized_name,
-            'normalizedParty', left_person.normalized_party,
-            'normalizedDistrict', left_person.normalized_district
+            'gender', left_person.gender,
+            'birthDate', left_person.birth_date
         ) AS evidence_json
     FROM public_people_base left_person
     JOIN public_people_base right_person
       ON right_person.normalized_name = left_person.normalized_name
-     AND right_person.normalized_party = left_person.normalized_party
-     AND right_person.normalized_district = left_person.normalized_district
+     AND right_person.gender = left_person.gender
+     AND right_person.birth_date = left_person.birth_date
      AND right_person.id > left_person.id
-    WHERE left_person.normalized_district <> '未知選區'
+    WHERE left_person.gender IS NOT NULL
+      AND left_person.gender <> 'unknown'
+      AND left_person.birth_date IS NOT NULL
 
     UNION ALL
 
     SELECT
         LEAST(left_person.id, right_person.id) AS left_person_id,
         GREATEST(left_person.id, right_person.id) AS right_person_id,
-        'same normalized name and party' AS reason,
+        'same normalized name with contextual overlap' AS reason,
         'D'::TEXT AS confidence_level,
         55::NUMERIC AS score,
         jsonb_build_object(
             'normalizedName', left_person.normalized_name,
-            'normalizedParty', left_person.normalized_party
+            'normalizedParty', CASE
+                WHEN left_person.normalized_party = right_person.normalized_party THEN left_person.normalized_party
+                ELSE NULL
+            END,
+            'normalizedDistrict', CASE
+                WHEN left_person.normalized_district = right_person.normalized_district THEN left_person.normalized_district
+                ELSE NULL
+            END,
+            'note', 'party and district are context only; they are not stable identity fields'
         ) AS evidence_json
     FROM public_people_base left_person
     JOIN public_people_base right_person
       ON right_person.normalized_name = left_person.normalized_name
-     AND right_person.normalized_party = left_person.normalized_party
      AND right_person.id > left_person.id
+    WHERE (
+        left_person.normalized_party = right_person.normalized_party
+        OR left_person.normalized_district = right_person.normalized_district
+    )
+      AND NOT (
+          left_person.gender IS NOT NULL
+          AND right_person.gender IS NOT NULL
+          AND left_person.gender <> 'unknown'
+          AND right_person.gender <> 'unknown'
+          AND left_person.gender <> right_person.gender
+      )
 ),
 deduped_pairs AS (
     SELECT DISTINCT ON (left_person_id, right_person_id)
@@ -225,7 +255,7 @@ WITH ranked_auto_merges AS (
         reason,
         evidence_json
     FROM person_duplicate_review_queue
-    WHERE confidence_level IN ('A', 'B')
+    WHERE confidence_level = 'A'
     ORDER BY duplicate_person_id, score DESC, canonical_person_id
 )
 INSERT INTO person_merge_decisions (

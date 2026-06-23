@@ -220,6 +220,32 @@
       ]
     },
     {
+      "id": "ly-historical-legislator-profiles",
+      "status": "implemented",
+      "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16",
+      "downloadUrl": "https://data.ly.gov.tw/odw/ID16Action.action?name=&sex=&party=&partyGroup=&areaName=&term={term}&fileType=json",
+      "cadence": "daily",
+      "format": "json-wrapped-in-html-whitespace",
+      "parser": "fetch-official-person-profile-enrichment.mjs",
+      "targetTables": ["person_claims"],
+      "targetPublicViews": ["public_person_claims"],
+      "currentUse": "Fetches Legislative Yuan terms 1-11 and writes official education/experience claims for already-known public_people only.",
+      "matching": {
+        "primary": "existing public external_id claim matching ly-legislator-${term}-${code}",
+        "fallback": "unique normalized name match with gender plus party/district/legislator-position scoring",
+        "boundary": "Does not create new people; ambiguous name matches are skipped."
+      },
+      "fieldCandidates": {
+        "education": ["degree"],
+        "experience": ["experience"]
+      },
+      "privacyBoundary": "Official structured public profile fields only. Photos are intentionally ignored.",
+      "nextParserNotes": [
+        "Keep this official enrichment step before Wikidata fallback in the hourly batch.",
+        "If local government structured profile sources are added later, write them as official A-level person_claims before Wiki/Wikidata claims."
+      ]
+    },
+    {
       "id": "control-yuan-political-contribution-search",
       "status": "planned",
       "sourceUrl": "https://ardata.cy.gov.tw/home",

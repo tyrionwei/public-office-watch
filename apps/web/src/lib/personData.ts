@@ -236,8 +236,12 @@ function compareNameByStroke(leftName: string, rightName: string) {
   return strokeResult === 0 ? fallbackCollator.compare(leftName, rightName) : strokeResult;
 }
 
-function matchesText(value: string | null | undefined, query: string) {
-  return value?.toLowerCase().includes(query) ?? false;
+function normalizeNameSearchText(value: string | null | undefined) {
+  return value?.replace(/\s+/g, '').trim().toLowerCase() ?? '';
+}
+
+function matchesPersonName(name: string, query: string) {
+  return normalizeNameSearchText(name).includes(normalizeNameSearchText(query));
 }
 
 function normalizePersonNameForDedupe(name: string) {
@@ -486,7 +490,7 @@ export function filterPersonListItems(items: PublicPersonListItem[], filters: Pu
   const query = filters.query?.trim().toLowerCase() ?? '';
   return sortPersonListItems(
     dedupePersonListItems(items.filter((person) => {
-      if (query && ![person.name, person.alias, person.party, person.position, person.district].some((value) => matchesText(value, query))) {
+      if (query && !matchesPersonName(person.name, query)) {
         return false;
       }
 

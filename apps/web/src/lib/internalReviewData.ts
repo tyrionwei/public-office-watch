@@ -17,6 +17,7 @@ export type ReviewClaim = {
   source_name: string | null;
   source_url: string | null;
   updated_at: string;
+  claim_json?: Record<string, unknown>;
 };
 
 type ReviewClaimFilters = {
@@ -39,6 +40,10 @@ type PublicPersonReviewSummary = {
 
 type ReviewAction = 'approve' | 'reject';
 
+function objectValue(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : null;
+}
+
 export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Promise<ReviewClaimResult> {
   const client = getSupabasePublicClient();
   if (!client) {
@@ -48,7 +53,7 @@ export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Pr
   let query = client
     .from('person_claim_review_queue')
     .select(
-      'claim_id,person_id,raw_name,claim_type,claim_value,confidence_level,review_score,review_status,visibility,source_name,source_url,updated_at',
+      'claim_id,person_id,raw_name,claim_type,claim_value,claim_json,confidence_level,review_score,review_status,visibility,source_name,source_url,updated_at',
     )
     .order('review_score', { ascending: false })
     .order('updated_at', { ascending: false })
@@ -87,9 +92,16 @@ export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Pr
   return {
     claims: rows.map((claim) => {
       const person = claim.person_id ? peopleById.get(claim.person_id) : null;
+      const targetPerson = objectValue(claim.claim_json?.targetPerson);
+      const claimJsonPersonName =
+        typeof claim.claim_json?.personName === 'string'
+          ? claim.claim_json.personName
+          : typeof targetPerson?.name === 'string'
+            ? targetPerson.name
+            : null;
       return {
         ...claim,
-        person_name: person?.name ?? claim.raw_name ?? null,
+        person_name: person?.name ?? claim.raw_name ?? claimJsonPersonName,
         person_party: person?.party ?? null,
         person_position: person?.position ?? null,
         person_district: person?.district ?? null,
@@ -99,7 +111,7 @@ export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Pr
   };
 }
 
-export async function reviewInternalClaim(claimId: string, action: ReviewAction): Promise<{ relatedUpdated: number; error: string | null }> {
+export async function reviewInternalClaim(claimId: string, action: ReviewAction): Promise<{ relatedUpdated: number; relatedClaimIds: string[]; error: string | null }> {
   const response = await fetch('/internal-api/review-claim', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
@@ -108,8 +120,12 @@ export async function reviewInternalClaim(claimId: string, action: ReviewAction)
   const body = await response.json().catch(() => null);
 
   if (!response.ok) {
-    return { relatedUpdated: 0, error: body?.error ?? response.statusText };
+    return { relatedUpdated: 0, relatedClaimIds: [], error: body?.error ?? response.statusText };
   }
 
-  return { relatedUpdated: Number(body?.relatedUpdated ?? 0), error: null };
+  return {
+    relatedUpdated: Number(body?.relatedUpdated ?? 0),
+    relatedClaimIds: Array.isArray(body?.relatedClaimIds) ? body.relatedClaimIds.map(String) : [],
+    error: null,
+  };
 }

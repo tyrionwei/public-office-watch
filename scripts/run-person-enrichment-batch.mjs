@@ -133,6 +133,19 @@ async function main() {
   const beforeReviewCount = await countRows('person_claim_review_queue', wikidataSourceName);
   const beforePublicCount = await countRows('public_person_claims', wikidataSourceName);
 
+  await run('npm', ['run', 'fetch:official-person-profile-enrichment', '--', '--write'], {
+    env: {
+      SUPABASE_URL: localSupabaseUrl,
+      SUPABASE_ANON_KEY: localAnonKey,
+    },
+  });
+  await run('npm', ['run', 'sync:official-person-profile-enrichment:write'], {
+    env: {
+      SUPABASE_URL: localSupabaseUrl,
+      SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,
+    },
+  });
+
   await run('npm', ['run', 'fetch:wikidata-person-enrichment:resume'], {
     env: {
       SUPABASE_URL: localSupabaseUrl,
@@ -157,6 +170,19 @@ async function main() {
       SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,
     },
   });
+  await run('npm', ['run', 'cleanup:merged-person-claims:write'], {
+    env: {
+      SUPABASE_URL: localSupabaseUrl,
+      SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,
+    },
+  });
+  await run('npm', ['run', 'report:duplicate-people', '--', '--sample-limit', '500', '--write'], {
+    env: {
+      SUPABASE_URL: localSupabaseUrl,
+      SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,
+    },
+  });
+  await run('npm', ['run', 'report:identity-gaps', '--', '--write']);
 
   const judicial = await maybeFetchJudicialLeads();
   const afterReviewCount = await countRows('person_claim_review_queue', wikidataSourceName);

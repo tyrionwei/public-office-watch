@@ -1,10 +1,12 @@
 const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || 'http://127.0.0.1:54321';
 const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
-const autoReviewVersion = 'auto-verified-external-id-v1';
+const autoReviewVersion = 'auto-verified-external-id-or-identity-match-v2';
 const wikidataSourceName = 'Wikidata 人物補充資料';
 const blockedClaimTypes = new Set(['legal_case', 'family_relation']);
+const wikidataFallbackOnlyClaimTypes = new Set(['education', 'experience']);
 const wikidataExternalIdUnlockedClaimTypes = new Set([
+  'external_id',
   'gender',
   'birth_date',
   'education',
@@ -105,6 +107,81 @@ async function fetchReviewCandidates(options) {
   }));
 }
 
+function inFilter(values) {
+  return `in.(${Array.from(values).join(',')})`;
+}
+
+function hasPublicValue(value) {
+  return typeof value === 'string' ? value.trim().length > 0 : value != null;
+}
+
+function fallbackClaimKey(claim) {
+  if (!claim.person_id || !wikidataFallbackOnlyClaimTypes.has(claim.claim_type)) {
+    return null;
+  }
+
+  return `${claim.person_id}:${claim.claim_type}`;
+}
+
+async function fetchPrimaryPublicFieldKeys(claims) {
+  const personIds = new Set(
+    claims
+      .filter((claim) => claim.source_name === wikidataSourceName && fallbackClaimKey(claim))
+      .map((claim) => claim.person_id),
+  );
+
+  if (personIds.size === 0) {
+    return new Set();
+  }
+
+  const url = supabaseUrl('public_people');
+  url.searchParams.set('select', 'person_id,education,experience');
+  url.searchParams.set('person_id', inFilter(personIds));
+  url.searchParams.set('limit', String(personIds.size));
+
+  const rows = await supabaseJson(url);
+  const keys = new Set();
+
+  for (const row of rows) {
+    for (const claimType of wikidataFallbackOnlyClaimTypes) {
+      if (hasPublicValue(row[claimType])) {
+        keys.add(`${row.person_id}:${claimType}`);
+      }
+    }
+  }
+
+  return keys;
+}
+
+async function fetchPrimaryPublicClaimKeys(claims) {
+  const personIds = new Set();
+  const claimTypes = new Set();
+
+  for (const claim of claims) {
+    if (claim.source_name === wikidataSourceName && fallbackClaimKey(claim)) {
+      personIds.add(claim.person_id);
+      claimTypes.add(claim.claim_type);
+    }
+  }
+
+  if (personIds.size === 0 || claimTypes.size === 0) {
+    return new Set();
+  }
+
+  const url = supabaseUrl('public_person_claims');
+  url.searchParams.set('select', 'person_id,claim_type,source_name');
+  url.searchParams.set('person_id', inFilter(personIds));
+  url.searchParams.set('claim_type', inFilter(claimTypes));
+  url.searchParams.set('limit', '10000');
+
+  const rows = await supabaseJson(url);
+  return new Set(
+    rows
+      .filter((row) => row.source_name !== wikidataSourceName)
+      .map((row) => `${row.person_id}:${row.claim_type}`),
+  );
+}
+
 async function fetchVerifiedExternalIdKeys(sourceName) {
   const url = supabaseUrl('person_claims');
   url.searchParams.set('select', 'person_id,claim_value,claim_json');
@@ -166,7 +243,7 @@ function verifiedExternalIdKeyForClaim(claim) {
   return `${claim.person_id}:wikidata:${qid.toUpperCase()}`;
 }
 
-function explainEligibility(claim, options, verifiedExternalIdKeys) {
+function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys) {
   if (blockedClaimTypes.has(claim.claim_type)) {
     return { eligible: false, reason: 'blocked-sensitive-claim-type' };
   }
@@ -183,24 +260,33 @@ function explainEligibility(claim, options, verifiedExternalIdKeys) {
     return { eligible: false, reason: 'wikidata-claim-type-not-auto-unlocked' };
   }
 
+  const primaryKey = fallbackClaimKey(claim);
+  if (primaryKey && primaryPublicFieldKeys.has(primaryKey)) {
+    return { eligible: false, reason: 'wikidata-fallback-skipped-public-field-exists' };
+  }
+
+  if (primaryKey && primaryPublicClaimKeys.has(primaryKey)) {
+    return { eligible: false, reason: 'wikidata-fallback-skipped-primary-claim-exists' };
+  }
+
   const externalIdKey = verifiedExternalIdKeyForClaim(claim);
   if (!externalIdKey) {
     return { eligible: false, reason: 'wikidata-missing-person-or-qid' };
   }
 
-  if (!verifiedExternalIdKeys.has(externalIdKey)) {
-    return { eligible: false, reason: 'wikidata-external-id-not-verified' };
+  if (verifiedExternalIdKeys.has(externalIdKey)) {
+    return { eligible: true, reason: 'wikidata-verified-external-id-unlocked' };
   }
 
-  if (claim.claim_json?.identityMatch?.status !== 'matched') {
-    return { eligible: true, reason: 'wikidata-verified-external-id-unlocked-without-identity-match' };
+  if (claim.claim_json?.identityMatch?.status === 'matched') {
+    return { eligible: true, reason: 'wikidata-identity-match-auto-unlocked' };
   }
 
-  return { eligible: true, reason: 'wikidata-verified-external-id-unlocked' };
+  return { eligible: false, reason: 'wikidata-external-id-not-verified' };
 }
 
-function isEligibleClaim(claim, options, verifiedExternalIdKeys) {
-  return explainEligibility(claim, options, verifiedExternalIdKeys).eligible;
+function isEligibleClaim(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys) {
+  return explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys).eligible;
 }
 
 function incrementReason(reasonCounts, reason) {
@@ -213,7 +299,7 @@ function nextScoringReasons(claim) {
     ...existing,
     {
       version: autoReviewVersion,
-      reason: 'low-sensitivity claim auto-approved after verified external_id for the same person and source entity',
+      reason: 'low-sensitivity claim auto-approved after verified external_id or matched identity evidence for the same person and source entity',
       reviewedAt: new Date().toISOString(),
     },
   ];
@@ -257,10 +343,17 @@ async function main() {
 
   while (batches < options.maxBatches) {
     const candidates = await fetchReviewCandidates(options);
+    const primaryPublicFieldKeys = await fetchPrimaryPublicFieldKeys(candidates);
+    const primaryPublicClaimKeys = await fetchPrimaryPublicClaimKeys(candidates);
     for (const claim of candidates) {
-      incrementReason(eligibilityReasonCounts, explainEligibility(claim, options, verifiedExternalIdKeys).reason);
+      incrementReason(
+        eligibilityReasonCounts,
+        explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys).reason,
+      );
     }
-    const eligibleClaims = candidates.filter((claim) => isEligibleClaim(claim, options, verifiedExternalIdKeys));
+    const eligibleClaims = candidates.filter((claim) =>
+      isEligibleClaim(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys),
+    );
     totalScanned += candidates.length;
     totalEligible += eligibleClaims.length;
     totalSkipped += candidates.length - eligibleClaims.length;
@@ -306,11 +399,12 @@ async function main() {
     skipped: totalSkipped,
     verifiedExternalIdKeyCount: verifiedExternalIdKeys.size,
     eligibilityReasonCounts,
-    autoReviewedRule: 'non-Wikidata claims pass existing non-sensitive rule; Wikidata low-sensitivity claims require a verified external_id for the same person/QID',
+    autoReviewedRule: 'non-Wikidata claims pass existing non-sensitive rule; Wikidata low-sensitivity claims require either a verified external_id for the same person/QID or matched identity evidence',
     sourceSpecificRules: {
       wikidata: {
-        requiresIdentityMatch: 'only when external_id has not been verified yet',
-        requiresVerifiedExternalId: true,
+        requiresIdentityMatch: 'when external_id has not been verified yet',
+        requiresVerifiedExternalId: false,
+        fallbackOnlyClaimTypes: Array.from(wikidataFallbackOnlyClaimTypes),
         autoClaimTypes: Array.from(wikidataExternalIdUnlockedClaimTypes),
       },
     },

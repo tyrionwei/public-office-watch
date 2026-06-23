@@ -1,0 +1,1605 @@
+{
+  "schemaVersion": 1,
+  "name": "identity-gap-wikidata-targets",
+  "generatedAt": "2026-06-23T01:17:15.430Z",
+  "sourceReportGeneratedAt": "2026-06-23T01:00:43.151Z",
+  "targetCount": 142,
+  "targets": [
+    {
+      "personId": "09a505d1-506f-476b-b7f9-391454d69e2b",
+      "name": "王鴻薇",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "臺北市議員",
+      "district": "臺北市第3選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "22f51350-ab3b-4447-8f77-3e11e387d3a5",
+      "name": "吳沛憶",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "臺北市議員",
+      "district": "臺北市第5選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "01b16e94-3096-43ac-8810-79b195961215",
+      "name": "李柏毅",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員",
+      "district": "高雄市第3選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "1948e637-12d2-4fd7-9d00-3ddd613b7122",
+      "name": "李柏毅",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "高雄市議員",
+      "district": "高雄市第4選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "87529363-ac9b-4d5b-b64a-c4c4136f8732",
+      "name": "許淑華",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人",
+      "district": "臺北市第7選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "769d921c-72cb-46bb-9eea-f36511e82618",
+      "name": "陳志明",
+      "gender": "male",
+      "party": "時代力量",
+      "position": "臺北市議員候選人",
+      "district": "臺北市第2選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "cb2d97d6-27cd-4e3c-98c1-f4cd2a923b7d",
+      "name": "陳志明",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "嘉義縣議員候選人",
+      "district": "嘉義縣第3選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "de10ebed-c9fe-4369-954e-b0f247467243",
+      "name": "陳志明",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "花蓮縣議員候選人",
+      "district": "花蓮縣第4選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "15617941-008f-4a83-b755-05f4fee19f41",
+      "name": "黃仁",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "平地原住民選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "31257070-2105-403c-bae2-76899766e8fa",
+      "name": "黃仁",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "平地原住民",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "f8f23cf8-eeec-49b7-a479-bc5a5682e7df",
+      "name": "黃仁",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "臺中市平地原住民議員",
+      "district": "臺中市第15選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "a15ef3fd-2773-4332-bd63-a759aed6045b",
+      "name": "王育敏",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "嘉義縣縣長候選人",
+      "district": "嘉義縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "750480ac-2bab-4fc0-aee9-56e77d586b35",
+      "name": "王美惠",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "嘉義市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "7f080d2d-0bb6-4014-b447-3c5c1cbdfb38",
+      "name": "王閔生",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人",
+      "district": "臺北市第8選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ef0db200-713e-440f-a6d6-f7f5da7d6226",
+      "name": "王閔生",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "臺北市議員",
+      "district": "臺北市第6選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "a6a2da3f-0dba-4097-8762-b92a11f98c76",
+      "name": "伍麗華 Saidhai．Tahovecahe",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "山地原住民",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ae7ba3fd-c884-404f-a5d1-4bb587c9ca5a",
+      "name": "伍麗華Saidhai‧Tahovecahe",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員",
+      "district": "山地原住民選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "2772fb37-a9bd-4d47-b134-4b40e5893899",
+      "name": "江肇國",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人",
+      "district": "臺中市第6選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "54709b82-1761-4aa8-aec2-6a1eb704aef2",
+      "name": "余筱菁",
+      "gender": "female",
+      "party": "綠黨",
+      "position": "第11屆立法委員候選人",
+      "district": "新竹縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "7ff6583d-ab1b-4a3b-95e1-a02c4d534eab",
+      "name": "余筱菁",
+      "gender": "female",
+      "party": "綠黨",
+      "position": "新竹縣議員候選人",
+      "district": "新竹縣第8選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+      "name": "吳宗憲",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "桃園市議員候選人",
+      "district": "桃園市第12選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+      "name": "吳宗憲",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "全國不分區及僑居國外國民",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "5af7eb77-90e1-481a-9005-d7795ddd6ab6",
+      "name": "吳欣岱",
+      "gender": "female",
+      "party": "台灣基進",
+      "position": "第11屆立法委員候選人",
+      "district": "臺北市第4選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "99a261ef-843e-4fb3-9704-8da6c88ff2f3",
+      "name": "吳欣岱",
+      "gender": "female",
+      "party": "台灣基進",
+      "position": "臺北市議員候選人",
+      "district": "臺北市第2選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "85c119ef-d20e-4137-8ccf-e3ec49e27e74",
+      "name": "吳政杰",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "澎湖縣議員",
+      "district": "澎湖縣第2選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "d419da4e-7c77-464d-9f09-6ac70fe1e4c6",
+      "name": "吳政杰",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "澎湖縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "300bc8b9-ad05-49cc-b04f-8c2ada4b8406",
+      "name": "吳炳輝",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "雲林縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "8d3641a7-9372-400a-a8a6-a34e012ded07",
+      "name": "吳炳輝",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "臺南市市長候選人",
+      "district": "臺南市",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "1fe7b44c-cfce-42ca-b2f6-8a30cfec6b07",
+      "name": "吳崢",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "臺北市議員候選人",
+      "district": "臺北市第3選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "adfc2c3d-81ad-4b5b-a73d-f6e50b9ac77e",
+      "name": "吳崢",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人",
+      "district": "新北市第8選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "0097d200-501b-45da-b442-2df53160636b",
+      "name": "李有宜",
+      "gender": "female",
+      "party": "無黨籍",
+      "position": "臺北市議員候選人",
+      "district": "臺北市第5選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "914f3157-49ca-466a-96a9-0a1ebc6b3ff1",
+      "name": "李有宜",
+      "gender": "female",
+      "party": "台灣民眾黨",
+      "position": "第11屆立法委員候選人",
+      "district": "新北市第2選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "bdb1dbb2-b052-49bc-b762-e457cd78887b",
+      "name": "李眉蓁",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "高雄市第3選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ec46af0a-921a-4f72-84af-5669ad194d0d",
+      "name": "李眉蓁",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "高雄市議員",
+      "district": "高雄市第4選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "5f1eda4b-c259-4626-a4ae-b9e3a6ba01a4",
+      "name": "李問",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "連江縣縣長候選人",
+      "district": "連江縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "8f17afc3-1ddc-4aa7-be01-98aae3beb5d9",
+      "name": "李問",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人",
+      "district": "連江縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "2cfd7d5b-1f96-4087-a14e-730c4248e5ce",
+      "name": "林世偉",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "新竹縣山地原住民議員候選人",
+      "district": "新竹縣第12選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "9050477b-62e9-42f4-a40a-9fb1716a9bbe",
+      "name": "林世偉",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "山地原住民",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "990c4455-532e-4b9a-a7b8-b64e4d31ad5a",
+      "name": "林志成",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "臺北市第5選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "dbc0f9b2-0cd0-4ced-b327-4d6b3feb91d7",
+      "name": "林志成",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "屏東縣議員候選人",
+      "district": "屏東縣第3選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "1cf231cf-01c4-43c0-ba9a-b6b30cd9adb6",
+      "name": "林金結",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "新北市議員",
+      "district": "新北市第8選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "8f339068-a6fd-485f-b365-04bc246806f4",
+      "name": "林金結",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "新北市第10選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "7ed0c94b-54a3-4794-8b22-e357e29c70f5",
+      "name": "林國春",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "新北市第6選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "5a64c59a-4c69-42ef-987c-e234e7626f95",
+      "name": "林意評",
+      "gender": "male",
+      "party": "台灣基進",
+      "position": "第11屆立法委員候選人",
+      "district": "宜蘭縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ade330a6-d068-42fe-8bcb-a5def13e4339",
+      "name": "林意評",
+      "gender": "male",
+      "party": "台灣基進",
+      "position": "宜蘭縣議員候選人",
+      "district": "宜蘭縣第6選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "b93d2aa3-208a-4d83-b953-8973531fd05f",
+      "name": "林義迪",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "高雄市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "d95504bd-67e4-48fa-bf40-65ea3b97a8fa",
+      "name": "林義迪",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "高雄市議員",
+      "district": "高雄市第1選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "2fadae6b-d31f-4da1-8226-2826f3fd58d0",
+      "name": "邱吉均",
+      "gender": "male",
+      "party": "制度救世島",
+      "position": "第11屆立法委員候選人",
+      "district": "新北市第4選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ff77b5c2-e07f-4b3c-bed9-643d4830eadd",
+      "name": "邱吉均",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "新北市議員候選人",
+      "district": "新北市第3選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "b7f0b9bc-d9c3-488e-af08-fa344a52b4a0",
+      "name": "侯友宜",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第16任總統候選人",
+      "district": "全國",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "3b46104a-4963-495d-8aa5-55f2ed8dc979",
+      "name": "侯漢廷",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "臺北市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "a6f2ae78-fd47-4bc7-9843-3e3363329e17",
+      "name": "侯漢廷",
+      "gender": "male",
+      "party": "新黨",
+      "position": "臺北市議員",
+      "district": "臺北市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "58668d18-2c87-42e2-80b1-edf180319c51",
+      "name": "姚正玉",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "臺南市第3選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "7146be10-f395-4eed-a420-c57723a86c97",
+      "name": "姚正玉",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "臺南市議員候選人",
+      "district": "臺南市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "425880fb-f8a3-4b3f-bc77-94b907f2e2b8",
+      "name": "柯志恩",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "高雄市市長候選人",
+      "district": "高雄市",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "a09267b3-fe84-4434-a703-1f58786184a0",
+      "name": "柯志恩",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "全國不分區及僑居國外國民",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "505f6c1e-6e82-40e0-ac7e-952755bd0dc5",
+      "name": "洪志明",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "屏東縣議員候選人",
+      "district": "屏東縣第4選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "d87a57f2-becb-4be7-8272-3a1337ef3845",
+      "name": "洪志明",
+      "gender": "male",
+      "party": "台灣民眾黨",
+      "position": "臺中市平地原住民議員候選人",
+      "district": "臺中市第15選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "60e13c5e-a183-470a-818e-52fb34a71ddb",
+      "name": "紀文清",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "臺中市第6選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "dccf171f-e7dc-460c-9766-b21193a49844",
+      "name": "紀文清",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "臺中市議員候選人",
+      "district": "臺中市第10選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "a058edf9-9aeb-4ebb-a490-848178441ce5",
+      "name": "高金素梅",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "山地原住民選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ae0dd30e-366e-46dd-93e8-904675ff808c",
+      "name": "高金素梅",
+      "gender": "female",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "山地原住民",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "009bdf6b-5300-460c-88b8-a4158f53ee90",
+      "name": "高美珠",
+      "gender": "female",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "平地原住民",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "18b4ec3f-d519-48b1-aa31-5c57b1c9343f",
+      "name": "高美珠",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "臺東縣平地原住民議員候選人",
+      "district": "臺東縣第11選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "6cdf9eab-203b-47f9-9d30-6629a112cdd4",
+      "name": "張志豪",
+      "gender": "male",
+      "party": "台灣民眾黨",
+      "position": "臺北市議員",
+      "district": "臺北市第6選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "115a4e40-4b81-4259-9c78-35ce9a910794",
+      "name": "張秀華",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "嘉義市議員",
+      "district": "嘉義市第2選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "3ee607f6-4aea-418e-ad20-88c66a3abb00",
+      "name": "張秀華",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "嘉義市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "3426e556-d1c6-4694-8b2a-2c03c57f5171",
+      "name": "許忠信",
+      "gender": "male",
+      "party": "台灣民眾黨",
+      "position": "第11屆立法委員",
+      "district": "全國不分區及僑居國外國民",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ae882451-8877-4ca1-907f-10a3e7d7e1fb",
+      "name": "許忠信",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "臺南市市長候選人",
+      "district": "臺南市",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "2a1a0ae8-22c1-4371-8818-16cf3d30274e",
+      "name": "陳玉珍",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "金門縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "a6981b25-a402-4b05-95cf-00717f1d984d",
+      "name": "陳玉珍",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "金門縣選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "78ebbfb4-68a3-4daf-b0be-823812beff87",
+      "name": "陳長宏",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "臺東縣縣長候選人",
+      "district": "臺東縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "99973e30-2e9a-42ec-8498-6c0aa351eb77",
+      "name": "陳長宏",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "臺東縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "470f10ee-1155-49ad-b71d-4ba0f9c77df3",
+      "name": "陳俊龍",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "雲林縣議員",
+      "district": "雲林縣第3選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "21ad81d6-8756-4ef7-a950-7bf72e63c628",
+      "name": "陳政宗",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "臺東縣平地原住民議員",
+      "district": "臺東縣第7選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "9e43c142-0d18-474a-b54c-3cc934320046",
+      "name": "陳政宗",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "平地原住民",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "6c5c0927-0829-4eea-9dd2-40fdcb95a275",
+      "name": "陳若翠",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "高雄市議員候選人",
+      "district": "高雄市第8選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "95a3d5db-403d-456a-973d-2cc32d573d3b",
+      "name": "陳若翠",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "高雄市第4選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "8bd0900a-154a-4d3d-9cd6-ff67fefa39f4",
+      "name": "陳雪生",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "連江縣選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "e903d1fb-e877-4c8f-82ce-181bf5eafdb4",
+      "name": "陳雪生",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "連江縣第1選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "2e33bfea-56e0-4f24-a99a-af1af51b6408",
+      "name": "陳琬惠",
+      "gender": "female",
+      "party": "台灣民眾黨",
+      "position": "宜蘭縣縣長候選人",
+      "district": "宜蘭縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "5635fee4-69d2-4bc0-bae2-b8cd65414098",
+      "name": "陳琬惠",
+      "gender": "female",
+      "party": "台灣民眾黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "宜蘭縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "811e4a5d-c84f-4a7a-8fe0-be5917ff6938",
+      "name": "陳超明",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "苗栗縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ca77c099-6964-4486-aaca-44a273baeb5d",
+      "name": "陳超明",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "苗栗縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "3246087d-e6fe-4c50-b66d-d031ae55023f",
+      "name": "陳瑩",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "平地原住民",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "52fe5599-4ed3-4292-a2a9-8702c171bc95",
+      "name": "陳瑩",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員",
+      "district": "平地原住民選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "2ebb787e-5abb-45fe-9dd0-364e5418e046",
+      "name": "傅崐萁",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "花蓮縣選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "f61b2941-8aab-42f7-a739-7b6d27b32144",
+      "name": "傅崐萁",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "花蓮縣第1選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "5c0cb582-08d9-4f11-962e-ca78b0649b59",
+      "name": "彭俊豪",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "桃園市議員",
+      "district": "桃園市第7選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "027f57a1-97e3-45a4-be54-0552a1b33be4",
+      "name": "彭振芳",
+      "gender": "male",
+      "party": "前進黨",
+      "position": "臺中市議員候選人",
+      "district": "臺中市第8選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "a9ecbe45-58f2-4540-b0f0-138d0caff915",
+      "name": "彭振芳",
+      "gender": "male",
+      "party": "司法改革黨",
+      "position": "第11屆立法委員候選人",
+      "district": "臺中市第5選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "326783f3-4213-4301-9e2b-925a6c28e6b5",
+      "name": "曾尹儷",
+      "gender": "female",
+      "party": "台灣民眾黨",
+      "position": "第11屆立法委員候選人",
+      "district": "高雄市第1選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "e6c8aaa4-4878-469e-a93a-4d83c0779d0f",
+      "name": "曾尹儷",
+      "gender": "female",
+      "party": "無黨籍",
+      "position": "高雄市市長候選人",
+      "district": "高雄市",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "2e4eb2d0-e45d-48f2-9594-04230bfadddc",
+      "name": "曾玟學",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "苗栗縣議員",
+      "district": "苗栗縣第5選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "b1f991da-91a4-41d7-bb73-6484c6ff90ba",
+      "name": "曾玟學",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "苗栗縣第2選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "8f0822c2-74a4-435a-924c-fc980491e4fc",
+      "name": "游智彬",
+      "gender": "male",
+      "party": "新黨",
+      "position": "桃園市議員候選人",
+      "district": "桃園市第7選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "af731f18-30fe-4619-87d4-de5dfa30adc6",
+      "name": "游智彬",
+      "gender": "male",
+      "party": "新黨",
+      "position": "第11屆立法委員候選人",
+      "district": "桃園市第3選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "78cabcdc-026e-49be-8c2c-f0e0e78baf2c",
+      "name": "游顥",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "南投縣議員",
+      "district": "南投縣第4選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "c2935434-bad5-4f2d-851c-029e964fae8b",
+      "name": "黃秀芳",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員",
+      "district": "彰化縣第2選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ea92aff5-a3e5-4897-9427-033ce6829b08",
+      "name": "黃秀芳",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "彰化縣縣長候選人",
+      "district": "彰化縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "0d6c109d-412c-461f-a366-aff5814564ef",
+      "name": "黃建賓",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "臺東縣選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "a3dcbdd4-7d3e-4022-9899-50186ada8e00",
+      "name": "黃建賓",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "臺東縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "1d525a06-f51b-4650-8fda-edd51744fbc3",
+      "name": "黃柏霖",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "高雄市第5選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "3a633a3c-d64c-4146-ba7c-82fb285230bc",
+      "name": "黃柏霖",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "高雄市議員",
+      "district": "高雄市第7選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "4adf2a6b-d45c-4590-ba8d-f2821ce1814c",
+      "name": "黃琤婷",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "宜蘭縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "98863cc0-8b32-4cc4-a6b6-3bac016ad274",
+      "name": "黃琤婷",
+      "gender": "female",
+      "party": "中國國民黨",
+      "position": "宜蘭縣議員",
+      "district": "宜蘭縣第6選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "2b335992-2565-4687-9d6e-0ae00aaa16b2",
+      "name": "黃瑞傳",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "新北市議員候選人",
+      "district": "新北市第11選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "6b96575e-df27-4c63-911f-24d385dcee6e",
+      "name": "黃瑞傳",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人",
+      "district": "新北市第12選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "7c5ebbd2-91e6-4af0-b890-36ac7e5d556c",
+      "name": "楊曜",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員",
+      "district": "澎湖縣選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "97ae8feb-7acc-4472-a0fa-7e4ab1a30f0c",
+      "name": "楊曜",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "澎湖縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "b4756913-e8c9-4329-b33f-cc6345535447",
+      "name": "劉仁照",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "桃園市議員",
+      "district": "桃園市第8選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "b68a488b-492f-4666-a159-bd10d58e49b0",
+      "name": "劉仁照",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人",
+      "district": "桃園市第5選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "09f819b2-9434-4309-8c72-34618bdba70e",
+      "name": "劉建國",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "雲林縣縣長候選人",
+      "district": "雲林縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "f420fec1-dcb2-49e6-9ef8-be2c99867e0b",
+      "name": "劉建國",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員",
+      "district": "雲林縣第2選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "42c63dc9-19c7-4afe-8662-c231859c245c",
+      "name": "劉復嵐",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "新竹縣縣長候選人",
+      "district": "新竹縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "9fdb5db2-ea2a-4bad-a741-974ccf51fcc1",
+      "name": "劉復嵐",
+      "gender": "male",
+      "party": "台灣維新",
+      "position": "第11屆立法委員候選人",
+      "district": "新竹縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "bc4d6f9d-8bdd-4f0a-bb3e-b679128d9236",
+      "name": "劉櫂豪",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "臺東縣縣長候選人",
+      "district": "臺東縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "fe60bebd-a6a9-4434-bc77-3c87e2049b56",
+      "name": "劉櫂豪",
+      "gender": "male",
+      "party": "無黨籍",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "臺東縣第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "27791286-ace8-4b3b-974a-df352a4d5b22",
+      "name": "蔡其昌",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員",
+      "district": "臺中市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "96cc7fcc-0914-4eca-8af9-e9e5e554313f",
+      "name": "蔡其昌",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "臺中市市長候選人",
+      "district": "臺中市",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "7a614187-e847-4bb7-9b8f-82ec1c71ad5f",
+      "name": "蔡培慧",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "南投縣第2選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "b9d53b33-b3ab-4ee2-9cd9-b40940444ed3",
+      "name": "蔡培慧",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "南投縣縣長候選人",
+      "district": "南投縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "b7cf036a-8753-47d2-9023-928253a13417",
+      "name": "蔡銘軒",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "南投縣議員",
+      "district": "南投縣第2選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "a14805bb-dbb0-44d6-b7bf-77479658a7e0",
+      "name": "鄭天財Sra Kacaw",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "平地原住民選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "f50da3f2-22fb-492b-8b8c-1eec29df17b9",
+      "name": "鄭天財 Sra‧Kacaw",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "平地原住民",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "780256ea-431e-4305-a3cb-530a28b2b1cd",
+      "name": "鄭文婷",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人",
+      "district": "基隆市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "f335cd38-254a-4ee5-ab05-7a8e27ad9f87",
+      "name": "鄭文婷",
+      "gender": "female",
+      "party": "民主進步黨",
+      "position": "基隆市議員",
+      "district": "基隆市第3選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "1bdf1b69-8e6d-4bed-921c-64479a54213f",
+      "name": "鄭正鈐",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "新竹市選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "250a2ef9-08e2-4e57-bf21-9206bac217a4",
+      "name": "鄭正鈐",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "新竹市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "19d65bb3-94ef-49b9-bfc9-5f7932a82d45",
+      "name": "鄭俊雄",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "彰化縣議員",
+      "district": "彰化縣第6選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "321dbb30-1c73-44c1-8d52-22cff4496a4e",
+      "name": "鄭俊雄",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "彰化縣第4選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "0336ff6c-ce5b-4f79-9cc6-e5b962b3ff21",
+      "name": "鄭運鵬",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "桃園市市長候選人",
+      "district": "桃園市",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "345ef4f4-d875-4513-97f4-02e98fa64c30",
+      "name": "鄭運鵬",
+      "gender": "male",
+      "party": "民主進步黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "桃園市第1選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "e49fc435-3609-4abb-beb5-ff5790687c3d",
+      "name": "盧縣一",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "山地原住民選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "ebf547e7-08eb-4054-ab66-46377593a7f4",
+      "name": "盧縣一",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "山地原住民",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "27e05636-3f4c-404a-86d6-3e823f035536",
+      "name": "賴香伶",
+      "gender": "female",
+      "party": "台灣民眾黨",
+      "position": "第11屆立法委員候選人（現任）",
+      "district": "桃園市第5選舉區",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "502b7215-a263-4276-9482-d7e6a4543b8e",
+      "name": "賴香伶",
+      "gender": "female",
+      "party": "台灣民眾黨",
+      "position": "桃園市市長候選人",
+      "district": "桃園市",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "320c38ea-48a7-4cfb-a77b-5842abcda5ac",
+      "name": "謝龍介",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "全國不分區及僑居國外國民",
+      "missingSignals": [
+        "external_id",
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "e2b69111-dd4c-432a-ab67-e50c23aa1188",
+      "name": "謝龍介",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "臺南市市長候選人",
+      "district": "臺南市",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "581d6dd5-3dae-48ac-a82a-3a783eaf0145",
+      "name": "鍾易仲",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員候選人",
+      "district": "高雄市第7選舉區",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "615d5d06-a5f3-4f2e-9001-913270daf1b0",
+      "name": "蘇清泉",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "屏東縣縣長候選人",
+      "district": "屏東縣",
+      "missingSignals": [
+        "birth_date"
+      ]
+    },
+    {
+      "personId": "b32b5ba4-3ef4-4cf4-b32c-5ab7d5acee13",
+      "name": "蘇清泉",
+      "gender": "male",
+      "party": "中國國民黨",
+      "position": "第11屆立法委員",
+      "district": "全國不分區及僑居國外國民",
+      "missingSignals": [
+        "birth_date"
+      ]
+    }
+  ]
+}

@@ -113,6 +113,14 @@ function rootPath(...segments: string[]) {
   return path.resolve(__dirname, '..', '..', ...segments);
 }
 
+function normalizeTargetName(value: unknown) {
+  return String(value ?? '')
+    .trim()
+    .replace(/[臺]/g, '台')
+    .replace(/[‧·．・･•]/g, '')
+    .replace(/[\s\u00A0\u3000]+/g, '');
+}
+
 function loadInternalEnv() {
   const rootEnv = parseEnvFile(rootPath('.env.local'));
   const webEnv = parseEnvFile(path.resolve(__dirname, '.env.local'));
@@ -168,8 +176,8 @@ function writeSkippedRetryTarget(claim: InternalClaim, person: PersonRow | null)
   const skippedPath = rootPath('data-sources', 'person-enrichment-skipped.json');
   const payload = readSkippedPayload();
   const skippedTargets = Array.isArray(payload.skippedTargets) ? payload.skippedTargets : [];
-  const key = `${claim.person_id ?? 'name'}:${personName}`;
-  const existingIndex = skippedTargets.findIndex((item) => `${item.target?.personId ?? 'name'}:${item.target?.name ?? item.name}` === key);
+  const key = `${claim.person_id ?? 'name'}:${normalizeTargetName(personName)}`;
+  const existingIndex = skippedTargets.findIndex((item) => `${item.target?.personId ?? 'name'}:${normalizeTargetName(item.target?.name ?? item.name)}` === key);
   const existing = existingIndex >= 0 ? skippedTargets[existingIndex] : null;
   const rejectedWikidataQids = Array.from(new Set([...(existing?.target?.rejectedWikidataQids ?? []), qid]));
   const next = {
@@ -217,7 +225,7 @@ async function approveRelatedWikidataClaims(claim: InternalClaim, now: string) {
     !claim.person_id ||
     !qid
   ) {
-    return 0;
+    return [];
   }
 
   const relatedClaims = await supabaseRest(
@@ -252,14 +260,14 @@ async function approveRelatedWikidataClaims(claim: InternalClaim, now: string) {
     });
   }
 
-  return targets.length;
+  return targets.map((target) => target.id);
 }
 
 async function rejectRelatedWikidataClaims(claim: InternalClaim, now: string) {
   const qid = wikidataQidForClaim(claim);
 
   if (claim.source_name !== wikidataSourceName || !claim.person_id || !qid) {
-    return 0;
+    return [];
   }
 
   const relatedClaims = await supabaseRest(
@@ -298,7 +306,7 @@ async function rejectRelatedWikidataClaims(claim: InternalClaim, now: string) {
     });
   }
 
-  return targets.length;
+  return targets.map((target) => target.id);
 }
 
 function internalReviewApiPlugin(): Plugin {
@@ -372,7 +380,7 @@ function internalReviewApiPlugin(): Plugin {
             body: JSON.stringify(patch),
           });
 
-          const relatedUpdated = action === 'approve'
+          const relatedClaimIds = action === 'approve'
             ? await approveRelatedWikidataClaims(claim, now)
             : await rejectRelatedWikidataClaims(claim, now);
 
@@ -380,7 +388,7 @@ function internalReviewApiPlugin(): Plugin {
             writeSkippedRetryTarget(claim, person);
           }
 
-          jsonResponse(response, 200, { status: 'ok', action, relatedUpdated });
+          jsonResponse(response, 200, { status: 'ok', action, relatedUpdated: relatedClaimIds.length, relatedClaimIds });
         } catch (error) {
           jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
         }

@@ -43,6 +43,7 @@ SELECT
     sp.normalized_name,
     pc.claim_type,
     pc.claim_value,
+    pc.claim_json,
     pc.confidence_level,
     pc.review_score,
     pc.review_status,

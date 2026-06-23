@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useState } from 'react';
+import type { FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
@@ -123,24 +125,73 @@ function SelectFilter({
   );
 }
 
+function KeywordFilter({
+  value,
+  onSearch,
+}: {
+  value: string;
+  onSearch: (value: string) => void;
+}) {
+  const [draftValue, setDraftValue] = useState(value);
+
+  useEffect(() => {
+    setDraftValue(value);
+  }, [value]);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onSearch(draftValue.trim());
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="block">
+      <span className="text-xs uppercase tracking-[0.2em] text-slate-500">keyword</span>
+      <input
+        value={draftValue}
+        onChange={(event) => setDraftValue(event.target.value)}
+        placeholder="搜尋姓名"
+        className="mt-2 w-full pixel-corners border border-line/70 bg-bg/70 px-3 py-2 text-sm text-white outline-none placeholder:text-slate-600 focus:border-accent"
+      />
+      <button
+        type="submit"
+        className="mt-2 w-full pixel-corners border border-accent/70 bg-accent/15 px-3 py-2 text-sm text-accent transition hover:bg-accent/25 hover:text-white"
+      >
+        搜尋
+      </button>
+    </form>
+  );
+}
+
 export function PeoplePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = getFilters(searchParams);
-  const people = publicDataProvider.getPeopleByFilters(filters);
+  const { party, query, regionId, role, status } = filters;
+  const people = useMemo(
+    () => publicDataProvider.getPeopleByFilters({ party, query, regionId, role, status }),
+    [party, query, regionId, role, status],
+  );
   const requestedPage = getPage(searchParams);
   const pageCount = Math.max(1, Math.ceil(people.length / PAGE_SIZE));
   const currentPage = Math.min(requestedPage, pageCount);
   const pageStart = (currentPage - 1) * PAGE_SIZE;
   const visiblePeople = people.slice(pageStart, pageStart + PAGE_SIZE);
   const visiblePageNumbers = getVisiblePageNumbers(currentPage, pageCount);
-  const allPeople = publicDataProvider.getPeopleByFilters();
-  const regionOptions = publicDataProvider
-    .getStageRegions()
-    .filter((region) => region.level === 'county_city')
-    .map((region) => ({ value: region.id, label: region.label }));
-  const partyOptions = Array.from(new Set(allPeople.map((person) => normalizePartyLabel(person.party))))
-    .sort(comparePartyOptions)
-    .map((party) => ({ value: party, label: party }));
+  const allPeople = useMemo(() => publicDataProvider.getPeopleByFilters(), []);
+  const regionOptions = useMemo(
+    () =>
+      publicDataProvider
+        .getStageRegions()
+        .filter((region) => region.level === 'county_city')
+        .map((region) => ({ value: region.id, label: region.label })),
+    [],
+  );
+  const partyOptions = useMemo(
+    () =>
+      Array.from(new Set(allPeople.map((person) => normalizePartyLabel(person.party))))
+        .sort(comparePartyOptions)
+        .map((party) => ({ value: party, label: party })),
+    [allPeople],
+  );
 
   const updateFilter = (key: string, value: string) => {
     const nextParams = new URLSearchParams(searchParams);
@@ -174,15 +225,7 @@ export function PeoplePage() {
         <aside className="space-y-3">
           <PixelFrame title="人物篩選">
             <div className="space-y-4">
-              <label className="block">
-                <span className="text-xs uppercase tracking-[0.2em] text-slate-500">keyword</span>
-                <input
-                  value={filters.query ?? ''}
-                  onChange={(event) => updateFilter('q', event.target.value)}
-                  placeholder="姓名、政黨、職位"
-                  className="mt-2 w-full pixel-corners border border-line/70 bg-bg/70 px-3 py-2 text-sm text-white outline-none placeholder:text-slate-600 focus:border-accent"
-                />
-              </label>
+              <KeywordFilter value={filters.query ?? ''} onSearch={(value) => updateFilter('q', value)} />
 
               <SelectFilter label="region" value={filters.regionId ?? ''} options={regionOptions} onChange={(value) => updateFilter('region', value)} />
               <SelectFilter label="party" value={filters.party ?? ''} options={partyOptions} onChange={(value) => updateFilter('party', value)} />

@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const wikidataApiUrl = 'https://www.wikidata.org/w/api.php';
+const wikidataUserAgent = 'public-office-watch/0.1 (https://github.com/tyrionwei/public-office-watch; person enrichment review-only)';
 const defaultOutputPath = path.resolve('data-sources/person-enrichment-claims.seed.json');
 const defaultProgressPath = path.resolve('data-sources/person-enrichment-progress.json');
 const defaultSkippedPath = path.resolve('data-sources/person-enrichment-skipped.json');
@@ -21,6 +22,8 @@ const relationLabels = {
   child: '子女',
   sibling: '手足',
 };
+
+let lastWikidataRequestAt = 0;
 
 function parseArgs(argv) {
   const args = {
@@ -149,6 +152,10 @@ function targetFromRecord(record) {
     return targetFromRecord(record.target);
   }
 
+  if (record?.person) {
+    return targetFromRecord(record.person);
+  }
+
   if (!record || typeof record !== 'object') {
     return null;
   }
@@ -175,6 +182,10 @@ function targetKey(target) {
   return `${target.personId ?? 'name'}:${normalizeName(target.name)}`;
 }
 
+function rejectedWikidataQidsForTarget(target) {
+  return Array.from(new Set((target?.rejectedWikidataQids ?? []).map((qid) => String(qid).toUpperCase())));
+}
+
 function loadTargetNames(filePath) {
   if (!filePath) {
     throw new Error('Provide --target-names or --target-names-from-supabase.');
@@ -183,7 +194,7 @@ function loadTargetNames(filePath) {
   const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   const records = Array.isArray(parsed)
     ? parsed
-    : parsed.names ?? parsed.targets ?? parsed.people ?? parsed.skippedTargets ?? parsed.skipped;
+    : parsed.wikidataRetryTargets ?? parsed.names ?? parsed.targets ?? parsed.people ?? parsed.skippedTargets ?? parsed.skipped ?? parsed.records;
 
   if (!Array.isArray(records) || records.length === 0) {
     throw new Error('Target names file must be a JSON array or an object with non-empty names/targets/skippedTargets.');
@@ -192,7 +203,7 @@ function loadTargetNames(filePath) {
   return records.map(targetFromRecord).filter((item) => item?.name);
 }
 
-async function loadTargetNamesFromSupabase() {
+async function loadTargetNamesFromSupabase(skippedPath = defaultSkippedPath) {
   const supabaseUrl = process.env.SUPABASE_URL?.trim() || process.env.VITE_SUPABASE_URL?.trim();
   const anonKey = process.env.SUPABASE_ANON_KEY?.trim() || process.env.VITE_SUPABASE_ANON_KEY?.trim();
 
@@ -207,7 +218,7 @@ async function loadTargetNamesFromSupabase() {
   while (true) {
     const url = new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/public_people`);
     url.searchParams.set('select', 'person_id,name,gender,party,position,district,education,experience');
-    url.searchParams.set('order', 'updated_at.desc');
+    url.searchParams.set('order', 'name.asc,person_id.asc');
 
     const response = await fetch(url, {
       headers: {
@@ -238,10 +249,26 @@ async function loadTargetNamesFromSupabase() {
     offset += pageSize;
   }
 
+  const skippedByKey = new Map();
+  if (fs.existsSync(skippedPath)) {
+    const skippedPayload = JSON.parse(fs.readFileSync(skippedPath, 'utf8'));
+    for (const record of skippedPayload.skippedTargets ?? []) {
+      const target = targetFromRecord(record);
+      const rejectedWikidataQids = rejectedWikidataQidsForTarget(target);
+      if (target && rejectedWikidataQids.length > 0) {
+        skippedByKey.set(targetKey(target), rejectedWikidataQids);
+      }
+    }
+  }
+
   const byName = new Map();
   for (const person of people) {
-    if (!byName.has(`${person.personId}:${person.name}`)) {
-      byName.set(`${person.personId}:${person.name}`, person);
+    const key = targetKey(person);
+    if (!byName.has(key)) {
+      byName.set(key, {
+        ...person,
+        rejectedWikidataQids: skippedByKey.get(key) ?? [],
+      });
     }
   }
 
@@ -252,6 +279,7 @@ async function wikidataGet(params) {
   const url = new URL(wikidataApiUrl);
   url.searchParams.set('format', 'json');
   url.searchParams.set('origin', '*');
+  url.searchParams.set('maxlag', '5');
 
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, String(value));
@@ -259,7 +287,7 @@ async function wikidataGet(params) {
 
   const response = await fetch(url, {
     headers: {
-      'user-agent': 'public-office-watch/0.1 (person enrichment; review-only)',
+      'User-Agent': wikidataUserAgent,
       accept: 'application/json',
     },
     signal: AbortSignal.timeout(60000),
@@ -274,7 +302,16 @@ async function wikidataGet(params) {
   }
 
   if (!response.ok || payload.error) {
-    throw new Error(`Wikidata API failed: ${payload.error?.info ?? response.statusText}`);
+    const errorCode = payload.error?.code ?? response.status;
+    const errorInfo = payload.error?.info ?? response.statusText;
+    const error = new Error(`Wikidata API failed: ${errorCode}: ${errorInfo}`);
+    const retryAfter = Number.parseInt(response.headers.get('retry-after') ?? '', 10);
+
+    if (Number.isFinite(retryAfter) && retryAfter > 0) {
+      error.retryAfterMs = retryAfter * 1000;
+    }
+
+    throw error;
   }
 
   return payload;
@@ -291,16 +328,23 @@ async function wikidataGetWithRetry(params, args) {
 
   for (let attempt = 0; attempt <= args.retryCount; attempt += 1) {
     try {
+      const waitMs = Math.max(0, args.requestDelayMs - (Date.now() - lastWikidataRequestAt));
+
+      if (waitMs > 0) {
+        await sleep(waitMs);
+      }
+
+      lastWikidataRequestAt = Date.now();
       return await wikidataGet(params);
     } catch (error) {
       lastError = error;
-      const message = error instanceof Error ? error.message : String(error);
+      const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
 
       if (!message.includes('too many requests') && !message.includes('maxlag') && !message.includes('non-JSON')) {
         throw error;
       }
 
-      await sleep(args.requestDelayMs * (attempt + 1));
+      await sleep(error.retryAfterMs ?? args.requestDelayMs * (attempt + 1));
     }
   }
 
@@ -597,7 +641,8 @@ function writeSkippedTargets(skippedPath, skippedTargets, resolvedTargets) {
 
   for (const skipped of existingPayload.skippedTargets ?? []) {
     const target = targetFromRecord(skipped);
-    if (!target || resolvedKeys.has(targetKey(target))) continue;
+    if (!target) continue;
+    if (resolvedKeys.has(targetKey(target)) && rejectedWikidataQidsForTarget(target).length === 0) continue;
     byKey.set(targetKey(target), skipped);
   }
 
@@ -625,7 +670,7 @@ async function main() {
   const args = parseArgs(process.argv);
   const progress = args.resume ? readProgress(args.progressPath) : { nextOffset: args.offset };
   const offset = args.resume ? Number(progress.nextOffset ?? 0) : args.offset;
-  const targets = (args.targetNamesFromSupabase ? await loadTargetNamesFromSupabase() : loadTargetNames(args.targetNamesPath)).slice(
+  const targets = (args.targetNamesFromSupabase ? await loadTargetNamesFromSupabase(args.skippedOutputPath) : loadTargetNames(args.targetNamesPath)).slice(
     offset,
     offset + args.maxPeople,
   );
@@ -635,7 +680,6 @@ async function main() {
 
   for (const target of targets) {
     try {
-      await sleep(args.requestDelayMs);
       const searchResults = await searchEntity(target.name, args.searchLimit, args);
       const entities = await getEntities(searchResults.map((result) => result.id), args);
       const candidates = [];
@@ -675,7 +719,6 @@ async function main() {
 
       const entity = matched.entity;
       const qid = matched.result.id;
-      await sleep(args.requestDelayMs);
       const relatedIds = [
         ...claimEntityIds(entity, 'P21'),
         ...claimEntityIds(entity, 'P69'),
@@ -720,6 +763,7 @@ async function main() {
       nextOffset: offset + targets.length,
       lastOffset: offset,
       lastTargetCount: targets.length,
+      lastTargetNames: targets.map((target) => target.name),
       lastNewClaimCount: allClaims.length,
       lastSkippedCount: skipped.length,
       updatedAt: new Date().toISOString(),
@@ -729,6 +773,7 @@ async function main() {
   console.log(JSON.stringify({
     status: 'ok',
     targetCount: targets.length,
+    targetNames: targets.map((target) => target.name),
     offset,
     nextOffset: offset + targets.length,
     newClaimCount: allClaims.length,

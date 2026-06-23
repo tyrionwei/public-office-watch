@@ -8,6 +8,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const defaultSeedPath = path.join(repoRoot, 'data-sources', 'real-public-data.seed.json');
 const defaultLegalRecordLeadsPath = path.join(repoRoot, 'data-sources', 'legal-record-leads.seed.json');
 const defaultPersonEnrichmentClaimsPath = path.join(repoRoot, 'data-sources', 'person-enrichment-claims.seed.json');
+const defaultPersonEnrichmentSkippedPath = path.join(repoRoot, 'data-sources', 'person-enrichment-skipped.json');
 
 function parseArgs(argv) {
   const args = {
@@ -24,6 +25,7 @@ function parseArgs(argv) {
     legalRecordLeadsPath: defaultLegalRecordLeadsPath,
     includePersonEnrichmentClaims: false,
     personEnrichmentClaimsPath: defaultPersonEnrichmentClaimsPath,
+    personEnrichmentSkippedPath: defaultPersonEnrichmentSkippedPath,
   };
 
   for (let index = 2; index < argv.length; index += 1) {
@@ -95,6 +97,12 @@ function parseArgs(argv) {
 
     if (arg === '--person-enrichment-claims') {
       args.personEnrichmentClaimsPath = path.resolve(argv[index + 1] ?? '');
+      index += 1;
+      continue;
+    }
+
+    if (arg === '--person-enrichment-skipped') {
+      args.personEnrichmentSkippedPath = path.resolve(argv[index + 1] ?? '');
       index += 1;
       continue;
     }
@@ -498,6 +506,11 @@ function scoreClaim({ claimType, sourceType, confidenceLevel, hasMatchedPerson }
   if (['name', 'gender', 'party', 'position', 'district', 'external_id'].includes(claimType)) {
     score += 10;
     reasons.push('low-ambiguity identity field');
+  }
+
+  if (['education', 'experience'].includes(claimType) && (sourceType.startsWith('official') || sourceType === 'government_open_data')) {
+    score += 10;
+    reasons.push('official public profile field');
   }
 
   if (['legal_case', 'family_relation'].includes(claimType)) {
@@ -1889,7 +1902,7 @@ function getSupabaseEnv() {
   return { url: url.replace(/\/$/, ''), serviceKey };
 }
 
-async function supabaseRequest(env, table, { method = 'GET', rows, onConflict, select } = {}) {
+async function supabaseRequest(env, table, { method = 'GET', rows, onConflict, select, range, filters } = {}) {
   const url = new URL(`${env.url}/rest/v1/${table}`);
 
   if (onConflict) {
@@ -1900,10 +1913,18 @@ async function supabaseRequest(env, table, { method = 'GET', rows, onConflict, s
     url.searchParams.set('select', select);
   }
 
+  for (const [key, value] of Object.entries(filters ?? {})) {
+    url.searchParams.set(key, value);
+  }
+
   const headers = {
     apikey: env.serviceKey,
     authorization: `Bearer ${env.serviceKey}`,
   };
+
+  if (range) {
+    headers.range = `${range.from}-${range.to}`;
+  }
 
   if (method !== 'GET') {
     headers['content-type'] = 'application/json';
@@ -1967,27 +1988,102 @@ async function selectOrThrow(env, table, select) {
   return supabaseRequest(env, table, { method: 'GET', select });
 }
 
+async function selectAllOrThrow(env, table, select, pageSize = 1000) {
+  const rows = [];
+  let offset = 0;
+
+  while (true) {
+    const page = await supabaseRequest(env, table, {
+      method: 'GET',
+      select,
+      filters: { order: 'id.asc' },
+      range: { from: offset, to: offset + pageSize - 1 },
+    });
+
+    rows.push(...page);
+    if (page.length < pageSize) break;
+    offset += pageSize;
+  }
+
+  return rows;
+}
+
 const terminalPersonClaimReviewStatuses = new Set(['verified', 'rejected', 'archived']);
 
+function wikidataQidFromClaimJson(claimJson) {
+  const qid = claimJson?.wikidataQid;
+  return typeof qid === 'string' && /^Q\d+$/i.test(qid) ? qid.toUpperCase() : null;
+}
+
+function wikidataSemanticClaimKey(row) {
+  const qid = wikidataQidFromClaimJson(row.claim_json);
+  if (!qid || !row.person_id || !row.claim_type) {
+    return null;
+  }
+
+  return [
+    row.person_id,
+    qid,
+    row.claim_type,
+    toClaimValue(row.claim_value) ?? '',
+  ].join(':');
+}
+
+function wikidataRejectedPersonQidKey(row) {
+  const qid = wikidataQidFromClaimJson(row.claim_json);
+  if (!qid || !row.person_id) {
+    return null;
+  }
+
+  return `${row.person_id}:${qid}`;
+}
+
 async function fetchExistingPersonClaimReviewStates(env) {
-  const rows = await selectOrThrow(
+  const rows = await selectAllOrThrow(
     env,
     'person_claims',
-    'claim_key,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json',
+    'claim_key,person_id,claim_type,claim_value,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json',
   );
 
-  return new Map(
-    rows
-      .filter((row) => terminalPersonClaimReviewStatuses.has(row.review_status))
-      .map((row) => [row.claim_key, row]),
-  );
+  const terminalRows = rows.filter((row) => terminalPersonClaimReviewStatuses.has(row.review_status));
+  const byClaimKey = new Map(terminalRows.map((row) => [row.claim_key, row]));
+  const byWikidataSemanticKey = new Map();
+  const rejectedWikidataPersonQids = new Map();
+
+  for (const row of terminalRows) {
+    const semanticKey = wikidataSemanticClaimKey(row);
+    if (semanticKey) {
+      byWikidataSemanticKey.set(semanticKey, row);
+    }
+
+    const rejectedKey = row.review_status === 'rejected' ? wikidataRejectedPersonQidKey(row) : null;
+    if (rejectedKey) {
+      rejectedWikidataPersonQids.set(rejectedKey, row);
+    }
+  }
+
+  return { byClaimKey, byWikidataSemanticKey, rejectedWikidataPersonQids };
 }
 
 function preserveReviewedPersonClaimRows(rows, existingReviewStates) {
   return rows.map((row) => {
-    const existing = existingReviewStates.get(row.claim_key);
+    const existing =
+      existingReviewStates.byClaimKey.get(row.claim_key) ??
+      existingReviewStates.rejectedWikidataPersonQids.get(wikidataRejectedPersonQidKey(row)) ??
+      existingReviewStates.byWikidataSemanticKey.get(wikidataSemanticClaimKey(row));
 
     if (!existing) {
+      return row;
+    }
+
+    if (
+      row.claim_type === 'external_id' &&
+      row.confidence_level === 'A' &&
+      row.review_status === 'verified' &&
+      row.visibility === 'public' &&
+      row.is_public === true &&
+      existing.review_status === 'archived'
+    ) {
       return row;
     }
 
@@ -2005,6 +2101,117 @@ function preserveReviewedPersonClaimRows(rows, existingReviewStates) {
       },
     };
   });
+}
+
+async function applySkippedWikidataRejections(env, args, reviewedAt) {
+  const rejectedByPerson = args.rejectedWikidataQidsByPerson ?? new Map();
+  if (rejectedByPerson.size === 0) {
+    return 0;
+  }
+
+  const targets = [];
+
+  for (const [key, rejectedQids] of rejectedByPerson.entries()) {
+    if (!key.startsWith('id:')) {
+      continue;
+    }
+
+    const personId = key.slice(3);
+    const rows = await supabaseRequest(env, 'person_claims', {
+      method: 'GET',
+      select: 'id,person_id,review_status,claim_json,scoring_reasons',
+      filters: {
+        person_id: `eq.${personId}`,
+        review_status: 'in.(pending,needs_more_evidence)',
+      },
+    });
+
+    targets.push(...rows.filter((row) => {
+      const qid = wikidataQidFromClaimJson(row.claim_json);
+      return Boolean(qid && rejectedQids.has(qid));
+    }));
+  }
+
+  for (const target of targets) {
+    const scoringReasons = Array.isArray(target.scoring_reasons) ? target.scoring_reasons : [];
+    await supabasePatch(env, 'person_claims', { id: target.id }, {
+      review_status: 'rejected',
+      visibility: 'private',
+      is_public: false,
+      scoring_version: 'person-enrichment-skipped-rejection-v1',
+      scoring_reasons: [
+        ...scoringReasons,
+        {
+          version: 'person-enrichment-skipped-rejection-v1',
+          reason: 'Wikidata QID was previously rejected for this person',
+          reviewedAt,
+        },
+      ],
+      claim_json: {
+        ...(target.claim_json ?? {}),
+        reviewDecision: {
+          version: 'person-enrichment-skipped-rejection-v1',
+          decision: 'reject',
+          reason: 'Wikidata QID was previously rejected for this person',
+          reviewedAt,
+        },
+      },
+      updated_at: reviewedAt,
+    });
+  }
+
+  return targets.length;
+}
+
+async function applyExistingWikidataTerminalReviewStates(env, reviewedAt) {
+  const rows = await selectAllOrThrow(
+    env,
+    'person_claims',
+    'id,person_id,claim_type,claim_value,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json',
+  );
+  const terminalBySemanticKey = new Map();
+
+  for (const row of rows) {
+    if (!terminalPersonClaimReviewStatuses.has(row.review_status)) {
+      continue;
+    }
+
+    const key = wikidataSemanticClaimKey(row);
+    if (key && !terminalBySemanticKey.has(key)) {
+      terminalBySemanticKey.set(key, row);
+    }
+  }
+
+  const targets = rows
+    .filter((row) => ['pending', 'needs_more_evidence'].includes(row.review_status))
+    .map((row) => ({ row, terminal: terminalBySemanticKey.get(wikidataSemanticClaimKey(row)) }))
+    .filter((item) => item.terminal);
+
+  for (const { row, terminal } of targets) {
+    const scoringReasons = Array.isArray(row.scoring_reasons) ? row.scoring_reasons : [];
+    await supabasePatch(env, 'person_claims', { id: row.id }, {
+      review_status: terminal.review_status,
+      visibility: terminal.visibility,
+      is_public: terminal.is_public,
+      auto_reviewed_at: terminal.auto_reviewed_at,
+      scoring_version: terminal.scoring_version ?? row.scoring_version,
+      scoring_reasons: [
+        ...scoringReasons,
+        {
+          version: 'existing-wikidata-terminal-state-sync-v1',
+          reason: 'same person, Wikidata QID, claim type, and value already has terminal review status',
+          reviewedAt,
+        },
+      ],
+      claim_json: {
+        ...(row.claim_json ?? {}),
+        ...(terminal.claim_json?.reviewDecision ? { reviewDecision: terminal.claim_json.reviewDecision } : {}),
+      },
+      updated_at: reviewedAt,
+    });
+  }
+
+  return targets.length;
 }
 
 function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
@@ -2209,6 +2416,43 @@ function buildProbableIdentityMatchRows(seed, sourcePersonByKey, canonicalPeople
 function toClaimValue(value) {
   if (value === null || value === undefined) return '';
   return String(value).trim();
+}
+
+function normalizePersonName(value) {
+  return String(value ?? '')
+    .trim()
+    .replace(/[臺]/g, '台')
+    .replace(/[‧·．・･•]/g, '')
+    .replace(/[\s\u00A0\u3000]+/g, '');
+}
+
+function loadRejectedWikidataQidsByPerson(skippedPath) {
+  if (!fs.existsSync(skippedPath)) {
+    return new Map();
+  }
+
+  const payload = JSON.parse(fs.readFileSync(skippedPath, 'utf8'));
+  const byPerson = new Map();
+
+  for (const record of payload.skippedTargets ?? []) {
+    const target = record.target ?? record;
+    const personId = target.personId ?? target.person_id ?? null;
+    const name = target.name ?? record.name ?? null;
+    const rejectedWikidataQids = target.rejectedWikidataQids ?? target.rejected_wikidata_qids ?? [];
+
+    if (!Array.isArray(rejectedWikidataQids) || rejectedWikidataQids.length === 0) {
+      continue;
+    }
+
+    const key = personId ? `id:${personId}` : `name:${normalizePersonName(name)}`;
+    const existing = byPerson.get(key) ?? new Set();
+    for (const qid of rejectedWikidataQids) {
+      existing.add(String(qid).toUpperCase());
+    }
+    byPerson.set(key, existing);
+  }
+
+  return byPerson;
 }
 
 function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt, autoApprovedPersonBySourceKey = new Map(), args = {}) {
@@ -2510,6 +2754,12 @@ function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt, args =
       const claimValue = toClaimValue(claim.claimValue);
       const claimJson = claim.claimJson ?? {};
       const claimHash = hashId(JSON.stringify({ claimValue, claimJson }));
+      const rejectedQids =
+        args.rejectedWikidataQidsByPerson?.get(`id:${person.id}`) ??
+        args.rejectedWikidataQidsByPerson?.get(`name:${normalizePersonName(person.name)}`) ??
+        new Set();
+      const wikidataQid = wikidataQidFromClaimJson(claimJson);
+      const rejectedWikidataQid = Boolean(wikidataQid && rejectedQids.has(wikidataQid));
 
       return {
         person_id: person.id,
@@ -2523,15 +2773,23 @@ function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt, args =
           sourceId: claim.sourceId,
         },
         confidence_level: claim.confidenceLevel,
-        review_status: allowAutoPublic ? 'verified' : 'pending',
-        visibility: allowAutoPublic ? 'public' : 'review_only',
+        review_status: rejectedWikidataQid ? 'rejected' : allowAutoPublic ? 'verified' : 'pending',
+        visibility: rejectedWikidataQid ? 'private' : allowAutoPublic ? 'public' : 'review_only',
         source_name: claim.sourceName,
         source_url: claim.sourceUrl,
         observed_at: claim.observedAt ?? startedAt,
-        is_public: allowAutoPublic,
+        is_public: rejectedWikidataQid ? false : allowAutoPublic,
         review_score: scoring.score,
-        scoring_version: reviewScoringVersion,
-        scoring_reasons: scoring.reasons,
+        scoring_version: rejectedWikidataQid ? 'person-enrichment-skipped-rejection-v1' : reviewScoringVersion,
+        scoring_reasons: rejectedWikidataQid
+          ? [
+              ...scoring.reasons,
+              {
+                version: 'person-enrichment-skipped-rejection-v1',
+                reason: 'Wikidata QID was previously rejected for this person',
+              },
+            ]
+          : scoring.reasons,
         auto_reviewed_at: allowAutoPublic ? startedAt : null,
         updated_at: startedAt,
       };
@@ -2775,6 +3033,8 @@ async function writeSeed(seed, hash, args) {
     existingPersonClaimReviewStates,
   );
   await upsertOrThrow(env, 'person_claims', personEnrichmentClaimRows, { onConflict: 'claim_key' });
+  args.appliedSkippedWikidataRejections = await applySkippedWikidataRejections(env, args, startedAt);
+  args.appliedExistingWikidataTerminalReviewStates = await applyExistingWikidataTerminalReviewStates(env, startedAt);
 
   const legalRecordLeadRows = buildLegalRecordLeadRows(seed, peopleRefresh, startedAt);
   await upsertOrThrow(env, 'legal_record_leads', legalRecordLeadRows, { onConflict: 'lead_key' });
@@ -2993,6 +3253,7 @@ async function main() {
   args.livePartyFinanceSummaries = financeEnriched.livePartyFinanceSummaries;
   args.legalRecordLeads = legalEnriched.legalRecordLeads;
   args.personEnrichmentClaims = personEnrichmentEnriched.personEnrichmentClaims;
+  args.rejectedWikidataQidsByPerson = loadRejectedWikidataQidsByPerson(args.personEnrichmentSkippedPath);
 
   if (args.write) {
     await writeSeed(seed, hash, args);

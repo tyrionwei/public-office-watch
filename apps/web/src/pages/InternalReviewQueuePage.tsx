@@ -100,7 +100,8 @@ export function InternalReviewQueuePage() {
       return;
     }
 
-    setClaims((current) => current.filter((item) => item.claim_id !== claim.claim_id));
+    const reviewedClaimIds = new Set([claim.claim_id, ...result.relatedClaimIds]);
+    setClaims((current) => current.filter((item) => !reviewedClaimIds.has(item.claim_id)));
     const approveCascadeText = result.relatedUpdated > 0 ? `，同步通過 ${result.relatedUpdated} 筆低敏感欄位` : '';
     const rejectCascadeText = result.relatedUpdated > 0 ? `，同步標記 ${result.relatedUpdated} 筆同 QID 資料` : '';
     setActionMessage(

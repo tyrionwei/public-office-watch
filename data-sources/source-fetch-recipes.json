@@ -220,6 +220,135 @@
       ]
     },
     {
+      "id": "cec-2024-candidate-json-profiles",
+      "status": "implemented",
+      "sourceUrl": "https://2024.cec.gov.tw/",
+      "downloadUrl": "https://2024.cec.gov.tw/data/json/{path}",
+      "cadence": "daily",
+      "format": "static-json",
+      "parser": "fetch-cec-2024-person-profile-enrichment.mjs",
+      "targetTables": ["person_claims"],
+      "targetPublicViews": ["public_person_claims"],
+      "currentUse": "Fetches 2024 presidential and legislative candidate JSON from the official CEC election site and writes official external_id, birth_date, and gender claims for existing public_candidates.",
+      "paths": {
+        "districtIndex": "/dist/prvCityDept.json",
+        "presidentCandidates": "/cand/P1/00000.json",
+        "districtLegislatorCandidates": "/cand/L1/{prvCityCode}.json",
+        "plainIndigenousLegislatorCandidates": "/cand/L2/00000.json",
+        "mountainIndigenousLegislatorCandidates": "/cand/L3/00000.json",
+        "partyListLegislatorCandidates": "/cand/L4/00000.json"
+      },
+      "matching": {
+        "primary": "existing public_candidates row matched by normalized name, candidate number, party, race title, and election name",
+        "boundary": "Does not create people or candidates. Ambiguous matches are skipped."
+      },
+      "fieldCandidates": {
+        "external_id": ["typeCode", "areaName", "party", "candNo", "candType", "name", "birth"],
+        "birth_date": ["birth"],
+        "gender": ["gender"],
+        "home": ["home"]
+      },
+      "privacyBoundary": "Official candidate public profile fields only. Portrait images are intentionally ignored. The home field is retained in claim_json context but not promoted as a public person field yet.",
+      "nextParserNotes": [
+        "This source does not include education or experience.",
+        "For education and experience, search official election bulletins or other official candidate profile publications next.",
+        "Keep this official enrichment step before Wikidata fallback in the batch."
+      ]
+    },
+    {
+      "id": "cec-election-bulletins",
+      "status": "planned",
+      "sourceUrl": "https://www.cec.gov.tw/",
+      "cadence": "daily during election bulletin publication windows, weekly otherwise",
+      "format": "pdf-or-attachment",
+      "parser": "planned",
+      "targetTables": ["person_claims"],
+      "targetPublicViews": ["public_person_claims"],
+      "currentUse": "Planned source for candidate education, experience, and platform where structured CEC JSON is incomplete.",
+      "matching": {
+        "primary": "election + race + candidate number",
+        "fallback": "unique normalized name match with party and district",
+        "boundary": "Do not publish ambiguous PDF text matches."
+      },
+      "fieldCandidates": {
+        "candidateNo": ["號次", "號碼"],
+        "name": ["姓名", "候選人"],
+        "party": ["推薦政黨", "黨籍"],
+        "gender": ["性別"],
+        "birth_date": ["出生", "出生年月日"],
+        "education": ["學歷"],
+        "experience": ["經歷"],
+        "platform": ["政見"]
+      },
+      "rawSourcePolicy": "Download PDFs to automation storage, not the repo. Store URL, fetchedAt, byte length, SHA-256, and extracted text checksum.",
+      "nextParserNotes": [
+        "Discover stable official bulletin attachment pages from CEC and local election commission sites.",
+        "Extract text with pdftotext or equivalent PDF parser.",
+        "Segment candidate blocks by race and candidate number before matching to people."
+      ]
+    },
+    {
+      "id": "taipei-city-council-current-councilors",
+      "status": "implemented",
+      "sourceUrl": "https://www.tcc.gov.tw/cp.aspx?n=13898",
+      "sampleUrl": "https://www.tcc.gov.tw/Councilor_Content.aspx?n=13898&s=2547",
+      "cadence": "daily",
+      "format": "html",
+      "parser": "scripts/fetch-taipei-official-person-profiles.mjs",
+      "targetTables": ["person_claims"],
+      "targetPublicViews": ["public_person_claims"],
+      "currentUse": "Implemented city-specific parser for Taipei current councilor profile fields.",
+      "matching": {
+        "primary": "official profile URL + normalized name + district",
+        "boundary": "Do not create or merge people from name-only matches."
+      },
+      "fieldCandidates": {
+        "name": ["姓名"],
+        "gender": ["性別"],
+        "birth_date": ["出生"],
+        "party": ["黨籍"],
+        "education": ["學歷"],
+        "experience": ["經歷"],
+        "platform": ["政見"],
+        "contactContextOnly": ["電子信箱", "電話", "傳真", "通訊處"]
+      },
+      "privacyBoundary": "Education, experience, gender, birth date, party, district, and platform are public profile claims. Contact fields are context-only unless the product explicitly exposes them later.",
+      "nextParserNotes": [
+        "Run npm run fetch:taipei-official-person-profiles -- --write.",
+        "Run npm run sync:taipei-official-person-profiles:write after reviewing output summary.",
+        "Keep this city-specific parser separate from other counties until their HTML formats are inspected."
+      ]
+    },
+    {
+      "id": "taipei-city-government-leaders",
+      "status": "implemented",
+      "sourceUrl": "https://www.gov.taipei/News_Leader.aspx?n=1E25E56D8B12C862&sms=7CAF6BD4D3E48630",
+      "sampleUrl": "https://www.gov.taipei/News_Content_Leader.aspx?n=1E25E56D8B12C862&sms=7CAF6BD4D3E48630&s=27B61C299444F306",
+      "cadence": "daily",
+      "format": "html",
+      "parser": "scripts/fetch-taipei-official-person-profiles.mjs",
+      "targetTables": ["source_people", "person_claims"],
+      "targetPublicViews": ["internal review views", "public_person_claims after match"],
+      "currentUse": "Implemented city-specific parser for Taipei mayor, deputy mayors, and agency heads.",
+      "matching": {
+        "primary": "official profile URL + normalized name + position",
+        "boundary": "Most government leader pages do not expose gender; keep unmatched officials in source_people instead of creating canonical people from name-only matches."
+      },
+      "fieldCandidates": {
+        "name": ["姓名", "og:title", "list title"],
+        "position": ["職稱"],
+        "agency": ["list agency"],
+        "education": ["學歷"],
+        "experience": ["經歷"]
+      },
+      "privacyBoundary": "Title, education, and experience are official public profile fields. Missing gender should not be inferred.",
+      "nextParserNotes": [
+        "Run with the Taipei council parser because both outputs share data-sources/taipei-official-person-profiles.seed.json.",
+        "Use source_people review for officials not already present in public_people.",
+        "If a later city source exposes gender or official personnel ID, add it before enabling automatic canonical creation."
+      ]
+    },
+    {
       "id": "ly-historical-legislator-profiles",
       "status": "implemented",
       "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16",

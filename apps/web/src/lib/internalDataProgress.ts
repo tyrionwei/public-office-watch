@@ -1,5 +1,4 @@
 import { getSupabasePublicClient } from './supabasePublicClient';
-import type { SupabaseClient } from '@supabase/supabase-js';
 
 type PublicPersonRow = {
   person_id: string;
@@ -81,7 +80,7 @@ function countBy<T>(rows: T[], keyFor: (row: T) => string | null | undefined) {
     .sort((left, right) => right.count - left.count);
 }
 
-async function fetchAllRows<T>(client: SupabaseClient, table: string, select: string) {
+async function fetchAllRows<T>(client: NonNullable<ReturnType<typeof getSupabasePublicClient>>, table: string, select: string) {
   const rows: T[] = [];
   const pageSize = 1000;
   let offset = 0;

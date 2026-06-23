@@ -202,6 +202,102 @@ Next parser notes:
 - Do not infer current local office from old election results alone after a new election cycle or resignation period.
 - Keep `source_url` on the base person row for traceability.
 
+## Implemented: CEC 2024 Candidate JSON Profiles
+
+Source:
+
+- Site: `https://2024.cec.gov.tw/`
+- JSON base: `https://2024.cec.gov.tw/data/json`
+- Current parser: `scripts/fetch-cec-2024-person-profile-enrichment.mjs`
+- Target table: `person_claims`
+- Target public view: `public_person_claims`
+
+Useful paths:
+
+| Data | Path |
+| --- | --- |
+| county/city and district index | `/dist/prvCityDept.json` |
+| president / vice president candidates | `/cand/P1/00000.json` |
+| regional legislator candidates | `/cand/L1/{prvCityCode}.json` |
+| plain indigenous legislator candidates | `/cand/L2/00000.json` |
+| mountain indigenous legislator candidates | `/cand/L3/00000.json` |
+| party-list legislator candidates | `/cand/L4/00000.json` |
+
+Useful field candidates:
+
+| Target field | Source field |
+| --- | --- |
+| `birth_date` | `birth` as ROC date, e.g. `0630522` |
+| `gender` | `gender` |
+| `party` | `party`, `partyName` |
+| `candidateNo` | `candNo` |
+| `raceTitle` | JSON path plus area metadata |
+
+Known boundaries:
+
+- This source does not contain education or experience.
+- `home` is retained only as context in `claim_json`.
+- Party-list rows are official candidate rows, but the current app schema still needs a dedicated party-list nominee model before they can all link cleanly to `public_candidates`.
+- Local WSL may require `--allow-insecure-tls` for this site if the local CA bundle cannot validate the certificate chain.
+
+## Discovered: Taipei City Council Current Councilors
+
+Source:
+
+- Current councilor list: `https://www.tcc.gov.tw/cp.aspx?n=13898`
+- Example profile: `https://www.tcc.gov.tw/Councilor_Content.aspx?n=13898&s=2547`
+- Inventory entry: `taipei-city-council-current-councilors` in `data-sources/official-person-source-inventory.json`
+- Target table: `person_claims` first, then optionally `people` after the parser is stable
+- Target public view: `public_person_claims`
+
+Observed fields:
+
+| Target field | Official label |
+| --- | --- |
+| `name` | `姓名` |
+| `gender` | `性別` |
+| `birth_date` | `出生` |
+| `party` | `黨籍` |
+| `district` | page title / district text |
+| `education` | `學歷` under `學 經 歷` |
+| `experience` | `經歷` under `學 經 歷` |
+| `platform` | `政見` |
+| `contact` | email, phone, fax, address |
+
+Next parser notes:
+
+- Parse list pages first and collect profile URLs.
+- Parse detail pages into claims with source URL and fetched checksum.
+- Match by official profile URL plus normalized name and district.
+- Auto-publish non-sensitive fields from this official source.
+- Do not publish contact details until the product explicitly needs them.
+
+## Planned: Official Election Bulletins
+
+Source family:
+
+- CEC and local election commission pages.
+- Expected format: PDF or attachment packages.
+- Inventory entry: `cec-election-bulletins` in `data-sources/official-person-source-inventory.json`.
+
+Expected fields:
+
+- Candidate number, name, party, gender, birth date, education, experience, and platform.
+
+Fetch method:
+
+1. Discover bulletin attachment URLs from CEC or local election commission pages.
+2. Download raw PDFs into automation storage, not the repo.
+3. Store URL, fetched time, content length, SHA-256, and extracted text checksum in a manifest.
+4. Extract text with `pdftotext` or an equivalent parser.
+5. Segment candidate blocks by election/race/candidate number before matching to people.
+
+Matching rule:
+
+- Use election + race + candidate number first.
+- Fall back to name + party + district only when the candidate number context is unavailable.
+- Keep ambiguous matches out of public claims.
+
 ## Implemented First Slice: Political Contributions
 
 Official sources:

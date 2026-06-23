@@ -88,6 +88,33 @@
       "notes": "可作裁判書批次資料線索；公開前需比對身分、案由、判決狀態與來源連結。"
     },
     {
+      "id": "cec-2024-candidate-json",
+      "type": "person-enrichment",
+      "name": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+      "url": "https://2024.cec.gov.tw/",
+      "license": "政府公開資料",
+      "refreshCadence": "daily",
+      "notes": "官方 2024 總統與立委候選人靜態 JSON，補充生日、性別與官方外部 ID。"
+    },
+    {
+      "id": "taipei-city-council-current-councilors",
+      "type": "person-enrichment",
+      "name": "臺北市議會：現任議員",
+      "url": "https://www.tcc.gov.tw/cp.aspx?n=13898",
+      "license": "政府網站公開資料",
+      "refreshCadence": "daily",
+      "notes": "臺北市現任議員官方個人頁，補充性別、生日、黨籍、選區、學歷、經歷與政見。"
+    },
+    {
+      "id": "taipei-city-government-leaders",
+      "type": "person-enrichment",
+      "name": "臺北市政府：市長、副市長與機關首長",
+      "url": "https://www.gov.taipei/News_Leader.aspx?n=1E25E56D8B12C862&sms=7CAF6BD4D3E48630",
+      "license": "政府網站公開資料",
+      "refreshCadence": "daily",
+      "notes": "臺北市政府市長、副市長、秘書長與機關首長官方頁，補充職稱、學歷與經歷；多數頁面不含性別，先以 source_people 保存。"
+    },
+    {
       "id": "wikidata-person-enrichment",
       "type": "person-enrichment",
       "name": "Wikidata 人物補充資料",

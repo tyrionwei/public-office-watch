@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-23T02:00:48.923Z",
-  "sourceDuplicateReportGeneratedAt": "2026-06-23T02:00:48.798Z",
+  "generatedAt": "2026-06-23T13:01:03.138Z",
+  "sourceDuplicateReportGeneratedAt": "2026-06-23T13:01:03.033Z",
   "policy": {
     "purpose": "Prioritize official birth date or shared official/person external IDs for same-name groups.",
     "contextOnlySignals": [
@@ -10,14 +10,14 @@
       "candidate region"
     ]
   },
-  "groupCount": 74,
+  "groupCount": 72,
   "byPriority": {
     "high": 2,
-    "medium": 72
+    "medium": 70
   },
   "byMissingSignal": {
-    "birth_date": 74,
-    "external_id": 33
+    "birth_date": 72,
+    "external_id": 31
   },
   "groups": [
     {
@@ -77,67 +77,6 @@
       ]
     },
     {
-      "normalizedName": "李柏毅",
-      "recordCount": 3,
-      "topRecommendation": "same_name_only",
-      "hasSharedExternalId": false,
-      "hasSharedBirthDate": false,
-      "groupMissingSignals": [
-        "birth_date",
-        "external_id"
-      ],
-      "priority": "medium",
-      "records": [
-        {
-          "personId": "01b16e94-3096-43ac-8810-79b195961215",
-          "name": "李柏毅",
-          "gender": "male",
-          "party": "民主進步黨",
-          "position": "第11屆立法委員",
-          "district": "高雄市第3選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-88da2d152e36",
-            "ly-legislator-11-110021"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
-          "personId": "1948e637-12d2-4fd7-9d00-3ddd613b7122",
-          "name": "李柏毅",
-          "gender": "male",
-          "party": "民主進步黨",
-          "position": "高雄市議員",
-          "district": "高雄市第4選舉區",
-          "externalIds": [
-            "cec-2022-local-councilor-regional-person-1e12ab114630",
-            "wikidata:Q47673767"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
-          "personId": "e1863da2-f37e-40ea-afef-01cf10271a33",
-          "name": "李柏毅",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "臺北市議員",
-          "district": "臺北市第6選舉區",
-          "externalIds": [],
-          "birthDates": [
-            "1981-10-09"
-          ],
-          "missingSignals": [
-            "external_id"
-          ]
-        }
-      ]
-    },
-    {
       "normalizedName": "許淑華",
       "recordCount": 3,
       "topRecommendation": "same_name_only",
@@ -162,6 +101,21 @@
           "missingSignals": [
             "birth_date"
           ]
+        },
+        {
+          "personId": "9c21c186-06fa-4616-858e-79f24c8d11fb",
+          "name": "許淑華",
+          "gender": "female",
+          "party": "中國國民黨",
+          "position": "南投縣縣長",
+          "district": "南投縣",
+          "externalIds": [
+            "cec-2022-local-mayor-person-5af8b76a0d91"
+          ],
+          "birthDates": [],
+          "missingSignals": [
+            "birth_date"
+          ]
         }
       ]
     },
@@ -172,8 +126,7 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
@@ -214,10 +167,11 @@
           "party": "無黨籍",
           "position": "花蓮縣議員候選人",
           "district": "花蓮縣第4選舉區",
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-regional-person-a1515f115445"
+          ],
           "birthDates": [],
           "missingSignals": [
-            "external_id",
             "birth_date"
           ]
         }
@@ -230,26 +184,10 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "15617941-008f-4a83-b755-05f4fee19f41",
-          "name": "黃仁",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員",
-          "district": "平地原住民選舉區",
-          "externalIds": [
-            "ly-legislator-11-110079"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "31257070-2105-403c-bae2-76899766e8fa",
           "name": "黃仁",
@@ -272,10 +210,11 @@
           "party": "中國國民黨",
           "position": "臺中市平地原住民議員",
           "district": "臺中市第15選舉區",
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-plain-indigenous-person-7fbcbb62304f"
+          ],
           "birthDates": [],
           "missingSignals": [
-            "external_id",
             "birth_date"
           ]
         }
@@ -292,6 +231,22 @@
       ],
       "priority": "medium",
       "records": [
+        {
+          "personId": "9a0262e1-f5c7-4f08-8acf-4378d5991cd1",
+          "name": "王育敏",
+          "gender": "female",
+          "party": "中國國民黨",
+          "position": "第11屆立法委員",
+          "district": "全國不分區及僑居國外國民",
+          "externalIds": [
+            "ly-legislator-11-110004",
+            "wikidata:Q8279711"
+          ],
+          "birthDates": [],
+          "missingSignals": [
+            "birth_date"
+          ]
+        },
         {
           "personId": "a15ef3fd-2773-4332-bd63-a759aed6045b",
           "name": "王育敏",
@@ -316,7 +271,8 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date"
+        "birth_date",
+        "external_id"
       ],
       "priority": "medium",
       "records": [
@@ -327,11 +283,10 @@
           "party": "民主進步黨",
           "position": "第11屆立法委員候選人（現任）",
           "district": "嘉義市第1選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-5d633367958e"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -344,8 +299,7 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
@@ -363,20 +317,6 @@
           "missingSignals": [
             "birth_date"
           ]
-        },
-        {
-          "personId": "ef0db200-713e-440f-a6d6-f7f5da7d6226",
-          "name": "王閔生",
-          "gender": "male",
-          "party": "民主進步黨",
-          "position": "臺北市議員",
-          "district": "臺北市第6選舉區",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
-          ]
         }
       ]
     },
@@ -387,26 +327,10 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "a6a2da3f-0dba-4097-8762-b92a11f98c76",
-          "name": "伍麗華 Saidhai．Tahovecahe",
-          "gender": "female",
-          "party": "民主進步黨",
-          "position": "第11屆立法委員候選人（現任）",
-          "district": "山地原住民",
-          "externalIds": [
-            "cec-2024-legislative-mountain-indigenous-person-51b297e5e53e"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "ae7ba3fd-c884-404f-a5d1-4bb587c9ca5a",
           "name": "伍麗華Saidhai‧Tahovecahe",
@@ -414,10 +338,11 @@
           "party": "民主進步黨",
           "position": "第11屆立法委員",
           "district": "山地原住民選舉區",
-          "externalIds": [],
+          "externalIds": [
+            "ly-legislator-11-110008"
+          ],
           "birthDates": [],
           "missingSignals": [
-            "external_id",
             "birth_date"
           ]
         }
@@ -543,8 +468,7 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
@@ -555,22 +479,8 @@
           "party": "台灣基進",
           "position": "第11屆立法委員候選人",
           "district": "臺北市第4選舉區",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
-          ]
-        },
-        {
-          "personId": "99a261ef-843e-4fb3-9704-8da6c88ff2f3",
-          "name": "吳欣岱",
-          "gender": "female",
-          "party": "台灣基進",
-          "position": "臺北市議員候選人",
-          "district": "臺北市第2選舉區",
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-1fbf823a64ed"
+            "cec-2024-legislative-district-person-198d29933a4b"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -586,8 +496,7 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
@@ -598,10 +507,12 @@
           "party": "中國國民黨",
           "position": "澎湖縣議員",
           "district": "澎湖縣第2選舉區",
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-regional-person-afd0ea2ba69b",
+            "cec-2024-candidate-json:l1:澎湖縣選舉區:中國國民黨:2:l1:吳政杰:0561129"
+          ],
           "birthDates": [],
           "missingSignals": [
-            "external_id",
             "birth_date"
           ]
         },
@@ -656,10 +567,11 @@
           "position": "臺南市市長候選人",
           "district": "臺南市",
           "externalIds": [],
-          "birthDates": [],
+          "birthDates": [
+            "1967-12-01"
+          ],
           "missingSignals": [
-            "external_id",
-            "birth_date"
+            "external_id"
           ]
         }
       ]
@@ -683,7 +595,8 @@
           "position": "臺北市議員候選人",
           "district": "臺北市第3選舉區",
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-a442d3a58b52"
+            "cec-2022-local-councilor-regional-person-a442d3a58b52",
+            "cec-2024-candidate-json:l1:新北市第8選舉區:民主進步黨:1:l1:吳崢:0780703"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -740,55 +653,10 @@
           "party": "台灣民眾黨",
           "position": "第11屆立法委員候選人",
           "district": "新北市第2選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-7ac4ade48f7b"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
-            "birth_date"
-          ]
-        }
-      ]
-    },
-    {
-      "normalizedName": "李眉蓁",
-      "recordCount": 2,
-      "topRecommendation": "same_name_only",
-      "hasSharedExternalId": false,
-      "hasSharedBirthDate": false,
-      "groupMissingSignals": [
-        "birth_date"
-      ],
-      "priority": "medium",
-      "records": [
-        {
-          "personId": "bdb1dbb2-b052-49bc-b762-e457cd78887b",
-          "name": "李眉蓁",
-          "gender": "female",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員候選人",
-          "district": "高雄市第3選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-988223e9974d"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
-          "personId": "ec46af0a-921a-4f72-84af-5669ad194d0d",
-          "name": "李眉蓁",
-          "gender": "female",
-          "party": "中國國民黨",
-          "position": "高雄市議員",
-          "district": "高雄市第4選舉區",
-          "externalIds": [
-            "cec-2022-local-councilor-regional-person-3431ec705f18",
-            "wikidata:Q50092375"
-          ],
-          "birthDates": [],
-          "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -801,25 +669,11 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date"
+        "birth_date",
+        "external_id"
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "5f1eda4b-c259-4626-a4ae-b9e3a6ba01a4",
-          "name": "李問",
-          "gender": "male",
-          "party": "民主進步黨",
-          "position": "連江縣縣長候選人",
-          "district": "連江縣",
-          "externalIds": [
-            "cec-2022-local-mayor-person-529f3bf255f3"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "8f17afc3-1ddc-4aa7-be01-98aae3beb5d9",
           "name": "李問",
@@ -827,11 +681,10 @@
           "party": "民主進步黨",
           "position": "第11屆立法委員候選人",
           "district": "連江縣第1選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-286bf1d0e5d7"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -870,12 +723,12 @@
           "party": "無黨籍",
           "position": "第11屆立法委員候選人",
           "district": "山地原住民",
-          "externalIds": [
-            "cec-2024-legislative-mountain-indigenous-person-3ed7a3947d6a"
+          "externalIds": [],
+          "birthDates": [
+            "1967-01-01"
           ],
-          "birthDates": [],
           "missingSignals": [
-            "birth_date"
+            "external_id"
           ]
         }
       ]
@@ -887,25 +740,11 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date"
+        "birth_date",
+        "external_id"
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "990c4455-532e-4b9a-a7b8-b64e4d31ad5a",
-          "name": "林志成",
-          "gender": "male",
-          "party": "無黨籍",
-          "position": "第11屆立法委員候選人",
-          "district": "臺北市第5選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-f212dc5e85be"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "dbc0f9b2-0cd0-4ced-b327-4d6b3feb91d7",
           "name": "林志成",
@@ -913,11 +752,10 @@
           "party": "無黨籍",
           "position": "屏東縣議員候選人",
           "district": "屏東縣第3選舉區",
-          "externalIds": [
-            "cec-2022-local-councilor-regional-person-fa1e53931b72"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -1020,21 +858,6 @@
           "missingSignals": [
             "birth_date"
           ]
-        },
-        {
-          "personId": "ade330a6-d068-42fe-8bcb-a5def13e4339",
-          "name": "林意評",
-          "gender": "male",
-          "party": "台灣基進",
-          "position": "宜蘭縣議員候選人",
-          "district": "宜蘭縣第6選舉區",
-          "externalIds": [
-            "cec-2022-local-councilor-regional-person-6486f289396d"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
         }
       ]
     },
@@ -1115,53 +938,11 @@
           "position": "新北市議員候選人",
           "district": "新北市第3選舉區",
           "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
-          ]
-        }
-      ]
-    },
-    {
-      "normalizedName": "侯友宜",
-      "recordCount": 2,
-      "topRecommendation": "same_name_only",
-      "hasSharedExternalId": false,
-      "hasSharedBirthDate": false,
-      "groupMissingSignals": [
-        "birth_date",
-        "external_id"
-      ],
-      "priority": "medium",
-      "records": [
-        {
-          "personId": "0d12b2a3-6c0f-4533-bc7b-d130f8604443",
-          "name": "侯友宜",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "新北市市長",
-          "district": "新北市",
-          "externalIds": [],
           "birthDates": [
-            "1957-06-07"
+            "1958-12-08"
           ],
           "missingSignals": [
             "external_id"
-          ]
-        },
-        {
-          "personId": "b7f0b9bc-d9c3-488e-af08-fa344a52b4a0",
-          "name": "侯友宜",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "第16任總統候選人",
-          "district": "全國",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
           ]
         }
       ]
@@ -1178,21 +959,6 @@
       "priority": "medium",
       "records": [
         {
-          "personId": "3b46104a-4963-495d-8aa5-55f2ed8dc979",
-          "name": "侯漢廷",
-          "gender": "male",
-          "party": "無黨籍",
-          "position": "第11屆立法委員候選人",
-          "district": "臺北市第1選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-9c7208709c3c"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
           "personId": "a6f2ae78-fd47-4bc7-9843-3e3363329e17",
           "name": "侯漢廷",
           "gender": "male",
@@ -1200,8 +966,7 @@
           "position": "臺北市議員",
           "district": "臺北市第1選舉區",
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-58ba21319d2e",
-            "wikidata:Q16926496"
+            "cec-2022-local-councilor-regional-person-58ba21319d2e"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -1221,21 +986,6 @@
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "58668d18-2c87-42e2-80b1-edf180319c51",
-          "name": "姚正玉",
-          "gender": "female",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員候選人",
-          "district": "臺南市第3選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-0f676903d930"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "7146be10-f395-4eed-a420-c57723a86c97",
           "name": "姚正玉",
@@ -1303,8 +1053,7 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
@@ -1330,10 +1079,11 @@
           "party": "台灣民眾黨",
           "position": "臺中市平地原住民議員候選人",
           "district": "臺中市第15選舉區",
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-plain-indigenous-person-8b00b1d19cb5"
+          ],
           "birthDates": [],
           "missingSignals": [
-            "external_id",
             "birth_date"
           ]
         }
@@ -1372,10 +1122,11 @@
           "party": "無黨籍",
           "position": "臺中市議員候選人",
           "district": "臺中市第10選舉區",
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-regional-person-891c98c1c87d"
+          ],
           "birthDates": [],
           "missingSignals": [
-            "external_id",
             "birth_date"
           ]
         }
@@ -1394,31 +1145,16 @@
       "priority": "medium",
       "records": [
         {
-          "personId": "a058edf9-9aeb-4ebb-a490-848178441ce5",
-          "name": "高金素梅",
-          "gender": "female",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員",
-          "district": "山地原住民選舉區",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
-          ]
-        },
-        {
           "personId": "ae0dd30e-366e-46dd-93e8-904675ff808c",
           "name": "高金素梅",
           "gender": "female",
           "party": "無黨籍",
           "position": "第11屆立法委員候選人（現任）",
           "district": "山地原住民",
-          "externalIds": [
-            "cec-2024-legislative-mountain-indigenous-person-e8ddb8f1bc32"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -1431,25 +1167,10 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "009bdf6b-5300-460c-88b8-a4158f53ee90",
-          "name": "高美珠",
-          "gender": "female",
-          "party": "無黨籍",
-          "position": "第11屆立法委員候選人",
-          "district": "平地原住民",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
-          ]
-        },
         {
           "personId": "18b4ec3f-d519-48b1-aa31-5c57b1c9343f",
           "name": "高美珠",
@@ -1457,35 +1178,8 @@
           "party": "中國國民黨",
           "position": "臺東縣平地原住民議員候選人",
           "district": "臺東縣第11選舉區",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
-          ]
-        }
-      ]
-    },
-    {
-      "normalizedName": "張志豪",
-      "recordCount": 2,
-      "topRecommendation": "same_name_only",
-      "hasSharedExternalId": false,
-      "hasSharedBirthDate": false,
-      "groupMissingSignals": [
-        "birth_date"
-      ],
-      "priority": "medium",
-      "records": [
-        {
-          "personId": "6cdf9eab-203b-47f9-9d30-6629a112cdd4",
-          "name": "張志豪",
-          "gender": "male",
-          "party": "台灣民眾黨",
-          "position": "臺北市議員",
-          "district": "臺北市第6選舉區",
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-b15b69c4807e"
+            "cec-2022-local-councilor-plain-indigenous-person-4dc00e197c15"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -1506,21 +1200,6 @@
       "priority": "medium",
       "records": [
         {
-          "personId": "115a4e40-4b81-4259-9c78-35ce9a910794",
-          "name": "張秀華",
-          "gender": "female",
-          "party": "中國國民黨",
-          "position": "嘉義市議員",
-          "district": "嘉義市第2選舉區",
-          "externalIds": [
-            "cec-2022-local-councilor-regional-person-c4bea3f30d70"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
           "personId": "3ee607f6-4aea-418e-ad20-88c66a3abb00",
           "name": "張秀華",
           "gender": "female",
@@ -1528,7 +1207,8 @@
           "position": "第11屆立法委員候選人",
           "district": "嘉義市第1選舉區",
           "externalIds": [
-            "cec-2024-legislative-district-person-617b0e8bf371"
+            "cec-2024-legislative-district-person-617b0e8bf371",
+            "wikidata:Q15951827"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -1605,22 +1285,6 @@
           "missingSignals": [
             "birth_date"
           ]
-        },
-        {
-          "personId": "a6981b25-a402-4b05-95cf-00717f1d984d",
-          "name": "陳玉珍",
-          "gender": "female",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員",
-          "district": "金門縣選舉區",
-          "externalIds": [
-            "ly-legislator-11-110063",
-            "wikidata:Q48896684"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
         }
       ]
     },
@@ -1631,25 +1295,11 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date"
+        "birth_date",
+        "external_id"
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "78ebbfb4-68a3-4daf-b0be-823812beff87",
-          "name": "陳長宏",
-          "gender": "male",
-          "party": "無黨籍",
-          "position": "臺東縣縣長候選人",
-          "district": "臺東縣",
-          "externalIds": [
-            "cec-2022-local-mayor-person-318d6f7e1db6"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "99973e30-2e9a-42ec-8498-6c0aa351eb77",
           "name": "陳長宏",
@@ -1657,11 +1307,10 @@
           "party": "無黨籍",
           "position": "第11屆立法委員候選人",
           "district": "臺東縣第1選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-390e9c4ed721"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -1680,31 +1329,16 @@
       "priority": "medium",
       "records": [
         {
-          "personId": "21ad81d6-8756-4ef7-a950-7bf72e63c628",
-          "name": "陳政宗",
-          "gender": "male",
-          "party": "無黨籍",
-          "position": "臺東縣平地原住民議員",
-          "district": "臺東縣第7選舉區",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
-          ]
-        },
-        {
           "personId": "9e43c142-0d18-474a-b54c-3cc934320046",
           "name": "陳政宗",
           "gender": "male",
           "party": "無黨籍",
           "position": "第11屆立法委員候選人",
           "district": "平地原住民",
-          "externalIds": [
-            "cec-2024-legislative-plain-indigenous-person-22f8391279d5"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -1730,10 +1364,11 @@
           "position": "高雄市議員候選人",
           "district": "高雄市第8選舉區",
           "externalIds": [],
-          "birthDates": [],
+          "birthDates": [
+            "1969-04-29"
+          ],
           "missingSignals": [
-            "external_id",
-            "birth_date"
+            "external_id"
           ]
         },
         {
@@ -1743,11 +1378,10 @@
           "party": "中國國民黨",
           "position": "第11屆立法委員候選人",
           "district": "高雄市第4選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-aed7ac2529c0"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -1765,21 +1399,6 @@
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "8bd0900a-154a-4d3d-9cd6-ff67fefa39f4",
-          "name": "陳雪生",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員",
-          "district": "連江縣選舉區",
-          "externalIds": [
-            "ly-legislator-11-110071"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "e903d1fb-e877-4c8f-82ce-181bf5eafdb4",
           "name": "陳雪生",
@@ -1873,6 +1492,7 @@
           "position": "第11屆立法委員",
           "district": "苗栗縣第1選舉區",
           "externalIds": [
+            "cec-2024-candidate-json:l1:苗栗縣第1選舉區:無黨籍:2:l1:陳超明:0401217",
             "ly-legislator-11-110073"
           ],
           "birthDates": [],
@@ -1938,20 +1558,6 @@
       "priority": "medium",
       "records": [
         {
-          "personId": "2ebb787e-5abb-45fe-9dd0-364e5418e046",
-          "name": "傅崐萁",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員",
-          "district": "花蓮縣選舉區",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
-          ]
-        },
-        {
           "personId": "f61b2941-8aab-42f7-a739-7b6d27b32144",
           "name": "傅崐萁",
           "gender": "male",
@@ -1986,7 +1592,7 @@
           "position": "桃園市議員",
           "district": "桃園市第7選舉區",
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-f6b803150a3a",
+            "cec-2024-candidate-json:l1:桃園市第3選舉區:民主進步黨:5:l1:彭俊豪:0710815",
             "wikidata:Q19825622"
           ],
           "birthDates": [],
@@ -2029,11 +1635,10 @@
           "party": "司法改革黨",
           "position": "第11屆立法委員候選人",
           "district": "臺中市第5選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-071884c1904a"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -2083,13 +1688,58 @@
       ]
     },
     {
+      "normalizedName": "曾玟學",
+      "recordCount": 2,
+      "topRecommendation": "same_name_only",
+      "hasSharedExternalId": false,
+      "hasSharedBirthDate": false,
+      "groupMissingSignals": [
+        "birth_date",
+        "external_id"
+      ],
+      "priority": "medium",
+      "records": [
+        {
+          "personId": "2e4eb2d0-e45d-48f2-9594-04230bfadddc",
+          "name": "曾玟學",
+          "gender": "male",
+          "party": "無黨籍",
+          "position": "苗栗縣議員",
+          "district": "苗栗縣第5選舉區",
+          "externalIds": [
+            "cec-2024-candidate-json:l1:苗栗縣第2選舉區:無黨籍:2:l1:曾玟學:0761219"
+          ],
+          "birthDates": [],
+          "missingSignals": [
+            "birth_date"
+          ]
+        },
+        {
+          "personId": "b1f991da-91a4-41d7-bb73-6484c6ff90ba",
+          "name": "曾玟學",
+          "gender": "male",
+          "party": "無黨籍",
+          "position": "第11屆立法委員候選人",
+          "district": "苗栗縣第2選舉區",
+          "externalIds": [],
+          "birthDates": [
+            "1987-12-19"
+          ],
+          "missingSignals": [
+            "external_id"
+          ]
+        }
+      ]
+    },
+    {
       "normalizedName": "游智彬",
       "recordCount": 2,
       "topRecommendation": "same_name_only",
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date"
+        "birth_date",
+        "external_id"
       ],
       "priority": "medium",
       "records": [
@@ -2100,26 +1750,38 @@
           "party": "新黨",
           "position": "桃園市議員候選人",
           "district": "桃園市第7選舉區",
-          "externalIds": [
-            "cec-2022-local-councilor-regional-person-81a596550ae9"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "normalizedName": "游顥",
+      "recordCount": 2,
+      "topRecommendation": "same_name_only",
+      "hasSharedExternalId": false,
+      "hasSharedBirthDate": false,
+      "groupMissingSignals": [
+        "birth_date",
+        "external_id"
+      ],
+      "priority": "medium",
+      "records": [
         {
-          "personId": "af731f18-30fe-4619-87d4-de5dfa30adc6",
-          "name": "游智彬",
+          "personId": "114993d4-21f1-470b-82a3-f7c2b6947480",
+          "name": "游顥",
           "gender": "male",
-          "party": "新黨",
-          "position": "第11屆立法委員候選人",
-          "district": "桃園市第3選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-d80745fb0bda"
-          ],
+          "party": "中國國民黨",
+          "position": "第11屆立法委員",
+          "district": "南投縣第2選舉區",
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -2136,21 +1798,6 @@
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "c2935434-bad5-4f2d-851c-029e964fae8b",
-          "name": "黃秀芳",
-          "gender": "female",
-          "party": "民主進步黨",
-          "position": "第11屆立法委員",
-          "district": "彰化縣第2選舉區",
-          "externalIds": [
-            "ly-legislator-11-110080"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "ea92aff5-a3e5-4897-9427-033ce6829b08",
           "name": "黃秀芳",
@@ -2180,21 +1827,6 @@
       "priority": "medium",
       "records": [
         {
-          "personId": "0d6c109d-412c-461f-a366-aff5814564ef",
-          "name": "黃建賓",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員",
-          "district": "臺東縣選舉區",
-          "externalIds": [
-            "ly-legislator-11-110081"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
           "personId": "a3dcbdd4-7d3e-4022-9899-50186ada8e00",
           "name": "黃建賓",
           "gender": "male",
@@ -2218,7 +1850,8 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date"
+        "birth_date",
+        "external_id"
       ],
       "priority": "medium",
       "records": [
@@ -2230,7 +1863,8 @@
           "position": "第11屆立法委員候選人",
           "district": "高雄市第5選舉區",
           "externalIds": [
-            "cec-2024-legislative-district-person-e507875e5d35"
+            "cec-2024-legislative-district-person-e507875e5d35",
+            "wikidata:Q8274108"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -2244,12 +1878,12 @@
           "party": "中國國民黨",
           "position": "高雄市議員",
           "district": "高雄市第7選舉區",
-          "externalIds": [
-            "wikidata:Q8274108"
+          "externalIds": [],
+          "birthDates": [
+            "1967-10-31"
           ],
-          "birthDates": [],
           "missingSignals": [
-            "birth_date"
+            "external_id"
           ]
         }
       ]
@@ -2265,21 +1899,6 @@
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "4adf2a6b-d45c-4590-ba8d-f2821ce1814c",
-          "name": "黃琤婷",
-          "gender": "female",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員候選人",
-          "district": "宜蘭縣第1選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-885ce4276957"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "98863cc0-8b32-4cc4-a6b6-3bac016ad274",
           "name": "黃琤婷",
@@ -2331,7 +1950,7 @@
           "position": "第11屆立法委員候選人",
           "district": "新北市第12選舉區",
           "externalIds": [
-            "cec-2024-legislative-district-person-87ba88115c26"
+            "cec-2024-candidate-json:l1:新北市第12選舉區:無黨籍:1:l1:黃瑞傳:0390407"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -2347,26 +1966,11 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date"
+        "birth_date",
+        "external_id"
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "7c5ebbd2-91e6-4af0-b890-36ac7e5d556c",
-          "name": "楊曜",
-          "gender": "male",
-          "party": "民主進步黨",
-          "position": "第11屆立法委員",
-          "district": "澎湖縣選舉區",
-          "externalIds": [
-            "ly-legislator-11-110086",
-            "wikidata:Q8350686"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "97ae8feb-7acc-4472-a0fa-7e4ab1a30f0c",
           "name": "楊曜",
@@ -2374,11 +1978,10 @@
           "party": "民主進步黨",
           "position": "第11屆立法委員候選人（現任）",
           "district": "澎湖縣第1選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-d53304d072cf"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -2396,6 +1999,21 @@
       "priority": "medium",
       "records": [
         {
+          "personId": "b4756913-e8c9-4329-b33f-cc6345535447",
+          "name": "劉仁照",
+          "gender": "male",
+          "party": "民主進步黨",
+          "position": "桃園市議員",
+          "district": "桃園市第8選舉區",
+          "externalIds": [
+            "cec-2022-local-councilor-regional-person-08502f8ca69a"
+          ],
+          "birthDates": [],
+          "missingSignals": [
+            "birth_date"
+          ]
+        },
+        {
           "personId": "b68a488b-492f-4666-a159-bd10d58e49b0",
           "name": "劉仁照",
           "gender": "male",
@@ -2403,6 +2021,7 @@
           "position": "第11屆立法委員候選人",
           "district": "桃園市第5選舉區",
           "externalIds": [
+            "cec-2024-candidate-json:l1:桃園市第5選舉區:民主進步黨:1:l1:劉仁照:0700126",
             "cec-2024-legislative-district-person-0a9a537c3c20"
           ],
           "birthDates": [],
@@ -2432,22 +2051,6 @@
           "district": "雲林縣",
           "externalIds": [
             "cec-2022-local-mayor-person-3d2197e16d8d"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
-          "personId": "f420fec1-dcb2-49e6-9ef8-be2c99867e0b",
-          "name": "劉建國",
-          "gender": "male",
-          "party": "民主進步黨",
-          "position": "第11屆立法委員",
-          "district": "雲林縣第2選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-48b6e16e6532",
-            "ly-legislator-11-110093"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -2490,7 +2093,7 @@
           "position": "第11屆立法委員候選人",
           "district": "新竹縣第1選舉區",
           "externalIds": [
-            "cec-2024-legislative-district-person-bf4992849e6a"
+            "cec-2024-candidate-json:l1:新竹縣第1選舉區:台灣維新:1:l1:劉復嵐:0630509"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -2562,6 +2165,7 @@
           "district": "臺中市第1選舉區",
           "externalIds": [
             "cec-2024-legislative-district-person-86f5c93ae119",
+            "cec-historical:8048827d8aaa",
             "ly-legislator-11-110094"
           ],
           "birthDates": [],
@@ -2577,7 +2181,8 @@
           "position": "臺中市市長候選人",
           "district": "臺中市",
           "externalIds": [
-            "cec-2022-local-mayor-person-586a0cb7b2db"
+            "cec-2022-local-mayor-person-586a0cb7b2db",
+            "cec-2024-candidate-json:l1:臺中市第1選舉區:民主進步黨:4:l1:蔡其昌:0580416"
           ],
           "birthDates": [],
           "missingSignals": [
@@ -2642,6 +2247,21 @@
       "priority": "medium",
       "records": [
         {
+          "personId": "acdddfd8-963f-46aa-b87f-98bd45addfa2",
+          "name": "蔡銘軒",
+          "gender": "male",
+          "party": "民主進步黨",
+          "position": "第11屆立法委員候選人",
+          "district": "南投縣第1選舉區",
+          "externalIds": [
+            "wikidata:Q118145350"
+          ],
+          "birthDates": [],
+          "missingSignals": [
+            "birth_date"
+          ]
+        },
+        {
           "personId": "b7cf036a-8753-47d2-9023-928253a13417",
           "name": "蔡銘軒",
           "gender": "male",
@@ -2670,21 +2290,6 @@
       "priority": "medium",
       "records": [
         {
-          "personId": "a14805bb-dbb0-44d6-b7bf-77479658a7e0",
-          "name": "鄭天財Sra Kacaw",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員",
-          "district": "平地原住民選舉區",
-          "externalIds": [
-            "ly-legislator-11-110096"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
           "personId": "f50da3f2-22fb-492b-8b8c-1eec29df17b9",
           "name": "鄭天財 Sra‧Kacaw",
           "gender": "male",
@@ -2707,8 +2312,7 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
@@ -2724,20 +2328,6 @@
           ],
           "birthDates": [],
           "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
-          "personId": "f335cd38-254a-4ee5-ab05-7a8e27ad9f87",
-          "name": "鄭文婷",
-          "gender": "female",
-          "party": "民主進步黨",
-          "position": "基隆市議員",
-          "district": "基隆市第3選舉區",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
             "birth_date"
           ]
         }
@@ -2793,25 +2383,10 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "19d65bb3-94ef-49b9-bfc9-5f7932a82d45",
-          "name": "鄭俊雄",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "彰化縣議員",
-          "district": "彰化縣第6選舉區",
-          "externalIds": [],
-          "birthDates": [],
-          "missingSignals": [
-            "external_id",
-            "birth_date"
-          ]
-        },
         {
           "personId": "321dbb30-1c73-44c1-8d52-22cff4496a4e",
           "name": "鄭俊雄",
@@ -2842,21 +2417,6 @@
       "priority": "medium",
       "records": [
         {
-          "personId": "0336ff6c-ce5b-4f79-9cc6-e5b962b3ff21",
-          "name": "鄭運鵬",
-          "gender": "male",
-          "party": "民主進步黨",
-          "position": "桃園市市長候選人",
-          "district": "桃園市",
-          "externalIds": [
-            "cec-2022-local-mayor-person-d7d8737cb3fc"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
-        {
           "personId": "345ef4f4-d875-4513-97f4-02e98fa64c30",
           "name": "鄭運鵬",
           "gender": "male",
@@ -2879,25 +2439,11 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date"
+        "birth_date",
+        "external_id"
       ],
       "priority": "medium",
       "records": [
-        {
-          "personId": "e49fc435-3609-4abb-beb5-ff5790687c3d",
-          "name": "盧縣一",
-          "gender": "male",
-          "party": "中國國民黨",
-          "position": "第11屆立法委員",
-          "district": "山地原住民選舉區",
-          "externalIds": [
-            "ly-legislator-11-110099"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
-        },
         {
           "personId": "ebf547e7-08eb-4054-ab66-46377593a7f4",
           "name": "盧縣一",
@@ -2905,11 +2451,10 @@
           "party": "中國國民黨",
           "position": "第11屆立法委員候選人",
           "district": "山地原住民",
-          "externalIds": [
-            "cec-2024-legislative-mountain-indigenous-person-a58e9d6e2906"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }
@@ -2940,21 +2485,6 @@
             "external_id",
             "birth_date"
           ]
-        },
-        {
-          "personId": "502b7215-a263-4276-9482-d7e6a4543b8e",
-          "name": "賴香伶",
-          "gender": "female",
-          "party": "台灣民眾黨",
-          "position": "桃園市市長候選人",
-          "district": "桃園市",
-          "externalIds": [
-            "cec-2022-local-mayor-person-88a2a36a070e"
-          ],
-          "birthDates": [],
-          "missingSignals": [
-            "birth_date"
-          ]
         }
       ]
     },
@@ -2965,8 +2495,7 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date",
-        "external_id"
+        "birth_date"
       ],
       "priority": "medium",
       "records": [
@@ -2977,10 +2506,11 @@
           "party": "中國國民黨",
           "position": "第11屆立法委員",
           "district": "全國不分區及僑居國外國民",
-          "externalIds": [],
+          "externalIds": [
+            "cec-historical:0792f9a66cda"
+          ],
           "birthDates": [],
           "missingSignals": [
-            "external_id",
             "birth_date"
           ]
         },
@@ -3008,7 +2538,8 @@
       "hasSharedExternalId": false,
       "hasSharedBirthDate": false,
       "groupMissingSignals": [
-        "birth_date"
+        "birth_date",
+        "external_id"
       ],
       "priority": "medium",
       "records": [
@@ -3019,11 +2550,10 @@
           "party": "中國國民黨",
           "position": "第11屆立法委員候選人",
           "district": "高雄市第7選舉區",
-          "externalIds": [
-            "cec-2024-legislative-district-person-bdf1093a6e63"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "missingSignals": [
+            "external_id",
             "birth_date"
           ]
         }

@@ -30,6 +30,30 @@ The CEC votedata package already exposes candidate gender codes in `elcand.csv`;
 6. Auto-publish only high-confidence public claims; keep weaker claims in review queues.
 7. Let public profile pages read only `public_people` and verified `public_person_claims`.
 
+## Official Source Expansion
+
+The machine-readable source inventory lives at `data-sources/official-person-source-inventory.json`.
+
+Current official source order:
+
+1. Structured official feeds: Legislative Yuan and CEC JSON.
+2. Official local council profile pages: first parser candidate is Taipei City Council current councilors.
+3. Official election bulletin PDFs: use for candidates' education, experience, and platform when no structured feed exists.
+4. Official county/city government profile pages: use for mayors, deputy mayors, and department/bureau heads.
+5. Official party nomination pages: use as announced-candidate leads before CEC registration.
+
+Verified discovery:
+
+- Taipei City Council current councilor pages expose name, gender, birth date, party, district, education, experience, platform, contact, and personal-site fields.
+- CEC 2024 static JSON exposes birth date and gender but not education or experience.
+- CEC election bulletins are still a source-discovery task. Treat them as PDF/attachment sources until a stable structured endpoint is found.
+
+Scheduling rule:
+
+- During election season, official candidate and bulletin sources can run daily.
+- Outside election season, historical sources can run weekly.
+- Local council and local government current-profile pages can run daily because resignations, replacements, and agency leadership changes are time-sensitive.
+
 ## Bulk Enrichment Leads
 
 - `data-sources/person-enrichment-claims.seed.json` stores optional enrichment claims.

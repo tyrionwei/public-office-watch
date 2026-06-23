@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "name": "official-person-source-inventory",
+  "updatedAt": "2026-06-23",
+  "purpose": "Machine-readable inventory for official person profile sources. Use this before adding scheduled enrichment jobs.",
+  "sourcePriority": [
+    "official structured feeds",
+    "official HTML profile pages",
+    "official election bulletin PDFs",
+    "party official nomination pages",
+    "wiki/wikidata fallback leads"
+  ],
+  "fieldPolicy": {
+    "autoPublishAllowed": [
+      "gender",
+      "birth_date",
+      "education",
+      "experience",
+      "position",
+      "office",
+      "district",
+      "party",
+      "platform"
+    ],
+    "reviewRequired": [
+      "legal_case",
+      "family_relation",
+      "political_family_relation",
+      "controversy"
+    ],
+    "privateOrContextOnly": [
+      "raw_html",
+      "raw_pdf_text",
+      "portrait_url",
+      "home"
+    ]
+  },
+  "sources": [
+    {
+      "id": "ly-historical-legislator-profiles",
+      "status": "implemented",
+      "sourceType": "official_structured_feed",
+      "owner": "Legislative Yuan",
+      "scope": "Legislators, terms 1-11",
+      "entryUrl": "https://data.ly.gov.tw/getds.action?id=16",
+      "downloadTemplate": "https://data.ly.gov.tw/odw/ID16Action.action?name=&sex=&party=&partyGroup=&areaName=&term={term}&fileType=json",
+      "cadence": "daily",
+      "fields": [
+        "gender",
+        "education",
+        "experience",
+        "party",
+        "district",
+        "onboardDate",
+        "leaveFlag"
+      ],
+      "parser": "scripts/fetch-official-person-profile-enrichment.mjs",
+      "matching": "official external_id first, then unique normalized name with gender/party/district/role scoring",
+      "notes": "Best official source for current and historical legislators' education and experience."
+    },
+    {
+      "id": "cec-2024-candidate-json-profiles",
+      "status": "implemented",
+      "sourceType": "official_static_json",
+      "owner": "Central Election Commission",
+      "scope": "2024 presidential and legislative candidates",
+      "entryUrl": "https://2024.cec.gov.tw/",
+      "downloadTemplates": [
+        "https://2024.cec.gov.tw/data/json/cand/P1/00000.json",
+        "https://2024.cec.gov.tw/data/json/cand/L1/{prvCityCode}.json",
+        "https://2024.cec.gov.tw/data/json/cand/L2/00000.json",
+        "https://2024.cec.gov.tw/data/json/cand/L3/00000.json",
+        "https://2024.cec.gov.tw/data/json/cand/L4/00000.json"
+      ],
+      "cadence": "daily during election cycle, weekly after election",
+      "fields": [
+        "external_id",
+        "gender",
+        "birth_date",
+        "party",
+        "candidate_number",
+        "race",
+        "home"
+      ],
+      "parser": "scripts/fetch-cec-2024-person-profile-enrichment.mjs",
+      "matching": "existing public_candidates row matched by normalized name, candidate number, party, race title, and election name",
+      "knownGaps": [
+        "Does not include education or experience.",
+        "Party-list candidates need a dedicated party-list nominee model before all unmatched rows can be linked."
+      ]
+    },
+    {
+      "id": "cec-election-bulletins",
+      "status": "planned",
+      "sourceType": "official_pdf_or_attachment",
+      "owner": "Central Election Commission and local election commissions",
+      "scope": "Election bulletins for candidates and campaign platforms",
+      "entryUrl": "https://www.cec.gov.tw/",
+      "cadence": "daily during bulletin publication window, weekly after election",
+      "expectedFields": [
+        "candidate_number",
+        "name",
+        "party",
+        "gender",
+        "birth_date",
+        "education",
+        "experience",
+        "platform"
+      ],
+      "parser": "planned",
+      "rawSourcePolicy": "Download PDFs to automation storage, keep URL, fetchedAt, content length, SHA-256, and extracted text checksum. Do not commit raw PDFs.",
+      "matching": "election/race/candidate number first, then name+party+district",
+      "notes": "Search did not reveal a stable structured endpoint yet. Next step is to discover official bulletin attachment pages from CEC and local election commission sites, then parse PDFs with pdftotext."
+    },
+    {
+      "id": "taipei-city-council-current-councilors",
+      "status": "discovered",
+      "sourceType": "official_html_profile_pages",
+      "owner": "Taipei City Council",
+      "scope": "Current Taipei city councilors",
+      "listUrl": "https://www.tcc.gov.tw/cp.aspx?n=13898",
+      "sampleProfileUrl": "https://www.tcc.gov.tw/Councilor_Content.aspx?n=13898&s=2547",
+      "cadence": "daily",
+      "fields": [
+        "name",
+        "gender",
+        "birth_date",
+        "party",
+        "district",
+        "email",
+        "phone",
+        "office_address",
+        "education",
+        "experience",
+        "platform",
+        "personal_site"
+      ],
+      "parser": "scripts/fetch-taipei-official-person-profiles.mjs",
+      "matching": "official URL + normalized name + gender + district; can create high-confidence public claims for non-sensitive fields",
+      "notes": "Implemented as the first city-specific local-council parser. The page exposes structured labels for birth date, education, experience, and platform."
+    },
+    {
+      "id": "taipei-city-government-leaders",
+      "status": "implemented",
+      "sourceType": "official_html_profile_pages",
+      "owner": "Taipei City Government",
+      "scope": "Current mayor, deputy mayors, secretary-general and agency heads",
+      "listUrl": "https://www.gov.taipei/News_Leader.aspx?n=1E25E56D8B12C862&sms=7CAF6BD4D3E48630",
+      "sampleProfileUrl": "https://www.gov.taipei/News_Content_Leader.aspx?n=1E25E56D8B12C862&sms=7CAF6BD4D3E48630&s=27B61C299444F306",
+      "cadence": "daily",
+      "fields": [
+        "name",
+        "position",
+        "agency",
+        "education",
+        "experience",
+        "profile_url"
+      ],
+      "parser": "scripts/fetch-taipei-official-person-profiles.mjs",
+      "matching": "official URL + normalized name + position; pages usually lack gender, so unmatched records stay in source_people",
+      "notes": "City government leader pages provide official title, education, and experience. Do not canonicalize name-only matches."
+    },
+    {
+      "id": "taipei-city-council-historical-councilors",
+      "status": "discovered",
+      "sourceType": "official_html_profile_pages",
+      "owner": "Taipei City Council",
+      "scope": "Historical Taipei city councilors",
+      "listUrl": "https://www.tcc.gov.tw/Councilor_Search1.aspx?n=13869",
+      "cadence": "weekly",
+      "fields": [
+        "name",
+        "term",
+        "district",
+        "party",
+        "profile_url"
+      ],
+      "parser": "planned",
+      "matching": "term + normalized name + district",
+      "notes": "Useful after current-person ingestion is stable."
+    },
+    {
+      "id": "local-council-profile-html-family",
+      "status": "planned",
+      "sourceType": "official_html_profile_pages",
+      "owner": "County and city councils",
+      "scope": "Current and historical county/city councilors",
+      "cadence": "daily for current pages, weekly for historical pages",
+      "startingPoints": [
+        {
+          "region": "臺北市",
+          "url": "https://www.tcc.gov.tw/cp.aspx?n=13898",
+          "status": "discovered"
+        },
+        {
+          "region": "新北市",
+          "url": "https://www.ntp.gov.tw/",
+          "status": "needs_probe"
+        },
+        {
+          "region": "桃園市",
+          "url": "https://www.tycc.gov.tw/",
+          "status": "needs_probe"
+        }
+      ],
+      "expectedFields": [
+        "name",
+        "gender",
+        "birth_date",
+        "party",
+        "district",
+        "education",
+        "experience",
+        "platform",
+        "contact",
+        "profile_url"
+      ],
+      "parser": "planned",
+      "matching": "official profile URL + name + region/district. Do not infer same person from name only.",
+      "notes": "Create one adapter per site family. Do not force all councils into one scraper until layouts are grouped."
+    },
+    {
+      "id": "local-government-executive-profiles",
+      "status": "planned",
+      "sourceType": "official_html_profile_pages",
+      "owner": "County and city governments",
+      "scope": "Mayors, deputy mayors, department heads, bureau heads",
+      "cadence": "daily",
+      "expectedFields": [
+        "name",
+        "title",
+        "agency",
+        "education",
+        "experience",
+        "term_status",
+        "profile_url"
+      ],
+      "parser": "planned",
+      "matching": "region + office title + official organization profile URL",
+      "notes": "This should populate deputy mayors and department heads. Do not derive deputy mayor or department-head records from election data."
+    },
+    {
+      "id": "party-official-nomination-pages",
+      "status": "planned",
+      "sourceType": "official_party_html_or_pdf",
+      "owner": "Political parties",
+      "scope": "Announced candidates before CEC registration",
+      "cadence": "daily during nomination season",
+      "expectedFields": [
+        "name",
+        "party",
+        "region",
+        "district",
+        "office",
+        "nomination_date",
+        "status",
+        "profile_url"
+      ],
+      "parser": "planned",
+      "matching": "party official URL + name + announced district/office",
+      "notes": "Use as candidate leads before CEC publishes official registration. These should remain candidate status, not officeholder status."
+    }
+  ],
+  "nextImplementationOrder": [
+    "taipei-city-council-current-councilors",
+    "cec-election-bulletins",
+    "local-government-executive-profiles",
+    "local-council-profile-html-family",
+    "party-official-nomination-pages"
+  ]
+}

@@ -1,10 +1,38 @@
 import { spawn } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || 'http://127.0.0.1:54321';
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+function readLocalEnv() {
+  const envPath = path.join(repoRoot, '.env.local');
+
+  if (!fs.existsSync(envPath)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    fs.readFileSync(envPath, 'utf8')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('#'))
+      .map((line) => {
+        const separatorIndex = line.indexOf('=');
+        const key = separatorIndex >= 0 ? line.slice(0, separatorIndex).trim() : line;
+        const value = separatorIndex >= 0 ? line.slice(separatorIndex + 1).trim().replace(/^['"]|['"]$/g, '') : '';
+        return [key, value];
+      }),
+  );
+}
+
+const localEnv = readLocalEnv();
+const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || localEnv.SUPABASE_URL || 'http://127.0.0.1:54321';
 const localAnonKey =
   process.env.SUPABASE_ANON_KEY?.trim() ||
+  localEnv.SUPABASE_ANON_KEY ||
   (localSupabaseUrl.startsWith('http://127.0.0.1:54321') ? 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH' : '');
-const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || localEnv.SUPABASE_SERVICE_ROLE_KEY;
 const wikidataSourceName = 'Wikidata 人物補充資料';
 
 function run(command, args, options = {}) {
@@ -140,6 +168,19 @@ async function main() {
     },
   });
   await run('npm', ['run', 'sync:official-person-profile-enrichment:write'], {
+    env: {
+      SUPABASE_URL: localSupabaseUrl,
+      SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,
+    },
+  });
+
+  await run('npm', ['run', 'fetch:cec-2024-person-profile-enrichment', '--', '--write', '--allow-insecure-tls'], {
+    env: {
+      SUPABASE_URL: localSupabaseUrl,
+      SUPABASE_ANON_KEY: localAnonKey,
+    },
+  });
+  await run('npm', ['run', 'sync:cec-2024-person-profile-enrichment:write'], {
     env: {
       SUPABASE_URL: localSupabaseUrl,
       SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,

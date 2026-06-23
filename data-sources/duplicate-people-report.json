@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-23T02:00:48.798Z",
+  "generatedAt": "2026-06-23T13:01:03.033Z",
   "policy": {
     "mergeCandidateSignals": [
       "shared verified external ID",
@@ -40,8 +40,20 @@
         "高雄市議員"
       ],
       "sharedExternalIds": [],
-      "topRecommendation": "same_name_only",
+      "topRecommendation": "merge_candidate",
       "pairSuggestions": [
+        {
+          "leftPersonId": "01b16e94-3096-43ac-8810-79b195961215",
+          "rightPersonId": "e1863da2-f37e-40ea-afef-01cf10271a33",
+          "score": 80,
+          "recommendation": "merge_candidate",
+          "reasons": [
+            "same normalized name",
+            "same gender: male",
+            "same birth date: 1981-10-09",
+            "different party context: 民主進步黨 / 中國國民黨"
+          ]
+        },
         {
           "leftPersonId": "01b16e94-3096-43ac-8810-79b195961215",
           "rightPersonId": "1948e637-12d2-4fd7-9d00-3ddd613b7122",
@@ -52,17 +64,6 @@
             "same gender: male",
             "shared candidate region context: 高雄市",
             "same party context: 民主進步黨"
-          ]
-        },
-        {
-          "leftPersonId": "01b16e94-3096-43ac-8810-79b195961215",
-          "rightPersonId": "e1863da2-f37e-40ea-afef-01cf10271a33",
-          "score": 35,
-          "recommendation": "same_name_only",
-          "reasons": [
-            "same normalized name",
-            "same gender: male",
-            "different party context: 民主進步黨 / 中國國民黨"
           ]
         },
         {
@@ -88,10 +89,12 @@
           "district": "高雄市第3選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-88da2d152e36",
-            "ly-legislator-11-110021"
+            "cec-2024-legislative-district-person-88da2d152e36"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1977-04-08",
+            "1981-10-09"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -114,8 +117,7 @@
           "district": "高雄市第4選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-1e12ab114630",
-            "wikidata:Q47673767"
+            "cec-2022-local-councilor-regional-person-1e12ab114630"
           ],
           "birthDates": [],
           "candidateCount": 1,
@@ -225,7 +227,10 @@
           "position": "第11屆立法委員",
           "district": "基隆市選舉區",
           "electionYear": 2024,
-          "externalIds": [],
+          "externalIds": [
+            "cec-2024-candidate-json:l1:基隆市選舉區:中國國民黨:5:l1:林沛祥:0660514",
+            "ly-legislator-11-110025"
+          ],
           "birthDates": [
             "1977-05-14"
           ],
@@ -267,7 +272,6 @@
           "district": "基隆市第5選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-7bbe697a5297",
             "wikidata:Q56283483"
           ],
           "birthDates": [
@@ -336,12 +340,11 @@
         {
           "leftPersonId": "9c21c186-06fa-4616-858e-79f24c8d11fb",
           "rightPersonId": "e34c3d98-dbf0-433e-bbd3-4b0a7e7f3ce4",
-          "score": 0,
-          "recommendation": "do_not_merge_likely",
+          "score": 35,
+          "recommendation": "same_name_only",
           "reasons": [
             "same normalized name",
             "same gender: female",
-            "different birth date: 1975-10-15 / 1973-05-22",
             "different party context: 中國國民黨 / 民主進步黨"
           ]
         }
@@ -382,12 +385,9 @@
           "district": "南投縣",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-mayor-person-5af8b76a0d91",
-            "wikidata:Q18659220"
+            "cec-2022-local-mayor-person-5af8b76a0d91"
           ],
-          "birthDates": [
-            "1975-10-15"
-          ],
+          "birthDates": [],
           "candidateCount": 1,
           "candidates": [
             {
@@ -410,10 +410,13 @@
           "district": "臺北市第3選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-c3380b4dfefb"
+            "cec-2022-local-councilor-regional-person-c3380b4dfefb",
+            "cec-2024-candidate-json:l1:臺北市第7選舉區:民主進步黨:5:l1:許淑華:0620522",
+            "wikidata:Q18659220"
           ],
           "birthDates": [
-            "1973-05-22"
+            "1973-05-22",
+            "1975-10-15"
           ],
           "candidateCount": 1,
           "candidates": [
@@ -546,7 +549,9 @@
           "position": "花蓮縣議員候選人",
           "district": "花蓮縣第4選舉區",
           "electionYear": 2022,
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-regional-person-a1515f115445"
+          ],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -629,9 +634,12 @@
           "district": "平地原住民選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l2:全國:中國國民黨:7:平地原住民:黃仁:0510413",
             "ly-legislator-11-110079"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1962-04-13"
+          ],
           "candidateCount": 0,
           "candidates": []
         },
@@ -669,7 +677,9 @@
           "position": "臺中市平地原住民議員",
           "district": "臺中市第15選舉區",
           "electionYear": 2022,
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-plain-indigenous-person-7fbcbb62304f"
+          ],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -717,7 +727,6 @@
             "shared external id: wikidata:Q56259834",
             "same normalized name",
             "same gender: male",
-            "same birth date: 1990-10-17",
             "shared candidate region context: 桃園市",
             "different party context: 無黨籍 / 中國國民黨"
           ]
@@ -737,9 +746,7 @@
             "cec-2022-local-councilor-regional-person-db6c0dcc2859",
             "wikidata:Q56259834"
           ],
-          "birthDates": [
-            "1990-10-17"
-          ],
+          "birthDates": [],
           "candidateCount": 1,
           "candidates": [
             {
@@ -762,8 +769,7 @@
           "district": "桃園市第1選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-5e46df7cdab9",
-            "ly-legislator-11-110002",
+            "cec-2024-candidate-json:l1:桃園市第1選舉區:中國國民黨:3:l1:牛煦庭:0791017",
             "wikidata:Q56259834"
           ],
           "birthDates": [
@@ -826,11 +832,10 @@
           "district": "全國不分區及僑居國外國民",
           "electionYear": 2024,
           "externalIds": [
-            "ly-legislator-11-110004"
+            "ly-legislator-11-110004",
+            "wikidata:Q8279711"
           ],
-          "birthDates": [
-            "1971-04-11"
-          ],
+          "birthDates": [],
           "candidateCount": 0,
           "candidates": []
         },
@@ -904,6 +909,7 @@
           "district": "嘉義市選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:嘉義市選舉區:民主進步黨:1:l1:王美惠:0540415",
             "ly-legislator-11-110006",
             "wikidata:Q78123040"
           ],
@@ -922,9 +928,7 @@
           "position": "第11屆立法委員候選人（現任）",
           "district": "嘉義市第1選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-district-person-5d633367958e"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -1008,8 +1012,12 @@
           "position": "臺北市議員",
           "district": "臺北市第6選舉區",
           "electionYear": 2022,
-          "externalIds": [],
-          "birthDates": [],
+          "externalIds": [
+            "cec-2024-candidate-json:l1:臺北市第8選舉區:民主進步黨:3:l1:王閔生:0640915"
+          ],
+          "birthDates": [
+            "1975-09-15"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -1094,7 +1102,8 @@
           "electionYear": 2024,
           "externalIds": [
             "cec-2022-local-councilor-regional-person-9ea307655f56",
-            "wikidata:Q9067119"
+            "cec-2024-candidate-json:l1:臺北市第3選舉區:中國國民黨:5:l1:王鴻薇:0530710",
+            "ly-legislator-11-110007"
           ],
           "birthDates": [
             "1964-07-10"
@@ -1156,9 +1165,11 @@
           "district": "山地原住民",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-mountain-indigenous-person-51b297e5e53e"
+            "cec-2024-candidate-json:l3:全國:民主進步黨:10:山地原住民:伍麗華 saidhai．tahovecahe:0580812"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1969-08-12"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -1180,7 +1191,9 @@
           "position": "第11屆立法委員",
           "district": "山地原住民選舉區",
           "electionYear": 2024,
-          "externalIds": [],
+          "externalIds": [
+            "ly-legislator-11-110008"
+          ],
           "birthDates": [],
           "candidateCount": 0,
           "candidates": []
@@ -1431,6 +1444,7 @@
           "electionYear": 2024,
           "externalIds": [
             "cec-2022-local-councilor-regional-person-5e4a63cc2bc4",
+            "cec-2024-candidate-json:l1:臺北市第5選舉區:民主進步黨:7:l1:吳沛憶:0760120",
             "wikidata:Q55696463"
           ],
           "birthDates": [
@@ -1566,7 +1580,9 @@
           "position": "第11屆立法委員候選人",
           "district": "臺北市第4選舉區",
           "electionYear": 2024,
-          "externalIds": [],
+          "externalIds": [
+            "cec-2024-legislative-district-person-198d29933a4b"
+          ],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -1590,9 +1606,12 @@
           "district": "臺北市第2選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-1fbf823a64ed"
+            "cec-2022-local-councilor-regional-person-1fbf823a64ed",
+            "cec-2024-candidate-json:l1:臺北市第4選舉區:台灣基進:2:l1:吳欣岱:0760701"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1987-07-01"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -1650,7 +1669,10 @@
           "position": "澎湖縣議員",
           "district": "澎湖縣第2選舉區",
           "electionYear": 2022,
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-regional-person-afd0ea2ba69b",
+            "cec-2024-candidate-json:l1:澎湖縣選舉區:中國國民黨:2:l1:吳政杰:0561129"
+          ],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -1757,7 +1779,9 @@
           "district": "臺南市",
           "electionYear": 2022,
           "externalIds": [],
-          "birthDates": [],
+          "birthDates": [
+            "1967-12-01"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -1816,7 +1840,8 @@
           "district": "臺北市第3選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-a442d3a58b52"
+            "cec-2022-local-councilor-regional-person-a442d3a58b52",
+            "cec-2024-candidate-json:l1:新北市第8選舉區:民主進步黨:1:l1:吳崢:0780703"
           ],
           "birthDates": [],
           "candidateCount": 1,
@@ -1924,9 +1949,7 @@
           "position": "第11屆立法委員候選人",
           "district": "新北市第2選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-district-person-7ac4ade48f7b"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -1959,15 +1982,18 @@
         "第11屆立法委員候選人",
         "高雄市議員"
       ],
-      "sharedExternalIds": [],
-      "topRecommendation": "same_name_only",
+      "sharedExternalIds": [
+        "wikidata:Q50092375"
+      ],
+      "topRecommendation": "merge_candidate",
       "pairSuggestions": [
         {
           "leftPersonId": "bdb1dbb2-b052-49bc-b762-e457cd78887b",
           "rightPersonId": "ec46af0a-921a-4f72-84af-5669ad194d0d",
-          "score": 45,
-          "recommendation": "same_name_only",
+          "score": 100,
+          "recommendation": "merge_candidate",
           "reasons": [
+            "shared external id: wikidata:Q50092375",
             "same normalized name",
             "same gender: female",
             "shared candidate region context: 高雄市",
@@ -1986,9 +2012,13 @@
           "district": "高雄市第3選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-988223e9974d"
+            "cec-2024-candidate-json:l1:高雄市第3選舉區:中國國民黨:3:l1:李眉蓁:0680321",
+            "cec-2024-legislative-district-person-988223e9974d",
+            "wikidata:Q50092375"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1979-03-21"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -2073,9 +2103,12 @@
           "district": "連江縣",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-mayor-person-529f3bf255f3"
+            "cec-2022-local-mayor-person-529f3bf255f3",
+            "cec-2024-candidate-json:l1:連江縣選舉區:民主進步黨:1:l1:李問:0780304"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1989-03-04"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -2097,9 +2130,7 @@
           "position": "第11屆立法委員候選人",
           "district": "連江縣第1選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-district-person-286bf1d0e5d7"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -2180,10 +2211,10 @@
           "position": "第11屆立法委員候選人",
           "district": "山地原住民",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-mountain-indigenous-person-3ed7a3947d6a"
+          "externalIds": [],
+          "birthDates": [
+            "1967-01-01"
           ],
-          "birthDates": [],
           "candidateCount": 1,
           "candidates": [
             {
@@ -2241,9 +2272,12 @@
           "district": "臺北市第5選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:臺北市第5選舉區:無黨籍:4:l1:林志成:0540528",
             "cec-2024-legislative-district-person-f212dc5e85be"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1965-05-28"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -2265,9 +2299,7 @@
           "position": "屏東縣議員候選人",
           "district": "屏東縣第3選舉區",
           "electionYear": 2022,
-          "externalIds": [
-            "cec-2022-local-councilor-regional-person-fa1e53931b72"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -2527,9 +2559,11 @@
           "district": "宜蘭縣第6選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-6486f289396d"
+            "cec-2024-candidate-json:l1:宜蘭縣選舉區:台灣基進:5:l1:林意評:0780304"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1989-03-04"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -2697,7 +2731,9 @@
           "district": "新北市第3選舉區",
           "electionYear": 2022,
           "externalIds": [],
-          "birthDates": [],
+          "birthDates": [
+            "1958-12-08"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -2729,17 +2765,21 @@
         "新北市市長",
         "第16任總統候選人"
       ],
-      "sharedExternalIds": [],
-      "topRecommendation": "same_name_only",
+      "sharedExternalIds": [
+        "wikidata:Q9187249"
+      ],
+      "topRecommendation": "merge_candidate",
       "pairSuggestions": [
         {
           "leftPersonId": "0d12b2a3-6c0f-4533-bc7b-d130f8604443",
           "rightPersonId": "b7f0b9bc-d9c3-488e-af08-fa344a52b4a0",
-          "score": 40,
-          "recommendation": "same_name_only",
+          "score": 100,
+          "recommendation": "merge_candidate",
           "reasons": [
+            "shared external id: wikidata:Q9187249",
             "same normalized name",
             "same gender: male",
+            "same birth date: 1957-06-07",
             "same party context: 中國國民黨"
           ]
         }
@@ -2754,7 +2794,9 @@
           "position": "新北市市長",
           "district": "新北市",
           "electionYear": 2022,
-          "externalIds": [],
+          "externalIds": [
+            "wikidata:Q9187249"
+          ],
           "birthDates": [
             "1957-06-07"
           ],
@@ -2779,8 +2821,13 @@
           "position": "第16任總統候選人",
           "district": "全國",
           "electionYear": 2024,
-          "externalIds": [],
-          "birthDates": [],
+          "externalIds": [
+            "cec-2024-candidate-json:p1:全國:中國國民黨:3:p:侯友宜:0460607",
+            "wikidata:Q9187249"
+          ],
+          "birthDates": [
+            "1957-06-07"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -2840,9 +2887,12 @@
           "district": "臺北市第1選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:臺北市第1選舉區:無黨籍:4:l1:侯漢廷:0771030",
             "cec-2024-legislative-district-person-9c7208709c3c"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1988-10-30"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -2865,8 +2915,7 @@
           "district": "臺北市第1選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-58ba21319d2e",
-            "wikidata:Q16926496"
+            "cec-2022-local-councilor-regional-person-58ba21319d2e"
           ],
           "birthDates": [],
           "candidateCount": 1,
@@ -2929,7 +2978,9 @@
           "externalIds": [
             "cec-2024-legislative-district-person-0f676903d930"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1966-12-21"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -3113,7 +3164,9 @@
           "position": "臺中市平地原住民議員候選人",
           "district": "臺中市第15選舉區",
           "electionYear": 2022,
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-plain-indigenous-person-8b00b1d19cb5"
+          ],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -3146,15 +3199,18 @@
         "新北市議員",
         "第11屆立法委員候選人"
       ],
-      "sharedExternalIds": [],
+      "sharedExternalIds": [
+        "wikidata:Q8273543"
+      ],
       "topRecommendation": "merge_candidate",
       "pairSuggestions": [
         {
           "leftPersonId": "d0afe3cc-b6aa-4121-ab39-562a945afb96",
           "rightPersonId": "f6eba0de-41b6-42f1-bf63-3624d5cbc5b3",
-          "score": 90,
+          "score": 100,
           "recommendation": "merge_candidate",
           "reasons": [
+            "shared external id: wikidata:Q8273543",
             "same normalized name",
             "same gender: female",
             "same birth date: 1977-06-28",
@@ -3174,7 +3230,9 @@
           "district": "新北市第5選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-93df6c5100a4"
+            "cec-2024-candidate-json:l1:新北市第5選舉區:中國國民黨:2:l1:洪佳君:0660628",
+            "cec-2024-legislative-district-person-93df6c5100a4",
+            "wikidata:Q8273543"
           ],
           "birthDates": [
             "1977-06-28"
@@ -3287,7 +3345,9 @@
           "position": "臺中市議員候選人",
           "district": "臺中市第10選舉區",
           "electionYear": 2022,
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-regional-person-891c98c1c87d"
+          ],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -3348,7 +3408,7 @@
           "district": "桃園市第9選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-c106cd5929ca"
+            "wikidata:Q123329291"
           ],
           "birthDates": [
             "1970-08-04"
@@ -3375,6 +3435,7 @@
           "district": "桃園市第2選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:桃園市第2選舉區:中國國民黨:4:l1:涂權吉:0590804",
             "cec-2024-legislative-district-person-bf618f44614f",
             "ly-legislator-11-110048"
           ],
@@ -3438,8 +3499,13 @@
           "position": "第11屆立法委員",
           "district": "山地原住民選舉區",
           "electionYear": 2024,
-          "externalIds": [],
-          "birthDates": [],
+          "externalIds": [
+            "cec-2024-candidate-json:l3:全國:無黨籍:8:山地原住民:高金素梅:0540921",
+            "ly-legislator-11-110051"
+          ],
+          "birthDates": [
+            "1965-09-21"
+          ],
           "candidateCount": 0,
           "candidates": []
         },
@@ -3452,9 +3518,7 @@
           "position": "第11屆立法委員候選人（現任）",
           "district": "山地原住民",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-mountain-indigenous-person-e8ddb8f1bc32"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -3513,8 +3577,12 @@
           "position": "第11屆立法委員候選人",
           "district": "平地原住民",
           "electionYear": 2024,
-          "externalIds": [],
-          "birthDates": [],
+          "externalIds": [
+            "cec-2024-candidate-json:l2:全國:無黨籍:1:平地原住民:高美珠:0590108"
+          ],
+          "birthDates": [
+            "1970-01-08"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -3536,7 +3604,9 @@
           "position": "臺東縣平地原住民議員候選人",
           "district": "臺東縣第11選舉區",
           "electionYear": 2022,
-          "externalIds": [],
+          "externalIds": [
+            "cec-2022-local-councilor-plain-indigenous-person-4dc00e197c15"
+          ],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -3570,17 +3640,21 @@
         "新北市議員候選人",
         "臺北市議員"
       ],
-      "sharedExternalIds": [],
-      "topRecommendation": "same_name_only",
+      "sharedExternalIds": [
+        "wikidata:Q30945692"
+      ],
+      "topRecommendation": "merge_candidate",
       "pairSuggestions": [
         {
           "leftPersonId": "6cdf9eab-203b-47f9-9d30-6629a112cdd4",
           "rightPersonId": "bb3640fb-7124-4a57-b781-84c824a5ad64",
-          "score": 35,
-          "recommendation": "same_name_only",
+          "score": 100,
+          "recommendation": "merge_candidate",
           "reasons": [
+            "shared external id: wikidata:Q30945692",
             "same normalized name",
             "same gender: male",
+            "same birth date: 1981-08-24",
             "different party context: 台灣民眾黨 / 民主進步黨"
           ]
         }
@@ -3596,9 +3670,12 @@
           "district": "臺北市第6選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-b15b69c4807e"
+            "cec-2022-local-councilor-regional-person-b15b69c4807e",
+            "wikidata:Q30945692"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1981-08-24"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -3622,9 +3699,10 @@
           "electionYear": 2022,
           "externalIds": [
             "cec-2022-local-councilor-regional-person-66ae6594b647",
-            "wikidata:Q111693189"
+            "wikidata:Q30945692"
           ],
           "birthDates": [
+            "1972-04-11",
             "1981-08-24"
           ],
           "candidateCount": 1,
@@ -3685,9 +3763,11 @@
           "district": "嘉義市第2選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-c4bea3f30d70"
+            "cec-2024-candidate-json:l1:嘉義市選舉區:中國國民黨:5:l1:張秀華:0460926"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1957-09-26"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -3710,7 +3790,8 @@
           "district": "嘉義市第1選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-617b0e8bf371"
+            "cec-2024-legislative-district-person-617b0e8bf371",
+            "wikidata:Q15951827"
           ],
           "birthDates": [],
           "candidateCount": 1,
@@ -3870,10 +3951,13 @@
           "district": "金門縣選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:金門縣選舉區:中國國民黨:2:l1:陳玉珍:0621029",
             "ly-legislator-11-110063",
             "wikidata:Q48896684"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1973-10-29"
+          ],
           "candidateCount": 0,
           "candidates": []
         }
@@ -3925,7 +4009,9 @@
           "externalIds": [
             "cec-2022-local-mayor-person-318d6f7e1db6"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1965-08-25"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -3947,9 +4033,7 @@
           "position": "第11屆立法委員候選人",
           "district": "臺東縣第1選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-district-person-390e9c4ed721"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -4042,6 +4126,7 @@
           "district": "宜蘭縣第4選舉區",
           "electionYear": 2022,
           "externalIds": [
+            "cec-2024-candidate-json:l1:宜蘭縣選舉區:民主進步黨:1:l1:陳俊宇:0640314",
             "wikidata:Q50063892"
           ],
           "birthDates": [
@@ -4092,7 +4177,6 @@
             "shared external id: wikidata:Q24835400",
             "same normalized name",
             "same gender: male",
-            "same birth date: 1966-11-21",
             "shared candidate region context: 雲林縣",
             "same party context: 無黨籍"
           ]
@@ -4139,9 +4223,7 @@
           "externalIds": [
             "wikidata:Q24835400"
           ],
-          "birthDates": [
-            "1966-11-21"
-          ],
+          "birthDates": [],
           "candidateCount": 1,
           "candidates": [
             {
@@ -4198,8 +4280,13 @@
           "position": "臺東縣平地原住民議員",
           "district": "臺東縣第7選舉區",
           "electionYear": 2022,
-          "externalIds": [],
-          "birthDates": [],
+          "externalIds": [
+            "cec-2022-local-councilor-plain-indigenous-person-4c78d56dfb21",
+            "cec-2024-candidate-json:l2:全國:無黨籍:4:平地原住民:陳政宗:0620226"
+          ],
+          "birthDates": [
+            "1973-02-26"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -4221,9 +4308,7 @@
           "position": "第11屆立法委員候選人",
           "district": "平地原住民",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-plain-indigenous-person-22f8391279d5"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -4283,7 +4368,9 @@
           "district": "高雄市第8選舉區",
           "electionYear": 2022,
           "externalIds": [],
-          "birthDates": [],
+          "birthDates": [
+            "1969-04-29"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -4305,9 +4392,7 @@
           "position": "第11屆立法委員候選人",
           "district": "高雄市第4選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-district-person-aed7ac2529c0"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -4366,9 +4451,12 @@
           "district": "連江縣選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:連江縣選舉區:中國國民黨:3:l1:陳雪生:0410101",
             "ly-legislator-11-110071"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1952-01-01"
+          ],
           "candidateCount": 0,
           "candidates": []
         },
@@ -4552,6 +4640,7 @@
           "district": "苗栗縣第1選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:苗栗縣第1選舉區:無黨籍:2:l1:陳超明:0401217",
             "ly-legislator-11-110073"
           ],
           "birthDates": [],
@@ -4676,8 +4765,13 @@
           "position": "第11屆立法委員",
           "district": "花蓮縣選舉區",
           "electionYear": 2024,
-          "externalIds": [],
-          "birthDates": [],
+          "externalIds": [
+            "cec-2024-candidate-json:l1:花蓮縣選舉區:中國國民黨:3:l1:傅崐萁:0510508",
+            "ly-legislator-11-110076"
+          ],
+          "birthDates": [
+            "1962-05-08"
+          ],
           "candidateCount": 0,
           "candidates": []
         },
@@ -4750,7 +4844,7 @@
           "district": "桃園市第7選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-f6b803150a3a",
+            "cec-2024-candidate-json:l1:桃園市第3選舉區:民主進步黨:5:l1:彭俊豪:0710815",
             "wikidata:Q19825622"
           ],
           "birthDates": [],
@@ -4862,9 +4956,7 @@
           "position": "第11屆立法委員候選人",
           "district": "臺中市第5選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-district-person-071884c1904a"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -4982,18 +5074,15 @@
         "第11屆立法委員候選人",
         "苗栗縣議員"
       ],
-      "sharedExternalIds": [
-        "wikidata:Q85880697"
-      ],
-      "topRecommendation": "merge_candidate",
+      "sharedExternalIds": [],
+      "topRecommendation": "same_name_only",
       "pairSuggestions": [
         {
           "leftPersonId": "2e4eb2d0-e45d-48f2-9594-04230bfadddc",
           "rightPersonId": "b1f991da-91a4-41d7-bb73-6484c6ff90ba",
-          "score": 100,
-          "recommendation": "merge_candidate",
+          "score": 45,
+          "recommendation": "same_name_only",
           "reasons": [
-            "shared external id: wikidata:Q85880697",
             "same normalized name",
             "same gender: male",
             "shared candidate region context: 苗栗縣",
@@ -5012,7 +5101,7 @@
           "district": "苗栗縣第5選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "wikidata:Q85880697"
+            "cec-2024-candidate-json:l1:苗栗縣第2選舉區:無黨籍:2:l1:曾玟學:0761219"
           ],
           "birthDates": [],
           "candidateCount": 1,
@@ -5036,10 +5125,10 @@
           "position": "第11屆立法委員候選人",
           "district": "苗栗縣第2選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "wikidata:Q85880697"
+          "externalIds": [],
+          "birthDates": [
+            "1987-12-19"
           ],
-          "birthDates": [],
           "candidateCount": 1,
           "candidates": [
             {
@@ -5097,9 +5186,7 @@
           "position": "桃園市議員候選人",
           "district": "桃園市第7選舉區",
           "electionYear": 2022,
-          "externalIds": [
-            "cec-2022-local-councilor-regional-person-81a596550ae9"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -5123,9 +5210,12 @@
           "district": "桃園市第3選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:桃園市第3選舉區:新黨:2:l1:游智彬:0721223",
             "cec-2024-legislative-district-person-d80745fb0bda"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1983-12-23"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -5158,17 +5248,16 @@
         "第11屆立法委員"
       ],
       "sharedExternalIds": [],
-      "topRecommendation": "merge_candidate",
+      "topRecommendation": "same_name_only",
       "pairSuggestions": [
         {
           "leftPersonId": "114993d4-21f1-470b-82a3-f7c2b6947480",
           "rightPersonId": "78cabcdc-026e-49be-8c2c-f0e0e78baf2c",
-          "score": 90,
-          "recommendation": "merge_candidate",
+          "score": 45,
+          "recommendation": "same_name_only",
           "reasons": [
             "same normalized name",
             "same gender: male",
-            "same birth date: 1983-09-11",
             "shared candidate region context: 南投縣",
             "same party context: 中國國民黨"
           ]
@@ -5184,12 +5273,8 @@
           "position": "第11屆立法委員",
           "district": "南投縣第2選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-district-person-921bf2da89ad"
-          ],
-          "birthDates": [
-            "1983-09-11"
-          ],
+          "externalIds": [],
+          "birthDates": [],
           "candidateCount": 1,
           "candidates": [
             {
@@ -5211,7 +5296,9 @@
           "position": "南投縣議員",
           "district": "南投縣第4選舉區",
           "electionYear": 2022,
-          "externalIds": [],
+          "externalIds": [
+            "wikidata:Q24838336"
+          ],
           "birthDates": [
             "1983-09-11"
           ],
@@ -5273,9 +5360,11 @@
           "district": "彰化縣第2選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "ly-legislator-11-110080"
+            "cec-2024-candidate-json:l1:彰化縣第2選舉區:民主進步黨:1:l1:黃秀芳:0601110"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1971-11-10"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -5358,9 +5447,12 @@
           "district": "臺東縣選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:臺東縣選舉區:中國國民黨:5:l1:黃建賓:0671225",
             "ly-legislator-11-110081"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1978-12-25"
+          ],
           "candidateCount": 0,
           "candidates": []
         },
@@ -5435,7 +5527,8 @@
           "district": "高雄市第5選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-e507875e5d35"
+            "cec-2024-legislative-district-person-e507875e5d35",
+            "wikidata:Q8274108"
           ],
           "birthDates": [],
           "candidateCount": 1,
@@ -5459,10 +5552,10 @@
           "position": "高雄市議員",
           "district": "高雄市第7選舉區",
           "electionYear": 2022,
-          "externalIds": [
-            "wikidata:Q8274108"
+          "externalIds": [],
+          "birthDates": [
+            "1967-10-31"
           ],
-          "birthDates": [],
           "candidateCount": 1,
           "candidates": [
             {
@@ -5523,7 +5616,9 @@
           "externalIds": [
             "cec-2024-legislative-district-person-885ce4276957"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1978-12-20"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -5632,7 +5727,7 @@
           "district": "新北市第12選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-87ba88115c26"
+            "cec-2024-candidate-json:l1:新北市第12選舉區:無黨籍:1:l1:黃瑞傳:0390407"
           ],
           "birthDates": [],
           "candidateCount": 1,
@@ -5692,10 +5787,12 @@
           "district": "澎湖縣選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "ly-legislator-11-110086",
+            "cec-2024-candidate-json:l1:澎湖縣選舉區:民主進步黨:1:l1:楊曜:0551206",
             "wikidata:Q8350686"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1966-12-06"
+          ],
           "candidateCount": 0,
           "candidates": []
         },
@@ -5708,9 +5805,7 @@
           "position": "第11屆立法委員候選人（現任）",
           "district": "澎湖縣第1選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-district-person-d53304d072cf"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -5770,12 +5865,9 @@
           "district": "桃園市第8選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-08502f8ca69a",
-            "wikidata:Q50076751"
+            "cec-2022-local-councilor-regional-person-08502f8ca69a"
           ],
-          "birthDates": [
-            "1981-01-26"
-          ],
+          "birthDates": [],
           "candidateCount": 1,
           "candidates": [
             {
@@ -5798,6 +5890,7 @@
           "district": "桃園市第5選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l1:桃園市第5選舉區:民主進步黨:1:l1:劉仁照:0700126",
             "cec-2024-legislative-district-person-0a9a537c3c20"
           ],
           "birthDates": [],
@@ -5884,10 +5977,12 @@
           "district": "雲林縣第2選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-48b6e16e6532",
-            "ly-legislator-11-110093"
+            "cec-2024-candidate-json:l1:雲林縣第2選舉區:民主進步黨:1:l1:劉建國:0580309",
+            "cec-2024-legislative-district-person-48b6e16e6532"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1969-03-09"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -5972,7 +6067,7 @@
           "district": "新竹縣第1選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-bf4992849e6a"
+            "cec-2024-candidate-json:l1:新竹縣第1選舉區:台灣維新:1:l1:劉復嵐:0630509"
           ],
           "birthDates": [],
           "candidateCount": 1,
@@ -6121,6 +6216,7 @@
           "electionYear": 2024,
           "externalIds": [
             "cec-2024-legislative-district-person-86f5c93ae119",
+            "cec-historical:8048827d8aaa",
             "ly-legislator-11-110094"
           ],
           "birthDates": [],
@@ -6146,7 +6242,8 @@
           "district": "臺中市",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-mayor-person-586a0cb7b2db"
+            "cec-2022-local-mayor-person-586a0cb7b2db",
+            "cec-2024-candidate-json:l1:臺中市第1選舉區:民主進步黨:4:l1:蔡其昌:0580416"
           ],
           "birthDates": [],
           "candidateCount": 1,
@@ -6293,12 +6390,9 @@
           "district": "南投縣第1選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-9a903d0b6201",
             "wikidata:Q118145350"
           ],
-          "birthDates": [
-            "1984-08-17"
-          ],
+          "birthDates": [],
           "candidateCount": 1,
           "candidates": [
             {
@@ -6379,9 +6473,12 @@
           "district": "平地原住民選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l2:全國:中國國民黨:9:平地原住民:鄭天財 sra‧kacaw:0451216",
             "ly-legislator-11-110096"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1956-12-16"
+          ],
           "candidateCount": 0,
           "candidates": []
         },
@@ -6478,8 +6575,13 @@
           "position": "基隆市議員",
           "district": "基隆市第3選舉區",
           "electionYear": 2022,
-          "externalIds": [],
-          "birthDates": [],
+          "externalIds": [
+            "cec-2022-local-councilor-regional-person-69f83d486dbf",
+            "cec-2024-candidate-json:l1:基隆市選舉區:民主進步黨:6:l1:鄭文婷:0570928"
+          ],
+          "birthDates": [
+            "1968-09-28"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -6613,8 +6715,12 @@
           "position": "彰化縣議員",
           "district": "彰化縣第6選舉區",
           "electionYear": 2022,
-          "externalIds": [],
-          "birthDates": [],
+          "externalIds": [
+            "cec-2024-candidate-json:l1:彰化縣第4選舉區:中國國民黨:2:l1:鄭俊雄:0500122"
+          ],
+          "birthDates": [
+            "1961-01-22"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -6698,9 +6804,12 @@
           "district": "桃園市",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-mayor-person-d7d8737cb3fc"
+            "cec-2022-local-mayor-person-d7d8737cb3fc",
+            "cec-2024-candidate-json:l1:桃園市第1選舉區:民主進步黨:2:l1:鄭運鵬:0620602"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1973-06-02"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -6781,9 +6890,12 @@
           "district": "山地原住民選舉區",
           "electionYear": 2024,
           "externalIds": [
+            "cec-2024-candidate-json:l3:全國:中國國民黨:3:山地原住民:盧縣一:0570428",
             "ly-legislator-11-110099"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1968-04-28"
+          ],
           "candidateCount": 0,
           "candidates": []
         },
@@ -6796,9 +6908,7 @@
           "position": "第11屆立法委員候選人",
           "district": "山地原住民",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-mountain-indigenous-person-a58e9d6e2906"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [
@@ -6881,9 +6991,12 @@
           "district": "桃園市",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-mayor-person-88a2a36a070e"
+            "cec-2022-local-mayor-person-88a2a36a070e",
+            "cec-2024-candidate-json:l1:桃園市第5選舉區:台灣民眾黨:3:l1:賴香伶:0570105"
           ],
-          "birthDates": [],
+          "birthDates": [
+            "1968-01-05"
+          ],
           "candidateCount": 1,
           "candidates": [
             {
@@ -6943,7 +7056,8 @@
           "district": "臺中市第8選舉區",
           "electionYear": 2024,
           "externalIds": [
-            "cec-2024-legislative-district-person-6b068bd7ee80"
+            "cec-2024-legislative-district-person-6b068bd7ee80",
+            "wikidata:Q8348569"
           ],
           "birthDates": [
             "1969-04-06"
@@ -6970,7 +7084,8 @@
           "district": "臺中市第4選舉區",
           "electionYear": 2022,
           "externalIds": [
-            "cec-2022-local-councilor-regional-person-56e63029e589"
+            "cec-2022-local-councilor-regional-person-56e63029e589",
+            "cec-2024-candidate-json:l1:臺中市第8選舉區:民主進步黨:2:l1:謝志忠:0580406"
           ],
           "birthDates": [
             "1969-04-06"
@@ -7031,7 +7146,9 @@
           "position": "第11屆立法委員",
           "district": "全國不分區及僑居國外國民",
           "electionYear": 2024,
-          "externalIds": [],
+          "externalIds": [
+            "cec-historical:0792f9a66cda"
+          ],
           "birthDates": [],
           "candidateCount": 0,
           "candidates": []
@@ -7106,9 +7223,7 @@
           "position": "第11屆立法委員候選人",
           "district": "高雄市第7選舉區",
           "electionYear": 2024,
-          "externalIds": [
-            "cec-2024-legislative-district-person-bdf1093a6e63"
-          ],
+          "externalIds": [],
           "birthDates": [],
           "candidateCount": 1,
           "candidates": [

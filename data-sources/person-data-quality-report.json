@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-23T01:30:01.814Z",
+  "generatedAt": "2026-06-23T08:00:10.965Z",
   "totals": {
     "people": 2130,
     "candidates": 2100,
-    "publicClaims": 17101,
-    "duplicateQueue": 76,
+    "publicClaims": 18169,
+    "duplicateQueue": 78,
     "mergeDecisions": 85,
-    "reviewQueue": 0
+    "reviewQueue": 7
   },
   "missingFields": {
     "counts": {
@@ -15,8 +15,8 @@
       "position": 0,
       "district": 0,
       "election_year": 0,
-      "education": 1787,
-      "experience": 1591,
+      "education": 1777,
+      "experience": 1520,
       "primary_photo_url": 2130
     },
     "primaryFieldMissing": {
@@ -24,8 +24,8 @@
       "experience": 2017
     },
     "publicClaimCoverage": {
-      "education": 338,
-      "experience": 533
+      "education": 352,
+      "experience": 608
     },
     "samples": {
       "gender": [],
@@ -289,13 +289,6 @@
           "district": "嘉義市第1選舉區"
         },
         {
-          "personId": "01ba229e-fc90-4671-844f-a1197c94ab11",
-          "name": "蘇柏興",
-          "party": "中國國民黨",
-          "position": "臺中市議員",
-          "district": "臺中市第13選舉區"
-        },
-        {
           "personId": "01cfd157-cf56-4214-bc50-7bd37c9f4c84",
           "name": "黃啟彬",
           "party": "制度救世島",
@@ -315,6 +308,13 @@
           "party": "時代力量",
           "position": "屏東縣議員候選人",
           "district": "屏東縣第1選舉區"
+        },
+        {
+          "personId": "026f0bf2-f093-4ce2-8bcc-01bf9a5fe20b",
+          "name": "王正",
+          "party": "勞動黨",
+          "position": "新北市議員候選人",
+          "district": "新北市第8選舉區"
         }
       ],
       "primary_photo_url": [
@@ -1191,10 +1191,22 @@
   },
   "duplicateQueue": {
     "byConfidenceLevel": {
-      "A": 16,
-      "D": 60
+      "A": 24,
+      "D": 54
     },
     "samples": [
+      {
+        "duplicate_person_id": "b7f0b9bc-d9c3-488e-af08-fa344a52b4a0",
+        "duplicate_person_name": "侯友宜",
+        "canonical_person_id": "0d12b2a3-6c0f-4533-bc7b-d130f8604443",
+        "canonical_person_name": "侯友宜",
+        "reason": "same verified external ID",
+        "confidence_level": "A",
+        "score": 100,
+        "evidence_json": {
+          "externalId": "wikidata:q9187249"
+        }
+      },
       {
         "duplicate_person_id": "bb3640fb-7124-4a57-b781-84c824a5ad64",
         "duplicate_person_name": "張志豪",
@@ -1229,6 +1241,18 @@
         "score": 100,
         "evidence_json": {
           "externalId": "wikidata:q85880697"
+        }
+      },
+      {
+        "duplicate_person_id": "e1863da2-f37e-40ea-afef-01cf10271a33",
+        "duplicate_person_name": "李柏毅",
+        "canonical_person_id": "1948e637-12d2-4fd7-9d00-3ddd613b7122",
+        "canonical_person_name": "李柏毅",
+        "reason": "same verified external ID",
+        "confidence_level": "A",
+        "score": 100,
+        "evidence_json": {
+          "externalId": "wikidata:q59455997"
         }
       },
       {
@@ -1340,6 +1364,30 @@
         }
       },
       {
+        "duplicate_person_id": "b7cf036a-8753-47d2-9023-928253a13417",
+        "duplicate_person_name": "蔡銘軒",
+        "canonical_person_id": "acdddfd8-963f-46aa-b87f-98bd45addfa2",
+        "canonical_person_name": "蔡銘軒",
+        "reason": "same verified external ID",
+        "confidence_level": "A",
+        "score": 100,
+        "evidence_json": {
+          "externalId": "wikidata:q118145350"
+        }
+      },
+      {
+        "duplicate_person_id": "e34c3d98-dbf0-433e-bbd3-4b0a7e7f3ce4",
+        "duplicate_person_name": "許淑華",
+        "canonical_person_id": "9c21c186-06fa-4616-858e-79f24c8d11fb",
+        "canonical_person_name": "許淑華",
+        "reason": "same verified external ID",
+        "confidence_level": "A",
+        "score": 100,
+        "evidence_json": {
+          "externalId": "wikidata:q18659220"
+        }
+      },
+      {
         "duplicate_person_id": "afc88709-05c6-447d-89d5-0a83bbcefad3",
         "duplicate_person_name": "謝志忠",
         "canonical_person_id": "39b6463b-9448-4b47-95f3-2c4158082e43",
@@ -1354,7 +1402,7 @@
       {
         "duplicate_person_id": "e6aa9298-f2ff-4883-802c-be0ed49e8582",
         "duplicate_person_name": "陳俊宇",
-        "canonical_person_id": "c50394ca-63b6-41c2-8a2d-33abf1772a6e",
+        "canonical_person_id": "1dd04142-4c5a-4eb3-932f-ca35ebbc16f8",
         "canonical_person_name": "陳俊宇",
         "reason": "same verified external ID",
         "confidence_level": "A",
@@ -1366,7 +1414,7 @@
       {
         "duplicate_person_id": "e6aa9298-f2ff-4883-802c-be0ed49e8582",
         "duplicate_person_name": "陳俊宇",
-        "canonical_person_id": "1dd04142-4c5a-4eb3-932f-ca35ebbc16f8",
+        "canonical_person_id": "c50394ca-63b6-41c2-8a2d-33abf1772a6e",
         "canonical_person_name": "陳俊宇",
         "reason": "same verified external ID",
         "confidence_level": "A",
@@ -1385,66 +1433,6 @@
         "score": 100,
         "evidence_json": {
           "externalId": "wikidata:q24835400"
-        }
-      },
-      {
-        "duplicate_person_id": "7ff6583d-ab1b-4a3b-95e1-a02c4d534eab",
-        "duplicate_person_name": "余筱菁",
-        "canonical_person_id": "54709b82-1761-4aa8-aec2-6a1eb704aef2",
-        "canonical_person_name": "余筱菁",
-        "reason": "same normalized name with contextual overlap",
-        "confidence_level": "D",
-        "score": 55,
-        "evidence_json": {
-          "note": "party and district are context only; they are not stable identity fields",
-          "normalizedName": "余筱菁",
-          "normalizedParty": "綠黨",
-          "normalizedDistrict": null
-        }
-      },
-      {
-        "duplicate_person_id": "b7f0b9bc-d9c3-488e-af08-fa344a52b4a0",
-        "duplicate_person_name": "侯友宜",
-        "canonical_person_id": "0d12b2a3-6c0f-4533-bc7b-d130f8604443",
-        "canonical_person_name": "侯友宜",
-        "reason": "same normalized name with contextual overlap",
-        "confidence_level": "D",
-        "score": 55,
-        "evidence_json": {
-          "note": "party and district are context only; they are not stable identity fields",
-          "normalizedName": "侯友宜",
-          "normalizedParty": "中國國民黨",
-          "normalizedDistrict": null
-        }
-      },
-      {
-        "duplicate_person_id": "a6f2ae78-fd47-4bc7-9843-3e3363329e17",
-        "duplicate_person_name": "侯漢廷",
-        "canonical_person_id": "3b46104a-4963-495d-8aa5-55f2ed8dc979",
-        "canonical_person_name": "侯漢廷",
-        "reason": "same normalized name with contextual overlap",
-        "confidence_level": "D",
-        "score": 55,
-        "evidence_json": {
-          "note": "party and district are context only; they are not stable identity fields",
-          "normalizedName": "侯漢廷",
-          "normalizedParty": null,
-          "normalizedDistrict": "台北市第1選舉區"
-        }
-      },
-      {
-        "duplicate_person_id": "f61b2941-8aab-42f7-a739-7b6d27b32144",
-        "duplicate_person_name": "傅崐萁",
-        "canonical_person_id": "2ebb787e-5abb-45fe-9dd0-364e5418e046",
-        "canonical_person_name": "傅崐萁",
-        "reason": "same normalized name with contextual overlap",
-        "confidence_level": "D",
-        "score": 55,
-        "evidence_json": {
-          "note": "party and district are context only; they are not stable identity fields",
-          "normalizedName": "傅崐萁",
-          "normalizedParty": "中國國民黨",
-          "normalizedDistrict": null
         }
       }
     ]
@@ -1682,7 +1670,59 @@
     ]
   },
   "reviewQueue": {
-    "byClaimType": {},
-    "samples": []
+    "byClaimType": {
+      "family_relation": 7
+    },
+    "samples": [
+      {
+        "claim_id": "7534acf5-43c9-4fdd-ba1a-09e9f42a9599",
+        "claim_type": "family_relation",
+        "source_name": "Wikidata 人物補充資料",
+        "review_status": "pending",
+        "visibility": "review_only"
+      },
+      {
+        "claim_id": "2fc40094-630e-4f48-b62d-db4ee9eb930a",
+        "claim_type": "family_relation",
+        "source_name": "Wikidata 人物補充資料",
+        "review_status": "pending",
+        "visibility": "review_only"
+      },
+      {
+        "claim_id": "22b7f7f7-1d8a-42cf-8efc-e9d6032180a3",
+        "claim_type": "family_relation",
+        "source_name": "Wikidata 人物補充資料",
+        "review_status": "pending",
+        "visibility": "review_only"
+      },
+      {
+        "claim_id": "5d3ba48d-ae9f-417e-baf5-9c39d7173881",
+        "claim_type": "family_relation",
+        "source_name": "Wikidata 人物補充資料",
+        "review_status": "pending",
+        "visibility": "review_only"
+      },
+      {
+        "claim_id": "277b1a57-3788-471b-ad0b-fe18bcfa1273",
+        "claim_type": "family_relation",
+        "source_name": "Wikidata 人物補充資料",
+        "review_status": "pending",
+        "visibility": "review_only"
+      },
+      {
+        "claim_id": "cc5c32a2-1fb6-4a74-9d00-f17b7609ed1b",
+        "claim_type": "family_relation",
+        "source_name": "Wikidata 人物補充資料",
+        "review_status": "pending",
+        "visibility": "review_only"
+      },
+      {
+        "claim_id": "7fa9eb5d-27d2-49d7-9a70-2a7c13c74b11",
+        "claim_type": "family_relation",
+        "source_name": "Wikidata 人物補充資料",
+        "review_status": "pending",
+        "visibility": "review_only"
+      }
+    ]
   }
 }

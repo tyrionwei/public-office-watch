@@ -23,11 +23,11 @@
       11
     ],
     "lyRows": 243,
-    "matchedRows": 181,
-    "unmatchedRows": 62,
-    "claims": 362,
-    "educationClaims": 181,
-    "experienceClaims": 181
+    "matchedRows": 178,
+    "unmatchedRows": 65,
+    "claims": 356,
+    "educationClaims": 178,
+    "experienceClaims": 178
   },
   "personClaims": [
     {
@@ -4663,10 +4663,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110002",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -4690,10 +4694,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110002",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5375,10 +5383,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110020",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5402,10 +5414,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110020",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5429,10 +5445,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110021",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5456,10 +5476,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110021",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5483,10 +5507,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110022",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5510,10 +5538,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110022",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5537,10 +5569,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110023",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5564,10 +5600,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110023",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5591,10 +5631,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110024",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5618,10 +5662,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110024",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5645,14 +5693,10 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110025",
         "identityMatch": {
           "status": "matched",
-          "method": "unique_name_profile_match",
-          "score": 110,
+          "method": "official_external_id",
+          "score": 100,
           "reasons": [
-            "normalized name matched",
-            "gender matched",
-            "party matched",
-            "district matched",
-            "legislator position hint matched"
+            "LY external_id matched public claim"
           ]
         }
       },
@@ -5676,14 +5720,10 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110025",
         "identityMatch": {
           "status": "matched",
-          "method": "unique_name_profile_match",
-          "score": 110,
+          "method": "official_external_id",
+          "score": 100,
           "reasons": [
-            "normalized name matched",
-            "gender matched",
-            "party matched",
-            "district matched",
-            "legislator position hint matched"
+            "LY external_id matched public claim"
           ]
         }
       },
@@ -5769,10 +5809,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110027",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5796,10 +5840,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110027",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5823,10 +5871,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110028",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -5850,10 +5902,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110028",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -7129,10 +7185,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110056",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -7156,10 +7216,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110056",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -7183,10 +7247,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110057",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -7210,10 +7278,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110057",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -7345,10 +7417,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110060",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -7372,10 +7448,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110060",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -8197,60 +8277,6 @@
       "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
     },
     {
-      "claimKey": "official-profile:ly-current-legislators:ly-legislator-11-110080:c2935434-bad5-4f2d-851c-029e964fae8b:education",
-      "personId": "c2935434-bad5-4f2d-851c-029e964fae8b",
-      "personName": "黃秀芳",
-      "claimType": "education",
-      "claimValue": "靜宜大學外國語文學系畢業",
-      "claimJson": {
-        "value": "靜宜大學外國語文學系畢業",
-        "officialExternalId": "ly-legislator-11-110080",
-        "term": "11",
-        "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110080",
-        "identityMatch": {
-          "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
-          "reasons": [
-            "LY external_id matched public claim"
-          ]
-        }
-      },
-      "confidenceLevel": "A",
-      "reviewStatus": "verified",
-      "visibility": "public",
-      "sourceId": "ly-current-legislators",
-      "sourceName": "立法院開放資料：歷屆委員資料",
-      "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
-    },
-    {
-      "claimKey": "official-profile:ly-current-legislators:ly-legislator-11-110080:c2935434-bad5-4f2d-851c-029e964fae8b:experience",
-      "personId": "c2935434-bad5-4f2d-851c-029e964fae8b",
-      "personName": "黃秀芳",
-      "claimType": "experience",
-      "claimValue": "第九、十屆立法委員；立法院第 29 屆厚生會會長；民進黨第 18 屆中央常務執行委員；彰化縣第 16、17、18 屆議員；民主進步黨全國黨代表；立法委員周清玉服務處主任；立法委員姚嘉文服務處助理；關懷文教基金會執行長；台灣關懷婦女協會理事長；國立彰化師範大",
-      "claimJson": {
-        "value": "第九、十屆立法委員；立法院第 29 屆厚生會會長；民進黨第 18 屆中央常務執行委員；彰化縣第 16、17、18 屆議員；民主進步黨全國黨代表；立法委員周清玉服務處主任；立法委員姚嘉文服務處助理；關懷文教基金會執行長；台灣關懷婦女協會理事長；國立彰化師範大",
-        "officialExternalId": "ly-legislator-11-110080",
-        "term": "11",
-        "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110080",
-        "identityMatch": {
-          "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
-          "reasons": [
-            "LY external_id matched public claim"
-          ]
-        }
-      },
-      "confidenceLevel": "A",
-      "reviewStatus": "verified",
-      "visibility": "public",
-      "sourceId": "ly-current-legislators",
-      "sourceName": "立法院開放資料：歷屆委員資料",
-      "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
-    },
-    {
       "claimKey": "official-profile:ly-current-legislators:ly-legislator-11-110081:0d6c109d-412c-461f-a366-aff5814564ef:education",
       "personId": "0d6c109d-412c-461f-a366-aff5814564ef",
       "personName": "黃建賓",
@@ -8317,10 +8343,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110083",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -8344,10 +8374,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110083",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -8425,10 +8459,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110086",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -8452,10 +8490,14 @@
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110086",
         "identityMatch": {
           "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
+          "method": "unique_name_profile_match",
+          "score": 110,
           "reasons": [
-            "LY external_id matched public claim"
+            "normalized name matched",
+            "gender matched",
+            "party matched",
+            "district matched",
+            "legislator position hint matched"
           ]
         }
       },
@@ -8774,114 +8816,6 @@
         "officialExternalId": "ly-legislator-11-110092",
         "term": "11",
         "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110092",
-        "identityMatch": {
-          "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
-          "reasons": [
-            "LY external_id matched public claim"
-          ]
-        }
-      },
-      "confidenceLevel": "A",
-      "reviewStatus": "verified",
-      "visibility": "public",
-      "sourceId": "ly-current-legislators",
-      "sourceName": "立法院開放資料：歷屆委員資料",
-      "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
-    },
-    {
-      "claimKey": "official-profile:ly-current-legislators:ly-legislator-11-110093:f420fec1-dcb2-49e6-9ef8-be2c99867e0b:education",
-      "personId": "f420fec1-dcb2-49e6-9ef8-be2c99867e0b",
-      "personName": "劉建國",
-      "claimType": "education",
-      "claimValue": "南華大學管理學院旅遊管理學碩士",
-      "claimJson": {
-        "value": "南華大學管理學院旅遊管理學碩士",
-        "officialExternalId": "ly-legislator-11-110093",
-        "term": "11",
-        "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110093",
-        "identityMatch": {
-          "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
-          "reasons": [
-            "LY external_id matched public claim"
-          ]
-        }
-      },
-      "confidenceLevel": "A",
-      "reviewStatus": "verified",
-      "visibility": "public",
-      "sourceId": "ly-current-legislators",
-      "sourceName": "立法院開放資料：歷屆委員資料",
-      "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
-    },
-    {
-      "claimKey": "official-profile:ly-current-legislators:ly-legislator-11-110093:f420fec1-dcb2-49e6-9ef8-be2c99867e0b:experience",
-      "personId": "f420fec1-dcb2-49e6-9ef8-be2c99867e0b",
-      "personName": "劉建國",
-      "claimType": "experience",
-      "claimValue": "立法院第七～十屆立法委員；立法院司法與法制委員會召委；立法院社會福利及衛生環境委員會召委；立法院厚生會會長；民進黨議會黨團召集人暨第十五、十六屆議員、議會教育及預算小組召集人；第六屆斗六市民代表；雲林縣體育會副理事長；雲林縣棒球委員會主委；雲林縣社會關懷協",
-      "claimJson": {
-        "value": "立法院第七～十屆立法委員；立法院司法與法制委員會召委；立法院社會福利及衛生環境委員會召委；立法院厚生會會長；民進黨議會黨團召集人暨第十五、十六屆議員、議會教育及預算小組召集人；第六屆斗六市民代表；雲林縣體育會副理事長；雲林縣棒球委員會主委；雲林縣社會關懷協",
-        "officialExternalId": "ly-legislator-11-110093",
-        "term": "11",
-        "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110093",
-        "identityMatch": {
-          "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
-          "reasons": [
-            "LY external_id matched public claim"
-          ]
-        }
-      },
-      "confidenceLevel": "A",
-      "reviewStatus": "verified",
-      "visibility": "public",
-      "sourceId": "ly-current-legislators",
-      "sourceName": "立法院開放資料：歷屆委員資料",
-      "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
-    },
-    {
-      "claimKey": "official-profile:ly-current-legislators:ly-legislator-11-110094:27791286-ace8-4b3b-974a-df352a4d5b22:education",
-      "personId": "27791286-ace8-4b3b-974a-df352a4d5b22",
-      "personName": "蔡其昌",
-      "claimType": "education",
-      "claimValue": "清水國小、沙鹿國中、清水高中；東海大學歷史學系；東海大學歷史研究所碩士；國立中興大學ＥＭＢＡ財金組碩士；國立中興大學財金系博士班；泰國國立湄洲大學觀光發展榮譽博士",
-      "claimJson": {
-        "value": "清水國小、沙鹿國中、清水高中；東海大學歷史學系；東海大學歷史研究所碩士；國立中興大學ＥＭＢＡ財金組碩士；國立中興大學財金系博士班；泰國國立湄洲大學觀光發展榮譽博士",
-        "officialExternalId": "ly-legislator-11-110094",
-        "term": "11",
-        "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110094",
-        "identityMatch": {
-          "status": "matched",
-          "method": "official_external_id",
-          "score": 100,
-          "reasons": [
-            "LY external_id matched public claim"
-          ]
-        }
-      },
-      "confidenceLevel": "A",
-      "reviewStatus": "verified",
-      "visibility": "public",
-      "sourceId": "ly-current-legislators",
-      "sourceName": "立法院開放資料：歷屆委員資料",
-      "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
-    },
-    {
-      "claimKey": "official-profile:ly-current-legislators:ly-legislator-11-110094:27791286-ace8-4b3b-974a-df352a4d5b22:experience",
-      "personId": "27791286-ace8-4b3b-974a-df352a4d5b22",
-      "personName": "蔡其昌",
-      "claimType": "experience",
-      "claimValue": "立法院第9、10屆副院長；立法院第6、8、9、10屆立法委員；中華職棒大聯盟會長；中興大學校友總會理事長；靜宜大學中文系講師；臺中縣政府民政局局長；臺中縣政府工業策進會總幹事",
-      "claimJson": {
-        "value": "立法院第9、10屆副院長；立法院第6、8、9、10屆立法委員；中華職棒大聯盟會長；中興大學校友總會理事長；靜宜大學中文系講師；臺中縣政府民政局局長；臺中縣政府工業策進會總幹事",
-        "officialExternalId": "ly-legislator-11-110094",
-        "term": "11",
-        "sourcePersonKey": "ly-current-legislators:ly-legislator-11-110094",
         "identityMatch": {
           "status": "matched",
           "method": "official_external_id",

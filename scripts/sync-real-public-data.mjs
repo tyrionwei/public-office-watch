@@ -9,6 +9,30 @@ const defaultSeedPath = path.join(repoRoot, 'data-sources', 'real-public-data.se
 const defaultLegalRecordLeadsPath = path.join(repoRoot, 'data-sources', 'legal-record-leads.seed.json');
 const defaultPersonEnrichmentClaimsPath = path.join(repoRoot, 'data-sources', 'person-enrichment-claims.seed.json');
 const defaultPersonEnrichmentSkippedPath = path.join(repoRoot, 'data-sources', 'person-enrichment-skipped.json');
+const defaultPersonSourcePeoplePath = path.join(repoRoot, 'data-sources', 'person-source-people.seed.json');
+
+function readLocalEnv() {
+  const envPath = path.join(repoRoot, '.env.local');
+
+  if (!fs.existsSync(envPath)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    fs.readFileSync(envPath, 'utf8')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('#'))
+      .map((line) => {
+        const separatorIndex = line.indexOf('=');
+        const key = separatorIndex >= 0 ? line.slice(0, separatorIndex).trim() : line;
+        const value = separatorIndex >= 0 ? line.slice(separatorIndex + 1).trim().replace(/^['"]|['"]$/g, '') : '';
+        return [key, value];
+      }),
+  );
+}
+
+const localEnv = readLocalEnv();
 
 function parseArgs(argv) {
   const args = {
@@ -26,6 +50,9 @@ function parseArgs(argv) {
     includePersonEnrichmentClaims: false,
     personEnrichmentClaimsPath: defaultPersonEnrichmentClaimsPath,
     personEnrichmentSkippedPath: defaultPersonEnrichmentSkippedPath,
+    includePersonSourcePeople: false,
+    personSourcePeoplePath: defaultPersonSourcePeoplePath,
+    skipSourceOnlyPersonClaims: false,
   };
 
   for (let index = 2; index < argv.length; index += 1) {
@@ -66,6 +93,16 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (arg === '--include-person-source-people') {
+      args.includePersonSourcePeople = true;
+      continue;
+    }
+
+    if (arg === '--skip-source-only-person-claims') {
+      args.skipSourceOnlyPersonClaims = true;
+      continue;
+    }
+
     if (arg === '--identity-auto-approve-threshold') {
       args.identityAutoApproveThreshold = Number.parseInt(argv[index + 1] ?? '', 10);
       index += 1;
@@ -103,6 +140,12 @@ function parseArgs(argv) {
 
     if (arg === '--person-enrichment-skipped') {
       args.personEnrichmentSkippedPath = path.resolve(argv[index + 1] ?? '');
+      index += 1;
+      continue;
+    }
+
+    if (arg === '--person-source-people') {
+      args.personSourcePeoplePath = path.resolve(argv[index + 1] ?? '');
       index += 1;
       continue;
     }
@@ -1804,6 +1847,34 @@ function enrichSeedWithPersonEnrichmentClaims(seed, args) {
   };
 }
 
+function enrichSeedWithPersonSourcePeople(seed, args) {
+  if (!args.includePersonSourcePeople) {
+    return {
+      seed,
+      personSourcePeople: {
+        status: 'disabled',
+        count: seed.sourcePeople?.length ?? 0,
+        path: args.personSourcePeoplePath,
+      },
+    };
+  }
+
+  const personSourceSeed = readOptionalJson(args.personSourcePeoplePath, { sourcePeople: [] });
+  const sourcePeople = personSourceSeed.sourcePeople ?? [];
+
+  return {
+    seed: {
+      ...seed,
+      sourcePeople: mergeBySourcePersonKey([seed.sourcePeople, sourcePeople]),
+    },
+    personSourcePeople: {
+      status: 'ok',
+      count: sourcePeople.length,
+      path: args.personSourcePeoplePath,
+    },
+  };
+}
+
 function validateSeed(seed) {
   const sourceIds = new Set(seed.sources.map((source) => source.id));
   const regionIds = new Set(seed.regions.map((region) => region.externalId));
@@ -1892,8 +1963,8 @@ function validateSeed(seed) {
 }
 
 function getSupabaseEnv() {
-  const url = process.env.SUPABASE_URL?.trim() || process.env.VITE_SUPABASE_URL?.trim();
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const url = process.env.SUPABASE_URL?.trim() || process.env.VITE_SUPABASE_URL?.trim() || localEnv.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || localEnv.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !serviceKey) {
     throw new Error('Writing requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
@@ -2538,6 +2609,10 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
       continue;
     }
 
+    if (!approvedPerson && args.skipSourceOnlyPersonClaims) {
+      continue;
+    }
+
     const confidence = person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId);
     const sourceType = person.sourceType ?? sourceTypeForSourceId(person.sourceId);
     const base = {
@@ -3158,6 +3233,7 @@ async function writeSeed(seed, hash, args) {
             args.livePartyFinanceSummaries,
             args.legalRecordLeads,
             args.personEnrichmentClaims,
+            args.personSourcePeople,
           ),
         },
       ],
@@ -3177,6 +3253,7 @@ function buildReport(
   livePartyFinanceSummaries,
   legalRecordLeads,
   personEnrichmentClaims,
+  personSourcePeople,
 ) {
   return {
     syncName: 'real-public-data-foundation',
@@ -3210,6 +3287,7 @@ function buildReport(
     livePartyFinanceSummaries,
     legalRecordLeads,
     personEnrichmentClaims,
+    personSourcePeople,
     skipped: {
       personalDonationDetails: true,
       rawContributionRows: true,
@@ -3226,7 +3304,8 @@ async function main() {
   const historicalCecEnriched = await enrichSeedWithHistoricalCecSourcePeople(candidateEnriched.seed, args);
   const plannedElectionEnriched = enrichSeedWithPlannedLocalElections(historicalCecEnriched.seed);
   const financeEnriched = await enrichSeedWithLivePartyFinanceSummaries(plannedElectionEnriched.seed, args);
-  const personEnrichmentEnriched = enrichSeedWithPersonEnrichmentClaims(financeEnriched.seed, args);
+  const personSourcePeopleEnriched = enrichSeedWithPersonSourcePeople(financeEnriched.seed, args);
+  const personEnrichmentEnriched = enrichSeedWithPersonEnrichmentClaims(personSourcePeopleEnriched.seed, args);
   const legalEnriched = enrichSeedWithLegalRecordLeads(personEnrichmentEnriched.seed, args);
   const seed = legalEnriched.seed;
   const hash = crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex');
@@ -3244,6 +3323,7 @@ async function main() {
     financeEnriched.livePartyFinanceSummaries,
     legalEnriched.legalRecordLeads,
     personEnrichmentEnriched.personEnrichmentClaims,
+    personSourcePeopleEnriched.personSourcePeople,
   );
   args.livePartyRegistry = partyEnriched.livePartyRegistry;
   args.liveCurrentOfficeholders = officeholderEnriched.liveCurrentOfficeholders;
@@ -3253,6 +3333,7 @@ async function main() {
   args.livePartyFinanceSummaries = financeEnriched.livePartyFinanceSummaries;
   args.legalRecordLeads = legalEnriched.legalRecordLeads;
   args.personEnrichmentClaims = personEnrichmentEnriched.personEnrichmentClaims;
+  args.personSourcePeople = personSourcePeopleEnriched.personSourcePeople;
   args.rejectedWikidataQidsByPerson = loadRejectedWikidataQidsByPerson(args.personEnrichmentSkippedPath);
 
   if (args.write) {

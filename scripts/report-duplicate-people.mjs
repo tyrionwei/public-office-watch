@@ -32,7 +32,7 @@ const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || loc
 const identityPolicy = {
   mergeCandidateSignals: [
     'shared verified external ID',
-    'same normalized name, gender, and birth date',
+    'same normalized name, gender, and birth date as B-level manual candidate',
   ],
   contextOnlySignals: [
     'party',
@@ -255,8 +255,10 @@ function scoreDuplicatePair(left, right) {
   const recommendation =
     hasGenderConflict || hasBirthConflict
       ? 'do_not_merge_likely'
-      : sharedExternalIds.length > 0 || (sharedBirthDates.length > 0 && sameKnownValue(left.gender, right.gender) && left.gender !== 'unknown')
+      : sharedExternalIds.length > 0
         ? 'merge_candidate'
+        : sharedBirthDates.length > 0 && sameKnownValue(left.gender, right.gender) && left.gender !== 'unknown'
+          ? 'manual_review_birthdate_match'
         : cappedScore >= 50
           ? 'manual_review'
           : 'same_name_only';

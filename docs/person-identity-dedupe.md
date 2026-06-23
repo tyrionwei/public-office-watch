@@ -9,6 +9,8 @@ Use these signals for merge candidates:
 - Shared verified external ID, including official IDs and verified Wikidata QIDs.
 - Same normalized name, same known gender, and same birth date.
 
+A-level automatic merge should be reserved for shared verified external IDs. Same name, gender, and birth date is a strong B-level candidate unless another stable identifier confirms the pair.
+
 ## Context-Only Signals
 
 These fields can change over time and are not stable identity fields:
@@ -30,7 +32,7 @@ These should block automatic merge and mark the pair as likely different people:
 ## Current Automation Boundary
 
 - `report-duplicate-people.mjs` uses this policy for file-based review reports.
-- `person_duplicate_review_queue` should emit A-level pairs only for primary identity signals.
+- `person_duplicate_review_queue` should emit A-level pairs only for shared verified external IDs.
 - `apply-person-merge-decisions.mjs` defaults to A-level pairs only.
 - B/C/D pairs require manual review or a separate explicit command.
 

@@ -1,7 +1,0 @@
-{
-  "schemaVersion": 1,
-  "name": "legal-record-leads",
-  "updatedAt": "2026-05-25",
-  "notes": "Private review-only legal/court record leads. Do not add name-only matches as public claims.",
-  "legalRecordLeads": []
-}

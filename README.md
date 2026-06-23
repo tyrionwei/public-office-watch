@@ -1,206 +1,92 @@
 # Public Office Watch
 
-台灣民代、候選人與其可驗證公司關聯的官方公開資料整理專案。
+Public Office Watch 是一個整理台灣公職人物、候選人、政黨與政治獻金公開資料的網站。
 
-## 目標
+網站目標是把分散在不同公開來源的選舉、公職、政黨、政治獻金與人物資料整理成容易查閱、可追溯來源、能逐步審核的公開資訊入口。
 
-建立一套可追溯、可人工審核、可安全匯入資料庫的資料更新 MVP。
+## 目前主要頁面
 
-目前階段：
-- 不做前端公開網站
-- 不抓取真實政治人物資料作為種子資料
-- 不連 production Supabase
-- 不公開未審核資料
+### 首頁
 
-## 專案原則
+首頁以台灣地圖作為主要入口，預設顯示選取縣市的公開資料摘要。
 
-- 不直接公開未審核資料
-- 不自動推論家族企業
-- 每筆資料都保留來源與證據
-- 僅使用官方或可信公開來源
-- 不提交任何 secrets
-- 所有資料更新先 dry-run，再人工審核
+目前首頁重點包含：
 
-## 目前完成
+- 縣市與離島地圖選擇
+- 選取縣市的基本選舉資訊
+- 即將到來的選舉項目
+- 縣市公職摘要，例如縣市長、地方民意代表政黨統計
+- 資料原則摘要
 
-- Importer dry-run
-- Importer execute staging import
-- Local Supabase migrations
-- GitHub Actions dry-run
-- Public repo security checklist
-- Gitleaks 掃描流程
-- Election / Region / Race / Candidate schema
-- Person media schema
+首頁的設計方向是讓使用者先從地區進入，再逐步查到該地區相關人物、候選人與選舉項目。
 
-## 資料流程
+![首頁截圖](docs/readme-assets/home.png)
 
-```text
-changes.json
-→ Importer validation
-→ raw_source_records / source_documents / relation_candidates
-→ 人工審核
-→ promote candidate
-→ public views
-→ 前端顯示 verified + public 資料
-```
+### 人物與候選人
 
-## 目錄結構
+人物頁整理目前公開資料中可查詢的公職人物與候選人。
 
-- `docs/`：政策、流程、資料來源說明
-- `database/`：schema snapshot、RLS snapshot、驗證 SQL
-- `supabase/migrations/`：Supabase local / future deploy migration
-- `samples/`：範例資料
-- `data-updates/`：每次資料更新候選報告與 JSON diff
-- `src/Importer/`：.NET 8 匯入工具
-- `local-data/`：本機資料，不進 Git
-- `logs/`：本機 log，不進 Git
+列表支援依地區、政黨、職位、狀態與姓名搜尋篩選，並以現任優先、職位層級、姓氏筆劃作為預設排序。
 
-## Importer 使用方式
+人物詳情頁預計整理：
 
-dry-run：
+- 基本資料
+- 現職與參選紀錄
+- 經歷與學歷
+- 政治獻金摘要
+- 政見與後續追蹤
+- 可公開的來源連結
 
-```bash
-dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --dry-run samples/sample-changes.json
-```
+尚未確認或仍待審核的資料不會直接作為確定事實呈現。
 
-execute staging import：
+![人物與候選人頁截圖](docs/readme-assets/people.png)
 
-```bash
-dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --execute samples/sample-changes.json
-```
+### 政黨與獻金
 
-execute 模式只允許寫入：
+政黨與獻金頁整理政黨基本資料、年度政治獻金摘要，以及已審核的公司層級關係摘要。
 
-- `raw_source_records`
-- `source_documents`
-- `relation_candidates`
+目前此頁的呈現原則是：
 
-不得寫入：
+- 以政黨層級摘要為主
+- 顯示收入、支出與不同捐贈類型的彙總
+- 顯示公司或營利事業捐贈的摘要資訊
+- 不公開個人捐贈明細
+- 保留資料來源與更新時間
 
-- `people`
-- `companies`
-- `person_company_relations`
+政黨詳情頁也會列出該黨目前就職中的人物與已公開的候選人資料。
 
-不得產生：
+![政黨與獻金頁截圖](docs/readme-assets/parties.png)
 
-- `verified`
-- `is_public = true`
+### 資料說明
 
-## Promote candidate
+資料說明頁集中整理本站的資料原則、可信度分級與政治獻金限制。
 
-promote 是人工審核通過後，將單筆 `relation_candidates` 正式轉成公開資料的受控動作。
+這個頁面用來說明資料如何被看待，而不是把所有原始資料細節塞進各個頁面。
 
-- 只支援人工指定單筆 `candidateId`
-- 不支援 promote all
-- `confidence_suggestion = D` 不可 promote
-- promote 成功後才會進入 `public_*` views
-- 前端未來只讀 `public_*` views，不讀 `relation_candidates`
-- promote execute 必須帶 `--confirm`
-- promote 需要 `DATABASE_CONNECTION_STRING`
-- promote 目前只建議在 local Supabase 測試，不連 production
+## 資料原則
 
-promote dry-run：
+本站資料整理遵守以下原則：
 
-```bash
-dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --promote-candidate <candidateId> --dry-run
-```
+- 官方來源優先，例如中選會、監察院、立法院、司法院與各級政府公開資料。
+- 每筆重要資料盡量保留來源名稱、來源連結與更新時間。
+- 人物資料以「同一個人」為主軸整理，職位、政黨、選區與參選紀錄視為可變動的歷史資料。
+- 姓名相同不代表同一人；人物合併需要穩定識別資訊，例如官方 ID、已審核外部 ID、生日、性別與其他可交叉確認資料。
+- 政黨、選區、職位只作為背景脈絡，不作為單獨合併人物的依據。
+- 刑事、司法、家族關係等敏感資料需要更保守的審核，不以單一同名或單篇報導直接公開。
+- 政治獻金以摘要與彙總呈現，不公開個人捐贈明細。
+- 未審核、低可信或來源不足的資料不應被包裝成確定事實。
 
-promote execute：
+## 可信度分級
 
-```bash
-dotnet run --project src/Importer/PublicOfficialInterest.Importer.csproj -- --promote-candidate <candidateId> --confirm
-```
+本站以 A/B/C/D 作為資料可信度標示：
 
-## Local Supabase
+- A：官方結構化資料或明確官方來源。
+- B：官方網站、本人或政黨公開頁，以及可交叉確認的高可信資料。
+- C：可信媒體、百科資料或第三方整理資料，需保留來源並視情況人工確認。
+- D：來源不足、同名風險高、未完成比對或僅作為內部線索的資料。
 
-clone 既有 repo 後通常不需要重新 init，直接：
+可信度代表目前資料來源與比對狀態，不代表對人物或政黨的價值判斷。
 
-```bash
-npx supabase start
-npx supabase migration up
-npx supabase status
-```
+## 網站狀態
 
-local Supabase only example，不可用於 production：
-
-```bash
-export DATABASE_CONNECTION_STRING="Host=127.0.0.1;Port=54322;Database=postgres;Username=postgres;Password=<local-password>"
-```
-
-實際連線資訊以 `npx supabase status` 顯示為準。
-
-## 安全提醒
-
-- 不提交 `.env`
-- 不提交 service role key
-- 不提交 production connection string
-- 不提交真實政治人物測試資料
-- 不提交 `logs/` / `local-data/`
-- 若 secret 曾被 push，必須 rotate secret，再清 history
-
-## Phase 3B：Election / Region schema
-
-本階段新增 Election / Region / Race / Candidate schema，供未來以下功能使用：
-
-- 台灣地圖
-- 縣市頁
-- 選舉項目頁
-- 候選人列表
-
-目前仍然：
-- 不做前端 UI
-- 不匯入真實候選人資料
-
-## Phase 3C：Person media
-
-本階段新增 `person_media`，供未來人物頁、候選人列表、搜尋結果顯示照片或 avatar。
-
-- 照片必須有來源、授權、審核狀態
-- 未通過審核或授權不明的照片不得公開
-- 目前不抓真實人物照片
-- 前端若沒有照片，應顯示預設 avatar
-
-## Frontend design direction
-
-前端視覺與資訊架構方向文件：
-- `docs/frontend-design-direction.md`
-
-目前尚未實作前端 UI。
-下一步將建立 React / Vite 前端骨架。
-
-## Frontend web app
-
-```bash
-cd apps/web
-npm install
-npm run dev
-npm run build
-npm run lint
-npm run smoke:public-views
-npm run check:data-boundary
-npm run check:public-view-contracts
-npm run preflight:production-readiness
-```
-
-- `VITE_PUBLIC_DATA_PROVIDER=mock` 是安全預設
-- local Supabase provider smoke 需 `.env.local`，且不得提交
-- app 目前仍使用 mock provider
-- GitHub Actions 會在 PR 與 main push 執行 web checks
-- checks 包含 build、lint、data boundary check、public views smoke script
-- smoke script 在沒有 env 時會中性跳過
-- smoke script 只測 Supabase public views
-- `check:data-boundary` 會檢查 page 是否繞過 `publicDataProvider`
-- `check:data-boundary` 也會檢查前端是否誤用 raw / staging / secret
-- 不要提交 `.env.local`
-- production 前檢查：`docs/pre-production-readiness.md`
-- local Supabase validation：`docs/local-supabase-validation.md`
-- production provider enable plan：`docs/production-provider-enable-plan.md`
-- production provider 啟用應走獨立 PR
-
-## 尚未完成
-
-- promote candidate CLI 的進一步 admin tooling
-- public views 後續前端串接
-- 前端網站
-- 真實資料小範圍測試
-- production Supabase 部署
+Public Office Watch 仍在資料結構、資料同步與 UI 整理階段。現階段目標是先建立可持續補資料、可追溯來源、可逐步審核的公開資料框架，再逐步擴充歷史選舉、地方政府名冊、政治獻金與人物資料。

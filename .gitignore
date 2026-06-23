@@ -27,3 +27,27 @@ supabase/.branches/
 supabase/.temp/
 secrets.json
 appsettings.Development.json
+
+# Local generated data artifacts
+data-sources/*-claims.seed.json
+data-sources/*-profiles.seed.json
+data-sources/*-leads.seed.json
+data-sources/*-report.json
+data-sources/*-progress.json
+data-sources/*-skipped.json
+data-sources/*-targets.json
+data-sources/*-target-names.json
+data-sources/raw/
+data-sources/tmp/
+data-sources/downloads/
+data-sources/*.csv
+data-sources/*.tsv
+data-sources/*.xlsx
+data-sources/*.xls
+data-sources/*.zip
+data-sources/*.pdf
+data-sources/*.html
+!data-sources/real-public-data.seed.json
+!data-sources/source-fetch-recipes.json
+!data-sources/official-person-source-inventory.json
+!data-sources/legal-record-target-names.example.json

@@ -12,6 +12,7 @@ These were cropped from `local-data/publicOfficeWatchDemo.jpg`, the local design
 ## Generated assets
 
 - `pixel-ocean-panel-bg.png`: AI-generated pixel ocean panel background with integrated decorative clouds, boats, and hot-air balloon.
+- `pixel-ocean-panel-bg-preview.png`: temporary homepage preview background matching the current target ocean distribution.
 
 ## CC0 fallback assets
 

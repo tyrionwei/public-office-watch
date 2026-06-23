@@ -90,7 +90,7 @@ export function InternalDataProgressPage() {
             </div>
 
             <SectionPanel title="核心欄位完整度" eyebrow="coverage">
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
                 {summary.metrics.map((metric) => (
                   <div key={metric.key} className="pixel-corners border border-line/70 bg-bg/35 p-4">
                     <div className="flex items-center justify-between gap-3">
@@ -105,6 +105,32 @@ export function InternalDataProgressPage() {
                 ))}
               </div>
             </SectionPanel>
+
+            <div className="grid gap-4 xl:grid-cols-2">
+              <SectionPanel title="已完成項目" eyebrow="done">
+                <div className="space-y-2">
+                  {summary.completedItems.length === 0 ? <p className="text-sm text-slate-400">目前沒有可標記為完成的項目。</p> : null}
+                  {summary.completedItems.map((item) => (
+                    <div key={item.key} className="pixel-corners border border-signal/50 bg-signal/10 px-3 py-3 text-sm">
+                      <div className="font-semibold text-white">{item.label}</div>
+                      <div className="mt-1 text-slate-300">{item.detail}</div>
+                    </div>
+                  ))}
+                </div>
+              </SectionPanel>
+
+              <SectionPanel title="待完成項目" eyebrow="next">
+                <div className="space-y-2">
+                  {summary.pendingItems.length === 0 ? <p className="text-sm text-slate-400">目前沒有待完成項目。</p> : null}
+                  {summary.pendingItems.map((item) => (
+                    <div key={item.key} className="pixel-corners border border-accent/50 bg-accent/10 px-3 py-3 text-sm">
+                      <div className="font-semibold text-white">{item.label}</div>
+                      <div className="mt-1 text-slate-300">{item.detail}</div>
+                    </div>
+                  ))}
+                </div>
+              </SectionPanel>
+            </div>
 
             <div className="grid gap-4 xl:grid-cols-2">
               <SectionPanel title="待審核類型" eyebrow="claim types">

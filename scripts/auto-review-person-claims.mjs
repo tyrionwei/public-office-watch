@@ -1,5 +1,33 @@
-const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || 'http://127.0.0.1:54321';
-const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+function readLocalEnv() {
+  const envPath = path.join(repoRoot, '.env.local');
+
+  if (!fs.existsSync(envPath)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    fs.readFileSync(envPath, 'utf8')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('#'))
+      .map((line) => {
+        const separatorIndex = line.indexOf('=');
+        const key = separatorIndex >= 0 ? line.slice(0, separatorIndex).trim() : line;
+        const value = separatorIndex >= 0 ? line.slice(separatorIndex + 1).trim().replace(/^['"]|['"]$/g, '') : '';
+        return [key, value];
+      }),
+  );
+}
+
+const localEnv = readLocalEnv();
+const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || localEnv.SUPABASE_URL || 'http://127.0.0.1:54321';
+const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || localEnv.SUPABASE_SERVICE_ROLE_KEY;
 
 const autoReviewVersion = 'auto-verified-external-id-or-identity-match-v2';
 const wikidataSourceName = 'Wikidata 人物補充資料';

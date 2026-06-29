@@ -20,6 +20,19 @@ The CEC votedata package already exposes candidate gender codes in `elcand.csv`;
 - Profile modules for platform, finance summary, legal record, and family relationship only render public reviewed claims. If no claim exists, the UI shows an empty state instead of inferred content.
 - Legal/criminal and political-family claims should not be generated from name-only matches. They require explicit source evidence and a conservative confidence level.
 
+## Person Profile Aggregation Note
+
+The current model intentionally keeps person data split across conservative public views. A basic person header can read `public_people`, but a full profile or timeline needs multiple public sources:
+
+- `public_candidates` for past and upcoming candidacies.
+- `public_person_claims` for reviewed office, position, education, experience, platform, finance summary, and other supplemental facts.
+- `public_person_party_affiliations` for party history.
+- `public_relation_details` for verified public company or interest relationships.
+
+Do not make page components own this joining logic. When the public person page expands beyond the basic header, add a provider-level aggregate such as `getPersonProfile(personId)` first. If the query shape becomes stable, prefer dedicated public views or RPCs such as `public_person_profile_summary` and `public_person_profile_timeline` so the database/provider layer keeps the public-data rules centralized.
+
+Example state to preserve: one person can be a current city councilor while also being a registered candidate for the next legislative election. That should remain one canonical `people` row, with current-summary fields on `public_people` and separate candidacy rows through `public_candidates` -> `public_races` -> `public_elections`.
+
 ## New Person Intake Flow
 
 1. Import source records into source tables without immediately publishing them.

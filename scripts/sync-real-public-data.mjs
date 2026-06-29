@@ -496,12 +496,24 @@ function normalizeSourcePersonName(name) {
 }
 
 function sourcePersonKeyFor(person) {
+  if (person.sourcePersonKey) {
+    return person.sourcePersonKey;
+  }
+
   return `${person.sourceId}:${person.externalId}`;
 }
 
 function sourceTypeForSourceId(sourceId) {
   if (sourceId.includes('cec')) return 'official_election';
-  if (sourceId.includes('ly')) return 'official_officeholder';
+  if (
+    sourceId.includes('ly') ||
+    sourceId.includes('taipei-city-council') ||
+    sourceId.includes('taipei-city-government') ||
+    sourceId.includes('new-taipei-city-council') ||
+    sourceId.includes('new-taipei-city-government') ||
+    sourceId.includes('hsinchu-city-council') ||
+    sourceId.includes('hsinchu-city-government')
+  ) return 'official_officeholder';
   if (sourceId.includes('cy') || sourceId.includes('political-finance')) return 'official_party_finance';
   if (sourceId.includes('wikidata')) return 'wikidata';
   if (sourceId.includes('moi')) return 'government_open_data';
@@ -586,6 +598,18 @@ function mergeByExternalId(collections) {
   for (const collection of collections) {
     for (const item of collection ?? []) {
       merged.set(item.externalId, item);
+    }
+  }
+
+  return Array.from(merged.values());
+}
+
+function mergeById(collections) {
+  const merged = new Map();
+
+  for (const collection of collections) {
+    for (const item of collection ?? []) {
+      merged.set(item.id, item);
     }
   }
 
@@ -1861,15 +1885,19 @@ function enrichSeedWithPersonSourcePeople(seed, args) {
 
   const personSourceSeed = readOptionalJson(args.personSourcePeoplePath, { sourcePeople: [] });
   const sourcePeople = personSourceSeed.sourcePeople ?? [];
+  const people = personSourceSeed.people ?? [];
 
   return {
     seed: {
       ...seed,
+      sources: mergeById([seed.sources, personSourceSeed.sources ?? []]),
+      people: mergeByExternalId([seed.people, people]),
       sourcePeople: mergeBySourcePersonKey([seed.sourcePeople, sourcePeople]),
     },
     personSourcePeople: {
       status: 'ok',
       count: sourcePeople.length,
+      adoptedPeople: people.length,
       path: args.personSourcePeoplePath,
     },
   };
@@ -2288,7 +2316,7 @@ async function applyExistingWikidataTerminalReviewStates(env, reviewedAt) {
 function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
   const canonicalRows = (seed.people ?? []).map((person) => {
     const source = getSource(seed, person.sourceId);
-    const sourceType = sourceTypeForSourceId(person.sourceId);
+    const sourceType = person.sourceType ?? sourceTypeForSourceId(person.sourceId);
     return {
       source_person_key: sourcePersonKeyFor(person),
       source_type: sourceType,
@@ -2314,8 +2342,9 @@ function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
         externalId: person.externalId,
         sourceId: person.sourceId,
         sourceType,
+        ...(person.sourcePayload ?? {}),
       },
-      confidence_suggestion: confidenceForSourceId(person.sourceId),
+      confidence_suggestion: person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId),
       ingest_batch_key: ingestBatchKey,
       is_public: person.isPublic ?? true,
       updated_at: startedAt,
@@ -2354,7 +2383,9 @@ function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
     };
   });
 
-  return [...canonicalRows, ...sourceOnlyRows];
+  return Array.from(
+    new Map([...sourceOnlyRows, ...canonicalRows].map((row) => [row.source_person_key, row])).values(),
+  );
 }
 
 function buildIdentityMatchRows(seed, sourcePersonByKey, personByExternalId, startedAt) {
@@ -2538,8 +2569,8 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
       continue;
     }
 
-    const confidence = confidenceForSourceId(person.sourceId);
-    const sourceType = sourceTypeForSourceId(person.sourceId);
+    const confidence = person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId);
+    const sourceType = person.sourceType ?? sourceTypeForSourceId(person.sourceId);
     const base = {
       person_id: canonicalPerson.id,
       source_person_id: sourcePerson.id,
@@ -2600,7 +2631,13 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
     }
   }
 
+  const canonicalSourcePersonKeys = new Set((seed.people ?? []).map((person) => sourcePersonKeyFor(person)));
+
   for (const person of seed.sourcePeople ?? []) {
+    if (canonicalSourcePersonKeys.has(person.sourcePersonKey)) {
+      continue;
+    }
+
     const source = getSource(seed, person.sourceId);
     const sourcePerson = sourcePersonByKey.get(person.sourcePersonKey);
     const approvedPerson = autoApprovedPersonBySourceKey.get(person.sourcePersonKey) ?? null;
@@ -2671,6 +2708,237 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
         },
       });
     }
+  }
+
+  return rows;
+}
+
+function normalizePartyAffiliationName(value) {
+  const party = normalizePartyName(value);
+  return party ? normalizeIdentityText(party) : '';
+}
+
+function partyRoleContextForSourcePerson(sourcePerson) {
+  const sourceType = sourcePerson.source_type ?? sourcePerson.sourceType ?? sourceTypeForSourceId(sourcePerson.sourceId);
+  const role = sourcePerson.normalized_role ?? sourcePerson.normalizedRole ?? normalizedRoleForPosition(sourcePerson.position);
+  const position = String(sourcePerson.position ?? '');
+
+  if (sourceType === 'official_election' || position.includes('候選人')) return 'candidate';
+  if (role === 'party_officer') return 'party_officer';
+  if (sourceType === 'wikidata' || sourceType === 'wikipedia') return 'wiki_record';
+  if (sourceType === 'official_officeholder' || sourceType === 'official_site' || position.includes('議員') || position.includes('市長') || position.includes('立法委員')) return 'officeholder';
+  if (sourceType === 'government_open_data') return 'official_record';
+  return 'other';
+}
+
+function observedYearForPartyAffiliation(sourcePerson, startedAt) {
+  const explicitYear = sourcePerson.election_year ?? sourcePerson.electionYear ?? sourcePerson.source_payload?.electionYear ?? sourcePerson.sourcePayload?.electionYear ?? sourcePerson.source_payload?.year ?? sourcePerson.sourcePayload?.year;
+  const parsedYear = Number.parseInt(String(explicitYear ?? ''), 10);
+  if (Number.isFinite(parsedYear) && parsedYear > 1900) return parsedYear;
+
+  const observedDate = sourcePerson.source_payload?.observedDate ?? sourcePerson.sourcePayload?.observedDate ?? sourcePerson.source_payload?.observedAt ?? sourcePerson.sourcePayload?.observedAt;
+  const observedYear = String(observedDate ?? '').match(/^(\d{4})/)?.[1];
+  if (observedYear) return Number.parseInt(observedYear, 10);
+
+  return Number.parseInt(startedAt.slice(0, 4), 10);
+}
+
+function partyAffiliationPublicState(sourcePerson) {
+  const sourceType = sourcePerson.source_type ?? sourcePerson.sourceType ?? sourceTypeForSourceId(sourcePerson.sourceId);
+  const confidence = sourcePerson.confidence_suggestion ?? sourcePerson.confidenceSuggestion ?? confidenceForSourceId(sourcePerson.sourceId);
+  const official = ['official_election', 'official_officeholder', 'government_open_data', 'official_site'].includes(sourceType);
+  return {
+    reviewStatus: official && confidence === 'A' ? 'verified' : 'pending',
+    isPublic: official && confidence === 'A',
+  };
+}
+
+function partyAffiliationKey(personId, sourcePersonId, normalizedParty, observedYear, roleContext, sourceName) {
+  return [
+    'party-affiliation',
+    personId,
+    sourcePersonId ?? 'claim',
+    normalizedParty,
+    observedYear ?? 'unknown-year',
+    roleContext,
+    normalizeIdentityText(sourceName),
+  ].join(':');
+}
+
+function partyClaimAffiliationKey(personId, claimKey) {
+  return ['party-affiliation', personId, 'claim', claimKey].join(':');
+}
+
+function sqlDateFromSourceDate(value) {
+  const text = String(value ?? '').trim().replace(/^\+/, '');
+  const match = text.match(/^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?/);
+  if (!match) return null;
+
+  const year = match[1];
+  const month = match[2] && match[2] !== '00' ? match[2] : '01';
+  const day = match[3] && match[3] !== '00' ? match[3] : '01';
+  return [year, month, day].join('-');
+}
+
+function yearFromDateText(value) {
+  const year = String(value ?? '').match(/^(\d{4})/)?.[1];
+  return year ? Number.parseInt(year, 10) : null;
+}
+
+function buildPersonPartyAffiliationRows(seed, sourcePersonByKey, personByExternalId, sourcePeople, startedAt) {
+  const rows = [];
+  const sourcePeopleByKey = new Map(sourcePeople.map((sourcePerson) => [sourcePerson.source_person_key, sourcePerson]));
+  const canonicalSourcePersonKeys = new Set((seed.people ?? []).map((person) => sourcePersonKeyFor(person)));
+
+  for (const person of seed.people ?? []) {
+    const partyName = normalizePartyName(person.party);
+    if (!partyName) continue;
+
+    const sourcePerson = sourcePersonByKey.get(sourcePersonKeyFor(person));
+    const canonicalPerson = personByExternalId.get(person.externalId);
+    if (!sourcePerson || !canonicalPerson) continue;
+
+    const source = getSource(seed, person.sourceId);
+    const normalizedParty = normalizePartyAffiliationName(partyName);
+    const sourceType = person.sourceType ?? sourceTypeForSourceId(person.sourceId);
+    const sourcePersonLike = {
+      ...person,
+      source_type: sourceType,
+      sourceId: person.sourceId,
+      source_payload: person.sourcePayload ?? {},
+      confidence_suggestion: person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId),
+    };
+    const publicState = partyAffiliationPublicState(sourcePersonLike);
+    const observedYear = observedYearForPartyAffiliation(sourcePersonLike, startedAt);
+
+    rows.push({
+      person_id: canonicalPerson.id,
+      source_person_id: sourcePerson.id,
+      source_claim_key: null,
+      affiliation_key: partyAffiliationKey(canonicalPerson.id, sourcePerson.id, normalizedParty, observedYear, partyRoleContextForSourcePerson(sourcePersonLike), source.name),
+      party_name: partyName,
+      normalized_party: normalizedParty,
+      role_context: partyRoleContextForSourcePerson(sourcePersonLike),
+      observed_year: observedYear,
+      observed_date: null,
+      start_date: null,
+      end_date: null,
+      is_current: Number.parseInt(startedAt.slice(0, 4), 10) === observedYear && !String(person.position ?? '').includes('候選人'),
+      confidence_level: sourcePersonLike.confidence_suggestion,
+      review_status: publicState.reviewStatus,
+      source_name: source.name,
+      source_url: person.sourceUrl ?? source.url,
+      source_payload: {
+        sourcePersonKey: sourcePersonKeyFor(person),
+        sourceType,
+        electionYear: person.electionYear ?? null,
+        position: person.position ?? null,
+        district: person.district ?? null,
+        precedence: 'official-source-year-first',
+      },
+      is_public: publicState.isPublic,
+      updated_at: startedAt,
+    });
+  }
+
+  for (const person of seed.sourcePeople ?? []) {
+    if (canonicalSourcePersonKeys.has(person.sourcePersonKey)) continue;
+
+    const partyName = normalizePartyName(person.party);
+    if (!partyName) continue;
+
+    const sourcePerson = sourcePeopleByKey.get(person.sourcePersonKey);
+    if (!sourcePerson) continue;
+
+    const matched = sourcePeople.find((row) => row.source_person_key === person.sourcePersonKey);
+    const source = getSource(seed, person.sourceId);
+    const sourceType = person.sourceType ?? sourceTypeForSourceId(person.sourceId);
+    const sourcePersonLike = {
+      ...person,
+      source_type: sourceType,
+      source_payload: person.sourcePayload ?? {},
+      confidence_suggestion: person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId),
+    };
+    const publicState = partyAffiliationPublicState(sourcePersonLike);
+    const observedYear = observedYearForPartyAffiliation(sourcePersonLike, startedAt);
+
+    rows.push({
+      person_id: matched?.matched_person_id ?? null,
+      source_person_id: sourcePerson.id,
+      source_claim_key: null,
+      affiliation_key: matched?.matched_person_id ? partyAffiliationKey(matched.matched_person_id, sourcePerson.id, normalizePartyAffiliationName(partyName), observedYear, partyRoleContextForSourcePerson(sourcePersonLike), person.sourceName ?? source.name) : null,
+      party_name: partyName,
+      normalized_party: normalizePartyAffiliationName(partyName),
+      role_context: partyRoleContextForSourcePerson(sourcePersonLike),
+      observed_year: observedYear,
+      observed_date: null,
+      start_date: null,
+      end_date: null,
+      is_current: Number.parseInt(startedAt.slice(0, 4), 10) === observedYear && !String(person.position ?? '').includes('候選人'),
+      confidence_level: sourcePersonLike.confidence_suggestion,
+      review_status: publicState.reviewStatus,
+      source_name: person.sourceName ?? source.name,
+      source_url: person.sourceUrl ?? source.url,
+      source_payload: {
+        sourcePersonKey: person.sourcePersonKey,
+        sourceType,
+        electionYear: person.electionYear ?? null,
+        position: person.position ?? null,
+        district: person.district ?? null,
+        precedence: 'official-source-year-first',
+      },
+      is_public: publicState.isPublic,
+      updated_at: startedAt,
+    });
+  }
+
+  return rows.filter((row) => row.person_id && row.normalized_party);
+}
+
+function buildEnrichmentPartyAffiliationRows(personClaimRows, startedAt) {
+  const rows = [];
+
+  for (const claim of personClaimRows) {
+    if (claim.claim_type !== 'party_affiliation') continue;
+    if (!claim.person_id || !claim.claim_value || claim.review_status === 'rejected') continue;
+
+    const claimJson = claim.claim_json ?? {};
+    const startDate = sqlDateFromSourceDate(claimJson.startDate);
+    const endDate = sqlDateFromSourceDate(claimJson.endDate);
+    if (!startDate && !endDate) continue;
+
+    const partyName = normalizePartyName(claim.claim_value);
+    const normalizedParty = normalizePartyAffiliationName(partyName);
+    if (!partyName || !normalizedParty) continue;
+
+    const observedYear = yearFromDateText(startDate ?? endDate) ?? Number.parseInt(startedAt.slice(0, 4), 10);
+
+    rows.push({
+      person_id: claim.person_id,
+      source_person_id: null,
+      source_claim_key: claim.claim_key,
+      affiliation_key: partyClaimAffiliationKey(claim.person_id, claim.claim_key),
+      party_name: partyName,
+      normalized_party: normalizedParty,
+      role_context: 'wiki_record',
+      observed_year: observedYear,
+      observed_date: startDate ?? endDate,
+      start_date: startDate,
+      end_date: endDate,
+      is_current: !endDate,
+      confidence_level: claim.confidence_level ?? 'C',
+      review_status: 'pending',
+      source_name: claim.source_name,
+      source_url: claim.source_url,
+      source_payload: {
+        ...claimJson,
+        sourceId: claimJson.sourceId ?? 'wikidata-person-enrichment',
+        sourceClaimKey: claim.claim_key,
+        precedence: 'wiki-secondary-explicit-date',
+      },
+      is_public: false,
+      updated_at: startedAt,
+    });
   }
 
   return rows;
@@ -3035,7 +3303,7 @@ async function writeSeed(seed, hash, args) {
 
   const people = await upsertOrThrow(env, 'people', personRows, { onConflict: 'external_id' });
   const personByExternalId = new Map(people.map((person) => [person.external_id, person]));
-  const peopleRefresh = await selectOrThrow(env, 'people', 'id,external_id,name,party,position,district,gender');
+  const peopleRefresh = await selectAllOrThrow(env, 'people', 'id,external_id,name,party,position,district,gender');
 
   const companyRows = (seed.companies ?? [])
     .filter((company) => company.unifiedBusinessNo)
@@ -3108,6 +3376,33 @@ async function writeSeed(seed, hash, args) {
     existingPersonClaimReviewStates,
   );
   await upsertOrThrow(env, 'person_claims', personEnrichmentClaimRows, { onConflict: 'claim_key' });
+
+  const confirmedIdentityMatches = await selectAllOrThrow(
+    env,
+    'person_identity_matches',
+    'source_person_id,person_id,match_status',
+  );
+  const confirmedPersonBySourcePersonId = new Map(
+    [
+      ...confirmedIdentityMatches,
+      ...identityMatchRows,
+      ...probableIdentityMatchRows,
+    ]
+      .filter((row) => row.match_status === 'auto_matched')
+      .map((row) => [row.source_person_id, row.person_id]),
+  );
+  const sourcePeopleWithMatches = sourcePeople.map((sourcePerson) => ({
+    ...sourcePerson,
+    matched_person_id: confirmedPersonBySourcePersonId.get(sourcePerson.id) ?? null,
+  }));
+  const personPartyAffiliationRows = [
+    ...buildPersonPartyAffiliationRows(seed, sourcePersonByKey, personByExternalId, sourcePeopleWithMatches, startedAt),
+    ...buildEnrichmentPartyAffiliationRows(personEnrichmentClaimRows, startedAt),
+  ];
+  await upsertOrThrow(env, 'person_party_affiliations', personPartyAffiliationRows, {
+    onConflict: 'affiliation_key',
+  });
+
   args.appliedSkippedWikidataRejections = await applySkippedWikidataRejections(env, args, startedAt);
   args.appliedExistingWikidataTerminalReviewStates = await applyExistingWikidataTerminalReviewStates(env, startedAt);
 
@@ -3213,6 +3508,7 @@ async function writeSeed(seed, hash, args) {
             probableIdentityMatchRows.length +
             personClaimRows.length +
             personEnrichmentClaimRows.length +
+            personPartyAffiliationRows.length +
             legalRecordLeadRows.length +
             (seed.candidates?.length ?? 0) +
             seed.parties.length +

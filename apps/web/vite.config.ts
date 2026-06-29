@@ -393,6 +393,98 @@ function internalReviewApiPlugin(): Plugin {
           jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
       });
+
+      server.middlewares.use('/internal-api/review-identity-match', async (request, response) => {
+        const devRequest = request as DevRequest;
+        if (devRequest.method !== 'POST') {
+          jsonResponse(response, 405, { error: 'Method not allowed.' });
+          return;
+        }
+
+        try {
+          const body = await readJsonBody(devRequest) as { sourcePersonId?: string; candidatePersonId?: string; action?: string };
+          const sourcePersonId = body.sourcePersonId?.trim();
+          const candidatePersonId = body.candidatePersonId?.trim();
+          const action = body.action;
+
+          if (!sourcePersonId || !candidatePersonId || (action !== 'approve' && action !== 'reject')) {
+            jsonResponse(response, 400, { error: 'sourcePersonId, candidatePersonId and action=approve|reject are required.' });
+            return;
+          }
+
+          const sourcePeople = await supabaseRest(
+            'source_people?select=id,source_person_key,raw_name,source_name,position,district&id=eq.' + encodeURIComponent(sourcePersonId) + '&limit=1',
+          ) as { id: string; source_person_key: string; raw_name: string; source_name: string; position: string | null; district: string | null }[];
+          const sourcePerson = sourcePeople[0];
+          if (!sourcePerson) {
+            jsonResponse(response, 404, { error: 'Source person not found.' });
+            return;
+          }
+
+          const people = await supabaseRest(
+            'people?select=id,name,party,position,district&id=eq.' + encodeURIComponent(candidatePersonId) + '&limit=1',
+          ) as { id: string; name: string; party: string | null; position: string | null; district: string | null }[];
+          const candidatePerson = people[0];
+          if (!candidatePerson) {
+            jsonResponse(response, 404, { error: 'Candidate person not found.' });
+            return;
+          }
+
+          const now = new Date().toISOString();
+          const approved = action === 'approve';
+          await supabaseRest('person_identity_matches?on_conflict=source_person_id,person_id', {
+            method: 'POST',
+            headers: { prefer: 'resolution=merge-duplicates,return=minimal' },
+            body: JSON.stringify({
+              source_person_id: sourcePersonId,
+              person_id: candidatePersonId,
+              match_status: approved ? 'auto_matched' : 'rejected_match',
+              score: approved ? 100 : 0,
+              match_method: 'manual_internal_review',
+              match_reason: approved ? 'confirmed via internal identity review queue' : 'rejected via internal identity review queue',
+              evidence_json: {
+                version: 'internal-identity-review-ui-v1',
+                action,
+                sourcePerson: {
+                  id: sourcePerson.id,
+                  sourcePersonKey: sourcePerson.source_person_key,
+                  name: sourcePerson.raw_name,
+                  sourceName: sourcePerson.source_name,
+                  position: sourcePerson.position,
+                  district: sourcePerson.district,
+                },
+                candidatePerson: {
+                  id: candidatePerson.id,
+                  name: candidatePerson.name,
+                  party: candidatePerson.party,
+                  position: candidatePerson.position,
+                  district: candidatePerson.district,
+                },
+              },
+              reviewed_by: 'local_internal_review',
+              reviewed_at: now,
+              updated_at: now,
+            }),
+          });
+
+          if (approved) {
+            await supabaseRest('source_people?id=eq.' + encodeURIComponent(sourcePersonId), {
+              method: 'PATCH',
+              headers: { prefer: 'return=minimal' },
+              body: JSON.stringify({ is_public: true, updated_at: now }),
+            });
+            await supabaseRest('person_claims?source_person_id=eq.' + encodeURIComponent(sourcePersonId), {
+              method: 'PATCH',
+              headers: { prefer: 'return=minimal' },
+              body: JSON.stringify({ person_id: candidatePersonId, review_status: 'verified', visibility: 'public', is_public: true, updated_at: now }),
+            });
+          }
+
+          jsonResponse(response, 200, { status: 'ok', action });
+        } catch (error) {
+          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+        }
+      });
     },
   };
 }

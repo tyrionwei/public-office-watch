@@ -20,6 +20,39 @@ export type ReviewClaim = {
   claim_json?: Record<string, unknown>;
 };
 
+export type IdentityReviewCandidate = {
+  personId: string;
+  name: string;
+  party: string | null;
+  position: string | null;
+  district: string | null;
+  gender: string | null;
+  birthDate: string | null;
+  matchStatus: string;
+  score: number;
+  reason: string | null;
+  evidence: Record<string, unknown> | null;
+};
+
+export type IdentityReviewItem = {
+  source_person_id: string;
+  source_person_key: string;
+  source_type: string;
+  source_name: string;
+  source_url: string | null;
+  raw_name: string;
+  gender: string | null;
+  party: string | null;
+  position: string | null;
+  district: string | null;
+  confidence_suggestion: 'A' | 'B' | 'C' | 'D';
+  candidate_count: number;
+  best_match_score: number;
+  review_status: string;
+  candidates: IdentityReviewCandidate[];
+  updated_at: string;
+};
+
 type ReviewClaimFilters = {
   sourceName?: string;
   claimType?: string;
@@ -27,6 +60,11 @@ type ReviewClaimFilters = {
 
 type ReviewClaimResult = {
   claims: ReviewClaim[];
+  error: string | null;
+};
+
+type IdentityReviewResult = {
+  items: IdentityReviewItem[];
   error: string | null;
 };
 
@@ -39,6 +77,7 @@ type PublicPersonReviewSummary = {
 };
 
 type ReviewAction = 'approve' | 'reject';
+type IdentityReviewAction = 'approve' | 'reject';
 
 function objectValue(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : null;
@@ -111,6 +150,34 @@ export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Pr
   };
 }
 
+export async function fetchInternalIdentityReviewItems(): Promise<IdentityReviewResult> {
+  const client = getSupabasePublicClient();
+  if (!client) {
+    return { items: [], error: 'Supabase public env not configured.' };
+  }
+
+  const { data, error } = await client
+    .from('person_identity_review_queue')
+    .select(
+      'source_person_id,source_person_key,source_type,source_name,source_url,raw_name,gender,party,position,district,confidence_suggestion,candidate_count,best_match_score,review_status,candidates,updated_at',
+    )
+    .order('best_match_score', { ascending: false })
+    .order('updated_at', { ascending: false })
+    .limit(200);
+
+  if (error) {
+    return { items: [], error: error.message };
+  }
+
+  return {
+    items: (data ?? []).map((item) => ({
+      ...(item as Omit<IdentityReviewItem, 'candidates'>),
+      candidates: Array.isArray(item.candidates) ? item.candidates as IdentityReviewCandidate[] : [],
+    })),
+    error: null,
+  };
+}
+
 export async function reviewInternalClaim(claimId: string, action: ReviewAction): Promise<{ relatedUpdated: number; relatedClaimIds: string[]; error: string | null }> {
   const response = await fetch('/internal-api/review-claim', {
     method: 'POST',
@@ -128,4 +195,23 @@ export async function reviewInternalClaim(claimId: string, action: ReviewAction)
     relatedClaimIds: Array.isArray(body?.relatedClaimIds) ? body.relatedClaimIds.map(String) : [],
     error: null,
   };
+}
+
+export async function reviewInternalIdentityMatch(
+  sourcePersonId: string,
+  candidatePersonId: string,
+  action: IdentityReviewAction,
+): Promise<{ error: string | null }> {
+  const response = await fetch('/internal-api/review-identity-match', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ sourcePersonId, candidatePersonId, action }),
+  });
+  const body = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    return { error: body?.error ?? response.statusText };
+  }
+
+  return { error: null };
 }

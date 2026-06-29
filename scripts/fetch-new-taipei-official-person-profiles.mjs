@@ -4,19 +4,35 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const defaultOutputPath = path.join(repoRoot, 'data-sources', 'taipei-official-person-profiles.seed.json');
+const defaultOutputPath = path.join(repoRoot, 'data-sources', 'new-taipei-official-person-profiles.seed.json');
 
-const tccSourceId = 'taipei-city-council-current-councilors';
-const tccSourceName = '臺北市議會：現任議員';
-const tccListUrl = 'https://www.tcc.gov.tw/cp.aspx?n=13898';
-const tccBaseUrl = 'https://www.tcc.gov.tw/';
+const ntpcCouncilSourceId = 'new-taipei-city-council-current-councilors';
+const ntpcCouncilSourceName = '新北市議會：現任議員';
+const ntpcCouncilBaseUrl = 'https://www.ntp.gov.tw/';
+const ntpcCouncilListUrl = 'https://www.ntp.gov.tw/councilor-all?program=37';
 
-const taipeiGovSourceId = 'taipei-city-government-leaders';
-const taipeiGovSourceName = '臺北市政府：市長、副市長與機關首長';
-const taipeiGovBaseUrl = 'https://www.gov.taipei/';
-const taipeiGovMayorUrl = 'https://www.gov.taipei/News.aspx?n=5A0C91ADEE6E7C46&sms=7CAF6BD4D3E48630';
-const taipeiGovDeputyUrl = 'https://www.gov.taipei/News.aspx?n=19FA75E3DEDDDA1F&sms=74724DD2D5D1AF52';
-const taipeiGovLeaderUrl = 'https://www.gov.taipei/News_Leader.aspx?n=1E25E56D8B12C862&sms=7CAF6BD4D3E48630';
+const ntpcGovSourceId = 'new-taipei-city-government-leaders';
+const ntpcGovSourceName = '新北市政府：市長、副市長與機關首長';
+const ntpcGovBaseUrl = 'https://www.ntpc.gov.tw/ch/';
+const ntpcGovMayorUrl = 'https://www.ntpc.gov.tw/ch/home.jsp?id=03e0d4f8fe4bf200';
+const ntpcGovDeputyUrl = 'https://www.ntpc.gov.tw/ch/home.jsp?id=4754a60e32ed2ffe';
+const ntpcGovAgenciesUrl = 'https://www.ntpc.gov.tw/ch/home.jsp?id=461536299de62891';
+
+const districtByArea = new Map([
+  ['1', '新北市第1選舉區（淡水區、八里區、三芝區、石門區）'],
+  ['2', '新北市第2選舉區（五股區、泰山區、林口區）'],
+  ['3', '新北市第3選舉區（新莊區）'],
+  ['4', '新北市第4選舉區（三重區、蘆洲區）'],
+  ['5', '新北市第5選舉區（板橋區）'],
+  ['6', '新北市第6選舉區（中和區）'],
+  ['7', '新北市第7選舉區（永和區）'],
+  ['8', '新北市第8選舉區（土城區、樹林區、鶯歌區、三峽區）'],
+  ['9', '新北市第9選舉區（新店區、深坑區、石碇區、坪林區、烏來區）'],
+  ['10', '新北市第10選舉區（瑞芳區、平溪區、雙溪區、貢寮區）'],
+  ['11', '新北市第11選舉區（汐止區、金山區、萬里區）'],
+  ['12', '新北市第12選舉區（平地原住民）'],
+  ['13', '新北市第13選舉區（山地原住民）'],
+]);
 
 function readLocalEnv() {
   const envPath = path.join(repoRoot, '.env.local');
@@ -78,6 +94,8 @@ function hashId(value) {
 
 function decodeHtml(value) {
   return String(value ?? '')
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, number) => String.fromCodePoint(Number.parseInt(number, 10)))
     .replace(/&nbsp;/g, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
@@ -98,6 +116,10 @@ function cleanText(value) {
     .join('\n');
 }
 
+function cleanInlineText(value) {
+  return cleanText(value).replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 function normalizeIdentityText(value) {
   return String(value ?? '')
     .trim()
@@ -108,55 +130,11 @@ function normalizeIdentityText(value) {
 }
 
 function normalizePartyName(value) {
-  const text = cleanText(value);
+  const text = cleanInlineText(value);
   if (text === '臺灣民眾黨') return '台灣民眾黨';
   if (text === '臺灣基進') return '台灣基進';
   if (text === '無黨籍及未經政黨推薦') return '無黨籍';
   return text;
-}
-
-function normalizeGender(value) {
-  const text = cleanText(value);
-  if (text === '男') return 'male';
-  if (text === '女') return 'female';
-  return 'unknown';
-}
-
-function parseRocDate(value) {
-  const text = cleanText(value);
-  const match = text.match(/民國\s*(\d{1,3})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日/);
-
-  if (!match) {
-    return null;
-  }
-
-  const year = Number.parseInt(match[1], 10) + 1911;
-  const month = Number.parseInt(match[2], 10);
-  const day = Number.parseInt(match[3], 10);
-
-  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-}
-
-function tccDistrict(zoneText) {
-  const text = cleanText(zoneText);
-  const match = text.match(/第([一二三四五六七八九十]+)選區/);
-  const numerals = {
-    一: 1,
-    二: 2,
-    三: 3,
-    四: 4,
-    五: 5,
-    六: 6,
-    七: 7,
-    八: 8,
-    九: 9,
-    十: 10,
-  };
-  const districtNo = match ? numerals[match[1]] ?? null : null;
-  const areaMatch = text.match(/（([^）]+)）/);
-  const areas = areaMatch ? areaMatch[1].replace(/、/g, '、') : '';
-
-  return districtNo ? `臺北市第${districtNo}選舉區${areas ? `（${areas}）` : ''}` : text;
 }
 
 async function fetchText(url) {
@@ -177,11 +155,11 @@ async function fetchText(url) {
   return utf8;
 }
 
-function restUrl(viewName) {
-  if (!supabaseUrl) {
-    throw new Error('Set SUPABASE_URL for Supabase REST access.');
-  }
+function absoluteUrl(baseUrl, href) {
+  return new URL(decodeHtml(href).trim(), baseUrl).toString();
+}
 
+function restUrl(viewName) {
   return new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/${viewName}`);
 }
 
@@ -236,20 +214,6 @@ async function mapLimit(items, limit, mapper) {
   return results;
 }
 
-function extractById(html, id) {
-  const pattern = new RegExp(`<[^>]+id=["']${id}["'][^>]*>([\\s\\S]*?)<\\/[^>]+>`, 'i');
-  return cleanText(html.match(pattern)?.[1] ?? '');
-}
-
-function extractMetaTitle(html) {
-  const og = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i)?.[1];
-  return cleanText(og ?? html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? '');
-}
-
-function absoluteUrl(baseUrl, href) {
-  return new URL(decodeHtml(href), baseUrl).toString();
-}
-
 function sourcePersonKey(sourceId, externalId) {
   return `${sourceId}:${externalId}`;
 }
@@ -264,13 +228,40 @@ function sourcePerson(row) {
     gender: row.gender ?? 'unknown',
     party: row.party ?? '',
     position: row.position ?? '',
-    district: row.district ?? '臺北市',
+    district: row.district ?? '新北市',
     birthDate: row.birthDate ?? null,
     sourceName: row.sourceName,
     sourceUrl: row.sourceUrl,
     sourceType: 'official_officeholder',
     confidenceSuggestion: 'A',
     sourcePayload: row.sourcePayload ?? {},
+  };
+}
+
+function adoptedCouncilor(row) {
+  const sourceKey = sourcePersonKey(row.sourceId, row.externalId);
+
+  return {
+    externalId: `official-current:${sourceKey}`,
+    sourcePersonKey: sourceKey,
+    sourceId: row.sourceId,
+    sourceType: 'official_officeholder',
+    confidenceSuggestion: 'A',
+    name: row.name,
+    gender: row.gender ?? 'unknown',
+    party: row.party ?? '',
+    position: row.position ?? '',
+    district: row.district ?? '新北市',
+    education: row.education ?? '',
+    experience: row.experience ?? '',
+    sourceUrl: row.sourceUrl,
+    sourcePayload: {
+      ...(row.sourcePayload ?? {}),
+      roleOrigin: 'elected',
+      elected: true,
+      identityStatus: 'official_name_only',
+      adoptionReason: 'official current councilor with no existing public person sharing the same normalized name',
+    },
   };
 }
 
@@ -287,7 +278,7 @@ function adoptedAppointedOfficial(row) {
     gender: row.gender ?? 'unknown',
     party: row.party ?? '',
     position: row.position ?? '',
-    district: row.district ?? '臺北市',
+    district: row.district ?? '新北市',
     education: row.education ?? '',
     experience: row.experience ?? '',
     sourceUrl: row.sourceUrl,
@@ -299,26 +290,6 @@ function adoptedAppointedOfficial(row) {
       adoptionReason: 'official appointed officeholder with no existing public person sharing the same normalized name',
     },
   };
-}
-
-function shouldAdoptExistingAppointedOfficial(row, sameNamePeople, appointedOfficialPersonIds) {
-  if (row.sourceId !== taipeiGovSourceId || sameNamePeople.length !== 1) {
-    return false;
-  }
-
-  if (appointedOfficialPersonIds.has(sameNamePeople[0].person_id)) {
-    return true;
-  }
-
-  const existingPosition = cleanText(sameNamePeople[0].position);
-  const nextPosition = cleanText(row.position);
-
-  return (
-    existingPosition.length > 0 &&
-    existingPosition.length <= 3 &&
-    nextPosition.length > existingPosition.length &&
-    nextPosition.endsWith(existingPosition)
-  );
 }
 
 function claimRecord({ row, person, match, claimType, claimValue }) {
@@ -392,12 +363,12 @@ function scoreMatch(row, person) {
     reasons.push('district matched');
   }
 
-  if (row.sourceId === tccSourceId && String(person.position ?? '').includes('議員')) {
+  if (String(person.position ?? '').includes('議員')) {
     score += 10;
     reasons.push('councilor role matched');
   }
 
-  if (row.sourceId === taipeiGovSourceId && String(row.position ?? '').includes('市長') && String(person.position ?? '').includes('市長')) {
+  if (row.sourceId === ntpcGovSourceId && String(row.position ?? '').includes('市長') && String(person.position ?? '').includes('市長')) {
     score += 10;
     reasons.push('local executive role matched');
   }
@@ -432,19 +403,20 @@ function matchPerson(row, peopleByName) {
 
   return {
     person: best.person,
-    method: 'taipei_official_profile_match',
+    method: row.sourceId === ntpcGovSourceId ? 'new_taipei_government_profile_match' : 'new_taipei_council_profile_match',
     score: best.score,
     reasons: best.reasons,
   };
 }
 
-function tccProfileLinks(html) {
+function ntpcCouncilorLinks(html) {
   const links = [];
   const seen = new Set();
-  const regex = /href=["'](Councilor_Content\.aspx\?n=13898&s=(\d+))["'][^>]*title=["']([^"']+)["']/gi;
+  const regex = /href=["'](councilor-detail\?program=37&A=(\d+)&C=(\d+)\s*)["'][^>]*>([\s\S]*?)<\/a>/gi;
 
   for (const match of html.matchAll(regex)) {
-    const url = absoluteUrl(tccBaseUrl, match[1]);
+    const href = match[1].trim();
+    const url = absoluteUrl(ntpcCouncilBaseUrl, href);
 
     if (seen.has(url)) {
       continue;
@@ -453,157 +425,184 @@ function tccProfileLinks(html) {
     seen.add(url);
     links.push({
       url,
-      externalId: `current-councilor-${match[2]}`,
-      listName: cleanText(match[3]),
+      area: match[2],
+      councilorId: match[3],
+      listName: cleanInlineText(match[4]),
     });
   }
 
   return links;
 }
 
-function parseTccProfile(html, link) {
-  const zoneText = extractById(html, 'ContentPlaceHolder1_FormView1_ElectionZoneLabel');
-  const partyMatch = html.match(/<span[^>]*class=["']flex-center["'][^>]*>([\s\S]*?)<\/span>/i);
-  const party = normalizePartyName(partyMatch?.[1] ?? '');
-  const name = extractById(html, 'ContentPlaceHolder1_FormView1_CouncilorNameLabel') || link.listName;
-  const gender = normalizeGender(extractById(html, 'ContentPlaceHolder1_FormView1_GenderLabel'));
-  const birthText = extractById(html, 'ContentPlaceHolder1_FormView1_BirthdayLabel');
+function fieldBetween(text, startLabel, endLabels) {
+  const start = text.indexOf(startLabel);
+  if (start < 0) {
+    return '';
+  }
+
+  const contentStart = start + startLabel.length;
+  const nextIndexes = endLabels
+    .map((label) => text.indexOf(label, contentStart))
+    .filter((index) => index >= 0);
+  const contentEnd = nextIndexes.length > 0 ? Math.min(...nextIndexes) : text.length;
+
+  return text.slice(contentStart, contentEnd).trim();
+}
+
+function parseCouncilorDetail(html, link) {
+  const text = cleanInlineText(html);
+  const party = normalizePartyName(text.match(/政黨：(.+?)\s+電話：/)?.[1] ?? '');
+  const name = text.match(/第\d+選區議員介紹\s+(.+?)\s+政黨：/)?.[1]?.trim() || link.listName;
 
   return {
-    sourceId: tccSourceId,
-    sourceName: tccSourceName,
+    sourceId: ntpcCouncilSourceId,
+    sourceName: ntpcCouncilSourceName,
     sourceUrl: link.url,
-    externalId: link.externalId,
+    externalId: `current-councilor-${link.councilorId}`,
     name,
-    gender,
+    gender: 'unknown',
     party,
-    position: '臺北市議員',
-    district: tccDistrict(zoneText),
-    birthDate: parseRocDate(birthText),
-    education: extractById(html, 'ContentPlaceHolder1_FormView1_EducationLabel'),
-    experience: extractById(html, 'ContentPlaceHolder1_FormView1_ExperienceLabel'),
-    platform: extractById(html, 'ContentPlaceHolder1_FormView1_OpinionLabel'),
+    position: '新北市議員',
+    district: districtByArea.get(link.area) ?? `新北市第${link.area}選舉區`,
+    education: fieldBetween(text, '學歷', ['經歷', '現任', '政見']),
+    experience: [fieldBetween(text, '經歷', ['現任', '政見']), fieldBetween(text, '現任', ['政見'])]
+      .filter(Boolean)
+      .join('\n'),
+    platform: fieldBetween(text, '政見', ['友善列印', '轉寄', '回上層']),
     sourcePayload: {
       profileUrl: link.url,
-      zoneText: cleanText(zoneText),
-      birthText,
-    },
-  };
-}
-
-async function fetchTccProfiles() {
-  const listHtml = await fetchText(tccListUrl);
-  const links = tccProfileLinks(listHtml);
-  return mapLimit(links, 6, async (link) => parseTccProfile(await fetchText(link.url), link));
-}
-
-function parseGovTableLinks(html, defaultPosition) {
-  const rows = [];
-  const regex = /<a\s+href=["']([^"']+)["']\s+title=["']([^"']+?)\[連結\]["'][^>]*>([\s\S]*?)<\/a>/gi;
-
-  for (const match of html.matchAll(regex)) {
-    const text = cleanText(match[3]);
-    const name = text.replace(/副市長$/, '').replace(/市長$/, '').trim();
-
-    if (!name || match[1].includes('Default.aspx')) {
-      continue;
-    }
-
-    rows.push({
-      name,
-      position: text.endsWith('副市長') ? '臺北市副市長' : defaultPosition,
-      url: absoluteUrl(taipeiGovBaseUrl, match[1]),
-    });
-  }
-
-  return rows;
-}
-
-function parseGovLeaderList(html) {
-  const rows = [];
-  const regex = /<p><a\s+href=["']([^"']+)["']\s+title=["']([^"']+?)\[連結\]["'][^>]*>([\s\S]*?)<\/a><\/p>\s*<span>([\s\S]*?)<\/span>\s*<span>([\s\S]*?)<\/span>/gi;
-
-  for (const match of html.matchAll(regex)) {
-    const name = cleanText(match[3]);
-    const title = cleanText(match[4]);
-    const agency = cleanText(match[5]);
-
-    if (!name) {
-      continue;
-    }
-
-    rows.push({
-      name,
-      position: title ? `臺北市政府${title}` : '臺北市政府機關首長',
-      agency,
-      url: absoluteUrl(taipeiGovBaseUrl, match[1]),
-    });
-  }
-
-  return rows;
-}
-
-function extractGovField(html, label) {
-  const regex = new RegExp(`<li><span[^>]*class=["']cp interduce-caption["'][^>]*>${label}：<\\/span>([\\s\\S]*?)<\\/li>`, 'i');
-  return cleanText(html.match(regex)?.[1] ?? '');
-}
-
-async function parseGovProfile(row) {
-  const html = await fetchText(row.url);
-  const externalId = new URL(row.url).searchParams.get('s') ?? hashId(row.url);
-  const rawTitle = extractGovField(html, '職稱');
-  const title = rawTitle && row.agency && !rawTitle.includes(row.agency)
-    ? `${row.agency}${rawTitle}`
-    : rawTitle || row.position;
-
-  return {
-    sourceId: taipeiGovSourceId,
-    sourceName: taipeiGovSourceName,
-    sourceUrl: row.url,
-    externalId: `leader-${externalId}`,
-    name: row.name || extractMetaTitle(html).replace(/(市長|副市長)$/, ''),
-    gender: 'unknown',
-    party: '',
-    position: title,
-    district: '臺北市',
-    education: extractGovField(html, '學歷'),
-    experience: extractGovField(html, '經歷'),
-    sourcePayload: {
-      profileUrl: row.url,
-      agency: row.agency ?? '',
-      title,
-      roleOrigin: 'appointed',
-      elected: false,
+      area: link.area,
+      councilorId: link.councilorId,
+      roleOrigin: 'elected',
+      elected: true,
       identityStatus: 'needs_identity_check',
     },
   };
 }
 
-async function fetchTaipeiGovProfiles() {
-  const rows = [];
-  const mayorHtml = await fetchText(taipeiGovMayorUrl);
-  rows.push(...parseGovTableLinks(mayorHtml, '臺北市市長'));
+function mainContentText(html) {
+  const text = cleanInlineText(html);
+  const start = text.indexOf('::: 首頁');
+  const endLabels = ['展開/收合', '如何到市府', '隱私權及資訊安全宣告'];
+  const content = start >= 0 ? text.slice(start) : text;
+  const endIndexes = endLabels.map((label) => content.indexOf(label)).filter((index) => index >= 0);
+  return endIndexes.length > 0 ? content.slice(0, Math.min(...endIndexes)).trim() : content;
+}
 
-  const deputyHtml = await fetchText(taipeiGovDeputyUrl);
-  rows.push(...parseGovTableLinks(deputyHtml, '臺北市副市長'));
+function pageLinks(html) {
+  const links = [];
+  const regex = /<a[^>]+href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
 
-  for (let page = 1; page <= 8; page += 1) {
-    const url = `${taipeiGovLeaderUrl}&page=${page}&PageSize=20`;
-    rows.push(...parseGovLeaderList(await fetchText(url)));
+  for (const match of html.matchAll(regex)) {
+    links.push({
+      href: decodeHtml(match[1]).trim(),
+      text: cleanInlineText(match[2]),
+    });
   }
 
-  const unique = new Map(rows.map((row) => [row.url, row]));
-  const parsedRows = await mapLimit(Array.from(unique.values()), 6, async (row) => {
+  return links;
+}
+
+function parseGovLeaderProfile(html, row) {
+  const text = mainContentText(html);
+  const titleMatch =
+    text.match(/(代理局長)：?(.+?)\s+學歷/) ??
+    text.match(/(市長|副市長|秘書長|副秘書長|局長|處長|主任委員|主任|董事長)\s+(.+?)\s+(?:職務列等\s+.+?\s+)?學歷/);
+  const title = row.title ?? titleMatch?.[1] ?? '新北市政府首長';
+  const name = row.name ?? titleMatch?.[2] ?? '';
+  const education = fieldBetween(text, '學歷', ['經歷', '個人簡歷', '督導機關']);
+  const experience = fieldBetween(text, '經歷', ['督導機關']) || fieldBetween(text, '個人簡歷', ['督導機關']);
+
+  if (!name) {
+    throw new Error(`Unable to parse official name from ${row.url}`);
+  }
+
+  return {
+    sourceId: ntpcGovSourceId,
+    sourceName: ntpcGovSourceName,
+    sourceUrl: row.url,
+    externalId: `leader-${new URL(row.url).searchParams.get('id') ?? hashId(row.url)}`,
+    name,
+    gender: 'unknown',
+    party: '',
+    position: row.agency && !title.includes(row.agency) ? `新北市政府${row.agency}${title}` : `新北市${title}`,
+    district: '新北市',
+    education,
+    experience,
+    sourcePayload: {
+      profileUrl: row.url,
+      agency: row.agency ?? '',
+      title,
+      roleOrigin: row.roleOrigin ?? 'appointed',
+      elected: row.elected ?? false,
+      identityStatus: 'needs_identity_check',
+    },
+  };
+}
+
+async function fetchNtpcGovLeaderRows() {
+  const rows = [
+    {
+      url: ntpcGovMayorUrl,
+      name: '侯友宜',
+      title: '市長',
+      agency: '',
+      roleOrigin: 'elected',
+      elected: true,
+    },
+  ];
+  const deputyHtml = await fetchText(ntpcGovDeputyUrl);
+  const deputyLinks = pageLinks(deputyHtml)
+    .filter((link) => ['劉和然', '朱惕之', '陳純敬'].includes(link.text))
+    .map((link) => ({
+      url: absoluteUrl(ntpcGovBaseUrl, link.href),
+      name: link.text,
+      title: '副市長',
+      agency: '',
+      roleOrigin: 'appointed',
+      elected: false,
+    }));
+  const deputyByUrl = new Map(deputyLinks.map((row) => [row.url, row]));
+  rows.push(...deputyByUrl.values());
+
+  const agenciesHtml = await fetchText(ntpcGovAgenciesUrl);
+  const agencyLinks = pageLinks(agenciesHtml)
+    .filter((link) => /^(秘書處|民政局|財政局|教育局|經濟發展局|工務局|水利局|農業局|城鄉發展局|社會局|地政局|勞工局|交通局|觀光旅遊局|法制局|警察局|衛生局|環境保護局|消防局|文化局|原住民族行政局|新聞局|人事處|主計處|政風處|研究發展考核委員會|客家事務局|捷運工程局|青年局|體育局)$/.test(link.text));
+  const agencyHeadRows = [];
+
+  for (const agency of agencyLinks) {
+    const agencyHtml = await fetchText(absoluteUrl(ntpcGovBaseUrl, agency.href));
+    const headLink = pageLinks(agencyHtml).find((link) => link.text === '機關首長');
+
+    if (!headLink) {
+      continue;
+    }
+
+    agencyHeadRows.push({
+      url: absoluteUrl(ntpcGovBaseUrl, headLink.href),
+      agency: agency.text,
+      roleOrigin: 'appointed',
+      elected: false,
+    });
+  }
+
+  rows.push(...agencyHeadRows);
+  return rows;
+}
+
+async function fetchNtpcGovProfiles() {
+  const rows = await fetchNtpcGovLeaderRows();
+  const parsedRows = await mapLimit(rows, 6, async (row) => {
     try {
-      return { profile: await parseGovProfile(row), skippedRow: null };
+      return { profile: parseGovLeaderProfile(await fetchText(row.url), row), skippedRow: null };
     } catch (error) {
       return {
         profile: null,
         skippedRow: {
-          sourceId: taipeiGovSourceId,
-          name: row.name,
-          position: row.position,
-          district: '臺北市',
+          sourceId: ntpcGovSourceId,
+          name: row.name ?? '',
+          position: row.title ?? '新北市政府首長',
+          district: '新北市',
           sourceUrl: row.url,
           reason: error.message,
         },
@@ -617,10 +616,15 @@ async function fetchTaipeiGovProfiles() {
   };
 }
 
+async function fetchNtpcCouncilProfiles() {
+  const listHtml = await fetchText(ntpcCouncilListUrl);
+  const links = ntpcCouncilorLinks(listHtml);
+  return mapLimit(links, 6, async (link) => parseCouncilorDetail(await fetchText(link.url), link));
+}
+
 function claimsForMatchedRow(row, match) {
   const fields = [
     ['gender', row.gender],
-    ['birth_date', row.birthDate],
     ['party', row.party],
     ['position', row.position],
     ['district', row.district],
@@ -635,44 +639,82 @@ function claimsForMatchedRow(row, match) {
     .map(([claimType, claimValue]) => claimRecord({ row, person: match.person, match, claimType, claimValue }));
 }
 
+function mergeOfficialRole(target, row) {
+  const positions = new Set(
+    String(target.position ?? '')
+      .split('；')
+      .map((item) => item.trim())
+      .filter(Boolean),
+  );
+  positions.add(row.position);
+  target.position = Array.from(positions).join('；');
+
+  if (row.education && !target.education) {
+    target.education = row.education;
+  }
+
+  if (row.experience && !target.experience) {
+    target.experience = row.experience;
+  }
+
+  const sourcePayload = target.sourcePayload ?? {};
+  sourcePayload.additionalOfficialRoles = [
+    ...(Array.isArray(sourcePayload.additionalOfficialRoles) ? sourcePayload.additionalOfficialRoles : []),
+    {
+      sourcePersonKey: sourcePersonKey(row.sourceId, row.externalId),
+      position: row.position,
+      sourceUrl: row.sourceUrl,
+      agency: row.sourcePayload?.agency ?? '',
+      title: row.sourcePayload?.title ?? '',
+    },
+  ];
+  target.sourcePayload = sourcePayload;
+}
+
 async function main() {
   if (!anonKey) {
-    throw new Error('Set SUPABASE_ANON_KEY for Taipei official person profile enrichment.');
+    throw new Error('Set SUPABASE_ANON_KEY for New Taipei official person profile enrichment.');
   }
 
   const options = parseArgs(process.argv.slice(2));
-  const [publicPeople, identitySources, tccRows, taipeiGovResult] = await Promise.all([
+  const [publicPeople, ntpcCouncilRows, ntpcGovResult] = await Promise.all([
     fetchAllRows('public_people', 'person_id,name,gender,party,position,district,education,experience'),
-    fetchAllRows('public_person_identity_sources', 'person_id,source_name,match_status'),
-    fetchTccProfiles(),
-    fetchTaipeiGovProfiles(),
+    fetchNtpcCouncilProfiles(),
+    fetchNtpcGovProfiles(),
   ]);
-  const taipeiGovRows = taipeiGovResult.profiles;
-  const skippedRows = taipeiGovResult.skippedRows;
+  const ntpcGovRows = ntpcGovResult.profiles;
+  const skippedRows = ntpcGovResult.skippedRows;
   const peopleByName = indexPeopleByName(publicPeople);
-  const appointedOfficialPersonIds = new Set(
-    identitySources
-      .filter((source) => source.source_name === taipeiGovSourceName && source.match_status === 'auto_matched')
-      .map((source) => source.person_id),
-  );
   const personClaims = [];
   const sourcePeople = [];
   const unmatchedRows = [];
   const adoptedPeople = [];
+  const adoptedPeopleByName = new Map();
   let matchedRows = 0;
 
-  for (const row of [...tccRows, ...taipeiGovRows]) {
+  for (const row of [...ntpcCouncilRows, ...ntpcGovRows]) {
     sourcePeople.push(sourcePerson(row));
     const match = matchPerson(row, peopleByName);
 
     if (!match) {
       const sameNamePeople = peopleByName.get(normalizeIdentityText(row.name)) ?? [];
-      const canAdoptAppointedOfficial =
-        row.sourceId === taipeiGovSourceId &&
-        (sameNamePeople.length === 0 || shouldAdoptExistingAppointedOfficial(row, sameNamePeople, appointedOfficialPersonIds));
 
-      if (canAdoptAppointedOfficial) {
-        adoptedPeople.push(adoptedAppointedOfficial(row));
+      if (row.sourceId === ntpcCouncilSourceId && sameNamePeople.length === 0) {
+        adoptedPeople.push(adoptedCouncilor(row));
+        continue;
+      }
+
+      if (row.sourceId === ntpcGovSourceId && sameNamePeople.length === 0) {
+        const key = normalizeIdentityText(row.name);
+        const existing = adoptedPeopleByName.get(key);
+
+        if (existing) {
+          mergeOfficialRole(existing, row);
+        } else {
+          const adopted = adoptedAppointedOfficial(row);
+          adoptedPeople.push(adopted);
+          adoptedPeopleByName.set(key, adopted);
+        }
         continue;
       }
 
@@ -680,15 +722,11 @@ async function main() {
         sourceId: row.sourceId,
         name: row.name,
         position: row.position,
+        party: row.party,
         district: row.district,
         sourceUrl: row.sourceUrl,
       });
       continue;
-    }
-
-    const sameNamePeople = peopleByName.get(normalizeIdentityText(row.name)) ?? [];
-    if (shouldAdoptExistingAppointedOfficial(row, sameNamePeople, appointedOfficialPersonIds)) {
-      adoptedPeople.push(adoptedAppointedOfficial(row));
     }
 
     personClaims.push(...claimsForMatchedRow(row, match));
@@ -697,8 +735,8 @@ async function main() {
 
   const summary = {
     publicPeople: publicPeople.length,
-    tccRows: tccRows.length,
-    taipeiGovRows: taipeiGovRows.length,
+    ntpcCouncilRows: ntpcCouncilRows.length,
+    ntpcGovRows: ntpcGovRows.length,
     adoptedPeople: adoptedPeople.length,
     sourcePeople: sourcePeople.length,
     matchedRows,
@@ -708,12 +746,12 @@ async function main() {
   };
   const output = {
     schemaVersion: 1,
-    name: 'taipei-official-person-profiles',
+    name: 'new-taipei-official-person-profiles',
     updatedAt: new Date().toISOString().slice(0, 10),
-    notes: 'Taipei-specific official parser. Council profile pages expose gender/birth date/education/experience/platform. Taipei City Government leader pages expose title/education/experience but usually not gender.',
+    notes: 'New Taipei-specific official parser. Council detail pages expose party, district, contact, education, experience/current office and platform. City government pages expose mayor, deputy mayors and agency heads with education/experience; these pages usually do not expose gender or birth date.',
     sources: [
-      { id: tccSourceId, name: tccSourceName, url: tccListUrl },
-      { id: taipeiGovSourceId, name: taipeiGovSourceName, url: taipeiGovLeaderUrl },
+      { id: ntpcCouncilSourceId, name: ntpcCouncilSourceName, url: ntpcCouncilListUrl },
+      { id: ntpcGovSourceId, name: ntpcGovSourceName, url: ntpcGovAgenciesUrl },
     ],
     summary,
     people: adoptedPeople,
@@ -737,6 +775,6 @@ async function main() {
 
 main().catch((error) => {
   const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`Taipei official person profile enrichment failed: ${message}`);
+  console.error(`New Taipei official person profile enrichment failed: ${message}`);
   process.exit(1);
 });

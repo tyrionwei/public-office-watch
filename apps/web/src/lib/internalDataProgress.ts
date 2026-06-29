@@ -30,6 +30,11 @@ type DuplicateReviewRow = {
   confidence_level: string;
 };
 
+type IdentityReviewRow = {
+  source_person_id: string;
+  review_status: string;
+};
+
 export type DataProgressMetric = {
   key: string;
   label: string;
@@ -54,6 +59,7 @@ export type DataProgressSummary = {
   sensitivePendingTotal: number;
   publicLegalClaimTotal: number;
   duplicateQueueTotal: number;
+  identityQueueTotal: number;
   metrics: DataProgressMetric[];
   completedItems: DataProgressItem[];
   pendingItems: DataProgressItem[];
@@ -135,6 +141,7 @@ export async function fetchInternalDataProgress(): Promise<DataProgressSummary> 
       sensitivePendingTotal: 0,
       publicLegalClaimTotal: 0,
       duplicateQueueTotal: 0,
+      identityQueueTotal: 0,
       metrics: [],
       completedItems: [],
       pendingItems: [],
@@ -145,18 +152,20 @@ export async function fetchInternalDataProgress(): Promise<DataProgressSummary> 
     };
   }
 
-  const [peopleResult, publicClaimsResult, reviewClaimsResult, duplicateQueueResult] = await Promise.all([
+  const [peopleResult, publicClaimsResult, reviewClaimsResult, duplicateQueueResult, identityQueueResult] = await Promise.all([
     fetchAllRows<PublicPersonRow>(client, 'public_people', 'person_id,name,gender,education,experience'),
     fetchAllRows<PublicClaimRow>(client, 'public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json,source_name'),
     fetchAllRows<ReviewClaimRow>(client, 'person_claim_review_queue', 'claim_id,person_id,claim_type,source_name,review_score'),
     fetchAllRows<DuplicateReviewRow>(client, 'person_duplicate_review_queue', 'duplicate_person_id,confidence_level'),
+    fetchAllRows<IdentityReviewRow>(client, 'person_identity_review_queue', 'source_person_id,review_status'),
   ]);
 
-  const error = peopleResult.error ?? publicClaimsResult.error ?? reviewClaimsResult.error ?? duplicateQueueResult.error ?? null;
+  const error = peopleResult.error ?? publicClaimsResult.error ?? reviewClaimsResult.error ?? duplicateQueueResult.error ?? identityQueueResult.error ?? null;
   const people = peopleResult.rows;
   const publicClaims = publicClaimsResult.rows;
   const reviewClaims = reviewClaimsResult.rows;
   const duplicateQueue = duplicateQueueResult.rows;
+  const identityQueue = identityQueueResult.rows;
   const total = people.length;
   const claimKeys = claimKeysByPerson(publicClaims);
   const externalIdPeople = new Set(
@@ -181,6 +190,7 @@ export async function fetchInternalDataProgress(): Promise<DataProgressSummary> 
   const sensitivePendingTotal = reviewClaims.filter((claim) => sensitiveClaimTypes.has(claim.claim_type)).length;
   const publicLegalClaimTotal = publicClaims.filter((claim) => claim.claim_type === 'legal_case').length;
   const duplicateQueueTotal = duplicateQueue.length;
+  const identityQueueTotal = identityQueue.length;
   const pendingByType = countBy(reviewClaims, (claim) => claim.claim_type).map(({ type, count }) => ({ type, count }));
   const pendingBySource = countBy(reviewClaims, (claim) => claim.source_name).map(({ source, count }) => ({ source, count }));
   const missingCorePeople = people
@@ -250,6 +260,11 @@ export async function fetchInternalDataProgress(): Promise<DataProgressSummary> 
       label: '同名人物待判斷',
       detail: `${duplicateQueueTotal} 組 duplicate review queue`,
     },
+    {
+      key: 'source-identity',
+      label: '官方來源身份待判斷',
+      detail: `${identityQueueTotal} 筆 source identity review queue`,
+    },
   ].filter((item) => !item.detail.startsWith('0 '));
 
   return {
@@ -262,6 +277,7 @@ export async function fetchInternalDataProgress(): Promise<DataProgressSummary> 
     sensitivePendingTotal,
     publicLegalClaimTotal,
     duplicateQueueTotal,
+    identityQueueTotal,
     metrics: [
       { key: 'gender', label: '性別', current: withGender, total, note: `${percentReady(withGender, total)}% 已補齊` },
       { key: 'external-id', label: '外部 ID', current: externalIdPeople, total, note: `${percentReady(externalIdPeople, total)}% 已建立` },

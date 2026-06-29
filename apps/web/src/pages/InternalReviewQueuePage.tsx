@@ -2,7 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
-import { fetchInternalReviewClaims, reviewInternalClaim, type ReviewClaim } from '../lib/internalReviewData';
+import {
+  fetchInternalIdentityReviewItems,
+  fetchInternalReviewClaims,
+  reviewInternalClaim,
+  reviewInternalIdentityMatch,
+  type IdentityReviewItem,
+  type ReviewClaim,
+} from '../lib/internalReviewData';
 
 const claimTypeLabels: Record<string, string> = {
   gender: '性別',
@@ -36,12 +43,16 @@ function claimTypeTone(value: string) {
 
 export function InternalReviewQueuePage() {
   const [claims, setClaims] = useState<ReviewClaim[]>([]);
+  const [identityItems, setIdentityItems] = useState<IdentityReviewItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [identityLoading, setIdentityLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [identityError, setIdentityError] = useState<string | null>(null);
   const [claimType, setClaimType] = useState('');
   const [sourceName, setSourceName] = useState('Wikidata 人物補充資料');
   const [query, setQuery] = useState('');
   const [actionClaimId, setActionClaimId] = useState<string | null>(null);
+  const [actionIdentityKey, setActionIdentityKey] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -60,6 +71,22 @@ export function InternalReviewQueuePage() {
     });
   }, [claimType, sourceName]);
 
+  useEffect(() => {
+    if (!isLocalReviewEnabled()) return;
+
+    setIdentityLoading(true);
+    void fetchInternalIdentityReviewItems().then((result) => {
+      if (result.error) {
+        setIdentityError(result.error);
+        setIdentityItems([]);
+      } else {
+        setIdentityError(null);
+        setIdentityItems(result.items);
+      }
+      setIdentityLoading(false);
+    });
+  }, []);
+
   const filteredClaims = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     if (!normalizedQuery) return claims;
@@ -70,6 +97,20 @@ export function InternalReviewQueuePage() {
       ),
     );
   }, [claims, query]);
+
+  const filteredIdentityItems = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return identityItems;
+
+    return identityItems.filter((item) =>
+      [item.raw_name, item.position, item.district, item.source_name, item.review_status].some((value) =>
+        value?.toLowerCase().includes(normalizedQuery),
+      ) ||
+      item.candidates.some((candidate) =>
+        [candidate.name, candidate.party, candidate.position, candidate.district].some((value) => value?.toLowerCase().includes(normalizedQuery)),
+      ),
+    );
+  }, [identityItems, query]);
 
   const countsByType = useMemo(() => {
     const counts = new Map<string, number>();
@@ -87,6 +128,23 @@ export function InternalReviewQueuePage() {
         </PixelFrame>
       </AppShell>
     );
+  }
+
+  async function handleIdentityReviewAction(item: IdentityReviewItem, candidatePersonId: string, action: 'approve' | 'reject') {
+    const actionKey = item.source_person_id + ':' + candidatePersonId;
+    setActionIdentityKey(actionKey);
+    setActionMessage(null);
+
+    const result = await reviewInternalIdentityMatch(item.source_person_id, candidatePersonId, action);
+    if (result.error) {
+      setActionMessage(result.error);
+      setActionIdentityKey(null);
+      return;
+    }
+
+    setIdentityItems((current) => current.filter((entry) => entry.source_person_id !== item.source_person_id));
+    setActionMessage(action === 'approve' ? '已確認身份：' + item.raw_name : '已標記不是同一人：' + item.raw_name);
+    setActionIdentityKey(null);
   }
 
   async function handleReviewAction(claim: ReviewClaim, action: 'approve' | 'reject') {
@@ -156,6 +214,79 @@ export function InternalReviewQueuePage() {
         </PixelFrame>
 
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+
+          <SectionPanel
+            title="身份比對審核"
+            eyebrow={identityLoading ? 'loading' : filteredIdentityItems.length + ' / ' + identityItems.length + ' records'}
+          >
+            {identityError ? (
+              <p className="pixel-corners border border-rose-400/50 bg-rose-500/10 p-4 text-sm text-rose-300">{identityError}</p>
+            ) : null}
+            {!identityError && identityLoading ? <p className="text-sm text-slate-400">載入中...</p> : null}
+            {!identityError && !identityLoading && filteredIdentityItems.length === 0 ? (
+              <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">沒有符合條件的身份比對資料。</p>
+            ) : null}
+            <div className="grid gap-3">
+              {filteredIdentityItems.map((item) => (
+                <article key={item.source_person_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                  <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="pixel-corners border border-accent/50 bg-accent/10 px-2 py-1 text-xs text-accent">
+                          {item.review_status}
+                        </span>
+                        <span className="text-xs text-slate-500">score {item.best_match_score}</span>
+                        <span className="text-xs text-slate-500">confidence {item.confidence_suggestion}</span>
+                      </div>
+                      <h3 className="mt-3 text-base font-semibold text-white">{item.raw_name}</h3>
+                      <p className="mt-2 text-sm text-slate-400">
+                        {[item.position, item.district, item.source_name].filter(Boolean).join(' · ')}
+                      </p>
+                    </div>
+                    {item.source_url ? (
+                      <a href={item.source_url} target="_blank" rel="noreferrer" className="text-sm text-accent hover:text-white">
+                        查看來源
+                      </a>
+                    ) : null}
+                  </div>
+                  <div className="mt-4 grid gap-2">
+                    {item.candidates.map((candidate) => {
+                      const actionKey = item.source_person_id + ':' + candidate.personId;
+                      return (
+                        <div key={candidate.personId} className="pixel-corners flex flex-col gap-3 border border-line/60 bg-bg/45 p-3 lg:flex-row lg:items-center lg:justify-between">
+                          <div>
+                            <p className="text-sm font-semibold text-white">候選人物：{candidate.name}</p>
+                            <p className="mt-1 text-sm text-slate-400">
+                              {[candidate.party, candidate.position, candidate.district].filter(Boolean).join(' · ')}
+                            </p>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              disabled={actionIdentityKey === actionKey}
+                              onClick={() => void handleIdentityReviewAction(item, candidate.personId, 'approve')}
+                              className="pixel-corners border border-signal/70 bg-signal/15 px-3 py-2 text-sm text-signal hover:bg-signal/25 disabled:cursor-wait disabled:opacity-60"
+                            >
+                              確認同一人
+                            </button>
+                            <button
+                              type="button"
+                              disabled={actionIdentityKey === actionKey}
+                              onClick={() => void handleIdentityReviewAction(item, candidate.personId, 'reject')}
+                              className="pixel-corners border border-rose-400/70 bg-rose-500/10 px-3 py-2 text-sm text-rose-300 hover:bg-rose-500/20 disabled:cursor-wait disabled:opacity-60"
+                            >
+                              不是同一人
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </SectionPanel>
+
           <SectionPanel
             title="待審核 claims"
             eyebrow={loading ? 'loading' : `${filteredClaims.length} / ${claims.length} records`}

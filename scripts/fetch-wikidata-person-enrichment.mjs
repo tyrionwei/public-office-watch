@@ -386,6 +386,12 @@ function timeFromClaim(claim) {
   return time.replace(/^\+/, '').slice(0, 10);
 }
 
+function timeFromQualifier(claim, property) {
+  const time = claim?.qualifiers?.[property]?.[0]?.datavalue?.value?.time;
+  if (!time) return null;
+  return time.replace(/^\+/, '').slice(0, 10);
+}
+
 function claimEntityIds(entity, property) {
   return (entity.claims?.[property] ?? []).map(entityIdFromClaim).filter(Boolean);
 }
@@ -538,6 +544,22 @@ function labelsForIds(entities, ids) {
     .filter((item) => item.label);
 }
 
+function partyAffiliations(entity, relatedEntities) {
+  return (entity.claims?.P102 ?? [])
+    .map((claim) => {
+      const partyQid = entityIdFromClaim(claim);
+      const label = getBestMonolingual(relatedEntities[partyQid]?.labels);
+      if (!partyQid || !label) return null;
+      return {
+        partyQid,
+        partyName: label,
+        startDate: timeFromQualifier(claim, 'P580'),
+        endDate: timeFromQualifier(claim, 'P582'),
+      };
+    })
+    .filter(Boolean);
+}
+
 function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvidence }) {
   const claims = [];
   const gender = genderFromEntityId(claimEntityIds(entity, 'P21')[0]);
@@ -545,6 +567,7 @@ function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvide
   const education = labelsForIds(relatedEntities, claimEntityIds(entity, 'P69')).map((item) => item.label);
   const positions = labelsForIds(relatedEntities, claimEntityIds(entity, 'P39')).map((item) => item.label);
   const occupations = labelsForIds(relatedEntities, claimEntityIds(entity, 'P106')).map((item) => item.label);
+  const parties = partyAffiliations(entity, relatedEntities);
 
   claims.push(claimRecord({ target, qid, claimType: 'external_id', claimValue: `wikidata:${qid}`, matchEvidence }));
 
@@ -567,6 +590,22 @@ function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvide
       claimType: 'experience',
       claimValue: Array.from(new Set([...positions, ...occupations])).slice(0, 12).join('；'),
       claimJson: { positions, occupations },
+      matchEvidence,
+    }));
+  }
+
+  for (const party of parties) {
+    claims.push(claimRecord({
+      target,
+      qid,
+      claimType: 'party_affiliation',
+      claimValue: party.partyName,
+      claimJson: {
+        partyQid: party.partyQid,
+        startDate: party.startDate,
+        endDate: party.endDate,
+        explicitDateSource: Boolean(party.startDate || party.endDate),
+      },
       matchEvidence,
     }));
   }
@@ -702,6 +741,7 @@ async function main() {
           ...claimEntityIds(entity, 'P69'),
           ...claimEntityIds(entity, 'P39'),
           ...claimEntityIds(entity, 'P106'),
+          ...claimEntityIds(entity, 'P102'),
         ];
         const relatedEntities = await getEntities(relatedIds, args);
         const match = scoreEntityMatch(target, entity, result, relatedEntities);
@@ -724,6 +764,7 @@ async function main() {
         ...claimEntityIds(entity, 'P69'),
         ...claimEntityIds(entity, 'P39'),
         ...claimEntityIds(entity, 'P106'),
+        ...claimEntityIds(entity, 'P102'),
         ...Object.keys(relationProperties).flatMap((property) => claimEntityIds(entity, property)),
       ];
       const relatedEntities = await getEntities(relatedIds, args);

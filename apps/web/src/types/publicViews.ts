@@ -21,6 +21,25 @@ export type PublicPerson = {
   photo_attribution: string | null;
 };
 
+export type PublicPersonPartyAffiliation = {
+  affiliation_id: string;
+  affiliation_key: string;
+  person_id: string;
+  person_name: string;
+  source_claim_key: string | null;
+  party_name: string;
+  role_context: 'candidate' | 'officeholder' | 'party_officer' | 'self_declared' | 'wiki_record' | 'official_record' | 'other';
+  observed_year: number | null;
+  observed_date: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  is_current: boolean;
+  confidence_level: 'A' | 'B' | 'C' | 'D';
+  source_name: string | null;
+  source_url: string | null;
+  updated_at: string;
+};
+
 export type PublicCompany = {
   company_id: string;
   unified_business_no: string | null;

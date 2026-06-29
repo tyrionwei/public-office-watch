@@ -16,6 +16,7 @@ const allowedPublicViews = {
   public_person_primary_photos: ['person_id', 'media_id', 'photo_url', 'source_name'],
   public_person_identity_sources: ['identity_source_id', 'person_id', 'source_type', 'source_name', 'election_year', 'match_status', 'match_score'],
   public_person_claims: ['claim_id', 'person_id', 'claim_type', 'confidence_level', 'review_score', 'source_name'],
+  public_person_party_affiliations: ['affiliation_id', 'person_id', 'source_claim_key', 'party_name', 'role_context', 'confidence_level'],
   public_parties: [
     'party_id',
     'name',

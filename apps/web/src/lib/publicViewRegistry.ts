@@ -11,6 +11,7 @@ export const allowedPublicViews = [
   'public_person_primary_photos',
   'public_person_identity_sources',
   'public_person_claims',
+  'public_person_party_affiliations',
   'public_parties',
   'public_party_finance_summaries',
   'public_party_company_contribution_summaries',

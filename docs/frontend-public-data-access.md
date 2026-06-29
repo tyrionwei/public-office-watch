@@ -5,6 +5,7 @@
 - 前端目前仍使用 `mockPublicDataProvider` 作為安全預設。
 - `supabasePublicDataProvider` mapping 已存在，但目前仍未啟用為預設 provider。
 - local provider factory 已存在，可用於本機 smoke / readiness validation。
+- internal review route / API 仍維持 local-only，production 不啟用。
 - `HomePage`、`RegionPage`、`ElectionPage` 仍透過 `publicDataProvider` 讀資料。
 
 ## 允許前端讀取的 public views
@@ -19,6 +20,12 @@
 - `public_home_election_ticker`
 - `public_region_election_summary`
 - `public_person_primary_photos`
+- `public_person_identity_sources`
+- `public_person_claims`
+- `public_person_party_affiliations`
+- `public_parties`
+- `public_party_finance_summaries`
+- `public_party_company_contribution_summaries`
 
 ## 禁止前端讀取
 
@@ -26,6 +33,14 @@
 - `raw_source_records`
 - `source_documents`
 - `person_media` raw table
+- `source_people`
+- `person_identity_matches`
+- `person_claims`
+- `identity_unmatched_source_people`
+- `identity_probable_match_queue`
+- `person_claim_review_queue`
+- `party_finance_reports`
+- `party_company_contributions`
 - `pending` / `rejected` data source
 - service role key
 - `DATABASE_CONNECTION_STRING`
@@ -64,6 +79,8 @@ npm run smoke:public-views
 - Phase 4N 仍不切換 production / CI 預設 provider。
 - 未來要切換到 Supabase 前，必須先完成 RLS、grants、public views 檢查。
 - 前端只允許讀取 public views。
+- allowed public views 必須與 `apps/web/src/lib/publicViewRegistry.ts` 對齊。
+- production 不得註冊 `/internal/review-queue` 或 dev-only `/internal-api/review-claim`。
 - 必須保留 fallback 與 empty state。
 - readiness checklist：`docs/supabase-provider-readiness-checklist.md`
 - pre-production bundle：`docs/pre-production-readiness.md`

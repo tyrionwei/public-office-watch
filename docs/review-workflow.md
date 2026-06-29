@@ -29,8 +29,10 @@
 
 ## Local Review UI
 
+- 目前決策：review 先保持 local-only。
 - `/internal/review-queue` 只在 Vite local development 顯示。
-- Production 不註冊此路由；正式上線若需要審核頁，必須先加帳號權限與操作紀錄。
+- Production 不註冊此路由，也不得註冊 dev-only `/internal-api/review-claim`。
+- 正式上線若需要審核頁，必須先獨立 PR 加帳號權限、操作紀錄、RLS / grant 驗證與 rollback plan。
 - 此頁讀 `person_claim_review_queue` 並透過 Vite dev-only `/internal-api/review-claim` 更新本機 Supabase。
 - `通過` 會把 claim 標記為 `verified` / `public` / `is_public = true`。
 - `標記錯誤` 會把 claim 標記為 `rejected` / `private` / `is_public = false`。
@@ -46,3 +48,5 @@ OpenClaw 不得 ad hoc 直接把資料寫成：
 - `is_public = true`
 
 唯一例外是可重跑、可檢查的自動審核腳本；目前 Wikidata 只允許已驗證 external ID 解鎖同 QID 的低敏感人物補充 claim。
+
+`review:person-claims:write` 會修改 Supabase 資料，預設只應用在 local Supabase 或明確核准的寫入環境。

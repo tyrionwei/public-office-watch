@@ -5,6 +5,7 @@
 - 目前 production provider 尚未啟用。
 - app safe default 仍是 mock；production 需明確開啟 Supabase provider flag。
 - 真正 production enable 必須獨立 PR。
+- internal review route / API 不是 production enable 的一部分，review 先維持 local-only。
 
 ## Production enable 前必須完成
 
@@ -15,6 +16,8 @@
 - anon key 權限確認完成。
 - raw / staging / review tables 不可由 anon key 讀。
 - public views 欄位契約與 mapper 對齊。
+- allowed public views 必須與 `apps/web/src/lib/publicViewRegistry.ts` 對齊。
+- production 不得註冊 `/internal/review-queue` 或 dev-only `/internal-api/review-claim`。
 - empty state / fallback 驗證完成。
 - hosting env 只放：
   - `VITE_SUPABASE_URL`
@@ -51,3 +54,4 @@
 - manual route check
 - no secret in git
 - no raw table access
+- no production internal review route/API

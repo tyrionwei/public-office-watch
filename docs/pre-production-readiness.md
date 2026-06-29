@@ -7,6 +7,7 @@
 - CI 已執行 frontend checks。
 - Supabase public provider mapping 已存在。
 - 尚未啟用 production Supabase provider。
+- internal review route / API 仍維持 local-only，production 不啟用。
 
 ## Production 前必跑 checks
 
@@ -29,6 +30,7 @@ npm run preflight:production-readiness
 - 確認沒有 `DATABASE_CONNECTION_STRING`。
 - 確認 anon key 只能讀取 public views。
 - 確認 raw / staging / review tables 不可由 anon key 讀取。
+- 確認 production 沒有註冊 internal review route 或 dev-only review API。
 - 確認 public views 欄位契約與 `publicViews.ts` / mapper 對齊。
 - 確認 empty state 與 fallback。
 - 確認 `publicDataProvider` 切換集中在 provider factory。
@@ -46,6 +48,12 @@ npm run preflight:production-readiness
 - `public_home_election_ticker`
 - `public_region_election_summary`
 - `public_person_primary_photos`
+- `public_person_identity_sources`
+- `public_person_claims`
+- `public_person_party_affiliations`
+- `public_parties`
+- `public_party_finance_summaries`
+- `public_party_company_contribution_summaries`
 
 ## Forbidden frontend sources
 
@@ -53,6 +61,14 @@ npm run preflight:production-readiness
 - `raw_source_records`
 - `source_documents`
 - `person_media` raw table
+- `source_people`
+- `person_identity_matches`
+- `person_claims`
+- `identity_unmatched_source_people`
+- `identity_probable_match_queue`
+- `person_claim_review_queue`
+- `party_finance_reports`
+- `party_company_contributions`
 - `pending` / `rejected` data source
 - service role key
 - `DATABASE_CONNECTION_STRING`

@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultOutputPath = path.join(repoRoot, 'data-sources', 'tainan-city-official-person-profiles.seed.json');
+const rawArchiveDir = path.join(repoRoot, 'local-data', 'raw', 'local', 'tainan-city', 'official-person-profiles', 'current');
+const fetchedAt = new Date().toISOString();
 
 const councilSourceId = 'tainan-city-council-current-councilors';
 const councilSourceName = '臺南市議會：現任議員';
@@ -129,6 +131,55 @@ function normalizePartyName(value) {
   return text;
 }
 
+function safeFilename(value) {
+  return String(value)
+    .replace(/^https?:\/\//, '')
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120)
+    .toLowerCase();
+}
+
+function sha256(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function archiveRaw(url, response, bodyText) {
+  fs.mkdirSync(rawArchiveDir, { recursive: true });
+  const filename = safeFilename(url) + '-' + hashId(url) + '.json';
+  const filePath = path.join(rawArchiveDir, filename);
+  const envelope = {
+    url,
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers.entries()),
+    fetchedAt,
+    body: bodyText,
+  };
+  const serialized = JSON.stringify(envelope, null, 2) + '\n';
+  fs.writeFileSync(filePath, serialized);
+
+  const manifestPath = path.join(rawArchiveDir, 'manifest.json');
+  let manifest = { generatedAt: fetchedAt, sources: [] };
+  try {
+    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch {
+    // New archive directory.
+  }
+  const sources = Array.isArray(manifest.sources) ? manifest.sources.filter((item) => item.sourceUrl !== url) : [];
+  sources.push({
+    title: 'Official person profile source',
+    sourceUrl: url,
+    fetchedAt,
+    status: response.status,
+    ok: response.ok,
+    format: 'raw-response-envelope-json',
+    files: [{ path: filename, bytes: Buffer.byteLength(serialized), sha256: sha256(serialized) }],
+  });
+  sources.sort((left, right) => left.sourceUrl.localeCompare(right.sourceUrl));
+  fs.writeFileSync(manifestPath, JSON.stringify({ generatedAt: fetchedAt, sources }, null, 2) + '\n');
+}
+
 async function fetchText(url) {
   const response = await fetch(url, {
     headers: { 'user-agent': 'Mozilla/5.0 public-office-watch local data sync' },
@@ -142,7 +193,9 @@ async function fetchText(url) {
   const bytes = await response.arrayBuffer();
   const utf8 = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
   const replacementCount = (utf8.match(/\uFFFD/g) ?? []).length;
-  return replacementCount > 5 ? new TextDecoder('big5', { fatal: false }).decode(bytes) : utf8;
+  const text = replacementCount > 5 ? new TextDecoder('big5', { fatal: false }).decode(bytes) : utf8;
+  archiveRaw(url, response, text);
+  return text;
 }
 
 function restUrl(viewName) {
@@ -290,6 +343,132 @@ function overlap(left, right) {
   );
 }
 
+const chineseNumberValues = new Map([
+  ['零', 0],
+  ['一', 1],
+  ['二', 2],
+  ['兩', 2],
+  ['三', 3],
+  ['四', 4],
+  ['五', 5],
+  ['六', 6],
+  ['七', 7],
+  ['八', 8],
+  ['九', 9],
+]);
+
+function parseChineseNumber(value) {
+  const text = String(value ?? '').trim().replaceAll('廿', '二十');
+  if (!text) return null;
+  if (/^\d+$/u.test(text)) return Number(text);
+  if (chineseNumberValues.has(text)) return chineseNumberValues.get(text);
+
+  const tenIndex = text.indexOf('十');
+  if (tenIndex >= 0) {
+    const leftText = text.slice(0, tenIndex);
+    const rightText = text.slice(tenIndex + 1);
+    const left = leftText ? chineseNumberValues.get(leftText) : 1;
+    const right = rightText ? chineseNumberValues.get(rightText) : 0;
+    if (typeof left === 'number' && typeof right === 'number') return left * 10 + right;
+  }
+
+  return null;
+}
+
+function parseDistrictOrdinal(value) {
+  const text = normalizeIdentityText(value);
+  if (!text) return null;
+  if (/^\d+$/u.test(text)) return Number(text);
+
+  const arabicMatch = text.match(/第(\d+)(?:選區|選舉區)?/u);
+  if (arabicMatch) return Number(arabicMatch[1]);
+
+  const chineseMatch = text.match(/第([一二兩三四五六七八九十廿]+)(?:選區|選舉區)?/u);
+  if (chineseMatch) return parseChineseNumber(chineseMatch[1]);
+
+  return null;
+}
+
+function councilDistrictOrdinal(row) {
+  const payload = row.sourcePayload ?? {};
+  return (
+    parseDistrictOrdinal(payload.electoralDistrictNumber) ??
+    parseDistrictOrdinal(payload.districtLabel) ??
+    parseDistrictOrdinal(payload.rawDistrict) ??
+    parseDistrictOrdinal(payload.districtType) ??
+    parseDistrictOrdinal(row.district)
+  );
+}
+
+function regionKey(value) {
+  const text = normalizeIdentityText(value).replaceAll('台', '臺');
+  const regions = ['彰化縣', '新竹縣', '高雄市', '基隆市', '金門縣', '澎湖縣', '臺南市', '臺東縣', '宜蘭縣'];
+  return regions.find((region) => text.includes(region)) ?? null;
+}
+
+function sameRegion(left, right) {
+  const leftRegion = regionKey(left);
+  const rightRegion = regionKey(right);
+  return Boolean(leftRegion && rightRegion && leftRegion === rightRegion);
+}
+
+function indigenousType(value) {
+  const text = normalizeIdentityText(value);
+  if (text.includes('平地原住民')) return 'flat';
+  if (text.includes('山地原住民')) return 'mountain';
+  return null;
+}
+
+function sameIndigenousType(row, person) {
+  const payloadText = JSON.stringify(row.sourcePayload ?? {});
+  const rowType = indigenousType(row.district) ?? indigenousType(row.position) ?? indigenousType(payloadText);
+  const personType = indigenousType(person.district) ?? indigenousType(person.position);
+  return !rowType || !personType || rowType === personType;
+}
+
+function hasIndigenousDistrict(value) {
+  return normalizeIdentityText(value).includes('原住民');
+}
+
+function councilDistrictOrdinalMatched(row, person) {
+  if (row.sourceId !== councilSourceId) return false;
+  const rowOrdinal = councilDistrictOrdinal(row);
+  const personOrdinal = parseDistrictOrdinal(person.district);
+  return Boolean(
+    rowOrdinal &&
+    personOrdinal &&
+    rowOrdinal === personOrdinal &&
+    sameRegion(row.district, person.district) &&
+    sameIndigenousType(row, person),
+  );
+}
+
+function indigenousCouncilDistrictMatched(row, person) {
+  if (row.sourceId !== councilSourceId) return false;
+  return Boolean(
+    String(row.position ?? '').includes('議員') &&
+    String(person.position ?? '').includes('議員') &&
+    sameRegion(row.district, person.district) &&
+    (hasIndigenousDistrict(row.district) || hasIndigenousDistrict(row.position)) &&
+    (hasIndigenousDistrict(person.district) || hasIndigenousDistrict(person.position)) &&
+    sameIndigenousType(row, person),
+  );
+}
+
+function councilLeadershipRoleMatched(row, person) {
+  return Boolean(
+    row.sourceId === councilSourceId &&
+    /議長|副議長/u.test(String(row.position ?? '')) &&
+    String(person.position ?? '').includes('議員') &&
+    sameRegion(row.district, person.district),
+  );
+}
+
+function councilDistrictOverlapMatched(row, person) {
+  if (!row.district || !overlap(row.district, person.district)) return false;
+  return !(row.sourceId === councilSourceId && councilDistrictOrdinal(row) && !sameRegion(row.district, person.district));
+}
+
 function scoreMatch(row, person) {
   let score = 0;
   const reasons = [];
@@ -317,14 +496,23 @@ function scoreMatch(row, person) {
     reasons.push('position matched');
   }
 
-  if (row.district && overlap(row.district, person.district)) {
+  if (councilDistrictOverlapMatched(row, person)) {
     score += 15;
     reasons.push('district matched');
+  } else if (councilDistrictOrdinalMatched(row, person)) {
+    score += 15;
+    reasons.push('council district ordinal matched');
+  } else if (indigenousCouncilDistrictMatched(row, person)) {
+    score += 15;
+    reasons.push('indigenous council district matched');
   }
 
   if (String(row.position ?? '').includes('議員') && String(person.position ?? '').includes('議員')) {
     score += 10;
     reasons.push('councilor role matched');
+  } else if (councilLeadershipRoleMatched(row, person)) {
+    score += 10;
+    reasons.push('council leadership role matched');
   }
 
   if (row.sourceId === govSourceId && String(row.position ?? '').includes('市長') && String(person.position ?? '').includes('市長')) {
@@ -478,14 +666,7 @@ async function fetchCouncilProfiles() {
       }
 
       if (/[（(]歿[）)]/.test(rawName)) {
-        skippedRows.push({
-          sourceId: councilSourceId,
-          name,
-          position: '臺南市議員',
-          district: `臺南市${districtTitle}`,
-          sourceUrl: new URL(href, councilBaseUrl).toString(),
-          reason: 'official council page marks this councilor as deceased',
-        });
+        // The official list keeps deceased councilors in-place; they are not parse gaps.
         continue;
       }
 

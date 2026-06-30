@@ -4,19 +4,46 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const defaultOutputPath = path.join(repoRoot, 'data-sources', 'taoyuan-city-official-person-profiles.seed.json');
-const rawArchiveDir = path.join(repoRoot, 'local-data', 'raw', 'local', 'taoyuan-city', 'official-person-profiles', 'current');
+const defaultOutputPath = path.join(repoRoot, 'data-sources', 'yilan-county-official-person-profiles.seed.json');
+const rawArchiveDir = path.join(repoRoot, 'local-data', 'raw', 'local', 'yilan-county', 'official-person-profiles', 'current');
 const fetchedAt = new Date().toISOString();
 
-const councilSourceId = 'taoyuan-city-council-current-councilors';
-const councilSourceName = '桃園市議會：現任議員';
-const councilBaseUrl = 'https://www.tycc.gov.tw/TC/';
+const councilSourceId = 'yilan-county-council-current-councilors';
+const councilSourceName = '宜蘭縣議會：第20屆議員便民服務';
+const councilListUrls = [{
+  url: 'https://www.ilcc.gov.tw/Html/H_05/H_05.asp',
+}];
+const correctedCouncilDistrictNames = new Map([
+  ['11', '平地原住民'],
+  ['12', '山地原住民'],
+  ['13', '山地原住民'],
+]);
 
-const govSourceId = 'taoyuan-city-government-leaders';
-const govSourceName = '桃園市政府：市長與市府本部首長';
-const govBaseUrl = 'https://www.tycg.gov.tw/';
-
-const govLeaderRows = [];
+const govSourceId = 'yilan-county-government-leaders';
+const govSourceName = '宜蘭縣政府：代理縣長、秘書長與局處首長';
+const govLeaderRows = [
+  {
+    url: 'https://www.e-land.gov.tw/cp.aspx?n=2700',
+    name: '林茂盛',
+    title: '代理縣長',
+    roleOrigin: 'appointed',
+    elected: false,
+  },
+  {
+    url: 'https://www.e-land.gov.tw/cp.aspx?n=2701',
+    name: '吳志宏',
+    title: '秘書長',
+    roleOrigin: 'appointed',
+    elected: false,
+  },
+  {
+    url: 'https://www.e-land.gov.tw/cp.aspx?n=2704',
+    title: '各局處首長',
+    roleOrigin: 'appointed',
+    elected: false,
+    listPage: true,
+  },
+];
 
 function readLocalEnv() {
   const envPath = path.join(repoRoot, '.env.local');
@@ -33,7 +60,7 @@ function readLocalEnv() {
       .map((line) => {
         const separatorIndex = line.indexOf('=');
         const key = separatorIndex >= 0 ? line.slice(0, separatorIndex).trim() : line;
-        const value = separatorIndex >= 0 ? line.slice(separatorIndex + 1).trim().replace(/^['"]|['"]$/g, '') : '';
+        const value = separatorIndex >= 0 ? line.slice(separatorIndex + 1).trim().replace(/^[ '\"]|[ '\"]$/g, '') : '';
         return [key, value];
       }),
   );
@@ -90,8 +117,9 @@ function decodeHtml(value) {
 
 function cleanText(value) {
   return decodeHtml(value)
-    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<br\s*\/?\s*>/gi, '\n')
     .replace(/<\/p>\s*<p[^>]*>/gi, '\n')
+    .replace(/<\/li>\s*<li[^>]*>/gi, '\n')
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
     .replace(/<style[\s\S]*?<\/style>/gi, ' ')
     .replace(/<[^>]+>/g, '')
@@ -123,6 +151,13 @@ function normalizePartyName(value) {
   return text;
 }
 
+function partyFromCouncilCode(value) {
+  const code = cleanInlineText(value).toUpperCase();
+  if (code === 'KMT') return '中國國民黨';
+  if (code === 'DPP' || code === 'DDP') return '民主進步黨';
+  return '無黨籍';
+}
+
 function safeFilename(value) {
   return String(value)
     .replace(/^https?:\/\//, '')
@@ -136,9 +171,9 @@ function sha256(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
 
-function archiveRaw(url, response, bodyText) {
+function archiveRawPage(url, response, bodyText) {
   fs.mkdirSync(rawArchiveDir, { recursive: true });
-  const filename = safeFilename(url) + '-' + hashId(url) + '.json';
+  const filename = `${safeFilename(url)}-${hashId(url)}.json`;
   const filePath = path.join(rawArchiveDir, filename);
   const envelope = {
     url,
@@ -148,7 +183,7 @@ function archiveRaw(url, response, bodyText) {
     fetchedAt,
     body: bodyText,
   };
-  const serialized = JSON.stringify(envelope, null, 2) + '\n';
+  const serialized = `${JSON.stringify(envelope, null, 2)}\n`;
   fs.writeFileSync(filePath, serialized);
 
   const manifestPath = path.join(rawArchiveDir, 'manifest.json');
@@ -160,18 +195,21 @@ function archiveRaw(url, response, bodyText) {
   }
   const sources = Array.isArray(manifest.sources) ? manifest.sources.filter((item) => item.sourceUrl !== url) : [];
   sources.push({
-    title: 'Official person profile source',
+    title: 'Yilan official person profile source page',
     sourceUrl: url,
     fetchedAt,
     status: response.status,
     ok: response.ok,
     format: 'raw-response-envelope-json',
-    files: [{ path: filename, bytes: Buffer.byteLength(serialized), sha256: sha256(serialized) }],
+    files: [{
+      path: filename,
+      bytes: Buffer.byteLength(serialized),
+      sha256: sha256(serialized),
+    }],
   });
   sources.sort((left, right) => left.sourceUrl.localeCompare(right.sourceUrl));
-  fs.writeFileSync(manifestPath, JSON.stringify({ generatedAt: fetchedAt, sources }, null, 2) + '\n');
+  fs.writeFileSync(manifestPath, `${JSON.stringify({ generatedAt: fetchedAt, sources }, null, 2)}\n`);
 }
-
 async function fetchText(url) {
   const response = await fetch(url, {
     headers: { 'user-agent': 'Mozilla/5.0 public-office-watch local data sync' },
@@ -186,7 +224,7 @@ async function fetchText(url) {
   const utf8 = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
   const replacementCount = (utf8.match(/\uFFFD/g) ?? []).length;
   const text = replacementCount > 5 ? new TextDecoder('big5', { fatal: false }).decode(bytes) : utf8;
-  archiveRaw(url, response, text);
+  archiveRawPage(url, response, text);
   return text;
 }
 
@@ -259,7 +297,7 @@ function sourcePerson(row) {
     gender: row.gender ?? 'unknown',
     party: row.party ?? '',
     position: row.position ?? '',
-    district: row.district ?? '桃園市',
+    district: row.district ?? '宜蘭縣',
     birthDate: row.birthDate ?? null,
     sourceName: row.sourceName,
     sourceUrl: row.sourceUrl,
@@ -282,7 +320,7 @@ function adoptedOfficial(row, origin) {
     gender: row.gender ?? 'unknown',
     party: row.party ?? '',
     position: row.position ?? '',
-    district: row.district ?? '桃園市',
+    district: row.district ?? '宜蘭縣',
     education: row.education ?? '',
     experience: row.experience ?? '',
     sourceUrl: row.sourceUrl,
@@ -335,6 +373,132 @@ function overlap(left, right) {
   );
 }
 
+const chineseNumberValues = new Map([
+  ['零', 0],
+  ['一', 1],
+  ['二', 2],
+  ['兩', 2],
+  ['三', 3],
+  ['四', 4],
+  ['五', 5],
+  ['六', 6],
+  ['七', 7],
+  ['八', 8],
+  ['九', 9],
+]);
+
+function parseChineseNumber(value) {
+  const text = String(value ?? '').trim().replaceAll('廿', '二十');
+  if (!text) return null;
+  if (/^\d+$/u.test(text)) return Number(text);
+  if (chineseNumberValues.has(text)) return chineseNumberValues.get(text);
+
+  const tenIndex = text.indexOf('十');
+  if (tenIndex >= 0) {
+    const leftText = text.slice(0, tenIndex);
+    const rightText = text.slice(tenIndex + 1);
+    const left = leftText ? chineseNumberValues.get(leftText) : 1;
+    const right = rightText ? chineseNumberValues.get(rightText) : 0;
+    if (typeof left === 'number' && typeof right === 'number') return left * 10 + right;
+  }
+
+  return null;
+}
+
+function parseDistrictOrdinal(value) {
+  const text = normalizeIdentityText(value);
+  if (!text) return null;
+  if (/^\d+$/u.test(text)) return Number(text);
+
+  const arabicMatch = text.match(/第(\d+)(?:選區|選舉區)?/u);
+  if (arabicMatch) return Number(arabicMatch[1]);
+
+  const chineseMatch = text.match(/第([一二兩三四五六七八九十廿]+)(?:選區|選舉區)?/u);
+  if (chineseMatch) return parseChineseNumber(chineseMatch[1]);
+
+  return null;
+}
+
+function councilDistrictOrdinal(row) {
+  const payload = row.sourcePayload ?? {};
+  return (
+    parseDistrictOrdinal(payload.electoralDistrictNumber) ??
+    parseDistrictOrdinal(payload.districtLabel) ??
+    parseDistrictOrdinal(payload.rawDistrict) ??
+    parseDistrictOrdinal(payload.districtType) ??
+    parseDistrictOrdinal(row.district)
+  );
+}
+
+function regionKey(value) {
+  const text = normalizeIdentityText(value).replaceAll('台', '臺');
+  const regions = ['彰化縣', '新竹縣', '高雄市', '基隆市', '金門縣', '澎湖縣', '臺南市', '臺東縣', '宜蘭縣'];
+  return regions.find((region) => text.includes(region)) ?? null;
+}
+
+function sameRegion(left, right) {
+  const leftRegion = regionKey(left);
+  const rightRegion = regionKey(right);
+  return Boolean(leftRegion && rightRegion && leftRegion === rightRegion);
+}
+
+function indigenousType(value) {
+  const text = normalizeIdentityText(value);
+  if (text.includes('平地原住民')) return 'flat';
+  if (text.includes('山地原住民')) return 'mountain';
+  return null;
+}
+
+function sameIndigenousType(row, person) {
+  const payloadText = JSON.stringify(row.sourcePayload ?? {});
+  const rowType = indigenousType(row.district) ?? indigenousType(row.position) ?? indigenousType(payloadText);
+  const personType = indigenousType(person.district) ?? indigenousType(person.position);
+  return !rowType || !personType || rowType === personType;
+}
+
+function hasIndigenousDistrict(value) {
+  return normalizeIdentityText(value).includes('原住民');
+}
+
+function councilDistrictOrdinalMatched(row, person) {
+  if (row.sourceId !== councilSourceId) return false;
+  const rowOrdinal = councilDistrictOrdinal(row);
+  const personOrdinal = parseDistrictOrdinal(person.district);
+  return Boolean(
+    rowOrdinal &&
+    personOrdinal &&
+    rowOrdinal === personOrdinal &&
+    sameRegion(row.district, person.district) &&
+    sameIndigenousType(row, person),
+  );
+}
+
+function indigenousCouncilDistrictMatched(row, person) {
+  if (row.sourceId !== councilSourceId) return false;
+  return Boolean(
+    String(row.position ?? '').includes('議員') &&
+    String(person.position ?? '').includes('議員') &&
+    sameRegion(row.district, person.district) &&
+    (hasIndigenousDistrict(row.district) || hasIndigenousDistrict(row.position)) &&
+    (hasIndigenousDistrict(person.district) || hasIndigenousDistrict(person.position)) &&
+    sameIndigenousType(row, person),
+  );
+}
+
+function councilLeadershipRoleMatched(row, person) {
+  return Boolean(
+    row.sourceId === councilSourceId &&
+    /議長|副議長/u.test(String(row.position ?? '')) &&
+    String(person.position ?? '').includes('議員') &&
+    sameRegion(row.district, person.district),
+  );
+}
+
+function councilDistrictOverlapMatched(row, person) {
+  if (!row.district || !overlap(row.district, person.district)) return false;
+  return !(row.sourceId === councilSourceId && councilDistrictOrdinal(row) && !sameRegion(row.district, person.district));
+}
+
 function scoreMatch(row, person) {
   let score = 0;
   const reasons = [];
@@ -362,19 +526,28 @@ function scoreMatch(row, person) {
     reasons.push('position matched');
   }
 
-  if (row.district && overlap(row.district, person.district)) {
+  if (councilDistrictOverlapMatched(row, person)) {
     score += 15;
     reasons.push('district matched');
+  } else if (councilDistrictOrdinalMatched(row, person)) {
+    score += 15;
+    reasons.push('council district ordinal matched');
+  } else if (indigenousCouncilDistrictMatched(row, person)) {
+    score += 15;
+    reasons.push('indigenous council district matched');
   }
 
   if (String(row.position ?? '').includes('議員') && String(person.position ?? '').includes('議員')) {
     score += 10;
     reasons.push('councilor role matched');
+  } else if (councilLeadershipRoleMatched(row, person)) {
+    score += 10;
+    reasons.push('council leadership role matched');
   }
 
-  if (row.sourceId === govSourceId && String(row.position ?? '').includes('市長') && String(person.position ?? '').includes('市長')) {
+  if (row.sourceId === govSourceId && String(row.position ?? '').includes('縣政府') && String(person.position ?? '').includes('縣')) {
     score += 10;
-    reasons.push('local executive role matched');
+    reasons.push('county government role matched');
   }
 
   return { score, reasons };
@@ -407,7 +580,7 @@ function matchPerson(row, peopleByName) {
 
   return {
     person: best.person,
-    method: row.sourceId === govSourceId ? 'taoyuan_city_government_profile_match' : 'taoyuan_city_council_profile_match',
+    method: row.sourceId === govSourceId ? 'yilan_county_government_profile_match' : 'yilan_county_council_profile_match',
     score: best.score,
     reasons: best.reasons,
   };
@@ -415,226 +588,79 @@ function matchPerson(row, peopleByName) {
 
 function fieldBetween(text, startLabel, endLabels) {
   const start = text.indexOf(startLabel);
-  if (start < 0) {
-    return '';
-  }
+  if (start < 0) return '';
 
   const contentStart = start + startLabel.length;
   const nextIndexes = endLabels
     .map((label) => text.indexOf(label, contentStart))
     .filter((index) => index >= 0);
   const contentEnd = nextIndexes.length > 0 ? Math.min(...nextIndexes) : text.length;
-
   return text.slice(contentStart, contentEnd).trim();
 }
 
-function fieldBetweenAny(text, startLabels, endLabels) {
-  for (const startLabel of startLabels) {
-    const value = fieldBetween(text, startLabel, endLabels);
-    if (value) {
-      return value;
-    }
+function parseCouncilRows(html, listRow) {
+  const sourceUrl = listRow.url;
+  const districtNames = new Map();
+  const rows = [];
+  const seen = new Set();
+
+  for (const match of html.matchAll(/summary=["']第(\d+)選區\(([^)"']+)\)/giu)) {
+    districtNames.set(match[1], cleanInlineText(match[2]));
   }
 
-  return '';
-}
+  const linkPattern = /<a\s+[^>]*href=["']([^"']*PBrowse\.aspx\?Sys_id=PMZ([^"']+))["'][^>]*title=["'][^"']*議員相關資料["'][^>]*>([\s\S]*?)<\/a>/giu;
 
-function partyFromCouncilClass(html) {
-  const className = html.match(/class="group current-member-content ([^"]+)"/i)?.[1] ?? '';
-  if (className.includes('dpp')) return '民主進步黨';
-  if (className.includes('kmt')) return '中國國民黨';
-  if (className.includes('tpp')) return '台灣民眾黨';
-  if (className.includes('npp')) return '時代力量';
-  if (className.includes('none') || className.includes('non')) return '無黨籍';
-  return '';
-}
+  for (const match of html.matchAll(linkPattern)) {
+    const href = decodeHtml(match[1]);
+    const [rawName, districtNumber, rawPartyCode, rawExternalId] = decodeHtml(match[2]).split(',');
+    const name = cleanInlineText(match[3] || rawName).replace(/\s+/g, '');
+    const districtName = correctedCouncilDistrictNames.get(districtNumber) ?? districtNames.get(districtNumber) ?? '';
+    const externalCode = cleanInlineText(rawExternalId);
 
-function parseCouncilorDetail(html, row) {
-  const text = cleanText(html);
-  const name = row.name;
-  const party = normalizePartyName(fieldBetweenAny(text, ['黨籍：', '黨籍'], ['參加黨團', '電話'])) || partyFromCouncilClass(html) || row.party;
-  const education = fieldBetween(text, '學歷', ['經歷']);
-  const experience = fieldBetween(text, '經歷', ['當屆議事資料', '議員個人總質詢', '市政總質詢', '相關新聞']);
-  const platform = '';
+    if (!name || !districtNumber || !externalCode) continue;
+    if (seen.has(externalCode)) continue;
+    seen.add(externalCode);
 
-  if (!name) {
-    return null;
-  }
-
-  return {
-    sourceId: councilSourceId,
-    sourceName: councilSourceName,
-    sourceUrl: row.sourceUrl,
-    externalId: `current-councilor-${row.councilorId}`,
-    name,
-    gender: 'unknown',
-    party,
-    position: row.position ?? '桃園市議員',
-    district: row.district,
-    education,
-    experience,
-    platform,
-    sourcePayload: {
-      profileUrl: row.sourceUrl,
-      listUrl: row.listUrl,
-      councilorId: row.councilorId,
-      rawDistrict: row.rawDistrict,
-      roleOrigin: 'elected',
-      elected: true,
-      identityStatus: 'needs_identity_check',
-    },
-  };
-}
-
-async function fetchCouncilProfiles() {
-  const listRows = [];
-  const skippedRows = [];
-  const areas = Array.from({ length: 14 }, (_, index) => index + 1);
-
-  for (const area of areas) {
-    const listUrl = new URL(`councilor-all.aspx?mid=39&area=${area}`, councilBaseUrl).toString();
-    const html = await fetchText(listUrl);
-    const heading = cleanInlineText(html.match(/<h4><span>([\s\S]*?)介紹<\/span><\/h4>/i)?.[1] ?? `第${String(area).padStart(2, '0')}選區`);
-    const districtTitle = heading.replace(/\s+/g, ' ').trim();
-    const position = area === 13 ? '桃園市平地原住民議員' : area === 14 ? '桃園市山地原住民議員' : '桃園市議員';
-    const linkPattern = /<a\b[^>]*href="([^"]*councilor-detail\.aspx[^"]*num=(\d+)[^"]*)"[\s\S]*?<img\b[^>]*title="([^"]*)"[\s\S]*?\/>\s*([\s\S]*?)(?=<\/a>)/gi;
-    let match;
-
-    while ((match = linkPattern.exec(html))) {
-      const href = decodeHtml(match[1]);
-      const councilorId = match[2];
-      const title = cleanInlineText(match[3]);
-      const rawName = cleanInlineText(match[4]) || title;
-      const name = rawName
-        .replace(/[（(](?:辭職|轉任立委|歿)[）)]/g, '')
-        .replace(/(?:議長|副議長|議員)$/u, '')
-        .trim();
-
-      if (!href || !name) {
-        continue;
-      }
-
-      if (/[（(](?:辭職|轉任立委|歿)[）)]/.test(rawName) || /辭職|轉任立委|歿/.test(title)) {
-        skippedRows.push({
-          sourceId: councilSourceId,
-          name,
-          position,
-          district: `桃園市${districtTitle}`,
-          sourceUrl: new URL(href, councilBaseUrl).toString(),
-          reason: /轉任立委/.test(rawName) || /轉任立委/.test(title)
-            ? 'official council page marks this councilor as transferred to legislator'
-            : /辭職/.test(rawName) || /辭職/.test(title)
-              ? 'official council page marks this councilor as resigned'
-              : 'official council page marks this councilor as deceased',
-        });
-        continue;
-      }
-
-      listRows.push({
-        councilorId,
-        name,
-        party: '',
-        position,
-        rawDistrict: districtTitle,
-        district: `桃園市${districtTitle}`,
-        listUrl,
-        sourceUrl: new URL(href, councilBaseUrl).toString(),
-      });
-    }
-  }
-
-  if (listRows.length === 0) {
-    throw new Error('Unable to parse Taoyuan councilor list.');
-  }
-
-  const parsedRows = listRows.map((row) => ({ profile: parseCouncilorDetail('', row), skippedRow: null }));
-
-  return {
-    profiles: parsedRows.map((row) => row.profile).filter(Boolean),
-    skippedRows: [...skippedRows, ...parsedRows.map((row) => row.skippedRow).filter(Boolean)],
-  };
-}
-
-function contentAfterLast(text, marker) {
-  const index = text.lastIndexOf(marker);
-  return index >= 0 ? text.slice(index) : text;
-}
-
-function namesFromGovLeaderPage(html, row) {
-  const names = [];
-  const imagePattern = /<img\b[^>]*alt="([^"]+)"[^>]*>/gi;
-  let match;
-
-  while ((match = imagePattern.exec(html))) {
-    const alt = cleanInlineText(match[1]);
-    if (!alt.includes(row.title)) continue;
-
-    const name =
-      alt.match(new RegExp(`${row.title}[-－]?([\\p{Script=Han}]{2,4})`, 'u'))?.[1] ??
-      alt.match(/[-－]([\p{Script=Han}]{2,4})$/u)?.[1] ??
-      alt.match(/([\p{Script=Han}]{2,4})$/u)?.[1] ??
-      '';
-
-    if (name && !names.includes(name)) {
-      names.push(name);
-    }
-  }
-
-  if (row.name && !names.includes(row.name)) {
-    names.unshift(row.name);
-  }
-
-  return names;
-}
-
-function parseGovLeaderProfiles(html, row) {
-  const text = cleanText(html);
-  const names = namesFromGovLeaderPage(html, row);
-
-  if (names.length === 0) {
-    throw new Error(`Unable to parse official name from ${row.url}`);
-  }
-
-  return names.map((name) => {
-    const content = contentAfterLast(text, name);
-    const education = fieldBetweenAny(content, ['學歷', '學 歷：', '學歷：'], ['主要經歷', '經歷', '市府分類', '最後異動日期']);
-    const experience = fieldBetweenAny(content, ['主要經歷', '經歷', '經 歷：', '經歷：'], ['市府分類', '最後異動日期', '發布日期']);
-
-    return {
-      sourceId: govSourceId,
-      sourceName: govSourceName,
-      sourceUrl: row.url,
-      externalId: `leader-${hashId(`${row.url}:${row.title}:${name}`)}`,
+    rows.push({
+      sourceId: councilSourceId,
+      sourceName: councilSourceName,
+      sourceUrl,
+      externalId: `current-councilor-${externalCode}`,
       name,
       gender: 'unknown',
-      party: '',
-      position: `桃園市${row.title}`,
-      district: '桃園市',
-      education,
-      experience,
+      party: partyFromCouncilCode(rawPartyCode),
+      position: '宜蘭縣議員',
+      district: districtName ? `宜蘭縣第${districtNumber}選區（${districtName}）` : `宜蘭縣第${districtNumber}選區`,
+      education: '',
+      experience: '',
       sourcePayload: {
-        profileUrl: row.url,
-        title: row.title,
-        roleOrigin: row.roleOrigin,
-        elected: row.elected,
+        profileHref: href,
+        profileUrl: sourceUrl,
+        electoralDistrictNumber: districtNumber,
+        electoralDistrictName: districtName,
+        rawPartyCode: cleanInlineText(rawPartyCode),
+        roleOrigin: 'elected',
+        elected: true,
         identityStatus: 'needs_identity_check',
       },
-    };
-  });
-}
+    });
+  }
 
-async function fetchGovProfiles() {
-  const leaderRows = await mapLimit(govLeaderRows, 4, async (row) => {
+  return rows;
+}
+async function fetchCouncilProfiles() {
+  const parsedRows = await mapLimit(councilListUrls, 1, async (row) => {
     try {
-      return { profiles: parseGovLeaderProfiles(await fetchText(row.url), row), skippedRow: null };
+      const html = await fetchText(row.url);
+      return { profiles: parseCouncilRows(html, row), skippedRow: null };
     } catch (error) {
       return {
         profiles: [],
         skippedRow: {
-          sourceId: govSourceId,
-          name: row.name ?? '',
-          position: `桃園市${row.title}`,
-          district: '桃園市',
+          sourceId: councilSourceId,
+          name: '',
+          position: '宜蘭縣議員',
+          district: '宜蘭縣',
           sourceUrl: row.url,
           reason: error instanceof Error ? error.message : String(error),
         },
@@ -643,8 +669,131 @@ async function fetchGovProfiles() {
   });
 
   return {
-    profiles: leaderRows.flatMap((row) => row.profiles),
-    skippedRows: leaderRows.map((row) => row.skippedRow).filter(Boolean),
+    profiles: parsedRows.flatMap((row) => row.profiles),
+    skippedRows: parsedRows.map((row) => row.skippedRow).filter(Boolean),
+  };
+}
+function fieldBetweenAny(text, startLabels, endLabels) {
+  for (const startLabel of startLabels) {
+    const value = fieldBetween(text, startLabel, endLabels);
+    if (value) return value;
+  }
+  return '';
+}
+
+function parseGovLeaderProfile(html, row) {
+  const text = cleanText(html);
+  const content = text;
+  const name = row.name ??
+    content.match(new RegExp('宜蘭縣政府' + row.title + '\n([\p{Script=Han}]{2,4})', 'u'))?.[1] ??
+    '';
+  const education = fieldBetweenAny(content, ['學歷'], ['經歷', '更新日期', '瀏覽人次', '回上一頁']);
+  const experience = fieldBetweenAny(content, ['經歷'], ['更新日期', '瀏覽人次', '回上一頁']);
+
+  if (!name) {
+    throw new Error(`Unable to parse official name from ${row.url}`);
+  }
+
+  return {
+    sourceId: govSourceId,
+    sourceName: govSourceName,
+    sourceUrl: row.url,
+    externalId: `leader-${hashId([row.url, row.title, name].join('|'))}`,
+    name,
+    gender: 'unknown',
+    party: '',
+    position: `宜蘭縣政府${row.title}`,
+    district: '宜蘭縣',
+    education,
+    experience,
+    sourcePayload: {
+      profileUrl: row.url,
+      title: row.title,
+      roleOrigin: row.roleOrigin,
+      elected: row.elected,
+      identityStatus: 'needs_identity_check',
+    },
+  };
+}
+
+function parseGovAgencyHeadProfiles(html, row) {
+  const text = cleanText(html);
+  const compact = text.replace(/\s+/g, '');
+  const start = compact.indexOf('職稱姓名聯絡電話');
+  if (start < 0) {
+    throw new Error(`Unable to parse agency head table from ${row.url}`);
+  }
+
+  const tableStart = start + '職稱姓名聯絡電話'.length;
+  const updateIndex = compact.indexOf('更新日期', tableStart);
+  const tableText = compact.slice(tableStart, updateIndex >= 0 ? updateIndex : undefined);
+  const profiles = [];
+  const seen = new Set();
+  const rowPattern = /([\p{Script=Han}]{2,12}(?:處處長|局局長))([\p{Script=Han}]{2,4})(\d{2,}(?:轉\d+)?)/gu;
+
+  for (const match of tableText.matchAll(rowPattern)) {
+    const title = match[1];
+    const name = match[2];
+    const contactPhone = match[3];
+    if (!title || !name || !/^[\p{Script=Han}]{2,4}$/u.test(name)) continue;
+    if (/縣長|代理縣長|副縣長|秘書長/.test(title)) continue;
+
+    const key = `${title}:${name}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    profiles.push({
+      sourceId: govSourceId,
+      sourceName: govSourceName,
+      sourceUrl: row.url,
+      externalId: `agency-head-${hashId([row.url, title, name].join('|'))}`,
+      name,
+      gender: 'unknown',
+      party: '',
+      position: `宜蘭縣政府${title}`,
+      district: '宜蘭縣',
+      education: '',
+      experience: '',
+      sourcePayload: {
+        profileUrl: row.url,
+        title,
+        contactPhone,
+        roleOrigin: row.roleOrigin,
+        elected: row.elected,
+        identityStatus: 'needs_identity_check',
+      },
+    });
+  }
+
+  if (profiles.length === 0) {
+    throw new Error(`Unable to parse agency head table from ${row.url}`);
+  }
+
+  return profiles;
+}
+async function fetchGovProfiles() {
+  const parsedRows = await mapLimit(govLeaderRows, 2, async (row) => {
+    try {
+      const html = await fetchText(row.url);
+      const profiles = row.listPage ? parseGovAgencyHeadProfiles(html, row) : [parseGovLeaderProfile(html, row)];
+      return { profiles, skippedRow: null };
+    } catch (error) {
+      return {
+        profiles: [],
+        skippedRow: {
+          sourceId: govSourceId,
+          name: row.name ?? '',
+          position: `宜蘭縣${row.title}`,
+          district: '宜蘭縣',
+          sourceUrl: row.url,
+          reason: error instanceof Error ? error.message : String(error),
+        },
+      };
+    }
+  });
+
+  return {
+    profiles: parsedRows.flatMap((row) => row.profiles),
+    skippedRows: parsedRows.map((row) => row.skippedRow).filter(Boolean),
   };
 }
 
@@ -656,7 +805,6 @@ function claimsForMatchedRow(row, match) {
     ['district', row.district],
     ['education', row.education],
     ['experience', row.experience],
-    ['platform', row.platform],
     ['external_id', sourcePersonKey(row.sourceId, row.externalId)],
   ];
 
@@ -667,7 +815,7 @@ function claimsForMatchedRow(row, match) {
 
 async function main() {
   if (!anonKey) {
-    throw new Error('Set SUPABASE_ANON_KEY for Taoyuan City official person profile enrichment.');
+    throw new Error('Set SUPABASE_ANON_KEY for Yilan County official person profile enrichment.');
   }
 
   const options = parseArgs(process.argv.slice(2));
@@ -717,7 +865,6 @@ async function main() {
     publicPeople: publicPeople.length,
     councilRows: councilRows.length,
     govRows: govRows.length,
-    agencyHeadRows: govRows.filter((row) => row.sourcePayload?.agency).length,
     adoptedPeople: adoptedPeople.length,
     sourcePeople: sourcePeople.length,
     matchedRows,
@@ -727,11 +874,12 @@ async function main() {
   };
   const output = {
     schemaVersion: 1,
-    name: 'taoyuan-city-official-person-profiles',
+    name: 'yilan-county-official-person-profiles',
     updatedAt: new Date().toISOString().slice(0, 10),
-    notes: 'Taoyuan City-specific official parser. Council profiles are parsed from the official council district pages. City government profile pages currently return HiNet Anti-DDoS 428 to non-browser fetches, so city government leaders are intentionally not written in this seed.',
+    notes: 'Yilan County-specific official parser. County council rows come from the official 20th councilor service page and currently include name, district, party code, and profile link metadata from the list page. County government rows cover acting county magistrate, secretary-general, and agency heads from official Yilan County Government pages.',
     sources: [
-      { id: councilSourceId, name: councilSourceName, url: 'https://www.tycc.gov.tw/TC/councilor-info.aspx?mid=39' },
+      { id: councilSourceId, name: councilSourceName, url: 'https://www.ilcc.gov.tw/' },
+      { id: govSourceId, name: govSourceName, url: 'https://www.e-land.gov.tw/cp.aspx?n=2700' },
     ],
     summary,
     people: adoptedPeople,
@@ -755,6 +903,6 @@ async function main() {
 
 main().catch((error) => {
   const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`Taoyuan City official person profile enrichment failed: ${message}`);
+  console.error(`Yilan County official person profile enrichment failed: ${message}`);
   process.exit(1);
 });

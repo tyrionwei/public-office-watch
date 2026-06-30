@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultOutputPath = path.join(repoRoot, 'data-sources', 'hsinchu-city-official-person-profiles.seed.json');
+const rawArchiveDir = path.join(repoRoot, 'local-data', 'raw', 'local', 'hsinchu-city', 'official-person-profiles', 'current');
+const fetchedAt = new Date().toISOString();
 
 const councilSourceId = 'hsinchu-city-council-current-councilors';
 const councilSourceName = '新竹市議會：現任議員';
@@ -168,6 +170,55 @@ function normalizePartyName(value) {
   return text;
 }
 
+function safeFilename(value) {
+  return String(value)
+    .replace(/^https?:\/\//, '')
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120)
+    .toLowerCase();
+}
+
+function sha256(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function archiveRaw(url, response, bodyText) {
+  fs.mkdirSync(rawArchiveDir, { recursive: true });
+  const filename = safeFilename(url) + '-' + hashId(url) + '.json';
+  const filePath = path.join(rawArchiveDir, filename);
+  const envelope = {
+    url,
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers.entries()),
+    fetchedAt,
+    body: bodyText,
+  };
+  const serialized = JSON.stringify(envelope, null, 2) + '\n';
+  fs.writeFileSync(filePath, serialized);
+
+  const manifestPath = path.join(rawArchiveDir, 'manifest.json');
+  let manifest = { generatedAt: fetchedAt, sources: [] };
+  try {
+    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch {
+    // New archive directory.
+  }
+  const sources = Array.isArray(manifest.sources) ? manifest.sources.filter((item) => item.sourceUrl !== url) : [];
+  sources.push({
+    title: 'Official person profile source',
+    sourceUrl: url,
+    fetchedAt,
+    status: response.status,
+    ok: response.ok,
+    format: 'raw-response-envelope-json',
+    files: [{ path: filename, bytes: Buffer.byteLength(serialized), sha256: sha256(serialized) }],
+  });
+  sources.sort((left, right) => left.sourceUrl.localeCompare(right.sourceUrl));
+  fs.writeFileSync(manifestPath, JSON.stringify({ generatedAt: fetchedAt, sources }, null, 2) + '\n');
+}
+
 async function fetchText(url) {
   const response = await fetch(url, {
     headers: { 'user-agent': 'Mozilla/5.0 public-office-watch local data sync' },
@@ -181,7 +232,9 @@ async function fetchText(url) {
   const bytes = await response.arrayBuffer();
   const utf8 = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
   const replacementCount = (utf8.match(/\uFFFD/g) ?? []).length;
-  return replacementCount > 5 ? new TextDecoder('big5', { fatal: false }).decode(bytes) : utf8;
+  const text = replacementCount > 5 ? new TextDecoder('big5', { fatal: false }).decode(bytes) : utf8;
+  archiveRaw(url, response, text);
+  return text;
 }
 
 function restUrl(viewName) {
@@ -329,6 +382,25 @@ function overlap(left, right) {
   );
 }
 
+function sameRegion(left, right) {
+  const leftRegion = normalizeIdentityText(left).match(/[\p{Script=Han}]{2,3}[縣市]/u)?.[0] ?? '';
+  const rightRegion = normalizeIdentityText(right).match(/[\p{Script=Han}]{2,3}[縣市]/u)?.[0] ?? '';
+  return Boolean(leftRegion && rightRegion && leftRegion === rightRegion);
+}
+
+function isSameIndigenousCouncilRole(row, person) {
+  return Boolean(
+    row.sourceId === councilSourceId &&
+    String(row.district ?? '').includes('平地原住民') &&
+    String(person.position ?? '').includes('平地原住民') &&
+    String(row.position ?? '').includes('議員') &&
+    String(person.position ?? '').includes('議員') &&
+    sameRegion(row.district, person.district)
+  );
+}
+
+const verifiedGovernmentCandidateNames = new Set(['施淑婷', '吳達偉']);
+
 function scoreMatch(row, person) {
   let score = 0;
   const reasons = [];
@@ -359,6 +431,9 @@ function scoreMatch(row, person) {
   if (row.district && overlap(row.district, person.district)) {
     score += 15;
     reasons.push('district matched');
+  } else if (isSameIndigenousCouncilRole(row, person)) {
+    score += 15;
+    reasons.push('indigenous council district matched');
   }
 
   if (String(row.position ?? '').includes('議員') && String(person.position ?? '').includes('議員')) {
@@ -395,16 +470,35 @@ function matchPerson(row, peopleByName) {
   const best = scored[0] ?? null;
   const second = scored[1] ?? null;
 
-  if (!best || best.score < 75 || (second && best.score - second.score < 10)) {
+  if (!best) {
     return null;
   }
 
-  return {
-    person: best.person,
-    method: row.sourceId === govSourceId ? 'hsinchu_city_government_profile_match' : 'hsinchu_city_council_profile_match',
-    score: best.score,
-    reasons: best.reasons,
-  };
+  if (best.score >= 75 && (!second || best.score - second.score >= 10)) {
+    return {
+      person: best.person,
+      method: row.sourceId === govSourceId ? 'hsinchu_city_government_profile_match' : 'hsinchu_city_council_profile_match',
+      score: best.score,
+      reasons: best.reasons,
+    };
+  }
+
+  if (
+    candidates.length === 1 &&
+    row.sourceId === govSourceId &&
+    row.sourcePayload?.elected === false &&
+    verifiedGovernmentCandidateNames.has(row.name) &&
+    String(best.person.position ?? '').includes('候選人')
+  ) {
+    return {
+      person: best.person,
+      method: 'hsinchu_city_verified_government_candidate_identity_match',
+      score: 75,
+      reasons: [...best.reasons, 'verified same person has both government officeholder and candidate records'],
+    };
+  }
+
+  return null;
 }
 
 function fieldBetween(text, startLabel, endLabels) {

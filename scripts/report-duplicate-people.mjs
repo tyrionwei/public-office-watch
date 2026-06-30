@@ -272,21 +272,38 @@ function scoreDuplicatePair(left, right) {
   };
 }
 
-function pairSuggestionsFor(records) {
+function decisionKey(leftPersonId, rightPersonId) {
+  return [leftPersonId, rightPersonId].sort().join('|');
+}
+
+function pairSuggestionsFor(records, terminalDecisionKeys) {
   const suggestions = [];
 
   for (let leftIndex = 0; leftIndex < records.length; leftIndex += 1) {
     for (let rightIndex = leftIndex + 1; rightIndex < records.length; rightIndex += 1) {
-      suggestions.push(scoreDuplicatePair(records[leftIndex], records[rightIndex]));
+      const left = records[leftIndex];
+      const right = records[rightIndex];
+      if (terminalDecisionKeys.has(decisionKey(left.personId, right.personId))) continue;
+      suggestions.push(scoreDuplicatePair(left, right));
     }
   }
 
   return suggestions.sort((left, right) => right.score - left.score);
 }
 
-function buildDuplicateReport(people, candidates, claims, options) {
+function buildDuplicateReport(people, candidates, claims, mergeDecisions, options) {
   const candidatesByPersonId = new Map();
   const claimsByPersonId = new Map();
+  const verifiedDuplicatePersonIds = new Set(
+    mergeDecisions
+      .filter((decision) => decision.status === 'verified')
+      .map((decision) => decision.duplicate_person_id),
+  );
+  const terminalDecisionKeys = new Set(
+    mergeDecisions
+      .filter((decision) => ['verified', 'rejected', 'archived'].includes(decision.status))
+      .map((decision) => decisionKey(decision.duplicate_person_id, decision.canonical_person_id)),
+  );
 
   for (const candidate of candidates) {
     candidatesByPersonId.set(candidate.person_id, [...(candidatesByPersonId.get(candidate.person_id) ?? []), candidate]);
@@ -299,6 +316,7 @@ function buildDuplicateReport(people, candidates, claims, options) {
   const byName = new Map();
 
   for (const person of people) {
+    if (verifiedDuplicatePersonIds.has(person.person_id)) continue;
     const normalizedName = normalizeName(person.name);
     if (!normalizedName) continue;
     byName.set(normalizedName, [...(byName.get(normalizedName) ?? []), person]);
@@ -335,7 +353,11 @@ function buildDuplicateReport(people, candidates, claims, options) {
       const sharedExternalIds = Array.from(externalIdCounts.entries())
         .filter(([, count]) => count > 1)
         .map(([externalId]) => externalId);
-      const pairSuggestions = pairSuggestionsFor(records);
+      const pairSuggestions = pairSuggestionsFor(records, terminalDecisionKeys);
+
+      if (pairSuggestions.length === 0) {
+        return null;
+      }
 
       return {
         normalizedName,
@@ -350,6 +372,7 @@ function buildDuplicateReport(people, candidates, claims, options) {
         records,
       };
     })
+    .filter(Boolean)
     .sort((left, right) => right.recordCount - left.recordCount || left.normalizedName.localeCompare(right.normalizedName, 'zh-Hant-TW'));
 
   return {
@@ -367,12 +390,13 @@ async function main() {
   }
 
   const options = parseArgs(process.argv.slice(2));
-  const [people, candidates, claims] = await Promise.all([
+  const [people, candidates, claims, mergeDecisions] = await Promise.all([
     fetchRows('public_people', 'person_id,name,gender,party,position,district,election_year', options),
     fetchRows('public_candidates', 'person_id,person_name,person_party,person_position,race_title,election_name,region_name,party,registration_status', options),
     fetchRows('public_person_claims', 'person_id,claim_type,claim_value,claim_json', options),
+    fetchRows('person_merge_decisions', 'duplicate_person_id,canonical_person_id,status', options),
   ]);
-  const report = buildDuplicateReport(people, candidates, claims, options);
+  const report = buildDuplicateReport(people, candidates, claims, mergeDecisions, options);
   const content = `${JSON.stringify(report, null, 2)}\n`;
 
   if (options.write) {

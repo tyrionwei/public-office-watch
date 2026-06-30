@@ -423,6 +423,12 @@ function scoreMatch(row, person) {
     reasons.push('county government role matched');
   }
 
+  const officialCareerText = `${row.education ?? ''} ${row.experience ?? ''}`;
+  if (row.sourceId === govSourceId && officialCareerText.includes('立法委員') && String(person.position ?? '').includes('立法委員')) {
+    score += 25;
+    reasons.push('official career legislator role matched');
+  }
+
   return { score, reasons };
 }
 

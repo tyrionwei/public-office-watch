@@ -9,6 +9,7 @@ import type {
   PublicPartyFinanceSummary,
   PublicPerson,
   PublicPersonClaim,
+  PublicPersonPartyAffiliation,
   PublicRace,
   PublicRegion,
   PublicRegionElectionSummary,
@@ -34,6 +35,7 @@ import {
   mapPublicPartyFinanceSummaryRow,
   mapPublicPartyRow,
   mapPublicPersonClaimRow,
+  mapPublicPersonPartyAffiliationRow,
   mapPublicPersonRow,
   mapPublicRaceRow,
   mapPublicRegionElectionSummaryRow,
@@ -76,6 +78,7 @@ type SupabasePublicSnapshot = {
   races: PublicRace[];
   candidates: PublicCandidate[];
   personClaims: PublicPersonClaim[];
+  personPartyAffiliations: PublicPersonPartyAffiliation[];
   parties: PublicParty[];
   partyFinanceSummaries: PublicPartyFinanceSummary[];
   partyCompanyContributionSummaries: PublicPartyCompanyContributionSummary[];
@@ -144,6 +147,7 @@ function buildSnapshot(params: {
   raceRows: unknown[];
   candidateRows: unknown[];
   personClaimRows: unknown[];
+  personPartyAffiliationRows: unknown[];
   partyRows: unknown[];
   partyFinanceRows: unknown[];
   partyCompanyContributionRows: unknown[];
@@ -160,6 +164,9 @@ function buildSnapshot(params: {
   const races = params.raceRows.map((row) => mapPublicRaceRow(row as PublicRace));
   const candidates = params.candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate));
   const personClaims = params.personClaimRows.map((row) => mapPublicPersonClaimRow(row as PublicPersonClaim));
+  const personPartyAffiliations = params.personPartyAffiliationRows.map((row) =>
+    mapPublicPersonPartyAffiliationRow(row as PublicPersonPartyAffiliation),
+  );
   const upcomingRaces = races.map((race) => mapRaceToUpcomingRace(race));
   const parties = params.partyRows.map((row) => mapPublicPartyRow(row as PublicParty));
   const partyFinanceSummaries = params.partyFinanceRows.map((row) =>
@@ -181,6 +188,7 @@ function buildSnapshot(params: {
     races,
     candidates,
     personClaims,
+    personPartyAffiliations,
     parties,
     partyFinanceSummaries,
     partyCompanyContributionSummaries,
@@ -203,6 +211,7 @@ export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePubli
     raceRows,
     candidateRows,
     personClaimRows,
+    personPartyAffiliationRows,
     partyRows,
     partyFinanceRows,
     partyCompanyContributionRows,
@@ -216,6 +225,7 @@ export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePubli
     fetchRows('public_races'),
     fetchRows('public_candidates'),
     fetchRows('public_person_claims'),
+    fetchRows('public_person_party_affiliations'),
     fetchRows('public_parties'),
     fetchRows('public_party_finance_summaries'),
     fetchRows('public_party_company_contribution_summaries'),
@@ -231,6 +241,7 @@ export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePubli
     raceRows,
     candidateRows,
     personClaimRows,
+    personPartyAffiliationRows,
     partyRows,
     partyFinanceRows,
     partyCompanyContributionRows,
@@ -408,7 +419,16 @@ export const supabasePublicDataProvider: PublicDataProvider = {
 
   getPersonProfile(personId: string) {
     const snapshot = getSnapshot();
-    return snapshot ? buildPersonProfile(personId, snapshot.people, snapshot.candidates, snapshot.stageRegions, snapshot.personClaims) : null;
+    return snapshot
+      ? buildPersonProfile(
+        personId,
+        snapshot.people,
+        snapshot.candidates,
+        snapshot.stageRegions,
+        snapshot.personClaims,
+        snapshot.personPartyAffiliations,
+      )
+      : null;
   },
 
   getLocalOfficeSummaryByRegionId(regionId: string) {

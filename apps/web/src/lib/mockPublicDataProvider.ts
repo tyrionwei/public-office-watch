@@ -9,6 +9,7 @@ import {
   mockPublicPartyCompanyContributionSummaries,
   mockPublicPartyFinanceSummaries,
   mockPublicPersonClaims,
+  mockPublicPersonPartyAffiliations,
   mockPublicPeople,
   mockPublicRaces,
 } from '../data/mockPublicViews';
@@ -27,6 +28,7 @@ const providerViews = [
   'public_races',
   'public_candidates',
   'public_person_claims',
+  'public_person_party_affiliations',
   'public_parties',
   'public_party_finance_summaries',
   'public_party_company_contribution_summaries',
@@ -147,7 +149,14 @@ export const mockPublicDataProvider: PublicDataProvider = {
   },
 
   getPersonProfile(personId: string) {
-    return buildPersonProfile(personId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes, mockPublicPersonClaims);
+    return buildPersonProfile(
+      personId,
+      mockPublicPeople,
+      mockPublicCandidates,
+      taiwanStageRegionNodes,
+      mockPublicPersonClaims,
+      mockPublicPersonPartyAffiliations,
+    );
   },
 
   getLocalOfficeSummaryByRegionId(regionId: string) {

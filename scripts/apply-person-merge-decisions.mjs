@@ -123,6 +123,23 @@ function decisionKey(leftPersonId, rightPersonId) {
   return [leftPersonId, rightPersonId].sort().join('|');
 }
 
+function bestCandidateByDuplicate(candidates) {
+  const bestByDuplicate = new Map();
+
+  for (const candidate of candidates) {
+    const existing = bestByDuplicate.get(candidate.duplicate_person_id);
+    if (
+      !existing ||
+      candidate.score > existing.score ||
+      (candidate.score === existing.score && candidate.canonical_person_id < existing.canonical_person_id)
+    ) {
+      bestByDuplicate.set(candidate.duplicate_person_id, candidate);
+    }
+  }
+
+  return Array.from(bestByDuplicate.values());
+}
+
 async function main() {
   if (!serviceRoleKey) {
     throw new Error('Set SUPABASE_SERVICE_ROLE_KEY for person merge decisions.');
@@ -143,10 +160,10 @@ async function main() {
       .filter((decision) => ['suggested', 'verified'].includes(decision.status))
       .map((decision) => decision.duplicate_person_id),
   );
-  const candidates = queue
+  const candidates = bestCandidateByDuplicate(queue
     .filter((item) => item.confidence_level === options.confidenceLevel)
     .filter((item) => !terminalDecisionKeys.has(decisionKey(item.duplicate_person_id, item.canonical_person_id)))
-    .filter((item) => !activeDuplicatePersonIds.has(item.duplicate_person_id));
+    .filter((item) => !activeDuplicatePersonIds.has(item.duplicate_person_id)));
   const rows = candidates.map((item) => ({
     duplicate_person_id: item.duplicate_person_id,
     canonical_person_id: item.canonical_person_id,

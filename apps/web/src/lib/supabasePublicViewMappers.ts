@@ -10,6 +10,7 @@ import type {
   PublicPartyFinanceSummary,
   PublicPerson,
   PublicPersonClaim,
+  PublicPersonPartyAffiliation,
   PublicPersonPrimaryPhoto,
   PublicRace,
   PublicRegion,
@@ -227,6 +228,10 @@ export function mapPublicCandidateRow(row: PartialRow<PublicCandidate>): PublicC
     party: asNullableString(row?.party),
     candidate_no: asNullableString(row?.candidate_no),
     registration_status: asCandidateRegistrationStatus(row?.registration_status),
+    vote_count: asNullableNumber(row?.vote_count),
+    vote_rate: asNullableNumber(row?.vote_rate),
+    is_elected: typeof row?.is_elected === 'boolean' ? row.is_elected : null,
+    is_incumbent: typeof row?.is_incumbent === 'boolean' ? row.is_incumbent : null,
     source_name: asNullableString(row?.source_name),
     source_url: asNullableString(row?.source_url),
     primary_photo_url: asNullableString(row?.primary_photo_url),
@@ -298,6 +303,7 @@ export function mapPublicPersonClaimRow(row: PartialRow<PublicPersonClaim>): Pub
     'gender',
     'birth_date',
     'party',
+    'party_affiliation',
     'position',
     'office',
     'candidacy',
@@ -330,6 +336,47 @@ export function mapPublicPersonClaimRow(row: PartialRow<PublicPersonClaim>): Pub
     source_name: asNullableString(row?.source_name),
     source_url: asNullableString(row?.source_url),
     observed_at: asNullableString(row?.observed_at),
+    updated_at: asString(row?.updated_at, ''),
+  };
+}
+
+function asPartyAffiliationRoleContext(value: unknown): PublicPersonPartyAffiliation['role_context'] {
+  const allowed: PublicPersonPartyAffiliation['role_context'][] = [
+    'candidate',
+    'officeholder',
+    'party_officer',
+    'self_declared',
+    'wiki_record',
+    'official_record',
+    'other',
+  ];
+  return typeof value === 'string' && allowed.includes(value as PublicPersonPartyAffiliation['role_context'])
+    ? (value as PublicPersonPartyAffiliation['role_context'])
+    : 'other';
+}
+
+export function mapPublicPersonPartyAffiliationRow(row: PartialRow<PublicPersonPartyAffiliation>): PublicPersonPartyAffiliation {
+  const confidenceLevels: PublicPersonPartyAffiliation['confidence_level'][] = ['A', 'B', 'C', 'D'];
+
+  return {
+    affiliation_id: asString(row?.affiliation_id, ''),
+    affiliation_key: asString(row?.affiliation_key, ''),
+    person_id: asString(row?.person_id, ''),
+    person_name: asString(row?.person_name, '未命名人物'),
+    source_claim_key: asNullableString(row?.source_claim_key),
+    party_name: asString(row?.party_name, '未知政黨'),
+    role_context: asPartyAffiliationRoleContext(row?.role_context),
+    observed_year: asNullableNumber(row?.observed_year),
+    observed_date: asNullableString(row?.observed_date),
+    start_date: asNullableString(row?.start_date),
+    end_date: asNullableString(row?.end_date),
+    is_current: typeof row?.is_current === 'boolean' ? row.is_current : false,
+    confidence_level:
+      typeof row?.confidence_level === 'string' && confidenceLevels.includes(row.confidence_level)
+        ? row.confidence_level
+        : 'D',
+    source_name: asNullableString(row?.source_name),
+    source_url: asNullableString(row?.source_url),
     updated_at: asString(row?.updated_at, ''),
   };
 }

@@ -156,6 +156,10 @@ export type PublicCandidate = {
   party: string | null;
   candidate_no: string | null;
   registration_status: 'pending' | 'registered' | 'qualified' | 'disqualified' | 'withdrawn' | 'elected' | 'not_elected' | 'unknown';
+  vote_count: number | null;
+  vote_rate: number | null;
+  is_elected: boolean | null;
+  is_incumbent: boolean | null;
   source_name: string | null;
   source_url: string | null;
   primary_photo_url: string | null;
@@ -242,6 +246,7 @@ export type PublicPersonClaim = {
     | 'gender'
     | 'birth_date'
     | 'party'
+    | 'party_affiliation'
     | 'position'
     | 'office'
     | 'candidacy'
@@ -380,10 +385,25 @@ export type PublicLocalOfficeSummary = {
   }[];
 };
 
+export type PublicPersonTimelineItem = {
+  id: string;
+  year: number | null;
+  date: string | null;
+  label: string;
+  detail: string | null;
+  category: 'office' | 'candidacy' | 'party' | 'experience';
+  status: 'current' | 'past' | 'candidate' | 'unknown';
+  source_name: string | null;
+  source_url: string | null;
+  confidence_level: PublicRelationDetail['confidence_level'] | null;
+};
+
 export type PublicPersonProfile = {
   person: PublicPersonListItem;
   identity_records: PublicPersonIdentityRecord[];
   candidate_records: PublicCandidate[];
+  party_affiliations: PublicPersonPartyAffiliation[];
+  timeline_records: PublicPersonTimelineItem[];
   public_claims: PublicPersonClaim[];
   experience_status: 'available' | 'todo';
   contribution_status: 'available' | 'summary_only' | 'todo';

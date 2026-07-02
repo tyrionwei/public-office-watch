@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultOutputPath = path.join(repoRoot, 'data-sources', 'taipei-official-person-profiles.seed.json');
+const rawArchiveDir = path.join(repoRoot, 'local-data', 'raw', 'local', 'taipei', 'official-person-profiles', 'current');
+const fetchedAt = new Date().toISOString();
 
 const tccSourceId = 'taipei-city-council-current-councilors';
 const tccSourceName = '臺北市議會：現任議員';
@@ -159,6 +161,55 @@ function tccDistrict(zoneText) {
   return districtNo ? `臺北市第${districtNo}選舉區${areas ? `（${areas}）` : ''}` : text;
 }
 
+function safeFilename(value) {
+  return String(value)
+    .replace(/^https?:\/\//, '')
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120)
+    .toLowerCase();
+}
+
+function sha256(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function archiveRaw(url, response, bodyText) {
+  fs.mkdirSync(rawArchiveDir, { recursive: true });
+  const filename = safeFilename(url) + '-' + hashId(url) + '.json';
+  const filePath = path.join(rawArchiveDir, filename);
+  const envelope = {
+    url,
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers.entries()),
+    fetchedAt,
+    body: bodyText,
+  };
+  const serialized = JSON.stringify(envelope, null, 2) + '\n';
+  fs.writeFileSync(filePath, serialized);
+
+  const manifestPath = path.join(rawArchiveDir, 'manifest.json');
+  let manifest = { generatedAt: fetchedAt, sources: [] };
+  try {
+    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch {
+    // New archive directory.
+  }
+  const sources = Array.isArray(manifest.sources) ? manifest.sources.filter((item) => item.sourceUrl !== url) : [];
+  sources.push({
+    title: 'Official person profile source',
+    sourceUrl: url,
+    fetchedAt,
+    status: response.status,
+    ok: response.ok,
+    format: 'raw-response-envelope-json',
+    files: [{ path: filename, bytes: Buffer.byteLength(serialized), sha256: sha256(serialized) }],
+  });
+  sources.sort((left, right) => left.sourceUrl.localeCompare(right.sourceUrl));
+  fs.writeFileSync(manifestPath, JSON.stringify({ generatedAt: fetchedAt, sources }, null, 2) + '\n');
+}
+
 async function fetchText(url) {
   const response = await fetch(url, { signal: AbortSignal.timeout(30000) });
 
@@ -169,12 +220,9 @@ async function fetchText(url) {
   const bytes = await response.arrayBuffer();
   const utf8 = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
   const replacementCount = (utf8.match(/\uFFFD/g) ?? []).length;
-
-  if (replacementCount > 5) {
-    return new TextDecoder('big5', { fatal: false }).decode(bytes);
-  }
-
-  return utf8;
+  const text = replacementCount > 5 ? new TextDecoder('big5', { fatal: false }).decode(bytes) : utf8;
+  archiveRaw(url, response, text);
+  return text;
 }
 
 function restUrl(viewName) {

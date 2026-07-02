@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultOutputPath = path.join(repoRoot, 'data-sources', 'taichung-city-official-person-profiles.seed.json');
+const rawArchiveDir = path.join(repoRoot, 'local-data', 'raw', 'local', 'taichung-city', 'official-person-profiles', 'current');
+const fetchedAt = new Date().toISOString();
 
 const councilSourceId = 'taichung-city-council-current-councilors';
 const councilSourceName = '臺中市議會：現任議員';
@@ -171,6 +173,55 @@ function normalizePartyName(value) {
   return text;
 }
 
+function safeFilename(value) {
+  return String(value)
+    .replace(/^https?:\/\//, '')
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120)
+    .toLowerCase();
+}
+
+function sha256(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function archiveRaw(url, response, bodyText) {
+  fs.mkdirSync(rawArchiveDir, { recursive: true });
+  const filename = safeFilename(url) + '-' + hashId(url) + '.json';
+  const filePath = path.join(rawArchiveDir, filename);
+  const envelope = {
+    url,
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers.entries()),
+    fetchedAt,
+    body: bodyText,
+  };
+  const serialized = JSON.stringify(envelope, null, 2) + '\n';
+  fs.writeFileSync(filePath, serialized);
+
+  const manifestPath = path.join(rawArchiveDir, 'manifest.json');
+  let manifest = { generatedAt: fetchedAt, sources: [] };
+  try {
+    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch {
+    // New archive directory.
+  }
+  const sources = Array.isArray(manifest.sources) ? manifest.sources.filter((item) => item.sourceUrl !== url) : [];
+  sources.push({
+    title: 'Official person profile source',
+    sourceUrl: url,
+    fetchedAt,
+    status: response.status,
+    ok: response.ok,
+    format: 'raw-response-envelope-json',
+    files: [{ path: filename, bytes: Buffer.byteLength(serialized), sha256: sha256(serialized) }],
+  });
+  sources.sort((left, right) => left.sourceUrl.localeCompare(right.sourceUrl));
+  fs.writeFileSync(manifestPath, JSON.stringify({ generatedAt: fetchedAt, sources }, null, 2) + '\n');
+}
+
 async function fetchText(url) {
   const response = await fetch(url, {
     headers: { 'user-agent': 'Mozilla/5.0 public-office-watch local data sync' },
@@ -184,7 +235,9 @@ async function fetchText(url) {
   const bytes = await response.arrayBuffer();
   const utf8 = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
   const replacementCount = (utf8.match(/\uFFFD/g) ?? []).length;
-  return replacementCount > 5 ? new TextDecoder('big5', { fatal: false }).decode(bytes) : utf8;
+  const text = replacementCount > 5 ? new TextDecoder('big5', { fatal: false }).decode(bytes) : utf8;
+  archiveRaw(url, response, text);
+  return text;
 }
 
 function restUrl(viewName) {
@@ -288,7 +341,7 @@ function adoptedOfficial(row, origin) {
       roleOrigin: origin,
       elected: origin === 'elected',
       identityStatus: 'official_name_only',
-      adoptionReason: `official ${origin} officeholder with no existing public person sharing the same normalized name`,
+      adoptionReason: row.sourcePayload?.adoptionReason ?? `official ${origin} officeholder with no existing public person sharing the same normalized name`,
     },
   };
 }
@@ -332,6 +385,43 @@ function overlap(left, right) {
   );
 }
 
+const chineseNumberValues = new Map([
+  ['一', 1],
+  ['二', 2],
+  ['三', 3],
+  ['四', 4],
+  ['五', 5],
+  ['六', 6],
+  ['七', 7],
+  ['八', 8],
+  ['九', 9],
+  ['十', 10],
+]);
+
+function parseChineseOrdinal(value) {
+  const text = normalizeIdentityText(value);
+  const digitMatch = text.match(/第(\d+)選[舉區]*/u);
+  if (digitMatch) return Number.parseInt(digitMatch[1], 10);
+
+  const chineseMatch = text.match(/第([一二三四五六七八九十]+)選[舉區]*/u);
+  const chinese = chineseMatch?.[1] ?? '';
+  if (!chinese) return null;
+  if (chinese === '十') return 10;
+  if (chinese.startsWith('十')) return 10 + (chineseNumberValues.get(chinese.slice(1)) ?? 0);
+  if (chinese.endsWith('十')) return (chineseNumberValues.get(chinese.slice(0, -1)) ?? 0) * 10;
+  if (chinese.includes('十')) {
+    const [tens, ones] = chinese.split('十');
+    return (chineseNumberValues.get(tens) ?? 0) * 10 + (chineseNumberValues.get(ones) ?? 0);
+  }
+  return chineseNumberValues.get(chinese) ?? null;
+}
+
+function sameRegion(left, right) {
+  const leftRegion = normalizeIdentityText(left).match(/[\p{Script=Han}]{2,3}[縣市]/u)?.[0] ?? '';
+  const rightRegion = normalizeIdentityText(right).match(/[\p{Script=Han}]{2,3}[縣市]/u)?.[0] ?? '';
+  return Boolean(leftRegion && rightRegion && leftRegion === rightRegion);
+}
+
 function scoreMatch(row, person) {
   let score = 0;
   const reasons = [];
@@ -362,6 +452,9 @@ function scoreMatch(row, person) {
   if (row.district && overlap(row.district, person.district)) {
     score += 15;
     reasons.push('district matched');
+  } else if (row.sourceId === councilSourceId && parseChineseOrdinal(row.district) && parseChineseOrdinal(row.district) === parseChineseOrdinal(person.district) && sameRegion(row.district, person.district)) {
+    score += 15;
+    reasons.push('district ordinal matched');
   }
 
   if (String(row.position ?? '').includes('議員') && String(person.position ?? '').includes('議員')) {
@@ -398,15 +491,64 @@ function matchPerson(row, peopleByName) {
   const best = scored[0] ?? null;
   const second = scored[1] ?? null;
 
-  if (!best || best.score < 75 || (second && best.score - second.score < 10)) {
+  if (!best) {
     return null;
   }
 
+  if (best.score >= 75 && (!second || best.score - second.score >= 10)) {
+    return {
+      person: best.person,
+      method: row.sourceId === govSourceId ? 'taichung_city_government_profile_match' : 'taichung_city_council_profile_match',
+      score: best.score,
+      reasons: best.reasons,
+    };
+  }
+
+  if (
+    candidates.length === 1 &&
+    row.sourceId === councilSourceId &&
+    row.sourcePayload?.elected &&
+    best.score >= 50 &&
+    sameRegion(row.district, best.person.district) &&
+    String(best.person.position ?? '').includes('候選人')
+  ) {
+    return {
+      person: best.person,
+      method: 'taichung_city_unique_current_councilor_candidate_match',
+      score: 75,
+      reasons: [...best.reasons, 'unique same-name candidate in same city matched to current official councilor'],
+    };
+  }
+
+  return null;
+}
+
+function isClearlyDifferentSameNamePerson(row, person) {
+  return Boolean(
+    row.sourceId === govSourceId &&
+    row.sourcePayload?.elected === false &&
+    row.district &&
+    person.district &&
+    !overlap(row.district, person.district) &&
+    row.position &&
+    person.position &&
+    !overlap(row.position, person.position)
+  );
+}
+
+function shouldAdoptOfficial(row, sameNamePeople) {
+  return sameNamePeople.length === 0 || sameNamePeople.every((person) => isClearlyDifferentSameNamePerson(row, person));
+}
+
+function adoptionSourceRow(row, sameNamePeople) {
+  if (sameNamePeople.length === 0) return row;
+
   return {
-    person: best.person,
-    method: row.sourceId === govSourceId ? 'taichung_city_government_profile_match' : 'taichung_city_council_profile_match',
-    score: best.score,
-    reasons: best.reasons,
+    ...row,
+    sourcePayload: {
+      ...(row.sourcePayload ?? {}),
+      adoptionReason: 'official appointed officeholder only matched same-name public people with incompatible region and role',
+    },
   };
 }
 
@@ -837,8 +979,8 @@ async function main() {
     if (!match) {
       const sameNamePeople = peopleByName.get(normalizeIdentityText(row.name)) ?? [];
 
-      if (sameNamePeople.length === 0) {
-        adoptedPeople.push(adoptedOfficial(row, row.sourceId === councilSourceId || row.sourcePayload?.elected ? 'elected' : 'appointed'));
+      if (shouldAdoptOfficial(row, sameNamePeople)) {
+        adoptedPeople.push(adoptedOfficial(adoptionSourceRow(row, sameNamePeople), row.sourceId === councilSourceId || row.sourcePayload?.elected ? 'elected' : 'appointed'));
         continue;
       }
 

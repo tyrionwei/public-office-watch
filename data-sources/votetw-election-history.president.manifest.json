@@ -1,0 +1,15 @@
+{
+  "source": "VoteTW presidential national election result pages",
+  "scope": "2016-2024 presidential national aggregate result pages only; local vote breakdown pages intentionally excluded",
+  "pages": [
+    {
+      "title": "2016年總統選舉投票結果"
+    },
+    {
+      "title": "2020年總統選舉投票結果"
+    },
+    {
+      "title": "2024年總統選舉投票結果"
+    }
+  ]
+}

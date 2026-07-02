@@ -22,6 +22,10 @@ function parseArgs(argv) {
     requestDelayMs: 1000,
     includeLegalPublic: true,
     dryRun: false,
+    skipFetchErrors: false,
+    useRawCache: true,
+    cacheOnly: false,
+    verbose: false,
   };
 
   for (let index = 2; index < argv.length; index += 1) {
@@ -53,6 +57,14 @@ function parseArgs(argv) {
       args.includeLegalPublic = false;
     } else if (arg === '--dry-run') {
       args.dryRun = true;
+    } else if (arg === '--skip-fetch-errors') {
+      args.skipFetchErrors = true;
+    } else if (arg === '--no-raw-cache') {
+      args.useRawCache = false;
+    } else if (arg === '--cache-only') {
+      args.cacheOnly = true;
+    } else if (arg === '--verbose') {
+      args.verbose = true;
     } else {
       throw new Error(`Unsupported argument: ${arg}`);
     }
@@ -119,6 +131,7 @@ function targetFromRecord(record) {
   return {
     personId: record.personId ?? record.person_id ?? null,
     name,
+    pageTitle: record.pageTitle ?? record.page_title ?? record.voteTwPersonPageTitle ?? record.vote_tw_person_page_title ?? name,
     birthDate: normalizeDate(record.birthDate ?? record.birth_date ?? record.birth_date_claim),
     gender: record.gender ?? 'unknown',
     party: record.party ?? '',
@@ -200,7 +213,7 @@ async function loadTargets(args) {
 
   const byKey = new Map();
   for (const target of targets) {
-    const key = `${target.personId ?? 'name'}:${normalizeName(target.name)}`;
+    const key = `${target.personId ?? target.pageTitle ?? 'name'}:${normalizeName(target.name)}`;
     if (!byKey.has(key)) byKey.set(key, target);
   }
   return Array.from(byKey.values()).slice(args.offset, args.offset + args.maxPeople);
@@ -244,6 +257,20 @@ function uniqueByJson(values) {
   return unique;
 }
 
+function cleanMultilineValue(value) {
+  return stripWiki(value)
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join('\n')
+    .trim();
+}
+
+function summarizeText(value, maxLength = 280) {
+  const text = cleanMultilineValue(value).replace(/\s+/g, ' ').trim();
+  return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
+}
+
 function splitList(value) {
   return Array.from(new Set(stripWiki(value).split(/\n|[；;]/).map((item) => item.replace(/^[-*#]\s*/, '').trim()).filter(Boolean)));
 }
@@ -270,30 +297,149 @@ async function requestText(url, args) {
   return text;
 }
 
+function revisionContent(revision) {
+  return revision?.slots?.main?.['*'] ?? revision?.slots?.main?.content ?? revision?.['*'] ?? revision?.content ?? null;
+}
+
 async function fetchVoteTwPage(title, args) {
   const infoUrl = new URL(apiUrl);
   infoUrl.searchParams.set('action', 'query');
   infoUrl.searchParams.set('format', 'json');
   infoUrl.searchParams.set('prop', 'info|revisions');
-  infoUrl.searchParams.set('rvprop', 'ids|timestamp');
+  infoUrl.searchParams.set('rvprop', 'ids|timestamp|content');
+  infoUrl.searchParams.set('rvslots', 'main');
   infoUrl.searchParams.set('titles', title);
   const infoJson = await requestJson(infoUrl, args);
   const page = Object.values(infoJson.query?.pages ?? {})[0];
   if (!page || page.missing !== undefined) return null;
 
+  const revision = page.revisions?.[0];
+  let raw = revisionContent(revision);
   const rawUrl = new URL('https://votetw.com/w/index.php');
   rawUrl.searchParams.set('title', title);
   rawUrl.searchParams.set('action', 'raw');
-  const raw = await requestText(rawUrl, args);
+  if (!raw) raw = await requestText(rawUrl, args);
   return {
     title: page.title,
     pageid: page.pageid,
     lastrevid: page.lastrevid,
-    revisionTimestamp: page.revisions?.[0]?.timestamp ?? null,
+    revisionTimestamp: revision?.timestamp ?? null,
     url: `https://votetw.com/wiki/${encodeURIComponent(page.title)}`,
     rawUrl: rawUrl.toString(),
     raw,
   };
+}
+
+function safeRawTitle(title) {
+  return title.replace(/[^\p{L}\p{N}_-]+/gu, '_');
+}
+
+function readCachedRawPage(title, args) {
+  if (!args.useRawCache || !fs.existsSync(args.rawOutputDir)) return null;
+
+  const safeTitle = safeRawTitle(title);
+  const files = fs.readdirSync(args.rawOutputDir)
+    .filter((fileName) => fileName.startsWith(`${safeTitle}-`) && fileName.endsWith('.wiki'))
+    .sort((a, b) => b.localeCompare(a));
+  const fileName = files[0];
+  if (!fileName) return null;
+
+  const suffix = fileName.slice(safeTitle.length + 1, -'.wiki'.length);
+  const parts = suffix.split('-');
+  const lastrevid = Number.parseInt(parts.at(-1) ?? '', 10);
+  const pageid = Number.parseInt(parts.at(-2) ?? '', 10);
+  const rawPath = path.join(args.rawOutputDir, fileName);
+
+  return {
+    title,
+    pageid: Number.isFinite(pageid) ? pageid : null,
+    lastrevid: Number.isFinite(lastrevid) ? lastrevid : null,
+    revisionTimestamp: null,
+    url: `https://votetw.com/wiki/${encodeURIComponent(title)}`,
+    rawUrl: `https://votetw.com/w/index.php?title=${encodeURIComponent(title)}&action=raw`,
+    raw: fs.readFileSync(rawPath, 'utf8'),
+    rawPath,
+  };
+}
+
+function normalizeTemplateTitle(title) {
+  const cleaned = cleanValue(title);
+  if (!cleaned) return null;
+  if (/^(選舉公報|[0-9]{4}年.*公報)$/.test(cleaned)) return null;
+  if (!cleaned.includes('政見')) return null;
+  if (/^(Template|模板):/.test(cleaned)) return cleaned;
+  return `Template:${cleaned}`;
+}
+
+function extractPlatformTemplateTitles(raw) {
+  const titles = [];
+  const pattern = /\{\{([^{}\n]*政見[^{}\n]*)\}\}/g;
+  let match = pattern.exec(raw);
+  while (match) {
+    const title = normalizeTemplateTitle(match[1]);
+    if (title) titles.push(title);
+    match = pattern.exec(raw);
+  }
+  return Array.from(new Set(titles));
+}
+
+function extractInlinePlatformRecords(raw) {
+  const lines = raw.split('\n');
+  const records = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const stripped = stripWiki(lines[index]).trim();
+    if (!/^政見(?:\s|[:：①(（]|$)/.test(stripped)) continue;
+
+    const parts = [lines[index]];
+    for (let next = index + 1; next < lines.length; next += 1) {
+      const line = lines[next];
+      if (/^==+\s*.+?\s*==+$/.test(line.trim())) break;
+      parts.push(line);
+    }
+
+    const platformText = cleanMultilineValue(parts.join('\n'));
+    if (platformText.length < 20) continue;
+    records.push({
+      sourceKind: 'inline',
+      platformText,
+      summary: summarizeText(platformText),
+    });
+  }
+  return uniqueByJson(records);
+}
+
+async function collectPlatformRecords(page, args, templatePagesByTitle, rawSources) {
+  const records = [...extractInlinePlatformRecords(page.raw)];
+  for (const templateTitle of extractPlatformTemplateTitles(page.raw)) {
+    let templatePage = templatePagesByTitle.get(templateTitle);
+    if (templatePage === undefined) {
+      try {
+        templatePage = readCachedRawPage(templateTitle, args) ?? await fetchVoteTwPage(templateTitle, args);
+      } catch (error) {
+        if (!args.skipFetchErrors) throw error;
+        templatePage = null;
+      }
+      templatePagesByTitle.set(templateTitle, templatePage);
+      if (templatePage) {
+        const rawPath = args.dryRun ? null : templatePage.rawPath ?? await writeRawPage(templatePage, args);
+        rawSources.push(rawSourceRecord(templatePage, rawPath));
+      }
+    }
+    if (!templatePage) continue;
+    const platformText = cleanMultilineValue(templatePage.raw);
+    if (platformText.length < 20) continue;
+    records.push({
+      sourceKind: 'template',
+      templateTitle: templatePage.title,
+      templatePageid: templatePage.pageid,
+      templateLastrevid: templatePage.lastrevid,
+      templateRevisionTimestamp: templatePage.revisionTimestamp,
+      templateSourceUrl: templatePage.url,
+      platformText,
+      summary: summarizeText(platformText),
+    });
+  }
+  return uniqueByJson(records);
 }
 
 function parseVoteTwProfiles(page) {
@@ -401,7 +547,7 @@ function extractLegalRecords(raw) {
     const [rawTitle = '', ...bodyParts] = section.split(/\s*==+\n/);
     const title = stripWiki(rawTitle);
     const body = stripWiki(bodyParts.join('\n'));
-    if (!legalSectionTitles.test(title) && !legalSentence.test(body)) continue;
+    if (!legalSectionTitles.test(title)) continue;
     const excerpts = body.split(/(?<=[。；;])|\n/).map((line) => line.trim()).filter((line) => legalSentence.test(line)).slice(0, 4);
     if (excerpts.length === 0) continue;
     records.push({ sectionTitle: title || null, summary: excerpts.join(' '), excerpts });
@@ -409,8 +555,13 @@ function extractLegalRecords(raw) {
   return records.slice(0, 3);
 }
 
+function targetIdentityNames(target) {
+  return new Set([target.name, target.pageTitle].map(normalizeName).filter(Boolean));
+}
+
 function matchProfileToTarget(target, profiles) {
-  const sameNameProfiles = profiles.filter((profile) => profile.normalizedName === normalizeName(target.name));
+  const identityNames = targetIdentityNames(target);
+  const sameNameProfiles = profiles.filter((profile) => identityNames.has(profile.normalizedName));
   if (sameNameProfiles.length === 0) return { status: 'skipped', reason: 'no same-name profile on VoteTW page' };
   if (target.birthDate) {
     const birthDateMatches = sameNameProfiles.filter((profile) => profile.birthDate === target.birthDate);
@@ -425,10 +576,24 @@ function matchProfileToTarget(target, profiles) {
       profile: sameNameProfiles[0],
     };
   }
+
+  const birthDatedProfiles = sameNameProfiles.filter((profile) => profile.birthDate);
+  const onlyEmptyIntroProfiles = sameNameProfiles
+    .filter((profile) => !profile.birthDate)
+    .every((profile) => profile.electionRecords.length === 0 && profile.experiences.length === 0 && profile.legalRecords.length === 0);
+  if (birthDatedProfiles.length === 1 && onlyEmptyIntroProfiles) {
+    return {
+      status: 'matched',
+      matchedBy: 'unique_birthdated_profile_with_empty_intro_duplicates',
+      confidenceLevel: 'B',
+      profile: birthDatedProfiles[0],
+    };
+  }
+
   return { status: 'skipped', reason: 'multiple same-name profiles on one VoteTW page and target has no birthday' };
 }
 
-function claimRecord({ target, page, profile, claimType, claimValue, claimJson, confidenceLevel, publicGate }) {
+function claimRecord({ target, page, profile, claimType, claimValue, claimJson, confidenceLevel, publicGate, reviewStatus = 'pending', visibility = 'review_only' }) {
   const normalizedName = normalizeName(target.name);
   const claimHash = hashId(JSON.stringify({ claimType, claimValue, pageid: page.pageid, profileKey: profile.key }));
   return {
@@ -451,8 +616,8 @@ function claimRecord({ target, page, profile, claimType, claimValue, claimJson, 
       voteTw: { pageTitle: page.title, pageid: page.pageid, lastrevid: page.lastrevid, revisionTimestamp: page.revisionTimestamp },
     },
     confidenceLevel,
-    reviewStatus: 'verified',
-    visibility: 'public',
+    reviewStatus,
+    visibility,
     sourceId,
     sourceName: 'VoteTW',
     sourceUrl: page.url,
@@ -460,12 +625,13 @@ function claimRecord({ target, page, profile, claimType, claimValue, claimJson, 
   };
 }
 
-function buildClaims(target, page, profiles, match, args) {
+function buildClaims(target, page, profiles, match, args, platformRecords = []) {
   const profile = match.profile;
-  const sameNameProfileCount = profiles.filter((item) => item.normalizedName === normalizeName(target.name)).length;
+  const identityNames = targetIdentityNames(target);
+  const sameNameProfileCount = profiles.filter((item) => identityNames.has(item.normalizedName)).length;
   const publicGate = {
-    status: 'passed',
-    reason: 'VoteTW raw page is source-versioned and identity was constrained before publication',
+    status: 'review_required',
+    reason: 'VoteTW person enrichment is imported as review-only before publication',
     matchedBy: match.matchedBy,
     sameNameProfileCount,
   };
@@ -484,6 +650,28 @@ function buildClaims(target, page, profiles, match, args) {
       claimJson: { electionRecords: profile.electionRecords, experienceType: 'election_history' },
     }));
   }
+  for (const platformRecord of platformRecords) {
+    claims.push(claimRecord({
+      ...base,
+      claimType: 'platform',
+      claimValue: platformRecord.summary,
+      claimJson: {
+        platformText: platformRecord.platformText,
+        platformSource: platformRecord,
+        platformPublicEligible: true,
+        publicationNote: 'Public campaign platform text fetched from a source-versioned VoteTW page or template.',
+      },
+      confidenceLevel: 'B',
+      publicGate: {
+        ...publicGate,
+        status: 'passed',
+        reason: 'VoteTW platform text is source-versioned and identity was constrained before publication',
+      },
+      reviewStatus: 'verified',
+      visibility: 'public',
+    }));
+  }
+
   if (args.includeLegalPublic && profile.legalRecords.length > 0) {
     claims.push(claimRecord({
       ...base,
@@ -491,17 +679,31 @@ function buildClaims(target, page, profiles, match, args) {
       claimValue: profile.legalRecords.map((record) => record.summary).join(' '),
       claimJson: {
         legalRecords: profile.legalRecords,
-        legalCasePublicEligible: true,
-        publicationNote: 'Assigned only when VoteTW page resolves to one source profile for the target identity.',
+        legalCasePublicEligible: false,
+        publicationNote: 'Review-only by default; sensitive legal claims require manual approval before publication.',
       },
     }));
   }
   return claims;
 }
 
+function rawSourceRecord(page, rawPath) {
+  return {
+    title: page.title,
+    pageid: page.pageid,
+    lastrevid: page.lastrevid,
+    revisionTimestamp: page.revisionTimestamp,
+    sourceUrl: page.url,
+    rawUrl: page.rawUrl,
+    rawPath,
+    sha256: crypto.createHash('sha256').update(page.raw).digest('hex'),
+    bytes: Buffer.byteLength(page.raw),
+  };
+}
+
 async function writeRawPage(page, args) {
   fs.mkdirSync(args.rawOutputDir, { recursive: true });
-  const safeTitle = page.title.replace(/[^\p{L}\p{N}_-]+/gu, '_');
+  const safeTitle = safeRawTitle(page.title);
   const rawPath = path.join(args.rawOutputDir, `${safeTitle}-${page.pageid}-${page.lastrevid}.wiki`);
   fs.writeFileSync(rawPath, page.raw);
   return rawPath;
@@ -516,25 +718,30 @@ async function main() {
   const rawSources = [];
   const skippedTargets = [];
   const pagesByName = new Map();
-  for (const target of targets) {
-    const title = target.name;
+  const templatePagesByTitle = new Map();
+  for (const [targetIndex, target] of targets.entries()) {
+    const title = target.pageTitle ?? target.name;
     let page = pagesByName.get(title);
     if (page === undefined) {
-      page = await fetchVoteTwPage(title, args);
+      page = readCachedRawPage(title, args);
+      if (args.verbose) console.error(`[${targetIndex + 1}/${targets.length}] ${page ? 'cached' : 'fetch'} ${title}`);
+      if (!page && args.cacheOnly) {
+        skippedTargets.push({ target, reason: 'missing raw cache' });
+        pagesByName.set(title, null);
+        continue;
+      }
+      try {
+        if (!page) page = await fetchVoteTwPage(title, args);
+      } catch (error) {
+        if (!args.skipFetchErrors) throw error;
+        skippedTargets.push({ target, reason: error.message });
+        pagesByName.set(title, null);
+        continue;
+      }
       pagesByName.set(title, page);
       if (page) {
-        const rawPath = args.dryRun ? null : await writeRawPage(page, args);
-        rawSources.push({
-          title: page.title,
-          pageid: page.pageid,
-          lastrevid: page.lastrevid,
-          revisionTimestamp: page.revisionTimestamp,
-          sourceUrl: page.url,
-          rawUrl: page.rawUrl,
-          rawPath,
-          sha256: crypto.createHash('sha256').update(page.raw).digest('hex'),
-          bytes: Buffer.byteLength(page.raw),
-        });
+        const rawPath = args.dryRun ? null : page.rawPath ?? await writeRawPage(page, args);
+        rawSources.push(rawSourceRecord(page, rawPath));
       }
     }
     if (!page) {
@@ -551,7 +758,8 @@ async function main() {
       });
       continue;
     }
-    personClaims.push(...buildClaims(target, page, profiles, match, args));
+    const platformRecords = await collectPlatformRecords(page, args, templatePagesByTitle, rawSources);
+    personClaims.push(...buildClaims(target, page, profiles, match, args, platformRecords));
   }
 
   const seed = {
@@ -564,7 +772,8 @@ async function main() {
       rawSourceCount: rawSources.length,
       claimCount: personClaims.length,
       skippedCount: skippedTargets.length,
-      legalPublicClaimCount: personClaims.filter((claim) => claim.claimType === 'legal_case').length,
+      legalClaimCount: personClaims.filter((claim) => claim.claimType === 'legal_case').length,
+      platformClaimCount: personClaims.filter((claim) => claim.claimType === 'platform').length,
     },
     sources: [{ id: sourceId, name: 'VoteTW', url: 'https://votetw.com/', licenseNote: 'Public VoteTW wiki pages fetched with pageid/revision metadata and raw source archival.' }],
     rawSources,

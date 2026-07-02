@@ -605,7 +605,7 @@ function allowsVoteTwPublicClaim(claim) {
     return Boolean(claim.claimJson?.legalCasePublicEligible);
   }
 
-  return ['external_id', 'birth_date', 'gender', 'education', 'experience', 'party_affiliation'].includes(claim.claimType);
+  return ['external_id', 'birth_date', 'gender', 'education', 'experience', 'party_affiliation', 'platform'].includes(claim.claimType);
 }
 
 function normalizedRoleForPosition(position) {

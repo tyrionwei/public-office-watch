@@ -10,6 +10,7 @@ const defaultLegalRecordLeadsPath = path.join(repoRoot, 'data-sources', 'legal-r
 const defaultPersonEnrichmentClaimsPath = path.join(repoRoot, 'data-sources', 'person-enrichment-claims.seed.json');
 const defaultPersonEnrichmentSkippedPath = path.join(repoRoot, 'data-sources', 'person-enrichment-skipped.json');
 const defaultPersonSourcePeoplePath = path.join(repoRoot, 'data-sources', 'person-source-people.seed.json');
+const defaultElectionHistoryPath = path.join(repoRoot, 'data-sources', 'votetw-election-history.seed.json');
 
 function readLocalEnv() {
   const envPath = path.join(repoRoot, '.env.local');
@@ -52,6 +53,8 @@ function parseArgs(argv) {
     personEnrichmentSkippedPath: defaultPersonEnrichmentSkippedPath,
     includePersonSourcePeople: false,
     personSourcePeoplePath: defaultPersonSourcePeoplePath,
+    includeElectionHistory: false,
+    electionHistoryPath: defaultElectionHistoryPath,
     skipSourceOnlyPersonClaims: false,
   };
 
@@ -95,6 +98,11 @@ function parseArgs(argv) {
 
     if (arg === '--include-person-source-people') {
       args.includePersonSourcePeople = true;
+      continue;
+    }
+
+    if (arg === '--include-election-history') {
+      args.includeElectionHistory = true;
       continue;
     }
 
@@ -146,6 +154,12 @@ function parseArgs(argv) {
 
     if (arg === '--person-source-people') {
       args.personSourcePeoplePath = path.resolve(argv[index + 1] ?? '');
+      index += 1;
+      continue;
+    }
+
+    if (arg === '--election-history') {
+      args.electionHistoryPath = path.resolve(argv[index + 1] ?? '');
       index += 1;
       continue;
     }
@@ -505,6 +519,7 @@ function sourcePersonKeyFor(person) {
 
 function sourceTypeForSourceId(sourceId) {
   if (sourceId.includes('cec')) return 'official_election';
+  if (sourceId.includes('votetw')) return 'public_reference';
   if (
     sourceId.includes('ly') ||
     sourceId.includes('taipei-city-council') ||
@@ -577,6 +592,20 @@ function scoreClaim({ claimType, sourceType, confidenceLevel, hasMatchedPerson }
     score: Math.max(0, Math.min(100, score)),
     reasons,
   };
+}
+
+function allowsVoteTwPublicClaim(claim) {
+  if (claim.sourceId !== 'votetw-person-enrichment') return false;
+  if (claim.visibility !== 'public' || claim.reviewStatus !== 'verified') return false;
+  if (claim.claimJson?.identityMatch?.status !== 'matched') return false;
+  if (claim.claimJson?.publicationGate?.status !== 'passed') return false;
+  if (claim.claimType === 'family_relation') return false;
+
+  if (claim.claimType === 'legal_case') {
+    return Boolean(claim.claimJson?.legalCasePublicEligible);
+  }
+
+  return ['external_id', 'birth_date', 'gender', 'education', 'experience', 'party_affiliation'].includes(claim.claimType);
 }
 
 function normalizedRoleForPosition(position) {
@@ -1855,18 +1884,55 @@ function enrichSeedWithPersonEnrichmentClaims(seed, args) {
   }
 
   const enrichmentSeed = readOptionalJson(args.personEnrichmentClaimsPath, { personClaims: [] });
-  const personEnrichmentClaims = (enrichmentSeed.personClaims ?? []).map((claim) => normalizePersonEnrichmentClaim(claim, seed));
+  const seedWithSources = {
+    ...seed,
+    sources: mergeById([seed.sources, enrichmentSeed.sources ?? []]),
+  };
+  const personEnrichmentClaims = (enrichmentSeed.personClaims ?? []).map((claim) => normalizePersonEnrichmentClaim(claim, seedWithSources));
 
   return {
     seed: {
-      ...seed,
+      ...seedWithSources,
       personEnrichmentClaims,
     },
     personEnrichmentClaims: {
       status: 'ok',
       count: personEnrichmentClaims.length,
       path: args.personEnrichmentClaimsPath,
-      publicationBoundary: 'review-only by default; low-trust enrichment sources are not auto-published',
+      publicationBoundary: 'review-only by default; VoteTW claims require source-versioned publicationGate before public sync',
+    },
+  };
+}
+
+function enrichSeedWithElectionHistory(seed, args) {
+  if (!args.includeElectionHistory) {
+    return {
+      seed,
+      electionHistory: {
+        status: 'disabled',
+        path: args.electionHistoryPath,
+      },
+    };
+  }
+
+  const historySeed = readOptionalJson(args.electionHistoryPath, {});
+  return {
+    seed: {
+      ...seed,
+      sources: mergeById([seed.sources, historySeed.sources ?? []]),
+      regions: mergeByExternalId([seed.regions, historySeed.regions ?? []]),
+      elections: mergeByExternalId([seed.elections, historySeed.elections ?? []]),
+      races: mergeByExternalId([seed.races, historySeed.races ?? []]),
+      parties: mergeByExternalId([seed.parties, historySeed.parties ?? []]),
+      people: mergeByExternalId([seed.people, historySeed.people ?? []]),
+      sourcePeople: mergeBySourcePersonKey([seed.sourcePeople, historySeed.sourcePeople ?? []]),
+      candidates: mergeByExternalId([seed.candidates, historySeed.candidates ?? []]),
+    },
+    electionHistory: {
+      status: 'ok',
+      path: args.electionHistoryPath,
+      summary: historySeed.summary ?? null,
+      rawSourceCount: historySeed.rawSources?.length ?? 0,
     },
   };
 }
@@ -3090,10 +3156,11 @@ function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt, args =
         hasMatchedPerson: true,
       });
       const allowAutoPublic =
-        claim.visibility === 'public' &&
-        claim.reviewStatus === 'verified' &&
-        scoring.score >= (args.claimAutoApproveThreshold ?? 90) &&
-        !['legal_case', 'family_relation'].includes(claim.claimType);
+        (claim.visibility === 'public' &&
+          claim.reviewStatus === 'verified' &&
+          scoring.score >= (args.claimAutoApproveThreshold ?? 90) &&
+          !['legal_case', 'family_relation'].includes(claim.claimType)) ||
+        allowsVoteTwPublicClaim(claim);
       const claimValue = toClaimValue(claim.claimValue);
       const claimJson = claim.claimJson ?? {};
       const claimHash = hashId(JSON.stringify({ claimValue, claimJson }));
@@ -3338,6 +3405,10 @@ async function writeSeed(seed, hash, args) {
       party: candidate.party ?? null,
       candidate_no: candidate.candidateNo ?? null,
       registration_status: candidate.registrationStatus ?? 'unknown',
+      vote_count: candidate.voteCount ?? candidate.vote_count ?? candidate.sourcePayload?.votes ?? null,
+      vote_rate: candidate.voteRate ?? candidate.vote_rate ?? candidate.sourcePayload?.voteRate ?? null,
+      is_elected: candidate.isElected ?? candidate.is_elected ?? candidate.sourcePayload?.elected ?? null,
+      is_incumbent: candidate.isIncumbent ?? candidate.is_incumbent ?? candidate.sourcePayload?.incumbent ?? null,
       source_name: source.name,
       source_url: candidate.sourceUrl ?? source.url,
       is_public: candidate.isPublic ?? true,
@@ -3530,6 +3601,7 @@ async function writeSeed(seed, hash, args) {
             args.legalRecordLeads,
             args.personEnrichmentClaims,
             args.personSourcePeople,
+            args.electionHistory,
           ),
         },
       ],
@@ -3550,6 +3622,7 @@ function buildReport(
   legalRecordLeads,
   personEnrichmentClaims,
   personSourcePeople,
+  electionHistory,
 ) {
   return {
     syncName: 'real-public-data-foundation',
@@ -3584,6 +3657,7 @@ function buildReport(
     legalRecordLeads,
     personEnrichmentClaims,
     personSourcePeople,
+    electionHistory,
     skipped: {
       personalDonationDetails: true,
       rawContributionRows: true,
@@ -3601,7 +3675,8 @@ async function main() {
   const plannedElectionEnriched = enrichSeedWithPlannedLocalElections(historicalCecEnriched.seed);
   const financeEnriched = await enrichSeedWithLivePartyFinanceSummaries(plannedElectionEnriched.seed, args);
   const personSourcePeopleEnriched = enrichSeedWithPersonSourcePeople(financeEnriched.seed, args);
-  const personEnrichmentEnriched = enrichSeedWithPersonEnrichmentClaims(personSourcePeopleEnriched.seed, args);
+  const electionHistoryEnriched = enrichSeedWithElectionHistory(personSourcePeopleEnriched.seed, args);
+  const personEnrichmentEnriched = enrichSeedWithPersonEnrichmentClaims(electionHistoryEnriched.seed, args);
   const legalEnriched = enrichSeedWithLegalRecordLeads(personEnrichmentEnriched.seed, args);
   const seed = legalEnriched.seed;
   const hash = crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex');
@@ -3620,6 +3695,7 @@ async function main() {
     legalEnriched.legalRecordLeads,
     personEnrichmentEnriched.personEnrichmentClaims,
     personSourcePeopleEnriched.personSourcePeople,
+    electionHistoryEnriched.electionHistory,
   );
   args.livePartyRegistry = partyEnriched.livePartyRegistry;
   args.liveCurrentOfficeholders = officeholderEnriched.liveCurrentOfficeholders;
@@ -3630,6 +3706,7 @@ async function main() {
   args.legalRecordLeads = legalEnriched.legalRecordLeads;
   args.personEnrichmentClaims = personEnrichmentEnriched.personEnrichmentClaims;
   args.personSourcePeople = personSourcePeopleEnriched.personSourcePeople;
+  args.electionHistory = electionHistoryEnriched.electionHistory;
   args.rejectedWikidataQidsByPerson = loadRejectedWikidataQidsByPerson(args.personEnrichmentSkippedPath);
 
   if (args.write) {

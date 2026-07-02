@@ -561,6 +561,28 @@ function targetIdentityNames(target) {
   return new Set([target.name, target.pageTitle].map(normalizeName).filter(Boolean));
 }
 
+function normalizeLooseIdentityName(value) {
+  return normalizeName(value)
+    .replace(/[A-Za-z0-9._'’`-]+/g, '')
+    .replace(/[-]/g, '')
+    .replace(/[^\p{Script=Han}]/gu, '');
+}
+
+function targetLooseIdentityNames(target) {
+  return new Set([target.name, target.pageTitle].map(normalizeLooseIdentityName).filter((value) => value.length >= 2));
+}
+
+function looseProfileNameMatchesTarget(target, profile) {
+  const looseProfileName = normalizeLooseIdentityName(profile.name);
+  if (looseProfileName.length < 2) return false;
+  for (const identityName of targetLooseIdentityNames(target)) {
+    if (looseProfileName === identityName) return true;
+    if (identityName.length >= 2 && looseProfileName.startsWith(identityName)) return true;
+    if (looseProfileName.length >= 2 && identityName.startsWith(looseProfileName)) return true;
+  }
+  return false;
+}
+
 function normalizeElectionContextValue(value) {
   return normalizeName(value)
     .replace(/[()（）]/g, '')
@@ -616,23 +638,42 @@ function electionYearMatchesTarget(target, record) {
   return electionText.includes(String(target.electionYear));
 }
 
-function electionRecordMatchesTarget(target, record) {
-  if (!electionYearMatchesTarget(target, record)) return null;
-  const signals = {
+function electionRecordContextSignals(target, record) {
+  return {
     position: targetPositionMatchesElection(target, record),
     district: targetDistrictMatchesElection(target, record),
     party: targetPartyMatchesElection(target, record),
   };
+}
+
+function electionRecordMatchesTarget(target, record) {
+  if (!electionYearMatchesTarget(target, record)) return null;
+  const signals = electionRecordContextSignals(target, record);
   const score = Object.values(signals).filter(Boolean).length;
   if (score < 2) return null;
-  return { record, signals, score };
+  return { record, signals, score, yearMatched: true };
+}
+
+function electionRecordMatchesTargetWithoutYear(target, record) {
+  const signals = electionRecordContextSignals(target, record);
+  const score = Object.values(signals).filter(Boolean).length;
+  if (score < 3) return null;
+  return { record, signals, score, yearMatched: false };
 }
 
 function matchProfileByElectionContext(target, profiles) {
+  return matchProfileByElectionRecord(target, profiles, electionRecordMatchesTarget);
+}
+
+function matchProfileByElectionContextWithoutYear(target, profiles) {
+  return matchProfileByElectionRecord(target, profiles, electionRecordMatchesTargetWithoutYear);
+}
+
+function matchProfileByElectionRecord(target, profiles, matchRecord) {
   const matches = [];
   for (const profile of profiles) {
     const recordMatches = profile.electionRecords
-      .map((record) => electionRecordMatchesTarget(target, record))
+      .map((record) => matchRecord(target, record))
       .filter(Boolean);
     if (recordMatches.length === 0) continue;
     recordMatches.sort((left, right) => right.score - left.score);
@@ -645,7 +686,30 @@ function matchProfileByElectionContext(target, profiles) {
 function matchProfileToTarget(target, profiles) {
   const identityNames = targetIdentityNames(target);
   const sameNameProfiles = profiles.filter((profile) => identityNames.has(profile.normalizedName));
-  if (sameNameProfiles.length === 0) return { status: 'skipped', reason: 'no same-name profile on VoteTW page' };
+  if (sameNameProfiles.length === 0) {
+    const looseNameProfiles = profiles.filter((profile) => looseProfileNameMatchesTarget(target, profile));
+    const electionContextMatch = matchProfileByElectionContext(target, looseNameProfiles);
+    if (electionContextMatch) {
+      return {
+        status: 'matched',
+        matchedBy: 'unique_loose_name_election_context',
+        confidenceLevel: 'B',
+        profile: electionContextMatch.profile,
+        electionContextMatch: electionContextMatch.electionContextMatch,
+      };
+    }
+    const electionContextWithoutYearMatch = matchProfileByElectionContextWithoutYear(target, looseNameProfiles);
+    if (electionContextWithoutYearMatch) {
+      return {
+        status: 'matched',
+        matchedBy: 'unique_loose_name_election_context_without_year',
+        confidenceLevel: 'B',
+        profile: electionContextWithoutYearMatch.profile,
+        electionContextMatch: electionContextWithoutYearMatch.electionContextMatch,
+      };
+    }
+    return { status: 'skipped', reason: 'no same-name profile on VoteTW page' };
+  }
   if (target.birthDate) {
     const birthDateMatches = sameNameProfiles.filter((profile) => profile.birthDate === target.birthDate);
     if (birthDateMatches.length === 1) return { status: 'matched', matchedBy: 'birth_date', confidenceLevel: 'A', profile: birthDateMatches[0] };

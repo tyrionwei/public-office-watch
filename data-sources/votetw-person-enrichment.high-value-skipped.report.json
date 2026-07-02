@@ -1,29 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceSeedPath": "data-sources/votetw-person-enrichment-claims.seed.json",
-  "generatedAt": "2026-07-02T18:00:41.351Z",
-  "remainingSkippedCount": 8322,
-  "highValueCount": 1394,
+  "generatedAt": "2026-07-02T18:24:28.112Z",
+  "remainingSkippedCount": 8311,
+  "highValueCount": 1383,
   "skippedReasonCounts": {
     "VoteTW page not found": 7686,
     "multiple same-name profiles on one VoteTW page and target has no birthday": 528,
-    "no same-name profile on VoteTW page": 108
+    "no same-name profile on VoteTW page": 97
   },
   "highValueReasonCounts": {
     "VoteTW page not found": 758,
     "multiple same-name profiles on one VoteTW page and target has no birthday": 528,
-    "no same-name profile on VoteTW page": 108
+    "no same-name profile on VoteTW page": 97
   },
   "highValuePositionCounts": {
     "議員候選人": 455,
-    "村里長候選人": 317,
+    "村里長候選人": 311,
     "地方首長候選人": 280,
     "立法委員候選人": 180,
-    "鄉鎮市民代表候選人": 162
+    "鄉鎮市民代表候選人": 157
   },
   "highValueYearCounts": {
     "2016": 180,
-    "2018": 1177,
+    "2018": 1166,
     "2022": 37
   },
   "samples": [
@@ -41,21 +41,6 @@
       "education": "",
       "experience": "",
       "skipReason": "VoteTW page not found"
-    },
-    {
-      "personId": null,
-      "name": "丁宗平",
-      "pageTitle": "丁宗平",
-      "birthDate": null,
-      "gender": "unknown",
-      "party": "無黨籍",
-      "position": "村里長候選人",
-      "district": "海南村（縣市）",
-      "electionYear": 2018,
-      "sourceElectionSeedPersonExternalId": "votetw-person-02087a58e21067ba",
-      "education": "",
-      "experience": "",
-      "skipReason": "no same-name profile on VoteTW page"
     },
     {
       "personId": null,
@@ -119,21 +104,6 @@
     },
     {
       "personId": null,
-      "name": "伊斯巴拉淦‧吾瑪斯Is Pala Kan．Umas",
-      "pageTitle": "伊斯巴拉淦吾瑪斯",
-      "birthDate": null,
-      "gender": "unknown",
-      "party": "無黨籍",
-      "position": "鄉鎮市民代表候選人",
-      "district": "信義鄉第2選舉區",
-      "electionYear": 2018,
-      "sourceElectionSeedPersonExternalId": "votetw-person-f7f5084e530a4628",
-      "education": "",
-      "experience": "",
-      "skipReason": "no same-name profile on VoteTW page"
-    },
-    {
-      "personId": null,
       "name": "伊藍．明基努安",
       "pageTitle": "伊藍明基努安",
       "birthDate": null,
@@ -161,21 +131,6 @@
       "education": "",
       "experience": "",
       "skipReason": "VoteTW page not found"
-    },
-    {
-      "personId": null,
-      "name": "伍金豎",
-      "pageTitle": "伍金豎",
-      "birthDate": null,
-      "gender": "unknown",
-      "party": "無黨籍",
-      "position": "村里長候選人",
-      "district": "東埔村（縣市）",
-      "electionYear": 2018,
-      "sourceElectionSeedPersonExternalId": "votetw-person-6ef3786b79220459",
-      "education": "",
-      "experience": "",
-      "skipReason": "no same-name profile on VoteTW page"
     },
     {
       "personId": null,
@@ -236,21 +191,6 @@
       "education": "",
       "experience": "",
       "skipReason": "VoteTW page not found"
-    },
-    {
-      "personId": null,
-      "name": "何㳵杏",
-      "pageTitle": "何杏",
-      "birthDate": null,
-      "gender": "unknown",
-      "party": "民主進步黨",
-      "position": "村里長候選人",
-      "district": "斗抵里（直轄市）",
-      "electionYear": 2018,
-      "sourceElectionSeedPersonExternalId": "votetw-person-acb13ef9d7e140c2",
-      "education": "",
-      "experience": "",
-      "skipReason": "no same-name profile on VoteTW page"
     },
     {
       "personId": null,
@@ -473,6 +413,66 @@
       "district": "高雄市第9選舉區",
       "electionYear": 2018,
       "sourceElectionSeedPersonExternalId": "votetw-person-1e0df5a4cdef9f61",
+      "education": "",
+      "experience": "",
+      "skipReason": "VoteTW page not found"
+    },
+    {
+      "personId": null,
+      "name": "劉劍鋒",
+      "pageTitle": "劉劍鋒",
+      "birthDate": null,
+      "gender": "unknown",
+      "party": "台灣整復師聯盟工黨",
+      "position": "議員候選人",
+      "district": "臺中市第4選舉區",
+      "electionYear": 2018,
+      "sourceElectionSeedPersonExternalId": "votetw-person-d0521151476849da",
+      "education": "",
+      "experience": "",
+      "skipReason": "VoteTW page not found"
+    },
+    {
+      "personId": null,
+      "name": "劉國隆",
+      "pageTitle": "劉國隆",
+      "birthDate": null,
+      "gender": "unknown",
+      "party": "台灣團結聯盟",
+      "position": "立法委員候選人",
+      "district": "臺中市第5選舉區",
+      "electionYear": 2016,
+      "sourceElectionSeedPersonExternalId": "votetw-person-93edf3eeb475d0a1",
+      "education": "",
+      "experience": "",
+      "skipReason": "VoteTW page not found"
+    },
+    {
+      "personId": null,
+      "name": "劉子麟",
+      "pageTitle": "劉子麟",
+      "birthDate": null,
+      "gender": "unknown",
+      "party": "中華統一促進黨",
+      "position": "立法委員候選人",
+      "district": "高雄市第1選舉區",
+      "electionYear": 2016,
+      "sourceElectionSeedPersonExternalId": "votetw-person-22f4d8ebafe9018b",
+      "education": "",
+      "experience": "",
+      "skipReason": "VoteTW page not found"
+    },
+    {
+      "personId": null,
+      "name": "劉宏文",
+      "pageTitle": "劉宏文",
+      "birthDate": null,
+      "gender": "unknown",
+      "party": "無黨籍",
+      "position": "議員候選人",
+      "district": "嘉義縣第3選舉區",
+      "electionYear": 2018,
+      "sourceElectionSeedPersonExternalId": "votetw-person-1c32e1fdeaf8d11a",
       "education": "",
       "experience": "",
       "skipReason": "VoteTW page not found"

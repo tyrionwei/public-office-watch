@@ -2142,11 +2142,19 @@ async function upsertOrThrow(env, table, rows, options = {}) {
     return [];
   }
 
-  return supabaseRequest(env, table, {
-    method: 'POST',
-    rows,
-    onConflict: options.onConflict,
-  });
+  const batchSize = options.batchSize ?? 1000;
+  const results = [];
+
+  for (let index = 0; index < rows.length; index += batchSize) {
+    const batch = rows.slice(index, index + batchSize);
+    results.push(...await supabaseRequest(env, table, {
+      method: 'POST',
+      rows: batch,
+      onConflict: options.onConflict,
+    }));
+  }
+
+  return results;
 }
 
 async function selectOrThrow(env, table, select) {
@@ -3322,7 +3330,7 @@ async function writeSeed(seed, hash, args) {
   const elections = await upsertOrThrow(env, 'elections', electionRows, { onConflict: 'external_id' });
   const electionByExternalId = new Map(elections.map((election) => [election.external_id, election]));
 
-  const regionRefresh = await selectOrThrow(env, 'regions', 'id,external_id');
+  const regionRefresh = await selectAllOrThrow(env, 'regions', 'id,external_id');
   for (const region of regionRefresh) {
     regionByExternalId.set(region.external_id, region);
   }
@@ -3346,7 +3354,7 @@ async function writeSeed(seed, hash, args) {
 
   await upsertOrThrow(env, 'races', raceRows, { onConflict: 'external_id' });
 
-  const raceRefresh = await selectOrThrow(env, 'races', 'id,external_id');
+  const raceRefresh = await selectAllOrThrow(env, 'races', 'id,external_id');
   const raceByExternalId = new Map(raceRefresh.map((race) => [race.external_id, race]));
 
   const personRows = (seed.people ?? []).map((person) => {
@@ -3397,21 +3405,24 @@ async function writeSeed(seed, hash, args) {
   const sourcePersonByKey = new Map(sourcePeople.map((sourcePerson) => [sourcePerson.source_person_key, sourcePerson]));
 
   const candidateRows = (seed.candidates ?? []).map((candidate) => {
-    const source = getSource(seed, candidate.sourceId);
+    const sourceId = candidate.sourceId ?? candidate.source_id;
+    const personExternalId = candidate.personExternalId ?? candidate.person_external_id;
+    const raceExternalId = candidate.raceExternalId ?? candidate.race_external_id;
+    const source = getSource(seed, sourceId);
     return {
-      external_id: candidate.externalId,
-      person_id: personByExternalId.get(candidate.personExternalId)?.id,
-      race_id: raceByExternalId.get(candidate.raceExternalId)?.id,
+      external_id: candidate.externalId ?? candidate.external_id ?? null,
+      person_id: personByExternalId.get(personExternalId)?.id ?? null,
+      race_id: raceByExternalId.get(raceExternalId)?.id ?? null,
       party: candidate.party ?? null,
-      candidate_no: candidate.candidateNo ?? null,
-      registration_status: candidate.registrationStatus ?? 'unknown',
+      candidate_no: candidate.candidateNo ?? candidate.candidate_no ?? null,
+      registration_status: candidate.registrationStatus ?? candidate.registration_status ?? 'unknown',
       vote_count: candidate.voteCount ?? candidate.vote_count ?? candidate.sourcePayload?.votes ?? null,
       vote_rate: candidate.voteRate ?? candidate.vote_rate ?? candidate.sourcePayload?.voteRate ?? null,
       is_elected: candidate.isElected ?? candidate.is_elected ?? candidate.sourcePayload?.elected ?? null,
       is_incumbent: candidate.isIncumbent ?? candidate.is_incumbent ?? candidate.sourcePayload?.incumbent ?? null,
       source_name: source.name,
-      source_url: candidate.sourceUrl ?? source.url,
-      is_public: candidate.isPublic ?? true,
+      source_url: candidate.sourceUrl ?? candidate.source_url ?? source.url,
+      is_public: candidate.isPublic ?? candidate.is_public ?? true,
       updated_at: startedAt,
     };
   });

@@ -48,6 +48,13 @@ export const partyTheme = {
     accent: '#D7B75E',
     text: '#F8FAFC',
   },
+  other: {
+    key: 'other',
+    label: '其他政黨',
+    primary: '#475467',
+    accent: '#B8C0CC',
+    text: '#F8FAFC',
+  },
   unknown: {
     key: 'unknown',
     label: '未知政黨',

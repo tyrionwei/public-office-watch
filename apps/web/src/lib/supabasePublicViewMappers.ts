@@ -46,7 +46,21 @@ function asPartyThemeKey(value: unknown): PartyThemeKey {
 }
 
 function asElectionType(value: unknown): PublicElection['election_type'] {
-  const allowed: PublicElection['election_type'][] = ['presidential', 'legislative', 'local', 'recall', 'referendum', 'by_election', 'other'];
+  const allowed: PublicElection['election_type'][] = [
+    'presidential',
+    'legislative',
+    'local',
+    'recall',
+    'referendum',
+    'by_election',
+    'other',
+    'president',
+    'legislator',
+    'councilor',
+    'local_chief',
+    'township_representative',
+    'village_chief',
+  ];
   return typeof value === 'string' && allowed.includes(value as PublicElection['election_type'])
     ? (value as PublicElection['election_type'])
     : 'other';
@@ -75,6 +89,11 @@ function asRaceType(value: unknown): PublicRace['race_type'] {
     'recall',
     'referendum',
     'other',
+    'legislative_district',
+    'councilor_district',
+    'local_chief',
+    'township_representative_district',
+    'indigenous',
   ];
   return typeof value === 'string' && allowed.includes(value as PublicRace['race_type'])
     ? (value as PublicRace['race_type'])
@@ -109,6 +128,13 @@ function asRegionType(value: unknown): PublicRegion['region_type'] {
     'village',
     'election_district',
     'special',
+    'president',
+    'legislative_district',
+    'councilor_district',
+    'local_chief',
+    'township_representative_district',
+    'village_chief',
+    'indigenous',
   ];
   return typeof value === 'string' && allowed.includes(value as PublicRegion['region_type'])
     ? (value as PublicRegion['region_type'])

@@ -85,7 +85,14 @@ export type PublicRegion = {
     | 'township'
     | 'village'
     | 'election_district'
-    | 'special';
+    | 'special'
+    | 'president'
+    | 'legislative_district'
+    | 'councilor_district'
+    | 'local_chief'
+    | 'township_representative_district'
+    | 'village_chief'
+    | 'indigenous';
   parent_region_id: string | null;
   official_code: string | null;
   map_code: string | null;
@@ -96,7 +103,20 @@ export type PublicElection = {
   election_id: string;
   name: string;
   year: number | null;
-  election_type: 'presidential' | 'legislative' | 'local' | 'recall' | 'referendum' | 'by_election' | 'other';
+  election_type:
+    | 'presidential'
+    | 'legislative'
+    | 'local'
+    | 'recall'
+    | 'referendum'
+    | 'by_election'
+    | 'other'
+    | 'president'
+    | 'legislator'
+    | 'councilor'
+    | 'local_chief'
+    | 'township_representative'
+    | 'village_chief';
   voting_date: string | null;
   status: 'draft' | 'announced' | 'upcoming' | 'active' | 'completed' | 'cancelled' | 'unknown';
   source_name: string | null;
@@ -124,7 +144,12 @@ export type PublicRace = {
     | 'village_chief'
     | 'recall'
     | 'referendum'
-    | 'other';
+    | 'other'
+    | 'legislative_district'
+    | 'councilor_district'
+    | 'local_chief'
+    | 'township_representative_district'
+    | 'indigenous';
   title: string;
   voting_date: string | null;
   status:
@@ -222,6 +247,7 @@ export type PublicPersonIdentitySource = {
     | 'wikidata'
     | 'official_site'
     | 'social_media'
+    | 'public_reference'
     | 'other';
   source_name: string;
   source_url: string | null;

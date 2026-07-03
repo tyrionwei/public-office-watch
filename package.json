@@ -52,6 +52,8 @@
     "report:missing-person-external-ids": "node scripts/report-missing-person-external-ids.mjs",
     "report:election-race-duplicates": "node scripts/report-election-race-duplicates.mjs",
     "plan:election-race-merges": "node scripts/plan-election-race-merges.mjs",
+    "merge:election-race-decisions:dry-run": "node scripts/apply-election-race-merge-plan.mjs",
+    "merge:election-race-decisions:write": "node scripts/apply-election-race-merge-plan.mjs --write",
     "sync:person-enrichment:dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-person-enrichment-claims",
     "sync:person-enrichment:write": "node scripts/sync-real-public-data.mjs --weekly --include-person-enrichment-claims --write --record-run",
     "sync:votetw-person-enrichment:dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-person-enrichment-claims --person-enrichment-claims data-sources/votetw-person-enrichment-claims.seed.json",

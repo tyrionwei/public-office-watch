@@ -37,6 +37,9 @@ data-sources/*-progress.json
 data-sources/*-skipped.json
 data-sources/*-targets.json
 data-sources/*-target-names.json
+data-sources/votetw-person-enrichment*.seed.json
+data-sources/votetw-person-enrichment*.targets.json
+data-sources/votetw-person-enrichment*-batches/
 data-sources/raw/
 data-sources/tmp/
 data-sources/downloads/

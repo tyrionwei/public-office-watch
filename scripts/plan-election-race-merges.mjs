@@ -82,6 +82,16 @@ function raceAction(pair) {
   return 'manual_review';
 }
 
+function confidenceLevelForAction(action) {
+  if (action === 'auto_merge') return 'A';
+  if (action === 'review_merge' || action === 'review_aggregate_source_link') return 'B';
+  return 'D';
+}
+
+function electionRelationTypeForAction(action) {
+  return action === 'review_aggregate_source_link' ? 'aggregate_source_link' : 'same_election';
+}
+
 function evidenceForPair(pair) {
   return {
     confidence: pair.confidence,
@@ -101,6 +111,12 @@ function electionPlanRow(pair) {
     semanticType: pair.semanticType,
     canonicalElection: compactTarget(canonical),
     duplicateElection: compactTarget(duplicate),
+    proposedDecision: {
+      table: 'election_merge_decisions',
+      status: 'suggested',
+      relationType: electionRelationTypeForAction(action),
+      confidenceLevel: confidenceLevelForAction(action),
+    },
     evidence: evidenceForPair(pair),
     notes: action === 'review_aggregate_source_link'
       ? 'CEC 2022 local election is an aggregate source while VoteTW local pages are split by office/region; do not direct-merge until a parent/child election model exists.'
@@ -117,6 +133,12 @@ function racePlanRow(pair) {
     semanticRaceType: pair.semanticRaceType,
     canonicalRace: compactTarget(canonical, pair.leftElection, pair.rightElection),
     duplicateRace: compactTarget(duplicate, pair.leftElection, pair.rightElection),
+    proposedDecision: {
+      table: 'race_merge_decisions',
+      status: 'suggested',
+      relationType: 'same_race',
+      confidenceLevel: confidenceLevelForAction(raceAction(pair)),
+    },
     evidence: evidenceForPair(pair),
   };
 }

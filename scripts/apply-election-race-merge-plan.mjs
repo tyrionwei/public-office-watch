@@ -191,9 +191,48 @@ function countBy(rows, key) {
   return counts;
 }
 
-function summarizeRows(rows, relationKey, confidenceKey) {
+function confidenceRank(level) {
+  return { A: 0, B: 1, C: 2, D: 3 }[level] ?? 9;
+}
+
+function candidateOverlapCount(row) {
+  return row.evidence_json?.evidence?.candidateOverlap?.count ?? 0;
+}
+
+function compareDecisionRows(left, right) {
+  return confidenceRank(left.confidence_level) - confidenceRank(right.confidence_level) ||
+    candidateOverlapCount(right) - candidateOverlapCount(left) ||
+    String(left.reason ?? '').localeCompare(String(right.reason ?? ''));
+}
+
+function selectBestRowsByDuplicate(rows, duplicateKey) {
+  const bestByDuplicate = new Map();
+  let internalDuplicateCount = 0;
+
+  for (const row of rows) {
+    const duplicateId = row[duplicateKey];
+    const existing = bestByDuplicate.get(duplicateId);
+    if (!existing) {
+      bestByDuplicate.set(duplicateId, row);
+      continue;
+    }
+
+    internalDuplicateCount += 1;
+    if (compareDecisionRows(row, existing) < 0) {
+      bestByDuplicate.set(duplicateId, row);
+    }
+  }
+
+  return {
+    rows: Array.from(bestByDuplicate.values()),
+    internalDuplicateCount,
+  };
+}
+
+function summarizeRows(rows, relationKey, confidenceKey, internalDuplicateCount = 0) {
   return {
     count: rows.length,
+    internalDuplicateCount,
     relationTypeCounts: countBy(rows, relationKey),
     confidenceLevelCounts: countBy(rows, confidenceKey),
   };
@@ -230,8 +269,12 @@ function filterRaceRowsForWrite(rows, existingRows) {
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   const plan = readJson(options.inputPath);
-  const electionRows = buildElectionRows(plan, options);
-  const raceRows = buildRaceRows(plan, options);
+  const electionRowsRaw = buildElectionRows(plan, options);
+  const raceRowsRaw = buildRaceRows(plan, options);
+  const electionSelection = selectBestRowsByDuplicate(electionRowsRaw, 'duplicate_election_id');
+  const raceSelection = selectBestRowsByDuplicate(raceRowsRaw, 'duplicate_race_id');
+  const electionRows = electionSelection.rows;
+  const raceRows = raceSelection.rows;
 
   if (!options.write) {
     console.log(JSON.stringify({
@@ -239,8 +282,8 @@ async function main() {
       dryRun: true,
       inputPath: options.inputPath,
       selectedActions: Array.from(options.actions).sort(),
-      electionRows: summarizeRows(electionRows, 'relation_type', 'confidence_level'),
-      raceRows: summarizeRows(raceRows, 'relation_type', 'confidence_level'),
+      electionRows: summarizeRows(electionRows, 'relation_type', 'confidence_level', electionSelection.internalDuplicateCount),
+      raceRows: summarizeRows(raceRows, 'relation_type', 'confidence_level', raceSelection.internalDuplicateCount),
       sampleElectionRows: electionRows.slice(0, 5),
       sampleRaceRows: raceRows.slice(0, 5),
     }, null, 2));
@@ -271,6 +314,8 @@ async function main() {
     existingRaceDecisionCount: existingRaceRows.length,
     plannedElectionRows: electionRows.length,
     plannedRaceRows: raceRows.length,
+    internalDuplicateElectionRows: electionSelection.internalDuplicateCount,
+    internalDuplicateRaceRows: raceSelection.internalDuplicateCount,
     insertedElectionRows: insertedElectionRows.length,
     insertedRaceRows: insertedRaceRows.length,
     skippedElectionRows: electionRows.length - electionRowsToInsert.length,

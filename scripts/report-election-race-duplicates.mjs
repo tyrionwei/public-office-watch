@@ -224,6 +224,7 @@ function buildCandidateKeySet(races, candidates, peopleById) {
 
 function compactElection(election) {
   return {
+    id: election.id,
     externalId: election.externalId,
     name: election.name,
     year: election.year,
@@ -238,6 +239,7 @@ function compactElection(election) {
 
 function compactRace(race) {
   return {
+    id: race.id,
     externalId: race.external_id,
     title: race.title,
     raceType: race.race_type,

@@ -7,7 +7,9 @@ ALTER TABLE candidates
 CREATE INDEX IF NOT EXISTS idx_candidates_vote_count ON candidates(vote_count);
 CREATE INDEX IF NOT EXISTS idx_candidates_is_elected ON candidates(is_elected);
 
-CREATE OR REPLACE VIEW public_candidates AS
+DROP VIEW IF EXISTS public_candidates;
+
+CREATE VIEW public_candidates AS
 WITH canonical_candidates AS (
     SELECT DISTINCT ON (cm.canonical_person_id, c.race_id, COALESCE(c.candidate_no, ''))
         c.*,

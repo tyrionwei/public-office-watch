@@ -39,6 +39,8 @@
     "review:missing-identity-match:write": "node scripts/downgrade-missing-identity-match.mjs --write",
     "merge:person-decisions:dry-run": "node scripts/apply-person-merge-decisions.mjs",
     "merge:person-decisions:write": "node scripts/apply-person-merge-decisions.mjs --write",
+    "merge:2024-candidate-person-decisions:dry-run": "node scripts/apply-2024-candidate-person-merge-decisions.mjs",
+    "merge:2024-candidate-person-decisions:write": "node scripts/apply-2024-candidate-person-merge-decisions.mjs --write",
     "cleanup:merged-person-claims:dry-run": "node scripts/cleanup-merged-person-claims.mjs",
     "cleanup:merged-person-claims:write": "node scripts/cleanup-merged-person-claims.mjs --write",
     "cleanup:source-only-person-claims:dry-run": "node scripts/cleanup-source-only-person-claims.mjs",

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 import { AppShell } from '../components/AppShell';
 import { DataPrinciplesPanel } from '../components/DataPrinciplesPanel';
 import { LocalOfficeSummaryPanel } from '../components/LocalOfficeSummaryPanel';
@@ -20,13 +20,13 @@ function getDefaultStageRegionId(regions: StageRegionNode[]) {
 
 export function HomePage() {
   const [selectedRegionId, setSelectedRegionId] = useState(() => getDefaultStageRegionId(publicDataProvider.getStageRegions()));
+  const [, startTransition] = useTransition();
 
   const homeData = publicDataProvider.getHomePageData();
   const pollComparison = publicDataProvider.getPollComparisonByElectionId(homeData.upcomingRaces[0]?.electionId ?? '');
-  const relatedRaces = useMemo(
-    () => publicDataProvider.getRelatedRacesByRegionId(selectedRegionId).filter((race) => race.status !== 'completed'),
-    [selectedRegionId],
-  );
+  const relatedRaces = publicDataProvider
+    .getRelatedRacesByRegionId(selectedRegionId)
+    .filter((race) => race.status !== 'completed');
 
   useEffect(() => {
     if (selectedRegionId) {
@@ -36,20 +36,17 @@ export function HomePage() {
     setSelectedRegionId(getDefaultStageRegionId(homeData.stageRegions));
   }, [homeData.stageRegions, selectedRegionId]);
 
-  const selectedRegionNode = useMemo(
-    () => publicDataProvider.getStageRegion(selectedRegionId) ?? homeData.stageRegions[0],
-    [homeData.stageRegions, selectedRegionId],
-  );
+  const selectedRegionNode = publicDataProvider.getStageRegion(selectedRegionId) ?? homeData.stageRegions[0];
 
-  const selectedRegionSummary = useMemo(
-    () => publicDataProvider.getRegionSummary(selectedRegionId) ?? homeData.stageRegionSummaries[0],
-    [homeData.stageRegionSummaries, selectedRegionId],
-  );
+  const selectedRegionSummary = publicDataProvider.getRegionSummary(selectedRegionId) ?? homeData.stageRegionSummaries[0];
 
-  const selectedRegion = useMemo(
-    () => publicDataProvider.getRegionCardByStageRegionId(selectedRegionId) ?? homeData.regions[0],
-    [homeData.regions, selectedRegionId],
-  );
+  const selectedRegion = publicDataProvider.getRegionCardByStageRegionId(selectedRegionId) ?? homeData.regions[0];
+
+  const handleSelectRegion = useCallback((regionId: string) => {
+    startTransition(() => {
+      setSelectedRegionId(regionId);
+    });
+  }, [startTransition]);
 
   return (
     <AppShell ticker={homeData.ticker}>
@@ -59,7 +56,7 @@ export function HomePage() {
             <TaiwanStageSelect
               regions={homeData.stageRegions}
               selectedRegionId={selectedRegionId}
-              onSelectRegion={setSelectedRegionId}
+              onSelectRegion={handleSelectRegion}
               hideQuickSelect
             />
           </div>

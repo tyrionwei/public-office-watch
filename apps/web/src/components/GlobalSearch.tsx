@@ -16,7 +16,7 @@ export function GlobalSearch() {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
-  const results = useMemo(() => publicDataProvider.searchPublicRecords(query), [query]);
+  const results = publicDataProvider.searchPublicRecords(query);
   const showPanel = isFocused && query.trim().length > 0;
 
   const groupedResults = useMemo(

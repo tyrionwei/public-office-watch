@@ -29,9 +29,15 @@ function App() {
     const handlePublicDataReady = () => setPublicDataVersion((version) => version + 1);
     window.addEventListener(publicDataReadyEvent, handlePublicDataReady);
 
-    void refreshSupabasePublicDataSnapshot().then(() => {
-      setPublicDataVersion((version) => version + 1);
-    });
+    void refreshSupabasePublicDataSnapshot()
+      .then(() => {
+        setPublicDataVersion((version) => version + 1);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) {
+          console.warn('Failed to refresh public data snapshot', error);
+        }
+      });
 
     return () => window.removeEventListener(publicDataReadyEvent, handlePublicDataReady);
   }, []);

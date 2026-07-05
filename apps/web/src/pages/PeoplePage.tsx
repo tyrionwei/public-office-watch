@@ -166,25 +166,18 @@ export function PeoplePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = getFilters(searchParams);
   const { party, query, regionId, role, status } = filters;
-  const people = useMemo(
-    () => publicDataProvider.getPeopleByFilters({ party, query, regionId, role, status }),
-    [party, query, regionId, role, status],
-  );
+  const people = publicDataProvider.getPeopleByFilters({ party, query, regionId, role, status });
   const requestedPage = getPage(searchParams);
   const pageCount = Math.max(1, Math.ceil(people.length / PAGE_SIZE));
   const currentPage = Math.min(requestedPage, pageCount);
   const pageStart = (currentPage - 1) * PAGE_SIZE;
   const visiblePeople = people.slice(pageStart, pageStart + PAGE_SIZE);
   const visiblePageNumbers = getVisiblePageNumbers(currentPage, pageCount);
-  const allPeople = useMemo(() => publicDataProvider.getPeopleByFilters(), []);
-  const regionOptions = useMemo(
-    () =>
-      publicDataProvider
-        .getStageRegions()
-        .filter((region) => region.level === 'county_city')
-        .map((region) => ({ value: region.id, label: region.label })),
-    [],
-  );
+  const allPeople = publicDataProvider.getPeopleByFilters();
+  const regionOptions = publicDataProvider
+    .getStageRegions()
+    .filter((region) => region.level === 'county_city')
+    .map((region) => ({ value: region.id, label: region.label }));
   const partyOptions = useMemo(
     () =>
       Array.from(new Set(allPeople.map((person) => normalizePartyLabel(person.party))))

@@ -4,12 +4,15 @@ import type {
   PublicCompany,
   PublicElection,
   PublicHomeElectionTicker,
+  PublicLocalOfficeSummary,
   PublicParty,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPerson,
   PublicPersonClaim,
+  PublicPersonListItem,
   PublicPersonPartyAffiliation,
+  PublicPersonProfile,
   PublicRace,
   PublicRegion,
   PublicRegionElectionSummary,
@@ -20,8 +23,9 @@ import { electionPath, partyPath, personPath, regionPath } from '../routes/route
 import type { HomePageData, HomeTicker, PublicDataProvider, PublicSearchResult } from './publicDataProvider';
 import {
   buildLocalOfficeSummary,
+  buildLocalOfficeSummaryFromItems,
   buildPersonListItems,
-  buildPersonProfile,
+  buildPersonProfileFromItems,
   filterPersonListItems,
 } from './personData';
 import { type AllowedPublicViewName, assertPublicViewName } from './publicViewRegistry';
@@ -66,6 +70,25 @@ const emptyHomePageData: HomePageData = {
   ],
 };
 
+type SupabasePublicSnapshotIndexes = {
+  regionLookupKeysByRegionId: Map<string, Set<string>>;
+  regionSummaryByLookupKey: Map<string, StageRegionSummary>;
+  regionCardByLookupKey: Map<string, RegionCard>;
+  stageRegionById: Map<string, StageRegionNode>;
+  childStageRegionsByParentId: Map<string, StageRegionNode[]>;
+  relatedRacesByRegionId: Map<string, UpcomingRace[]>;
+  electionById: Map<string, PublicElection>;
+  racesByElectionId: Map<string, PublicRace[]>;
+  candidatesByElectionId: Map<string, PublicCandidate[]>;
+  personById: Map<string, PublicPerson>;
+  personListItems: PublicPersonListItem[] | null;
+  personProfilesById: Map<string, PublicPersonProfile | null>;
+  localOfficeSummariesByRegionId: Map<string, PublicLocalOfficeSummary>;
+  partyBySlug: Map<string, PublicParty>;
+  partyFinanceSummariesByPartyId: Map<string, PublicPartyFinanceSummary[]>;
+  partyCompanyContributionSummariesByPartyId: Map<string, PublicPartyCompanyContributionSummary[]>;
+};
+
 type SupabasePublicSnapshot = {
   homeTicker: HomeTicker;
   regionCards: RegionCard[];
@@ -82,9 +105,125 @@ type SupabasePublicSnapshot = {
   parties: PublicParty[];
   partyFinanceSummaries: PublicPartyFinanceSummary[];
   partyCompanyContributionSummaries: PublicPartyCompanyContributionSummary[];
+  indexes: SupabasePublicSnapshotIndexes;
 };
 
 let snapshotCache: SupabasePublicSnapshot | null = null;
+let homeSnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
+let peopleSnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
+let defaultPeopleDatasetLoaded = false;
+let partySnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
+const electionSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
+const personSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
+const peopleSearchSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
+const loadedPeopleSearchQueries = new Set<string>();
+
+function addLookupValue<T>(index: Map<string, T>, key: string | null | undefined, value: T) {
+  if (!key) return;
+  if (!index.has(key)) {
+    index.set(key, value);
+  }
+
+  const normalizedKey = key.replace(/^region-/, '');
+  if (!index.has(normalizedKey)) {
+    index.set(normalizedKey, value);
+  }
+}
+
+function addArrayIndexValue<T>(index: Map<string, T[]>, key: string | null | undefined, value: T) {
+  if (!key) return;
+  const values = index.get(key) ?? [];
+  values.push(value);
+  index.set(key, values);
+}
+
+function buildSnapshotIndexes(params: {
+  stageRegions: StageRegionNode[];
+  stageRegionSummaries: StageRegionSummary[];
+  regionCards: RegionCard[];
+  upcomingRaces: UpcomingRace[];
+  elections: PublicElection[];
+  races: PublicRace[];
+  candidates: PublicCandidate[];
+  people: PublicPerson[];
+  parties: PublicParty[];
+  partyFinanceSummaries: PublicPartyFinanceSummary[];
+  partyCompanyContributionSummaries: PublicPartyCompanyContributionSummary[];
+}): SupabasePublicSnapshotIndexes {
+  const regionLookupKeysByRegionId = new Map<string, Set<string>>();
+  const regionSummaryByLookupKey = new Map<string, StageRegionSummary>();
+  const regionCardByLookupKey = new Map<string, RegionCard>();
+  const stageRegionById = new Map(params.stageRegions.map((region) => [region.id, region]));
+  const childStageRegionsByParentId = new Map<string, StageRegionNode[]>();
+  const relatedRacesByRegionId = new Map<string, UpcomingRace[]>();
+  const electionById = new Map(params.elections.map((election) => [election.election_id, election]));
+  const racesByElectionId = new Map<string, PublicRace[]>();
+  const candidatesByElectionId = new Map<string, PublicCandidate[]>();
+  const personById = new Map(params.people.map((person) => [person.person_id, person]));
+  const partyBySlug = new Map(params.parties.map((party) => [party.slug, party]));
+  const partyFinanceSummariesByPartyId = new Map<string, PublicPartyFinanceSummary[]>();
+  const partyCompanyContributionSummariesByPartyId = new Map<string, PublicPartyCompanyContributionSummary[]>();
+  const nationalRaceIds = new Set(params.upcomingRaces.filter(isNationalUpcomingRace).map((race) => race.id));
+
+  for (const region of params.stageRegions) {
+    addArrayIndexValue(childStageRegionsByParentId, region.parentId, region);
+    const keys = toRegionLookupKeys(region.id, params.stageRegions);
+    for (const key of keys) {
+      regionLookupKeysByRegionId.set(key, keys);
+    }
+  }
+
+  for (const summary of params.stageRegionSummaries) {
+    addLookupValue(regionSummaryByLookupKey, summary.regionId, summary);
+  }
+
+  for (const card of params.regionCards) {
+    addLookupValue(regionCardByLookupKey, card.id, card);
+  }
+
+  for (const region of params.stageRegions) {
+    const keys = toRegionAndDescendantLookupKeys(region.id, params.stageRegions);
+    const relatedRaces = params.upcomingRaces.filter((race) => keys.has(race.regionId) || nationalRaceIds.has(race.id));
+    for (const key of toRegionLookupKeys(region.id, params.stageRegions)) {
+      relatedRacesByRegionId.set(key, relatedRaces);
+    }
+  }
+
+  for (const race of params.races) {
+    addArrayIndexValue(racesByElectionId, race.election_id, race);
+  }
+
+  for (const candidate of params.candidates) {
+    addArrayIndexValue(candidatesByElectionId, candidate.election_id, candidate);
+  }
+
+  for (const summary of params.partyFinanceSummaries) {
+    addArrayIndexValue(partyFinanceSummariesByPartyId, summary.party_id, summary);
+  }
+
+  for (const summary of params.partyCompanyContributionSummaries) {
+    addArrayIndexValue(partyCompanyContributionSummariesByPartyId, summary.party_id, summary);
+  }
+
+  return {
+    regionLookupKeysByRegionId,
+    regionSummaryByLookupKey,
+    regionCardByLookupKey,
+    stageRegionById,
+    childStageRegionsByParentId,
+    relatedRacesByRegionId,
+    electionById,
+    racesByElectionId,
+    candidatesByElectionId,
+    personById,
+    personListItems: null,
+    personProfilesById: new Map<string, PublicPersonProfile | null>(),
+    localOfficeSummariesByRegionId: new Map<string, PublicLocalOfficeSummary>(),
+    partyBySlug,
+    partyFinanceSummariesByPartyId,
+    partyCompanyContributionSummariesByPartyId,
+  };
+}
 
 function fromPublicView(viewName: AllowedPublicViewName) {
   assertPublicViewName(viewName);
@@ -97,21 +236,29 @@ function fromPublicView(viewName: AllowedPublicViewName) {
   return client.from(viewName);
 }
 
-async function fetchRows<T>(viewName: AllowedPublicViewName): Promise<T[]> {
+async function fetchRows<T>(
+  viewName: AllowedPublicViewName,
+  configure?: (query: ReturnType<NonNullable<ReturnType<typeof fromPublicView>>['select']>) => ReturnType<NonNullable<ReturnType<typeof fromPublicView>>['select']>,
+): Promise<T[]> {
   const pageSize = 1000;
   const rows: T[] = [];
   let offset = 0;
 
   while (true) {
-    const query = fromPublicView(viewName);
+    const view = fromPublicView(viewName);
 
-    if (!query) {
+    if (!view) {
       return [];
     }
 
-    const { data, error } = await query.select('*').range(offset, offset + pageSize - 1);
+    const baseQuery = view.select('*');
+    const query = configure ? configure(baseQuery) : baseQuery;
+    const { data, error } = await query.range(offset, offset + pageSize - 1);
 
     if (error || !Array.isArray(data)) {
+      if (error && import.meta.env.DEV) {
+        console.warn(`Failed to fetch ${viewName}: ${error.message}`);
+      }
       return [];
     }
 
@@ -135,6 +282,77 @@ function buildStageRegions(regions: PublicRegion[]) {
       const parentRegion = region.parent_region_id ? byRegionId.get(region.parent_region_id) ?? null : null;
       return mapRegionToStageRegionNode(region, index, parentRegion?.slug ?? null);
     });
+}
+
+function rebuildSnapshot(params: Omit<SupabasePublicSnapshot, 'indexes'>): SupabasePublicSnapshot {
+  return {
+    ...params,
+    indexes: buildSnapshotIndexes({
+      stageRegions: params.stageRegions,
+      stageRegionSummaries: params.stageRegionSummaries,
+      regionCards: params.regionCards,
+      upcomingRaces: params.upcomingRaces,
+      elections: params.elections,
+      races: params.races,
+      candidates: params.candidates,
+      people: params.people,
+      parties: params.parties,
+      partyFinanceSummaries: params.partyFinanceSummaries,
+      partyCompanyContributionSummaries: params.partyCompanyContributionSummaries,
+    }),
+  };
+}
+
+function notifyPublicDataReady() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('public-data-ready'));
+  }
+}
+
+function mergeUniqueBy<T>(currentItems: T[], incomingItems: T[], getKey: (item: T) => string) {
+  const byKey = new Map(currentItems.map((item) => [getKey(item), item]));
+  for (const item of incomingItems) {
+    byKey.set(getKey(item), item);
+  }
+  return Array.from(byKey.values());
+}
+
+function hasPersonSearchQuery(filters: { query?: string | null }) {
+  return Boolean(filters.query?.trim());
+}
+
+function normalizePeopleSearchQuery(query: string) {
+  return query.trim().toLowerCase();
+}
+
+function isGrassrootsPosition(value: string | null | undefined) {
+  return Boolean(value?.includes("村里") || value?.includes("代表"));
+}
+
+function isGrassrootsPersonListItem(person: PublicPersonListItem) {
+  return [person.position, person.role_label, person.district, person.region_name].some(isGrassrootsPosition);
+}
+
+function mergeSnapshot(values: Partial<Omit<SupabasePublicSnapshot, 'indexes'>>) {
+  const base = snapshotCache;
+  snapshotCache = rebuildSnapshot({
+    homeTicker: values.homeTicker ?? base?.homeTicker ?? emptyHomeTicker,
+    regionCards: values.regionCards ?? base?.regionCards ?? [],
+    stageRegions: values.stageRegions ?? base?.stageRegions ?? [],
+    stageRegionSummaries: values.stageRegionSummaries ?? base?.stageRegionSummaries ?? [],
+    upcomingRaces: values.upcomingRaces ?? base?.upcomingRaces ?? [],
+    people: values.people ?? base?.people ?? [],
+    companies: values.companies ?? base?.companies ?? [],
+    elections: values.elections ?? base?.elections ?? [],
+    races: values.races ?? base?.races ?? [],
+    candidates: values.candidates ?? base?.candidates ?? [],
+    personClaims: values.personClaims ?? base?.personClaims ?? [],
+    personPartyAffiliations: values.personPartyAffiliations ?? base?.personPartyAffiliations ?? [],
+    parties: values.parties ?? base?.parties ?? [],
+    partyFinanceSummaries: values.partyFinanceSummaries ?? base?.partyFinanceSummaries ?? [],
+    partyCompanyContributionSummaries: values.partyCompanyContributionSummaries ?? base?.partyCompanyContributionSummaries ?? [],
+  });
+  return snapshotCache;
 }
 
 function buildSnapshot(params: {
@@ -175,6 +393,19 @@ function buildSnapshot(params: {
   const partyCompanyContributionSummaries = params.partyCompanyContributionRows.map((row) =>
     mapPublicPartyCompanyContributionSummaryRow(row as PublicPartyCompanyContributionSummary),
   );
+  const indexes = buildSnapshotIndexes({
+    stageRegions,
+    stageRegionSummaries,
+    regionCards,
+    upcomingRaces,
+    elections,
+    races,
+    candidates,
+    people,
+    parties,
+    partyFinanceSummaries,
+    partyCompanyContributionSummaries,
+  });
 
   return {
     homeTicker: homeTickerRow ? mapTickerToHomeTicker(mapPublicHomeElectionTickerRow(homeTickerRow as PublicHomeElectionTicker)) : emptyHomeTicker,
@@ -192,40 +423,22 @@ function buildSnapshot(params: {
     parties,
     partyFinanceSummaries,
     partyCompanyContributionSummaries,
+    indexes,
   };
 }
 
-export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePublicSnapshot | null> {
+async function loadHomeSnapshot(): Promise<SupabasePublicSnapshot | null> {
   if (!getSupabasePublicClient()) {
     snapshotCache = null;
     return null;
   }
 
-  const [
-    tickerRows,
-    regionSummaryRows,
-    regionRows,
-    personRows,
-    companyRows,
-    electionRows,
-    raceRows,
-    candidateRows,
-    personClaimRows,
-    personPartyAffiliationRows,
-    partyRows,
-    partyFinanceRows,
-    partyCompanyContributionRows,
-  ] = await Promise.all([
+  const homeRegionTypes = ['country', 'municipality', 'county', 'city'];
+  const [tickerRows, regionSummaryRows, regionRows, raceRows, partyRows, partyFinanceRows, partyCompanyContributionRows] = await Promise.all([
     fetchRows('public_home_election_ticker'),
-    fetchRows('public_region_election_summary'),
-    fetchRows('public_regions'),
-    fetchRows('public_people'),
-    fetchRows('public_companies'),
-    fetchRows('public_elections'),
-    fetchRows('public_races'),
-    fetchRows('public_candidates'),
-    fetchRows('public_person_claims'),
-    fetchRows('public_person_party_affiliations'),
+    fetchRows('public_region_election_summary', (query) => query.in('region_type', homeRegionTypes)),
+    fetchRows('public_regions', (query) => query.in('region_type', homeRegionTypes)),
+    fetchRows('public_races', (query) => query.neq('status', 'completed')),
     fetchRows('public_parties'),
     fetchRows('public_party_finance_summaries'),
     fetchRows('public_party_company_contribution_summaries'),
@@ -235,13 +448,13 @@ export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePubli
     tickerRows,
     regionSummaryRows,
     regionRows,
-    personRows,
-    companyRows,
-    electionRows,
+    personRows: [],
+    companyRows: [],
+    electionRows: [],
     raceRows,
-    candidateRows,
-    personClaimRows,
-    personPartyAffiliationRows,
+    candidateRows: [],
+    personClaimRows: [],
+    personPartyAffiliationRows: [],
     partyRows,
     partyFinanceRows,
     partyCompanyContributionRows,
@@ -249,8 +462,250 @@ export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePubli
   return snapshotCache;
 }
 
+export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePublicSnapshot | null> {
+  if (snapshotCache && snapshotCache.stageRegions.length > 0) {
+    return snapshotCache;
+  }
+
+  homeSnapshotPromise ??= loadHomeSnapshot().finally(() => {
+    homeSnapshotPromise = null;
+  });
+  return homeSnapshotPromise;
+}
+
+async function ensurePeopleDataset(filters: { query?: string | null } = {}) {
+  if (hasPersonSearchQuery(filters)) {
+    return ensurePeopleSearchDataset(filters.query ?? '');
+  }
+
+  if (defaultPeopleDatasetLoaded) {
+    return snapshotCache;
+  }
+
+  peopleSnapshotPromise ??= (async () => {
+    await refreshSupabasePublicDataSnapshot();
+    const [personRows, candidateRows] = await Promise.all([
+      fetchRows('public_people', (query) => query.not('position', 'ilike', '%村里%').not('position', 'ilike', '%代表%')),
+      fetchRows('public_candidates', (query) => query.not('person_position', 'ilike', '%村里%').not('person_position', 'ilike', '%代表%')),
+    ]);
+    const base = snapshotCache;
+    const people = mergeUniqueBy(
+      base?.people ?? [],
+      personRows.map((row) => mapPublicPersonRow(row as PublicPerson)),
+      (item) => item.person_id,
+    );
+    const candidates = mergeUniqueBy(
+      base?.candidates ?? [],
+      candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate)),
+      (item) => item.candidate_id,
+    );
+    defaultPeopleDatasetLoaded = true;
+    const snapshot = mergeSnapshot({ people, candidates });
+    notifyPublicDataReady();
+    return snapshot;
+  })().finally(() => {
+    peopleSnapshotPromise = null;
+  });
+
+  return peopleSnapshotPromise;
+}
+
+async function ensurePeopleSearchDataset(query: string) {
+  const normalizedQuery = normalizePeopleSearchQuery(query);
+
+  if (normalizedQuery.length === 0 || loadedPeopleSearchQueries.has(normalizedQuery)) {
+    return snapshotCache;
+  }
+
+  if (peopleSearchSnapshotPromises.has(normalizedQuery) === false) {
+    peopleSearchSnapshotPromises.set(normalizedQuery, (async () => {
+      await refreshSupabasePublicDataSnapshot();
+      const pattern = '%' + query.trim() + '%';
+      const personRows = await fetchRows('public_people', (request) =>
+        request.or([
+          'name.ilike.' + pattern,
+          'alias.ilike.' + pattern,
+          'party.ilike.' + pattern,
+          'position.ilike.' + pattern,
+          'district.ilike.' + pattern,
+        ].join(',')),
+      );
+      const people = personRows.map((row) => mapPublicPersonRow(row as PublicPerson));
+      const personIds = people.map((person) => person.person_id).filter(Boolean);
+      const candidateRows: unknown[] = [];
+
+      for (let index = 0; index < personIds.length; index += 200) {
+        const chunk = personIds.slice(index, index + 200);
+        candidateRows.push(...await fetchRows('public_candidates', (request) => request.in('person_id', chunk)));
+      }
+
+      const base = snapshotCache;
+      const snapshot = mergeSnapshot({
+        people: mergeUniqueBy(base?.people ?? [], people, (item) => item.person_id),
+        candidates: mergeUniqueBy(
+          base?.candidates ?? [],
+          candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate)),
+          (item) => item.candidate_id,
+        ),
+      });
+      loadedPeopleSearchQueries.add(normalizedQuery);
+      notifyPublicDataReady();
+      return snapshot;
+    })().finally(() => {
+      peopleSearchSnapshotPromises.delete(normalizedQuery);
+    }));
+  }
+
+  return peopleSearchSnapshotPromises.get(normalizedQuery) ?? null;
+}
+
+async function ensureElectionDataset(electionId: string) {
+  if (!electionId) return snapshotCache;
+  if (snapshotCache?.indexes.electionById.has(electionId) && snapshotCache.indexes.racesByElectionId.has(electionId)) {
+    return snapshotCache;
+  }
+
+  if (!electionSnapshotPromises.has(electionId)) {
+    electionSnapshotPromises.set(electionId, (async () => {
+      await refreshSupabasePublicDataSnapshot();
+      const [electionRows, raceRows, candidateRows] = await Promise.all([
+        fetchRows('public_elections', (query) => query.eq('election_id', electionId)),
+        fetchRows('public_races', (query) => query.eq('election_id', electionId)),
+        fetchRows('public_candidates', (query) => query.eq('election_id', electionId)),
+      ]);
+      const base = snapshotCache;
+      const elections = mergeUniqueBy(
+        base?.elections ?? [],
+        electionRows.map((row) => mapPublicElectionRow(row as PublicElection)),
+        (item) => item.election_id,
+      );
+      const races = mergeUniqueBy(
+        base?.races ?? [],
+        raceRows.map((row) => mapPublicRaceRow(row as PublicRace)),
+        (item) => item.race_id,
+      );
+      const candidates = mergeUniqueBy(
+        base?.candidates ?? [],
+        candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate)),
+        (item) => item.candidate_id,
+      );
+      const snapshot = mergeSnapshot({ elections, races, candidates });
+      notifyPublicDataReady();
+      return snapshot;
+    })().finally(() => {
+      electionSnapshotPromises.delete(electionId);
+    }));
+  }
+
+  return electionSnapshotPromises.get(electionId) ?? null;
+}
+
+async function ensurePersonProfileDataset(personId: string) {
+  if (!personId) return snapshotCache;
+  if (snapshotCache?.indexes.personById.has(personId) && snapshotCache.personClaims.some((claim) => claim.person_id === personId)) {
+    return snapshotCache;
+  }
+
+  if (!personSnapshotPromises.has(personId)) {
+    personSnapshotPromises.set(personId, (async () => {
+      await refreshSupabasePublicDataSnapshot();
+      const [personRows, candidateRows, claimRows, partyAffiliationRows] = await Promise.all([
+        fetchRows('public_people', (query) => query.eq('person_id', personId)),
+        fetchRows('public_candidates', (query) => query.eq('person_id', personId)),
+        fetchRows('public_person_claims', (query) => query.eq('person_id', personId)),
+        fetchRows('public_person_party_affiliations', (query) => query.eq('person_id', personId)),
+      ]);
+      const base = snapshotCache;
+      const people = mergeUniqueBy(
+        base?.people ?? [],
+        personRows.map((row) => mapPublicPersonRow(row as PublicPerson)),
+        (item) => item.person_id,
+      );
+      const candidates = mergeUniqueBy(
+        base?.candidates ?? [],
+        candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate)),
+        (item) => item.candidate_id,
+      );
+      const personClaims = mergeUniqueBy(
+        base?.personClaims ?? [],
+        claimRows.map((row) => mapPublicPersonClaimRow(row as PublicPersonClaim)),
+        (item) => item.claim_id,
+      );
+      const personPartyAffiliations = mergeUniqueBy(
+        base?.personPartyAffiliations ?? [],
+        partyAffiliationRows.map((row) => mapPublicPersonPartyAffiliationRow(row as PublicPersonPartyAffiliation)),
+        (item) => item.affiliation_id,
+      );
+      const snapshot = mergeSnapshot({ people, candidates, personClaims, personPartyAffiliations });
+      notifyPublicDataReady();
+      return snapshot;
+    })().finally(() => {
+      personSnapshotPromises.delete(personId);
+    }));
+  }
+
+  return personSnapshotPromises.get(personId) ?? null;
+}
+
+async function ensurePartyDataset() {
+  if (snapshotCache?.parties.length) {
+    return snapshotCache;
+  }
+
+  partySnapshotPromise ??= (async () => {
+    await refreshSupabasePublicDataSnapshot();
+    const [partyRows, partyFinanceRows, partyCompanyContributionRows] = await Promise.all([
+      fetchRows('public_parties'),
+      fetchRows('public_party_finance_summaries'),
+      fetchRows('public_party_company_contribution_summaries'),
+    ]);
+    const parties = partyRows.map((row) => mapPublicPartyRow(row as PublicParty));
+    const partyFinanceSummaries = partyFinanceRows.map((row) =>
+      mapPublicPartyFinanceSummaryRow(row as PublicPartyFinanceSummary),
+    );
+    const partyCompanyContributionSummaries = partyCompanyContributionRows.map((row) =>
+      mapPublicPartyCompanyContributionSummaryRow(row as PublicPartyCompanyContributionSummary),
+    );
+    const snapshot = mergeSnapshot({ parties, partyFinanceSummaries, partyCompanyContributionSummaries });
+    notifyPublicDataReady();
+    return snapshot;
+  })().finally(() => {
+    partySnapshotPromise = null;
+  });
+
+  return partySnapshotPromise;
+}
+
 function getSnapshot() {
   return snapshotCache;
+}
+
+function getPersonListItems(snapshot: SupabasePublicSnapshot) {
+  if (!snapshot.indexes.personListItems) {
+    snapshot.indexes.personListItems = buildPersonListItems(
+      snapshot.people,
+      snapshot.candidates,
+      snapshot.stageRegions,
+      snapshot.personClaims,
+    );
+  }
+
+  return snapshot.indexes.personListItems;
+}
+
+function getRegionLookupKeys(snapshot: SupabasePublicSnapshot, regionId: string) {
+  return snapshot.indexes.regionLookupKeysByRegionId.get(regionId) ?? new Set([regionId, regionId.replace(/^region-/, '')]);
+}
+
+function lookupByRegionKeys<T>(keys: Set<string>, index: Map<string, T>) {
+  for (const key of keys) {
+    const value = index.get(key);
+    if (value) {
+      return value;
+    }
+  }
+
+  return null;
 }
 
 function toRegionLookupKeys(regionId: string, stageRegions: StageRegionNode[]) {
@@ -339,8 +794,7 @@ export const supabasePublicDataProvider: PublicDataProvider = {
       return null;
     }
 
-    const keys = toRegionLookupKeys(regionId, snapshot.stageRegions);
-    return snapshot.stageRegionSummaries.find((summary) => keys.has(summary.regionId)) ?? null;
+    return lookupByRegionKeys(getRegionLookupKeys(snapshot, regionId), snapshot.indexes.regionSummaryByLookupKey);
   },
 
   getRegionCardByStageRegionId(regionId: string) {
@@ -350,8 +804,7 @@ export const supabasePublicDataProvider: PublicDataProvider = {
       return null;
     }
 
-    const keys = toRegionLookupKeys(regionId, snapshot.stageRegions);
-    return snapshot.regionCards.find((region) => keys.has(region.id)) ?? null;
+    return lookupByRegionKeys(getRegionLookupKeys(snapshot, regionId), snapshot.indexes.regionCardByLookupKey);
   },
 
   getStageRegions() {
@@ -359,11 +812,11 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   },
 
   getStageRegion(regionId: string) {
-    return getSnapshot()?.stageRegions.find((region) => region.id === regionId) ?? null;
+    return getSnapshot()?.indexes.stageRegionById.get(regionId) ?? null;
   },
 
   getChildStageRegions(parentId: string) {
-    return getSnapshot()?.stageRegions.filter((region) => region.parentId === parentId) ?? [];
+    return getSnapshot()?.indexes.childStageRegionsByParentId.get(parentId) ?? [];
   },
 
   getUpcomingRaces() {
@@ -377,16 +830,17 @@ export const supabasePublicDataProvider: PublicDataProvider = {
       return [];
     }
 
-    const keys = toRegionAndDescendantLookupKeys(regionId, snapshot.stageRegions);
-    return snapshot.upcomingRaces.filter((race) => keys.has(race.regionId) || isNationalUpcomingRace(race));
+    return snapshot.indexes.relatedRacesByRegionId.get(regionId) ?? [];
   },
 
   getElectionById(electionId: string) {
-    return getSnapshot()?.elections.find((item) => item.election_id === electionId) ?? null;
+    void ensureElectionDataset(electionId);
+    return getSnapshot()?.indexes.electionById.get(electionId) ?? null;
   },
 
   getRacesByElectionId(electionId: string) {
-    return getSnapshot()?.races.filter((race) => race.election_id === electionId) ?? [];
+    void ensureElectionDataset(electionId);
+    return getSnapshot()?.indexes.racesByElectionId.get(electionId) ?? [];
   },
 
   getCandidates() {
@@ -394,7 +848,8 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   },
 
   getCandidatesByElectionId(electionId: string) {
-    return getSnapshot()?.candidates.filter((candidate) => candidate.election_id === electionId) ?? [];
+    void ensureElectionDataset(electionId);
+    return getSnapshot()?.indexes.candidatesByElectionId.get(electionId) ?? [];
   },
 
   getPollComparisonByElectionId(): PollComparison | null {
@@ -407,35 +862,63 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   },
 
   getPeopleByFilters(filters = {}) {
+    void ensurePeopleDataset(filters);
     const snapshot = getSnapshot();
-    return snapshot
-      ? filterPersonListItems(buildPersonListItems(snapshot.people, snapshot.candidates, snapshot.stageRegions, snapshot.personClaims), filters)
-      : [];
+
+    if (snapshot === null) {
+      return [];
+    }
+
+    const items = getPersonListItems(snapshot);
+    const visibleItems = hasPersonSearchQuery(filters)
+      ? items
+      : items.filter((person) => isGrassrootsPersonListItem(person) === false);
+
+    return filterPersonListItems(visibleItems, filters);
   },
 
   getPersonById(personId: string) {
-    return getSnapshot()?.people.find((person) => person.person_id === personId) ?? null;
+    return getSnapshot()?.indexes.personById.get(personId) ?? null;
   },
 
   getPersonProfile(personId: string) {
+    void ensurePersonProfileDataset(personId);
     const snapshot = getSnapshot();
-    return snapshot
-      ? buildPersonProfile(
+    if (!snapshot) {
+      return null;
+    }
+
+    if (!snapshot.indexes.personProfilesById.has(personId)) {
+      snapshot.indexes.personProfilesById.set(
         personId,
-        snapshot.people,
-        snapshot.candidates,
-        snapshot.stageRegions,
-        snapshot.personClaims,
-        snapshot.personPartyAffiliations,
-      )
-      : null;
+        buildPersonProfileFromItems(
+          personId,
+          getPersonListItems(snapshot),
+          snapshot.candidates,
+          snapshot.personClaims,
+          snapshot.personPartyAffiliations,
+        ),
+      );
+    }
+
+    return snapshot.indexes.personProfilesById.get(personId) ?? null;
   },
 
   getLocalOfficeSummaryByRegionId(regionId: string) {
+    void ensurePeopleDataset();
     const snapshot = getSnapshot();
-    return snapshot
-      ? buildLocalOfficeSummary(regionId, snapshot.people, snapshot.candidates, snapshot.stageRegions, snapshot.personClaims)
-      : buildLocalOfficeSummary(regionId, [], [], []);
+    if (!snapshot) {
+      return buildLocalOfficeSummary(regionId, [], [], []);
+    }
+
+    if (!snapshot.indexes.localOfficeSummariesByRegionId.has(regionId)) {
+      snapshot.indexes.localOfficeSummariesByRegionId.set(
+        regionId,
+        buildLocalOfficeSummaryFromItems(regionId, getPersonListItems(snapshot), snapshot.stageRegions),
+      );
+    }
+
+    return snapshot.indexes.localOfficeSummariesByRegionId.get(regionId) ?? buildLocalOfficeSummary(regionId, [], [], []);
   },
 
   getCompanies() {
@@ -443,26 +926,36 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   },
 
   getParties() {
+    void ensurePartyDataset();
     return getSnapshot()?.parties ?? [];
   },
 
   getPartyBySlug(partySlug: string) {
-    return getSnapshot()?.parties.find((party) => party.slug === partySlug) ?? null;
+    void ensurePartyDataset();
+    return getSnapshot()?.indexes.partyBySlug.get(partySlug) ?? null;
   },
 
   getPartyFinanceSummaries(partyId: string) {
-    return getSnapshot()?.partyFinanceSummaries.filter((summary) => summary.party_id === partyId) ?? [];
+    void ensurePartyDataset();
+    return getSnapshot()?.indexes.partyFinanceSummariesByPartyId.get(partyId) ?? [];
   },
 
   getPartyCompanyContributionSummaries(partyId: string) {
-    return getSnapshot()?.partyCompanyContributionSummaries.filter((summary) => summary.party_id === partyId) ?? [];
+    void ensurePartyDataset();
+    return getSnapshot()?.indexes.partyCompanyContributionSummariesByPartyId.get(partyId) ?? [];
   },
 
   searchPublicRecords(query: string) {
-    const snapshot = getSnapshot();
     const normalizedQuery = query.trim().toLowerCase();
 
-    if (!snapshot || normalizedQuery.length < 2) {
+    if (normalizedQuery.length < 2) {
+      return [];
+    }
+
+    void ensurePeopleDataset({ query });
+    const snapshot = getSnapshot();
+
+    if (!snapshot) {
       return [];
     }
 

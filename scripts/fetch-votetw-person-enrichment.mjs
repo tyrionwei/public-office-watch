@@ -137,6 +137,8 @@ function targetFromRecord(record) {
     party: record.party ?? '',
     position: record.position ?? '',
     district: record.district ?? '',
+    electionYear: record.electionYear ?? record.election_year ?? null,
+    sourceElectionSeedPersonExternalId: record.sourceElectionSeedPersonExternalId ?? record.source_election_seed_person_external_id ?? null,
     education: record.education ?? '',
     experience: record.experience ?? '',
   };
@@ -559,10 +561,155 @@ function targetIdentityNames(target) {
   return new Set([target.name, target.pageTitle].map(normalizeName).filter(Boolean));
 }
 
+function normalizeLooseIdentityName(value) {
+  return normalizeName(value)
+    .replace(/[A-Za-z0-9._'’`-]+/g, '')
+    .replace(/[-]/g, '')
+    .replace(/[^\p{Script=Han}]/gu, '');
+}
+
+function targetLooseIdentityNames(target) {
+  return new Set([target.name, target.pageTitle].map(normalizeLooseIdentityName).filter((value) => value.length >= 2));
+}
+
+function looseProfileNameMatchesTarget(target, profile) {
+  const looseProfileName = normalizeLooseIdentityName(profile.name);
+  if (looseProfileName.length < 2) return false;
+  for (const identityName of targetLooseIdentityNames(target)) {
+    if (looseProfileName === identityName) return true;
+    if (identityName.length >= 2 && looseProfileName.startsWith(identityName)) return true;
+    if (looseProfileName.length >= 2 && identityName.startsWith(looseProfileName)) return true;
+  }
+  return false;
+}
+
+function normalizeElectionContextValue(value) {
+  return normalizeName(value)
+    .replace(/[()（）]/g, '')
+    .replace(/選舉區/g, '')
+    .replace(/全國/g, '')
+    .replace(/區域/g, '')
+    .replace(/縣市/g, '')
+    .replace(/直轄市/g, '')
+    .replace(/原住民/g, '原住民族');
+}
+
+function normalizePartyContext(value) {
+  const normalized = normalizeName(value).replace(/籍$/g, '');
+  if (!normalized || normalized === '無' || normalized === '無黨') return '無黨籍';
+  return normalized;
+}
+
+function targetPositionMatchesElection(target, record) {
+  const position = String(target.position ?? '');
+  const electionText = normalizeElectionContextValue([record.election, record.district].filter(Boolean).join(' '));
+  if (!position || !electionText) return false;
+  if (position.includes('立法委員')) return electionText.includes('立法委員');
+  if (position.includes('議員')) return electionText.includes('議員');
+  if (position.includes('鄉鎮市民代表')) return electionText.includes('代表');
+  if (position.includes('村里長')) return electionText.includes('村長') || electionText.includes('里長');
+  if (position.includes('地方首長')) return /縣長|市長|鄉長|鎮長|區長/.test(electionText);
+  return false;
+}
+
+function targetDistrictMatchesElection(target, record) {
+  const targetDistrict = normalizeElectionContextValue(target.district);
+  if (!targetDistrict || targetDistrict.length < 2) return false;
+  const electionText = normalizeElectionContextValue([record.election, record.district].filter(Boolean).join(' '));
+  if (!electionText) return false;
+  if (electionText.includes(targetDistrict) || targetDistrict.includes(electionText)) return true;
+
+  const districtTokens = targetDistrict
+    .split(/第|選|（|）|\(|\)/)
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 2 && !['全國', '區域', '原住民族'].includes(token));
+  return districtTokens.some((token) => electionText.includes(token));
+}
+
+function targetPartyMatchesElection(target, record) {
+  const targetParty = normalizePartyContext(target.party);
+  const recordParty = normalizePartyContext(record.party);
+  return Boolean(targetParty && recordParty && targetParty === recordParty);
+}
+
+function electionYearMatchesTarget(target, record) {
+  if (!target.electionYear) return false;
+  const electionText = String(record.election ?? '');
+  return electionText.includes(String(target.electionYear));
+}
+
+function electionRecordContextSignals(target, record) {
+  return {
+    position: targetPositionMatchesElection(target, record),
+    district: targetDistrictMatchesElection(target, record),
+    party: targetPartyMatchesElection(target, record),
+  };
+}
+
+function electionRecordMatchesTarget(target, record) {
+  if (!electionYearMatchesTarget(target, record)) return null;
+  const signals = electionRecordContextSignals(target, record);
+  const score = Object.values(signals).filter(Boolean).length;
+  if (score < 2) return null;
+  return { record, signals, score, yearMatched: true };
+}
+
+function electionRecordMatchesTargetWithoutYear(target, record) {
+  const signals = electionRecordContextSignals(target, record);
+  const score = Object.values(signals).filter(Boolean).length;
+  if (score < 3) return null;
+  return { record, signals, score, yearMatched: false };
+}
+
+function matchProfileByElectionContext(target, profiles) {
+  return matchProfileByElectionRecord(target, profiles, electionRecordMatchesTarget);
+}
+
+function matchProfileByElectionContextWithoutYear(target, profiles) {
+  return matchProfileByElectionRecord(target, profiles, electionRecordMatchesTargetWithoutYear);
+}
+
+function matchProfileByElectionRecord(target, profiles, matchRecord) {
+  const matches = [];
+  for (const profile of profiles) {
+    const recordMatches = profile.electionRecords
+      .map((record) => matchRecord(target, record))
+      .filter(Boolean);
+    if (recordMatches.length === 0) continue;
+    recordMatches.sort((left, right) => right.score - left.score);
+    matches.push({ profile, electionContextMatch: recordMatches[0] });
+  }
+  if (matches.length !== 1) return null;
+  return matches[0];
+}
+
 function matchProfileToTarget(target, profiles) {
   const identityNames = targetIdentityNames(target);
   const sameNameProfiles = profiles.filter((profile) => identityNames.has(profile.normalizedName));
-  if (sameNameProfiles.length === 0) return { status: 'skipped', reason: 'no same-name profile on VoteTW page' };
+  if (sameNameProfiles.length === 0) {
+    const looseNameProfiles = profiles.filter((profile) => looseProfileNameMatchesTarget(target, profile));
+    const electionContextMatch = matchProfileByElectionContext(target, looseNameProfiles);
+    if (electionContextMatch) {
+      return {
+        status: 'matched',
+        matchedBy: 'unique_loose_name_election_context',
+        confidenceLevel: 'B',
+        profile: electionContextMatch.profile,
+        electionContextMatch: electionContextMatch.electionContextMatch,
+      };
+    }
+    const electionContextWithoutYearMatch = matchProfileByElectionContextWithoutYear(target, looseNameProfiles);
+    if (electionContextWithoutYearMatch) {
+      return {
+        status: 'matched',
+        matchedBy: 'unique_loose_name_election_context_without_year',
+        confidenceLevel: 'B',
+        profile: electionContextWithoutYearMatch.profile,
+        electionContextMatch: electionContextWithoutYearMatch.electionContextMatch,
+      };
+    }
+    return { status: 'skipped', reason: 'no same-name profile on VoteTW page' };
+  }
   if (target.birthDate) {
     const birthDateMatches = sameNameProfiles.filter((profile) => profile.birthDate === target.birthDate);
     if (birthDateMatches.length === 1) return { status: 'matched', matchedBy: 'birth_date', confidenceLevel: 'A', profile: birthDateMatches[0] };
@@ -574,6 +721,17 @@ function matchProfileToTarget(target, profiles) {
       matchedBy: sameNameProfiles[0].birthDate ? 'unique_page_profile_with_birth_date' : 'unique_page_profile',
       confidenceLevel: sameNameProfiles[0].birthDate ? 'A' : 'B',
       profile: sameNameProfiles[0],
+    };
+  }
+
+  const electionContextMatch = matchProfileByElectionContext(target, sameNameProfiles);
+  if (electionContextMatch) {
+    return {
+      status: 'matched',
+      matchedBy: 'unique_election_context',
+      confidenceLevel: 'B',
+      profile: electionContextMatch.profile,
+      electionContextMatch: electionContextMatch.electionContextMatch,
     };
   }
 
@@ -634,6 +792,11 @@ function buildClaims(target, page, profiles, match, args, platformRecords = []) 
     reason: 'VoteTW person enrichment is imported as review-only before publication',
     matchedBy: match.matchedBy,
     sameNameProfileCount,
+    electionContextMatch: match.electionContextMatch ? {
+      score: match.electionContextMatch.score,
+      signals: match.electionContextMatch.signals,
+      electionRecord: match.electionContextMatch.record,
+    } : null,
   };
   const base = { target, page, profile, confidenceLevel: match.confidenceLevel, publicGate };
   const claims = [claimRecord({ ...base, claimType: 'external_id', claimValue: `votetw:${page.pageid}:${profile.key}`, claimJson: { externalIdType: 'votetw_profile', electionRecords: profile.electionRecords } })];

@@ -1,7 +1,7 @@
 import type { PublicDataProvider } from './publicDataProvider';
 import { mockPublicDataProvider } from './mockPublicDataProvider';
 import { getPublicDataProviderMode, getSupabasePublicEnv } from './supabaseEnv';
-import { refreshSupabasePublicDataSnapshot, supabasePublicDataProvider } from './supabasePublicDataProvider';
+import { supabasePublicDataProvider } from './supabasePublicDataProvider';
 
 export const publicDataReadyEvent = 'public-data-ready';
 
@@ -24,8 +24,5 @@ export function createPublicDataProvider(): PublicDataProvider {
     return mockPublicDataProvider;
   }
 
-  void refreshSupabasePublicDataSnapshot().then(() => {
-    window.dispatchEvent(new Event(publicDataReadyEvent));
-  });
   return supabasePublicDataProvider;
 }

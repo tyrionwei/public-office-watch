@@ -299,20 +299,12 @@ function inferRegionForPerson(person: PublicPerson, candidateRecords: PublicCand
   );
 }
 
-function candidateRecordsFor(personId: string, candidates: PublicCandidate[]) {
-  return candidates.filter((candidate) => candidate.person_id === personId);
-}
-
 function hasText(value: string | null | undefined) {
   return Boolean(value && value.trim().length > 0);
 }
 
 function claimText(claim: PublicPersonClaim) {
   return claim.claim_value?.trim() || null;
-}
-
-function claimsForPerson(personId: string, claims: PublicPersonClaim[]) {
-  return claims.filter((claim) => claim.person_id === personId);
 }
 
 function profileClaimsFor(personIds: string[], claims: PublicPersonClaim[]) {
@@ -567,10 +559,23 @@ export function buildPersonListItems(
   stageRegions: StageRegionNode[],
   claims: PublicPersonClaim[] = [],
 ): PublicPersonListItem[] {
+  const candidatesByPersonId = candidates.reduce<Map<string, PublicCandidate[]>>((recordsByPersonId, candidate) => {
+    const records = recordsByPersonId.get(candidate.person_id) ?? [];
+    records.push(candidate);
+    recordsByPersonId.set(candidate.person_id, records);
+    return recordsByPersonId;
+  }, new Map<string, PublicCandidate[]>());
+  const claimsByPersonId = claims.reduce<Map<string, PublicPersonClaim[]>>((recordsByPersonId, claim) => {
+    const records = recordsByPersonId.get(claim.person_id) ?? [];
+    records.push(claim);
+    recordsByPersonId.set(claim.person_id, records);
+    return recordsByPersonId;
+  }, new Map<string, PublicPersonClaim[]>());
+
   return people.map((person) => {
-    const personClaims = claimsForPerson(person.person_id, claims);
+    const personClaims = claimsByPersonId.get(person.person_id) ?? [];
     const enrichedPerson = applyClaimBackfill(person, personClaims);
-    const candidateRecords = candidateRecordsFor(person.person_id, candidates);
+    const candidateRecords = candidatesByPersonId.get(person.person_id) ?? [];
     const role = getPersonRole(enrichedPerson.position, candidateRecords);
     const status = getPersonStatus(enrichedPerson.position, role, candidateRecords);
     const region = inferRegionForPerson(enrichedPerson, candidateRecords, stageRegions);
@@ -647,17 +652,15 @@ function identityRecordsFor(personIds: string[], items: PublicPersonListItem[]):
     }));
 }
 
-export function buildLocalOfficeSummary(
+export function buildLocalOfficeSummaryFromItems(
   regionId: string,
-  people: PublicPerson[],
-  candidates: PublicCandidate[],
+  items: PublicPersonListItem[],
   stageRegions: StageRegionNode[],
-  claims: PublicPersonClaim[] = [],
 ): PublicLocalOfficeSummary {
   const region = stageRegions.find((item) => item.id === regionId || item.publicRegionId === regionId);
   const resolvedRegionId = region?.id ?? regionId;
   const resolvedRegionName = region?.label ?? regionId;
-  const localPeople = filterPersonListItems(buildPersonListItems(people, candidates, stageRegions, claims), {
+  const localPeople = filterPersonListItems(items, {
     regionId: resolvedRegionId,
     status: 'current',
   });
@@ -707,15 +710,27 @@ export function buildLocalOfficeSummary(
   };
 }
 
-export function buildPersonProfile(
-  personId: string,
+export function buildLocalOfficeSummary(
+  regionId: string,
   people: PublicPerson[],
   candidates: PublicCandidate[],
   stageRegions: StageRegionNode[],
   claims: PublicPersonClaim[] = [],
+): PublicLocalOfficeSummary {
+  return buildLocalOfficeSummaryFromItems(
+    regionId,
+    buildPersonListItems(people, candidates, stageRegions, claims),
+    stageRegions,
+  );
+}
+
+export function buildPersonProfileFromItems(
+  personId: string,
+  allItems: PublicPersonListItem[],
+  candidates: PublicCandidate[],
+  claims: PublicPersonClaim[] = [],
   partyAffiliations: PublicPersonPartyAffiliation[] = [],
 ): PublicPersonProfile | null {
-  const allItems = buildPersonListItems(people, candidates, stageRegions, claims);
   const mergedItems = dedupePersonListItems(allItems);
   const person = mergedItems.find((item) => item.person_id === personId || item.merged_person_ids.includes(personId));
 
@@ -742,4 +757,21 @@ export function buildPersonProfile(
     legal_record_status: publicClaims.some((claim) => claim.claim_type === 'legal_case') ? 'review_required' : 'todo',
     family_relation_status: publicClaims.some((claim) => claim.claim_type === 'family_relation') ? 'review_required' : 'todo',
   };
+}
+
+export function buildPersonProfile(
+  personId: string,
+  people: PublicPerson[],
+  candidates: PublicCandidate[],
+  stageRegions: StageRegionNode[],
+  claims: PublicPersonClaim[] = [],
+  partyAffiliations: PublicPersonPartyAffiliation[] = [],
+): PublicPersonProfile | null {
+  return buildPersonProfileFromItems(
+    personId,
+    buildPersonListItems(people, candidates, stageRegions, claims),
+    candidates,
+    claims,
+    partyAffiliations,
+  );
 }

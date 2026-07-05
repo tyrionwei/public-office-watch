@@ -31,6 +31,8 @@ const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || loc
 
 const autoReviewVersion = 'auto-verified-external-id-or-identity-match-v2';
 const wikidataSourceName = 'Wikidata 人物補充資料';
+const voteTwSourceName = 'VoteTW';
+const voteTwSourceId = 'votetw-person-enrichment';
 const blockedClaimTypes = new Set(['legal_case', 'family_relation']);
 const wikidataFallbackOnlyClaimTypes = new Set(['education', 'experience']);
 const wikidataExternalIdUnlockedClaimTypes = new Set([
@@ -43,6 +45,15 @@ const wikidataExternalIdUnlockedClaimTypes = new Set([
   'office',
   'district',
   'party',
+]);
+const voteTwAutoClaimTypes = new Set([
+  'external_id',
+  'birth_date',
+  'gender',
+  'education',
+  'experience',
+  'party_affiliation',
+  'platform',
 ]);
 
 function parseArgs(argv) {
@@ -271,6 +282,26 @@ function verifiedExternalIdKeyForClaim(claim) {
   return `${claim.person_id}:wikidata:${qid.toUpperCase()}`;
 }
 
+function isVoteTwClaim(claim) {
+  return claim.source_name === voteTwSourceName || claim.claim_json?.sourceId === voteTwSourceId;
+}
+
+function explainVoteTwEligibility(claim) {
+  if (!voteTwAutoClaimTypes.has(claim.claim_type)) {
+    return { eligible: false, reason: 'votetw-claim-type-not-auto-unlocked' };
+  }
+
+  if (claim.claim_json?.identityMatch?.status !== 'matched') {
+    return { eligible: false, reason: 'votetw-identity-match-not-confirmed' };
+  }
+
+  if (claim.claim_json?.publicationGate?.status !== 'passed') {
+    return { eligible: false, reason: 'votetw-publication-gate-not-passed' };
+  }
+
+  return { eligible: true, reason: 'votetw-publication-gate-passed' };
+}
+
 function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys) {
   if (blockedClaimTypes.has(claim.claim_type)) {
     return { eligible: false, reason: 'blocked-sensitive-claim-type' };
@@ -278,6 +309,10 @@ function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPubli
 
   if (Number(claim.review_score) < options.minScore) {
     return { eligible: false, reason: 'below-min-score' };
+  }
+
+  if (isVoteTwClaim(claim)) {
+    return explainVoteTwEligibility(claim);
   }
 
   if (claim.source_name !== wikidataSourceName) {
@@ -427,8 +462,13 @@ async function main() {
     skipped: totalSkipped,
     verifiedExternalIdKeyCount: verifiedExternalIdKeys.size,
     eligibilityReasonCounts,
-    autoReviewedRule: 'non-Wikidata claims pass existing non-sensitive rule; Wikidata low-sensitivity claims require either a verified external_id for the same person/QID or matched identity evidence',
+    autoReviewedRule: 'VoteTW claims require a passed publicationGate; other non-Wikidata claims pass the existing non-sensitive rule; Wikidata low-sensitivity claims require either a verified external_id for the same person/QID or matched identity evidence',
     sourceSpecificRules: {
+      votetw: {
+        requiresIdentityMatch: true,
+        requiresPublicationGate: 'passed',
+        autoClaimTypes: Array.from(voteTwAutoClaimTypes),
+      },
       wikidata: {
         requiresIdentityMatch: 'when external_id has not been verified yet',
         requiresVerifiedExternalId: false,

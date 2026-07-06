@@ -225,6 +225,14 @@ function currentOfficeCandidateLabel(candidate: PublicCandidate) {
   const raceTitle = normalizeOfficeLabel(candidate.race_title);
   const personPosition = normalizeOfficeLabel(candidate.person_position);
 
+  if (raceTitle?.includes('總統') && raceTitle.includes('副總統') && personPosition?.includes('副總統')) {
+    return '副總統';
+  }
+
+  if (raceTitle?.includes('總統') && raceTitle.includes('副總統') && personPosition?.includes('總統')) {
+    return '總統';
+  }
+
   if (raceTitle?.includes('總統') && personPosition?.includes('副總統')) {
     return personPosition;
   }

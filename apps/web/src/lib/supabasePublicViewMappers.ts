@@ -193,6 +193,8 @@ export function mapPublicPersonRow(row: PartialRow<PublicPerson>): PublicPerson 
     gender: asPersonGender(row?.gender),
     party: asNullableString(row?.party),
     position: asNullableString(row?.position),
+    current_office_label: asNullableString(row?.current_office_label),
+    upcoming_candidate_label: asNullableString(row?.upcoming_candidate_label),
     election_year: asNullableNumber(row?.election_year),
     district: asNullableString(row?.district),
     education: asNullableString(row?.education),

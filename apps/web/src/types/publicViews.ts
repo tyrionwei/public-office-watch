@@ -7,6 +7,8 @@ export type PublicPerson = {
   gender: 'male' | 'female' | 'unknown' | null;
   party: string | null;
   position: string | null;
+  current_office_label: string | null;
+  upcoming_candidate_label: string | null;
   election_year: number | null;
   district: string | null;
   education: string | null;

@@ -411,7 +411,7 @@ function displayPositionLabelFor(
   roleLabel: string,
   status: PublicPersonStatus,
   currentOfficeLabel: string | null,
-  candidateRecords: PublicCandidate[],
+  upcomingCandidateLabel: string | null,
   regionName: string | null | undefined,
 ) {
   const position = person.position?.trim();
@@ -431,8 +431,6 @@ function displayPositionLabelFor(
       return regionRoleLabel(role, roleLabel, regionName);
     }
   }
-
-  const upcomingCandidateLabel = upcomingCandidateLabelFor(candidateRecords);
 
   if (upcomingCandidateLabel) {
     return upcomingCandidateLabel;
@@ -777,7 +775,8 @@ export function buildPersonListItems(
     const status = getPersonStatus(enrichedPerson.position, role, candidateRecords, enrichedPerson.election_year);
     const region = inferRegionForPerson(enrichedPerson, candidateRecords, stageRegions);
     const roleLabel = roleLabels[role];
-    const currentOfficeLabel = currentOfficeLabelFor(candidateRecords);
+    const currentOfficeLabel = enrichedPerson.current_office_label ?? currentOfficeLabelFor(candidateRecords);
+    const upcomingCandidateLabel = enrichedPerson.upcoming_candidate_label ?? upcomingCandidateLabelFor(candidateRecords);
     const regionName = region?.label ?? enrichedPerson.district ?? candidateRecords[0]?.region_name ?? null;
 
     return {
@@ -787,7 +786,8 @@ export function buildPersonListItems(
       status,
       status_label: statusLabels[status],
       current_office_label: currentOfficeLabel,
-      display_position_label: displayPositionLabelFor(enrichedPerson, role, roleLabel, status, currentOfficeLabel, candidateRecords, regionName),
+      upcoming_candidate_label: upcomingCandidateLabel,
+      display_position_label: displayPositionLabelFor(enrichedPerson, role, roleLabel, status, currentOfficeLabel, upcomingCandidateLabel, regionName),
       region_id: region?.id ?? candidateRecords[0]?.region_id ?? null,
       region_name: regionName,
       candidate_count: candidateRecords.length,

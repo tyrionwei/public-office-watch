@@ -5,7 +5,7 @@ import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { pickDefaultCandidateSprite } from '../data/defaultCharacterAssets';
 import { publicDataProvider } from '../lib/publicData';
-import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonClaim, PublicPersonPartyAffiliation, PublicPersonTimelineItem } from '../types/publicViews';
@@ -330,6 +330,8 @@ export function PersonPage() {
   const financeClaims = profile ? claimsByType(profile.public_claims, 'finance_summary') : [];
   const legalClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'legal_case')) : [];
   const familyClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'family_relation')) : [];
+  const displayPosition = person ? getPersonDisplayPosition(person) : '公開人物資料';
+  const profilePosition = person ? getPersonDisplayPosition(person, '待補') : '待補';
 
   return (
     <AppShell>
@@ -356,7 +358,7 @@ export function PersonPage() {
                 <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{person.role_label}</p>
                 <h2 className="mt-2 font-display text-4xl text-white">{person.name}</h2>
                 <p className="mt-3 text-sm leading-6 text-slate-300">
-                  {person.position ?? '公開人物資料'}。此頁先彙整目前可公開的基本資料、候選紀錄與資料狀態。
+                  {displayPosition}。此頁先彙整目前可公開的基本資料、候選紀錄與資料狀態。
                 </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   <HudStatCard
@@ -385,7 +387,7 @@ export function PersonPage() {
                   ['性別', person.gender ? genderLabels[person.gender] : '待補'],
                   ['生日', birthDateClaim?.claim_value ?? '待補'],
                   ['政黨', normalizePartyLabel(person.party)],
-                  ['職位', person.position ?? '待補'],
+                  ['職位', profilePosition],
                   ['所處區域', person.region_name ?? person.district ?? '未指定'],
                   ['選舉年度', person.election_year?.toString() ?? '待補'],
                 ].map(([label, value]) => (

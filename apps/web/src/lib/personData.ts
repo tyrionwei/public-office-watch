@@ -176,15 +176,9 @@ export function toPartyThemeKey(partyLabel: string | null | undefined): PartyThe
   return 'unknown';
 }
 
-export function getPersonRole(position: string | null | undefined, candidateRecords: PublicCandidate[] = []): PublicPersonRole {
-  const personText = [position, ...candidateRecords.map((candidate) => candidate.person_position)]
-    .filter(Boolean)
-    .join(' ');
-  const raceText = candidateRecords.map((candidate) => candidate.race_title).filter(Boolean).join(' ');
-
-  if (personText.includes('副總統')) return 'vice_president';
-  if (personText.includes('總統')) return 'president';
-  const text = [personText, raceText].join(' ');
+function getRoleFromText(text: string): PublicPersonRole {
+  if (text.includes('副總統')) return 'vice_president';
+  if (text.includes('總統')) return 'president';
   if (text.includes('立法委員') || text.includes('立委')) return 'legislator';
   if (text.includes('議員')) return 'councilor';
   if (text.includes('副市長') || text.includes('副縣長') || text.includes('副縣市長')) return 'local_deputy';
@@ -195,10 +189,161 @@ export function getPersonRole(position: string | null | undefined, candidateReco
   return 'other';
 }
 
+function candidateRoleText(candidate: PublicCandidate) {
+  return [candidate.race_title, candidate.person_position].filter(Boolean).join(' ');
+}
+
+function normalizeOfficeLabel(value: string | null | undefined) {
+  return value
+    ?.replace(/候選人/g, '')
+    .replace(/選舉/g, '')
+    .replace(/全國/g, '')
+    .trim() || null;
+}
+
+function isOfficeLabel(value: string | null | undefined) {
+  return Boolean(value && /總統|副總統|立法委員|立委|市長|縣長|議員/.test(value));
+}
+
+function candidateOfficeLabel(candidate: PublicCandidate) {
+  const personPosition = normalizeOfficeLabel(candidate.person_position);
+
+  if (isOfficeLabel(personPosition)) {
+    return personPosition;
+  }
+
+  const raceTitle = normalizeOfficeLabel(candidate.race_title);
+
+  if (isOfficeLabel(raceTitle)) {
+    return raceTitle;
+  }
+
+  return personPosition;
+}
+
+function currentOfficeCandidateLabel(candidate: PublicCandidate) {
+  const raceTitle = normalizeOfficeLabel(candidate.race_title);
+  const personPosition = normalizeOfficeLabel(candidate.person_position);
+
+  if (raceTitle?.includes('總統') && personPosition?.includes('副總統')) {
+    return personPosition;
+  }
+
+  if (isOfficeLabel(raceTitle)) {
+    return raceTitle;
+  }
+
+  if (isOfficeLabel(personPosition)) {
+    return personPosition;
+  }
+
+  return raceTitle ?? personPosition;
+}
+
+function isCandidatePosition(value: string | null | undefined) {
+  return Boolean(value && /候選人|參選|擬參選/.test(value));
+}
+
+function officeLabelMatchesRole(value: string, role: PublicPersonRole): boolean {
+  if (role === 'president') return value.includes('總統') && !value.includes('副總統');
+  if (role === 'vice_president') return value.includes('副總統');
+  if (role === 'legislator') return value.includes('立法委員') || value.includes('立委');
+  if (role === 'local_deputy') return value.includes('副市長') || value.includes('副縣長') || value.includes('副縣市長');
+  if (role === 'local_chief') return (value.includes('市長') || value.includes('縣長')) && !officeLabelMatchesRole(value, 'local_deputy');
+  if (role === 'agency_head') return value.includes('局長') || value.includes('處長') || value.includes('主任委員');
+  if (role === 'councilor') return value.includes('議員');
+  if (role === 'party_officer') return value.includes('黨主席') || value.includes('主席') || value.includes('秘書長');
+  return true;
+}
+
+function displayRuleYear() {
+  return new Date().getFullYear();
+}
+
+function isUpcomingElectionYear(year: number | null | undefined) {
+  return typeof year === 'number' && year >= displayRuleYear();
+}
+
+export function getPersonDisplayPosition(
+  person: Pick<PublicPersonListItem, 'display_position_label' | 'position'>,
+  fallback = '公開人物資料',
+) {
+  return person.display_position_label ?? fallback;
+}
+
+export function getPersonRole(position: string | null | undefined, candidateRecords: PublicCandidate[] = []): PublicPersonRole {
+  const currentOfficeCandidate = currentOfficeCandidateFor(candidateRecords);
+
+  if (currentOfficeCandidate) {
+    return getRoleFromText(currentOfficeCandidateLabel(currentOfficeCandidate) ?? candidateRoleText(currentOfficeCandidate));
+  }
+
+  const positionText = position?.trim() ?? '';
+
+  if (positionText && !isCandidatePosition(positionText)) {
+    return getRoleFromText(positionText);
+  }
+
+  const candidateText = candidateRecords.map(candidateRoleText).filter(Boolean).join(' ');
+  return getRoleFromText([positionText, candidateText].filter(Boolean).join(' '));
+}
+
 function candidateElectionYear(candidate: PublicCandidate) {
   const text = [candidate.election_name, candidate.race_title].filter(Boolean).join(' ');
   const year = text.match(/(?:19|20)\d{2}/)?.[0];
   return year ? Number.parseInt(year, 10) : null;
+}
+
+function isUpcomingCandidate(candidate: PublicCandidate) {
+  return activeCandidateStatuses.has(candidate.registration_status) && isUpcomingElectionYear(candidateElectionYear(candidate));
+}
+
+function compareUpcomingCandidates(left: PublicCandidate, right: PublicCandidate) {
+  const leftYear = candidateElectionYear(left) ?? Number.MAX_SAFE_INTEGER;
+  const rightYear = candidateElectionYear(right) ?? Number.MAX_SAFE_INTEGER;
+  if (leftYear !== rightYear) return leftYear - rightYear;
+
+  const leftRole = getRoleFromText(candidateOfficeLabel(left) ?? candidateRoleText(left));
+  const rightRole = getRoleFromText(candidateOfficeLabel(right) ?? candidateRoleText(right));
+  const roleDiff = roleRank[leftRole] - roleRank[rightRole];
+  if (roleDiff !== 0) return roleDiff;
+
+  return fallbackCollator.compare(candidateRoleText(left), candidateRoleText(right));
+}
+
+function upcomingCandidateFor(candidateRecords: PublicCandidate[]) {
+  return candidateRecords
+    .filter(isUpcomingCandidate)
+    .sort(compareUpcomingCandidates)[0] ?? null;
+}
+
+function upcomingCandidateLabelFor(candidateRecords: PublicCandidate[]) {
+  const upcomingCandidate = upcomingCandidateFor(candidateRecords);
+  return upcomingCandidate ? candidateOfficeLabel(upcomingCandidate) ?? candidateRoleText(upcomingCandidate) : null;
+}
+
+function compareCurrentOfficeCandidates(left: PublicCandidate, right: PublicCandidate) {
+  const leftRole = getRoleFromText(currentOfficeCandidateLabel(left) ?? candidateRoleText(left));
+  const rightRole = getRoleFromText(currentOfficeCandidateLabel(right) ?? candidateRoleText(right));
+  const roleDiff = roleRank[leftRole] - roleRank[rightRole];
+  if (roleDiff !== 0) return roleDiff;
+
+  const leftYear = candidateElectionYear(left) ?? Number.MIN_SAFE_INTEGER;
+  const rightYear = candidateElectionYear(right) ?? Number.MIN_SAFE_INTEGER;
+  if (leftYear !== rightYear) return rightYear - leftYear;
+
+  return fallbackCollator.compare(candidateRoleText(left), candidateRoleText(right));
+}
+
+function currentOfficeCandidateFor(candidateRecords: PublicCandidate[]) {
+  return candidateRecords
+    .filter(isLikelyCurrentElectedCandidate)
+    .sort(compareCurrentOfficeCandidates)[0] ?? null;
+}
+
+function currentOfficeLabelFor(candidateRecords: PublicCandidate[]) {
+  const currentOfficeCandidate = currentOfficeCandidateFor(candidateRecords);
+  return currentOfficeCandidate ? currentOfficeCandidateLabel(currentOfficeCandidate) : null;
 }
 
 function isLikelyCurrentElectedCandidate(candidate: PublicCandidate) {
@@ -226,16 +371,21 @@ function isLikelyCurrentElectedCandidate(candidate: PublicCandidate) {
   return year >= 2024;
 }
 
-function getPersonStatus(position: string | null | undefined, role: PublicPersonRole, candidateRecords: PublicCandidate[]): PublicPersonStatus {
+function getPersonStatus(
+  position: string | null | undefined,
+  role: PublicPersonRole,
+  candidateRecords: PublicCandidate[],
+  electionYear: number | null | undefined,
+): PublicPersonStatus {
   const hasCurrentElectedRecord = candidateRecords.some(isLikelyCurrentElectedCandidate);
-  const hasActiveCandidate = candidateRecords.some((candidate) => activeCandidateStatuses.has(candidate.registration_status));
-  const hasCandidateText = position?.includes('候選人') ?? false;
+  const hasUpcomingCandidate = candidateRecords.some(isUpcomingCandidate);
+  const hasUpcomingCandidateText = (position?.includes('候選人') ?? false) && isUpcomingElectionYear(electionYear);
 
   if (hasCurrentElectedRecord && role !== 'candidate') {
     return 'current';
   }
 
-  if (hasActiveCandidate || hasCandidateText) {
+  if (hasUpcomingCandidate || hasUpcomingCandidateText) {
     return 'candidate';
   }
 
@@ -248,6 +398,51 @@ function getPersonStatus(position: string | null | undefined, role: PublicPerson
   }
 
   return 'other';
+}
+
+function regionRoleLabel(role: PublicPersonRole, roleLabel: string, regionName: string | null | undefined) {
+  const regionPrefix = regionName && role !== 'president' && role !== 'vice_president' ? regionName : '';
+  return regionPrefix + roleLabel;
+}
+
+function displayPositionLabelFor(
+  person: PublicPerson,
+  role: PublicPersonRole,
+  roleLabel: string,
+  status: PublicPersonStatus,
+  currentOfficeLabel: string | null,
+  candidateRecords: PublicCandidate[],
+  regionName: string | null | undefined,
+) {
+  const position = person.position?.trim();
+
+  if (status === 'current' && role !== 'candidate') {
+    const officeLabel = currentOfficeLabel?.trim();
+
+    if (officeLabel && officeLabelMatchesRole(officeLabel, role)) {
+      return officeLabel;
+    }
+
+    if (position && !isCandidatePosition(position) && officeLabelMatchesRole(position, role)) {
+      return position;
+    }
+
+    if (roleLabel !== '其他公眾人物') {
+      return regionRoleLabel(role, roleLabel, regionName);
+    }
+  }
+
+  const upcomingCandidateLabel = upcomingCandidateLabelFor(candidateRecords);
+
+  if (upcomingCandidateLabel) {
+    return upcomingCandidateLabel;
+  }
+
+  if (position && isCandidatePosition(position) && isUpcomingElectionYear(person.election_year)) {
+    return position;
+  }
+
+  return null;
 }
 
 function surnameOf(name: string) {
@@ -496,6 +691,8 @@ function mergePersonListItems(left: PublicPersonListItem, right: PublicPersonLis
 
   return {
     ...preferred,
+    current_office_label: preferred.current_office_label ?? secondary.current_office_label,
+    display_position_label: preferred.display_position_label ?? secondary.display_position_label,
     external_ids: Array.from(new Set([...preferred.external_ids, ...secondary.external_ids])).sort(),
     merged_person_ids: Array.from(new Set([...preferred.merged_person_ids, ...secondary.merged_person_ids])),
     merged_role_labels: Array.from(new Set([...preferred.merged_role_labels, ...secondary.merged_role_labels])),
@@ -577,17 +774,22 @@ export function buildPersonListItems(
     const enrichedPerson = applyClaimBackfill(person, personClaims);
     const candidateRecords = candidatesByPersonId.get(person.person_id) ?? [];
     const role = getPersonRole(enrichedPerson.position, candidateRecords);
-    const status = getPersonStatus(enrichedPerson.position, role, candidateRecords);
+    const status = getPersonStatus(enrichedPerson.position, role, candidateRecords, enrichedPerson.election_year);
     const region = inferRegionForPerson(enrichedPerson, candidateRecords, stageRegions);
+    const roleLabel = roleLabels[role];
+    const currentOfficeLabel = currentOfficeLabelFor(candidateRecords);
+    const regionName = region?.label ?? enrichedPerson.district ?? candidateRecords[0]?.region_name ?? null;
 
     return {
       ...enrichedPerson,
       role,
-      role_label: roleLabels[role],
+      role_label: roleLabel,
       status,
       status_label: statusLabels[status],
+      current_office_label: currentOfficeLabel,
+      display_position_label: displayPositionLabelFor(enrichedPerson, role, roleLabel, status, currentOfficeLabel, candidateRecords, regionName),
       region_id: region?.id ?? candidateRecords[0]?.region_id ?? null,
-      region_name: region?.label ?? enrichedPerson.district ?? candidateRecords[0]?.region_name ?? null,
+      region_name: regionName,
       candidate_count: candidateRecords.length,
       external_ids: externalIdsForPerson(personClaims),
       merged_person_ids: [enrichedPerson.person_id],
@@ -645,7 +847,7 @@ function identityRecordsFor(personIds: string[], items: PublicPersonListItem[]):
       person_id: item.person_id,
       name: item.name,
       party: item.party,
-      position: item.position,
+      position: item.display_position_label,
       district: item.district,
       role_label: item.role_label,
       status_label: item.status_label,

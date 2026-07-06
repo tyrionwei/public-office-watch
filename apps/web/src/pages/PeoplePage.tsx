@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { publicDataProvider } from '../lib/publicData';
-import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicPersonFilters, PublicPersonRole, PublicPersonStatus } from '../types/publicViews';
@@ -243,8 +243,13 @@ export function PeoplePage() {
             </span>
           }
         >
-          <div className="mb-4 pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300">
-            預設依現任優先、職位層級、姓氏筆劃排序。從首頁政黨小卡進入時，會自動帶入縣市、政黨與職位條件。
+          <div className="mb-4 grid gap-2 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.45fr)]">
+            <div className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs leading-5 text-slate-300">
+              預設顯示總統、立委、縣市首長與議員等主要層級，暫不列出村里長與鄉鎮市民代表。輸入姓名搜尋時仍會查完整人物資料。
+            </div>
+            <div className="pixel-corners border border-accent/35 bg-accent/10 px-3 py-2 text-xs leading-5 text-slate-300">
+              目前結果 <span className="font-display text-base text-white">{people.length}</span> 筆，依現任優先、職位層級與姓名排序。
+            </div>
           </div>
 
           {people.length > 0 ? (
@@ -263,22 +268,22 @@ export function PeoplePage() {
                     <Link
                       key={person.person_id}
                       to={personPath(person.person_id)}
-                      className="grid gap-3 px-3 py-3 transition hover:bg-accent/8 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent/35 lg:grid-cols-[minmax(140px,1fr)_110px_130px_130px_90px]"
+                      className="grid gap-3 px-3 py-3 transition hover:bg-accent/8 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent/35 lg:grid-cols-[minmax(160px,1fr)_minmax(120px,0.7fr)_minmax(120px,0.75fr)_minmax(130px,0.8fr)_90px]"
                     >
-                      <div>
-                        <p className="font-display text-lg text-white">{person.name}</p>
-                        <p className="mt-1 text-xs text-slate-500">{person.position ?? '公開人物資料'}</p>
+                      <div className="min-w-0">
+                        <p className="truncate font-display text-lg text-white">{person.name}</p>
+                        <p className="mt-1 truncate text-xs text-slate-500">{getPersonDisplayPosition(person)}</p>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <span
-                          className="pixel-corners inline-block border px-2 py-1 text-xs"
+                          className="pixel-corners inline-block max-w-full truncate border px-2 py-1 text-xs"
                           style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}33`, color: theme.text }}
                         >
                           {normalizePartyLabel(person.party)}
                         </span>
                       </div>
-                      <p className="text-sm text-slate-300">{person.role_label}</p>
-                      <p className="text-sm text-slate-300">{person.region_name ?? person.district ?? '未指定'}</p>
+                      <p className="min-w-0 truncate text-sm text-slate-300">{person.role_label}</p>
+                      <p className="min-w-0 truncate text-sm text-slate-300">{person.region_name ?? person.district ?? '未指定'}</p>
                       <p className={person.status === 'current' ? 'text-sm text-signal' : 'text-sm text-slate-400'}>
                         {person.status_label}
                       </p>
@@ -298,7 +303,7 @@ export function PeoplePage() {
               <p>
                 顯示 {pageStart + 1}-{Math.min(pageStart + PAGE_SIZE, people.length)} / {people.length}
               </p>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                 <button
                   type="button"
                   onClick={() => updatePage(1)}

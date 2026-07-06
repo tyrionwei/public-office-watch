@@ -372,6 +372,8 @@ export type PublicPersonListItem = PublicPerson & {
   role_label: string;
   status: PublicPersonStatus;
   status_label: string;
+  current_office_label: string | null;
+  display_position_label: string | null;
   region_id: string | null;
   region_name: string | null;
   candidate_count: number;

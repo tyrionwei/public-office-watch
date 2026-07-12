@@ -40,6 +40,7 @@ export function PartiesPage() {
   const sortedParties = parties
     .slice()
     .sort((left, right) => left.name.localeCompare(right.name, 'zh-TW'));
+  const untrackedPartyCount = Math.max(0, sortedParties.length - summaries.length);
 
   return (
     <AppShell>
@@ -119,17 +120,17 @@ export function PartiesPage() {
 
         <SectionPanel title="完整政黨列表" eyebrow="party registry">
           <details className="group pixel-corners border border-line/70 bg-bg/35">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm text-white marker:hidden">
+            <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm text-white marker:hidden">
               <span>全部政黨登記資料</span>
-              <span className="text-xs uppercase tracking-[0.22em] text-slate-500 group-open:hidden">
-                {sortedParties.length} parties · expand
+              <span className="text-xs uppercase tracking-[0.18em] text-slate-500 group-open:hidden">
+                共 {sortedParties.length} 個，另有 {untrackedPartyCount} 個尚未接入摘要 · 展開
               </span>
-              <span className="hidden text-xs uppercase tracking-[0.22em] text-slate-500 group-open:inline">
-                collapse
+              <span className="hidden text-xs uppercase tracking-[0.18em] text-slate-500 group-open:inline">
+                收合完整列表
               </span>
             </summary>
             <div className="border-t border-line/60 p-3">
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
                 {sortedParties.map((party) => {
                   const theme = partyTheme[party.theme_key];
                   const isTracked = trackedPartyIds.has(party.party_id);
@@ -138,12 +139,12 @@ export function PartiesPage() {
                     <Link
                       key={party.party_id}
                       to={partyPath(party.slug)}
-                      className="pixel-corners border border-line/60 bg-panelAlt/35 px-3 py-2 transition hover:border-accent/55 focus:outline-none focus:ring-2 focus:ring-accent/35"
+                      className="pixel-corners min-w-0 border border-line/60 bg-panelAlt/35 px-3 py-2 transition hover:border-accent/55 focus:outline-none focus:ring-2 focus:ring-accent/35"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <p className="truncate text-sm text-white">{party.name}</p>
-                          <p className="mt-1 truncate text-xs text-slate-500">{party.short_name ?? party.registry_no ?? 'party registry'}</p>
+                          <p className="mt-1 truncate text-xs text-slate-500">{party.short_name ?? party.registry_no ?? '政黨登記資料'}</p>
                         </div>
                         <span
                           className="shrink-0 rounded-sm border px-2 py-1 text-[11px]"

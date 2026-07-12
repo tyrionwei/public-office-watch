@@ -1,4 +1,5 @@
 import { taiwanCountyPaths } from '../data/generated/taiwanCountyMap';
+import { useI18n } from '../i18n';
 import type { StageRegionNode } from '../types/stageMap';
 import { TaiwanCountyMap } from './TaiwanCountyMap';
 
@@ -20,13 +21,14 @@ export function CompactCountyQuickSelect({
   selectedRegionId,
   onSelectRegion,
 }: CompactCountyQuickSelectProps) {
+  const { t } = useI18n();
   const topLevelRegions = regions.filter((region) => region.level === 'county_city');
 
   return (
     <div className="pixel-corners border border-line/70 bg-panelAlt/35 px-3 py-3">
       <div className="mb-2 flex items-center justify-between gap-3">
-        <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">縣市快速選擇</p>
-        <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">備用清單</span>
+        <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">{t('stage.quickSelect')}</p>
+        <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{t('stage.backupList')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
         {topLevelRegions.map((region) => {
@@ -60,6 +62,7 @@ export function TaiwanStageSelect({
   onSelectRegion,
   hideQuickSelect = false,
 }: TaiwanStageSelectProps) {
+  const { t } = useI18n();
   const topLevelRegions = regions.filter((region) => region.level === 'county_city');
   const hasCountyPaths = taiwanCountyPaths.length > 0;
 
@@ -68,10 +71,10 @@ export function TaiwanStageSelect({
         <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(7,22,45,0.96),rgba(8,27,52,0.94)_55%,rgba(7,18,38,0.96))] p-3 sm:p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="font-display text-sm uppercase tracking-[0.24em] text-slate-200">台灣縣市導覽</p>
+              <p className="font-display text-sm uppercase tracking-[0.24em] text-slate-200">{t('stage.countyGuide')}</p>
             </div>
             <span className="rounded-sm border border-signal/30 bg-signal/10 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-signal">
-              縣市層級
+              {t('stage.countyLevel')}
             </span>
           </div>
 
@@ -104,7 +107,7 @@ export function TaiwanStageSelect({
                       {region.stageLabel}
                     </span>
                     <span className="mt-2 block text-sm font-medium leading-snug">{region.label}</span>
-                    <span className="mt-2 block text-[11px] text-slate-500">縣市代碼 {region.stageLabel}</span>
+                    <span className="mt-2 block text-[11px] text-slate-500">{t('stage.countyCode', { code: region.stageLabel })}</span>
                   </button>
                 );
               })}

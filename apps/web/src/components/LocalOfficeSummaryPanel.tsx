@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
+import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath, personPath } from '../routes/routePaths';
@@ -13,26 +14,37 @@ type LocalOfficeSummaryPanelProps = {
 };
 
 function EmptyOfficeCard({ emptyText }: { emptyText: string }) {
+  const { t } = useI18n();
+
   return (
     <div className="pixel-corners border border-line/70 bg-bg/35 p-3">
-      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">資料待補</p>
+      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('office.dataPending')}</p>
       <p className="mt-2 text-sm text-slate-300">{emptyText}</p>
     </div>
   );
 }
 
-function PersonOfficeLink({ person, dense = false }: { person: PublicPersonListItem; dense?: boolean }) {
+function PersonOfficeLink({
+  person,
+  dense = false,
+  showRoleLabel = true,
+}: {
+  person: PublicPersonListItem;
+  dense?: boolean;
+  showRoleLabel?: boolean;
+}) {
+  const { t } = useI18n();
   const theme = partyTheme[toPartyThemeKey(person.party)];
-  const subtitle = getPersonDisplayPosition(person, '現任公職');
+  const subtitle = getPersonDisplayPosition(person, t('office.currentOfficeFallback'));
   const linkClassName = dense
     ? 'pixel-corners flex items-start justify-between gap-3 border border-line/70 bg-bg/40 px-3 py-2 transition hover:border-accent/60 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/35'
-    : 'pixel-corners block border border-line/70 bg-bg/40 p-3 transition hover:border-accent/60 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/35';
+    : 'pixel-corners flex items-start justify-between gap-3 border border-line/70 bg-bg/40 p-3 transition hover:border-accent/60 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/35';
 
   return (
     <Link to={personPath(person.person_id)} className={linkClassName}>
       <div className="min-w-0">
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{person.role_label}</p>
-        <h3 className={dense ? 'mt-1 truncate font-display text-lg text-white' : 'mt-2 font-display text-xl text-white'}>
+        {showRoleLabel ? <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{person.role_label}</p> : null}
+        <h3 className={showRoleLabel ? (dense ? 'mt-1 truncate font-display text-lg text-white' : 'mt-2 font-display text-xl text-white') : dense ? 'truncate font-display text-lg text-white' : 'font-display text-xl text-white'}>
           {person.name}
         </h3>
         <p className={dense ? 'mt-1 line-clamp-2 text-xs text-slate-400' : 'mt-1 text-sm text-slate-400'}>
@@ -49,12 +61,21 @@ function PersonOfficeLink({ person, dense = false }: { person: PublicPersonListI
   );
 }
 
-function PersonOfficeCard({ person, emptyText }: { person: PublicPersonListItem | null; emptyText: string }) {
-  if (!person) {
-    return <EmptyOfficeCard emptyText={emptyText} />;
-  }
-
-  return <PersonOfficeLink person={person} />;
+function PersonOfficeCard({
+  title,
+  person,
+  emptyText,
+}: {
+  title: string;
+  person: PublicPersonListItem | null;
+  emptyText: string;
+}) {
+  return (
+    <section className="pixel-corners border border-line/70 bg-bg/35 p-3">
+      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{title}</p>
+      <div className="mt-3">{person ? <PersonOfficeLink person={person} showRoleLabel={false} /> : <EmptyOfficeCard emptyText={emptyText} />}</div>
+    </section>
+  );
 }
 
 function PersonOfficeGroupCard({
@@ -68,6 +89,7 @@ function PersonOfficeGroupCard({
   emptyText: string;
   visibleCount?: number;
 }) {
+  const { t } = useI18n();
   const cardRef = useRef<HTMLElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -128,10 +150,10 @@ function PersonOfficeGroupCard({
     <div ref={panelRef} className="fixed z-[100]" style={{ left: panelPosition.left, top: panelPosition.top, width: panelPosition.width }}>
       <div className="pixel-corners border border-accent/45 bg-panel/95 p-3 shadow-[0_16px_0_rgba(0,0,0,0.28)] backdrop-blur-sm">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <p className="text-xs uppercase tracking-[0.2em] text-accent">其他{title}</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-accent">{t('office.otherTitle', { title })}</p>
           <button
             type="button"
-            aria-label={`關閉${title}清單`}
+            aria-label={t('office.closeList', { title })}
             onClick={() => setIsOpen(false)}
             className="pixel-corners border border-line/70 bg-bg/50 px-2 py-1 text-xs text-slate-300 hover:border-accent/55 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/35"
           >
@@ -140,7 +162,7 @@ function PersonOfficeGroupCard({
         </div>
         <div id={panelId} className="grid max-h-80 gap-2 overflow-y-auto pr-1">
           {otherPeople.map((person) => (
-            <PersonOfficeLink key={person.person_id} person={person} dense />
+            <PersonOfficeLink key={person.person_id} person={person} dense showRoleLabel={false} />
           ))}
         </div>
       </div>
@@ -152,12 +174,12 @@ function PersonOfficeGroupCard({
       <div className="flex items-center justify-between gap-3">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{title}</p>
         <span className="pixel-corners border border-line/70 bg-panelAlt/45 px-2 py-1 text-[11px] text-slate-300">
-          {people.length} 位
+          {t('common.peopleCount', { count: people.length })}
         </span>
       </div>
       <div className="mt-3 grid gap-2">
         {visiblePeople.map((person) => (
-          <PersonOfficeLink key={person.person_id} person={person} dense />
+          <PersonOfficeLink key={person.person_id} person={person} dense showRoleLabel={false} />
         ))}
       </div>
       {otherPeople.length > 0 ? (
@@ -168,7 +190,7 @@ function PersonOfficeGroupCard({
           onClick={() => setIsOpen((current) => !current)}
           className="pixel-corners mt-2 w-full border border-line/60 bg-panelAlt/30 px-3 py-2 text-left text-xs text-slate-300 transition hover:border-accent/55 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/35"
         >
-          {isOpen ? '收回其他人員' : `顯示另外 ${otherPeople.length} 位`}
+          {isOpen ? t('office.collapseOthers') : t('office.showMorePeople', { count: otherPeople.length })}
         </button>
       ) : null}
       {typeof document !== 'undefined' && panel ? createPortal(panel, document.body) : null}
@@ -177,6 +199,7 @@ function PersonOfficeGroupCard({
 }
 
 function PartyCountCard({ summary, party, count }: { summary: PublicLocalOfficeSummary; party: string; count: number }) {
+  const { t } = useI18n();
   const theme = partyTheme[toPartyThemeKey(party)];
 
   return (
@@ -186,7 +209,7 @@ function PartyCountCard({ summary, party, count }: { summary: PublicLocalOfficeS
       style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}2E` }}
     >
       <p className="text-xs uppercase tracking-[0.2em]" style={{ color: theme.accent }}>
-        議員
+        {t('office.councilors')}
       </p>
       <div className="mt-2 flex items-end justify-between gap-3">
         <span className="text-sm text-white">{party}</span>
@@ -199,51 +222,52 @@ function PartyCountCard({ summary, party, count }: { summary: PublicLocalOfficeS
 }
 
 export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelProps) {
+  const { t } = useI18n();
   const summary = publicDataProvider.getLocalOfficeSummaryByRegionId(regionId);
   const hasCouncilors = summary.councilor_party_counts.length > 0;
 
   return (
     <PixelFrame
-      title="縣市公職摘要"
+      title={t('office.title')}
       action={
         <Link
           to={peoplePath({ region: summary.region_id, status: 'current' })}
           className="text-[11px] uppercase tracking-[0.22em] text-accent hover:text-white"
         >
-          查看人物
+          {t('office.viewPeople')}
         </Link>
       }
       className="overflow-visible bg-[linear-gradient(180deg,rgba(12,18,36,0.96),rgba(8,15,30,0.92))]"
     >
       <div className="mb-3 flex items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-slate-500">目前縣市公職</p>
+          <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{t('office.currentLocalOffice')}</p>
           <h2 className="mt-1 font-display text-2xl text-white">{summary.region_name}</h2>
         </div>
         <Link
           to={peoplePath({ region: summary.region_id, role: 'councilor', status: 'current' })}
           className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-right text-xs text-slate-300 hover:border-accent/55 hover:text-white"
         >
-          議員總數
+          {t('office.councilorTotal')}
           <span className="ml-2 font-display text-lg text-signal">{summary.councilor_total}</span>
         </Link>
       </div>
 
       <div className="grid gap-3 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
         <div className="grid gap-3">
-          <PersonOfficeCard person={summary.chief_executive} emptyText="尚未找到可公開的現任縣市首長資料。" />
+          <PersonOfficeCard title={t('people.role.local_chief')} person={summary.chief_executive} emptyText={t('office.emptyChief')} />
           <PersonOfficeGroupCard
-            title="副縣市首長"
+            title={t('office.deputyChiefs')}
             people={summary.deputies}
-            emptyText="地方政府名冊待同步：副縣市長資料尚未接入。"
+            emptyText={t('office.emptyDeputies')}
             visibleCount={1}
           />
         </div>
-        <PersonOfficeGroupCard title="主要單位首長" people={summary.agency_heads} emptyText="局處首長資料待同步。" />
+        <PersonOfficeGroupCard title={t('office.agencyHeads')} people={summary.agency_heads} emptyText={t('office.emptyAgencyHeads')} />
       </div>
 
       <div className="mt-3">
-        <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">議員政黨分布</p>
+        <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">{t('office.councilorPartyCards')}</p>
         {hasCouncilors ? (
           <div className="grid gap-2 sm:grid-cols-2">
             {summary.councilor_party_counts.map((item) => (
@@ -252,7 +276,7 @@ export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelPro
           </div>
         ) : (
           <div className="pixel-corners border border-line/70 bg-bg/35 px-3 py-3 text-sm text-slate-300">
-            尚未找到可公開的現任議員資料；後續會接地方選舉異動與地方政府名冊校正。
+            {t('office.emptyCouncilors')}
           </div>
         )}
       </div>
@@ -263,7 +287,7 @@ export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelPro
             <div className="flex items-center justify-between gap-3">
               <span className="text-xs text-slate-400">{item.label}</span>
               <span className={item.status === 'available' ? 'text-xs text-signal' : 'text-xs text-slate-500'}>
-                {item.status === 'available' ? '已接入' : '待同步'}
+                {item.status === 'available' ? t('office.available') : t('office.pending')}
               </span>
             </div>
             <p className="mt-1 text-xs text-slate-500">{item.note}</p>

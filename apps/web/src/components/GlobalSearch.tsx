@@ -1,18 +1,20 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import type { PublicSearchResult } from '../lib/publicDataProvider';
 
 const resultTypeOrder: PublicSearchResult['type'][] = ['party', 'election', 'region', 'person', 'company'];
-const resultTypeLabels: Record<PublicSearchResult['type'], string> = {
-  party: '政黨',
-  election: '選舉',
-  region: '地區',
-  person: '人物',
-  company: '公司',
+const resultTypeLabelKeys: Record<PublicSearchResult['type'], 'search.type.party' | 'search.type.election' | 'search.type.region' | 'search.type.person' | 'search.type.company'> = {
+  party: 'search.type.party',
+  election: 'search.type.election',
+  region: 'search.type.region',
+  person: 'search.type.person',
+  company: 'search.type.company',
 };
 
 export function GlobalSearch() {
+  const { t } = useI18n();
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
@@ -33,7 +35,7 @@ export function GlobalSearch() {
   return (
     <div className="relative min-w-0 flex-1">
       <label htmlFor="global-search" className="sr-only">
-        搜尋人物、公司、政黨、選舉、地區
+        {t('search.placeholder')}
       </label>
       <div className="pixel-corners flex min-h-14 items-center gap-2 border border-line/80 bg-bg/55 px-3 shadow-[inset_0_0_18px_rgba(114,232,255,0.08)] focus-within:border-accent/70 focus-within:ring-2 focus-within:ring-accent/20">
         <span className="font-display text-sm text-signal" aria-hidden="true">
@@ -46,7 +48,7 @@ export function GlobalSearch() {
           onChange={(event) => setQuery(event.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => window.setTimeout(() => setIsFocused(false), 120)}
-          placeholder="搜尋人物、公司、政黨、選舉、地區"
+          placeholder={t('search.placeholder')}
           className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-slate-500"
         />
       </div>
@@ -54,13 +56,13 @@ export function GlobalSearch() {
       {showPanel ? (
         <div className="pixel-corners absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[420px] overflow-auto border border-accent/35 bg-[#071126]/98 p-3 shadow-[0_18px_40px_rgba(0,0,0,0.42)]">
           {query.trim().length < 2 ? (
-            <p className="px-2 py-3 text-xs text-slate-400">請輸入至少 2 個字元。</p>
+            <p className="px-2 py-3 text-xs text-slate-400">{t('search.minChars')}</p>
           ) : groupedResults.length > 0 ? (
             <div className="space-y-3">
               {groupedResults.map((group) => (
                 <section key={group.type}>
                   <p className="mb-1 px-2 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                    {resultTypeLabels[group.type]}
+                    {t(resultTypeLabelKeys[group.type])}
                   </p>
                   <div className="grid gap-1">
                     {group.results.map((result) =>
@@ -78,7 +80,7 @@ export function GlobalSearch() {
                           key={`${result.type}-${result.id}`}
                           className="pixel-corners border border-line/50 bg-bg/30 px-3 py-2"
                         >
-                          <SearchResultContent result={result} note="詳情頁未啟用" />
+                          <SearchResultContent result={result} note={t('search.detailDisabled')} />
                         </div>
                       ),
                     )}
@@ -87,7 +89,7 @@ export function GlobalSearch() {
               ))}
             </div>
           ) : (
-            <p className="px-2 py-3 text-xs text-slate-400">找不到符合的公開資料。</p>
+            <p className="px-2 py-3 text-xs text-slate-400">{t('search.noResults')}</p>
           )}
         </div>
       ) : null}

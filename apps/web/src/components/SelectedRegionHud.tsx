@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useI18n } from '../i18n';
 import { regionPath } from '../routes/routePaths';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import { PixelFrame } from './PixelFrame';
@@ -14,16 +15,18 @@ type SelectedRegionHudProps = {
 };
 
 const skylineBars = [42, 68, 96, 132, 82, 58];
-const electionItemLabels = ['首長選舉', '民意代表選舉', '基層公職'];
 
 export function SelectedRegionHud({ region, regionNode, regionSummary }: SelectedRegionHudProps) {
+  const { t } = useI18n();
+  const electionItemLabels = [t('regionHud.chiefElection'), t('regionHud.representativeElection'), t('regionHud.basicOffice')];
+
   if (!regionSummary || !regionNode) {
     return null;
   }
 
   return (
     <PixelFrame
-      title="縣市重點"
+      title={t('regionHud.title')}
       className="bg-[linear-gradient(180deg,rgba(6,46,91,0.95),rgba(9,37,74,0.92)_55%,rgba(10,19,39,0.95))]"
     >
       <div className="space-y-3 text-sm text-slate-300">
@@ -45,25 +48,25 @@ export function SelectedRegionHud({ region, regionNode, regionSummary }: Selecte
           </div>
 
           <div className="relative max-w-full sm:max-w-[74%]">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-accent">目前選取縣市</p>
+            <p className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('regionHud.currentCounty')}</p>
             <p className="mt-3 font-display text-3xl leading-none text-white">{regionSummary.label}</p>
             <p className="mt-2 text-lg font-semibold uppercase tracking-[0.14em] text-slate-100">
               {regionNode.stageLabel}
             </p>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-slate-200">{region?.tone ?? '公開資料導覽區塊'}</p>
+            <p className="mt-4 max-w-sm text-sm leading-6 text-slate-200">{region?.tone ?? t('regionHud.defaultTone')}</p>
 
             <div className="mt-5 grid max-w-[420px] gap-2 text-xs text-slate-100">
               <div className="grid grid-cols-[96px_minmax(0,1fr)] gap-3">
-                <span className="uppercase tracking-[0.18em] text-slate-400">最近選舉</span>
+                <span className="uppercase tracking-[0.18em] text-slate-400">{t('regionHud.nearestElection')}</span>
                 <span className="font-medium text-white">{regionSummary.nearestElectionName}</span>
               </div>
               <div className="grid grid-cols-[96px_minmax(0,1fr)] gap-3">
-                <span className="uppercase tracking-[0.18em] text-slate-400">投票日</span>
+                <span className="uppercase tracking-[0.18em] text-slate-400">{t('regionHud.voteDate')}</span>
                 <span className="font-display text-base text-signal">{regionSummary.nearestElectionDate}</span>
               </div>
               <div className="grid grid-cols-[96px_minmax(0,1fr)] gap-3">
-                <span className="uppercase tracking-[0.18em] text-slate-400">公開項目</span>
-                <span className="text-white">{regionSummary.upcomingRaceCount} 項待追蹤選舉</span>
+                <span className="uppercase tracking-[0.18em] text-slate-400">{t('regionHud.publicItems')}</span>
+                <span className="text-white">{t('regionHud.upcomingRaceCount', { count: regionSummary.upcomingRaceCount })}</span>
               </div>
             </div>
 
@@ -90,7 +93,7 @@ export function SelectedRegionHud({ region, regionNode, regionSummary }: Selecte
                 to={regionPath(regionNode.id)}
                 className="pixel-corners inline-flex min-w-[220px] justify-center border border-yellow-200/70 bg-signal px-5 py-3 font-display text-sm uppercase tracking-[0.16em] text-slate-950 shadow-[0_4px_0_rgba(120,75,12,0.8)] transition hover:translate-y-0.5 hover:shadow-[0_2px_0_rgba(120,75,12,0.8)] focus:outline-none focus:ring-2 focus:ring-signal/40"
               >
-                查看此縣市
+                {t('regionHud.viewCounty')}
               </Link>
             ) : null}
           </div>

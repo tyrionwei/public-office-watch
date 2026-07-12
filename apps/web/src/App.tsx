@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { BgmProvider } from './components/BgmProvider';
+import { LanguageProvider } from './i18n';
 import { publicDataReadyEvent } from './lib/publicDataProviderFactory';
 import { refreshSupabasePublicDataSnapshot } from './lib/supabasePublicDataProvider';
 import { AboutPage } from './pages/AboutPage';
@@ -44,40 +45,42 @@ function App() {
 
   return (
     <BrowserRouter>
-      <BgmProvider>
-        <Routes>
-          <Route path={homePath()} element={<HomePage />} />
-          <Route path={peoplePath()} element={<PeoplePage />} />
-          <Route path="/people/:personId" element={<PersonPage />} />
-          <Route path={partiesPath()} element={<PartiesPage />} />
-          <Route path="/parties/:partySlug" element={<PartyPage />} />
-          <Route path={dataGuidancePath()} element={<DataGuidancePage />} />
-          <Route path={aboutPath()} element={<AboutPage />} />
-          <Route path="/regions/:regionId" element={<RegionPage />} />
-          <Route path="/elections/:electionId" element={<ElectionPage />} />
-          {InternalReviewQueuePage ? (
-            <Route
-              path={internalReviewQueuePath()}
-              element={
-                <Suspense fallback={null}>
-                  <InternalReviewQueuePage />
-                </Suspense>
-              }
-            />
-          ) : null}
-          {InternalDataProgressPage ? (
-            <Route
-              path={internalDataProgressPath()}
-              element={
-                <Suspense fallback={null}>
-                  <InternalDataProgressPage />
-                </Suspense>
-              }
-            />
-          ) : null}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </BgmProvider>
+      <LanguageProvider>
+        <BgmProvider>
+          <Routes>
+            <Route path={homePath()} element={<HomePage />} />
+            <Route path={peoplePath()} element={<PeoplePage />} />
+            <Route path="/people/:personId" element={<PersonPage />} />
+            <Route path={partiesPath()} element={<PartiesPage />} />
+            <Route path="/parties/:partySlug" element={<PartyPage />} />
+            <Route path={dataGuidancePath()} element={<DataGuidancePage />} />
+            <Route path={aboutPath()} element={<AboutPage />} />
+            <Route path="/regions/:regionId" element={<RegionPage />} />
+            <Route path="/elections/:electionId" element={<ElectionPage />} />
+            {InternalReviewQueuePage ? (
+              <Route
+                path={internalReviewQueuePath()}
+                element={
+                  <Suspense fallback={null}>
+                    <InternalReviewQueuePage />
+                  </Suspense>
+                }
+              />
+            ) : null}
+            {InternalDataProgressPage ? (
+              <Route
+                path={internalDataProgressPath()}
+                element={
+                  <Suspense fallback={null}>
+                    <InternalDataProgressPage />
+                  </Suspense>
+                }
+              />
+            ) : null}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </BgmProvider>
+      </LanguageProvider>
     </BrowserRouter>
   );
 }

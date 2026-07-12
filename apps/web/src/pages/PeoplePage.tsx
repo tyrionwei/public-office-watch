@@ -3,6 +3,8 @@ import type { FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
+import { useI18n } from '../i18n';
+import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath, personPath } from '../routes/routePaths';
@@ -11,24 +13,24 @@ import type { PublicPersonFilters, PublicPersonRole, PublicPersonStatus } from '
 
 const PAGE_SIZE = 20;
 
-const roleOptions: { value: PublicPersonRole; label: string }[] = [
-  { value: 'president', label: '總統' },
-  { value: 'vice_president', label: '副總統' },
-  { value: 'legislator', label: '立法委員' },
-  { value: 'local_chief', label: '縣市首長' },
-  { value: 'local_deputy', label: '副縣市首長' },
-  { value: 'agency_head', label: '主要單位首長' },
-  { value: 'councilor', label: '議員' },
-  { value: 'party_officer', label: '政黨職務' },
-  { value: 'candidate', label: '候選人' },
-  { value: 'other', label: '其他' },
+const roleOptionDefinitions: { value: PublicPersonRole; labelKey: TranslationKey }[] = [
+  { value: 'president', labelKey: 'people.role.president' },
+  { value: 'vice_president', labelKey: 'people.role.vice_president' },
+  { value: 'legislator', labelKey: 'people.role.legislator' },
+  { value: 'local_chief', labelKey: 'people.role.local_chief' },
+  { value: 'local_deputy', labelKey: 'people.role.local_deputy' },
+  { value: 'agency_head', labelKey: 'people.role.agency_head' },
+  { value: 'councilor', labelKey: 'people.role.councilor' },
+  { value: 'party_officer', labelKey: 'people.role.party_officer' },
+  { value: 'candidate', labelKey: 'people.role.candidate' },
+  { value: 'other', labelKey: 'people.role.other' },
 ];
 
-const statusOptions: { value: PublicPersonStatus; label: string }[] = [
-  { value: 'current', label: '現任' },
-  { value: 'candidate', label: '候選人' },
-  { value: 'former', label: '曾參選' },
-  { value: 'other', label: '其他' },
+const statusOptionDefinitions: { value: PublicPersonStatus; labelKey: TranslationKey }[] = [
+  { value: 'current', labelKey: 'people.status.current' },
+  { value: 'candidate', labelKey: 'people.status.candidate' },
+  { value: 'former', labelKey: 'people.status.former' },
+  { value: 'other', labelKey: 'people.status.other' },
 ];
 
 const priorityPartyOrder = ['民主進步黨', '中國國民黨', '台灣民眾黨'];
@@ -100,11 +102,13 @@ function SelectFilter({
   value,
   options,
   onChange,
+  allLabel,
 }: {
   label: string;
   value: string;
   options: { value: string; label: string }[];
   onChange: (value: string) => void;
+  allLabel: string;
 }) {
   return (
     <label className="block">
@@ -114,7 +118,7 @@ function SelectFilter({
         onChange={(event) => onChange(event.target.value)}
         className="mt-2 w-full pixel-corners border border-line/70 bg-bg/70 px-3 py-2 text-sm text-white outline-none focus:border-accent"
       >
-        <option value="">全部</option>
+        <option value="">{allLabel}</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
@@ -128,9 +132,13 @@ function SelectFilter({
 function KeywordFilter({
   value,
   onSearch,
+  label,
+  buttonLabel,
 }: {
   value: string;
   onSearch: (value: string) => void;
+  label: string;
+  buttonLabel: string;
 }) {
   const [draftValue, setDraftValue] = useState(value);
 
@@ -145,24 +153,25 @@ function KeywordFilter({
 
   return (
     <form onSubmit={handleSubmit} className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-slate-500">搜尋姓名</span>
+      <span className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</span>
       <input
         value={draftValue}
         onChange={(event) => setDraftValue(event.target.value)}
-        placeholder="搜尋姓名"
+        placeholder={label}
         className="mt-2 w-full pixel-corners border border-line/70 bg-bg/70 px-3 py-2 text-sm text-white outline-none placeholder:text-slate-600 focus:border-accent"
       />
       <button
         type="submit"
         className="mt-2 w-full pixel-corners border border-accent/70 bg-accent/15 px-3 py-2 text-sm text-accent transition hover:bg-accent/25 hover:text-white"
       >
-        搜尋
+        {buttonLabel}
       </button>
     </form>
   );
 }
 
 export function PeoplePage() {
+  const { t } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = getFilters(searchParams);
   const { party, query, regionId, role, status } = filters;
@@ -178,6 +187,14 @@ export function PeoplePage() {
     .getStageRegions()
     .filter((region) => region.level === 'county_city')
     .map((region) => ({ value: region.id, label: region.label }));
+  const roleOptions = useMemo(
+    () => roleOptionDefinitions.map((option) => ({ value: option.value, label: t(option.labelKey) })),
+    [t],
+  );
+  const statusOptions = useMemo(
+    () => statusOptionDefinitions.map((option) => ({ value: option.value, label: t(option.labelKey) })),
+    [t],
+  );
   const partyOptions = useMemo(
     () =>
       Array.from(new Set(allPeople.map((person) => normalizePartyLabel(person.party))))
@@ -186,11 +203,11 @@ export function PeoplePage() {
     [allPeople],
   );
   const activeFilterItems = [
-    query ? { label: '姓名', value: query } : null,
-    regionId ? { label: '區域', value: regionOptions.find((option) => option.value === regionId)?.label ?? regionId } : null,
-    party ? { label: '政黨', value: party } : null,
-    role ? { label: '身分', value: roleOptions.find((option) => option.value === role)?.label ?? role } : null,
-    status ? { label: '狀態', value: statusOptions.find((option) => option.value === status)?.label ?? status } : null,
+    query ? { label: t('people.name'), value: query } : null,
+    regionId ? { label: t('people.region'), value: regionOptions.find((option) => option.value === regionId)?.label ?? regionId } : null,
+    party ? { label: t('people.party'), value: party } : null,
+    role ? { label: t('people.role'), value: roleOptions.find((option) => option.value === role)?.label ?? role } : null,
+    status ? { label: t('people.status'), value: statusOptions.find((option) => option.value === status)?.label ?? status } : null,
   ].filter((item): item is { label: string; value: string } => Boolean(item));
 
   const updateFilter = (key: string, value: string) => {
@@ -223,37 +240,37 @@ export function PeoplePage() {
     <AppShell>
       <div className="grid gap-4 xl:grid-cols-[280px_minmax(0,1fr)]">
         <aside className="space-y-3">
-          <PixelFrame title="人物篩選">
+          <PixelFrame title={t('people.filterTitle')}>
             <div className="space-y-4">
-              <KeywordFilter value={filters.query ?? ''} onSearch={(value) => updateFilter('q', value)} />
+              <KeywordFilter value={filters.query ?? ''} onSearch={(value) => updateFilter('q', value)} label={t('people.keyword')} buttonLabel={t('common.search')} />
 
-              <SelectFilter label="區域" value={filters.regionId ?? ''} options={regionOptions} onChange={(value) => updateFilter('region', value)} />
-              <SelectFilter label="政黨" value={filters.party ?? ''} options={partyOptions} onChange={(value) => updateFilter('party', value)} />
-              <SelectFilter label="身分" value={filters.role ?? ''} options={roleOptions} onChange={(value) => updateFilter('role', value)} />
-              <SelectFilter label="狀態" value={filters.status ?? ''} options={statusOptions} onChange={(value) => updateFilter('status', value)} />
+              <SelectFilter label={t('people.region')} value={filters.regionId ?? ''} options={regionOptions} onChange={(value) => updateFilter('region', value)} allLabel={t('common.all')} />
+              <SelectFilter label={t('people.party')} value={filters.party ?? ''} options={partyOptions} onChange={(value) => updateFilter('party', value)} allLabel={t('common.all')} />
+              <SelectFilter label={t('people.role')} value={filters.role ?? ''} options={roleOptions} onChange={(value) => updateFilter('role', value)} allLabel={t('common.all')} />
+              <SelectFilter label={t('people.status')} value={filters.status ?? ''} options={statusOptions} onChange={(value) => updateFilter('status', value)} allLabel={t('common.all')} />
 
               <Link
                 to={peoplePath()}
                 className="pixel-corners block border border-line/70 bg-bg/35 px-3 py-2 text-center text-sm text-slate-300 hover:border-accent/55 hover:text-white"
               >
-                清除篩選
+                {t('common.clearFilters')}
               </Link>
             </div>
           </PixelFrame>
         </aside>
 
         <PixelFrame
-          title="人物與候選人"
+          title={t('people.title')}
           action={
             <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">
-              {people.length} 筆資料 · 第 {currentPage}/{pageCount} 頁
+              {t('common.recordsPage', { count: people.length, currentPage, pageCount })}
             </span>
           }
         >
           <div className="mb-4 grid gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.42fr)]">
             <div className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs leading-5 text-slate-300">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-slate-500">目前篩選</span>
+                <span className="text-slate-500">{t('people.currentFilters')}</span>
                 {activeFilterItems.length > 0 ? (
                   activeFilterItems.map((item) => (
                     <span key={item.label} className="pixel-corners border border-line/70 bg-panelAlt/45 px-2 py-1 text-slate-200">
@@ -261,29 +278,29 @@ export function PeoplePage() {
                     </span>
                   ))
                 ) : (
-                  <span className="text-slate-400">全部人物</span>
+                  <span className="text-slate-400">{t('people.allPeople')}</span>
                 )}
               </div>
               <p className="mt-2 text-slate-400">
-                預設顯示總統、立委、縣市首長與議員等主要層級，暫不列出村里長與鄉鎮市民代表。輸入姓名搜尋時仍會查完整人物資料。
+                {t('people.defaultScope')}
               </p>
             </div>
             <div className="pixel-corners border border-accent/35 bg-accent/10 px-3 py-2 text-xs leading-5 text-slate-300">
               <p>
-                目前結果 <span className="font-display text-base text-white">{people.length}</span> 筆
+                {t('people.currentResults')} <span className="font-display text-base text-white">{people.length}</span> {t('people.recordsUnit')}
               </p>
-              <p className="mt-1 text-slate-400">排序：現任優先 → 職位層級 → 姓名。</p>
+              <p className="mt-1 text-slate-400">{t('people.sortHint')}</p>
             </div>
           </div>
 
           {people.length > 0 ? (
             <div className="overflow-hidden pixel-corners border border-line/70">
               <div className="grid grid-cols-[minmax(160px,1fr)_minmax(120px,0.7fr)_minmax(120px,0.75fr)_minmax(130px,0.8fr)_90px] gap-3 border-b border-line/70 bg-panelAlt/55 px-3 py-2 text-xs uppercase tracking-[0.18em] text-slate-500 max-lg:hidden">
-                <span>姓名</span>
-                <span>政黨</span>
-                <span>身分</span>
-                <span>地區</span>
-                <span>狀態</span>
+                <span>{t('people.name')}</span>
+                <span>{t('people.party')}</span>
+                <span>{t('people.role')}</span>
+                <span>{t('people.region')}</span>
+                <span>{t('people.status')}</span>
               </div>
               <div className="divide-y divide-line/60">
                 {visiblePeople.map((person) => {
@@ -299,7 +316,7 @@ export function PeoplePage() {
                         <p className="mt-1 truncate text-xs text-slate-500">{getPersonDisplayPosition(person)}</p>
                       </div>
                       <div className="min-w-0">
-                        <span className="mb-1 block text-[10px] text-slate-500 lg:hidden">政黨</span>
+                        <span className="mb-1 block text-[10px] text-slate-500 lg:hidden">{t('people.party')}</span>
                         <span
                           className="pixel-corners inline-block max-w-full truncate border px-2 py-1 text-xs"
                           style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}33`, color: theme.text }}
@@ -307,10 +324,10 @@ export function PeoplePage() {
                           {normalizePartyLabel(person.party)}
                         </span>
                       </div>
-                      <p className="min-w-0 truncate text-sm text-slate-300"><span className="mr-2 text-[10px] text-slate-500 lg:hidden">身分</span>{person.role_label}</p>
-                      <p className="min-w-0 truncate text-sm text-slate-300"><span className="mr-2 text-[10px] text-slate-500 lg:hidden">地區</span>{person.region_name ?? person.district ?? '未指定'}</p>
+                      <p className="min-w-0 truncate text-sm text-slate-300"><span className="mr-2 text-[10px] text-slate-500 lg:hidden">{t('people.role')}</span>{person.role_label}</p>
+                      <p className="min-w-0 truncate text-sm text-slate-300"><span className="mr-2 text-[10px] text-slate-500 lg:hidden">{t('people.region')}</span>{person.region_name ?? person.district ?? t('people.noRegion')}</p>
                       <p className={person.status === 'current' ? 'text-sm text-signal' : 'text-sm text-slate-400'}>
-                        <span className="mr-2 text-[10px] text-slate-500 lg:hidden">狀態</span>{person.status_label}
+                        <span className="mr-2 text-[10px] text-slate-500 lg:hidden">{t('people.status')}</span>{person.status_label}
                       </p>
                     </Link>
                   );
@@ -319,14 +336,14 @@ export function PeoplePage() {
             </div>
           ) : (
             <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center text-sm text-slate-300">
-              沒有符合目前篩選條件的人物資料。
+              {t('people.noResults')}
             </div>
           )}
 
           {people.length > PAGE_SIZE ? (
             <div className="mt-4 flex flex-col gap-3 border-t border-line/60 pt-4 text-sm text-slate-300 sm:flex-row sm:items-center sm:justify-between">
               <p>
-                顯示 {pageStart + 1}-{Math.min(pageStart + PAGE_SIZE, people.length)} / {people.length}
+                {t('people.showing', { start: pageStart + 1, end: Math.min(pageStart + PAGE_SIZE, people.length), total: people.length })}
               </p>
               <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                 <button
@@ -335,7 +352,7 @@ export function PeoplePage() {
                   disabled={currentPage <= 1}
                   className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  頭
+                  {t('people.first')}
                 </button>
                 <button
                   type="button"
@@ -343,7 +360,7 @@ export function PeoplePage() {
                   disabled={currentPage <= 1}
                   className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  上一頁
+                  {t('people.previous')}
                 </button>
                 {visiblePageNumbers.map((pageNumber) => (
                   <button
@@ -366,7 +383,7 @@ export function PeoplePage() {
                   disabled={currentPage >= pageCount}
                   className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  下一頁
+                  {t('people.next')}
                 </button>
                 <button
                   type="button"
@@ -374,7 +391,7 @@ export function PeoplePage() {
                   disabled={currentPage >= pageCount}
                   className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs uppercase tracking-[0.16em] text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  底
+                  {t('people.last')}
                 </button>
               </div>
             </div>

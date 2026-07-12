@@ -142,7 +142,7 @@ export function ElectionPage() {
             <section className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(11,19,38,0.94),rgba(15,24,46,0.88))] p-5">
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.36fr)] lg:items-start">
                 <div className="min-w-0">
-                  <p className="text-xs uppercase tracking-[0.22em] text-accent">election profile</p>
+                  <p className="text-xs uppercase tracking-[0.22em] text-accent">選舉概覽</p>
                   <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">{election.name}</h2>
                   <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-300">
                     <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">
@@ -158,7 +158,7 @@ export function ElectionPage() {
                 </div>
 
                 <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-3 text-sm text-slate-300">
-                  <p className="text-xs uppercase tracking-[0.22em] text-slate-500">source</p>
+                  <p className="text-xs uppercase tracking-[0.22em] text-slate-500">來源</p>
                   <p className="mt-2">{election.source_name ?? '公開選舉資料'}</p>
                   {election.source_url ? (
                     <a href={election.source_url} className="mt-2 inline-block text-xs text-accent hover:text-white">
@@ -178,7 +178,7 @@ export function ElectionPage() {
 
             {pollComparison ? <PollComparisonPanel comparison={pollComparison} /> : null}
 
-            <SectionPanel title={candidates.length > 0 ? '選區與候選人' : '選區總覽'} eyebrow="races and candidates">
+            <SectionPanel title={candidates.length > 0 ? '選區與候選人' : '選區總覽'} eyebrow="選區與候選人">
               {races.length > 0 ? (
                 candidates.length > 0 ? (
                   <div className="space-y-3">
@@ -306,19 +306,19 @@ export function ElectionPage() {
               )}
             </SectionPanel>
 
-            <SectionPanel title="資料狀態" eyebrow="public data boundary">
+            <SectionPanel title="資料狀態" eyebrow="公開資料邊界">
               <div className="grid gap-3 text-sm leading-6 text-slate-300 md:grid-cols-3">
                 <div className="pixel-corners border border-line/70 bg-bg/35 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">coverage</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">涵蓋範圍</p>
                   <p className="mt-2">已接入 {races.length} 個選區、{candidates.length} 筆候選紀錄，{electedCount} 筆標示當選。</p>
                 </div>
                 <div className="pixel-corners border border-line/70 bg-bg/35 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">source</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">來源</p>
                   <p className="mt-2">{sourcedCandidateCount} 筆候選紀錄帶有來源名稱；缺漏項目會保留空狀態。</p>
                 </div>
                 <div className="pixel-corners border border-line/70 bg-bg/35 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">boundary</p>
-                  <p className="mt-2">頁面只讀取 approved public views；政治獻金與公司關係仍走獨立審核流程。</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">資料邊界</p>
+                  <p className="mt-2">頁面只讀取已審核的公開資料檢視；政治獻金與公司關係仍走獨立審核流程。</p>
                 </div>
               </div>
             </SectionPanel>

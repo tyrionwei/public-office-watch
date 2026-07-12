@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { AppShell } from '../components/AppShell';
-import { DataPrinciplesPanel } from '../components/DataPrinciplesPanel';
 import { LocalOfficeSummaryPanel } from '../components/LocalOfficeSummaryPanel';
 import { PollComparisonPanel } from '../components/PollComparisonPanel';
 import { SelectedRegionHud } from '../components/SelectedRegionHud';
@@ -50,9 +49,9 @@ export function HomePage() {
 
   return (
     <AppShell ticker={homeData.ticker}>
-      <div className="grid gap-3 xl:grid-cols-[minmax(420px,0.98fr)_minmax(390px,0.92fr)_minmax(300px,0.62fr)]">
-        <section className="min-w-0">
-          <div className="min-w-0 xl:h-full">
+      <div className="grid gap-3 xl:grid-cols-[minmax(460px,1.08fr)_minmax(390px,0.88fr)_minmax(300px,0.62fr)]">
+        <section className="min-w-0 space-y-3">
+          <div className="min-w-0">
             <TaiwanStageSelect
               regions={homeData.stageRegions}
               selectedRegionId={selectedRegionId}
@@ -69,20 +68,17 @@ export function HomePage() {
             regionSummary={selectedRegionSummary}
           />
           {pollComparison ? <PollComparisonPanel comparison={pollComparison} /> : null}
-          <LocalOfficeSummaryPanel regionId={selectedRegionId} />
+          <UpcomingElectionCards
+            races={relatedRaces}
+            selectedRegionId={selectedRegionId}
+            selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? '未指定區域'}
+            selectedPublicRegionId={selectedRegionNode?.publicRegionId ?? null}
+            compact
+          />
         </section>
 
-        <section className="space-y-3">
-          <div className="xl:max-h-[360px] xl:overflow-auto">
-            <UpcomingElectionCards
-              races={relatedRaces}
-              selectedRegionId={selectedRegionId}
-              selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? '未指定區域'}
-              selectedPublicRegionId={selectedRegionNode?.publicRegionId ?? null}
-              compact
-            />
-          </div>
-          <DataPrinciplesPanel principles={homeData.dataPrinciples} />
+        <section className="min-w-0">
+          <LocalOfficeSummaryPanel regionId={selectedRegionId} />
         </section>
       </div>
     </AppShell>

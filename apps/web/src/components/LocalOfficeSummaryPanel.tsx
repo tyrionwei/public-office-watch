@@ -15,7 +15,7 @@ type LocalOfficeSummaryPanelProps = {
 function EmptyOfficeCard({ emptyText }: { emptyText: string }) {
   return (
     <div className="pixel-corners border border-line/70 bg-bg/35 p-3">
-      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">source todo</p>
+      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">資料待補</p>
       <p className="mt-2 text-sm text-slate-300">{emptyText}</p>
     </div>
   );
@@ -186,7 +186,7 @@ function PartyCountCard({ summary, party, count }: { summary: PublicLocalOfficeS
       style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}2E` }}
     >
       <p className="text-xs uppercase tracking-[0.2em]" style={{ color: theme.accent }}>
-        councilors
+        議員
       </p>
       <div className="mt-2 flex items-end justify-between gap-3">
         <span className="text-sm text-white">{party}</span>
@@ -210,14 +210,14 @@ export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelPro
           to={peoplePath({ region: summary.region_id, status: 'current' })}
           className="text-[11px] uppercase tracking-[0.22em] text-accent hover:text-white"
         >
-          view people
+          查看人物
         </Link>
       }
       className="overflow-visible bg-[linear-gradient(180deg,rgba(12,18,36,0.96),rgba(8,15,30,0.92))]"
     >
       <div className="mb-3 flex items-end justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-slate-500">selected local office</p>
+          <p className="text-xs uppercase tracking-[0.22em] text-slate-500">目前縣市公職</p>
           <h2 className="mt-1 font-display text-2xl text-white">{summary.region_name}</h2>
         </div>
         <Link
@@ -243,7 +243,7 @@ export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelPro
       </div>
 
       <div className="mt-3">
-        <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">councilor party cards</p>
+        <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">議員政黨分布</p>
         {hasCouncilors ? (
           <div className="grid gap-2 sm:grid-cols-2">
             {summary.councilor_party_counts.map((item) => (

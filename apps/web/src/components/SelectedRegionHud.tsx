@@ -23,7 +23,7 @@ export function SelectedRegionHud({ region, regionNode, regionSummary }: Selecte
 
   return (
     <PixelFrame
-      title="Selected Region"
+      title="縣市重點"
       className="bg-[linear-gradient(180deg,rgba(6,46,91,0.95),rgba(9,37,74,0.92)_55%,rgba(10,19,39,0.95))]"
     >
       <div className="space-y-3 text-sm text-slate-300">
@@ -45,7 +45,7 @@ export function SelectedRegionHud({ region, regionNode, regionSummary }: Selecte
           </div>
 
           <div className="relative max-w-full sm:max-w-[74%]">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-accent">selected region</p>
+            <p className="text-[11px] uppercase tracking-[0.22em] text-accent">目前選取縣市</p>
             <p className="mt-3 font-display text-3xl leading-none text-white">{regionSummary.label}</p>
             <p className="mt-2 text-lg font-semibold uppercase tracking-[0.14em] text-slate-100">
               {regionNode.stageLabel}

@@ -2161,7 +2161,7 @@ async function selectOrThrow(env, table, select) {
   return supabaseRequest(env, table, { method: 'GET', select });
 }
 
-async function selectAllOrThrow(env, table, select, pageSize = 1000) {
+async function selectAllOrThrow(env, table, select, pageSize = 1000, filters = {}) {
   const rows = [];
   let offset = 0;
 
@@ -2169,7 +2169,7 @@ async function selectAllOrThrow(env, table, select, pageSize = 1000) {
     const page = await supabaseRequest(env, table, {
       method: 'GET',
       select,
-      filters: { order: 'id.asc' },
+      filters: { ...filters, order: 'id.asc' },
       range: { from: offset, to: offset + pageSize - 1 },
     });
 
@@ -2216,14 +2216,15 @@ async function fetchExistingPersonClaimReviewStates(env) {
     env,
     'person_claims',
     'claim_key,person_id,claim_type,claim_value,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json',
+    1000,
+    { review_status: 'in.(verified,rejected,archived)' },
   );
 
-  const terminalRows = rows.filter((row) => terminalPersonClaimReviewStatuses.has(row.review_status));
-  const byClaimKey = new Map(terminalRows.map((row) => [row.claim_key, row]));
+  const byClaimKey = new Map(rows.map((row) => [row.claim_key, row]));
   const byWikidataSemanticKey = new Map();
   const rejectedWikidataPersonQids = new Map();
 
-  for (const row of terminalRows) {
+  for (const row of rows) {
     const semanticKey = wikidataSemanticClaimKey(row);
     if (semanticKey) {
       byWikidataSemanticKey.set(semanticKey, row);
@@ -2337,26 +2338,32 @@ async function applySkippedWikidataRejections(env, args, reviewedAt) {
 }
 
 async function applyExistingWikidataTerminalReviewStates(env, reviewedAt) {
-  const rows = await selectAllOrThrow(
+  const wikidataClaimFilter = { 'claim_json->>wikidataQid': 'not.is.null' };
+  const select = 'id,person_id,claim_type,claim_value,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json';
+  const terminalRows = await selectAllOrThrow(
     env,
     'person_claims',
-    'id,person_id,claim_type,claim_value,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json',
+    select,
+    1000,
+    { ...wikidataClaimFilter, review_status: 'in.(verified,rejected,archived)' },
+  );
+  const reviewableRows = await selectAllOrThrow(
+    env,
+    'person_claims',
+    select,
+    1000,
+    { ...wikidataClaimFilter, review_status: 'in.(pending,needs_more_evidence)' },
   );
   const terminalBySemanticKey = new Map();
 
-  for (const row of rows) {
-    if (!terminalPersonClaimReviewStatuses.has(row.review_status)) {
-      continue;
-    }
-
+  for (const row of terminalRows) {
     const key = wikidataSemanticClaimKey(row);
     if (key && !terminalBySemanticKey.has(key)) {
       terminalBySemanticKey.set(key, row);
     }
   }
 
-  const targets = rows
-    .filter((row) => ['pending', 'needs_more_evidence'].includes(row.review_status))
+  const targets = reviewableRows
     .map((row) => ({ row, terminal: terminalBySemanticKey.get(wikidataSemanticClaimKey(row)) }))
     .filter((item) => item.terminal);
 

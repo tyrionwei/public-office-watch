@@ -740,12 +740,13 @@ function parseAgencyHeadListEntry(html, expectedTitle) {
   if (tableRow) {
     const cells = [...tableRow.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map((cell) => cell[1]);
     const nameCell = cells[2] ?? '';
-    const name =
-      cleanInlineText(nameCell.match(/<a\b[^>]*title="([^"]+)"/i)?.[1] ?? '') ||
-      cleanInlineText(nameCell).replace(/[男女]性?$/u, '').trim();
+    const cellText = cleanInlineText(nameCell).replace(/[男女]性?$/u, '').trim();
+    const anchorTitle = cleanInlineText(nameCell.match(/<a\b[^>]*title="([^"]+)"/i)?.[1] ?? '');
+    const cellTextIsName = /^[\p{Script=Han}]{2,4}$/u.test(cellText) && cellText !== expectedTitle && cellText !== `代理${expectedTitle}`;
+    const name = cellTextIsName ? cellText : anchorTitle;
     const gender = /alt="女"|女性/u.test(nameCell) ? 'female' : /alt="男"|男性/u.test(nameCell) ? 'male' : 'unknown';
 
-    if (/^[\p{Script=Han}]{2,4}$/u.test(name)) {
+    if (/^[\p{Script=Han}]{2,4}$/u.test(name) && name !== expectedTitle && name !== `代理${expectedTitle}`) {
       return { name, gender };
     }
   }
@@ -766,6 +767,7 @@ function parseAgencyHeadProfile(html, row) {
   const title = row.title;
   const listedHead = parseAgencyHeadListEntry(html, title);
   const namePatterns = [
+    new RegExp(`職稱\\s*姓名\\s*${title}\\s*([\\p{Script=Han}]{2,4})`, 'u'),
     /姓\s*名\s*[：:]?\s*([\p{Script=Han}]{2,4})/u,
     /姓名\s*([\p{Script=Han}]{2,4})/u,
     new RegExp(`${title}[：:]\\s*\\n?([\\p{Script=Han}]{2,4})`, 'u'),
@@ -776,7 +778,7 @@ function parseAgencyHeadProfile(html, row) {
     new RegExp(`(?:${title}介紹|${title}簡介)\\s*[：:]?\\s*\\n([\\p{Script=Han}]{2,4})`, 'u'),
   ];
   const name = listedHead?.name ?? namePatterns.map((pattern) => content.match(pattern)?.[1] ?? '').find((value) => {
-    return value && !/介紹|首頁|主要|副處|副局|業務|主管|組織|臺中|台中|預留|行政院|工程|性別|標題/.test(value);
+    return value && value !== title && value !== `代理${title}` && !/介紹|首頁|主要|副處|副局|業務|主管|組織|臺中|台中|預留|行政院|工程|性別|標題/.test(value);
   }) ?? '';
   const education = fieldBetweenAny(content, ['學 歷：', '學歷：', '學歷'], ['經 歷：', '經歷：', '經歷', '瀏覽人次', '回上頁', '上一頁']);
   const experience = fieldBetweenAny(content, ['經 歷：', '經歷：', '經歷'], ['瀏覽人次', '回上頁', '上一頁', 'E-mail', '電子郵件']);

@@ -116,6 +116,10 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return upcomingRaces.filter((race) => race.regionId === baseRegionId || isNationalUpcomingRace(race));
   },
 
+  getElections() {
+    return mockPublicElections;
+  },
+
   getElectionById(electionId: string) {
     return mockPublicElections.find((item) => item.election_id === electionId) ?? null;
   },
@@ -124,12 +128,24 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return mockPublicRaces.filter((race) => race.election_id === electionId);
   },
 
+  getRaces() {
+    return mockPublicRaces;
+  },
+
+  getRaceById(raceId: string) {
+    return mockPublicRaces.find((race) => race.race_id === raceId) ?? null;
+  },
+
   getCandidates() {
     return mockPublicCandidates;
   },
 
   getCandidatesByElectionId(electionId: string) {
     return mockPublicCandidates.filter((candidate) => candidate.election_id === electionId);
+  },
+
+  getCandidatesByRaceId(raceId: string) {
+    return mockPublicCandidates.filter((candidate) => candidate.race_id === raceId);
   },
 
   getPollComparisonByElectionId(electionId: string) {

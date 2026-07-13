@@ -13,8 +13,9 @@ const councilSourceName = '連江縣議會：議員介紹';
 const councilListUrl = 'https://www.mtcc.gov.tw/ch/counciler_introlist/7190';
 
 const govSourceId = 'lienchiang-county-government-leaders';
-const govSourceName = '連江縣政府：縣長專欄';
+const govSourceName = '連江縣政府：縣長專欄與縣府組織';
 const magistrateUrl = 'https://www.matsu.gov.tw/chhtml/chiefpage/371030000A/19';
+const govOrganizationUrl = 'https://www.matsu.gov.tw/chhtml/government/371030000A/22';
 const govLeaderRows = [
   { url: magistrateUrl, name: '王忠銘', title: '縣長', roleOrigin: 'elected', elected: true, kind: 'magistrateProfile' },
 ];
@@ -480,6 +481,59 @@ function parseMagistrateProfile(html, row) {
   };
 }
 
+function parseOrganizationLinks(html) {
+  const rows = [];
+  const seen = new Set();
+  const linkPattern = /<a[^>]+href=["']([^"']*\?qdptid=[^"']+)["'][^>]*>([\s\S]*?)<\/a>/giu;
+
+  for (const match of html.matchAll(linkPattern)) {
+    const label = cleanInlineText(match[2]);
+    if (!label || label === '幕僚團隊') continue;
+    if (!/副縣長|秘書長|處|局/.test(label)) continue;
+    const url = new URL(match[1], govOrganizationUrl).href;
+    if (seen.has(url)) continue;
+    seen.add(url);
+    rows.push({ label, url });
+  }
+
+  return rows;
+}
+
+function parseOrganizationProfile(html, row) {
+  const content = cleanText(html);
+  const titleMatch = content.match(/(副縣長|秘書長|代理秘書長|處長|代理處長|局長|代理局長|主任|主委)：\s*([\p{Script=Han}]{2,4})/u);
+  if (!titleMatch) throw new Error('Unable to parse organization head from ' + row.url);
+
+  const title = titleMatch[1];
+  const name = titleMatch[2];
+  const education = sectionBetween(content, '學歷：', ['------', '經歷：']).replace(/^[-\s]+/u, '').trim();
+  const experience = sectionBetween(content, '經歷：', ['電話：', '傳真：', '組織簡介', '回前頁']).replace(/^[-\s]+/u, '').trim();
+  const isAgencyHead = !/副縣長|秘書長/.test(title);
+  const position = isAgencyHead ? '連江縣政府' + row.label + title : '連江縣政府' + title;
+
+  return {
+    sourceId: govSourceId,
+    sourceName: govSourceName,
+    sourceUrl: row.url,
+    externalId: 'organization-head-' + hashId([row.url, row.label, title, name].join('|')),
+    name,
+    gender: 'unknown',
+    party: '',
+    position,
+    district: '連江縣',
+    education,
+    experience,
+    sourcePayload: {
+      profileUrl: row.url,
+      agency: isAgencyHead ? row.label : undefined,
+      title,
+      roleOrigin: 'appointed',
+      elected: false,
+      identityStatus: 'needs_identity_check',
+    },
+  };
+}
+
 async function fetchGovProfiles() {
   const skippedRows = [];
   const profiles = [];
@@ -496,6 +550,41 @@ async function fetchGovProfiles() {
       reason: error instanceof Error ? error.message : String(error),
     });
   }
+
+  try {
+    const organizationHtml = await fetchText(govOrganizationUrl);
+    const organizationRows = parseOrganizationLinks(organizationHtml);
+    const parsedRows = await mapLimit(organizationRows, 3, async (row) => {
+      try {
+        const html = await fetchText(row.url);
+        return { profile: parseOrganizationProfile(html, row), skippedRow: null };
+      } catch (error) {
+        return {
+          profile: null,
+          skippedRow: {
+            sourceId: govSourceId,
+            name: '',
+            position: '連江縣政府' + row.label,
+            district: '連江縣',
+            sourceUrl: row.url,
+            reason: error instanceof Error ? error.message : String(error),
+          },
+        };
+      }
+    });
+    profiles.push(...parsedRows.map((row) => row.profile).filter(Boolean));
+    skippedRows.push(...parsedRows.map((row) => row.skippedRow).filter(Boolean));
+  } catch (error) {
+    skippedRows.push({
+      sourceId: govSourceId,
+      name: '',
+      position: '連江縣政府縣府組織',
+      district: '連江縣',
+      sourceUrl: govOrganizationUrl,
+      reason: error instanceof Error ? error.message : String(error),
+    });
+  }
+
   return { profiles, skippedRows };
 }
 
@@ -573,10 +662,11 @@ async function main() {
     schemaVersion: 1,
     name: 'lienchiang-county-official-person-profiles',
     updatedAt: new Date().toISOString().slice(0, 10),
-    notes: 'Lienchiang County-specific official parser. Council rows cover current councilors from the official Lienchiang County Council member list and profile pages. County government rows cover the official magistrate profile.',
+    notes: 'Lienchiang County-specific official parser. Council rows cover current councilors from the official Lienchiang County Council member list and profile pages. County government rows cover the official magistrate profile and organization pages.',
     sources: [
       { id: councilSourceId, name: councilSourceName, url: councilListUrl },
       { id: govSourceId, name: `${govSourceName}：縣長專欄`, url: magistrateUrl },
+      { id: govSourceId, name: `${govSourceName}：縣府組織`, url: govOrganizationUrl },
     ],
     summary,
     people: adoptedPeople,

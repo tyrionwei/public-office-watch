@@ -1,6 +1,6 @@
 import { taiwanCountyPaths } from '../data/generated/taiwanCountyMap';
+import { useI18n } from '../i18n';
 import type { StageRegionNode } from '../types/stageMap';
-import { PixelFrame } from './PixelFrame';
 import { TaiwanCountyMap } from './TaiwanCountyMap';
 
 type TaiwanStageSelectProps = {
@@ -21,13 +21,14 @@ export function CompactCountyQuickSelect({
   selectedRegionId,
   onSelectRegion,
 }: CompactCountyQuickSelectProps) {
+  const { t } = useI18n();
   const topLevelRegions = regions.filter((region) => region.level === 'county_city');
 
   return (
     <div className="pixel-corners border border-line/70 bg-panelAlt/35 px-3 py-3">
       <div className="mb-2 flex items-center justify-between gap-3">
-        <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">Compact county quick select</p>
-        <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">chip wall fallback</span>
+        <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">{t('stage.quickSelect')}</p>
+        <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{t('stage.backupList')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
         {topLevelRegions.map((region) => {
@@ -61,23 +62,19 @@ export function TaiwanStageSelect({
   onSelectRegion,
   hideQuickSelect = false,
 }: TaiwanStageSelectProps) {
+  const { t } = useI18n();
   const topLevelRegions = regions.filter((region) => region.level === 'county_city');
   const hasCountyPaths = taiwanCountyPaths.length > 0;
 
   return (
-    <PixelFrame
-      title="Stage Select"
-      action={<span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">county level</span>}
-      className="h-full"
-    >
-      <div className="space-y-4">
+    <div className="h-full space-y-4">
         <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(7,22,45,0.96),rgba(8,27,52,0.94)_55%,rgba(7,18,38,0.96))] p-3 sm:p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="font-display text-sm uppercase tracking-[0.24em] text-slate-200">Taiwan stage select</p>
+              <p className="font-display text-sm uppercase tracking-[0.24em] text-slate-200">{t('stage.countyGuide')}</p>
             </div>
             <span className="rounded-sm border border-signal/30 bg-signal/10 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-signal">
-              County level
+              {t('stage.countyLevel')}
             </span>
           </div>
 
@@ -110,7 +107,7 @@ export function TaiwanStageSelect({
                       {region.stageLabel}
                     </span>
                     <span className="mt-2 block text-sm font-medium leading-snug">{region.label}</span>
-                    <span className="mt-2 block text-[11px] text-slate-500">COUNTYCODE {region.stageLabel}</span>
+                    <span className="mt-2 block text-[11px] text-slate-500">{t('stage.countyCode', { code: region.stageLabel })}</span>
                   </button>
                 );
               })}
@@ -127,7 +124,6 @@ export function TaiwanStageSelect({
             </div>
           ) : null}
         </div>
-      </div>
-    </PixelFrame>
+    </div>
   );
 }

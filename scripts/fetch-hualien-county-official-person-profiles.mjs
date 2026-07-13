@@ -568,6 +568,43 @@ function parseTeamRows(html, sourceRows) {
     if (content.includes(row.title) && content.includes(row.name)) teamRows.push(leaderProfile(row));
   }
 
+  const agencyStart = content.indexOf('局處主管');
+  const agencyEnd = content.indexOf('回上一頁', agencyStart);
+  const agencyText = agencyStart >= 0 ? content.slice(agencyStart, agencyEnd >= 0 ? agencyEnd : undefined).replace(/^局處主管\s*/, '') : '';
+  const rowPattern = /([\p{Script=Han}]{2,16}(?:局|處))\s*((?:代理)?(?:局長|處長))\s*([\p{Script=Han}]{2,4})/gu;
+  const seen = new Set(teamRows.map((profile) => profile.position + ':' + profile.name));
+
+  for (const match of agencyText.matchAll(rowPattern)) {
+    const agency = match[1];
+    const title = match[2];
+    const name = match[3];
+    const position = '花蓮縣政府' + agency + title;
+    const key = position + ':' + name;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    teamRows.push({
+      sourceId: govSourceId,
+      sourceName: govSourceName,
+      sourceUrl: govTeamUrl,
+      externalId: 'agency-head-' + hashId([govTeamUrl, agency, title, name].join('|')),
+      name,
+      gender: 'unknown',
+      party: '',
+      position,
+      district: '花蓮縣',
+      education: '',
+      experience: '',
+      sourcePayload: {
+        profileUrl: govTeamUrl,
+        agency,
+        title,
+        roleOrigin: 'appointed',
+        elected: false,
+        identityStatus: 'needs_identity_check',
+      },
+    });
+  }
+
   return teamRows;
 }
 

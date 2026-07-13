@@ -5,7 +5,7 @@ import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { pickDefaultCandidateSprite } from '../data/defaultCharacterAssets';
 import { publicDataProvider } from '../lib/publicData';
-import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonClaim, PublicPersonPartyAffiliation, PublicPersonTimelineItem } from '../types/publicViews';
@@ -330,6 +330,8 @@ export function PersonPage() {
   const financeClaims = profile ? claimsByType(profile.public_claims, 'finance_summary') : [];
   const legalClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'legal_case')) : [];
   const familyClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'family_relation')) : [];
+  const displayPosition = person ? getPersonDisplayPosition(person) : '公開人物資料';
+  const profilePosition = person ? getPersonDisplayPosition(person, '待補') : '待補';
 
   return (
     <AppShell>
@@ -337,7 +339,7 @@ export function PersonPage() {
         title="人物資料"
         action={
           <Link to={peoplePath()} className="text-[11px] uppercase tracking-[0.22em] text-accent hover:text-white">
-            back to people
+            返回人物列表
           </Link>
         }
       >
@@ -356,7 +358,7 @@ export function PersonPage() {
                 <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{person.role_label}</p>
                 <h2 className="mt-2 font-display text-4xl text-white">{person.name}</h2>
                 <p className="mt-3 text-sm leading-6 text-slate-300">
-                  {person.position ?? '公開人物資料'}。此頁先彙整目前可公開的基本資料、候選紀錄與資料狀態。
+                  {displayPosition}。此頁先彙整目前可公開的基本資料、候選紀錄與資料狀態。
                 </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   <HudStatCard
@@ -377,7 +379,7 @@ export function PersonPage() {
               </div>
             </section>
 
-            <SectionPanel title="基本資料" eyebrow="public profile">
+            <SectionPanel title="基本資料" eyebrow="公開基本資料">
               <dl className="grid gap-3 sm:grid-cols-2">
                 {[
                   ['姓名', person.name],
@@ -385,7 +387,7 @@ export function PersonPage() {
                   ['性別', person.gender ? genderLabels[person.gender] : '待補'],
                   ['生日', birthDateClaim?.claim_value ?? '待補'],
                   ['政黨', normalizePartyLabel(person.party)],
-                  ['職位', person.position ?? '待補'],
+                  ['職位', profilePosition],
                   ['所處區域', person.region_name ?? person.district ?? '未指定'],
                   ['選舉年度', person.election_year?.toString() ?? '待補'],
                 ].map(([label, value]) => (
@@ -398,7 +400,7 @@ export function PersonPage() {
             </SectionPanel>
 
             {profile.identity_records.length > 1 ? (
-              <SectionPanel title="身分摘要" eyebrow="merged profile">
+              <SectionPanel title="身分摘要" eyebrow="合併身分">
                 <div className="grid gap-3 md:grid-cols-2">
                   {profile.identity_records.map((identity) => (
                     <article key={identity.person_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
@@ -422,7 +424,7 @@ export function PersonPage() {
               </SectionPanel>
             </div>
 
-            <SectionPanel title="參選紀錄" eyebrow="candidate records">
+            <SectionPanel title="參選紀錄" eyebrow="參選紀錄">
               {profile.candidate_records.length > 0 ? (
                 <div className="grid gap-3 md:grid-cols-2">
                   {profile.candidate_records.map((candidate) => (
@@ -450,7 +452,7 @@ export function PersonPage() {
               )}
             </SectionPanel>
 
-            <SectionPanel title="公開資料線索" eyebrow="verified claims">
+            <SectionPanel title="公開資料線索" eyebrow="已審核線索">
               {publicClaims.length > 0 ? (
                 <div className="grid gap-3 md:grid-cols-2">
                   {publicClaims.map((claim) => (
@@ -463,7 +465,7 @@ export function PersonPage() {
             </SectionPanel>
 
             <div className="grid gap-4 lg:grid-cols-3">
-              <SectionPanel title="經歷" eyebrow="experience">
+              <SectionPanel title="經歷" eyebrow="經歷">
                 {splitProfileText(person.experience).length > 0 ? (
                   <ul className="space-y-2 text-sm text-slate-300">
                     {splitProfileText(person.experience).map((item) => (
@@ -476,7 +478,7 @@ export function PersonPage() {
                   <EmptyInfo>經歷資料來源待同步，暫不手動推論。</EmptyInfo>
                 )}
               </SectionPanel>
-              <SectionPanel title="學歷" eyebrow="education">
+              <SectionPanel title="學歷" eyebrow="學歷">
                 {splitProfileText(person.education).length > 0 ? (
                   <ul className="space-y-2 text-sm text-slate-300">
                     {splitProfileText(person.education).map((item) => (
@@ -489,7 +491,7 @@ export function PersonPage() {
                   <EmptyInfo>學歷資料待接官方公報或機關名冊。</EmptyInfo>
                 )}
               </SectionPanel>
-              <SectionPanel title="政治獻金" eyebrow="contributions">
+              <SectionPanel title="政治獻金" eyebrow="政治獻金">
                 <ClaimGrid
                   claims={financeClaims}
                   emptyText="此頁不顯示個人捐贈明細；後續僅放可公開摘要或已審核關係。"
@@ -498,7 +500,7 @@ export function PersonPage() {
             </div>
 
             <div className="grid gap-4 lg:grid-cols-3">
-              <SectionPanel title="政見" eyebrow="platform">
+              <SectionPanel title="政見" eyebrow="政見">
                 {platformClaims.length > 0 ? (
                   <div className="grid gap-3">
                     {platformClaims.map((claim) => (
@@ -509,13 +511,13 @@ export function PersonPage() {
                   <EmptyInfo>政見資料待接官方公告或公開政見來源。</EmptyInfo>
                 )}
               </SectionPanel>
-              <SectionPanel title="司法 / 爭議紀錄" eyebrow="legal records">
+              <SectionPanel title="司法 / 爭議紀錄" eyebrow="司法與爭議">
                 <ClaimGrid
                   claims={legalClaims}
                   emptyText="此區只預留已審核公開摘要；法院判決書與媒體/民團整理需比對同一人後才可公開。"
                 />
               </SectionPanel>
-              <SectionPanel title="政治家族關係" eyebrow="family network">
+              <SectionPanel title="政治家族關係" eyebrow="政治家族">
                 <ClaimGrid
                   claims={familyClaims}
                   emptyText="政二代、親屬任公職或政治家族關係需來源佐證與人工覆核，暫不自動推論。"

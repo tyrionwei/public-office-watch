@@ -625,30 +625,69 @@ function parseMagistrateProfile(html, row) {
 
 function parseTeamRows(html, sourceRows) {
   const teamRows = [];
+  const seen = new Set();
   const rowPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/giu;
 
   for (const match of html.matchAll(rowPattern)) {
     const cells = [...match[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/giu)].map((cell) => cleanInlineText(cell[1]));
-    if (cells.length < 3 || cells[0] !== '府本部') continue;
-    const sourceRow = sourceRows.find((row) => row.title === cells[1] && row.name === cells[2]);
-    if (!sourceRow) continue;
+    if (cells.length < 3) continue;
+
+    if (cells[0] === '府本部') {
+      const sourceRow = sourceRows.find((row) => row.title === cells[1] && row.name === cells[2]);
+      if (!sourceRow) continue;
+      const key = '臺東縣政府' + sourceRow.title + ':' + sourceRow.name;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      teamRows.push({
+        sourceId: govSourceId,
+        sourceName: govSourceName,
+        sourceUrl: sourceRow.url,
+        externalId: 'leader-' + hashId([sourceRow.url, sourceRow.title, sourceRow.name].join('|')),
+        name: sourceRow.name,
+        gender: 'unknown',
+        party: '',
+        position: '臺東縣政府' + sourceRow.title,
+        district: '臺東縣',
+        education: '',
+        experience: '',
+        sourcePayload: {
+          profileUrl: sourceRow.url,
+          title: sourceRow.title,
+          roleOrigin: sourceRow.roleOrigin,
+          elected: sourceRow.elected,
+          identityStatus: 'needs_identity_check',
+        },
+      });
+      continue;
+    }
+
+    if (!/(局|處)$/.test(cells[0]) || !/(局長|處長|主任|主委)$/.test(cells[1]) || !/^[\p{Script=Han}]{2,4}$/u.test(cells[2])) continue;
+    const agency = cells[0];
+    const title = cells[1];
+    const name = cells[2];
+    const position = '臺東縣政府' + agency + title;
+    const key = position + ':' + name;
+    if (seen.has(key)) continue;
+    seen.add(key);
     teamRows.push({
       sourceId: govSourceId,
       sourceName: govSourceName,
-      sourceUrl: sourceRow.url,
-      externalId: 'leader-' + hashId([sourceRow.url, sourceRow.title, sourceRow.name].join('|')),
-      name: sourceRow.name,
+      sourceUrl: govTeamUrl,
+      externalId: 'agency-head-' + hashId([govTeamUrl, agency, title, name].join('|')),
+      name,
       gender: 'unknown',
       party: '',
-      position: '臺東縣政府' + sourceRow.title,
+      position,
       district: '臺東縣',
       education: '',
       experience: '',
       sourcePayload: {
-        profileUrl: sourceRow.url,
-        title: sourceRow.title,
-        roleOrigin: sourceRow.roleOrigin,
-        elected: sourceRow.elected,
+        profileUrl: govTeamUrl,
+        agency,
+        title,
+        contactPhone: cells[3] ?? '',
+        roleOrigin: 'appointed',
+        elected: false,
         identityStatus: 'needs_identity_check',
       },
     });

@@ -139,7 +139,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
     <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(4,23,52,0.96),rgba(4,16,38,0.94)_58%,rgba(3,10,24,0.96))] p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
-          <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">County boundary map</p>
+          <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">縣市地圖</p>
         </div>
         <span className="rounded-sm border border-line/70 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-400">
           本島19縣市 + 離島3縣市

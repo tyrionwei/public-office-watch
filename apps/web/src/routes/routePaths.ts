@@ -6,8 +6,20 @@ export function regionPath(regionId: string) {
   return `/regions/${regionId}`;
 }
 
+export function electionsPath() {
+  return '/elections';
+}
+
 export function electionPath(electionId: string) {
   return `/elections/${electionId}`;
+}
+
+export function electionEventPath(eventKey: string) {
+  return `/elections/events/${eventKey}`;
+}
+
+export function racePath(raceId: string) {
+  return `/elections/races/${raceId}`;
 }
 
 export function peoplePath(searchParams?: URLSearchParams | Record<string, string | null | undefined>) {

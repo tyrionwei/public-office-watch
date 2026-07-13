@@ -337,7 +337,7 @@ function adoptedOfficial(row, origin) {
       roleOrigin: origin,
       elected: origin === 'elected',
       identityStatus: 'official_name_only',
-      adoptionReason: `official ${origin} officeholder with no existing public person sharing the same normalized name`,
+      adoptionReason: `official ${origin} officeholder adopted from current official profile`,
     },
   };
 }
@@ -714,6 +714,11 @@ async function main() {
 
       if (sameNamePeople.length === 0) {
         adoptedPeople.push(adoptedOfficial(row, row.sourceId === councilSourceId || row.sourcePayload?.elected ? 'elected' : 'appointed'));
+        continue;
+      }
+
+      if (row.sourceId === govSourceId && /副縣長/.test(row.position ?? '')) {
+        adoptedPeople.push(adoptedOfficial(row, 'appointed'));
         continue;
       }
 

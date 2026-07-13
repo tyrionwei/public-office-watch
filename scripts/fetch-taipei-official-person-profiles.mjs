@@ -550,17 +550,18 @@ function parseGovTableLinks(html, defaultPosition) {
   const regex = /<a\s+href=["']([^"']+)["']\s+title=["']([^"']+?)\[連結\]["'][^>]*>([\s\S]*?)<\/a>/gi;
 
   for (const match of html.matchAll(regex)) {
+    const href = match[1].trim();
     const text = cleanText(match[3]);
     const name = text.replace(/副市長$/, '').replace(/市長$/, '').trim();
 
-    if (!name || match[1].includes('Default.aspx')) {
+    if (!name || href.startsWith('#') || href.includes('Default.aspx') || !/News_Content\.aspx/i.test(href)) {
       continue;
     }
 
     rows.push({
       name,
       position: text.endsWith('副市長') ? '臺北市副市長' : defaultPosition,
-      url: absoluteUrl(taipeiGovBaseUrl, match[1]),
+      url: absoluteUrl(taipeiGovBaseUrl, href),
     });
   }
 

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { aboutPath, dataGuidancePath, homePath, partiesPath, peoplePath } from '../routes/routePaths';
+import { useI18n } from '../i18n';
+import { aboutPath, dataGuidancePath, electionsPath, homePath, partiesPath, peoplePath } from '../routes/routePaths';
 import { GlobalSearch } from './GlobalSearch';
 
 type AppHeaderProps = {
@@ -8,14 +9,17 @@ type AppHeaderProps = {
 };
 
 const navItems = [
-  { label: '首頁', mark: '⌂', to: homePath(), end: true },
-  { label: '人物', mark: '◎', to: peoplePath() },
-  { label: '政黨與獻金', mark: '▧', to: partiesPath() },
-  { label: '資料說明', mark: '▣', to: dataGuidancePath() },
-  { label: '關於本站', mark: 'i', to: aboutPath() },
-];
+  { labelKey: 'nav.home', mark: '⌂', to: homePath(), end: true },
+  { labelKey: 'nav.people', mark: '◎', to: peoplePath(), end: false },
+  { labelKey: 'nav.elections', mark: '◇', to: electionsPath(), end: false },
+  { labelKey: 'nav.parties', mark: '▧', to: partiesPath(), end: false },
+  { labelKey: 'nav.dataGuidance', mark: '▣', to: dataGuidancePath(), end: false },
+  { labelKey: 'nav.about', mark: 'i', to: aboutPath(), end: false },
+] as const;
 
 export function AppHeader({ rightSlot }: AppHeaderProps) {
+  const { t } = useI18n();
+
   return (
     <header className="pixel-corners relative overflow-hidden border border-line/80 bg-[#071126]/90 px-3 py-3 shadow-pixel backdrop-blur-sm sm:px-4">
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(114,232,255,0.08),transparent_35%,rgba(244,211,94,0.08))]" />
@@ -26,18 +30,18 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
             <Link
               to={homePath()}
               className="pixel-corners grid h-16 w-16 shrink-0 place-items-center border border-accent/50 bg-bg/60 text-center shadow-[inset_0_0_22px_rgba(114,232,255,0.12)] focus:outline-none focus:ring-2 focus:ring-accent/35"
-              aria-label="回到首頁"
+              aria-label={t('nav.homeAria')}
             >
               <span className="font-display text-lg leading-none text-signal">POW</span>
             </Link>
             <div className="min-w-0">
               <Link to={homePath()} className="inline-block focus:outline-none focus:ring-2 focus:ring-accent/35">
                 <h1 className="font-display text-2xl leading-none text-white sm:text-3xl">
-                  公職資料觀測站
+                  {t('brand.name')}
                 </h1>
               </Link>
               <p className="mt-1 font-display text-xs uppercase tracking-[0.26em] text-accent">
-                Public Office Watch
+                {t('brand.subtitle')}
               </p>
             </div>
           </div>
@@ -46,10 +50,10 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
             <GlobalSearch />
           </div>
 
-          <nav className="grid grid-cols-2 gap-2 sm:grid-cols-5 2xl:flex 2xl:items-stretch" aria-label="主導覽">
+          <nav className="grid grid-cols-2 gap-2 sm:grid-cols-6 2xl:flex 2xl:items-stretch" aria-label={t('nav.mainAria')}>
             {navItems.map((item) => (
               <NavLink
-                key={item.label}
+                key={item.labelKey}
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
@@ -64,14 +68,14 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
                 {({ isActive }) => (
                   <>
                     <span className={isActive ? 'text-signal' : 'text-slate-500'}>{item.mark}</span>
-                    <span className="text-[11px] leading-tight">{item.label}</span>
+                    <span className="text-[11px] leading-tight">{t(item.labelKey)}</span>
                   </>
                 )}
               </NavLink>
             ))}
           </nav>
 
-          {rightSlot ? <div className="min-w-[210px] 2xl:max-w-[260px]">{rightSlot}</div> : null}
+          {rightSlot ? <div className="w-full max-w-[300px] justify-self-end">{rightSlot}</div> : null}
         </div>
       </div>
     </header>

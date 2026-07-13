@@ -7,6 +7,8 @@ export type PublicPerson = {
   gender: 'male' | 'female' | 'unknown' | null;
   party: string | null;
   position: string | null;
+  current_office_label: string | null;
+  upcoming_candidate_label: string | null;
   election_year: number | null;
   district: string | null;
   education: string | null;
@@ -372,6 +374,8 @@ export type PublicPersonListItem = PublicPerson & {
   role_label: string;
   status: PublicPersonStatus;
   status_label: string;
+  current_office_label: string | null;
+  display_position_label: string | null;
   region_id: string | null;
   region_name: string | null;
   candidate_count: number;

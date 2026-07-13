@@ -539,21 +539,49 @@ function parseGovLeaderProfile(html, row) {
   };
 }
 
+function fallbackGovDeputyProfile(row, reason) {
+  if (!row.name || !/副縣長/.test(row.title ?? '')) return null;
+
+  return {
+    sourceId: govSourceId,
+    sourceName: govSourceName,
+    sourceUrl: row.url,
+    externalId: 'leader-' + hashId([row.url, row.title, row.name].join('|')),
+    name: row.name,
+    gender: 'unknown',
+    party: '',
+    position: '雲林縣政府' + row.title,
+    district: '雲林縣',
+    education: '',
+    experience: '',
+    sourcePayload: {
+      profileUrl: row.url,
+      title: row.title,
+      roleOrigin: row.roleOrigin,
+      elected: row.elected,
+      identityStatus: 'official_name_only',
+      fallbackReason: reason,
+    },
+  };
+}
+
 async function fetchGovProfiles() {
   const parsedRows = await mapLimit(govLeaderRows, 2, async (row) => {
     try {
       const html = await fetchText(row.url);
       return { profiles: [parseGovLeaderProfile(html, row)], skippedRow: null };
     } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      const fallbackProfile = fallbackGovDeputyProfile(row, reason);
       return {
-        profiles: [],
-        skippedRow: {
+        profiles: fallbackProfile ? [fallbackProfile] : [],
+        skippedRow: fallbackProfile ? null : {
           sourceId: govSourceId,
           name: row.name ?? '',
           position: `雲林縣${row.title}`,
           district: '雲林縣',
           sourceUrl: row.url,
-          reason: error instanceof Error ? error.message : String(error),
+          reason,
         },
       };
     }
@@ -611,6 +639,11 @@ async function main() {
 
       if (sameNamePeople.length === 0) {
         adoptedPeople.push(adoptedOfficial(row, row.sourceId === councilSourceId || row.sourcePayload?.elected ? 'elected' : 'appointed'));
+        continue;
+      }
+
+      if (row.sourceId === govSourceId && /副縣長/.test(row.position ?? '')) {
+        adoptedPeople.push(adoptedOfficial(row, 'appointed'));
         continue;
       }
 

@@ -39,9 +39,9 @@ export function DataGuidancePage() {
   return (
     <AppShell>
       <div className="space-y-3">
-        <PixelFrame title="Data Guidance">
+        <PixelFrame title="資料說明">
           <div className="max-w-4xl">
-            <p className="text-xs uppercase tracking-[0.22em] text-accent">principles / confidence / contribution boundary</p>
+            <p className="text-xs uppercase tracking-[0.22em] text-accent">資料原則 / 可信度 / 政治獻金限制</p>
             <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">資料說明</h2>
             <p className="mt-3 text-sm leading-6 text-slate-300">
               這裡集中放置資料原則、可信度分級與政治獻金限制。頁面可有像素風格，但資料敘述保持中性、保守、可追溯。
@@ -49,7 +49,7 @@ export function DataGuidancePage() {
           </div>
         </PixelFrame>
 
-        <SectionPanel title="資料原則" eyebrow="data principles">
+        <SectionPanel title="資料原則" eyebrow="資料原則">
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
             {dataPrinciples.map((principle) => (
               <p key={principle} className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm leading-6 text-slate-300">
@@ -59,7 +59,7 @@ export function DataGuidancePage() {
           </div>
         </SectionPanel>
 
-        <SectionPanel title="可信度分級" eyebrow="confidence levels">
+        <SectionPanel title="可信度分級" eyebrow="可信度分級">
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {confidenceLevels.map(([level, description]) => (
               <article key={level} className="pixel-corners border border-line/70 bg-bg/35 p-4">
@@ -70,7 +70,7 @@ export function DataGuidancePage() {
           </div>
         </SectionPanel>
 
-        <SectionPanel title="政治獻金限制" eyebrow="political contribution policy">
+        <SectionPanel title="政治獻金限制" eyebrow="政治獻金限制">
           <div className="grid gap-3 text-sm leading-6 text-slate-300 lg:grid-cols-3">
             <p className="pixel-corners border border-line/70 bg-bg/35 p-4">
               第一版只顯示政黨層級摘要與公司層級彙總，不公開個人捐贈明細，避免過早暴露高風險資料。
@@ -84,7 +84,7 @@ export function DataGuidancePage() {
           </div>
         </SectionPanel>
 
-        <SectionPanel title="來源連結" eyebrow="source references">
+        <SectionPanel title="來源連結" eyebrow="來源連結">
           <div className="grid gap-3 md:grid-cols-3">
             {sourceLinks.map((source) => (
               <a

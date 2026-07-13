@@ -78,8 +78,10 @@ type SupabasePublicSnapshotIndexes = {
   childStageRegionsByParentId: Map<string, StageRegionNode[]>;
   relatedRacesByRegionId: Map<string, UpcomingRace[]>;
   electionById: Map<string, PublicElection>;
+  raceById: Map<string, PublicRace>;
   racesByElectionId: Map<string, PublicRace[]>;
   candidatesByElectionId: Map<string, PublicCandidate[]>;
+  candidatesByRaceId: Map<string, PublicCandidate[]>;
   personById: Map<string, PublicPerson>;
   personListItems: PublicPersonListItem[] | null;
   personProfilesById: Map<string, PublicPersonProfile | null>;
@@ -113,7 +115,10 @@ let homeSnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
 let peopleSnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
 let defaultPeopleDatasetLoaded = false;
 let partySnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
+let electionIndexSnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
+let electionIndexDatasetLoaded = false;
 const electionSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
+const loadedElectionDatasets = new Set<string>();
 const personSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
 const peopleSearchSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
 const loadedPeopleSearchQueries = new Set<string>();
@@ -157,8 +162,10 @@ function buildSnapshotIndexes(params: {
   const childStageRegionsByParentId = new Map<string, StageRegionNode[]>();
   const relatedRacesByRegionId = new Map<string, UpcomingRace[]>();
   const electionById = new Map(params.elections.map((election) => [election.election_id, election]));
+  const raceById = new Map(params.races.map((race) => [race.race_id, race]));
   const racesByElectionId = new Map<string, PublicRace[]>();
   const candidatesByElectionId = new Map<string, PublicCandidate[]>();
+  const candidatesByRaceId = new Map<string, PublicCandidate[]>();
   const personById = new Map(params.people.map((person) => [person.person_id, person]));
   const partyBySlug = new Map(params.parties.map((party) => [party.slug, party]));
   const partyFinanceSummariesByPartyId = new Map<string, PublicPartyFinanceSummary[]>();
@@ -195,6 +202,7 @@ function buildSnapshotIndexes(params: {
 
   for (const candidate of params.candidates) {
     addArrayIndexValue(candidatesByElectionId, candidate.election_id, candidate);
+    addArrayIndexValue(candidatesByRaceId, candidate.race_id, candidate);
   }
 
   for (const summary of params.partyFinanceSummaries) {
@@ -213,8 +221,10 @@ function buildSnapshotIndexes(params: {
     childStageRegionsByParentId,
     relatedRacesByRegionId,
     electionById,
+    raceById,
     racesByElectionId,
     candidatesByElectionId,
+    candidatesByRaceId,
     personById,
     personListItems: null,
     personProfilesById: new Map<string, PublicPersonProfile | null>(),
@@ -559,9 +569,46 @@ async function ensurePeopleSearchDataset(query: string) {
   return peopleSearchSnapshotPromises.get(normalizedQuery) ?? null;
 }
 
+async function ensureElectionIndexDataset() {
+  if (electionIndexDatasetLoaded) return snapshotCache;
+
+  if (!electionIndexSnapshotPromise) {
+    electionIndexSnapshotPromise = (async () => {
+      await refreshSupabasePublicDataSnapshot();
+      const [electionRows, raceRows] = await Promise.all([
+        fetchRows('public_elections'),
+        fetchRows('public_races'),
+      ]);
+      const base = snapshotCache;
+      const elections = mergeUniqueBy(
+        base?.elections ?? [],
+        electionRows.map((row) => mapPublicElectionRow(row as PublicElection)),
+        (item) => item.election_id,
+      );
+      const races = mergeUniqueBy(
+        base?.races ?? [],
+        raceRows.map((row) => mapPublicRaceRow(row as PublicRace)),
+        (item) => item.race_id,
+      );
+      const snapshot = mergeSnapshot({ elections, races });
+
+      if (electionRows.length > 0 || raceRows.length > 0) {
+        electionIndexDatasetLoaded = true;
+      }
+
+      notifyPublicDataReady();
+      return snapshot;
+    })().finally(() => {
+      electionIndexSnapshotPromise = null;
+    });
+  }
+
+  return electionIndexSnapshotPromise;
+}
+
 async function ensureElectionDataset(electionId: string) {
   if (!electionId) return snapshotCache;
-  if (snapshotCache?.indexes.electionById.has(electionId) && snapshotCache.indexes.racesByElectionId.has(electionId)) {
+  if (loadedElectionDatasets.has(electionId)) {
     return snapshotCache;
   }
 
@@ -590,6 +637,7 @@ async function ensureElectionDataset(electionId: string) {
         (item) => item.candidate_id,
       );
       const snapshot = mergeSnapshot({ elections, races, candidates });
+      loadedElectionDatasets.add(electionId);
       notifyPublicDataReady();
       return snapshot;
     })().finally(() => {
@@ -833,14 +881,29 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     return snapshot.indexes.relatedRacesByRegionId.get(regionId) ?? [];
   },
 
+  getElections() {
+    void ensureElectionIndexDataset();
+    return getSnapshot()?.elections ?? [];
+  },
+
   getElectionById(electionId: string) {
     void ensureElectionDataset(electionId);
     return getSnapshot()?.indexes.electionById.get(electionId) ?? null;
   },
 
   getRacesByElectionId(electionId: string) {
-    void ensureElectionDataset(electionId);
+    void ensureElectionIndexDataset();
     return getSnapshot()?.indexes.racesByElectionId.get(electionId) ?? [];
+  },
+
+  getRaces() {
+    void ensureElectionIndexDataset();
+    return getSnapshot()?.races ?? [];
+  },
+
+  getRaceById(raceId: string) {
+    void ensureElectionIndexDataset();
+    return getSnapshot()?.indexes.raceById.get(raceId) ?? null;
   },
 
   getCandidates() {
@@ -850,6 +913,18 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   getCandidatesByElectionId(electionId: string) {
     void ensureElectionDataset(electionId);
     return getSnapshot()?.indexes.candidatesByElectionId.get(electionId) ?? [];
+  },
+
+  getCandidatesByRaceId(raceId: string) {
+    const race = getSnapshot()?.indexes.raceById.get(raceId) ?? null;
+
+    if (race) {
+      void ensureElectionDataset(race.election_id);
+    } else {
+      void ensureElectionIndexDataset();
+    }
+
+    return getSnapshot()?.indexes.candidatesByRaceId.get(raceId) ?? [];
   },
 
   getPollComparisonByElectionId(): PollComparison | null {

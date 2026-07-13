@@ -2,6 +2,7 @@ import type { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 import { AppHeader } from './AppHeader';
 import { BgmToggle } from './BgmToggle';
 import { useBgm } from './BgmContext';
+import { LanguageToggle } from './LanguageToggle';
 import { NextEventTicker } from './NextEventTicker';
 
 type AppShellProps = PropsWithChildren<{
@@ -14,7 +15,12 @@ export function AppShell({ headerRight, ticker, children }: AppShellProps) {
   const headerControl = (
     <div className="grid gap-2">
       {headerRight}
-      <AppShellBgmToggle enabled={bgm.enabled} onToggle={bgm.toggle} />
+      <div className="flex items-stretch justify-end gap-2">
+        <LanguageToggle />
+        <div className="w-32 shrink-0">
+          <AppShellBgmToggle enabled={bgm.enabled} onToggle={bgm.toggle} />
+        </div>
+      </div>
     </div>
   );
 

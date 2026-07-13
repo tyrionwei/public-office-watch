@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { electionPath } from '../routes/routePaths';
+import { useI18n } from '../i18n';
+import type { Translate } from '../i18n';
+import { racePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import { PixelFrame } from './PixelFrame';
 
@@ -24,12 +26,13 @@ type UpcomingElectionCardsProps = {
   compact?: boolean;
 };
 
-const statusLabels: Record<string, string> = {
-  upcoming: '即將進行',
-  announced: '已公告',
-  active: '進行中',
-  completed: '已完成',
-};
+function getStatusLabel(status: string, t: Translate) {
+  if (status === 'upcoming') return t('electionCards.status.upcoming');
+  if (status === 'announced') return t('electionCards.status.announced');
+  if (status === 'active') return t('electionCards.status.active');
+  if (status === 'completed') return t('electionCards.status.completed');
+  return status;
+}
 
 type RaceGroupKind = 'village' | 'councilor' | 'legislator';
 type RaceCategory = 'presidential' | 'chief' | 'representative' | 'basic';
@@ -41,23 +44,29 @@ const raceCategoryStyles: Record<RaceCategory, { color: string; label: string }>
   basic: { color: '#86efac', label: '基層公職' },
 };
 
-const raceGroupLabels: Record<RaceGroupKind, { title: string; countLabel: string; action: string }> = {
-  village: {
-    title: '村里長選舉',
-    countLabel: '個村里層級選舉項目',
-    action: '點開選擇行政區',
-  },
-  councilor: {
-    title: '議員選舉',
-    countLabel: '個議員選區項目',
-    action: '點開選擇選區',
-  },
-  legislator: {
-    title: '區域立法委員選舉',
-    countLabel: '個立委選區項目',
-    action: '點開選擇選區',
-  },
-};
+function getRaceGroupLabel(kind: RaceGroupKind, t: Translate) {
+  if (kind === 'village') {
+    return {
+      title: t('electionCards.group.village.title'),
+      countLabel: t('electionCards.group.village.count'),
+      action: t('electionCards.group.village.action'),
+    };
+  }
+
+  if (kind === 'councilor') {
+    return {
+      title: t('electionCards.group.councilor.title'),
+      countLabel: t('electionCards.group.councilor.count'),
+      action: t('electionCards.group.councilor.action'),
+    };
+  }
+
+  return {
+    title: t('electionCards.group.legislator.title'),
+    countLabel: t('electionCards.group.legislator.count'),
+    action: t('electionCards.group.legislator.action'),
+  };
+}
 
 function getRaceGroupKind(race: UpcomingElectionCardRace): RaceGroupKind | null {
   if (race.raceType === 'village_chief' || race.title.includes('里長') || race.title.includes('村長')) {
@@ -97,8 +106,8 @@ function getRaceCategory(race: UpcomingElectionCardRace): RaceCategory {
   return 'basic';
 }
 
-function groupTitle(kind: RaceGroupKind, selectedRegionLabel: string) {
-  return `${selectedRegionLabel} ${raceGroupLabels[kind].title}`;
+function groupTitle(kind: RaceGroupKind, selectedRegionLabel: string, t: Translate) {
+  return `${selectedRegionLabel} ${getRaceGroupLabel(kind, t).title}`;
 }
 
 function isUnfinishedRace(race: UpcomingElectionCardRace) {
@@ -110,20 +119,65 @@ function electionDistrictNumber(race: UpcomingElectionCardRace) {
   return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
 }
 
+function raceDateSortValue(race: UpcomingElectionCardRace) {
+  const timestamp = Date.parse(race.date);
+  return Number.isNaN(timestamp) ? Number.MAX_SAFE_INTEGER : timestamp;
+}
+
+function raceTypePriority(race: UpcomingElectionCardRace) {
+  const title = race.title;
+
+  if (race.raceType === 'president' || race.raceType === 'vice_president' || title.includes('總統')) return 10;
+  if (
+    race.raceType === 'municipality_mayor' ||
+    race.raceType === 'county_mayor' ||
+    race.raceType === 'local_chief' ||
+    race.raceType === 'township_mayor' ||
+    title.includes('市長') ||
+    title.includes('縣長') ||
+    title.includes('鄉長') ||
+    title.includes('鎮長')
+  ) return 20;
+  if (
+    race.raceType === 'legislator' ||
+    race.raceType === 'legislative_district' ||
+    race.raceType === 'party_list_legislator' ||
+    title.includes('立法委員') ||
+    title.includes('立委')
+  ) return 30;
+  if (
+    race.raceType === 'city_councilor' ||
+    race.raceType === 'county_councilor' ||
+    race.raceType === 'councilor_district' ||
+    title.includes('議員')
+  ) return 40;
+  if (race.raceType === 'township_representative' || race.raceType === 'township_representative_district' || title.includes('代表')) return 50;
+  if (race.raceType === 'village_chief' || title.includes('里長') || title.includes('村長')) return 60;
+  if (race.raceType === 'referendum' || title.includes('公投')) return 70;
+  if (race.raceType === 'recall' || title.includes('罷免')) return 80;
+  if (race.raceType === 'by_election' || title.includes('補選')) return 90;
+
+  return 100;
+}
+
 function compareRaceOrder(left: UpcomingElectionCardRace, right: UpcomingElectionCardRace) {
-  const statusDiff = Number(isUnfinishedRace(left)) - Number(isUnfinishedRace(right));
+  const statusDiff = Number(isUnfinishedRace(right)) - Number(isUnfinishedRace(left));
   if (statusDiff !== 0) return statusDiff;
+
+  const dateDiff = raceDateSortValue(left) - raceDateSortValue(right);
+  if (dateDiff !== 0) return dateDiff;
+
+  const priorityDiff = raceTypePriority(left) - raceTypePriority(right);
+  if (priorityDiff !== 0) return priorityDiff;
 
   const leftDistrictNumber = electionDistrictNumber(left);
   const rightDistrictNumber = electionDistrictNumber(right);
   if (leftDistrictNumber !== rightDistrictNumber) return leftDistrictNumber - rightDistrictNumber;
 
-  if (left.date !== right.date) return right.date.localeCompare(left.date);
-
   return left.title.localeCompare(right.title, 'zh-Hant-TW');
 }
 
-function groupRaces(races: UpcomingElectionCardRace[], selectedRegionLabel: string) {
+function groupRaces(races: UpcomingElectionCardRace[], selectedRegionLabel: string, t: Translate) {
   const groups = new Map<string, UpcomingElectionCardRace[]>();
   const orderedItems: (
     | { kind: 'race'; race: UpcomingElectionCardRace }
@@ -148,7 +202,7 @@ function groupRaces(races: UpcomingElectionCardRace[], selectedRegionLabel: stri
 
     const groupRaces = [race];
     groups.set(groupId, groupRaces);
-    orderedItems.push({ kind: 'group', id: groupId, groupKind, title: groupTitle(groupKind, selectedRegionLabel), races: groupRaces });
+    orderedItems.push({ kind: 'group', id: groupId, groupKind, title: groupTitle(groupKind, selectedRegionLabel, t), races: groupRaces });
   }
 
   return orderedItems.map((item) => {
@@ -167,8 +221,9 @@ export function UpcomingElectionCards({
   selectedPublicRegionId,
   compact = false,
 }: UpcomingElectionCardsProps) {
+  const { t } = useI18n();
   const normalizedPublicRegionId = selectedPublicRegionId?.replace('region-', '') ?? null;
-  const displayItems = groupRaces(races, selectedRegionLabel);
+  const displayItems = groupRaces(races, selectedRegionLabel, t);
 
   function renderCompactRace(race: UpcomingElectionCardRace) {
     const category = raceCategoryStyles[getRaceCategory(race)];
@@ -195,13 +250,13 @@ export function UpcomingElectionCards({
           </div>
           <span className="justify-self-end text-[11px] text-signal">{race.date}</span>
           <div className="col-span-2 col-start-2 mt-2 flex items-center justify-between gap-3">
-            <span className="text-xs text-slate-500">{statusLabels[race.status] ?? race.status}</span>
+            <span className="text-xs text-slate-500">{getStatusLabel(race.status, t)}</span>
             {race.electionId ? (
               <span
                 className="rounded-sm border bg-accent/8 px-2 py-1 text-[11px] focus:outline-none focus:ring-2 focus:ring-accent/30"
                 style={{ borderColor: `${category.color}88`, color: category.color }}
               >
-                查看選舉項目
+                {t('electionCards.viewElectionItem')}
               </span>
             ) : null}
           </div>
@@ -214,7 +269,7 @@ export function UpcomingElectionCards({
     const style = { borderColor: isRelated ? category.color : 'rgba(49,64,91,0.8)' };
 
     return race.electionId ? (
-      <Link key={race.id} to={electionPath(race.electionId)} aria-label={`查看${race.title}`} className={className} style={style}>
+      <Link key={race.id} to={racePath(race.id)} aria-label={t('electionCards.viewRaceAria', { title: race.title })} className={className} style={style}>
         {content}
       </Link>
     ) : (
@@ -227,7 +282,7 @@ export function UpcomingElectionCards({
   function renderCompactGroup(group: { id: string; groupKind: RaceGroupKind; title: string; races: UpcomingElectionCardRace[] }) {
     const sample = group.races[0];
     const category = raceCategoryStyles[sample ? getRaceCategory(sample) : 'basic'];
-    const groupLabel = raceGroupLabels[group.groupKind];
+    const groupLabel = getRaceGroupLabel(group.groupKind, t);
 
     return (
       <details
@@ -253,9 +308,9 @@ export function UpcomingElectionCards({
               <p className="font-display text-sm leading-tight text-white">{group.title}</p>
               <p className="mt-1 text-xs text-slate-400">{group.races.length} {groupLabel.countLabel}</p>
             </div>
-            <span className="justify-self-end text-[11px] text-signal">{sample?.date ?? '待公告'}</span>
+            <span className="justify-self-end text-[11px] text-signal">{sample?.date ?? t('common.toBeAnnounced')}</span>
             <div className="col-span-2 col-start-2 mt-2 flex items-center justify-between gap-3">
-              <span className="text-xs text-slate-500">{statusLabels[sample?.status ?? ''] ?? sample?.status ?? '待公告'}</span>
+              <span className="text-xs text-slate-500">{sample ? getStatusLabel(sample.status, t) : t('common.toBeAnnounced')}</span>
               <span
                 className="rounded-sm border bg-accent/8 px-2 py-1 text-[11px]"
                 style={{ borderColor: `${category.color}88`, color: category.color }}
@@ -270,9 +325,9 @@ export function UpcomingElectionCards({
             race.electionId ? (
               <Link
                 key={race.id}
-                to={electionPath(race.electionId)}
+                to={racePath(race.id)}
                 className="flex items-center justify-between gap-3 pixel-corners border border-line/60 bg-bg/35 px-3 py-2 transition hover:border-white/20 hover:bg-accent/8 focus:outline-none focus:ring-2 focus:ring-accent/35"
-                aria-label={`查看${race.title}`}
+                aria-label={t('electionCards.viewRaceAria', { title: race.title })}
               >
                 <div className="min-w-0">
                   <p className="truncate text-sm text-white">{race.title}</p>
@@ -282,7 +337,7 @@ export function UpcomingElectionCards({
                   className="shrink-0 rounded-sm border bg-accent/8 px-2 py-1 text-[11px]"
                   style={{ borderColor: `${category.color}88`, color: category.color }}
                 >
-                  查看
+                  {t('common.view')}
                 </span>
               </Link>
             ) : (
@@ -332,7 +387,7 @@ export function UpcomingElectionCards({
             ))}
           </div>
           <div className="min-w-0">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-slate-500">Card {index + 1}</p>
+            <p className="text-[11px] uppercase tracking-[0.22em] text-slate-500">{t('electionCards.item', { number: index + 1 })}</p>
             <p className="mt-1 font-display text-base leading-tight text-white">{race.title}</p>
             <p className="mt-1 text-sm text-slate-400">{race.region}</p>
           </div>
@@ -348,24 +403,24 @@ export function UpcomingElectionCards({
 
         <dl className="mt-4 grid gap-3 text-sm text-slate-300">
           <div className="flex items-center justify-between gap-3 border-b border-line/40 pb-2">
-            <dt className="text-slate-500">投票日</dt>
+            <dt className="text-slate-500">{t('electionCards.voteDate')}</dt>
             <dd>{race.date}</dd>
           </div>
           <div className="flex items-center justify-between gap-3 border-b border-line/40 pb-2">
-            <dt className="text-slate-500">狀態</dt>
-            <dd>{statusLabels[race.status] ?? race.status}</dd>
+            <dt className="text-slate-500">{t('electionCards.status')}</dt>
+            <dd>{getStatusLabel(race.status, t)}</dd>
           </div>
           <div className="flex items-center justify-between gap-3 border-b border-line/40 pb-2">
-            <dt className="text-slate-500">區域關聯</dt>
-            <dd>{isRelated ? '目前選取區域相關' : '示範卡片'}</dd>
+            <dt className="text-slate-500">{t('electionCards.regionRelation')}</dt>
+            <dd>{isRelated ? t('electionCards.relatedRegion') : t('electionCards.demoCard')}</dd>
           </div>
           <div className="pt-1">
             {race.electionId ? (
               <Link
-                to={electionPath(race.electionId)}
+                to={racePath(race.id)}
                 className="inline-flex rounded-sm border border-accent/60 bg-accent/10 px-3 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent focus:outline-none focus:ring-2 focus:ring-accent/35"
               >
-                查看選舉資訊
+                {t('electionCards.viewElection')}
               </Link>
             ) : (
               <button
@@ -373,7 +428,7 @@ export function UpcomingElectionCards({
                 disabled
                 className="rounded-sm border border-accent/30 bg-accent/8 px-3 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent/60"
               >
-                查看選舉資訊
+                {t('electionCards.viewElection')}
               </button>
             )}
           </div>
@@ -384,10 +439,10 @@ export function UpcomingElectionCards({
 
   return (
     <PixelFrame
-      title={compact ? '即將到來的選舉' : '熱門選舉項目'}
+      title={compact ? t('electionCards.titleCompact') : t('electionCards.titleFull')}
       action={
         <span className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
-          目前選取區域：{selectedRegionLabel}
+          {t('electionCards.selectedRegion', { region: selectedRegionLabel })}
         </span>
       }
     >
@@ -403,7 +458,7 @@ export function UpcomingElectionCards({
         </div>
       ) : (
         <div className="pixel-corners border border-line/70 bg-bg/35 px-3 py-4 text-sm text-slate-300">
-          目前沒有找到和 {selectedRegionLabel} 直接相關的即將到來選舉。
+          {t('electionCards.noRelated', { region: selectedRegionLabel })}
         </div>
       )}
     </PixelFrame>

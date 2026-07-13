@@ -487,17 +487,39 @@ function regionKeysFor(region: StageRegionNode) {
   return [region.id, region.publicRegionId, region.label, region.stageLabel].filter(Boolean) as string[];
 }
 
-function inferRegionForPerson(person: PublicPerson, candidateRecords: PublicCandidate[], stageRegions: StageRegionNode[]) {
-  const textValues = [
-    person.district,
-    ...candidateRecords.flatMap((candidate) => [candidate.region_id, candidate.region_name, candidate.race_title]),
-  ].filter(Boolean) as string[];
+function findRegionByTextValues(textValues: string[], stageRegions: StageRegionNode[]) {
+  return stageRegions.find((region) =>
+    regionKeysFor(region).some((key) => textValues.some((value) => value === key || value.includes(region.label) || value.includes(key))),
+  ) ?? null;
+}
 
-  return (
-    stageRegions.find((region) =>
-      regionKeysFor(region).some((key) => textValues.some((value) => value === key || value.includes(region.label) || value.includes(key))),
-    ) ?? null
-  );
+function isNationalCandidateRecord(candidate: PublicCandidate) {
+  const text = [candidate.region_name, candidate.race_title].filter(Boolean).join(' ');
+  return text.includes('全國') || text.includes('臺灣') || text.includes('台灣') || text.includes('總統');
+}
+
+function inferRegionForPerson(person: PublicPerson, candidateRecords: PublicCandidate[], stageRegions: StageRegionNode[]) {
+  const personTextValues = [person.district, person.position].filter(Boolean) as string[];
+  const personRegion = findRegionByTextValues(personTextValues, stageRegions);
+
+  if (personRegion) {
+    return personRegion;
+  }
+
+  const localCandidateTextValues = candidateRecords
+    .filter((candidate) => !isNationalCandidateRecord(candidate))
+    .flatMap((candidate) => [candidate.region_id, candidate.region_name, candidate.race_title])
+    .filter(Boolean) as string[];
+  const localCandidateRegion = findRegionByTextValues(localCandidateTextValues, stageRegions);
+
+  if (localCandidateRegion) {
+    return localCandidateRegion;
+  }
+
+  const candidateTextValues = candidateRecords
+    .flatMap((candidate) => [candidate.region_id, candidate.region_name, candidate.race_title])
+    .filter(Boolean) as string[];
+  return findRegionByTextValues(candidateTextValues, stageRegions);
 }
 
 function hasText(value: string | null | undefined) {

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
+import { getRegionHighlightBackground } from '../data/regionHighlights';
 import { regionPath } from '../routes/routePaths';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import { PixelFrame } from './PixelFrame';
@@ -14,11 +15,14 @@ type SelectedRegionHudProps = {
   regionSummary: StageRegionSummary | undefined;
 };
 
-const skylineBars = [42, 68, 96, 132, 82, 58];
 
 export function SelectedRegionHud({ region, regionNode, regionSummary }: SelectedRegionHudProps) {
   const { t } = useI18n();
   const electionItemLabels = [t('regionHud.chiefElection'), t('regionHud.representativeElection'), t('regionHud.basicOffice')];
+  const highlightBackground = getRegionHighlightBackground(regionNode?.id, regionNode?.publicRegionId, regionNode?.stageLabel);
+  const heroBackgroundImage = highlightBackground
+    ? `linear-gradient(180deg,rgba(5,12,24,0.18),rgba(5,12,24,0.58)),url(${highlightBackground.image})`
+    : 'linear-gradient(180deg,rgba(12,93,161,0.94),rgba(10,68,122,0.86) 48%,rgba(9,27,57,0.96))';
 
   if (!regionSummary || !regionNode) {
     return null;
@@ -30,23 +34,17 @@ export function SelectedRegionHud({ region, regionNode, regionSummary }: Selecte
       className="bg-[linear-gradient(180deg,rgba(6,46,91,0.95),rgba(9,37,74,0.92)_55%,rgba(10,19,39,0.95))]"
     >
       <div className="space-y-3 text-sm text-slate-300">
-        <div className="relative min-h-[298px] overflow-hidden rounded-sm border border-accent/25 bg-[linear-gradient(180deg,rgba(12,93,161,0.94),rgba(10,68,122,0.86)_48%,rgba(9,27,57,0.96))] p-5">
+        <div
+          className="relative min-h-[298px] overflow-hidden rounded-sm border border-accent/25 bg-slate-950 bg-cover bg-center p-5"
+          data-region-highlight={highlightBackground?.regionId ?? regionNode.id}
+          data-region-highlight-feature={highlightBackground?.feature ?? undefined}
+          style={{
+            backgroundImage: heroBackgroundImage,
+            backgroundPosition: highlightBackground?.focalPoint ?? 'center',
+          }}
+        >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_36%,rgba(125,211,252,0.28),transparent_34%),linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px)] [background-size:auto,100%_18px]" />
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-28 bg-[linear-gradient(180deg,transparent,rgba(5,12,24,0.9))]" />
-          <div className="pointer-events-none absolute bottom-0 right-0 hidden h-[168px] w-[46%] opacity-95 sm:block">
-            <div className="absolute bottom-0 left-0 right-0 h-12 bg-[linear-gradient(180deg,rgba(22,101,52,0.0),rgba(22,101,52,0.62))]" />
-            <div className="absolute bottom-8 right-4 flex items-end gap-1">
-              {skylineBars.map((height, index) => (
-                <span
-                  key={height + index}
-                  className="block w-8 border border-sky-200/20 bg-slate-900/72 shadow-[inset_0_0_0_2px_rgba(255,255,255,0.03)]"
-                  style={{ height }}
-                />
-              ))}
-              <span className="ml-2 block h-40 w-5 border border-signal/40 bg-slate-900/75 shadow-[0_0_18px_rgba(244,211,94,0.16)]" />
-            </div>
-          </div>
-
           <div className="relative max-w-full sm:max-w-[74%]">
             <p className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('regionHud.currentCounty')}</p>
             <p className="mt-3 font-display text-3xl leading-none text-white">{regionSummary.label}</p>

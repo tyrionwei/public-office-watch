@@ -1,5 +1,30 @@
 import { expect, test } from '@playwright/test';
 
+const countyHighlightTargets = [
+  { id: 'county-63000', label: '臺北市' },
+  { id: 'county-65000', label: '新北市' },
+  { id: 'county-68000', label: '桃園市' },
+  { id: 'county-66000', label: '臺中市' },
+  { id: 'county-67000', label: '臺南市' },
+  { id: 'county-64000', label: '高雄市' },
+  { id: 'county-10017', label: '基隆市' },
+  { id: 'county-10018', label: '新竹市' },
+  { id: 'county-10020', label: '嘉義市' },
+  { id: 'county-10002', label: '宜蘭縣' },
+  { id: 'county-10004', label: '新竹縣' },
+  { id: 'county-10005', label: '苗栗縣' },
+  { id: 'county-10007', label: '彰化縣' },
+  { id: 'county-10008', label: '南投縣' },
+  { id: 'county-10009', label: '雲林縣' },
+  { id: 'county-10010', label: '嘉義縣' },
+  { id: 'county-10013', label: '屏東縣' },
+  { id: 'county-10014', label: '臺東縣' },
+  { id: 'county-10015', label: '花蓮縣' },
+  { id: 'county-10016', label: '澎湖縣' },
+  { id: 'county-09020', label: '金門縣' },
+  { id: 'county-09007', label: '連江縣' },
+];
+
 async function getBox(page: import('@playwright/test').Page, selector: string) {
   return page.locator(selector).first().boundingBox();
 }
@@ -48,4 +73,22 @@ test('desktop public pages do not introduce horizontal overflow in English', asy
     await page.getByRole('button', { name: 'EN' }).click();
     await expectNoHorizontalOverflow(page);
   }
+});
+
+test('county highlight panel provides a distinct background for every county city', async ({ page }) => {
+  await page.goto('/');
+
+  const highlightPanel = page.locator('[data-region-highlight]');
+
+  for (const county of countyHighlightTargets) {
+    await page.locator('[aria-label="選取 ' + county.label + '"]').first().evaluate((element) => {
+      element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    });
+    await expect(highlightPanel).toHaveAttribute('data-region-highlight', county.id);
+
+    const backgroundImage = await highlightPanel.evaluate((element) => window.getComputedStyle(element).backgroundImage);
+    expect(backgroundImage).toContain('/assets/regions/' + county.id + '-day.png');
+  }
+
+  await expectNoHorizontalOverflow(page);
 });

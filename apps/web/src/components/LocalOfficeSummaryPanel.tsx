@@ -287,7 +287,7 @@ export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelPro
             <div className="flex items-center justify-between gap-3">
               <span className="text-xs text-slate-400">{item.label}</span>
               <span className={item.status === 'available' ? 'text-xs text-signal' : 'text-xs text-slate-500'}>
-                {item.status === 'available' ? t('office.available') : t('office.pending')}
+                {item.status === 'available' ? t('office.available') : t('office.todo')}
               </span>
             </div>
             <p className="mt-1 text-xs text-slate-500">{item.note}</p>

@@ -53,10 +53,14 @@ export interface PublicDataProvider {
   getChildStageRegions(parentId: string): StageRegionNode[];
   getUpcomingRaces(): UpcomingRace[];
   getRelatedRacesByRegionId(regionId: string): UpcomingRace[];
+  getElections(): PublicElection[];
   getElectionById(electionId: string): PublicElection | null;
   getRacesByElectionId(electionId: string): PublicRace[];
+  getRaces(): PublicRace[];
+  getRaceById(raceId: string): PublicRace | null;
   getCandidates(): PublicCandidate[];
   getCandidatesByElectionId(electionId: string): PublicCandidate[];
+  getCandidatesByRaceId(raceId: string): PublicCandidate[];
   getPollComparisonByElectionId(electionId: string): PollComparison | null;
   getPeople(): PublicPerson[];
   getPeopleByFilters(filters?: PublicPersonFilters): PublicPersonListItem[];

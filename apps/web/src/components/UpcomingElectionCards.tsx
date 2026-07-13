@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import type { Translate } from '../i18n';
-import { electionPath } from '../routes/routePaths';
+import { racePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import { PixelFrame } from './PixelFrame';
 
@@ -269,7 +269,7 @@ export function UpcomingElectionCards({
     const style = { borderColor: isRelated ? category.color : 'rgba(49,64,91,0.8)' };
 
     return race.electionId ? (
-      <Link key={race.id} to={electionPath(race.electionId)} aria-label={t('electionCards.viewRaceAria', { title: race.title })} className={className} style={style}>
+      <Link key={race.id} to={racePath(race.id)} aria-label={t('electionCards.viewRaceAria', { title: race.title })} className={className} style={style}>
         {content}
       </Link>
     ) : (
@@ -325,7 +325,7 @@ export function UpcomingElectionCards({
             race.electionId ? (
               <Link
                 key={race.id}
-                to={electionPath(race.electionId)}
+                to={racePath(race.id)}
                 className="flex items-center justify-between gap-3 pixel-corners border border-line/60 bg-bg/35 px-3 py-2 transition hover:border-white/20 hover:bg-accent/8 focus:outline-none focus:ring-2 focus:ring-accent/35"
                 aria-label={t('electionCards.viewRaceAria', { title: race.title })}
               >
@@ -417,7 +417,7 @@ export function UpcomingElectionCards({
           <div className="pt-1">
             {race.electionId ? (
               <Link
-                to={electionPath(race.electionId)}
+                to={racePath(race.id)}
                 className="inline-flex rounded-sm border border-accent/60 bg-accent/10 px-3 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent focus:outline-none focus:ring-2 focus:ring-accent/35"
               >
                 {t('electionCards.viewElection')}

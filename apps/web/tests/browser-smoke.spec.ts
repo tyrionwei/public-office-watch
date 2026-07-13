@@ -92,3 +92,37 @@ test('county highlight panel provides a distinct background for every county cit
 
   await expectNoHorizontalOverflow(page);
 });
+
+
+test('elections page groups elections into events and opens race detail', async ({ page }) => {
+  await page.goto('/elections');
+
+  await expect(page.getByRole('heading', { name: '依年份選擇大選' })).toBeVisible();
+  await expect(page.getByText('選舉年份')).toBeVisible();
+
+  const eventLinks = page.locator('main a[href^="/elections/events/"]');
+  const eventCount = await eventLinks.count();
+
+  if (eventCount === 0) {
+    await expect(page.getByText('目前尚未載入可公開的選舉事件資料。')).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+    return;
+  }
+
+  await eventLinks.first().click();
+
+  await expect(page.getByRole('heading', { name: '大選總覽' })).toBeVisible();
+  await expect(page.getByText('項目分類')).toBeVisible();
+  await expect(page.getByText('縣市 / 區域')).toBeVisible();
+
+  const raceLinks = page.locator('main a[href^="/elections/races/"]');
+  const raceCount = await raceLinks.count();
+
+  if (raceCount > 0) {
+    await raceLinks.first().click();
+    await expect(page.getByRole('heading', { name: '選區項目細節' })).toBeVisible();
+    await expect(page.getByText('候選名冊')).toBeVisible();
+  }
+
+  await expectNoHorizontalOverflow(page);
+});

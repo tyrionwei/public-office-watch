@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useI18n } from '../i18n';
-import { aboutPath, dataGuidancePath, homePath, partiesPath, peoplePath } from '../routes/routePaths';
+import { aboutPath, dataGuidancePath, electionsPath, homePath, partiesPath, peoplePath } from '../routes/routePaths';
 import { GlobalSearch } from './GlobalSearch';
 
 type AppHeaderProps = {
@@ -11,6 +11,7 @@ type AppHeaderProps = {
 const navItems = [
   { labelKey: 'nav.home', mark: '⌂', to: homePath(), end: true },
   { labelKey: 'nav.people', mark: '◎', to: peoplePath(), end: false },
+  { labelKey: 'nav.elections', mark: '◇', to: electionsPath(), end: false },
   { labelKey: 'nav.parties', mark: '▧', to: partiesPath(), end: false },
   { labelKey: 'nav.dataGuidance', mark: '▣', to: dataGuidancePath(), end: false },
   { labelKey: 'nav.about', mark: 'i', to: aboutPath(), end: false },
@@ -49,7 +50,7 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
             <GlobalSearch />
           </div>
 
-          <nav className="grid grid-cols-2 gap-2 sm:grid-cols-5 2xl:flex 2xl:items-stretch" aria-label={t('nav.mainAria')}>
+          <nav className="grid grid-cols-2 gap-2 sm:grid-cols-6 2xl:flex 2xl:items-stretch" aria-label={t('nav.mainAria')}>
             {navItems.map((item) => (
               <NavLink
                 key={item.labelKey}

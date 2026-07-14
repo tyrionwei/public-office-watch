@@ -16,7 +16,6 @@ import type {
   PublicPersonFilters,
   PublicPersonListItem,
   PublicPersonPartyAffiliation,
-  PublicPersonRole,
   PublicPersonProfile,
   PublicRace,
   PublicRegion,
@@ -127,6 +126,9 @@ const peopleSearchSnapshotPromises = new Map<string, Promise<SupabasePublicSnaps
 const loadedPeopleSearchQueries = new Set<string>();
 const localOfficeSummaryCache = new Map<string, PublicLocalOfficeSummary>();
 const localOfficeSummaryPromises = new Map<string, Promise<PublicLocalOfficeSummary>>();
+const peoplePageCache = new Map<string, PublicPersonListPage>();
+const peoplePagePromises = new Map<string, Promise<PublicPersonListPage>>();
+const peoplePageBlockSize = 10;
 
 function addLookupValue<T>(index: Map<string, T>, key: string | null | undefined, value: T) {
   if (!key) return;
@@ -502,23 +504,60 @@ export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePubli
   return homeSnapshotPromise;
 }
 
+function peoplePageCacheKey(filters: PublicPersonFilters, page: number, pageSize: number) {
+  return JSON.stringify([
+    filters.query?.trim().toLowerCase() ?? '',
+    filters.regionId ?? '',
+    filters.party ?? '',
+    filters.role ?? '',
+    filters.status ?? '',
+    page,
+    pageSize,
+  ]);
+}
+
+function loadCachedPeoplePage(filters: PublicPersonFilters, page: number, pageSize: number) {
+  const cacheKey = peoplePageCacheKey(filters, page, pageSize);
+  const cachedPage = peoplePageCache.get(cacheKey);
+  if (cachedPage) return Promise.resolve(cachedPage);
+
+  const blockStartPage = Math.floor((page - 1) / peoplePageBlockSize) * peoplePageBlockSize + 1;
+  const blockCacheKey = peoplePageCacheKey(filters, blockStartPage, pageSize);
+  let blockPromise = peoplePagePromises.get(blockCacheKey);
+
+  if (!blockPromise) {
+    blockPromise = fetchPeoplePage(filters, blockStartPage, pageSize, peoplePageBlockSize)
+      .then((result) => {
+        for (let index = 0; index < peoplePageBlockSize; index += 1) {
+          const blockPage = blockStartPage + index;
+          const itemStart = index * pageSize;
+          peoplePageCache.set(
+            peoplePageCacheKey(filters, blockPage, pageSize),
+            { items: result.items.slice(itemStart, itemStart + pageSize), total: result.total },
+          );
+        }
+
+        return result;
+      })
+      .finally(() => {
+        peoplePagePromises.delete(blockCacheKey);
+      });
+    peoplePagePromises.set(blockCacheKey, blockPromise);
+  }
+
+  return blockPromise.then((result) => peoplePageCache.get(cacheKey) ?? { items: [], total: result.total });
+}
+
 async function fetchPeoplePage(
   filters: PublicPersonFilters,
   page: number,
   pageSize: number,
+  pageCount = 1,
 ): Promise<PublicPersonListPage> {
   await refreshSupabasePublicDataSnapshot();
 
-  if (filters.status === 'former' || filters.status === 'other' || filters.role === 'other') {
-    await ensurePeopleDataset(filters);
-    const snapshot = getSnapshot();
-    const items = snapshot ? filterPersonListItems(getPersonListItems(snapshot), filters) : [];
-    const pageStart = (page - 1) * pageSize;
-    return { items: items.slice(pageStart, pageStart + pageSize), total: items.length };
-  }
-
   const snapshot = getSnapshot();
-  const view = fromPublicView('public_people');
+  const view = fromPublicView('public_people_list');
   if (!snapshot || !view) {
     return { items: [], total: 0 };
   }
@@ -529,7 +568,7 @@ async function fetchPeoplePage(
   if (normalizedQuery) {
     query = query.ilike('name', '%' + normalizedQuery + '%');
   } else {
-    query = query.not('position', 'ilike', '%村里%').not('position', 'ilike', '%代表%');
+    query = query.eq('list_is_grassroots', false);
   }
 
   if (filters.party) {
@@ -545,51 +584,15 @@ async function fetchPeoplePage(
     query = query.or(labels.map((label) => 'district.ilike.' + label + '%').join(','));
   }
 
-  const rolePatterns: Partial<Record<PublicPersonRole, string[]>> = {
-    president: ['總統'],
-    vice_president: ['副總統'],
-    legislator: ['立法委員', '立委'],
-    local_chief: ['市長', '縣長'],
-    local_deputy: ['副市長', '副縣長', '副縣市長'],
-    agency_head: ['局長', '處長', '主任委員'],
-    councilor: ['議員'],
-    party_officer: ['黨主席', '主席', '秘書長'],
-    candidate: ['候選人', '參選', '擬參選'],
-  };
-  const patterns = filters.role ? rolePatterns[filters.role] : null;
-  if (patterns?.length) {
-    query = query.or(patterns.map((pattern) => 'position.ilike.%' + pattern + '%').join(','));
-    if (filters.role === 'president') {
-      query = query.not('position', 'ilike', '%副總統%');
-    } else if (filters.role === 'local_chief') {
-      query = query.not('position', 'ilike', '%副市長%').not('position', 'ilike', '%副縣長%');
-    }
-  }
-
-  if (filters.status === 'current') {
-    query = query.or([
-      'current_office_label.not.is.null',
-      'position.ilike.%副市長%',
-      'position.ilike.%副縣長%',
-      'position.ilike.%局長%',
-      'position.ilike.%處長%',
-      'position.ilike.%主任委員%',
-    ].join(','));
-  } else if (filters.status === 'candidate') {
-    query = query.or([
-      'upcoming_candidate_label.not.is.null',
-      'position.ilike.%候選人%',
-      'position.ilike.%參選%',
-      'position.ilike.%擬參選%',
-    ].join(','));
-  }
+  if (filters.role) query = query.eq('list_role', filters.role);
+  if (filters.status) query = query.eq('list_status', filters.status);
 
   const pageStart = (page - 1) * pageSize;
   const { data, error, count } = await query
-    .order('current_office_label', { ascending: false, nullsFirst: false })
-    .order('upcoming_candidate_label', { ascending: false, nullsFirst: false })
+    .order('list_status_order', { ascending: true })
+    .order('list_role_order', { ascending: true })
     .order('name', { ascending: true })
-    .range(pageStart, pageStart + pageSize - 1);
+    .range(pageStart, pageStart + pageSize * pageCount - 1);
 
   if (error || !Array.isArray(data)) {
     if (error && import.meta.env.DEV) {
@@ -601,7 +604,13 @@ async function fetchPeoplePage(
   const people = data.map((row) => mapPublicPersonRow(row as PublicPerson));
   const candidateRows = await fetchCandidateRowsByPersonIds(people.map((person) => person.person_id));
   const candidates = candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate));
-  const items = filterPersonListItems(buildPersonListItems(people, candidates, snapshot.stageRegions), filters);
+  const itemsByPersonId = new Map(
+    buildPersonListItems(people, candidates, snapshot.stageRegions)
+      .map((item) => [item.person_id, item] as const),
+  );
+  const items = people
+    .map((person) => itemsByPersonId.get(person.person_id))
+    .filter((item): item is PublicPersonListItem => Boolean(item));
 
   return { items, total: count ?? items.length };
 }
@@ -1181,7 +1190,7 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   },
 
   loadPeoplePage(filters, page, pageSize) {
-    return fetchPeoplePage(filters, page, pageSize);
+    return loadCachedPeoplePage(filters, page, pageSize);
   },
 
   getPersonById(personId: string) {

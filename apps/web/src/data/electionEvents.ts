@@ -1,5 +1,5 @@
 import type { PublicElection, PublicElectionRaceSummary, PublicRace } from '../types/publicViews';
-import { compareRacesForDisplay, getRaceCategory, getRaceCategoryByType, groupRacesByCategory } from './electionLabels';
+import { compareElectionRegionLabels, compareRacesForDisplay, getElectionCountyCityName, getRaceCategory, getRaceCategoryByType, groupRacesByCategory } from './electionLabels';
 
 export type ElectionEventFamily = 'national' | 'local' | 'referendum' | 'recall' | 'by_election' | 'other';
 
@@ -25,13 +25,6 @@ export type ElectionEvent = {
   categoryGroups: ReturnType<typeof groupRacesByCategory<PublicRace>>;
   regionGroups: ElectionEventRegion[];
 };
-
-const countyCityNames = [
-  '臺北市', '新北市', '桃園市', '臺中市', '臺南市', '高雄市',
-  '基隆市', '新竹市', '嘉義市', '宜蘭縣', '新竹縣', '苗栗縣',
-  '彰化縣', '南投縣', '雲林縣', '嘉義縣', '屏東縣', '臺東縣',
-  '花蓮縣', '澎湖縣', '金門縣', '連江縣',
-];
 
 const statusOrder: PublicElection['status'][] = ['active', 'upcoming', 'announced', 'draft', 'completed', 'cancelled', 'unknown'];
 const localRaceTypes = new Set<PublicRace['race_type']>([
@@ -138,7 +131,7 @@ export function getRaceRegionGroup(race: PublicRace) {
   }
 
   const regionName = race.region_name ?? '未指定區域';
-  const countyCityName = countyCityNames.find((name) => regionName.startsWith(name));
+  const countyCityName = getElectionCountyCityName(regionName);
 
   if (countyCityName) {
     return { key: countyCityName, label: countyCityName };
@@ -159,11 +152,7 @@ function groupRacesByRegion(races: PublicRace[]): ElectionEventRegion[] {
 
   return Array.from(groups.values())
     .map((group) => ({ ...group, races: group.races.slice().sort(compareRacesForDisplay) }))
-    .sort((left, right) => {
-      if (left.key === 'national') return -1;
-      if (right.key === 'national') return 1;
-      return left.label.localeCompare(right.label, 'zh-TW');
-    });
+    .sort((left, right) => compareElectionRegionLabels(left.label, right.label));
 }
 
 function finalizeEvent(elections: PublicElection[], allRaces: PublicRace[], allSummaries: PublicElectionRaceSummary[]): ElectionEvent {

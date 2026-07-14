@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const allowedPublicViews = {
   public_people: ['person_id', 'name', 'gender', 'education', 'experience', 'updated_at'],
+  public_people_list: ['person_id', 'name', 'list_role', 'list_status', 'list_is_grassroots', 'list_status_order', 'list_role_order'],
   public_companies: ['company_id', 'name', 'updated_at'],
   public_relation_details: ['relation_id', 'person_id', 'company_id', 'relation_type', 'verification_status'],
   public_regions: ['region_id', 'name', 'slug', 'region_type'],

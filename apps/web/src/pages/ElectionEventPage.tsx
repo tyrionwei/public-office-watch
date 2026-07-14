@@ -6,7 +6,7 @@ import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { buildElectionEvents, getElectionEventByKey, getRaceRegionGroup } from '../data/electionEvents';
 import type { ElectionEvent } from '../data/electionEvents';
-import { getElectionStatusLabel, getRaceCategory, getRaceCategoryByType, getRaceStatusLabel, getRaceTypeLabel } from '../data/electionLabels';
+import { compareElectionRegionLabels, compareRacesForDisplay, getElectionStatusLabel, getRaceCategory, getRaceCategoryByType, getRaceStatusLabel, getRaceTypeLabel } from '../data/electionLabels';
 import type { RaceCategory } from '../data/electionLabels';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
@@ -38,11 +38,7 @@ function buildRegionOptions(facets: PublicElectionRaceFacet[]): RegionOption[] {
     options.set(facet.region_key, option);
   }
 
-  return Array.from(options.values()).sort((left, right) => {
-    if (left.key === 'national') return -1;
-    if (right.key === 'national') return 1;
-    return left.label.localeCompare(right.label, 'zh-TW');
-  });
+  return Array.from(options.values()).sort((left, right) => compareElectionRegionLabels(left.label, right.label));
 }
 
 function buildFilterPath(eventKey: string, searchParams: URLSearchParams, key: 'category' | 'region', value: string) {
@@ -106,14 +102,24 @@ export function ElectionEventPage() {
     };
   }, [eventKey]);
 
-  const selectedCategory = searchParams.get('category') ?? '';
-  const selectedRegion = searchParams.get('region') ?? '';
+  const selectedCategoryParam = searchParams.get('category') ?? '';
+  const categoryOptions = buildCategoryOptions(facets);
+  const selectedCategoryOption = categoryOptions.find((option) => option.key === selectedCategoryParam)
+    ?? categoryOptions[0];
+  const selectedCategory = selectedCategoryOption?.key ?? '';
+  const regionOptions = buildRegionOptions(
+    facets.filter((facet) => getRaceCategoryByType(facet.race_type).key === selectedCategory),
+  );
+  const selectedRegionParam = searchParams.get('region') ?? '';
+  const selectedRegion = regionOptions.some((option) => option.key === selectedRegionParam)
+    ? selectedRegionParam
+    : '';
 
   useEffect(() => {
     let active = true;
     setRaces([]);
 
-    if (!event || !selectedCategory || !selectedRegion) {
+    if (!event || !selectedCategory) {
       setRacesLoading(false);
       return () => {
         active = false;
@@ -129,10 +135,10 @@ export function ElectionEventPage() {
 
     void publicDataProvider.loadRacesByElectionIds(
       event.elections.map((election) => election.election_id),
-      { raceTypes, regionKey: selectedRegion },
+      { raceTypes, regionKey: selectedRegion || undefined },
     )
       .then((nextRaces) => {
-        if (active) setRaces(nextRaces);
+        if (active) setRaces(nextRaces.slice().sort(compareRacesForDisplay));
       })
       .catch((error: unknown) => {
         if (import.meta.env.DEV) console.warn('Failed to load filtered election races', error);
@@ -146,9 +152,6 @@ export function ElectionEventPage() {
     };
   }, [event, facets, selectedCategory, selectedRegion]);
 
-  const categoryOptions = buildCategoryOptions(facets);
-  const regionOptions = buildRegionOptions(facets);
-
   if (!event) {
     return (
       <AppShell>
@@ -160,12 +163,10 @@ export function ElectionEventPage() {
   }
 
   const filteredRaces = races;
-  const selectedCategoryLabel = selectedCategory
-    ? categoryOptions.find((option) => option.key === selectedCategory)?.label ?? selectedCategory
-    : '請選擇項目';
+  const selectedCategoryLabel = selectedCategoryOption?.label ?? '請選擇項目';
   const selectedRegionLabel = selectedRegion
     ? regionOptions.find((option) => option.key === selectedRegion)?.label ?? selectedRegion
-    : '請選擇區域';
+    : '全部區域';
   const regionCount = regionOptions.length;
 
   return (
@@ -180,7 +181,7 @@ export function ElectionEventPage() {
               <p className="text-xs uppercase tracking-[0.22em] text-accent">{event.votingDate ?? '投票日待公告'}</p>
               <h1 className="mt-2 font-display text-4xl text-white">{event.title}</h1>
               <p className="mt-3 text-sm leading-6 text-slate-300">
-                這個事件合併 {event.elections.length} 筆原始選舉資料：{event.sourceNameSummary}。先從左側選擇項目，再從右側選擇縣市或區域，中間會列出符合條件的選區項目。
+                這個事件合併 {event.elections.length} 筆原始選舉資料：{event.sourceNameSummary}。預設顯示層級最高的項目；可從左側切換項目，再從右側依縣市或區域縮小範圍。
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
                 <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{getElectionStatusLabel(event.status)}</span>
@@ -200,12 +201,6 @@ export function ElectionEventPage() {
           <aside className="space-y-3">
             <PixelFrame title="項目分類">
               <div className="space-y-2">
-                <Link
-                  to={buildFilterPath(event.key, searchParams, 'category', '')}
-                  className={selectedCategory === '' ? 'block pixel-corners border border-accent bg-accent/20 px-3 py-2 text-sm text-white' : 'block pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-sm text-slate-300 hover:border-accent/55 hover:text-white'}
-                >
-                  清除項目 <span className="float-right text-slate-500">{event.raceCount}</span>
-                </Link>
                 {categoryOptions.map((option) => (
                   <Link
                     key={option.key}
@@ -220,8 +215,8 @@ export function ElectionEventPage() {
           </aside>
 
           <SectionPanel title="選區項目" eyebrow={`${selectedCategoryLabel} / ${selectedRegionLabel}`}>
-            {!selectedCategory || !selectedRegion ? (
-              <p className="text-sm text-slate-400">請先從左側選擇選舉項目，再從右側選擇縣市或區域。</p>
+            {!selectedCategory ? (
+              <p className="text-sm text-slate-400">目前沒有可公開的選區項目。</p>
             ) : racesLoading ? (
               <p className="text-sm text-slate-400">正在載入符合條件的選區項目。</p>
             ) : filteredRaces.length > 0 ? (
@@ -270,7 +265,7 @@ export function ElectionEventPage() {
                   to={buildFilterPath(event.key, searchParams, 'region', '')}
                   className={selectedRegion === '' ? 'block pixel-corners border border-accent bg-accent/20 px-3 py-2 text-sm text-white' : 'block pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-sm text-slate-300 hover:border-accent/55 hover:text-white'}
                 >
-                  清除區域 <span className="float-right text-slate-500">{event.raceCount}</span>
+                  全部區域 <span className="float-right text-slate-500">{selectedCategoryOption?.count ?? 0}</span>
                 </Link>
                 {regionOptions.map((option) => (
                   <Link

@@ -185,8 +185,10 @@ export function PeoplePage() {
     setLoading(true);
     setPeoplePage({ items: [], total: 0 });
 
+    const requestFilters = { party, query, regionId, role, status };
+
     void refreshConfiguredPublicDataProvider()
-      .then(() => publicDataProvider.loadPeoplePage({ party, query, regionId, role, status }, requestedPage, PAGE_SIZE))
+      .then(() => publicDataProvider.loadPeoplePage(requestFilters, requestedPage, PAGE_SIZE))
       .then((nextPage) => {
         if (active) {
           setPeoplePage(nextPage);

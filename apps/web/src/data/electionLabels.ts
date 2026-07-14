@@ -1,4 +1,5 @@
 import type { PublicCandidate, PublicElection, PublicRace } from '../types/publicViews';
+import { taiwanRegions } from './taiwanRegions';
 
 export const electionTypeLabels: Record<PublicElection['election_type'] | string, string> = {
   presidential: '總統副總統',
@@ -112,6 +113,50 @@ const raceCategoryByType: Record<PublicRace['race_type'], RaceCategory> = {
   other: { key: 'other', label: '其他', order: 999 },
 };
 
+const countyCityOrder = new Map(taiwanRegions.map((region, index) => [region.name, index]));
+const nationalRegionNames = new Set(['全國', '臺灣', '台灣']);
+
+function normalizeRegionLabel(label: string) {
+  return label.replace(/台/g, '臺');
+}
+
+export function getElectionCountyCityName(label: string | null | undefined) {
+  if (!label) return null;
+  const normalizedLabel = normalizeRegionLabel(label);
+  return taiwanRegions.find((region) => normalizedLabel.startsWith(region.name))?.name ?? null;
+}
+
+export function compareElectionRegionLabels(left: string, right: string) {
+  const getRegionOrder = (label: string) => {
+    if (nationalRegionNames.has(label)) return -1;
+    const countyCityName = getElectionCountyCityName(label);
+    if (countyCityName) return countyCityOrder.get(countyCityName) ?? taiwanRegions.length;
+    if (label === '未指定區域') return taiwanRegions.length + 2;
+    return taiwanRegions.length + 1;
+  };
+
+  const orderDiff = getRegionOrder(left) - getRegionOrder(right);
+  if (orderDiff !== 0) return orderDiff;
+  return left.localeCompare(right, 'zh-TW', { numeric: true });
+}
+
+function getRaceDistrictNumber(race: PublicRace) {
+  const match = [race.region_name, race.title]
+    .filter(Boolean)
+    .join(' ')
+    .match(/(?:第\s*)?0*(\d+)\s*(?:選舉區|選區)/);
+
+  return match ? Number.parseInt(match[1], 10) : null;
+}
+
+function getRaceSortRegionLabel(race: PublicRace) {
+  if (['president', 'vice_president', 'party_list_legislator', 'referendum'].includes(race.race_type)) {
+    return '全國';
+  }
+
+  return race.region_name ?? '未指定區域';
+}
+
 export function getElectionTypeLabel(type: PublicElection['election_type'] | string) {
   return electionTypeLabels[type] ?? type;
 }
@@ -166,5 +211,22 @@ export function compareRacesForDisplay(left: PublicRace, right: PublicRace) {
     return leftCategory.order - rightCategory.order;
   }
 
-  return [left.region_name ?? '', left.title].join(' ').localeCompare([right.region_name ?? '', right.title].join(' '), 'zh-TW');
+  const leftRegionLabel = getRaceSortRegionLabel(left);
+  const rightRegionLabel = getRaceSortRegionLabel(right);
+  const leftCountyCity = getElectionCountyCityName(leftRegionLabel) ?? leftRegionLabel;
+  const rightCountyCity = getElectionCountyCityName(rightRegionLabel) ?? rightRegionLabel;
+  const regionDiff = compareElectionRegionLabels(leftCountyCity, rightCountyCity);
+  if (regionDiff !== 0) return regionDiff;
+
+  const leftDistrictNumber = getRaceDistrictNumber(left);
+  const rightDistrictNumber = getRaceDistrictNumber(right);
+  if (leftDistrictNumber !== rightDistrictNumber) {
+    if (leftDistrictNumber === null) return -1;
+    if (rightDistrictNumber === null) return 1;
+    return leftDistrictNumber - rightDistrictNumber;
+  }
+
+  const fullRegionDiff = compareElectionRegionLabels(leftRegionLabel, rightRegionLabel);
+  if (fullRegionDiff !== 0) return fullRegionDiff;
+  return left.title.localeCompare(right.title, 'zh-TW', { numeric: true });
 }

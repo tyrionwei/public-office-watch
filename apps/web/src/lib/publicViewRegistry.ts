@@ -1,5 +1,6 @@
 export const allowedPublicViews = [
   'public_people',
+  'public_people_list',
   'public_companies',
   'public_relation_details',
   'public_regions',

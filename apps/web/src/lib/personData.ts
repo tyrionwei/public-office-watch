@@ -302,6 +302,13 @@ function candidateElectionYear(candidate: PublicCandidate) {
   return year ? Number.parseInt(year, 10) : null;
 }
 
+function compareCandidateRecordsNewestFirst(left: PublicCandidate, right: PublicCandidate) {
+  const leftYear = candidateElectionYear(left) ?? Number.MIN_SAFE_INTEGER;
+  const rightYear = candidateElectionYear(right) ?? Number.MIN_SAFE_INTEGER;
+  if (leftYear !== rightYear) return rightYear - leftYear;
+  return fallbackCollator.compare(left.race_title, right.race_title);
+}
+
 function isUpcomingCandidate(candidate: PublicCandidate) {
   return activeCandidateStatuses.has(candidate.registration_status) && isUpcomingElectionYear(candidateElectionYear(candidate));
 }
@@ -561,53 +568,57 @@ function timelineYearForCandidate(candidate: PublicCandidate) {
   return candidateElectionYear(candidate) ?? timelineYearFromDate(candidate.election_name);
 }
 
-function timelineStatusForCandidate(candidate: PublicCandidate): PublicPersonTimelineItem['status'] {
+function timelineStatusForCandidate(candidate: PublicCandidate, isCurrentOffice: boolean): PublicPersonTimelineItem['status'] {
   if (activeCandidateStatuses.has(candidate.registration_status)) return 'candidate';
-  if (isLikelyCurrentElectedCandidate(candidate)) return 'current';
+  if (isCurrentOffice) return 'current';
   return 'past';
 }
 
 function buildTimelineRecords(
   candidateRecords: PublicCandidate[],
-  partyAffiliations: PublicPersonPartyAffiliation[],
   publicClaims: PublicPersonClaim[],
 ): PublicPersonTimelineItem[] {
-  const candidateItems: PublicPersonTimelineItem[] = candidateRecords.map((candidate) => ({
-    id: 'candidate:' + candidate.candidate_id,
-    year: timelineYearForCandidate(candidate),
-    date: null,
-    label: candidate.race_title,
-    detail: [candidate.election_name, normalizePartyLabel(candidate.party), candidate.region_name].filter(Boolean).join(' · ') || null,
-    category: isLikelyCurrentElectedCandidate(candidate) ? 'office' : 'candidacy',
-    status: timelineStatusForCandidate(candidate),
-    source_name: candidate.source_name,
-    source_url: candidate.source_url,
-    confidence_level: candidate.source_name ? 'A' : null,
-  }));
+  const currentOfficeCandidateId = currentOfficeCandidateFor(candidateRecords)?.candidate_id ?? null;
+  const candidateItems: PublicPersonTimelineItem[] = candidateRecords.map((candidate) => {
+    const isCurrentOffice = candidate.candidate_id === currentOfficeCandidateId;
+    const isElected = candidate.registration_status === 'elected' || candidate.is_elected === true;
+    return {
+      id: 'candidate:' + candidate.candidate_id,
+      year: timelineYearForCandidate(candidate),
+      date: null,
+      label: candidate.race_title,
+      detail: [candidate.election_name, normalizePartyLabel(candidate.party), candidate.region_name].filter(Boolean).join(' · ') || null,
+      category: isElected ? 'office' : 'candidacy',
+      status: timelineStatusForCandidate(candidate, isCurrentOffice),
+      source_name: candidate.source_name,
+      source_url: candidate.source_url,
+      confidence_level: candidate.source_name ? 'A' : null,
+    };
+  });
 
-  const partyItems: PublicPersonTimelineItem[] = partyAffiliations.map((affiliation) => ({
-    id: 'party:' + affiliation.affiliation_id,
-    year: affiliation.observed_year ?? timelineYearFromDate(affiliation.observed_date ?? affiliation.start_date),
-    date: affiliation.observed_date ?? affiliation.start_date,
-    label: (affiliation.is_current ? '現屬 ' : '曾屬 ') + normalizePartyLabel(affiliation.party_name),
-    detail: affiliation.role_context === 'other' ? null : affiliation.role_context,
-    category: 'party',
-    status: affiliation.is_current ? 'current' : 'past',
-    source_name: affiliation.source_name,
-    source_url: affiliation.source_url,
-    confidence_level: affiliation.confidence_level,
-  }));
-
+  const seenExperienceLabels = new Set<string>();
   const experienceItems: PublicPersonTimelineItem[] = publicClaims
     .filter((claim) => claim.claim_type === 'experience')
     .flatMap((claim) => (joinClaimTexts([claim], 'experience') ?? '').split(/[；;]/).map((item, index) => ({ claim, item, index })))
-    .filter(({ item }) => item.trim().length > 0)
+    .filter(({ item }) => {
+      const label = item.trim();
+      const normalizedLabel = label.replace(/\s+/g, '').replace(/[，,。．·・:：()（）]/g, '').toLowerCase();
+      const year = timelineYearFromDate(label);
+
+      if (label.length > 240) return false;
+      if (!year || normalizedLabel === '政治人物' || /^politician$/i.test(normalizedLabel)) return false;
+      if (/^(?:19|20)\d{2}年.*選舉/.test(normalizedLabel)) return false;
+      if (seenExperienceLabels.has(normalizedLabel)) return false;
+
+      seenExperienceLabels.add(normalizedLabel);
+      return true;
+    })
     .map(({ claim, item, index }) => ({
       id: 'experience:' + claim.claim_id + ':' + index,
       year: timelineYearFromDate(item),
       date: null,
       label: item.trim(),
-      detail: claim.source_name,
+      detail: null,
       category: 'experience',
       status: 'unknown',
       source_name: claim.source_name,
@@ -615,14 +626,14 @@ function buildTimelineRecords(
       confidence_level: claim.confidence_level,
     }));
 
-  return [...candidateItems, ...partyItems, ...experienceItems]
+  return [...candidateItems, ...experienceItems]
     .sort((left, right) => {
       const leftYear = left.year ?? Number.MIN_SAFE_INTEGER;
       const rightYear = right.year ?? Number.MIN_SAFE_INTEGER;
       if (leftYear !== rightYear) return rightYear - leftYear;
       return fallbackCollator.compare(left.label, right.label);
     })
-    .slice(0, 24);
+    .slice(0, 16);
 }
 
 function firstClaimText(claims: PublicPersonClaim[], claimType: PublicPersonClaim['claim_type']) {
@@ -973,7 +984,9 @@ export function buildPersonProfileFromItems(
   const mergedPersonIds = person.merged_person_ids;
   const publicClaims = profileClaimsFor(mergedPersonIds, claims);
   const profilePartyAffiliations = partyAffiliationsFor(mergedPersonIds, partyAffiliations);
-  const candidateRecords = candidates.filter((candidate) => mergedPersonIds.includes(candidate.person_id));
+  const candidateRecords = candidates
+    .filter((candidate) => mergedPersonIds.includes(candidate.person_id))
+    .sort(compareCandidateRecordsNewestFirst);
   const enrichedPerson = applyClaimBackfill(person, publicClaims) as PublicPersonListItem;
 
   return {
@@ -981,7 +994,7 @@ export function buildPersonProfileFromItems(
     identity_records: identityRecordsFor(mergedPersonIds, allItems),
     candidate_records: candidateRecords,
     party_affiliations: profilePartyAffiliations,
-    timeline_records: buildTimelineRecords(candidateRecords, profilePartyAffiliations, publicClaims),
+    timeline_records: buildTimelineRecords(candidateRecords, publicClaims),
     public_claims: publicClaims,
     experience_status: hasText(enrichedPerson.experience) ? 'available' : 'todo',
     contribution_status: publicClaims.some((claim) => claim.claim_type === 'finance_summary') ? 'summary_only' : 'todo',

@@ -21,8 +21,9 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
   const { t } = useI18n();
 
   return (
-    <header className="pixel-corners relative overflow-hidden border border-line/80 bg-[#071126]/90 px-3 py-3 shadow-pixel backdrop-blur-sm sm:px-4">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(114,232,255,0.08),transparent_35%,rgba(244,211,94,0.08))]" />
+    <header className="relative z-50 px-3 py-3 sm:px-4">
+      <div className="pixel-corners pointer-events-none absolute inset-0 border border-line/80 bg-[#071126]/90 shadow-pixel backdrop-blur-sm" />
+      <div className="pixel-corners pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(114,232,255,0.08),transparent_35%,rgba(244,211,94,0.08))]" />
 
       <div className="relative">
         <div className="grid gap-3 2xl:grid-cols-[minmax(260px,0.72fr)_minmax(340px,0.9fr)_auto_auto] 2xl:items-center">

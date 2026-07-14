@@ -7,6 +7,7 @@ export const allowedPublicViews = [
   'public_elections',
   'public_election_race_summaries',
   'public_election_race_facets',
+  'public_election_race_list',
   'public_races',
   'public_candidates',
   'public_home_election_ticker',

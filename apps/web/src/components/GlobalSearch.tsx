@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
@@ -17,8 +17,40 @@ export function GlobalSearch() {
   const { t } = useI18n();
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [results, setResults] = useState<PublicSearchResult[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const results = publicDataProvider.searchPublicRecords(query);
+  useEffect(() => {
+    const normalizedQuery = query.trim();
+
+    if (normalizedQuery.length < 2) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+
+    let active = true;
+    setLoading(true);
+    const timeoutId = window.setTimeout(() => {
+      void publicDataProvider.searchPublicRecords(normalizedQuery)
+        .then((nextResults) => {
+          if (active) setResults(nextResults);
+        })
+        .catch((error: unknown) => {
+          if (active) setResults([]);
+          if (import.meta.env.DEV) console.warn('Failed to search public records', error);
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+    }, 200);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timeoutId);
+    };
+  }, [query]);
+
   const showPanel = isFocused && query.trim().length > 0;
 
   const groupedResults = useMemo(
@@ -54,9 +86,11 @@ export function GlobalSearch() {
       </div>
 
       {showPanel ? (
-        <div className="pixel-corners absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[420px] overflow-auto border border-accent/35 bg-[#071126]/98 p-3 shadow-[0_18px_40px_rgba(0,0,0,0.42)]">
+        <div className="pixel-corners absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[420px] overflow-auto border border-accent/60 bg-[#030817] p-3 shadow-[0_20px_48px_rgba(0,0,0,0.82)]">
           {query.trim().length < 2 ? (
             <p className="px-2 py-3 text-xs text-slate-400">{t('search.minChars')}</p>
+          ) : loading ? (
+            <p className="px-2 py-3 text-xs text-slate-400">{t('search.loading')}</p>
           ) : groupedResults.length > 0 ? (
             <div className="space-y-3">
               {groupedResults.map((group) => (

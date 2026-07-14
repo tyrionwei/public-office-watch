@@ -6,15 +6,35 @@ import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { buildElectionEvents, getElectionEventByKey, getRaceRegionGroup } from '../data/electionEvents';
 import type { ElectionEvent } from '../data/electionEvents';
-import { compareElectionRegionLabels, compareRacesForDisplay, getElectionStatusLabel, getRaceCategory, getRaceCategoryByType, getRaceStatusLabel, getRaceTypeLabel } from '../data/electionLabels';
+import { compareElectionRegionLabels, getElectionStatusLabel, getRaceCategory, getRaceCategoryByType, getRaceStatusLabel, getRaceTypeLabel } from '../data/electionLabels';
 import type { RaceCategory } from '../data/electionLabels';
 import { publicDataProvider } from '../lib/publicData';
+import type { PublicRaceListPage } from '../lib/publicDataProvider';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { electionEventPath, electionsPath, racePath } from '../routes/routePaths';
-import type { PublicElectionRaceFacet, PublicRace } from '../types/publicViews';
+import type { PublicElectionRaceFacet } from '../types/publicViews';
 
 type CategoryOption = RaceCategory & { count: number };
 type RegionOption = { key: string; label: string; count: number };
+const PAGE_SIZE = 50;
+
+function getPage(searchParams: URLSearchParams) {
+  const page = Number.parseInt(searchParams.get('page') ?? '1', 10);
+  return Number.isFinite(page) && page > 0 ? page : 1;
+}
+
+function getVisiblePageNumbers(currentPage: number, pageCount: number) {
+  const visibleCount = Math.min(5, pageCount);
+  const halfWindow = Math.floor(visibleCount / 2);
+  let start = Math.max(1, currentPage - halfWindow);
+  const endOverflow = start + visibleCount - 1 - pageCount;
+
+  if (endOverflow > 0) {
+    start = Math.max(1, start - endOverflow);
+  }
+
+  return Array.from({ length: visibleCount }, (_, index) => start + index);
+}
 
 function buildCategoryOptions(facets: PublicElectionRaceFacet[]): CategoryOption[] {
   const options = new Map<string, CategoryOption>();
@@ -50,16 +70,17 @@ function buildFilterPath(eventKey: string, searchParams: URLSearchParams, key: '
     nextParams.delete(key);
   }
 
+  nextParams.delete('page');
   const query = nextParams.toString();
   return query ? `${electionEventPath(eventKey)}?${query}` : electionEventPath(eventKey);
 }
 
 export function ElectionEventPage() {
   const { eventKey } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [event, setEvent] = useState<ElectionEvent | null>(null);
   const [facets, setFacets] = useState<PublicElectionRaceFacet[]>([]);
-  const [races, setRaces] = useState<PublicRace[]>([]);
+  const [racePage, setRacePage] = useState<PublicRaceListPage>({ items: [], total: 0 });
   const [loading, setLoading] = useState(true);
   const [racesLoading, setRacesLoading] = useState(false);
 
@@ -68,7 +89,7 @@ export function ElectionEventPage() {
     setLoading(true);
     setEvent(null);
     setFacets([]);
-    setRaces([]);
+    setRacePage({ items: [], total: 0 });
 
     void refreshConfiguredPublicDataProvider()
       .then(() => publicDataProvider.loadElectionIndex())
@@ -114,10 +135,11 @@ export function ElectionEventPage() {
   const selectedRegion = regionOptions.some((option) => option.key === selectedRegionParam)
     ? selectedRegionParam
     : '';
+  const requestedPage = getPage(searchParams);
 
   useEffect(() => {
     let active = true;
-    setRaces([]);
+    setRacePage({ items: [], total: 0 });
 
     if (!event || !selectedCategory) {
       setRacesLoading(false);
@@ -133,15 +155,18 @@ export function ElectionEventPage() {
     ));
     setRacesLoading(true);
 
-    void publicDataProvider.loadRacesByElectionIds(
+    void publicDataProvider.loadElectionRacePage(
+      event.key,
       event.elections.map((election) => election.election_id),
       { raceTypes, regionKey: selectedRegion || undefined },
+      requestedPage,
+      PAGE_SIZE,
     )
-      .then((nextRaces) => {
-        if (active) setRaces(nextRaces.slice().sort(compareRacesForDisplay));
+      .then((nextPage) => {
+        if (active) setRacePage(nextPage);
       })
       .catch((error: unknown) => {
-        if (import.meta.env.DEV) console.warn('Failed to load filtered election races', error);
+        if (import.meta.env.DEV) console.warn('Failed to load election race page', error);
       })
       .finally(() => {
         if (active) setRacesLoading(false);
@@ -150,7 +175,7 @@ export function ElectionEventPage() {
     return () => {
       active = false;
     };
-  }, [event, facets, selectedCategory, selectedRegion]);
+  }, [event, facets, requestedPage, selectedCategory, selectedRegion]);
 
   if (!event) {
     return (
@@ -162,7 +187,23 @@ export function ElectionEventPage() {
     );
   }
 
-  const filteredRaces = races;
+  const filteredRaces = racePage.items;
+  const pageCount = Math.max(1, Math.ceil(racePage.total / PAGE_SIZE));
+  const currentPage = Math.min(requestedPage, pageCount);
+  const pageStart = (currentPage - 1) * PAGE_SIZE;
+  const visiblePageNumbers = getVisiblePageNumbers(currentPage, pageCount);
+  const updatePage = (page: number) => {
+    const nextParams = new URLSearchParams(searchParams);
+    const nextPage = Math.min(Math.max(page, 1), pageCount);
+
+    if (nextPage <= 1) {
+      nextParams.delete('page');
+    } else {
+      nextParams.set('page', String(nextPage));
+    }
+
+    setSearchParams(nextParams);
+  };
   const selectedCategoryLabel = selectedCategoryOption?.label ?? '請選擇項目';
   const selectedRegionLabel = selectedRegion
     ? regionOptions.find((option) => option.key === selectedRegion)?.label ?? selectedRegion
@@ -221,7 +262,7 @@ export function ElectionEventPage() {
               <p className="text-sm text-slate-400">正在載入符合條件的選區項目。</p>
             ) : filteredRaces.length > 0 ? (
               <div className="space-y-3">
-                <p className="text-sm text-slate-400">目前顯示 {filteredRaces.length} 個項目。點進單一項目後可查看候選人與當選資料。</p>
+                <p className="text-sm text-slate-400">目前顯示第 {pageStart + 1}-{pageStart + filteredRaces.length} 項，共 {racePage.total} 個項目。點進單一項目後可查看候選人與當選資料。</p>
                 <div className="overflow-hidden pixel-corners border border-line/70">
                   <div className="grid gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid-cols-[minmax(180px,1fr)_130px_130px_110px]">
                     <span>項目</span>
@@ -252,6 +293,60 @@ export function ElectionEventPage() {
                     })}
                   </div>
                 </div>
+                {racePage.total > PAGE_SIZE ? (
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line/60 pt-4 text-sm text-slate-300">
+                    <p>第 {currentPage}/{pageCount} 頁</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => updatePage(1)}
+                        disabled={currentPage <= 1}
+                        className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        第一頁
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updatePage(currentPage - 1)}
+                        disabled={currentPage <= 1}
+                        className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        上一頁
+                      </button>
+                      {visiblePageNumbers.map((pageNumber) => (
+                        <button
+                          key={pageNumber}
+                          type="button"
+                          onClick={() => updatePage(pageNumber)}
+                          aria-current={pageNumber === currentPage ? 'page' : undefined}
+                          className={
+                            pageNumber === currentPage
+                              ? 'pixel-corners border border-accent bg-accent/20 px-3 py-2 text-xs text-white'
+                              : 'pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white'
+                          }
+                        >
+                          {pageNumber}
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => updatePage(currentPage + 1)}
+                        disabled={currentPage >= pageCount}
+                        className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        下一頁
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updatePage(pageCount)}
+                        disabled={currentPage >= pageCount}
+                        className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        最後一頁
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : (
               <p className="text-sm text-slate-400">目前沒有符合此項目與區域的選區資料。</p>

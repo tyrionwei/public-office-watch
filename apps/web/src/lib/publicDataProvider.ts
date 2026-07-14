@@ -49,6 +49,11 @@ export type PublicPersonListPage = {
   total: number;
 };
 
+export type PublicRaceListPage = {
+  items: PublicRace[];
+  total: number;
+};
+
 export type PublicElectionIndexData = {
   elections: PublicElection[];
   raceSummaries: PublicElectionRaceSummary[];
@@ -87,6 +92,7 @@ export interface PublicDataProvider {
   loadElectionIndex(): Promise<PublicElectionIndexData>;
   loadElectionRaceFacets(electionIds: string[]): Promise<PublicElectionRaceFacet[]>;
   loadRacesByElectionIds(electionIds: string[], filters?: PublicRaceQueryFilters): Promise<PublicRace[]>;
+  loadElectionRacePage(eventKey: string, electionIds: string[], filters: PublicRaceQueryFilters, page: number, pageSize: number): Promise<PublicRaceListPage>;
   loadRaceDetail(raceId: string): Promise<PublicRaceDetailData>;
   getPollComparisonByElectionId(electionId: string): PollComparison | null;
   getPeople(): PublicPerson[];
@@ -101,5 +107,5 @@ export interface PublicDataProvider {
   getPartyBySlug(partySlug: string): PublicParty | null;
   getPartyFinanceSummaries(partyId: string): PublicPartyFinanceSummary[];
   getPartyCompanyContributionSummaries(partyId: string): PublicPartyCompanyContributionSummary[];
-  searchPublicRecords(query: string): PublicSearchResult[];
+  searchPublicRecords(query: string): Promise<PublicSearchResult[]>;
 }

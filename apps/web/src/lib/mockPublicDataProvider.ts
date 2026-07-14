@@ -14,6 +14,7 @@ import {
   mockPublicRaces,
 } from '../data/mockPublicViews';
 import { getRaceRegionGroup } from '../data/electionEvents';
+import { compareRacesForDisplay } from '../data/electionLabels';
 import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
 import { buildLocalOfficeSummary, buildPersonListItems, buildPersonProfile, filterPersonListItems } from './personData';
 import { assertPublicViewName, allowedPublicViews } from './publicViewRegistry';
@@ -27,6 +28,7 @@ const providerViews = [
   'public_regions',
   'public_elections',
   'public_election_race_summaries',
+  'public_election_race_list',
   'public_races',
   'public_candidates',
   'public_person_claims',
@@ -196,6 +198,16 @@ export const mockPublicDataProvider: PublicDataProvider = {
     });
   },
 
+  async loadElectionRacePage(_eventKey, electionIds, filters, page, pageSize) {
+    const races = await this.loadRacesByElectionIds(electionIds, filters);
+    const sortedRaces = races.slice().sort(compareRacesForDisplay);
+    const pageStart = (page - 1) * pageSize;
+    return {
+      items: sortedRaces.slice(pageStart, pageStart + pageSize),
+      total: sortedRaces.length,
+    };
+  },
+
   async loadRaceDetail(raceId: string) {
     const race = this.getRaceById(raceId);
     return {
@@ -269,7 +281,7 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return mockPublicPartyCompanyContributionSummaries.filter((summary) => summary.party_id === partyId);
   },
 
-  searchPublicRecords(query: string) {
+  async searchPublicRecords(query: string) {
     const normalizedQuery = query.trim().toLowerCase();
 
     if (normalizedQuery.length < 2) {

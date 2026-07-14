@@ -24,7 +24,7 @@ import type {
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import type { PollComparison } from '../types/polling';
 import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
-import type { HomePageData, HomeTicker, PublicDataProvider, PublicElectionIndexData, PublicPersonListPage, PublicRaceDetailData, PublicSearchResult } from './publicDataProvider';
+import type { HomePageData, HomeTicker, PublicDataProvider, PublicElectionIndexData, PublicPersonListPage, PublicRaceDetailData, PublicRaceListPage, PublicRaceQueryFilters, PublicSearchResult } from './publicDataProvider';
 import {
   buildLocalOfficeSummary,
   buildPersonListItems,
@@ -129,6 +129,9 @@ const localOfficeSummaryPromises = new Map<string, Promise<PublicLocalOfficeSumm
 const peoplePageCache = new Map<string, PublicPersonListPage>();
 const peoplePagePromises = new Map<string, Promise<PublicPersonListPage>>();
 const peoplePageBlockSize = 10;
+const electionRacePageCache = new Map<string, PublicRaceListPage>();
+const electionRacePagePromises = new Map<string, Promise<PublicRaceListPage>>();
+const electionRacePageBlockSize = 10;
 
 function addLookupValue<T>(index: Map<string, T>, key: string | null | undefined, value: T) {
   if (!key) return;
@@ -255,12 +258,16 @@ function fromPublicView(viewName: AllowedPublicViewName) {
 async function fetchRows<T>(
   viewName: AllowedPublicViewName,
   configure?: (query: ReturnType<NonNullable<ReturnType<typeof fromPublicView>>['select']>) => ReturnType<NonNullable<ReturnType<typeof fromPublicView>>['select']>,
+  maxRows = Number.POSITIVE_INFINITY,
 ): Promise<T[]> {
   const pageSize = 1000;
   const rows: T[] = [];
   let offset = 0;
 
   while (true) {
+    const requestSize = Math.min(pageSize, maxRows - rows.length);
+    if (requestSize <= 0) return rows;
+
     const view = fromPublicView(viewName);
 
     if (!view) {
@@ -269,7 +276,7 @@ async function fetchRows<T>(
 
     const baseQuery = view.select('*');
     const query = configure ? configure(baseQuery) : baseQuery;
-    const { data, error } = await query.range(offset, offset + pageSize - 1);
+    const { data, error } = await query.range(offset, offset + requestSize - 1);
 
     if (error || !Array.isArray(data)) {
       if (error && import.meta.env.DEV) {
@@ -280,7 +287,7 @@ async function fetchRows<T>(
 
     rows.push(...(data as T[]));
 
-    if (data.length < pageSize) {
+    if (data.length < requestSize) {
       return rows;
     }
 
@@ -615,6 +622,97 @@ async function fetchPeoplePage(
   return { items, total: count ?? items.length };
 }
 
+function electionRacePageCacheKey(
+  eventKey: string,
+  filters: PublicRaceQueryFilters,
+  page: number,
+  pageSize: number,
+) {
+  return JSON.stringify([
+    eventKey,
+    [...(filters.raceTypes ?? [])].sort(),
+    filters.regionKey ?? '',
+    page,
+    pageSize,
+  ]);
+}
+
+function loadCachedElectionRacePage(
+  eventKey: string,
+  filters: PublicRaceQueryFilters,
+  page: number,
+  pageSize: number,
+) {
+  const cacheKey = electionRacePageCacheKey(eventKey, filters, page, pageSize);
+  const cachedPage = electionRacePageCache.get(cacheKey);
+  if (cachedPage) return Promise.resolve(cachedPage);
+
+  const blockStartPage = Math.floor((page - 1) / electionRacePageBlockSize) * electionRacePageBlockSize + 1;
+  const blockCacheKey = electionRacePageCacheKey(eventKey, filters, blockStartPage, pageSize);
+  let blockPromise = electionRacePagePromises.get(blockCacheKey);
+
+  if (!blockPromise) {
+    blockPromise = fetchElectionRacePage(eventKey, filters, blockStartPage, pageSize, electionRacePageBlockSize)
+      .then((result) => {
+        for (let index = 0; index < electionRacePageBlockSize; index += 1) {
+          const blockPage = blockStartPage + index;
+          const itemStart = index * pageSize;
+          electionRacePageCache.set(
+            electionRacePageCacheKey(eventKey, filters, blockPage, pageSize),
+            { items: result.items.slice(itemStart, itemStart + pageSize), total: result.total },
+          );
+        }
+
+        return result;
+      })
+      .finally(() => {
+        electionRacePagePromises.delete(blockCacheKey);
+      });
+    electionRacePagePromises.set(blockCacheKey, blockPromise);
+  }
+
+  return blockPromise.then((result) => electionRacePageCache.get(cacheKey) ?? { items: [], total: result.total });
+}
+
+async function fetchElectionRacePage(
+  eventKey: string,
+  filters: PublicRaceQueryFilters,
+  page: number,
+  pageSize: number,
+  pageCount = 1,
+): Promise<PublicRaceListPage> {
+  await refreshSupabasePublicDataSnapshot();
+
+  const view = fromPublicView('public_election_race_list');
+  if (!view) return { items: [], total: 0 };
+
+  let query = view.select('*', { count: 'exact' }).eq('event_key', eventKey);
+  if (filters.raceTypes?.length) query = query.in('race_type', filters.raceTypes);
+  if (filters.regionKey) query = query.eq('region_key', filters.regionKey);
+
+  const pageStart = (page - 1) * pageSize;
+  const { data, error, count } = await query
+    .order('sort_category_order', { ascending: true })
+    .order('sort_region_order', { ascending: true })
+    .order('sort_district_order', { ascending: true, nullsFirst: true })
+    .order('region_name', { ascending: true, nullsFirst: true })
+    .order('title', { ascending: true })
+    .order('race_id', { ascending: true })
+    .range(pageStart, pageStart + pageSize * pageCount - 1);
+
+  if (error || !Array.isArray(data)) {
+    if (error && import.meta.env.DEV) {
+      console.warn('Failed to fetch public election race page: ' + error.message);
+    }
+    return { items: [], total: 0 };
+  }
+
+  return {
+    items: data.map((row) => mapPublicRaceRow(row as PublicRace)),
+    total: count ?? data.length,
+  };
+}
+
 async function loadLocalOfficeSummary(regionId: string): Promise<PublicLocalOfficeSummary> {
   const cachedSummary = localOfficeSummaryCache.get(regionId);
   if (cachedSummary) {
@@ -701,14 +799,17 @@ async function ensurePeopleSearchDataset(query: string) {
     peopleSearchSnapshotPromises.set(normalizedQuery, (async () => {
       await refreshSupabasePublicDataSnapshot();
       const pattern = '%' + query.trim() + '%';
-      const personRows = await fetchRows('public_people', (request) =>
-        request.or([
-          'name.ilike.' + pattern,
-          'alias.ilike.' + pattern,
-          'party.ilike.' + pattern,
-          'position.ilike.' + pattern,
-          'district.ilike.' + pattern,
-        ].join(',')),
+      const personRows = await fetchRows(
+        'public_people',
+        (request) =>
+          request.or([
+            'name.ilike.' + pattern,
+            'alias.ilike.' + pattern,
+            'party.ilike.' + pattern,
+            'position.ilike.' + pattern,
+            'district.ilike.' + pattern,
+          ].join(',')),
+        12,
       );
       const people = personRows.map((row) => mapPublicPersonRow(row as PublicPerson));
       const personIds = people.map((person) => person.person_id).filter(Boolean);
@@ -1143,6 +1244,10 @@ export const supabasePublicDataProvider: PublicDataProvider = {
       .filter((race) => !filters.regionKey || getRaceRegionGroup(race).key === filters.regionKey);
   },
 
+  loadElectionRacePage(eventKey, _electionIds, filters, page, pageSize) {
+    return loadCachedElectionRacePage(eventKey, filters, page, pageSize);
+  },
+
   async loadRaceDetail(raceId: string): Promise<PublicRaceDetailData> {
     await refreshSupabasePublicDataSnapshot();
     const raceRows = await fetchRows('public_races', (query) => query.eq('race_id', raceId));
@@ -1254,14 +1359,50 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     return getSnapshot()?.indexes.partyCompanyContributionSummariesByPartyId.get(partyId) ?? [];
   },
 
-  searchPublicRecords(query: string) {
+  async searchPublicRecords(query: string) {
     const normalizedQuery = query.trim().toLowerCase();
 
     if (normalizedQuery.length < 2) {
       return [];
     }
 
-    void ensurePeopleDataset({ query });
+    await Promise.all([
+      ensurePeopleDataset({ query }),
+      ensurePartyDataset(),
+    ]);
+
+    const pattern = '%' + query.trim() + '%';
+    const [electionRows, companyRows] = await Promise.all([
+      fetchRows('public_elections', (request) => request.ilike('name', pattern), 12),
+      fetchRows(
+        'public_companies',
+        (request) =>
+          request.or([
+            'name.ilike.' + pattern,
+            'unified_business_no.ilike.' + pattern,
+            'representative_name.ilike.' + pattern,
+            'address_region.ilike.' + pattern,
+          ].join(',')),
+        12,
+      ),
+    ]);
+
+    const base = getSnapshot();
+    if (base) {
+      mergeSnapshot({
+        elections: mergeUniqueBy(
+          base.elections,
+          electionRows.map((row) => mapPublicElectionRow(row as PublicElection)),
+          (item) => item.election_id,
+        ),
+        companies: mergeUniqueBy(
+          base.companies,
+          companyRows.map((row) => mapPublicCompanyRow(row as PublicCompany)),
+          (item) => item.company_id,
+        ),
+      });
+    }
+
     const snapshot = getSnapshot();
 
     if (!snapshot) {

@@ -12,6 +12,7 @@ const allowedPublicViews = {
   public_elections: ['election_id', 'name', 'election_type', 'status'],
   public_election_race_summaries: ['election_id', 'race_count', 'race_types'],
   public_election_race_facets: ['election_id', 'race_type', 'region_key', 'region_label', 'race_count'],
+  public_election_race_list: ['race_id', 'event_key', 'race_type', 'region_key', 'sort_category_order', 'sort_region_order', 'sort_district_order'],
   public_races: ['race_id', 'election_id', 'title', 'status'],
   public_candidates: ['candidate_id', 'person_id', 'race_id', 'election_id', 'registration_status'],
   public_home_election_ticker: ['election_id', 'election_name', 'voting_date', 'status'],

@@ -132,8 +132,12 @@ export function getRegistrationStatusLabel(status: PublicCandidate['registration
   return registrationStatusLabels[status] ?? status;
 }
 
+export function getRaceCategoryByType(raceType: PublicRace['race_type']): RaceCategory {
+  return raceCategoryByType[raceType] ?? raceCategoryByType.other;
+}
+
 export function getRaceCategory(race: PublicRace): RaceCategory {
-  return raceCategoryByType[race.race_type] ?? raceCategoryByType.other;
+  return getRaceCategoryByType(race.race_type);
 }
 
 export function groupRacesByCategory<T extends PublicRace>(races: T[]) {

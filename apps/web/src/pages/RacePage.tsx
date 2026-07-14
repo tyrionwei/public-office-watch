@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
@@ -6,6 +7,8 @@ import { SectionPanel } from '../components/SectionPanel';
 import { buildElectionEvents, getElectionEventForRace, getRaceRegionGroup } from '../data/electionEvents';
 import { getElectionStatusLabel, getRaceCategory, getRaceStatusLabel, getRaceTypeLabel, getRegistrationStatusLabel } from '../data/electionLabels';
 import { publicDataProvider } from '../lib/publicData';
+import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
+import type { PublicRaceDetailData } from '../lib/publicDataProvider';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { electionEventPath, electionsPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
@@ -33,19 +36,43 @@ function compareCandidates(left: PublicCandidate, right: PublicCandidate) {
 export function RacePage() {
   const { raceId } = useParams();
   const safeRaceId = raceId ?? '';
-  const race = publicDataProvider.getRaceById(safeRaceId);
-  const election = race ? publicDataProvider.getElectionById(race.election_id) : null;
-  const candidates = publicDataProvider.getCandidatesByRaceId(safeRaceId).slice().sort(compareCandidates);
+  const [detail, setDetail] = useState<PublicRaceDetailData>({ race: null, election: null, candidates: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    setDetail({ race: null, election: null, candidates: [] });
+
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadRaceDetail(safeRaceId))
+      .then((nextDetail) => {
+        if (active) setDetail(nextDetail);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) console.warn('Failed to load race detail', error);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [safeRaceId]);
+
+  const { race, election } = detail;
+  const candidates = detail.candidates.slice().sort(compareCandidates);
   const electedCount = candidates.filter((candidate) => candidate.is_elected || candidate.registration_status === 'elected').length;
-  const events = buildElectionEvents(publicDataProvider.getElections(), publicDataProvider.getRaces());
+  const events = buildElectionEvents(election ? [election] : [], race ? [race] : []);
   const event = getElectionEventForRace(events, race);
   const backPath = event ? electionEventPath(event.key) : electionsPath();
 
   if (!race) {
     return (
       <AppShell>
-        <PixelFrame title="找不到選區項目" action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">返回選舉年份</Link>}>
-          <p className="text-sm text-slate-300">此選區項目尚未載入，或目前沒有可公開的選區資料。</p>
+        <PixelFrame title={loading ? '選區資料載入中' : '找不到選區項目'} action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">返回選舉年份</Link>}>
+          <p className="text-sm text-slate-300">{loading ? '正在載入選區與候選人資料。' : '此選區項目尚未載入，或目前沒有可公開的選區資料。'}</p>
         </PixelFrame>
       </AppShell>
     );

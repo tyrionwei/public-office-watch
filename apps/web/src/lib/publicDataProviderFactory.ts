@@ -1,28 +1,53 @@
 import type { PublicDataProvider } from './publicDataProvider';
 import { mockPublicDataProvider } from './mockPublicDataProvider';
 import { getPublicDataProviderMode, getSupabasePublicEnv } from './supabaseEnv';
-import { supabasePublicDataProvider } from './supabasePublicDataProvider';
 
 export const publicDataReadyEvent = 'public-data-ready';
+
+let activePublicDataProvider: PublicDataProvider = mockPublicDataProvider;
+let configuredProviderPromise: Promise<PublicDataProvider> | null = null;
 
 function isSupabaseProviderAllowed() {
   return import.meta.env.DEV || import.meta.env.VITE_ENABLE_SUPABASE_PROVIDER === 'true';
 }
 
-export function createPublicDataProvider(): PublicDataProvider {
+function shouldUseSupabaseProvider() {
   if (getPublicDataProviderMode() !== 'supabase') {
-    return mockPublicDataProvider;
+    return false;
   }
 
   if (!isSupabaseProviderAllowed()) {
-    return mockPublicDataProvider;
+    return false;
   }
 
-  const env = getSupabasePublicEnv();
+  return getSupabasePublicEnv() !== null;
+}
 
-  if (!env) {
-    return mockPublicDataProvider;
+export function createPublicDataProvider(): PublicDataProvider {
+  return new Proxy({} as PublicDataProvider, {
+    get(_target, property: keyof PublicDataProvider) {
+      const value = activePublicDataProvider[property];
+      return typeof value === 'function' ? value.bind(activePublicDataProvider) : value;
+    },
+  });
+}
+
+export function refreshConfiguredPublicDataProvider(): Promise<PublicDataProvider> {
+  if (!shouldUseSupabaseProvider()) {
+    activePublicDataProvider = mockPublicDataProvider;
+    return Promise.resolve(activePublicDataProvider);
   }
 
-  return supabasePublicDataProvider;
+  configuredProviderPromise ??= import('./supabasePublicDataProvider')
+    .then(async (module) => {
+      activePublicDataProvider = module.supabasePublicDataProvider;
+      await module.refreshSupabasePublicDataSnapshot();
+      return activePublicDataProvider;
+    })
+    .catch((error: unknown) => {
+      configuredProviderPromise = null;
+      throw error;
+    });
+
+  return configuredProviderPromise;
 }

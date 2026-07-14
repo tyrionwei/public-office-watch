@@ -4,6 +4,8 @@ export const allowedPublicViews = [
   'public_relation_details',
   'public_regions',
   'public_elections',
+  'public_election_race_summaries',
+  'public_election_race_facets',
   'public_races',
   'public_candidates',
   'public_home_election_ticker',

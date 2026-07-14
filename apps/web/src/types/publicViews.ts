@@ -125,6 +125,20 @@ export type PublicElection = {
   source_url: string | null;
 };
 
+export type PublicElectionRaceSummary = {
+  election_id: string;
+  race_count: number;
+  race_types: PublicRace['race_type'][];
+};
+
+export type PublicElectionRaceFacet = {
+  election_id: string;
+  race_type: PublicRace['race_type'];
+  region_key: string;
+  region_label: string;
+  race_count: number;
+};
+
 export type PublicRace = {
   race_id: string;
   election_id: string;

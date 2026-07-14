@@ -1,8 +1,11 @@
 import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
+import { getRaceRegionGroup } from '../data/electionEvents';
 import type {
   PublicCandidate,
   PublicCompany,
   PublicElection,
+  PublicElectionRaceFacet,
+  PublicElectionRaceSummary,
   PublicHomeElectionTicker,
   PublicLocalOfficeSummary,
   PublicParty,
@@ -10,8 +13,10 @@ import type {
   PublicPartyFinanceSummary,
   PublicPerson,
   PublicPersonClaim,
+  PublicPersonFilters,
   PublicPersonListItem,
   PublicPersonPartyAffiliation,
+  PublicPersonRole,
   PublicPersonProfile,
   PublicRace,
   PublicRegion,
@@ -20,10 +25,9 @@ import type {
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import type { PollComparison } from '../types/polling';
 import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
-import type { HomePageData, HomeTicker, PublicDataProvider, PublicSearchResult } from './publicDataProvider';
+import type { HomePageData, HomeTicker, PublicDataProvider, PublicElectionIndexData, PublicPersonListPage, PublicRaceDetailData, PublicSearchResult } from './publicDataProvider';
 import {
   buildLocalOfficeSummary,
-  buildLocalOfficeSummaryFromItems,
   buildPersonListItems,
   buildPersonProfileFromItems,
   filterPersonListItems,
@@ -85,7 +89,6 @@ type SupabasePublicSnapshotIndexes = {
   personById: Map<string, PublicPerson>;
   personListItems: PublicPersonListItem[] | null;
   personProfilesById: Map<string, PublicPersonProfile | null>;
-  localOfficeSummariesByRegionId: Map<string, PublicLocalOfficeSummary>;
   partyBySlug: Map<string, PublicParty>;
   partyFinanceSummariesByPartyId: Map<string, PublicPartyFinanceSummary[]>;
   partyCompanyContributionSummariesByPartyId: Map<string, PublicPartyCompanyContributionSummary[]>;
@@ -122,6 +125,8 @@ const loadedElectionDatasets = new Set<string>();
 const personSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
 const peopleSearchSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
 const loadedPeopleSearchQueries = new Set<string>();
+const localOfficeSummaryCache = new Map<string, PublicLocalOfficeSummary>();
+const localOfficeSummaryPromises = new Map<string, Promise<PublicLocalOfficeSummary>>();
 
 function addLookupValue<T>(index: Map<string, T>, key: string | null | undefined, value: T) {
   if (!key) return;
@@ -228,7 +233,6 @@ function buildSnapshotIndexes(params: {
     personById,
     personListItems: null,
     personProfilesById: new Map<string, PublicPersonProfile | null>(),
-    localOfficeSummariesByRegionId: new Map<string, PublicLocalOfficeSummary>(),
     partyBySlug,
     partyFinanceSummariesByPartyId,
     partyCompanyContributionSummariesByPartyId,
@@ -282,6 +286,17 @@ async function fetchRows<T>(
   }
 }
 
+async function fetchCandidateRowsByPersonIds(personIds: string[]) {
+  const candidateRows: unknown[] = [];
+
+  for (let index = 0; index < personIds.length; index += 200) {
+    const chunk = personIds.slice(index, index + 200);
+    candidateRows.push(...await fetchRows('public_candidates', (query) => query.in('person_id', chunk)));
+  }
+
+  return candidateRows;
+}
+
 function buildStageRegions(regions: PublicRegion[]) {
   const byRegionId = new Map(regions.map((region) => [region.region_id, region]));
 
@@ -333,6 +348,10 @@ function hasPersonSearchQuery(filters: { query?: string | null }) {
 
 function normalizePeopleSearchQuery(query: string) {
   return query.trim().toLowerCase();
+}
+
+function regionLabelVariants(label: string) {
+  return Array.from(new Set([label, label.replace(/臺/g, '台'), label.replace(/台/g, '臺')]));
 }
 
 function isGrassrootsPosition(value: string | null | undefined) {
@@ -481,6 +500,148 @@ export async function refreshSupabasePublicDataSnapshot(): Promise<SupabasePubli
     homeSnapshotPromise = null;
   });
   return homeSnapshotPromise;
+}
+
+async function fetchPeoplePage(
+  filters: PublicPersonFilters,
+  page: number,
+  pageSize: number,
+): Promise<PublicPersonListPage> {
+  await refreshSupabasePublicDataSnapshot();
+
+  if (filters.status === 'former' || filters.status === 'other' || filters.role === 'other') {
+    await ensurePeopleDataset(filters);
+    const snapshot = getSnapshot();
+    const items = snapshot ? filterPersonListItems(getPersonListItems(snapshot), filters) : [];
+    const pageStart = (page - 1) * pageSize;
+    return { items: items.slice(pageStart, pageStart + pageSize), total: items.length };
+  }
+
+  const snapshot = getSnapshot();
+  const view = fromPublicView('public_people');
+  if (!snapshot || !view) {
+    return { items: [], total: 0 };
+  }
+
+  let query = view.select('*', { count: 'exact' });
+  const normalizedQuery = filters.query?.trim();
+
+  if (normalizedQuery) {
+    query = query.ilike('name', '%' + normalizedQuery + '%');
+  } else {
+    query = query.not('position', 'ilike', '%村里%').not('position', 'ilike', '%代表%');
+  }
+
+  if (filters.party) {
+    const partyNames = filters.party === '台灣民眾黨' || filters.party === '臺灣民眾黨'
+      ? ['台灣民眾黨', '臺灣民眾黨']
+      : [filters.party];
+    query = query.in('party', partyNames);
+  }
+
+  if (filters.regionId) {
+    const region = snapshot.indexes.stageRegionById.get(filters.regionId);
+    const labels = regionLabelVariants(region?.label ?? filters.regionId);
+    query = query.or(labels.map((label) => 'district.ilike.' + label + '%').join(','));
+  }
+
+  const rolePatterns: Partial<Record<PublicPersonRole, string[]>> = {
+    president: ['總統'],
+    vice_president: ['副總統'],
+    legislator: ['立法委員', '立委'],
+    local_chief: ['市長', '縣長'],
+    local_deputy: ['副市長', '副縣長', '副縣市長'],
+    agency_head: ['局長', '處長', '主任委員'],
+    councilor: ['議員'],
+    party_officer: ['黨主席', '主席', '秘書長'],
+    candidate: ['候選人', '參選', '擬參選'],
+  };
+  const patterns = filters.role ? rolePatterns[filters.role] : null;
+  if (patterns?.length) {
+    query = query.or(patterns.map((pattern) => 'position.ilike.%' + pattern + '%').join(','));
+    if (filters.role === 'president') {
+      query = query.not('position', 'ilike', '%副總統%');
+    } else if (filters.role === 'local_chief') {
+      query = query.not('position', 'ilike', '%副市長%').not('position', 'ilike', '%副縣長%');
+    }
+  }
+
+  if (filters.status === 'current') {
+    query = query.or([
+      'current_office_label.not.is.null',
+      'position.ilike.%副市長%',
+      'position.ilike.%副縣長%',
+      'position.ilike.%局長%',
+      'position.ilike.%處長%',
+      'position.ilike.%主任委員%',
+    ].join(','));
+  } else if (filters.status === 'candidate') {
+    query = query.or([
+      'upcoming_candidate_label.not.is.null',
+      'position.ilike.%候選人%',
+      'position.ilike.%參選%',
+      'position.ilike.%擬參選%',
+    ].join(','));
+  }
+
+  const pageStart = (page - 1) * pageSize;
+  const { data, error, count } = await query
+    .order('current_office_label', { ascending: false, nullsFirst: false })
+    .order('upcoming_candidate_label', { ascending: false, nullsFirst: false })
+    .order('name', { ascending: true })
+    .range(pageStart, pageStart + pageSize - 1);
+
+  if (error || !Array.isArray(data)) {
+    if (error && import.meta.env.DEV) {
+      console.warn('Failed to fetch public people page: ' + error.message);
+    }
+    return { items: [], total: 0 };
+  }
+
+  const people = data.map((row) => mapPublicPersonRow(row as PublicPerson));
+  const candidateRows = await fetchCandidateRowsByPersonIds(people.map((person) => person.person_id));
+  const candidates = candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate));
+  const items = filterPersonListItems(buildPersonListItems(people, candidates, snapshot.stageRegions), filters);
+
+  return { items, total: count ?? items.length };
+}
+
+async function loadLocalOfficeSummary(regionId: string): Promise<PublicLocalOfficeSummary> {
+  const cachedSummary = localOfficeSummaryCache.get(regionId);
+  if (cachedSummary) {
+    return cachedSummary;
+  }
+
+  if (!localOfficeSummaryPromises.has(regionId)) {
+    localOfficeSummaryPromises.set(regionId, (async () => {
+      await refreshSupabasePublicDataSnapshot();
+      const snapshot = getSnapshot();
+      const region = snapshot?.indexes.stageRegionById.get(regionId);
+
+      if (!snapshot || !region) {
+        return buildLocalOfficeSummary(regionId, [], [], []);
+      }
+
+      const labels = regionLabelVariants(region.label);
+      const personRows = await fetchRows('public_people', (query) =>
+        query.or(labels.map((label) => 'district.ilike.' + label + '%').join(',')),
+      );
+      const people = personRows
+        .map((row) => mapPublicPersonRow(row as PublicPerson))
+        .filter((person) => {
+          const position = person.position ?? '';
+          const isAppointedLocalOffice = /副市長|副縣長|副縣市長|局長|處長|主任委員/.test(position);
+          return isAppointedLocalOffice || Boolean(person.current_office_label);
+        });
+      const summary = buildLocalOfficeSummary(regionId, people, [], snapshot.stageRegions);
+      localOfficeSummaryCache.set(regionId, summary);
+      return summary;
+    })().finally(() => {
+      localOfficeSummaryPromises.delete(regionId);
+    }));
+  }
+
+  return localOfficeSummaryPromises.get(regionId) ?? buildLocalOfficeSummary(regionId, [], [], []);
 }
 
 async function ensurePeopleDataset(filters: { query?: string | null } = {}) {
@@ -927,6 +1088,73 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     return getSnapshot()?.indexes.candidatesByRaceId.get(raceId) ?? [];
   },
 
+  async loadElectionIndex(): Promise<PublicElectionIndexData> {
+    await refreshSupabasePublicDataSnapshot();
+    const [electionRows, summaryRows] = await Promise.all([
+      fetchRows('public_elections'),
+      fetchRows('public_election_race_summaries'),
+    ]);
+
+    return {
+      elections: electionRows.map((row) => mapPublicElectionRow(row as PublicElection)),
+      raceSummaries: summaryRows as PublicElectionRaceSummary[],
+    };
+  },
+
+  async loadElectionRaceFacets(electionIds: string[]) {
+    await refreshSupabasePublicDataSnapshot();
+    const uniqueElectionIds = Array.from(new Set(electionIds.filter(Boolean)));
+    const facetRows: PublicElectionRaceFacet[] = [];
+
+    for (let index = 0; index < uniqueElectionIds.length; index += 200) {
+      const chunk = uniqueElectionIds.slice(index, index + 200);
+      facetRows.push(...await fetchRows('public_election_race_facets', (query) => query.in('election_id', chunk)) as PublicElectionRaceFacet[]);
+    }
+
+    return facetRows;
+  },
+
+  async loadRacesByElectionIds(electionIds, filters = {}) {
+    await refreshSupabasePublicDataSnapshot();
+    const uniqueElectionIds = Array.from(new Set(electionIds.filter(Boolean)));
+    const raceRows: unknown[] = [];
+
+    for (let index = 0; index < uniqueElectionIds.length; index += 200) {
+      const chunk = uniqueElectionIds.slice(index, index + 200);
+      raceRows.push(...await fetchRows('public_races', (query) => {
+        let filteredQuery = query.in('election_id', chunk);
+        if (filters.raceTypes?.length) filteredQuery = filteredQuery.in('race_type', filters.raceTypes);
+        if (filters.regionKey && filters.regionKey !== 'national') filteredQuery = filteredQuery.like('region_name', `${filters.regionKey}%`);
+        return filteredQuery;
+      }));
+    }
+
+    return raceRows
+      .map((row) => mapPublicRaceRow(row as PublicRace))
+      .filter((race) => !filters.regionKey || getRaceRegionGroup(race).key === filters.regionKey);
+  },
+
+  async loadRaceDetail(raceId: string): Promise<PublicRaceDetailData> {
+    await refreshSupabasePublicDataSnapshot();
+    const raceRows = await fetchRows('public_races', (query) => query.eq('race_id', raceId));
+    const race = raceRows[0] ? mapPublicRaceRow(raceRows[0] as PublicRace) : null;
+
+    if (!race) {
+      return { race: null, election: null, candidates: [] };
+    }
+
+    const [electionRows, candidateRows] = await Promise.all([
+      fetchRows('public_elections', (query) => query.eq('election_id', race.election_id)),
+      fetchRows('public_candidates', (query) => query.eq('race_id', raceId)),
+    ]);
+
+    return {
+      race,
+      election: electionRows[0] ? mapPublicElectionRow(electionRows[0] as PublicElection) : null,
+      candidates: candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate)),
+    };
+  },
+
   getPollComparisonByElectionId(): PollComparison | null {
     // TODO: Add a mapped poll comparison source after an approved public poll view exists.
     return null;
@@ -950,6 +1178,10 @@ export const supabasePublicDataProvider: PublicDataProvider = {
       : items.filter((person) => isGrassrootsPersonListItem(person) === false);
 
     return filterPersonListItems(visibleItems, filters);
+  },
+
+  loadPeoplePage(filters, page, pageSize) {
+    return fetchPeoplePage(filters, page, pageSize);
   },
 
   getPersonById(personId: string) {
@@ -980,20 +1212,13 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   },
 
   getLocalOfficeSummaryByRegionId(regionId: string) {
-    void ensurePeopleDataset();
     const snapshot = getSnapshot();
-    if (!snapshot) {
-      return buildLocalOfficeSummary(regionId, [], [], []);
-    }
+    return localOfficeSummaryCache.get(regionId)
+      ?? buildLocalOfficeSummary(regionId, [], [], snapshot?.stageRegions ?? []);
+  },
 
-    if (!snapshot.indexes.localOfficeSummariesByRegionId.has(regionId)) {
-      snapshot.indexes.localOfficeSummariesByRegionId.set(
-        regionId,
-        buildLocalOfficeSummaryFromItems(regionId, getPersonListItems(snapshot), snapshot.stageRegions),
-      );
-    }
-
-    return snapshot.indexes.localOfficeSummariesByRegionId.get(regionId) ?? buildLocalOfficeSummary(regionId, [], [], []);
+  loadLocalOfficeSummaryByRegionId(regionId: string) {
+    return loadLocalOfficeSummary(regionId);
   },
 
   getCompanies() {

@@ -4,6 +4,8 @@ import type {
   PublicCandidate,
   PublicCompany,
   PublicElection,
+  PublicElectionRaceFacet,
+  PublicElectionRaceSummary,
   PublicLocalOfficeSummary,
   PublicParty,
   PublicPartyCompanyContributionSummary,
@@ -42,6 +44,27 @@ export type PublicSearchResult = {
   href: string | null;
 };
 
+export type PublicPersonListPage = {
+  items: PublicPersonListItem[];
+  total: number;
+};
+
+export type PublicElectionIndexData = {
+  elections: PublicElection[];
+  raceSummaries: PublicElectionRaceSummary[];
+};
+
+export type PublicRaceDetailData = {
+  race: PublicRace | null;
+  election: PublicElection | null;
+  candidates: PublicCandidate[];
+};
+
+export type PublicRaceQueryFilters = {
+  raceTypes?: PublicRace['race_type'][];
+  regionKey?: string;
+};
+
 export interface PublicDataProvider {
   getHomeTicker(): HomeTicker;
   getHomePageData(): HomePageData;
@@ -61,12 +84,18 @@ export interface PublicDataProvider {
   getCandidates(): PublicCandidate[];
   getCandidatesByElectionId(electionId: string): PublicCandidate[];
   getCandidatesByRaceId(raceId: string): PublicCandidate[];
+  loadElectionIndex(): Promise<PublicElectionIndexData>;
+  loadElectionRaceFacets(electionIds: string[]): Promise<PublicElectionRaceFacet[]>;
+  loadRacesByElectionIds(electionIds: string[], filters?: PublicRaceQueryFilters): Promise<PublicRace[]>;
+  loadRaceDetail(raceId: string): Promise<PublicRaceDetailData>;
   getPollComparisonByElectionId(electionId: string): PollComparison | null;
   getPeople(): PublicPerson[];
   getPeopleByFilters(filters?: PublicPersonFilters): PublicPersonListItem[];
+  loadPeoplePage(filters: PublicPersonFilters, page: number, pageSize: number): Promise<PublicPersonListPage>;
   getPersonById(personId: string): PublicPerson | null;
   getPersonProfile(personId: string): PublicPersonProfile | null;
   getLocalOfficeSummaryByRegionId(regionId: string): PublicLocalOfficeSummary;
+  loadLocalOfficeSummaryByRegionId(regionId: string): Promise<PublicLocalOfficeSummary>;
   getCompanies(): PublicCompany[];
   getParties(): PublicParty[];
   getPartyBySlug(partySlug: string): PublicParty | null;

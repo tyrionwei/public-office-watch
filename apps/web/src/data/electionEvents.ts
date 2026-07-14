@@ -1,5 +1,5 @@
-import type { PublicElection, PublicRace } from '../types/publicViews';
-import { compareRacesForDisplay, getRaceCategory, groupRacesByCategory } from './electionLabels';
+import type { PublicElection, PublicElectionRaceSummary, PublicRace } from '../types/publicViews';
+import { compareRacesForDisplay, getRaceCategory, getRaceCategoryByType, groupRacesByCategory } from './electionLabels';
 
 export type ElectionEventFamily = 'national' | 'local' | 'referendum' | 'recall' | 'by_election' | 'other';
 
@@ -18,6 +18,7 @@ export type ElectionEvent = {
   status: PublicElection['status'];
   elections: PublicElection[];
   races: PublicRace[];
+  raceCount: number;
   categorySummary: string;
   regionSummary: string;
   sourceNameSummary: string;
@@ -65,20 +66,20 @@ export function getDisplayElectionYear(election: PublicElection) {
   return election.year;
 }
 
-function getEventFamily(elections: PublicElection[], races: PublicRace[]): ElectionEventFamily {
-  if (races.some((race) => nationalRaceTypes.has(race.race_type)) || elections.some((election) => election.election_type === 'presidential' || election.election_type === 'president' || election.election_type === 'legislative' || election.election_type === 'legislator')) {
+function getEventFamily(elections: PublicElection[], raceTypes: PublicRace['race_type'][]): ElectionEventFamily {
+  if (raceTypes.some((raceType) => nationalRaceTypes.has(raceType)) || elections.some((election) => election.election_type === 'presidential' || election.election_type === 'president' || election.election_type === 'legislative' || election.election_type === 'legislator')) {
     return 'national';
   }
 
-  if (races.some((race) => localRaceTypes.has(race.race_type)) || elections.some((election) => ['local', 'local_chief', 'councilor', 'township_representative', 'village_chief'].includes(election.election_type))) {
+  if (raceTypes.some((raceType) => localRaceTypes.has(raceType)) || elections.some((election) => ['local', 'local_chief', 'councilor', 'township_representative', 'village_chief'].includes(election.election_type))) {
     return 'local';
   }
 
-  if (races.some((race) => race.race_type === 'referendum') || elections.some((election) => election.election_type === 'referendum')) {
+  if (raceTypes.includes('referendum') || elections.some((election) => election.election_type === 'referendum')) {
     return 'referendum';
   }
 
-  if (races.some((race) => race.race_type === 'recall') || elections.some((election) => election.election_type === 'recall')) {
+  if (raceTypes.includes('recall') || elections.some((election) => election.election_type === 'recall')) {
     return 'recall';
   }
 
@@ -98,9 +99,9 @@ function getInitialFamily(election: PublicElection) {
   return 'other';
 }
 
-function buildEventTitle(year: number | null, family: ElectionEventFamily, elections: PublicElection[], races: PublicRace[]) {
+function buildEventTitle(year: number | null, family: ElectionEventFamily, elections: PublicElection[], raceTypes: PublicRace['race_type'][]) {
   const yearLabel = year ? `${year}` : '未定年份';
-  const categories = new Set(races.map((race) => getRaceCategory(race).key));
+  const categories = new Set(raceTypes.map((raceType) => getRaceCategoryByType(raceType).key));
 
   if (family === 'national') {
     const hasPresident = categories.has('presidential') || elections.some((election) => election.election_type === 'presidential' || election.election_type === 'president');
@@ -165,26 +166,36 @@ function groupRacesByRegion(races: PublicRace[]): ElectionEventRegion[] {
     });
 }
 
-function finalizeEvent(elections: PublicElection[], allRaces: PublicRace[]): ElectionEvent {
+function finalizeEvent(elections: PublicElection[], allRaces: PublicRace[], allSummaries: PublicElectionRaceSummary[]): ElectionEvent {
   const electionIds = new Set(elections.map((election) => election.election_id));
   const races = allRaces.filter((race) => electionIds.has(race.election_id)).sort(compareRacesForDisplay);
-  const family = getEventFamily(elections, races);
+  const summaries = allSummaries.filter((summary) => electionIds.has(summary.election_id));
+  const raceTypes = Array.from(new Set([
+    ...races.map((race) => race.race_type),
+    ...summaries.flatMap((summary) => summary.race_types),
+  ]));
+  const family = getEventFamily(elections, raceTypes);
   const year = elections.map(getDisplayElectionYear).find((value): value is number => value !== null) ?? null;
   const votingDate = elections.map((election) => election.voting_date).find((value): value is string => Boolean(value)) ?? null;
   const categoryGroups = groupRacesByCategory(races);
+  const summaryCategories = Array.from(new Map(raceTypes.map((raceType) => {
+    const category = getRaceCategoryByType(raceType);
+    return [category.key, category] as const;
+  })).values()).sort((left, right) => left.order - right.order);
   const regionGroups = groupRacesByRegion(races);
 
   return {
     key: buildElectionEventKey(year, votingDate, family),
-    title: buildEventTitle(year, family, elections, races),
+    title: buildEventTitle(year, family, elections, raceTypes),
     year,
     votingDate,
     family,
     status: getEventStatus(elections),
     elections: elections.slice().sort((left, right) => left.name.localeCompare(right.name, 'zh-TW')),
     races,
-    categorySummary: summarizeLabels(categoryGroups.map((group) => group.category.label), '尚未接入選舉項目'),
-    regionSummary: summarizeLabels(regionGroups.map((group) => group.label), '未指定區域', 3),
+    raceCount: races.length > 0 ? races.length : summaries.reduce((total, summary) => total + summary.race_count, 0),
+    categorySummary: summarizeLabels(summaryCategories.map((category) => category.label), '尚未接入選舉項目'),
+    regionSummary: races.length > 0 ? summarizeLabels(regionGroups.map((group) => group.label), '未指定區域', 3) : '進入查看區域',
     sourceNameSummary: summarizeLabels(uniqueValues(elections.map((election) => election.name)), '公開選舉資料', 3),
     categoryGroups,
     regionGroups,
@@ -195,7 +206,7 @@ export function buildElectionEventKey(year: number | null, votingDate: string | 
   return `${year ?? 'unknown'}-${votingDate ?? 'undated'}-${family}`;
 }
 
-export function buildElectionEvents(elections: PublicElection[], races: PublicRace[]) {
+export function buildElectionEvents(elections: PublicElection[], races: PublicRace[], raceSummaries: PublicElectionRaceSummary[] = []) {
   const groups = new Map<string, PublicElection[]>();
 
   for (const election of elections) {
@@ -207,7 +218,7 @@ export function buildElectionEvents(elections: PublicElection[], races: PublicRa
   }
 
   return Array.from(groups.values())
-    .map((group) => finalizeEvent(group, races))
+    .map((group) => finalizeEvent(group, races, raceSummaries))
     .sort((left, right) => {
       const leftUpcoming = ['active', 'upcoming', 'announced'].includes(left.status);
       const rightUpcoming = ['active', 'upcoming', 'announced'].includes(right.status);

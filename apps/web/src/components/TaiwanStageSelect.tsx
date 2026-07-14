@@ -1,7 +1,6 @@
-import { taiwanCountyPaths } from '../data/generated/taiwanCountyMap';
+import { lazy, Suspense } from 'react';
 import { useI18n } from '../i18n';
 import type { StageRegionNode } from '../types/stageMap';
-import { TaiwanCountyMap } from './TaiwanCountyMap';
 
 type TaiwanStageSelectProps = {
   regions: StageRegionNode[];
@@ -15,6 +14,8 @@ type CompactCountyQuickSelectProps = {
   selectedRegionId: string;
   onSelectRegion: (regionId: string) => void;
 };
+
+const LazyTaiwanCountyMap = lazy(() => import('./TaiwanCountyMap').then((module) => ({ default: module.TaiwanCountyMap })));
 
 export function CompactCountyQuickSelect({
   regions,
@@ -64,8 +65,6 @@ export function TaiwanStageSelect({
 }: TaiwanStageSelectProps) {
   const { t } = useI18n();
   const topLevelRegions = regions.filter((region) => region.level === 'county_city');
-  const hasCountyPaths = taiwanCountyPaths.length > 0;
-
   return (
     <div className="h-full space-y-4">
         <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(7,22,45,0.96),rgba(8,27,52,0.94)_55%,rgba(7,18,38,0.96))] p-3 sm:p-4">
@@ -78,41 +77,13 @@ export function TaiwanStageSelect({
             </span>
           </div>
 
-          {hasCountyPaths ? (
-            <TaiwanCountyMap
+          <Suspense fallback={<div className="pixel-corners min-h-[560px] border border-line/70 bg-panelAlt/35" />}>
+            <LazyTaiwanCountyMap
               regions={topLevelRegions}
               selectedRegionId={selectedRegionId}
               onSelectRegion={onSelectRegion}
             />
-          ) : (
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
-              {topLevelRegions.map((region) => {
-                const selected = selectedRegionId === region.id;
-                const blockClasses = selected
-                  ? 'border-accent bg-accent/20 text-white shadow-[0_0_18px_rgba(103,232,249,0.18)]'
-                  : 'border-line bg-panelAlt/55 text-slate-300 hover:border-accent/55 hover:text-white';
-
-                return (
-                  <button
-                    key={region.id}
-                    type="button"
-                    onClick={() => onSelectRegion(region.id)}
-                    aria-pressed={selected}
-                    className={[
-                      'pixel-corners min-h-[76px] border p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
-                      blockClasses,
-                    ].join(' ')}
-                  >
-                    <span className="block font-display text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                      {region.stageLabel}
-                    </span>
-                    <span className="mt-2 block text-sm font-medium leading-snug">{region.label}</span>
-                    <span className="mt-2 block text-[11px] text-slate-500">{t('stage.countyCode', { code: region.stageLabel })}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          </Suspense>
 
           {!hideQuickSelect ? (
             <div className="mt-5">

@@ -13,6 +13,7 @@ import {
   mockPublicPeople,
   mockPublicRaces,
 } from '../data/mockPublicViews';
+import { getRaceRegionGroup } from '../data/electionEvents';
 import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
 import { buildLocalOfficeSummary, buildPersonListItems, buildPersonProfile, filterPersonListItems } from './personData';
 import { assertPublicViewName, allowedPublicViews } from './publicViewRegistry';
@@ -25,6 +26,7 @@ const providerViews = [
   'public_companies',
   'public_regions',
   'public_elections',
+  'public_election_race_summaries',
   'public_races',
   'public_candidates',
   'public_person_claims',
@@ -148,6 +150,61 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return mockPublicCandidates.filter((candidate) => candidate.race_id === raceId);
   },
 
+  async loadElectionIndex() {
+    return {
+      elections: mockPublicElections,
+      raceSummaries: mockPublicElections.map((election) => {
+        const electionRaces = mockPublicRaces.filter((race) => race.election_id === election.election_id);
+        return {
+          election_id: election.election_id,
+          race_count: electionRaces.length,
+          race_types: Array.from(new Set(electionRaces.map((race) => race.race_type))),
+        };
+      }),
+    };
+  },
+
+  async loadElectionRaceFacets(electionIds: string[]) {
+    const selectedIds = new Set(electionIds);
+    const groups = new Map<string, { election_id: string; race_type: (typeof mockPublicRaces)[number]['race_type']; region_key: string; region_label: string; race_count: number }>();
+
+    for (const race of mockPublicRaces.filter((item) => selectedIds.has(item.election_id))) {
+      const region = getRaceRegionGroup(race);
+      const key = [race.election_id, race.race_type, region.key].join(':');
+      const group = groups.get(key) ?? {
+        election_id: race.election_id,
+        race_type: race.race_type,
+        region_key: region.key,
+        region_label: region.label,
+        race_count: 0,
+      };
+      group.race_count += 1;
+      groups.set(key, group);
+    }
+
+    return Array.from(groups.values());
+  },
+
+  async loadRacesByElectionIds(electionIds, filters = {}) {
+    const selectedIds = new Set(electionIds);
+    const selectedRaceTypes = new Set(filters.raceTypes ?? []);
+    return mockPublicRaces.filter((race) => {
+      if (!selectedIds.has(race.election_id)) return false;
+      if (selectedRaceTypes.size > 0 && !selectedRaceTypes.has(race.race_type)) return false;
+      if (filters.regionKey && getRaceRegionGroup(race).key !== filters.regionKey) return false;
+      return true;
+    });
+  },
+
+  async loadRaceDetail(raceId: string) {
+    const race = this.getRaceById(raceId);
+    return {
+      race,
+      election: race ? this.getElectionById(race.election_id) : null,
+      candidates: this.getCandidatesByRaceId(raceId),
+    };
+  },
+
   getPollComparisonByElectionId(electionId: string) {
     return mockPollComparisons.find((comparison) => comparison.electionId === electionId) ?? null;
   },
@@ -158,6 +215,15 @@ export const mockPublicDataProvider: PublicDataProvider = {
 
   getPeopleByFilters(filters = {}) {
     return filterPersonListItems(buildPersonListItems(mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes, mockPublicPersonClaims), filters);
+  },
+
+  async loadPeoplePage(filters, page, pageSize) {
+    const items = this.getPeopleByFilters(filters);
+    const pageStart = (page - 1) * pageSize;
+    return {
+      items: items.slice(pageStart, pageStart + pageSize),
+      total: items.length,
+    };
   },
 
   getPersonById(personId: string) {
@@ -177,6 +243,10 @@ export const mockPublicDataProvider: PublicDataProvider = {
 
   getLocalOfficeSummaryByRegionId(regionId: string) {
     return buildLocalOfficeSummary(regionId, mockPublicPeople, mockPublicCandidates, taiwanStageRegionNodes, mockPublicPersonClaims);
+  },
+
+  async loadLocalOfficeSummaryByRegionId(regionId: string) {
+    return this.getLocalOfficeSummaryByRegionId(regionId);
   },
 
   getCompanies() {

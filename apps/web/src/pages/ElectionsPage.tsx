@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
@@ -6,7 +7,9 @@ import { SectionPanel } from '../components/SectionPanel';
 import { buildElectionEvents } from '../data/electionEvents';
 import { getElectionStatusLabel } from '../data/electionLabels';
 import { publicDataProvider } from '../lib/publicData';
+import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { electionEventPath } from '../routes/routePaths';
+import type { PublicElectionIndexData } from '../lib/publicDataProvider';
 
 function groupEventsByYear(events: ReturnType<typeof buildElectionEvents>) {
   const groups = new Map<string, typeof events>();
@@ -28,10 +31,33 @@ function groupEventsByYear(events: ReturnType<typeof buildElectionEvents>) {
 }
 
 export function ElectionsPage() {
-  const events = buildElectionEvents(publicDataProvider.getElections(), publicDataProvider.getRaces());
+  const [indexData, setIndexData] = useState<PublicElectionIndexData>({ elections: [], raceSummaries: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadElectionIndex())
+      .then((data) => {
+        if (active) setIndexData(data);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) console.warn('Failed to load election index', error);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const events = buildElectionEvents(indexData.elections, [], indexData.raceSummaries);
   const eventGroups = groupEventsByYear(events);
   const upcomingEvents = events.filter((event) => ['active', 'upcoming', 'announced'].includes(event.status));
-  const totalRaces = events.reduce((total, event) => total + event.races.length, 0);
+  const totalRaces = events.reduce((total, event) => total + event.raceCount, 0);
 
   return (
     <AppShell>
@@ -87,7 +113,7 @@ export function ElectionsPage() {
                       </div>
                       <div>
                         <p className="text-xs uppercase tracking-[0.18em] text-slate-500">選區</p>
-                        <p className="mt-1">{event.races.length} 項</p>
+                        <p className="mt-1">{event.raceCount} 項</p>
                       </div>
                     </div>
                   </Link>
@@ -96,8 +122,8 @@ export function ElectionsPage() {
             </SectionPanel>
           ))
         ) : (
-          <PixelFrame title="選舉資料載入中">
-            <p className="text-sm text-slate-300">目前尚未載入可公開的選舉事件資料。</p>
+          <PixelFrame title={loading ? '選舉資料載入中' : '尚無選舉資料'}>
+            <p className="text-sm text-slate-300">{loading ? '正在載入選舉事件摘要。' : '目前尚未載入可公開的選舉事件資料。'}</p>
           </PixelFrame>
         )}
       </div>

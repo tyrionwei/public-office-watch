@@ -6,10 +6,11 @@ import { PixelFrame } from '../components/PixelFrame';
 import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
+import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicPersonFilters, PublicPersonRole, PublicPersonStatus } from '../types/publicViews';
+import type { PublicPersonFilters, PublicPersonListItem, PublicPersonRole, PublicPersonStatus } from '../types/publicViews';
 
 const PAGE_SIZE = 20;
 
@@ -175,14 +176,42 @@ export function PeoplePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = getFilters(searchParams);
   const { party, query, regionId, role, status } = filters;
-  const people = publicDataProvider.getPeopleByFilters({ party, query, regionId, role, status });
   const requestedPage = getPage(searchParams);
-  const pageCount = Math.max(1, Math.ceil(people.length / PAGE_SIZE));
+  const [peoplePage, setPeoplePage] = useState<{ items: PublicPersonListItem[]; total: number }>({ items: [], total: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    setPeoplePage({ items: [], total: 0 });
+
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadPeoplePage({ party, query, regionId, role, status }, requestedPage, PAGE_SIZE))
+      .then((nextPage) => {
+        if (active) {
+          setPeoplePage(nextPage);
+          setLoading(false);
+        }
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setLoading(false);
+          if (import.meta.env.DEV) {
+            console.warn('Failed to load people page', error);
+          }
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [party, query, regionId, role, status, requestedPage]);
+
+  const people = peoplePage.items;
+  const pageCount = Math.max(1, Math.ceil(peoplePage.total / PAGE_SIZE));
   const currentPage = Math.min(requestedPage, pageCount);
   const pageStart = (currentPage - 1) * PAGE_SIZE;
-  const visiblePeople = people.slice(pageStart, pageStart + PAGE_SIZE);
   const visiblePageNumbers = getVisiblePageNumbers(currentPage, pageCount);
-  const allPeople = publicDataProvider.getPeopleByFilters();
   const regionOptions = publicDataProvider
     .getStageRegions()
     .filter((region) => region.level === 'county_city')
@@ -195,13 +224,9 @@ export function PeoplePage() {
     () => statusOptionDefinitions.map((option) => ({ value: option.value, label: t(option.labelKey) })),
     [t],
   );
-  const partyOptions = useMemo(
-    () =>
-      Array.from(new Set(allPeople.map((person) => normalizePartyLabel(person.party))))
-        .sort(comparePartyOptions)
-        .map((party) => ({ value: party, label: party })),
-    [allPeople],
-  );
+  const partyOptions = Array.from(new Set(publicDataProvider.getParties().map((item) => normalizePartyLabel(item.name))))
+    .sort(comparePartyOptions)
+    .map((item) => ({ value: item, label: item }));
   const activeFilterItems = [
     query ? { label: t('people.name'), value: query } : null,
     regionId ? { label: t('people.region'), value: regionOptions.find((option) => option.value === regionId)?.label ?? regionId } : null,
@@ -263,7 +288,7 @@ export function PeoplePage() {
           title={t('people.title')}
           action={
             <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">
-              {t('common.recordsPage', { count: people.length, currentPage, pageCount })}
+              {t('common.recordsPage', { count: loading ? '...' : peoplePage.total, currentPage, pageCount })}
             </span>
           }
         >
@@ -287,13 +312,17 @@ export function PeoplePage() {
             </div>
             <div className="pixel-corners border border-accent/35 bg-accent/10 px-3 py-2 text-xs leading-5 text-slate-300">
               <p>
-                {t('people.currentResults')} <span className="font-display text-base text-white">{people.length}</span> {t('people.recordsUnit')}
+                {t('people.currentResults')} <span className="font-display text-base text-white">{loading ? '...' : peoplePage.total}</span> {t('people.recordsUnit')}
               </p>
               <p className="mt-1 text-slate-400">{t('people.sortHint')}</p>
             </div>
           </div>
 
-          {people.length > 0 ? (
+          {loading ? (
+            <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center text-sm text-slate-300">
+              {t('people.loading')}
+            </div>
+          ) : people.length > 0 ? (
             <div className="overflow-hidden pixel-corners border border-line/70">
               <div className="grid grid-cols-[minmax(160px,1fr)_minmax(120px,0.7fr)_minmax(120px,0.75fr)_minmax(130px,0.8fr)_90px] gap-3 border-b border-line/70 bg-panelAlt/55 px-3 py-2 text-xs uppercase tracking-[0.18em] text-slate-500 max-lg:hidden">
                 <span>{t('people.name')}</span>
@@ -303,7 +332,7 @@ export function PeoplePage() {
                 <span>{t('people.status')}</span>
               </div>
               <div className="divide-y divide-line/60">
-                {visiblePeople.map((person) => {
+                {people.map((person) => {
                   const theme = partyTheme[toPartyThemeKey(person.party)];
                   return (
                     <Link
@@ -340,10 +369,10 @@ export function PeoplePage() {
             </div>
           )}
 
-          {people.length > PAGE_SIZE ? (
+          {!loading && peoplePage.total > PAGE_SIZE ? (
             <div className="mt-4 flex flex-col gap-3 border-t border-line/60 pt-4 text-sm text-slate-300 sm:flex-row sm:items-center sm:justify-between">
               <p>
-                {t('people.showing', { start: pageStart + 1, end: Math.min(pageStart + PAGE_SIZE, people.length), total: people.length })}
+                {t('people.showing', { start: pageStart + 1, end: pageStart + people.length, total: peoplePage.total })}
               </p>
               <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                 <button

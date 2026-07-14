@@ -9,6 +9,8 @@ const allowedPublicViews = {
   public_relation_details: ['relation_id', 'person_id', 'company_id', 'relation_type', 'verification_status'],
   public_regions: ['region_id', 'name', 'slug', 'region_type'],
   public_elections: ['election_id', 'name', 'election_type', 'status'],
+  public_election_race_summaries: ['election_id', 'race_count', 'race_types'],
+  public_election_race_facets: ['election_id', 'race_type', 'region_key', 'region_label', 'race_count'],
   public_races: ['race_id', 'election_id', 'title', 'status'],
   public_candidates: ['candidate_id', 'person_id', 'race_id', 'election_id', 'registration_status'],
   public_home_election_ticker: ['election_id', 'election_name', 'voting_date', 'status'],

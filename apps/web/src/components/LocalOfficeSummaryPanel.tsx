@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
+import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
@@ -223,19 +224,52 @@ function PartyCountCard({ summary, party, count }: { summary: PublicLocalOfficeS
 
 export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelProps) {
   const { t } = useI18n();
-  const summary = publicDataProvider.getLocalOfficeSummaryByRegionId(regionId);
+  const [summary, setSummary] = useState(() => publicDataProvider.getLocalOfficeSummaryByRegionId(regionId));
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setSummary(publicDataProvider.getLocalOfficeSummaryByRegionId(regionId));
+    setLoading(true);
+
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadLocalOfficeSummaryByRegionId(regionId))
+      .then((nextSummary) => {
+        if (active) {
+          setSummary(nextSummary);
+          setLoading(false);
+        }
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setLoading(false);
+          if (import.meta.env.DEV) {
+            console.warn('Failed to load local office summary', error);
+          }
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [regionId]);
+
   const hasCouncilors = summary.councilor_party_counts.length > 0;
 
   return (
     <PixelFrame
       title={t('office.title')}
       action={
-        <Link
-          to={peoplePath({ region: summary.region_id, status: 'current' })}
-          className="text-[11px] uppercase tracking-[0.22em] text-accent hover:text-white"
-        >
-          {t('office.viewPeople')}
-        </Link>
+        loading ? (
+          <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">{t('office.loading')}</span>
+        ) : (
+          <Link
+            to={peoplePath({ region: summary.region_id, status: 'current' })}
+            className="text-[11px] uppercase tracking-[0.22em] text-accent hover:text-white"
+          >
+            {t('office.viewPeople')}
+          </Link>
+        )
       }
       className="overflow-visible bg-[linear-gradient(180deg,rgba(12,18,36,0.96),rgba(8,15,30,0.92))]"
     >

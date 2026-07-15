@@ -34,6 +34,7 @@ appsettings.Development.json
 
 # Local generated data artifacts
 data-sources/votetw-election-history.seed.json
+data-sources/votetw-election-history.village-chief.seed.json
 data-sources/*-claims.seed.json
 data-sources/*-profiles.seed.json
 data-sources/*-leads.seed.json

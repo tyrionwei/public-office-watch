@@ -11,8 +11,12 @@ node_modules/
 dist/
 coverage/
 .vite/
+playwright-report/
+test-results/
+blob-report/
 *.local
 .DS_Store
+Thumbs.db
 *.log
 *.tmp
 *.bak
@@ -29,6 +33,7 @@ secrets.json
 appsettings.Development.json
 
 # Local generated data artifacts
+data-sources/votetw-election-history.seed.json
 data-sources/*-claims.seed.json
 data-sources/*-profiles.seed.json
 data-sources/*-leads.seed.json

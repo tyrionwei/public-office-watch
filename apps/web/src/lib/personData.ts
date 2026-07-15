@@ -297,9 +297,16 @@ export function getPersonRole(position: string | null | undefined, candidateReco
 }
 
 function candidateElectionYear(candidate: PublicCandidate) {
+  if (candidate.election_year !== null) return candidate.election_year;
   const text = [candidate.election_name, candidate.race_title].filter(Boolean).join(' ');
   const year = text.match(/(?:19|20)\d{2}/)?.[0];
   return year ? Number.parseInt(year, 10) : null;
+}
+
+export function getCandidateElectionLabel(candidate: PublicCandidate) {
+  const year = candidateElectionYear(candidate);
+  if (!year || candidate.election_name.includes(String(year))) return candidate.election_name;
+  return `${year}年${candidate.election_name}`;
 }
 
 function compareCandidateRecordsNewestFirst(left: PublicCandidate, right: PublicCandidate) {
@@ -587,7 +594,7 @@ function buildTimelineRecords(
       year: timelineYearForCandidate(candidate),
       date: null,
       label: candidate.race_title,
-      detail: [candidate.election_name, normalizePartyLabel(candidate.party), candidate.region_name].filter(Boolean).join(' · ') || null,
+      detail: [getCandidateElectionLabel(candidate), normalizePartyLabel(candidate.party), candidate.region_name].filter(Boolean).join(' · ') || null,
       category: isElected ? 'office' : 'candidacy',
       status: timelineStatusForCandidate(candidate, isCurrentOffice),
       source_name: candidate.source_name,

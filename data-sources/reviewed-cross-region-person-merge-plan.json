@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "manual-review:2026-07-15-cross-region-election-history",
+  "groups": [
+    {
+      "name": "孟藹倫",
+      "canonicalPersonId": "da777a46-5a18-4b1d-9821-0ed2be67e9a0",
+      "duplicatePersonIds": [
+        "73174d29-20a2-4ccf-b288-74bcdbb8bb2d"
+      ],
+      "evidence": {
+        "basis": "VoteTW source profile lists the same birth date and continuous legislative candidacies in Taipei in 2020 and New Taipei in 2024",
+        "candidateYears": [
+          2020,
+          2024
+        ],
+        "candidateOffices": [
+          "立法委員"
+        ],
+        "sourceUrl": "https://votetw.com/wiki/%E5%AD%9F%E8%97%B9%E5%80%AB"
+      }
+    }
+  ]
+}

@@ -380,7 +380,7 @@
   "elections": [
     {
       "externalId": "cec-2024-president-vice-president",
-      "name": "第16任總統副總統選舉",
+      "name": "2024年第16任總統副總統選舉",
       "year": 2024,
       "electionType": "presidential",
       "votingDate": "2024-01-13",
@@ -389,7 +389,7 @@
     },
     {
       "externalId": "cec-2024-legislative-yuan",
-      "name": "第11屆立法委員選舉",
+      "name": "2024年第11屆立法委員選舉",
       "year": 2024,
       "electionType": "legislative",
       "votingDate": "2024-01-13",

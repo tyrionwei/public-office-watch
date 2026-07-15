@@ -122,6 +122,12 @@ function normalizeText(value) {
     .replace(/\s+/g, '');
 }
 
+function normalizeCandidateName(value) {
+  return normalizeText(value)
+    .toLocaleLowerCase('en-US')
+    .replace(/[．‧・·]/g, '');
+}
+
 function electionYear(candidate) {
   const value = `${candidate.election_name ?? ''} ${candidate.race_title ?? ''}`;
   const match = value.match(/(19|20)\d{2}/);
@@ -133,11 +139,10 @@ function officeKind(candidate) {
 
   if (value.includes('總統副總統')) return 'president';
   if (value.includes('立法委員')) return 'legislator';
-  if (value.includes('縣市長') || value.includes('市長') || value.includes('縣長')) return 'local_executive';
-  if (value.includes('鄉長') || value.includes('鎮長')) return 'local_executive';
-  if (value.includes('議員')) return 'councilor';
-  if (value.includes('代表')) return 'representative';
-  if (value.includes('村長') || value.includes('里長')) return 'village_chief';
+  if (value.includes('議員選舉')) return 'councilor';
+  if (/(?:市民代表|鄉民代表|鎮民代表|區民代表|代表)選舉/.test(value)) return 'representative';
+  if (/[村里]長選舉/.test(value)) return 'village_chief';
+  if (/(?:縣市長|[縣市鄉鎮區]長)選舉/.test(value)) return 'local_executive';
   return null;
 }
 
@@ -154,25 +159,164 @@ function officeArea(candidate) {
     .replace(/立法委員選舉/g, '')
     .replace(/縣市長選舉/g, '')
     .replace(/[縣市]長選舉/g, '')
-    .replace(/[鄉鎮]長選舉/g, '')
-    .replace(/議員選舉/g, '')
-    .replace(/市民代表選舉|鄉民代表選舉|鎮民代表選舉|代表選舉/g, '')
+    .replace(/[鄉鎮區]長選舉/g, '')
+    .replace(/(?:區域|平地原住民|山地原住民)?議員選舉/g, '')
+    .replace(/市民代表選舉|鄉民代表選舉|鎮民代表選舉|區民代表選舉|代表選舉/g, '')
     .replace(/[村里]長選舉/g, '')
-    .replace(/選舉/g, '')
+    .replace(/選舉$/, '')
+    .replace(/第0+(\d+)/g, '第$1')
     .trim();
 }
 
-function candidateGroupKey(candidate) {
-  const name = normalizeText(candidate.person_name);
-  const party = normalizeText(candidate.party || candidate.person_party);
-  const kind = officeKind(candidate);
-  const area = officeArea(candidate);
+function canonicalOfficeArea(kind, area) {
+  if (kind !== 'representative') {
+    return area;
+  }
 
-  if (!name || !party || !kind || !area || party === '無黨籍' || party === '未知政黨') {
+  return area.replace(
+    /（(?:平地|山地|直轄市)?原住民）|(?:平地|山地|直轄市)?原住民/g,
+    '原住民',
+  );
+}
+
+function numberedOrUnnumberedDistrict(candidate) {
+  const year = electionYear(candidate);
+  const kind = officeKind(candidate);
+  if (!year || !['legislator', 'councilor', 'representative'].includes(kind)) {
     return null;
   }
 
+  const area = canonicalOfficeArea(kind, officeArea(candidate));
+  const numberedMatch = area.match(/^(.+)第(\d+)選舉區$/);
+  if (numberedMatch) {
+    return {
+      scopeKey: [year, kind, numberedMatch[1]].join('|'),
+      jurisdiction: numberedMatch[1],
+      districtNumber: Number(numberedMatch[2]),
+      isUnnumbered: false,
+    };
+  }
+
+  const unnumberedMatch = area.match(/^(.+(?:縣|市|區|鄉|鎮))選舉區$/);
+  if (!unnumberedMatch) {
+    return null;
+  }
+
+  return {
+    scopeKey: [year, kind, unnumberedMatch[1]].join('|'),
+    jurisdiction: unnumberedMatch[1],
+    districtNumber: null,
+    isUnnumbered: true,
+  };
+}
+
+function buildSingleDistrictScopes(candidates) {
+  const scopes = new Map();
+
+  for (const candidate of candidates) {
+    const identity = numberedOrUnnumberedDistrict(candidate);
+    if (!identity) continue;
+
+    const scope = scopes.get(identity.scopeKey) ?? {
+      numbers: new Set(),
+      hasUnnumbered: false,
+    };
+    if (identity.isUnnumbered) {
+      scope.hasUnnumbered = true;
+    } else {
+      scope.numbers.add(identity.districtNumber);
+    }
+    scopes.set(identity.scopeKey, scope);
+  }
+
+  return new Set(
+    [...scopes.entries()]
+      .filter(([, scope]) => (
+        scope.hasUnnumbered
+        && scope.numbers.size === 1
+        && scope.numbers.has(1)
+      ))
+      .map(([scopeKey]) => scopeKey),
+  );
+}
+
+function sameElectionOfficeArea(candidate, singleDistrictScopes) {
+  const kind = officeKind(candidate);
+  const area = canonicalOfficeArea(kind, officeArea(candidate));
+  const identity = numberedOrUnnumberedDistrict(candidate);
+
+  if (
+    identity
+    && singleDistrictScopes.has(identity.scopeKey)
+    && (identity.isUnnumbered || identity.districtNumber === 1)
+  ) {
+    return `${identity.jurisdiction}第1選舉區`;
+  }
+
+  return area;
+}
+
+function isDetailedLocalArea(kind, area) {
+  if (kind === 'village_chief') {
+    return /(?:縣|市).+(?:區|鄉|鎮|市).+[村里]$/.test(area);
+  }
+  if (kind === 'representative') {
+    return /(?:縣|市).+(?:區|鄉|鎮|市)第\d+選舉區(?:（[^）]+）|原住民)?$/.test(area);
+  }
+  if (kind === 'councilor') {
+    return /^(?:.+縣|.+市)第\d+選舉區(?:（[^）]+）)?$/.test(area);
+  }
+  if (kind === 'local_executive') {
+    return /(?:縣|市).+(?:區|鄉|鎮|市)$/.test(area);
+  }
+  return false;
+}
+
+function isExactElectionArea(kind, area) {
+  if (isDetailedLocalArea(kind, area)) {
+    return true;
+  }
+  if (kind === 'president') {
+    return area === '全國';
+  }
+  if (kind === 'legislator') {
+    return /^(?:(?:.+縣|.+市)第\d+選舉區(?:（[^）]+）)?|全國不分區及僑居國外國民|平地原住民|山地原住民|全國(?:（[^）]+）)?)$/.test(area);
+  }
+  if (kind === 'local_executive') {
+    return /^(?:.+縣|.+市)$/.test(area);
+  }
+  return false;
+}
+
+function candidateGroupKey(candidate) {
+  const name = normalizeCandidateName(candidate.person_name);
+  const party = normalizeText(candidate.party || candidate.person_party);
+  const kind = officeKind(candidate);
+  const area = canonicalOfficeArea(kind, officeArea(candidate));
+
+  if (!name || !kind || !area) {
+    return null;
+  }
+
+  if (isDetailedLocalArea(kind, area)) {
+    return [name, kind, area].join('|');
+  }
+
+  if (!party || party === '無黨籍' || party === '未知政黨') return null;
   return [name, party, kind, area].join('|');
+}
+
+function sameElectionCandidateGroupKey(candidate, singleDistrictScopes) {
+  const year = electionYear(candidate);
+  const name = normalizeCandidateName(candidate.person_name);
+  const kind = officeKind(candidate);
+  const area = sameElectionOfficeArea(candidate, singleDistrictScopes);
+
+  if (!year || !name || !kind || !isExactElectionArea(kind, area)) {
+    return null;
+  }
+
+  return ['same-election', year, name, kind, area].join('|');
 }
 
 function decisionPairKey(leftPersonId, rightPersonId) {
@@ -193,6 +337,17 @@ function compactCandidate(candidate) {
   };
 }
 
+function personCompleteness(person) {
+  if (!person) return 0;
+  let score = person.external_id?.startsWith('cec-') ? 20 : 0;
+  if (person.gender && person.gender !== 'unknown') score += 5;
+  if (person.position) score += 5;
+  if (person.district) score += 3;
+  if (person.party) score += 2;
+  if (person.external_id) score += 1;
+  return score;
+}
+
 function chooseCanonicalPersonId(personIds, personById, canonicalPersonByPersonId) {
   const canonicalIds = [...new Set(personIds.map((personId) => canonicalPersonByPersonId.get(personId) ?? personId))];
 
@@ -201,18 +356,32 @@ function chooseCanonicalPersonId(personIds, personById, canonicalPersonByPersonI
     .sort((left, right) => {
       const leftPerson = personById.get(left);
       const rightPerson = personById.get(right);
-      const leftIsCec = leftPerson?.external_id?.startsWith('cec-') ? 1 : 0;
-      const rightIsCec = rightPerson?.external_id?.startsWith('cec-') ? 1 : 0;
-
-      if (leftIsCec !== rightIsCec) {
-        return rightIsCec - leftIsCec;
-      }
-
-      return left.localeCompare(right);
+      return personCompleteness(rightPerson) - personCompleteness(leftPerson) || left.localeCompare(right);
     })[0];
 }
 
-function buildRows(candidateGroups, personById, canonicalPersonByPersonId, existingDecisions) {
+function birthDatesConflict(personIds, birthDatesByPersonId) {
+  const dateSets = personIds
+    .map((personId) => [...new Set(birthDatesByPersonId.get(personId) ?? [])])
+    .filter((dates) => dates.length > 0);
+
+  for (let leftIndex = 0; leftIndex < dateSets.length; leftIndex += 1) {
+    for (let rightIndex = leftIndex + 1; rightIndex < dateSets.length; rightIndex += 1) {
+      const compatible = dateSets[leftIndex].some((left) => dateSets[rightIndex].some((right) => {
+        if (left === right) return true;
+        const leftYear = left.match(/^(19|20)\d{2}/)?.[0];
+        const rightYear = right.match(/^(19|20)\d{2}/)?.[0];
+        if (!leftYear || leftYear !== rightYear) return false;
+        return left.endsWith('-01-01') || right.endsWith('-01-01');
+      }));
+      if (!compatible) return true;
+    }
+  }
+
+  return false;
+}
+
+function buildRows(candidateGroups, personById, canonicalPersonByPersonId, birthDatesByPersonId, existingDecisions) {
   const activeDuplicatePersonIds = new Set(
     existingDecisions
       .filter((decision) => ['suggested', 'verified'].includes(decision.status))
@@ -228,10 +397,58 @@ function buildRows(candidateGroups, personById, canonicalPersonByPersonId, exist
   const duplicatePersonConflicts = [];
 
   for (const [key, candidates] of candidateGroups) {
+    const sameElectionMatch = key.startsWith('same-election|');
     const years = new Set(candidates.map(electionYear).filter(Boolean));
     const personIds = [...new Set(candidates.map((candidate) => candidate.person_id).filter(Boolean))];
 
-    if (years.size < 2 || personIds.length < 2) {
+    if (personIds.length < 2 || (!sameElectionMatch && years.size < 2)) {
+      continue;
+    }
+
+    const knownCandidateNumbers = new Set(
+      candidates
+        .map((candidate) => String(candidate.candidate_no ?? '').trim())
+        .filter(Boolean),
+    );
+    const hasMissingCandidateNumber = candidates.some(
+      (candidate) => !String(candidate.candidate_no ?? '').trim(),
+    );
+
+    if (sameElectionMatch && knownCandidateNumbers.size > 1) {
+      skipped.push({
+        reason: 'conflicting candidate numbers in the same election area',
+        key,
+        candidates: candidates.map(compactCandidate),
+      });
+      continue;
+    }
+
+    const canonicalPersonIds = [...new Set(
+      personIds.map((personId) => canonicalPersonByPersonId.get(personId) ?? personId),
+    )];
+    const knownGenders = new Set(
+      canonicalPersonIds
+        .map((personId) => personById.get(personId)?.gender)
+        .filter((gender) => gender && gender !== 'unknown'),
+    );
+    const hasBirthDateConflict = birthDatesConflict(canonicalPersonIds, birthDatesByPersonId);
+    const peopleByYear = new Map();
+    for (const candidate of candidates) {
+      const year = electionYear(candidate);
+      if (!year) continue;
+      const personId = canonicalPersonByPersonId.get(candidate.person_id) ?? candidate.person_id;
+      peopleByYear.set(year, new Set([...(peopleByYear.get(year) ?? []), personId]));
+    }
+
+    const hasAmbiguousSameYearCandidates = !sameElectionMatch
+      && [...peopleByYear.values()].some((ids) => ids.size > 1);
+
+    if (knownGenders.size > 1 || hasBirthDateConflict || hasAmbiguousSameYearCandidates) {
+      skipped.push({
+        reason: 'identity conflict or ambiguous same-year candidates',
+        key,
+        candidates: candidates.map(compactCandidate),
+      });
       continue;
     }
 
@@ -258,18 +475,38 @@ function buildRows(candidateGroups, personById, canonicalPersonByPersonId, exist
         continue;
       }
 
+      const kind = officeKind(candidates[0]);
+      const area = officeArea(candidates[0]);
+      const detailedLocalMatch = isDetailedLocalArea(kind, area);
       const row = {
         duplicate_person_id: duplicatePersonId,
         canonical_person_id: canonicalPersonId,
         status: 'verified',
-        confidence_level: 'B',
-        reason: 'same name, same party, same office type, and same constituency across election years',
+        confidence_level: sameElectionMatch && hasMissingCandidateNumber ? 'C' : 'B',
+        reason: sameElectionMatch
+          ? 'same name, election year, office type, and exact constituency with no conflicting known candidate number'
+          : detailedLocalMatch
+            ? 'same name and complete local constituency across election years; records consolidated under the preferred canonical person'
+            : 'same name, same party, same office type, and same constituency across election years',
         evidence_json: {
-          rule: 'cross_year_same_name_party_office_area',
+          rule: sameElectionMatch
+            ? 'same_election_exact_area_compatible_candidate_number'
+            : detailedLocalMatch
+              ? 'cross_year_exact_local_area'
+              : 'cross_year_same_name_party_office_area',
           key,
+          officeKind: kind,
+          candidateNumbers: [...knownCandidateNumbers],
+          hasMissingCandidateNumber,
+          canonicalSelection: canonicalPersonIds.map((personId) => ({
+            personId,
+            completeness: personCompleteness(personById.get(personId)),
+          })),
           candidates: candidates.map(compactCandidate),
         },
-        reviewed_by: 'system:cross-year-candidate-person-merge',
+        reviewed_by: sameElectionMatch
+          ? 'system:same-election-candidate-person-merge'
+          : 'system:cross-year-candidate-person-merge',
         reviewed_at: new Date().toISOString(),
       };
       candidateRowsByDuplicateId.set(duplicatePersonId, [
@@ -300,34 +537,56 @@ async function main() {
   }
 
   const options = parseArgs(process.argv.slice(2));
-  const [candidates, people, canonicalMapRows, existingDecisions] = await Promise.all([
+  const [candidates, people, birthDateClaims, canonicalMapRows, existingDecisions] = await Promise.all([
     fetchRows(
       'public_candidates',
-      'person_id,person_name,person_party,election_name,race_title,region_name,party,candidate_no,is_elected,vote_count',
+      'candidate_id,person_id,person_name,person_party,election_name,race_title,region_name,party,candidate_no,is_elected,vote_count',
+      { order: 'candidate_id.asc' },
     ),
-    fetchRows('people', 'id,name,party,position,district,external_id,is_public'),
-    fetchRows('person_canonical_map', 'person_id,canonical_person_id'),
-    fetchRows('person_merge_decisions', 'duplicate_person_id,canonical_person_id,status'),
+    fetchRows('people', 'id,name,gender,party,position,district,external_id,is_public', { order: 'id.asc' }),
+    fetchRows('public_person_claims', 'claim_id,person_id,claim_value,claim_json', {
+      claim_type: 'eq.birth_date',
+      order: 'claim_id.asc',
+    }),
+    fetchRows('person_canonical_map', 'person_id,canonical_person_id', { order: 'person_id.asc' }),
+    fetchRows('person_merge_decisions', 'id,duplicate_person_id,canonical_person_id,status', { order: 'id.asc' }),
   ]);
   const personById = new Map(people.map((person) => [person.id, person]));
+  const birthDatesByPersonId = new Map();
+  for (const claim of birthDateClaims) {
+    const value = String(claim.claim_value ?? claim.claim_json?.value ?? '').trim();
+    if (!value) continue;
+    birthDatesByPersonId.set(claim.person_id, [
+      ...(birthDatesByPersonId.get(claim.person_id) ?? []),
+      value,
+    ]);
+  }
   const canonicalPersonByPersonId = new Map(
     canonicalMapRows.map((row) => [row.person_id, row.canonical_person_id]),
   );
   const candidateGroups = new Map();
+  const singleDistrictScopes = buildSingleDistrictScopes(candidates);
 
   for (const candidate of candidates) {
     const key = candidateGroupKey(candidate);
-    if (!key) {
-      continue;
+    if (key) {
+      candidateGroups.set(key, [...(candidateGroups.get(key) ?? []), candidate]);
     }
 
-    candidateGroups.set(key, [...(candidateGroups.get(key) ?? []), candidate]);
+    const sameElectionKey = sameElectionCandidateGroupKey(candidate, singleDistrictScopes);
+    if (sameElectionKey) {
+      candidateGroups.set(sameElectionKey, [
+        ...(candidateGroups.get(sameElectionKey) ?? []),
+        candidate,
+      ]);
+    }
   }
 
   const { rows, skipped, duplicatePersonConflicts } = buildRows(
     candidateGroups,
     personById,
     canonicalPersonByPersonId,
+    birthDatesByPersonId,
     existingDecisions,
   );
   let inserted = [];
@@ -338,6 +597,12 @@ async function main() {
     }
   }
 
+  const rowsByOfficeKind = rows.reduce((counts, row) => {
+    const kind = row.evidence_json.officeKind ?? 'unknown';
+    counts[kind] = (counts[kind] ?? 0) + 1;
+    return counts;
+  }, {});
+
   console.log(JSON.stringify({
     status: 'ok',
     dryRun: !options.write,
@@ -347,6 +612,7 @@ async function main() {
     skippedCount: skipped.length,
     duplicatePersonConflictCount: duplicatePersonConflicts.length,
     insertedCount: inserted.length,
+    rowsByOfficeKind,
     houRows: rows.filter((row) => row.evidence_json.key.startsWith('侯友宜|')),
     sampleRows: rows.slice(0, 10),
     sampleSkipped: skipped.slice(0, 10),

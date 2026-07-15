@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "manual-review:2026-07-14-high-value-public-figures",
+  "partyCorrections": [
+    {
+      "personId": "a058edf9-9aeb-4ebb-a490-848178441ce5",
+      "expectedName": "高金素梅",
+      "from": "中國國民黨",
+      "to": "無黨籍",
+      "sourceNamePrefix": "立法院",
+      "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=46801",
+      "reason": "Legislative Yuan lists party as independent and caucus as Kuomintang"
+    }
+  ],
+  "groups": [
+    {
+      "name": "伍麗華",
+      "canonicalPersonId": "ae7ba3fd-c884-404f-a5d1-4bb587c9ca5a",
+      "duplicatePersonIds": [
+        "8b6641f7-cdf6-4fc7-9e9b-348cf6c3cda9",
+        "0267918b-252b-4791-b66c-573380f2ef89"
+      ],
+      "evidence": {
+        "basis": "same name, party, mountain indigenous constituency, and continuous legislative candidacies",
+        "candidateYears": [2020, 2024],
+        "candidateOffices": ["立法委員"]
+      }
+    },
+    {
+      "name": "高金素梅",
+      "canonicalPersonId": "a058edf9-9aeb-4ebb-a490-848178441ce5",
+      "duplicatePersonIds": [
+        "1021acaf-21d6-4add-8ef6-3bdd7eb61b9f",
+        "96500307-a859-45ff-b067-7e80f73636a7"
+      ],
+      "evidence": {
+        "basis": "same name and continuous mountain indigenous legislative candidacies",
+        "candidateYears": [2016, 2020, 2024],
+        "candidateOffices": ["立法委員"]
+      }
+    },
+    {
+      "name": "黃珊珊",
+      "canonicalPersonId": "36defbff-0205-4687-bc82-8416184cab3e",
+      "duplicatePersonIds": [
+        "8d58d0ab-7476-4f71-9f4e-b57bd444084f",
+        "c124e558-444a-4760-a128-3190aee02a6f"
+      ],
+      "evidence": {
+        "basis": "same Taipei political career across legislative, council, and mayoral elections",
+        "candidateYears": [2016, 2018, 2022],
+        "candidateOffices": ["立法委員", "直轄市議員", "直轄市市長"]
+      }
+    },
+    {
+      "name": "韓國瑜",
+      "canonicalPersonId": "6eec8a91-e26f-4ee6-a177-fe44ddd554d9",
+      "duplicatePersonIds": [
+        "524ffaf0-e191-4244-b4a3-4e02578ec6ee",
+        "3f3b99eb-c390-4512-828e-efc9d6b235e6"
+      ],
+      "evidence": {
+        "basis": "same public figure across Kaohsiung mayoral and presidential elections",
+        "candidateYears": [2018, 2020],
+        "candidateOffices": ["直轄市市長", "總統"]
+      }
+    },
+    {
+      "name": "柯文哲",
+      "canonicalPersonId": "7ceadf52-bdeb-45ae-9542-9fd3ace7a502",
+      "duplicatePersonIds": ["dcb67344-79a2-4ad1-8097-b7cf465fa49f"],
+      "evidence": {
+        "basis": "same public figure across Taipei mayoral and presidential elections",
+        "candidateYears": [2018, 2024],
+        "candidateOffices": ["直轄市市長", "總統"]
+      }
+    },
+    {
+      "name": "張善政",
+      "canonicalPersonId": "c30e7ac5-0838-407c-9fb7-20a750a1388f",
+      "duplicatePersonIds": ["4dba5096-d3b3-485f-a6f0-076c49656f97"],
+      "evidence": {
+        "basis": "same public figure across vice-presidential and Taoyuan mayoral elections",
+        "candidateYears": [2020, 2022],
+        "candidateOffices": ["副總統", "直轄市市長"]
+      }
+    },
+    {
+      "name": "黃偉哲",
+      "canonicalPersonId": "a0959bb6-fc41-4012-b5dc-52d136c4bb73",
+      "duplicatePersonIds": ["f181785f-c0a0-410e-b7d5-2b17e3401301"],
+      "evidence": {
+        "basis": "same Tainan political career across legislative and mayoral elections",
+        "candidateYears": [2016, 2018, 2022],
+        "candidateOffices": ["立法委員", "直轄市市長"]
+      }
+    },
+    {
+      "name": "蔣萬安",
+      "canonicalPersonId": "a4a44dff-efa9-45cc-8371-cbaa4cf6772d",
+      "duplicatePersonIds": ["1d7ca221-0d8c-42a5-9300-2fef55910dc7"],
+      "evidence": {
+        "basis": "same Taipei political career across legislative and mayoral elections",
+        "candidateYears": [2016, 2020, 2022],
+        "candidateOffices": ["立法委員", "直轄市市長"]
+      }
+    },
+    {
+      "name": "盧秀燕",
+      "canonicalPersonId": "cc4de44b-a6ba-4816-b388-ad59cb379d9a",
+      "duplicatePersonIds": ["3d386ab4-d1eb-44f7-84a5-25eb2b691f3c"],
+      "evidence": {
+        "basis": "same Taichung political career across legislative and mayoral elections",
+        "candidateYears": [2016, 2018, 2022],
+        "candidateOffices": ["立法委員", "直轄市市長"]
+      }
+    },
+    {
+      "name": "傅崐萁",
+      "canonicalPersonId": "2ebb787e-5abb-45fe-9dd0-364e5418e046",
+      "duplicatePersonIds": ["63345572-2432-4ac1-8dd6-54622dbc9f65"],
+      "evidence": {
+        "basis": "same Hualien legislative constituency and continuous candidacies",
+        "candidateYears": [2020, 2024],
+        "candidateOffices": ["立法委員"]
+      }
+    },
+    {
+      "name": "張嘉郡",
+      "canonicalPersonId": "36fd1ae0-76a8-46ac-81fd-f0952558a536",
+      "duplicatePersonIds": ["4a5a8727-072e-4629-8afc-618e5f4b1cf4"],
+      "evidence": {
+        "basis": "same Yunlin legislative constituency and public career",
+        "candidateYears": [2020, 2024],
+        "candidateOffices": ["立法委員"]
+      }
+    },
+    {
+      "name": "蕭美琴",
+      "canonicalPersonId": "1d6d74ef-ea70-4503-bc59-6bf36d9f25cf",
+      "duplicatePersonIds": ["2beea3a6-fa87-42a8-b060-92f8398c28ee"],
+      "evidence": {
+        "basis": "same public figure across Hualien legislative and vice-presidential elections",
+        "candidateYears": [2016, 2020, 2024],
+        "candidateOffices": ["立法委員", "副總統"]
+      }
+    },
+    {
+      "name": "賴清德",
+      "canonicalPersonId": "e333ae37-8821-4f98-8a90-54a4d217dbce",
+      "duplicatePersonIds": ["e64a96fd-9dc3-448d-9d35-d77abc5d1d58"],
+      "evidence": {
+        "basis": "same public figure across vice-presidential and presidential elections",
+        "candidateYears": [2020, 2024],
+        "candidateOffices": ["副總統", "總統"]
+      }
+    }
+  ]
+}

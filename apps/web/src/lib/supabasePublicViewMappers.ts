@@ -251,6 +251,7 @@ export function mapPublicCandidateRow(row: PartialRow<PublicCandidate>): PublicC
     race_title: asString(row?.race_title, '未命名選舉項目'),
     election_id: asString(row?.election_id, ''),
     election_name: asString(row?.election_name, '未命名選舉'),
+    election_year: asNullableNumber(row?.election_year),
     region_id: asNullableString(row?.region_id),
     region_name: asNullableString(row?.region_name),
     party: asNullableString(row?.party),

@@ -5,7 +5,7 @@ import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { pickDefaultCandidateSprite } from '../data/defaultCharacterAssets';
 import { publicDataProvider } from '../lib/publicData';
-import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { getCandidateElectionLabel, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonClaim, PublicPersonPartyAffiliation, PublicPersonTimelineItem } from '../types/publicViews';
@@ -434,7 +434,7 @@ export function PersonPage() {
                     <article key={candidate.candidate_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{candidate.election_name}</p>
+                          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{getCandidateElectionLabel(candidate)}</p>
                           <h3 className="mt-2 font-display text-lg text-white">{candidate.race_title}</h3>
                         </div>
                         <span className="text-xs text-signal">{candidateStatusLabels[candidate.registration_status]}</span>

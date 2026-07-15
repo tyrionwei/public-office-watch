@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "manual-review:2026-07-15-exact-cross-year-context",
+  "groups": [
+    {
+      "name": "章正輝",
+      "canonicalPersonId": "b7fc90bb-aa99-450d-9cef-c9738cce5ec8",
+      "duplicatePersonIds": [
+        "9aa78c28-72ff-4d10-b858-3ad79f81e87f"
+      ],
+      "evidence": {
+        "basis": "same name, known gender, party, and exact constituency across election years",
+        "candidateYears": [
+          2018,
+          2022
+        ],
+        "candidateOffices": [
+          "election candidate"
+        ],
+        "district": "臺東縣第14選舉區"
+      }
+    },
+    {
+      "name": "林秉君",
+      "canonicalPersonId": "8ca08019-7f05-4cf1-a86a-9fd0cdb8df4e",
+      "duplicatePersonIds": [
+        "48a106ba-a534-4cce-9636-853c82e2dc39"
+      ],
+      "evidence": {
+        "basis": "same name, known gender, party, and exact constituency across election years",
+        "candidateYears": [
+          2018,
+          2022
+        ],
+        "candidateOffices": [
+          "election candidate"
+        ],
+        "district": "新竹縣第11選舉區"
+      }
+    },
+    {
+      "name": "林義豐",
+      "canonicalPersonId": "01e2cf19-cec6-47e6-a1b0-8c5a599674a4",
+      "duplicatePersonIds": [
+        "04f821ba-1feb-4fd5-befc-17172baaafc5"
+      ],
+      "evidence": {
+        "basis": "same name, known gender, party, and exact constituency across election years",
+        "candidateYears": [
+          2018,
+          2022
+        ],
+        "candidateOffices": [
+          "election candidate"
+        ],
+        "district": "臺南市"
+      }
+    },
+    {
+      "name": "蔡明堂",
+      "canonicalPersonId": "28c5dfaf-6490-4641-8a2f-f49e65fa1c61",
+      "duplicatePersonIds": [
+        "999bb8c6-c2d6-43c6-acb7-82f23ab86dbf"
+      ],
+      "evidence": {
+        "basis": "same name, known gender, party, and exact constituency across election years",
+        "candidateYears": [
+          2018,
+          2024
+        ],
+        "candidateOffices": [
+          "election candidate"
+        ],
+        "district": "新北市第3選舉區"
+      }
+    },
+    {
+      "name": "李坤城",
+      "canonicalPersonId": "4f0164a6-9054-483c-8d7e-17d814c76428",
+      "duplicatePersonIds": [
+        "53a938f8-8298-49ec-b2db-f336bf7c541d"
+      ],
+      "evidence": {
+        "basis": "same name, known gender, party, and exact constituency across election years",
+        "candidateYears": [
+          2018,
+          2024
+        ],
+        "candidateOffices": [
+          "election candidate"
+        ],
+        "district": "新北市第3選舉區"
+      }
+    },
+    {
+      "name": "賴惠員",
+      "canonicalPersonId": "b46d510a-7c0c-4e1f-a4bb-a624d5b39544",
+      "duplicatePersonIds": [
+        "595215e8-02c6-4da5-b3a1-abe1fa36d29f"
+      ],
+      "evidence": {
+        "basis": "same name, known gender, party, and exact constituency across election years",
+        "candidateYears": [
+          2018,
+          2024
+        ],
+        "candidateOffices": [
+          "election candidate"
+        ],
+        "district": "臺南市第1選舉區"
+      }
+    },
+    {
+      "name": "羅智強",
+      "canonicalPersonId": "06b67557-c358-4388-b297-7be1a8059bb6",
+      "duplicatePersonIds": [
+        "97e08c79-04df-4229-9cb2-6fbd3ea92be6"
+      ],
+      "evidence": {
+        "basis": "same name, known gender, party, and exact constituency across election years",
+        "candidateYears": [
+          2018,
+          2024
+        ],
+        "candidateOffices": [
+          "election candidate"
+        ],
+        "district": "臺北市第6選舉區"
+      }
+    },
+    {
+      "name": "嚴惠美",
+      "canonicalPersonId": "bb090125-d434-432e-ab2f-bff85eeaf2ef",
+      "duplicatePersonIds": [
+        "f0075256-28eb-49b1-98f9-76de4ee59037"
+      ],
+      "evidence": {
+        "basis": "same name, known gender, party, and exact constituency across election years",
+        "candidateYears": [
+          2018,
+          2022
+        ],
+        "candidateOffices": [
+          "election candidate"
+        ],
+        "district": "臺東縣第11選舉區"
+      }
+    }
+  ]
+}

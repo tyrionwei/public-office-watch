@@ -135,7 +135,7 @@ function getLegislatorCodeFromPhotoUrl(picUrl) {
 function lyExternalId(row) {
   const term = pickField(row, ['term']) || '11';
   const name = pickField(row, ['name']);
-  const party = pickField(row, ['partyGroup', 'party']);
+  const party = pickField(row, ['party', 'partyGroup']);
   const areaName = pickField(row, ['areaName']);
   const onboardDate = pickField(row, ['onboardDate']);
   const legislatorCode = getLegislatorCodeFromPhotoUrl(pickField(row, ['picUrl']));
@@ -235,7 +235,7 @@ function scoreNameMatch(row, person) {
   let score = 50;
   const reasons = ['normalized name matched'];
   const rowGender = normalizeGender(pickField(row, ['sex']));
-  const rowParty = pickField(row, ['partyGroup', 'party']);
+  const rowParty = pickField(row, ['party', 'partyGroup']);
   const rowArea = pickField(row, ['areaName']);
 
   if (rowGender !== 'unknown' && person.gender === rowGender) {

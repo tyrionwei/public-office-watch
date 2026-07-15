@@ -75,7 +75,7 @@ function restUrl(pathname) {
   return new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/${pathname}`);
 }
 
-async function fetchRows(viewName, select, options) {
+async function fetchRows(viewName, select, options, order, params = {}) {
   const pageSize = 1000;
   const rows = [];
 
@@ -84,6 +84,10 @@ async function fetchRows(viewName, select, options) {
     const pageEnd = Math.min(pageStart + pageSize - 1, options.limit - 1);
     const url = restUrl(viewName);
     url.searchParams.set('select', select);
+    url.searchParams.set('order', order);
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
 
     const response = await fetch(url, {
       headers: {
@@ -236,15 +240,18 @@ function summarizeMissingFields(people, claims, options) {
   };
 }
 
-function summarizeExternalIds(people, claims, options) {
+function summarizeExternalIds(people, claims, options, canonicalPersonByPersonId) {
   const externalIdsByPerson = new Map();
   const peopleById = new Map(people.map((person) => [person.person_id, person]));
   const peopleByExternalId = new Map();
 
   for (const claim of claims) {
+    const canonicalPersonId = canonicalPersonByPersonId.get(claim.person_id) ?? claim.person_id;
+    if (!peopleById.has(canonicalPersonId)) continue;
+
     for (const externalId of externalIdValuesFor(claim)) {
-      externalIdsByPerson.set(claim.person_id, [...(externalIdsByPerson.get(claim.person_id) ?? []), externalId]);
-      peopleByExternalId.set(externalId, [...(peopleByExternalId.get(externalId) ?? []), claim.person_id]);
+      externalIdsByPerson.set(canonicalPersonId, [...(externalIdsByPerson.get(canonicalPersonId) ?? []), externalId]);
+      peopleByExternalId.set(externalId, [...(peopleByExternalId.get(externalId) ?? []), canonicalPersonId]);
     }
   }
 
@@ -398,19 +405,26 @@ async function main() {
     people,
     candidates,
     claims,
-    rawClaims,
+    externalIdClaims,
+    rawExternalIdClaims,
+    canonicalMapRows,
     duplicateQueue,
     mergeDecisions,
     reviewQueue,
   ] = await Promise.all([
-    fetchRows('public_people', 'person_id,name,alias,gender,party,position,election_year,district,education,experience,updated_at,primary_photo_url', options),
-    fetchRows('public_candidates', 'candidate_id,person_id,person_name,person_party,person_position,race_title,election_name,region_name,party,registration_status', options),
-    fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json,confidence_level,source_name,source_url', options),
-    fetchRows('person_claims', 'id,person_id,claim_type,claim_value,claim_json,confidence_level,review_status,visibility,is_public,source_name,source_url', options),
-    fetchRows('person_duplicate_review_queue', 'duplicate_person_id,duplicate_person_name,canonical_person_id,canonical_person_name,reason,confidence_level,score,evidence_json', options),
-    fetchRows('person_merge_decisions', 'id,duplicate_person_id,canonical_person_id,status,confidence_level,reason,reviewed_at,updated_at', options),
-    fetchRows('person_claim_review_queue', 'claim_id,claim_type,source_name,review_status,visibility', options),
+    fetchRows('public_people', 'person_id,name,alias,gender,party,position,election_year,district,education,experience,updated_at,primary_photo_url', options, 'person_id.asc'),
+    fetchRows('public_candidates', 'candidate_id,person_id,person_name,person_party,person_position,race_title,election_name,region_name,party,registration_status', options, 'candidate_id.asc'),
+    fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json,confidence_level,source_name,source_url', options, 'claim_id.asc'),
+    fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json,confidence_level,source_name,source_url', options, 'claim_id.asc', { claim_type: 'eq.external_id' }),
+    fetchRows('person_claims', 'id,person_id,claim_type,claim_value,claim_json,confidence_level,review_status,visibility,is_public,source_name,source_url', options, 'id.asc', { claim_type: 'eq.external_id' }),
+    fetchRows('person_canonical_map', 'person_id,canonical_person_id', options, 'person_id.asc'),
+    fetchRows('person_duplicate_review_queue', 'duplicate_person_id,duplicate_person_name,canonical_person_id,canonical_person_name,reason,confidence_level,score,evidence_json', options, 'duplicate_person_id.asc,canonical_person_id.asc'),
+    fetchRows('person_merge_decisions', 'id,duplicate_person_id,canonical_person_id,status,confidence_level,reason,reviewed_at,updated_at', options, 'id.asc'),
+    fetchRows('person_claim_review_queue', 'claim_id,claim_type,source_name,review_status,visibility', options, 'claim_id.asc'),
   ]);
+  const canonicalPersonByPersonId = new Map(
+    canonicalMapRows.map((row) => [row.person_id, row.canonical_person_id]),
+  );
   const mergeDecisionCounts = Object.fromEntries(
     Array.from(groupBy(mergeDecisions, (decision) => decision.status).entries()).map(([status, records]) => [status, records.length]),
   );
@@ -431,7 +445,12 @@ async function main() {
       reviewQueue: reviewQueue.length,
     },
     missingFields: summarizeMissingFields(people, claims, options),
-    externalIds: externalIdSummaryFromMissingReport(people, options) ?? summarizeExternalIds(people, [...claims, ...publicExternalIdClaimsFromRawClaims(rawClaims)], options),
+    externalIds: externalIdSummaryFromMissingReport(people, options) ?? summarizeExternalIds(
+      people,
+      [...externalIdClaims, ...publicExternalIdClaimsFromRawClaims(rawExternalIdClaims)],
+      options,
+      canonicalPersonByPersonId,
+    ),
     duplicateNames: summarizeDuplicateNames(people, options),
     duplicateQueue: {
       byConfidenceLevel: duplicateQueueCounts,

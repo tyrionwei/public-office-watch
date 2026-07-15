@@ -383,6 +383,34 @@ function compactRaceTitle(label, currentSection, metadata, qualifier) {
   return shouldKeepQualifier && title && !title.includes(qualifier) ? `${title}（${qualifier}）` : title;
 }
 
+function fullRaceTitle(pageTitle, compactTitle, metadata) {
+  if (!compactTitle) return compactTitle;
+
+  if (metadata.electionType === 'village_chief' && pageTitle.startsWith(metadata.name)) {
+    const area = pageTitle.slice(metadata.name.length).replace(/投票結果$/, '');
+    if (!area) return compactTitle;
+    const office = compactTitle.endsWith('村')
+      ? '村長選舉'
+      : compactTitle.endsWith('里') ? '里長選舉' : '村里長選舉';
+    return `${area}${compactTitle}${office}`;
+  }
+
+  const electionTitle = metadata.name.replace(/^\d{4}年/, '');
+  if (metadata.electionType === 'township_representative') {
+    const office = electionTitle.match(/(鄉民代表|鎮民代表|市民代表|區民代表)選舉$/)?.[1];
+    if (!office) return compactTitle;
+    const area = electionTitle.replace(/(鄉民代表|鎮民代表|市民代表|區民代表)選舉$/, '');
+    const localArea = area.match(/([^縣市]+[鄉鎮市區])$/)?.[1] ?? '';
+    const district = localArea && compactTitle.startsWith(localArea)
+      ? compactTitle.slice(localArea.length)
+      : compactTitle;
+    return `${area}${district}${office}選舉`;
+  }
+
+  if (metadata.electionType === 'local_chief') return electionTitle;
+  return compactTitle;
+}
+
 function shouldParseVoteDetailTable(pageTitle, metadata, currentSection, qualifier) {
   if (metadata.electionType === 'legislator' && qualifier && qualifier !== '區域' && currentSection !== '全國') return false;
   if (/^\d{4}年立法委員選舉投票結果$/.test(pageTitle)) return true;
@@ -464,7 +492,11 @@ function parseElectionPage(page) {
     if (headingMatch) {
       const level = headingMatch[1].length;
       const heading = cleanValue(headingMatch[2]);
-      if (level === 2) inVoteDetailSection = heading.includes('投票明細');
+      if (level === 2) {
+        inVoteDetailSection = heading.includes('投票明細');
+        currentRace = null;
+        currentTableHeaders = [];
+      }
       if (level >= 3) currentSection = heading;
       continue;
     }
@@ -474,9 +506,10 @@ function parseElectionPage(page) {
     if (line.includes('!colspan') && line.includes('投票結果')) {
       const link = parseLinkTitle(line);
       const qualifier = line.match(/（([^）]+)）/)?.[1] ?? null;
-      const raceTitle = compactRaceTitle(link?.label ?? page.title, currentSection, metadata, qualifier);
+      const compactTitle = compactRaceTitle(link?.label ?? page.title, currentSection, metadata, qualifier);
+      const raceTitle = fullRaceTitle(page.title, compactTitle, metadata);
       const regionExternalId = `votetw-region-${slugFor(raceTitle)}`;
-      const raceExternalId = `votetw-race-${metadata.year}-${slugFor(`${link?.target ?? raceTitle}|${raceTitle}|${qualifier ?? ''}`)}`;
+      const raceExternalId = `votetw-race-${metadata.year}-${slugFor(`${link?.target ?? compactTitle}|${compactTitle}|${qualifier ?? ''}`)}`;
       currentRace = {
         externalId: raceExternalId,
         title: raceTitle,

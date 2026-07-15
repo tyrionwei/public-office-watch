@@ -710,20 +710,6 @@ function matchProfileToTarget(target, profiles) {
     }
     return { status: 'skipped', reason: 'no same-name profile on VoteTW page' };
   }
-  if (target.birthDate) {
-    const birthDateMatches = sameNameProfiles.filter((profile) => profile.birthDate === target.birthDate);
-    if (birthDateMatches.length === 1) return { status: 'matched', matchedBy: 'birth_date', confidenceLevel: 'A', profile: birthDateMatches[0] };
-    return { status: 'skipped', reason: birthDateMatches.length > 1 ? 'multiple same-name profiles with same birthday' : 'target birthday does not match VoteTW profiles' };
-  }
-  if (sameNameProfiles.length === 1) {
-    return {
-      status: 'matched',
-      matchedBy: sameNameProfiles[0].birthDate ? 'unique_page_profile_with_birth_date' : 'unique_page_profile',
-      confidenceLevel: sameNameProfiles[0].birthDate ? 'A' : 'B',
-      profile: sameNameProfiles[0],
-    };
-  }
-
   const electionContextMatch = matchProfileByElectionContext(target, sameNameProfiles);
   if (electionContextMatch) {
     return {
@@ -735,20 +721,29 @@ function matchProfileToTarget(target, profiles) {
     };
   }
 
-  const birthDatedProfiles = sameNameProfiles.filter((profile) => profile.birthDate);
-  const onlyEmptyIntroProfiles = sameNameProfiles
-    .filter((profile) => !profile.birthDate)
-    .every((profile) => profile.electionRecords.length === 0 && profile.experiences.length === 0 && profile.legalRecords.length === 0);
-  if (birthDatedProfiles.length === 1 && onlyEmptyIntroProfiles) {
+  const electionContextWithoutYearMatch = matchProfileByElectionContextWithoutYear(target, sameNameProfiles);
+  if (electionContextWithoutYearMatch) {
     return {
       status: 'matched',
-      matchedBy: 'unique_birthdated_profile_with_empty_intro_duplicates',
+      matchedBy: 'unique_election_context_without_year',
       confidenceLevel: 'B',
-      profile: birthDatedProfiles[0],
+      profile: electionContextWithoutYearMatch.profile,
+      electionContextMatch: electionContextWithoutYearMatch.electionContextMatch,
     };
   }
 
-  return { status: 'skipped', reason: 'multiple same-name profiles on one VoteTW page and target has no birthday' };
+  if (target.birthDate) {
+    const birthDateMatches = sameNameProfiles.filter((profile) => profile.birthDate === target.birthDate);
+    if (birthDateMatches.length === 1) return { status: 'matched', matchedBy: 'birth_date', confidenceLevel: 'A', profile: birthDateMatches[0] };
+    return { status: 'skipped', reason: birthDateMatches.length > 1 ? 'multiple same-name profiles with same birthday' : 'target birthday does not match VoteTW profiles' };
+  }
+
+  return {
+    status: 'skipped',
+    reason: sameNameProfiles.length === 1
+      ? 'unique same-name profile lacks matching election context or target birthday'
+      : 'multiple same-name profiles on one VoteTW page and target has no birthday',
+  };
 }
 
 function claimRecord({ target, page, profile, claimType, claimValue, claimJson, confidenceLevel, publicGate, reviewStatus = 'pending', visibility = 'review_only' }) {

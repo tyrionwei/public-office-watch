@@ -659,7 +659,7 @@ function mergeBySourcePersonKey(collections) {
 
 const plannedLocalElection = {
   externalId: 'planned-2026-local-public-officials',
-  name: '115年地方公職人員選舉',
+  name: '2026年地方公職人員選舉',
   year: 2026,
   electionType: 'local',
   votingDate: '2026-11-28',
@@ -1086,7 +1086,7 @@ async function enrichSeedWithLiveCecCandidates(seed, args) {
     const elections = [
       {
         externalId: 'cec-2022-local-public-officials',
-        name: '111年地方公職人員選舉',
+        name: '2022年地方公職人員選舉',
         year: 2022,
         electionType: 'local',
         votingDate: '2022-11-26',
@@ -1547,7 +1547,7 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
       .map((row) => {
         const term = pickField(row, ['term']) || '11';
         const name = pickField(row, ['name']);
-        const party = pickField(row, ['partyGroup', 'party']);
+        const party = pickField(row, ['party', 'partyGroup']);
         const areaName = pickField(row, ['areaName']);
         const onboardDate = pickField(row, ['onboardDate']);
         const legislatorCode = getLegislatorCodeFromPhotoUrl(pickField(row, ['picUrl']));
@@ -3150,11 +3150,14 @@ function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt, args =
         return null;
       }
 
+      const nameMatches = claim.normalizedName
+        ? peopleByNormalizedName.get(claim.normalizedName) ?? []
+        : [];
       const candidates = [
         claim.personId ? peopleById.get(claim.personId) : null,
         claim.personExternalId ? peopleByExternalId.get(claim.personExternalId) : null,
-        claim.normalizedName && claim.claimJson?.identityMatch?.status === 'matched'
-          ? (peopleByNormalizedName.get(claim.normalizedName) ?? [])[0]
+        claim.claimJson?.identityMatch?.status === 'matched' && nameMatches.length === 1
+          ? nameMatches[0]
           : null,
       ].filter(Boolean);
       const person = candidates[0] ?? null;

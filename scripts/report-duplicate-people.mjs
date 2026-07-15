@@ -90,7 +90,7 @@ function supabaseUrl(pathname) {
   return new URL(`${localSupabaseUrl.replace(/\/$/, '')}/rest/v1/${pathname}`);
 }
 
-async function fetchRows(viewName, select, options) {
+async function fetchRows(viewName, select, options, order, params = {}) {
   const pageSize = 1000;
   const rows = [];
 
@@ -99,6 +99,10 @@ async function fetchRows(viewName, select, options) {
     const pageEnd = Math.min(pageStart + pageSize - 1, options.limit - 1);
     const url = supabaseUrl(viewName);
     url.searchParams.set('select', select);
+    url.searchParams.set('order', order);
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
 
     const response = await fetch(url, {
       headers: {
@@ -391,10 +395,12 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [people, candidates, claims, mergeDecisions] = await Promise.all([
-    fetchRows('public_people', 'person_id,name,gender,party,position,district,election_year', options),
-    fetchRows('public_candidates', 'person_id,person_name,person_party,person_position,race_title,election_name,region_name,party,registration_status', options),
-    fetchRows('public_person_claims', 'person_id,claim_type,claim_value,claim_json', options),
-    fetchRows('person_merge_decisions', 'duplicate_person_id,canonical_person_id,status', options),
+    fetchRows('public_people', 'person_id,name,gender,party,position,district,election_year', options, 'person_id.asc'),
+    fetchRows('public_candidates', 'candidate_id,person_id,person_name,person_party,person_position,race_title,election_name,region_name,party,registration_status', options, 'candidate_id.asc'),
+    fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json', options, 'claim_id.asc', {
+      claim_type: 'in.(external_id,birth_date)',
+    }),
+    fetchRows('person_merge_decisions', 'id,duplicate_person_id,canonical_person_id,status', options, 'id.asc'),
   ]);
   const report = buildDuplicateReport(people, candidates, claims, mergeDecisions, options);
   const content = `${JSON.stringify(report, null, 2)}\n`;

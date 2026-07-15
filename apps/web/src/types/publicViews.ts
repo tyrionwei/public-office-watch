@@ -192,6 +192,7 @@ export type PublicCandidate = {
   race_title: string;
   election_id: string;
   election_name: string;
+  election_year: number | null;
   region_id: string | null;
   region_name: string | null;
   party: string | null;

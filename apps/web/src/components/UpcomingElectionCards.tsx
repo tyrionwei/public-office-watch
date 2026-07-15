@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import type { Translate } from '../i18n';
+import { compareUpcomingRacesForDisplay } from '../data/upcomingRaceSort';
 import { racePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import { PixelFrame } from './PixelFrame';
@@ -110,73 +111,6 @@ function groupTitle(kind: RaceGroupKind, selectedRegionLabel: string, t: Transla
   return `${selectedRegionLabel} ${getRaceGroupLabel(kind, t).title}`;
 }
 
-function isUnfinishedRace(race: UpcomingElectionCardRace) {
-  return !['completed', 'cancelled'].includes(race.status);
-}
-
-function electionDistrictNumber(race: UpcomingElectionCardRace) {
-  const match = race.title.match(/第\s*(\d+)\s*選舉區/);
-  return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
-}
-
-function raceDateSortValue(race: UpcomingElectionCardRace) {
-  const timestamp = Date.parse(race.date);
-  return Number.isNaN(timestamp) ? Number.MAX_SAFE_INTEGER : timestamp;
-}
-
-function raceTypePriority(race: UpcomingElectionCardRace) {
-  const title = race.title;
-
-  if (race.raceType === 'president' || race.raceType === 'vice_president' || title.includes('總統')) return 10;
-  if (
-    race.raceType === 'municipality_mayor' ||
-    race.raceType === 'county_mayor' ||
-    race.raceType === 'local_chief' ||
-    race.raceType === 'township_mayor' ||
-    title.includes('市長') ||
-    title.includes('縣長') ||
-    title.includes('鄉長') ||
-    title.includes('鎮長')
-  ) return 20;
-  if (
-    race.raceType === 'legislator' ||
-    race.raceType === 'legislative_district' ||
-    race.raceType === 'party_list_legislator' ||
-    title.includes('立法委員') ||
-    title.includes('立委')
-  ) return 30;
-  if (
-    race.raceType === 'city_councilor' ||
-    race.raceType === 'county_councilor' ||
-    race.raceType === 'councilor_district' ||
-    title.includes('議員')
-  ) return 40;
-  if (race.raceType === 'township_representative' || race.raceType === 'township_representative_district' || title.includes('代表')) return 50;
-  if (race.raceType === 'village_chief' || title.includes('里長') || title.includes('村長')) return 60;
-  if (race.raceType === 'referendum' || title.includes('公投')) return 70;
-  if (race.raceType === 'recall' || title.includes('罷免')) return 80;
-  if (race.raceType === 'by_election' || title.includes('補選')) return 90;
-
-  return 100;
-}
-
-function compareRaceOrder(left: UpcomingElectionCardRace, right: UpcomingElectionCardRace) {
-  const statusDiff = Number(isUnfinishedRace(right)) - Number(isUnfinishedRace(left));
-  if (statusDiff !== 0) return statusDiff;
-
-  const dateDiff = raceDateSortValue(left) - raceDateSortValue(right);
-  if (dateDiff !== 0) return dateDiff;
-
-  const priorityDiff = raceTypePriority(left) - raceTypePriority(right);
-  if (priorityDiff !== 0) return priorityDiff;
-
-  const leftDistrictNumber = electionDistrictNumber(left);
-  const rightDistrictNumber = electionDistrictNumber(right);
-  if (leftDistrictNumber !== rightDistrictNumber) return leftDistrictNumber - rightDistrictNumber;
-
-  return left.title.localeCompare(right.title, 'zh-Hant-TW');
-}
-
 function groupRaces(races: UpcomingElectionCardRace[], selectedRegionLabel: string, t: Translate) {
   const groups = new Map<string, UpcomingElectionCardRace[]>();
   const orderedItems: (
@@ -184,7 +118,7 @@ function groupRaces(races: UpcomingElectionCardRace[], selectedRegionLabel: stri
     | { kind: 'group'; id: string; groupKind: RaceGroupKind; title: string; races: UpcomingElectionCardRace[] }
   )[] = [];
 
-  for (const race of races.slice().sort(compareRaceOrder)) {
+  for (const race of races.slice().sort(compareUpcomingRacesForDisplay)) {
     const groupKind = getRaceGroupKind(race);
 
     if (!groupKind) {
@@ -210,7 +144,7 @@ function groupRaces(races: UpcomingElectionCardRace[], selectedRegionLabel: stri
       return item;
     }
 
-    return { ...item, races: item.races.slice().sort(compareRaceOrder) };
+    return { ...item, races: item.races.slice().sort(compareUpcomingRacesForDisplay) };
   });
 }
 

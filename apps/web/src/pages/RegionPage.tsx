@@ -1,12 +1,18 @@
 import { Link, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
-import { HudStatCard } from '../components/HudStatCard';
-import { MockDataBadge } from '../components/MockDataBadge';
-import { PageNotice } from '../components/PageNotice';
-import { PixelFrame } from '../components/PixelFrame';
+import { LocalOfficeSummaryPanel } from '../components/LocalOfficeSummaryPanel';
 import { SectionPanel } from '../components/SectionPanel';
+import { getRaceStatusLabel } from '../data/electionLabels';
+import { getRegionHighlightBackground } from '../data/regionHighlights';
+import { compareUpcomingRacesForDisplay } from '../data/upcomingRaceSort';
 import { publicDataProvider } from '../lib/publicData';
-import { electionPath, homePath, regionPath } from '../routes/routePaths';
+import { electionsPath, homePath, peoplePath, racePath, regionPath } from '../routes/routePaths';
+
+function formatRegionLevel(level: string) {
+  if (level === 'county_city') return '縣市';
+  if (level === 'district') return '鄉鎮市區';
+  return '全國';
+}
 
 export function RegionPage() {
   const { regionId } = useParams();
@@ -16,108 +22,132 @@ export function RegionPage() {
   const regionCard = publicDataProvider.getRegionCardByStageRegionId(safeRegionId);
   const childRegions = regionNode ? publicDataProvider.getChildStageRegions(regionNode.id) : [];
   const relatedRaces = publicDataProvider.getRelatedRacesByRegionId(safeRegionId);
+  const sortedRelatedRaces = relatedRaces.slice().sort(compareUpcomingRacesForDisplay);
+  const highlight = getRegionHighlightBackground(
+    regionNode?.id,
+    regionNode?.publicRegionId,
+    regionNode?.stageLabel,
+  );
+  const publicRegionId = regionNode?.publicRegionId ?? safeRegionId;
 
   return (
     <AppShell>
-      <PixelFrame
-        title="地區資料"
-        action={
-          <Link to={homePath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">
-            返回首頁
-          </Link>
-        }
-      >
-        {regionNode && regionSummary ? (
-          <div className="space-y-6">
-            <section className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(11,19,38,0.94),rgba(15,24,46,0.88))] p-5">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="space-y-3">
-                  <MockDataBadge />
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-slate-500">地區概覽</p>
-                    <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">{regionSummary.label}</h2>
-                    <p className="mt-2 text-sm text-slate-400">
-                      {regionCard?.tone ?? '尚未接入正式資料，僅展示 placeholder 區域資料。'}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-3 text-sm text-slate-300 lg:w-[280px]">
-                  <p className="text-xs uppercase tracking-[0.22em] text-slate-500">資料邊界</p>
-                  <p className="mt-2">此為 UI 測試用區域，不代表正式行政區或選舉選區。</p>
-                </div>
+      {regionNode && regionSummary ? (
+        <div className="space-y-5">
+          <header
+            className="pixel-corners relative min-h-[330px] overflow-hidden border border-line/80 bg-panel"
+            style={highlight ? {
+              backgroundImage: `linear-gradient(90deg, rgba(5, 10, 22, 0.96) 0%, rgba(5, 10, 22, 0.78) 42%, rgba(5, 10, 22, 0.2) 78%), url(${highlight.image})`,
+              backgroundPosition: `center, ${highlight.focalPoint}`,
+              backgroundSize: 'cover',
+            } : undefined}
+          >
+            <div className="relative flex min-h-[330px] max-w-3xl flex-col justify-between p-5 sm:p-7">
+              <div className="flex items-center gap-3 text-xs text-slate-400">
+                <Link to={homePath()} className="text-accent hover:text-white">縣市導覽</Link>
+                <span aria-hidden="true">/</span>
+                <span>{regionSummary.label}</span>
               </div>
 
-              <dl className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                <HudStatCard label="地區層級" value={regionNode.level} />
-                <HudStatCard label="最近選舉" value={regionSummary.nearestElectionName} />
-                <HudStatCard label="最近投票日" value={<span className="font-display text-xl text-signal">{regionSummary.nearestElectionDate}</span>} />
-                <HudStatCard label="相關選舉數量" value={`${regionSummary.upcomingRaceCount} 項公開選舉項目`} />
-              </dl>
-            </section>
+              <div className="py-8">
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">{formatRegionLevel(regionNode.level)}重點</p>
+                <h1 className="mt-3 font-display text-4xl text-white sm:text-5xl">{regionSummary.label}</h1>
+                <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300">
+                  {highlight?.feature ?? regionCard?.tone ?? regionSummary.sourceNote}
+                </p>
+              </div>
 
-            <SectionPanel title="地區選舉摘要" eyebrow="相關選舉項目">
-              {relatedRaces.length > 0 ? (
-                <div className="grid gap-4 lg:grid-cols-2">
-                  {relatedRaces.map((race) => (
-                    <article key={race.id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
-                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">選舉資訊</p>
-                      <h4 className="mt-2 font-display text-lg text-white">{race.title}</h4>
-                      <p className="mt-1 text-sm text-slate-400">{race.region} · {race.date}</p>
-                      <div className="mt-4 flex items-center justify-between gap-3 text-sm text-slate-300">
-                        <span>{race.partyLabel}</span>
-                        <Link
-                          to={electionPath(race.electionId)}
-                          className="rounded-sm border border-accent/60 bg-accent/10 px-3 py-2 font-display text-xs uppercase tracking-[0.22em] text-accent"
-                        >
-                          查看選舉資訊
-                        </Link>
-                      </div>
-                    </article>
-                  ))}
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="border-l-2 border-signal bg-bg/60 px-3 py-2 backdrop-blur-sm">
+                  <p className="text-[11px] text-slate-500">最近選舉</p>
+                  <p className="mt-1 line-clamp-2 text-sm text-white">{regionSummary.nearestElectionName}</p>
                 </div>
-              ) : (
-                <p className="text-sm text-slate-400">目前沒有相關選舉資料。</p>
-              )}
-            </SectionPanel>
+                <div className="border-l-2 border-accent bg-bg/60 px-3 py-2 backdrop-blur-sm">
+                  <p className="text-[11px] text-slate-500">投票日</p>
+                  <p className="mt-1 font-display text-sm text-accent">{regionSummary.nearestElectionDate}</p>
+                </div>
+                <div className="border-l-2 border-cyan-300 bg-bg/60 px-3 py-2 backdrop-blur-sm">
+                  <p className="text-[11px] text-slate-500">公開選舉項目</p>
+                  <p className="mt-1 font-display text-sm text-white">{regionSummary.upcomingRaceCount} 項</p>
+                </div>
+              </div>
+            </div>
+          </header>
 
-            <PageNotice
-              title="地區資料邊界"
-              bullets={[
-                '目前使用公開檢視格式的測試資料。',
-                '尚未接入正式公開資料檢視。',
-                '不顯示未審核資料。',
-                '不代表正式行政區或選舉選區。',
-              ]}
-            />
+          <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(420px,0.8fr)]">
+            <main className="space-y-5">
+              <SectionPanel
+                title="相關選舉"
+                eyebrow="選舉與選區"
+                action={<Link to={electionsPath()} className="text-xs text-accent hover:text-white">查看全部選舉</Link>}
+              >
+                {relatedRaces.length > 0 ? (
+                  <div className="divide-y divide-line/60 border-y border-line/60">
+                    {sortedRelatedRaces.map((race) => (
+                      <Link
+                        key={race.id}
+                        to={racePath(race.id)}
+                        className="grid gap-3 px-2 py-4 transition hover:bg-accent/5 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent/35 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
+                      >
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                            <span>{race.region}</span>
+                            <span aria-hidden="true">/</span>
+                            <span>{race.date}</span>
+                          </div>
+                          <h2 className="mt-2 font-display text-lg text-white">{race.title}</h2>
+                          <p className="mt-1 text-xs text-slate-400">{getRaceStatusLabel(race.status)}</p>
+                        </div>
+                        <span className="font-display text-xs text-accent">查看候選人 →</span>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="border-y border-line/60 py-6 text-sm text-slate-400">
+                    <p>目前沒有已公開的近期選舉項目。</p>
+                    <Link to={electionsPath()} className="mt-3 inline-block text-accent hover:text-white">前往歷史選舉總覽</Link>
+                  </div>
+                )}
+              </SectionPanel>
 
-            <SectionPanel title="下層地區" eyebrow="下一層行政區">
               {childRegions.length > 0 ? (
-                <div className="grid gap-3 md:grid-cols-2">
-                  {childRegions.map((child) => (
-                    <Link
-                      key={child.id}
-                      to={regionPath(child.id)}
-                      className="pixel-corners border border-line/70 bg-bg/35 p-4 transition hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/35"
-                    >
-                      <p className="font-display text-sm uppercase tracking-[0.18em] text-white">{child.label}</p>
-                      <p className="mt-2 text-xs text-slate-400">{child.note}</p>
+                <SectionPanel
+                  title="行政區導覽"
+                  eyebrow="下一層地區"
+                  action={
+                    <Link to={peoplePath({ region: publicRegionId })} className="text-xs text-accent hover:text-white">
+                      查看此地區人物
                     </Link>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-slate-400">尚無下一層地區資料。</p>
-              )}
-            </SectionPanel>
+                  }
+                >
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {childRegions.map((child) => (
+                      <Link
+                        key={child.id}
+                        to={regionPath(child.id)}
+                        className="border border-line/70 bg-bg/35 px-4 py-3 transition hover:border-accent/55 hover:bg-accent/5 focus:outline-none focus:ring-2 focus:ring-accent/35"
+                      >
+                        <p className="font-display text-sm text-white">{child.label}</p>
+                        <p className="mt-1 line-clamp-2 text-xs text-slate-500">{child.note}</p>
+                      </Link>
+                    ))}
+                  </div>
+                </SectionPanel>
+              ) : null}
+            </main>
+
+            <aside className="min-w-0">
+              <LocalOfficeSummaryPanel regionId={safeRegionId} />
+            </aside>
           </div>
-        ) : (
-          <div className="space-y-3 text-sm text-slate-300">
-            <h2 className="font-display text-2xl text-white">找不到區域資料</h2>
-            <p>此頁目前只提供 UI 測試資料，尚未接入正式資料。</p>
-            <p>你可以返回首頁，從縣市導覽重新選擇區域。</p>
-          </div>
-        )}
-      </PixelFrame>
+        </div>
+      ) : (
+        <section className="border border-line/70 bg-panel p-6 text-sm text-slate-300">
+          <h1 className="font-display text-2xl text-white">找不到縣市資料</h1>
+          <p className="mt-3">此地區可能尚未公開，或網址已經失效。</p>
+          <Link to={homePath()} className="mt-5 inline-block text-accent hover:text-white">返回縣市導覽</Link>
+        </section>
+      )}
     </AppShell>
   );
 }

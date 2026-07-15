@@ -38,11 +38,11 @@ function getStatusLabel(status: string, t: Translate) {
 type RaceGroupKind = 'village' | 'councilor' | 'legislator';
 type RaceCategory = 'presidential' | 'chief' | 'representative' | 'basic';
 
-const raceCategoryStyles: Record<RaceCategory, { color: string; label: string }> = {
-  presidential: { color: '#f472b6', label: '總統選舉' },
-  chief: { color: '#f4d35e', label: '首長選舉' },
-  representative: { color: '#7dd3fc', label: '民意代表選舉' },
-  basic: { color: '#86efac', label: '基層公職' },
+const raceCategoryStyles: Record<RaceCategory, { color: string }> = {
+  presidential: { color: '#f472b6' },
+  chief: { color: '#f4d35e' },
+  representative: { color: '#7dd3fc' },
+  basic: { color: '#86efac' },
 };
 
 function getRaceGroupLabel(kind: RaceGroupKind, t: Translate) {

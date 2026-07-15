@@ -1,4 +1,5 @@
 import { taiwanCountyMapBounds, taiwanCountyPaths } from '../data/generated/taiwanCountyMap';
+import { useI18n } from '../i18n';
 import type { StageRegionNode } from '../types/stageMap';
 
 type TaiwanCountyMapProps = {
@@ -127,6 +128,7 @@ const largestOffshoreDisplayPathByCode: Record<string, string> = Object.fromEntr
 );
 
 export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: TaiwanCountyMapProps) {
+  const { t } = useI18n();
   const offshoreCodes = new Set(taiwanCountyMapBounds.offshoreCountyCodes);
   const mainIslandCounties = taiwanCountyPaths.filter((county) => !offshoreCodes.has(county.code));
   const offshoreCounties = taiwanCountyPaths.filter((county) => offshoreCodes.has(county.code));
@@ -139,10 +141,10 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
     <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(4,23,52,0.96),rgba(4,16,38,0.94)_58%,rgba(3,10,24,0.96))] p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
-          <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">縣市地圖</p>
+          <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">{t('map.title')}</p>
         </div>
         <span className="rounded-sm border border-line/70 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-          本島19縣市 + 離島3縣市
+          {t('map.summary')}
         </span>
       </div>
 
@@ -159,7 +161,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                   onClick={() => onSelectRegion(regionId)}
                   aria-pressed={selected}
                   aria-current={selected ? 'true' : undefined}
-                  aria-label={`選取 ${county.name}`}
+                  aria-label={t('map.selectCounty', { name: county.name })}
                   className={[
                     'pixel-corners relative overflow-hidden border bg-slate-950/12 p-1.5 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
                     selected
@@ -198,9 +200,9 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
               preserveAspectRatio="xMidYMid meet"
               className="relative z-20 block h-[500px] w-full max-w-full drop-shadow-[0_18px_18px_rgba(0,0,0,0.28)] xl:h-full"
               role="img"
-              aria-label="台灣縣市地圖輪廓，選取不同縣市作為 stage region"
+              aria-label={t('map.outlineAria')}
             >
-              <title>台灣縣市地圖輪廓</title>
+              <title>{t('map.outlineTitle')}</title>
               <g
                 transform={`translate(${mainIslandDisplayCenterX} 0) scale(${mainIslandTopDownXScale} 1) translate(-${mainIslandDisplayCenterX} 0)`}
               >
@@ -213,7 +215,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                       d={county.displayPath}
                       role="button"
                       tabIndex={0}
-                      aria-label={`選取 ${county.name}`}
+                      aria-label={t('map.selectCounty', { name: county.name })}
                       aria-pressed={selected}
                       aria-current={selected ? 'true' : undefined}
                       onClick={() => onSelectRegion(regionId)}

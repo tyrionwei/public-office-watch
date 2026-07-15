@@ -1,6 +1,22 @@
 import type { Translate, TranslationKey } from '../i18n';
 import type { ElectionEvent } from './electionEvents';
 
+const electionTypeKeys: Record<string, TranslationKey> = {
+  presidential: 'election.type.presidential',
+  president: 'election.type.presidential',
+  legislative: 'election.type.legislative',
+  legislator: 'election.type.legislative',
+  local: 'election.type.local',
+  local_chief: 'election.type.localChief',
+  councilor: 'election.type.councilor',
+  township_representative: 'election.type.townshipRepresentative',
+  village_chief: 'election.type.villageChief',
+  recall: 'election.type.recall',
+  referendum: 'election.type.referendum',
+  by_election: 'election.type.byElection',
+  other: 'election.type.other',
+};
+
 const electionStatusKeys: Record<string, TranslationKey> = {
   draft: 'election.status.draft',
   announced: 'election.status.announced',
@@ -73,6 +89,10 @@ const raceCategoryKeys: Record<string, TranslationKey> = {
 function translateMappedValue(value: string, keys: Record<string, TranslationKey>, t: Translate) {
   const key = keys[value];
   return key ? t(key) : value;
+}
+
+export function translateElectionType(type: string, t: Translate) {
+  return translateMappedValue(type, electionTypeKeys, t);
 }
 
 export function translateElectionStatus(status: string, t: Translate) {

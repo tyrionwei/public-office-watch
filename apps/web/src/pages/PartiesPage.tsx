@@ -3,12 +3,13 @@ import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
+import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { partyPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat('zh-TW', {
+function formatCurrency(value: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: 'TWD',
     maximumFractionDigits: 0,
@@ -16,6 +17,7 @@ function formatCurrency(value: number) {
 }
 
 export function PartiesPage() {
+  const { language, t } = useI18n();
   const parties = publicDataProvider.getParties();
   const summaries = parties
     .map((party) => {
@@ -39,30 +41,29 @@ export function PartiesPage() {
   const trackedPartyIds = new Set(summaries.map((item) => item.party.party_id));
   const sortedParties = parties
     .slice()
-    .sort((left, right) => left.name.localeCompare(right.name, 'zh-TW'));
+    .sort((left, right) => left.name.localeCompare(right.name, language));
   const untrackedPartyCount = Math.max(0, sortedParties.length - summaries.length);
+  const currency = (value: number) => formatCurrency(value, language);
 
   return (
     <AppShell>
       <div className="space-y-3">
-        <PixelFrame title="Parties & Contributions">
+        <PixelFrame title={t('parties.frameTitle')}>
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-accent">public contribution summaries</p>
-              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">政黨與政治獻金</h2>
-              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-                目前只呈現政黨層級的政治獻金摘要與已審核公司關係摘要，不公開個人捐贈明細。
-              </p>
+              <p className="text-xs uppercase tracking-[0.22em] text-accent">{t('parties.eyebrow')}</p>
+              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">{t('parties.heading')}</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">{t('parties.description')}</p>
             </div>
             <dl className="grid gap-3">
-              <HudStatCard label="tracked parties" value={<span className="font-display text-2xl text-white">{summaries.length}</span>} />
-              <HudStatCard label="income total" value={<span className="font-display text-2xl text-signal">{formatCurrency(totalIncome)}</span>} />
-              <HudStatCard label="company summary total" value={<span className="font-display text-2xl text-white">{companyRelationCount}</span>} />
+              <HudStatCard label={t('parties.trackedParties')} value={<span className="font-display text-2xl text-white">{summaries.length}</span>} />
+              <HudStatCard label={t('parties.incomeTotal')} value={<span className="font-display text-2xl text-signal">{currency(totalIncome)}</span>} />
+              <HudStatCard label={t('parties.companySummaryTotal')} value={<span className="font-display text-2xl text-white">{companyRelationCount}</span>} />
             </dl>
           </div>
         </PixelFrame>
 
-        <SectionPanel title="已接入政黨列表" eyebrow="contribution summaries">
+        <SectionPanel title={t('parties.trackedTitle')} eyebrow={t('parties.trackedEyebrow')}>
           <div className="grid gap-3 lg:grid-cols-3">
             {summaries.map(({ party, latestFinance, companySummaries }) => {
               const theme = partyTheme[party.theme_key];
@@ -79,7 +80,7 @@ export function PartiesPage() {
                   />
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{party.short_name ?? 'party'}</p>
+                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{party.short_name ?? t('parties.partyFallback')}</p>
                       <h3 className="mt-2 font-display text-xl text-white group-hover:text-accent">{party.name}</h3>
                     </div>
                     <span
@@ -92,24 +93,24 @@ export function PartiesPage() {
 
                   <dl className="mt-5 grid gap-2 text-sm text-slate-300">
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-500">負責人 / 主席</dt>
-                      <dd className="text-right">{party.chairperson_name ?? '待官方名冊同步'}</dd>
+                      <dt className="text-slate-500">{t('parties.chairperson')}</dt>
+                      <dd className="text-right">{party.chairperson_name ?? t('parties.registryPending')}</dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-500">成立日期</dt>
-                      <dd className="text-right">{party.founded_date_text ?? '待官方名冊同步'}</dd>
+                      <dt className="text-slate-500">{t('parties.founded')}</dt>
+                      <dd className="text-right">{party.founded_date_text ?? t('parties.registryPending')}</dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-500">年度收入</dt>
-                      <dd>{latestFinance ? formatCurrency(latestFinance.income_total) : '待整理'}</dd>
+                      <dt className="text-slate-500">{t('parties.annualIncome')}</dt>
+                      <dd>{latestFinance ? currency(latestFinance.income_total) : t('parties.awaitingData')}</dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-500">營利事業捐贈</dt>
-                      <dd>{latestFinance ? formatCurrency(latestFinance.business_donation_total) : '待整理'}</dd>
+                      <dt className="text-slate-500">{t('parties.businessDonations')}</dt>
+                      <dd>{latestFinance ? currency(latestFinance.business_donation_total) : t('parties.awaitingData')}</dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-500">公司摘要</dt>
-                      <dd>{companySummaries.length} 筆</dd>
+                      <dt className="text-slate-500">{t('parties.companySummaries')}</dt>
+                      <dd>{t('parties.recordCount', { count: companySummaries.length })}</dd>
                     </div>
                   </dl>
                 </Link>
@@ -118,15 +119,15 @@ export function PartiesPage() {
           </div>
         </SectionPanel>
 
-        <SectionPanel title="完整政黨列表" eyebrow="party registry">
+        <SectionPanel title={t('parties.registryTitle')} eyebrow={t('parties.registryEyebrow')}>
           <details className="group pixel-corners border border-line/70 bg-bg/35">
             <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm text-white marker:hidden">
-              <span>全部政黨登記資料</span>
+              <span>{t('parties.registryAll')}</span>
               <span className="text-xs uppercase tracking-[0.18em] text-slate-500 group-open:hidden">
-                共 {sortedParties.length} 個，另有 {untrackedPartyCount} 個尚未接入摘要 · 展開
+                {t('parties.registrySummary', { total: sortedParties.length, untracked: untrackedPartyCount })}
               </span>
               <span className="hidden text-xs uppercase tracking-[0.18em] text-slate-500 group-open:inline">
-                收合完整列表
+                {t('parties.registryCollapse')}
               </span>
             </summary>
             <div className="border-t border-line/60 p-3">
@@ -144,13 +145,13 @@ export function PartiesPage() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <p className="truncate text-sm text-white">{party.name}</p>
-                          <p className="mt-1 truncate text-xs text-slate-500">{party.short_name ?? party.registry_no ?? '政黨登記資料'}</p>
+                          <p className="mt-1 truncate text-xs text-slate-500">{party.short_name ?? party.registry_no ?? t('parties.registryRecord')}</p>
                         </div>
                         <span
                           className="shrink-0 rounded-sm border px-2 py-1 text-[11px]"
                           style={{ borderColor: theme.accent, color: isTracked ? theme.text : '#94a3b8' }}
                         >
-                          {isTracked ? '已接入' : theme.label}
+                          {isTracked ? t('parties.tracked') : theme.label}
                         </span>
                       </div>
                     </Link>
@@ -161,14 +162,14 @@ export function PartiesPage() {
           </details>
         </SectionPanel>
 
-        <SectionPanel title="資料限制" eyebrow="political contribution boundary">
+        <SectionPanel title={t('parties.limitsTitle')} eyebrow={t('parties.limitsEyebrow')}>
           <div className="grid gap-3 text-sm leading-6 text-slate-300 md:grid-cols-3">
-            <p className="pixel-corners border border-line/70 bg-bg/35 p-4">只顯示政黨層級摘要，不公開個人捐贈明細。</p>
-            <p className="pixel-corners border border-line/70 bg-bg/35 p-4">公司關係摘要需通過人工審核與來源追溯。</p>
-            <p className="pixel-corners border border-line/70 bg-bg/35 p-4">g0v/Ronny 資料站作為呈現參考，正式接入前需確認授權。</p>
+            {(['parties.limitSummary', 'parties.limitReview', 'parties.limitLicense'] as const).map((key) => (
+              <p key={key} className="pixel-corners border border-line/70 bg-bg/35 p-4">{t(key)}</p>
+            ))}
           </div>
           <p className="mt-3 text-xs text-slate-500">
-            營利事業捐贈合計：{formatCurrency(totalBusinessDonations)}
+            {t('parties.businessDonationTotal', { amount: currency(totalBusinessDonations) })}
           </p>
         </SectionPanel>
       </div>

@@ -4,73 +4,65 @@ import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { pickDefaultCandidateSprite } from '../data/defaultCharacterAssets';
+import { translateRegistrationStatus } from '../data/electionI18n';
+import { useI18n } from '../i18n';
+import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { getCandidateElectionLabel, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonClaim, PublicPersonPartyAffiliation, PublicPersonTimelineItem } from '../types/publicViews';
 
-const candidateStatusLabels: Record<PublicCandidate['registration_status'], string> = {
-  [`${'pen'}${'ding'}`]: '待公告',
-  registered: '已登記',
-  qualified: '資格符合',
-  disqualified: '資格不符',
-  withdrawn: '已退選',
-  elected: '當選',
-  not_elected: '未當選',
-  unknown: '未知',
+const genderLabels: Record<'male' | 'female' | 'unknown', TranslationKey> = {
+  male: 'person.gender.male',
+  female: 'person.gender.female',
+  unknown: 'person.gender.unknown',
 };
 
-const genderLabels = {
-  male: '男',
-  female: '女',
-  unknown: '未知',
+const timelineCategoryLabels: Record<PublicPersonTimelineItem['category'], TranslationKey> = {
+  office: 'person.claim.office',
+  candidacy: 'person.claim.candidacy',
+  party: 'person.claim.party',
+  experience: 'person.claim.experience',
 };
 
-const timelineCategoryLabels: Record<PublicPersonTimelineItem['category'], string> = {
-  office: '公職',
-  candidacy: '參選',
-  party: '黨籍',
-  experience: '經歷',
+const timelineStatusLabels: Record<PublicPersonTimelineItem['status'], TranslationKey> = {
+  current: 'person.timeline.status.current',
+  past: 'person.timeline.status.past',
+  candidate: 'person.timeline.status.candidate',
+  unknown: 'person.timeline.status.record',
 };
 
-const timelineStatusLabels: Record<PublicPersonTimelineItem['status'], string> = {
-  current: '現任',
-  past: '過往',
-  candidate: '候選',
-  unknown: '紀錄',
+const partyRoleContextLabels: Record<PublicPersonPartyAffiliation['role_context'], TranslationKey> = {
+  candidate: 'person.partyRole.candidate',
+  officeholder: 'person.partyRole.officeholder',
+  party_officer: 'person.partyRole.partyOfficer',
+  self_declared: 'person.partyRole.selfDeclared',
+  wiki_record: 'person.partyRole.wikiRecord',
+  official_record: 'person.partyRole.officialRecord',
+  other: 'person.partyRole.other',
 };
 
-const partyRoleContextLabels: Record<PublicPersonPartyAffiliation['role_context'], string> = {
-  candidate: '候選登記',
-  officeholder: '公職紀錄',
-  party_officer: '黨職',
-  self_declared: '自行揭露',
-  wiki_record: '公開百科紀錄',
-  official_record: '官方紀錄',
-  other: '其他來源',
-};
-
-const claimTypeLabels: Record<PublicPersonClaim['claim_type'], string> = {
-  name: '姓名',
-  alias: '別名',
-  gender: '性別',
-  birth_date: '生日',
-  party: '政黨',
-  party_affiliation: '政黨紀錄',
-  position: '職位',
-  office: '公職',
-  candidacy: '參選',
-  district: '地區',
-  education: '學歷',
-  experience: '經歷',
-  platform: '政見',
-  finance_summary: '政治獻金',
-  legal_case: '司法紀錄',
-  family_relation: '政治家族',
-  media: '媒體資料',
-  external_id: '外部 ID',
-  other: '其他',
+const claimTypeLabels: Record<PublicPersonClaim['claim_type'], TranslationKey> = {
+  name: 'person.claim.name',
+  alias: 'person.claim.alias',
+  gender: 'person.claim.gender',
+  birth_date: 'person.claim.birthDate',
+  party: 'person.claim.party',
+  party_affiliation: 'person.claim.partyAffiliation',
+  position: 'person.claim.position',
+  office: 'person.claim.office',
+  candidacy: 'person.claim.candidacy',
+  district: 'person.claim.district',
+  education: 'person.claim.education',
+  experience: 'person.claim.experience',
+  platform: 'person.claim.platform',
+  finance_summary: 'person.claim.finance',
+  legal_case: 'person.claim.legal',
+  family_relation: 'person.claim.family',
+  media: 'person.claim.media',
+  external_id: 'person.claim.externalId',
+  other: 'person.claim.other',
 };
 
 function splitProfileText(value: string | null | undefined) {
@@ -114,11 +106,11 @@ function meaningfulExperienceItems(value: string | null | undefined, currentPosi
   return chineseItems.length > 0 ? chineseItems : filteredItems;
 }
 
-function formatUpdatedAt(value: string | null | undefined) {
-  if (!value) return '待同步';
+function formatUpdatedAt(value: string | null | undefined, locale: string, fallback: string) {
+  if (!value) return fallback;
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat('zh-TW', { dateStyle: 'medium' }).format(date);
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date);
 }
 
 type SourceRecord = {
@@ -126,11 +118,11 @@ type SourceRecord = {
   source_url: string | null;
 };
 
-function collectProfileSources(...groups: SourceRecord[][]) {
+function collectProfileSources(fallbackName: string, ...groups: SourceRecord[][]) {
   const sources = new Map<string, { name: string; url: string }>();
   groups.flat().forEach((record) => {
     if (!record.source_url) return;
-    const name = record.source_name?.trim() || '公開資料來源';
+    const name = record.source_name?.trim() || fallbackName;
     const key = name.toLowerCase();
     if (sources.has(key)) return;
     sources.set(key, { name, url: record.source_url });
@@ -147,8 +139,8 @@ function platformTextForClaim(claim: PublicPersonClaim) {
   return claimJsonString(claim, 'platformText') ?? claim.claim_value?.trim() ?? null;
 }
 
-function formatVoteCount(value: number | null) {
-  return value === null ? null : value.toLocaleString('zh-TW');
+function formatVoteCount(value: number | null, locale: string) {
+  return value === null ? null : value.toLocaleString(locale);
 }
 
 function formatVoteRate(value: number | null) {
@@ -157,16 +149,16 @@ function formatVoteRate(value: number | null) {
   return percentage.toFixed(2).replace(/\.00$/, '') + '%';
 }
 
-function candidateDetailRows(candidate: PublicCandidate) {
+function candidateDetailRows(candidate: PublicCandidate, t: ReturnType<typeof useI18n>['t'], locale: string) {
   const rows: Array<[string, string]> = [];
-  const voteCount = formatVoteCount(candidate.vote_count);
+  const voteCount = formatVoteCount(candidate.vote_count, locale);
   const voteRate = formatVoteRate(candidate.vote_rate);
 
-  if (candidate.region_name) rows.push(['地區', candidate.region_name]);
-  rows.push(['政黨', normalizePartyLabel(candidate.party)]);
-  if (candidate.candidate_no !== null) rows.push(['號次', String(candidate.candidate_no)]);
-  if (voteCount) rows.push(['得票數', voteCount]);
-  if (voteRate) rows.push(['得票率', voteRate]);
+  if (candidate.region_name) rows.push([t('person.region'), candidate.region_name]);
+  rows.push([t('person.party'), normalizePartyLabel(candidate.party)]);
+  if (candidate.candidate_no !== null) rows.push([t('race.number'), String(candidate.candidate_no)]);
+  if (voteCount) rows.push([t('race.votes'), voteCount]);
+  if (voteRate) rows.push([t('race.voteRate'), voteRate]);
   return rows;
 }
 
@@ -219,10 +211,12 @@ function claimsByType(claims: PublicPersonClaim[], claimType: PublicPersonClaim[
 }
 
 function ClaimCard({ claim }: { claim: PublicPersonClaim }) {
+  const { t } = useI18n();
+
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
       <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-        {claimTypeLabels[claim.claim_type]}
+        {t(claimTypeLabels[claim.claim_type])}
       </p>
       <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value}</h3>
     </article>
@@ -230,8 +224,10 @@ function ClaimCard({ claim }: { claim: PublicPersonClaim }) {
 }
 
 function TimelineList({ items }: { items: PublicPersonTimelineItem[] }) {
+  const { t } = useI18n();
+
   if (items.length === 0) {
-    return <EmptyInfo>目前沒有足夠資料建立人物時間軸。</EmptyInfo>;
+    return <EmptyInfo>{t('person.timeline.empty')}</EmptyInfo>;
   }
 
   return (
@@ -241,8 +237,8 @@ function TimelineList({ items }: { items: PublicPersonTimelineItem[] }) {
           <div className="text-sm font-semibold text-signal">{item.year ?? item.date ?? '—'}</div>
           <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
             <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-              <span className="pixel-corners border border-line/70 px-2 py-1">{timelineCategoryLabels[item.category]}</span>
-              {item.status !== 'unknown' ? <span>{timelineStatusLabels[item.status]}</span> : null}
+              <span className="pixel-corners border border-line/70 px-2 py-1">{t(timelineCategoryLabels[item.category])}</span>
+              {item.status !== 'unknown' ? <span>{t(timelineStatusLabels[item.status])}</span> : null}
             </div>
             <h3 className="mt-2 text-sm font-semibold text-white">{item.label}</h3>
             {item.detail ? <p className="mt-2 text-sm text-slate-400">{item.detail}</p> : null}
@@ -254,8 +250,10 @@ function TimelineList({ items }: { items: PublicPersonTimelineItem[] }) {
 }
 
 function PartyAffiliationList({ affiliations, currentParty }: { affiliations: PublicPersonPartyAffiliation[]; currentParty: string | null }) {
+  const { t } = useI18n();
+
   if (affiliations.length === 0) {
-    return <EmptyInfo>目前沒有已公開的黨籍歷史紀錄。</EmptyInfo>;
+    return <EmptyInfo>{t('person.affiliation.empty')}</EmptyInfo>;
   }
 
   const normalizedCurrentParty = currentParty ? normalizePartyLabel(currentParty) : null;
@@ -272,18 +270,18 @@ function PartyAffiliationList({ affiliations, currentParty }: { affiliations: Pu
         <article key={affiliation.affiliation_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{isCurrentAffiliation(affiliation) ? '目前黨籍' : '過往黨籍'}</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{isCurrentAffiliation(affiliation) ? t('person.affiliation.current') : t('person.affiliation.past')}</p>
               <h3 className="mt-2 text-sm font-semibold text-white">{normalizePartyLabel(affiliation.party_name)}</h3>
             </div>
             <span className={isCurrentAffiliation(affiliation) ? 'text-xs text-signal' : 'text-xs text-slate-400'}>
-              {isCurrentAffiliation(affiliation) ? '現屬' : '曾屬'}
+              {isCurrentAffiliation(affiliation) ? t('person.affiliation.belongs') : t('person.affiliation.formerly')}
             </span>
           </div>
           <dl className="mt-3 space-y-2 text-sm">
             {affiliation.observed_date || affiliation.observed_year ? (
-              <div className="flex justify-between gap-3"><dt className="text-slate-500">紀錄時間</dt><dd className="text-right text-slate-200">{affiliation.observed_date ?? affiliation.observed_year}</dd></div>
+              <div className="flex justify-between gap-3"><dt className="text-slate-500">{t('person.affiliation.observed')}</dt><dd className="text-right text-slate-200">{affiliation.observed_date ?? affiliation.observed_year}</dd></div>
             ) : null}
-            <div className="flex justify-between gap-3"><dt className="text-slate-500">紀錄類型</dt><dd className="text-right text-slate-200">{partyRoleContextLabels[affiliation.role_context]}</dd></div>
+            <div className="flex justify-between gap-3"><dt className="text-slate-500">{t('person.affiliation.type')}</dt><dd className="text-right text-slate-200">{t(partyRoleContextLabels[affiliation.role_context])}</dd></div>
           </dl>
         </article>
       ))}
@@ -302,19 +300,21 @@ function ClaimGrid({ claims }: { claims: PublicPersonClaim[] }) {
 }
 
 function PlatformClaimCard({ claim }: { claim: PublicPersonClaim }) {
+  const { t } = useI18n();
   const platformText = platformTextForClaim(claim);
 
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
-      <h3 className="text-sm font-semibold text-white">公開政見</h3>
+      <h3 className="text-sm font-semibold text-white">{t('person.publicPlatform')}</h3>
       <div className="mt-3 max-h-72 overflow-auto whitespace-pre-line pr-2 text-sm leading-6 text-slate-200">
-        {platformText ?? '未提供內容'}
+        {platformText ?? t('person.noContent')}
       </div>
     </article>
   );
 }
 
 export function PersonPage() {
+  const { language, t } = useI18n();
   const { personId } = useParams();
   const profile = publicDataProvider.getPersonProfile(personId ?? '');
   const person = profile?.person ?? null;
@@ -325,12 +325,12 @@ export function PersonPage() {
   const financeClaims = profile ? claimsByType(profile.public_claims, 'finance_summary') : [];
   const legalClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'legal_case')) : [];
   const familyClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'family_relation')) : [];
-  const displayPosition = person ? getPersonDisplayPosition(person) : '公開人物資料';
-  const profilePosition = person ? getPersonDisplayPosition(person, '待補') : '待補';
+  const displayPosition = person ? getPersonDisplayPosition(person) : t('person.publicRecord');
+  const profilePosition = person ? getPersonDisplayPosition(person, t('person.toBeAdded')) : t('person.toBeAdded');
   const educationItems = person ? meaningfulEducationItems(person.education) : [];
   const experienceItems = person ? meaningfulExperienceItems(person.experience, displayPosition) : [];
   const profileSources = profile
-    ? collectProfileSources(profile.candidate_records, profile.party_affiliations, profile.public_claims)
+    ? collectProfileSources(t('person.publicSource'), profile.candidate_records, profile.party_affiliations, profile.public_claims)
     : [];
   const identityRecords = profile
     ? profile.identity_records.filter((identity, index, records) => {
@@ -342,11 +342,11 @@ export function PersonPage() {
     : [];
   const basicFacts: Array<[string, string]> = person
     ? [
-        person.alias ? ['別名', person.alias] : null,
-        person.gender && person.gender !== 'unknown' ? ['性別', genderLabels[person.gender]] : null,
-        birthDateClaim?.claim_value ? ['生日', birthDateClaim.claim_value] : null,
-        ['現職', profilePosition],
-        person.region_name || person.district ? ['所處區域', person.region_name ?? person.district ?? ''] : null,
+        person.alias ? [t('person.alias'), person.alias] : null,
+        person.gender && person.gender !== 'unknown' ? [t('person.gender'), t(genderLabels[person.gender])] : null,
+        birthDateClaim?.claim_value ? [t('person.birthDate'), birthDateClaim.claim_value] : null,
+        [t('person.currentPosition'), profilePosition],
+        person.region_name || person.district ? [t('person.location'), person.region_name ?? person.district ?? ''] : null,
       ].filter((fact): fact is [string, string] => fact !== null)
     : [];
   const supplementarySectionCount = [
@@ -359,10 +359,10 @@ export function PersonPage() {
   return (
     <AppShell>
       <PixelFrame
-        title="人物資料"
+        title={t('person.frameTitle')}
         action={
           <Link to={peoplePath()} className="text-[11px] uppercase tracking-[0.22em] text-accent hover:text-white">
-            返回人物列表
+            {t('person.back')}
           </Link>
         }
       >
@@ -383,7 +383,7 @@ export function PersonPage() {
                 <p className="mt-3 text-sm leading-6 text-slate-300">{displayPosition}</p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   <HudStatCard
-                    label="政黨"
+                    label={t('person.party')}
                     value={
                       <span
                         className="pixel-corners inline-block border px-2 py-1 text-sm"
@@ -393,14 +393,14 @@ export function PersonPage() {
                       </span>
                     }
                   />
-                  <HudStatCard label="地區" value={person.region_name ?? person.district ?? '未指定'} />
-                  <HudStatCard label="狀態" value={<span className={person.status === 'current' ? 'text-signal' : 'text-white'}>{person.status_label}</span>} />
-                  <HudStatCard label="資料更新" value={formatUpdatedAt(person.updated_at)} />
+                  <HudStatCard label={t('person.region')} value={person.region_name ?? person.district ?? t('person.unspecified')} />
+                  <HudStatCard label={t('person.status')} value={<span className={person.status === 'current' ? 'text-signal' : 'text-white'}>{t(person.status === 'current' ? 'people.status.current' : person.status === 'candidate' ? 'people.status.candidate' : person.status === 'former' ? 'people.status.former' : 'people.status.other')}</span>} />
+                  <HudStatCard label={t('person.updated')} value={formatUpdatedAt(person.updated_at, language, t('person.awaitingSync'))} />
                 </div>
               </div>
             </section>
 
-            <SectionPanel title="基本資料" eyebrow="公開基本資料">
+            <SectionPanel title={t('person.basicTitle')} eyebrow={t('person.basicEyebrow')}>
               <dl className="grid gap-3 sm:grid-cols-2">
                 {basicFacts.map(([label, value]) => (
                   <div key={label} className="pixel-corners border border-line/70 bg-bg/35 p-3">
@@ -412,14 +412,14 @@ export function PersonPage() {
             </SectionPanel>
 
             {identityRecords.length > 1 ? (
-              <SectionPanel title="身分摘要" eyebrow="合併身分">
+              <SectionPanel title={t('person.identitiesTitle')} eyebrow={t('person.identitiesEyebrow')}>
                 <div className="grid gap-3 md:grid-cols-2">
                   {identityRecords.map((identity) => (
                     <article key={identity.person_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
                       <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{identity.status_label}</p>
                       <h3 className="mt-2 font-display text-lg text-white">{identity.position ?? identity.role_label}</h3>
                       <p className="mt-2 text-sm text-slate-400">
-                        {[normalizePartyLabel(identity.party), identity.district].filter(Boolean).join(' · ') || '公開人物資料'}
+                        {[normalizePartyLabel(identity.party), identity.district].filter(Boolean).join(' · ') || t('person.publicRecord')}
                       </p>
                     </article>
                   ))}
@@ -427,7 +427,7 @@ export function PersonPage() {
               </SectionPanel>
             ) : null}
 
-            <SectionPanel title="參選紀錄" eyebrow="選舉與結果">
+            <SectionPanel title={t('person.candidaciesTitle')} eyebrow={t('person.candidaciesEyebrow')}>
               {profile.candidate_records.length > 0 ? (
                 <div className="grid gap-3 md:grid-cols-2">
                   {profile.candidate_records.map((candidate) => (
@@ -437,10 +437,10 @@ export function PersonPage() {
                           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{getCandidateElectionLabel(candidate)}</p>
                           <h3 className="mt-2 font-display text-lg text-white">{candidate.race_title}</h3>
                         </div>
-                        <span className="text-xs text-signal">{candidateStatusLabels[candidate.registration_status]}</span>
+                        <span className="text-xs text-signal">{translateRegistrationStatus(candidate.registration_status, t)}</span>
                       </div>
                       <dl className="mt-3 space-y-2 text-sm">
-                        {candidateDetailRows(candidate).map(([label, value]) => (
+                        {candidateDetailRows(candidate, t, language).map(([label, value]) => (
                           <div key={label} className="flex justify-between gap-3">
                             <dt className="text-slate-500">{label}</dt>
                             <dd className="text-right text-slate-200">{value}</dd>
@@ -451,7 +451,7 @@ export function PersonPage() {
                   ))}
                 </div>
               ) : (
-                <EmptyInfo>目前沒有可公開的參選紀錄。</EmptyInfo>
+                <EmptyInfo>{t('person.noCandidacies')}</EmptyInfo>
               )}
             </SectionPanel>
 
@@ -462,12 +462,12 @@ export function PersonPage() {
                   : 'grid gap-4'
               }>
                 {profile.timeline_records.length > 0 ? (
-                  <SectionPanel title="人物時間軸" eyebrow="依年份排序">
+                  <SectionPanel title={t('person.timelineTitle')} eyebrow={t('person.timelineEyebrow')}>
                     <TimelineList items={profile.timeline_records} />
                   </SectionPanel>
                 ) : null}
                 {profile.party_affiliations.length > 0 ? (
-                  <SectionPanel title="黨籍紀錄" eyebrow="政黨歸屬">
+                  <SectionPanel title={t('person.affiliationsTitle')} eyebrow={t('person.affiliationsEyebrow')}>
                     <PartyAffiliationList affiliations={profile.party_affiliations} currentParty={person.party} />
                   </SectionPanel>
                 ) : null}
@@ -475,7 +475,7 @@ export function PersonPage() {
             ) : null}
 
             {educationItems.length > 0 || experienceItems.length > 0 ? (
-              <SectionPanel title="學歷與經歷" eyebrow="公開履歷">
+              <SectionPanel title={t('person.resumeTitle')} eyebrow={t('person.resumeEyebrow')}>
                 <div className={
                   educationItems.length > 0 && experienceItems.length > 0
                     ? 'grid gap-4 lg:grid-cols-2'
@@ -483,7 +483,7 @@ export function PersonPage() {
                 }>
                   {educationItems.length > 0 ? (
                     <div>
-                      <h3 className="mb-3 text-sm font-semibold text-white">學歷</h3>
+                      <h3 className="mb-3 text-sm font-semibold text-white">{t('person.education')}</h3>
                       <ul className="space-y-2 text-sm text-slate-300">
                         {educationItems.map((item) => (
                           <li key={item} className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2">
@@ -495,7 +495,7 @@ export function PersonPage() {
                   ) : null}
                   {experienceItems.length > 0 ? (
                     <div>
-                      <h3 className="mb-3 text-sm font-semibold text-white">經歷</h3>
+                      <h3 className="mb-3 text-sm font-semibold text-white">{t('person.experience')}</h3>
                       <ul className="space-y-2 text-sm text-slate-300">
                         {experienceItems.map((item) => (
                           <li key={item} className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2">
@@ -512,7 +512,7 @@ export function PersonPage() {
             {supplementarySectionCount > 0 ? (
               <div className={supplementarySectionCount > 1 ? 'grid gap-4 lg:grid-cols-2' : 'grid gap-4'}>
                 {platformClaims.length > 0 ? (
-                  <SectionPanel title="政見" eyebrow="公開政見">
+                  <SectionPanel title={t('person.platformTitle')} eyebrow={t('person.platformEyebrow')}>
                     <div className="grid gap-3">
                       {platformClaims.map((claim) => (
                         <PlatformClaimCard key={claim.claim_id} claim={claim} />
@@ -521,17 +521,17 @@ export function PersonPage() {
                   </SectionPanel>
                 ) : null}
                 {financeClaims.length > 0 ? (
-                  <SectionPanel title="政治獻金" eyebrow="公開摘要">
+                  <SectionPanel title={t('person.financeTitle')} eyebrow={t('person.financeEyebrow')}>
                     <ClaimGrid claims={financeClaims} />
                   </SectionPanel>
                 ) : null}
                 {legalClaims.length > 0 ? (
-                  <SectionPanel title="司法 / 爭議紀錄" eyebrow="已審核資料">
+                  <SectionPanel title={t('person.legalTitle')} eyebrow={t('person.reviewedEyebrow')}>
                     <ClaimGrid claims={legalClaims} />
                   </SectionPanel>
                 ) : null}
                 {familyClaims.length > 0 ? (
-                  <SectionPanel title="政治家族關係" eyebrow="已審核資料">
+                  <SectionPanel title={t('person.familyTitle')} eyebrow={t('person.reviewedEyebrow')}>
                     <ClaimGrid claims={familyClaims} />
                   </SectionPanel>
                 ) : null}
@@ -539,7 +539,7 @@ export function PersonPage() {
             ) : null}
 
             {publicClaims.length > 0 ? (
-              <SectionPanel title="公開資料線索" eyebrow="已審核線索">
+              <SectionPanel title={t('person.leadsTitle')} eyebrow={t('person.leadsEyebrow')}>
                 <div className="grid gap-3 md:grid-cols-2">
                   {publicClaims.map((claim) => (
                     <ClaimCard key={claim.claim_id} claim={claim} />
@@ -549,7 +549,7 @@ export function PersonPage() {
             ) : null}
 
             {profileSources.length > 0 ? (
-              <SectionPanel title="資料來源" eyebrow="參考連結">
+              <SectionPanel title={t('person.sourcesTitle')} eyebrow={t('person.sourcesEyebrow')}>
                 <ul className="grid gap-2 md:grid-cols-2">
                   {profileSources.map((source) => (
                     <li key={source.url}>
@@ -569,7 +569,7 @@ export function PersonPage() {
           </div>
         ) : (
           <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center text-sm text-slate-300">
-            找不到這筆人物資料。
+            {t('person.notFound')}
           </div>
         )}
       </PixelFrame>

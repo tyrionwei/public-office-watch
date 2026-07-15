@@ -7,8 +7,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "check": "npm --prefix apps/web run lint && npm --prefix apps/web run build && npm --prefix apps/web run check:data-boundary && npm --prefix apps/web run check:public-view-contracts",
+    "check": "npm run test:data-reports && npm --prefix apps/web run lint && npm --prefix apps/web run build && npm --prefix apps/web run check:data-boundary && npm --prefix apps/web run check:public-view-contracts",
     "test": "npm run check",
+    "test:data-reports": "node --test scripts/report-election-race-duplicates.test.mjs",
     "sync:real-data:dry-run": "node scripts/sync-real-public-data.mjs --weekly",
     "sync:real-data:historical-dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-historical-cec",
     "sync:real-data:daily": "node scripts/sync-real-public-data.mjs --daily",

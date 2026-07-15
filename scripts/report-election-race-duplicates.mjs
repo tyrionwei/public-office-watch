@@ -136,6 +136,13 @@ function normalizeName(value) {
   return normalizeText(value).replace(/[^\p{Script=Han}a-z0-9]/gu, '');
 }
 
+function normalizeCandidateNumber(value) {
+  const normalized = String(value ?? '').trim();
+  if (!normalized) return '';
+  if (/^\d+$/.test(normalized)) return String(Number.parseInt(normalized, 10));
+  return normalizeText(normalized);
+}
+
 function semanticElectionType(value) {
   if (['presidential', 'president'].includes(value)) return 'president';
   if (['legislative', 'legislator'].includes(value)) return 'legislator';
@@ -158,7 +165,23 @@ function candidateIdentityKey(candidate, peopleById) {
   const name = normalizeName(person?.name);
   const party = normalizeText(candidate.party);
   if (!name) return null;
-  return `${name}|${party}`;
+  return `${name}|${party}|${normalizeCandidateNumber(candidate.candidate_no) || '?'}`;
+}
+
+function unorderedPairKey(leftId, rightId) {
+  return [leftId, rightId].sort().join('|');
+}
+
+function buildDecisionState(rows, duplicateKey, canonicalKey) {
+  return {
+    pairKeys: new Set(rows.map((row) => unorderedPairKey(row[duplicateKey], row[canonicalKey]))),
+    activeDuplicateIds: new Set(rows.filter((row) => ['suggested', 'verified'].includes(row.status)).map((row) => row[duplicateKey])),
+    statusCounts: countBy(rows, 'status'),
+  };
+}
+
+function isSuppressedByDecision(leftId, rightId, decisionState) {
+  return decisionState.pairKeys.has(unorderedPairKey(leftId, rightId)) || decisionState.activeDuplicateIds.has(leftId) || decisionState.activeDuplicateIds.has(rightId);
 }
 
 function overlap(leftSet, rightSet) {
@@ -180,6 +203,7 @@ function overlap(leftSet, rightSet) {
 }
 
 function confidenceForElectionPair(pair) {
+  if (pair.relationSuggestion === 'aggregate_source_link') return 'review';
   if (pair.year === 2024 && pair.semanticType === 'president' && pair.candidateOverlap.smallerRate >= 1) return 'auto';
   if (pair.year === 2024 && pair.semanticType === 'legislator' && pair.candidateOverlap.smallerRate >= 0.75) return 'auto';
   if (pair.year === 2022 && pair.semanticType === 'local' && pair.raceTypeOverlap.length > 0 && pair.candidateOverlap.count > 0) return 'review';
@@ -188,10 +212,23 @@ function confidenceForElectionPair(pair) {
 }
 
 function confidenceForRacePair(pair) {
-  if (pair.candidateOverlap.smallerRate >= 1 && pair.candidateOverlap.count > 0) return 'auto';
+  if (pair.regionCompatibility !== 'unknown' && pair.candidateOverlap.smallerRate >= 1 && pair.candidateOverlap.count > 0) return 'auto';
   if (pair.candidateOverlap.smallerRate >= 0.75 && pair.candidateOverlap.count >= 2) return 'review';
   if (pair.nameSimilarity || pair.candidateOverlap.count > 0) return 'manual';
   return 'unlikely';
+}
+
+function electionRelationSuggestion(pair) {
+  if (pair.semanticType !== 'local' || pair.candidateOverlap.smallerRate < 0.9) return 'same_election';
+  const [aggregate, specific] = pair.left.candidateCount >= pair.right.candidateCount ? [pair.left, pair.right] : [pair.right, pair.left];
+  const isAggregateLocalElection = aggregate.electionType === 'local' && specific.electionType !== 'local';
+  const isMeaningfullyLarger = aggregate.candidateCount >= specific.candidateCount * 1.5 && aggregate.raceCount > specific.raceCount;
+  return isAggregateLocalElection && isMeaningfullyLarger ? 'aggregate_source_link' : 'same_election';
+}
+
+function raceRegionCompatibility(left, right, nameSimilarity) {
+  if (left.region_id && right.region_id) return left.region_id === right.region_id ? 'same_region' : 'different_region';
+  return nameSimilarity ? 'matching_title' : 'unknown';
 }
 
 function summarizeElection(election, races, candidates) {
@@ -241,6 +278,7 @@ function compactRace(race) {
   return {
     id: race.id,
     externalId: race.external_id,
+    regionId: race.region_id,
     title: race.title,
     raceType: race.race_type,
     semanticRaceType: semanticRaceType(race.race_type),
@@ -255,12 +293,19 @@ async function main() {
   }
 
   const options = parseArgs(process.argv.slice(2));
-  const [elections, races, candidates, people] = await Promise.all([
+  const [elections, races, candidates, people, electionDecisions, raceDecisions] = await Promise.all([
     fetchRows('elections', 'id,external_id,name,year,election_type,voting_date,status,source_name,is_public', options),
     fetchRows('races', 'id,external_id,election_id,region_id,race_type,title,voting_date,status,source_name,is_public', options),
     fetchRows('candidates', 'id,external_id,person_id,race_id,party,candidate_no,registration_status,is_elected,source_name,is_public', options),
     fetchRows('people', 'id,external_id,name,is_public', options),
+    fetchRows('election_merge_decisions', 'id,duplicate_election_id,canonical_election_id,relation_type,status', options),
+    fetchRows('race_merge_decisions', 'id,duplicate_race_id,canonical_race_id,relation_type,status', options),
   ]);
+
+  const electionDecisionState = buildDecisionState(electionDecisions, 'duplicate_election_id', 'canonical_election_id');
+  const raceDecisionState = buildDecisionState(raceDecisions, 'duplicate_race_id', 'canonical_race_id');
+  let suppressedElectionPairs = 0;
+  let suppressedRacePairs = 0;
 
   const peopleById = new Map(people.map((person) => [person.id, person]));
   const racesByElectionId = new Map();
@@ -292,6 +337,10 @@ async function main() {
       if (left.semanticType !== right.semanticType) continue;
       if (left.sourceKind === right.sourceKind) continue;
       if (!['cec', 'votetw'].includes(left.sourceKind) && !['cec', 'votetw'].includes(right.sourceKind)) continue;
+      if (isSuppressedByDecision(left.id, right.id, electionDecisionState)) {
+        suppressedElectionPairs += 1;
+        continue;
+      }
 
       const leftRaces = racesByElectionId.get(left.id) ?? [];
       const rightRaces = racesByElectionId.get(right.id) ?? [];
@@ -308,6 +357,7 @@ async function main() {
         candidateOverlap,
         raceTypeOverlap,
       };
+      pair.relationSuggestion = electionRelationSuggestion(pair);
       electionPairs.push({
         ...pair,
         confidence: confidenceForElectionPair(pair),
@@ -333,9 +383,15 @@ async function main() {
         const right = group[rightIndex];
         if (sourceKind(left) === sourceKind(right)) continue;
         if (!['cec', 'votetw'].includes(sourceKind(left)) && !['cec', 'votetw'].includes(sourceKind(right))) continue;
+        if (isSuppressedByDecision(left.id, right.id, raceDecisionState)) {
+          suppressedRacePairs += 1;
+          continue;
+        }
         const leftName = normalizeText(left.title);
         const rightName = normalizeText(right.title);
         const nameSimilarity = Boolean(leftName && rightName && (leftName.includes(rightName) || rightName.includes(leftName)));
+        const regionCompatibility = raceRegionCompatibility(left, right, nameSimilarity);
+        if (regionCompatibility === 'different_region') continue;
         const leftCandidateKeys = new Set((candidatesByRaceId.get(left.id) ?? []).map((candidate) => candidateIdentityKey(candidate, peopleById)).filter(Boolean));
         const rightCandidateKeys = new Set((candidatesByRaceId.get(right.id) ?? []).map((candidate) => candidateIdentityKey(candidate, peopleById)).filter(Boolean));
         const candidateOverlap = overlap(leftCandidateKeys, rightCandidateKeys);
@@ -348,6 +404,7 @@ async function main() {
           left: compactRace(left),
           right: compactRace(right),
           nameSimilarity,
+          regionCompatibility,
           candidateOverlap,
         };
         racePairs.push({
@@ -366,9 +423,15 @@ async function main() {
       races: races.length,
       candidates: candidates.length,
       people: people.length,
+      electionDecisions: electionDecisions.length,
+      raceDecisions: raceDecisions.length,
       electionPairs: electionPairs.length,
       racePairs: racePairs.length,
+      suppressedElectionPairs,
+      suppressedRacePairs,
     },
+    electionDecisionStatusCounts: electionDecisionState.statusCounts,
+    raceDecisionStatusCounts: raceDecisionState.statusCounts,
     electionPairConfidenceCounts: countBy(electionPairs, 'confidence'),
     racePairConfidenceCounts: countBy(racePairs, 'confidence'),
   };
@@ -416,8 +479,14 @@ function compareRacePairs(left, right) {
     right.candidateOverlap.count - left.candidateOverlap.count;
 }
 
-main().catch((error) => {
-  const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`election/race duplicate report failed: ${message}`);
-  process.exit(1);
-});
+const isMainModule = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (isMainModule) {
+  main().catch((error) => {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`election/race duplicate report failed: ${message}`);
+    process.exit(1);
+  });
+}
+
+export { buildDecisionState, candidateIdentityKey, confidenceForRacePair, electionRelationSuggestion, isSuppressedByDecision, normalizeCandidateNumber, raceRegionCompatibility };

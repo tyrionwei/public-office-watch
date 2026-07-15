@@ -69,7 +69,7 @@ function chooseCanonical(left, right) {
 
 function electionAction(pair) {
   if (pair.confidence === 'auto') return 'auto_merge';
-  if (pair.year === 2022 && pair.semanticType === 'local' && pair.confidence === 'review') {
+  if (pair.relationSuggestion === 'aggregate_source_link') {
     return 'review_aggregate_source_link';
   }
   if (pair.confidence === 'review') return 'review_merge';
@@ -119,7 +119,7 @@ function electionPlanRow(pair) {
     },
     evidence: evidenceForPair(pair),
     notes: action === 'review_aggregate_source_link'
-      ? 'CEC 2022 local election is an aggregate source while VoteTW local pages are split by office/region; do not direct-merge until a parent/child election model exists.'
+      ? 'One election is an aggregate source while the other is a narrower office or region election; record the relationship without canonicalizing them as the same election.'
       : null,
   };
 }
@@ -184,7 +184,7 @@ function main() {
       raceActionCounts: countBy(raceMergePlan, 'action'),
       warnings: [
         'This file is a merge plan only. It does not write database rows.',
-        'review_aggregate_source_link rows should not be direct-merged without a parent/child election model.',
+        'review_aggregate_source_link rows are parent/child relationships and must never be canonicalized as same_election.',
         'auto_merge rows still need an apply script that preserves source references before any database write.',
       ],
     },

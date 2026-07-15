@@ -20,6 +20,13 @@
 - 用於某人物參加某場選舉項目
 - 候選人資料未審核前不可公開
 
+### 選舉與選區的正規化關係
+- `same_election`：兩筆來源代表同一場選舉，只有 `verified` 決策會進入 `election_canonical_map`
+- `same_race`：兩筆來源代表同一選區，只有 `verified` 決策會進入 `race_canonical_map`
+- `aggregate_source_link`：大型選舉事件與較小的公職或縣市子選舉之父子關係，不得當成 `same_election` 合併
+- `election_hierarchy_map` 只列出已驗證的父子關係，供匯入、稽核與後續選舉導覽使用
+- `rejected` 與 `archived` 決策不影響公開資料
+
 ## 2. 地圖行政區不一定等於正式選舉選區
 
 行政區地圖與正式選舉選區不一定完全相同。

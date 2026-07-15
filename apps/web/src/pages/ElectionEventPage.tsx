@@ -6,8 +6,10 @@ import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { buildElectionEvents, getElectionEventByKey, getRaceRegionGroup } from '../data/electionEvents';
 import type { ElectionEvent } from '../data/electionEvents';
-import { compareElectionRegionLabels, getElectionStatusLabel, getRaceCategory, getRaceCategoryByType, getRaceStatusLabel, getRaceTypeLabel } from '../data/electionLabels';
+import { translateElectionEventTitle, translateElectionStatus, translateRaceCategory, translateRaceStatus, translateRaceType } from '../data/electionI18n';
+import { compareElectionRegionLabels, getRaceCategoryByType } from '../data/electionLabels';
 import type { RaceCategory } from '../data/electionLabels';
+import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import type { PublicRaceListPage } from '../lib/publicDataProvider';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
@@ -36,7 +38,7 @@ function getVisiblePageNumbers(currentPage: number, pageCount: number) {
   return Array.from({ length: visibleCount }, (_, index) => start + index);
 }
 
-function buildCategoryOptions(facets: PublicElectionRaceFacet[]): CategoryOption[] {
+function buildCategoryOptions(facets: PublicElectionRaceFacet[], t: ReturnType<typeof useI18n>['t']): CategoryOption[] {
   const options = new Map<string, CategoryOption>();
 
   for (const facet of facets) {
@@ -46,7 +48,9 @@ function buildCategoryOptions(facets: PublicElectionRaceFacet[]): CategoryOption
     options.set(category.key, option);
   }
 
-  return Array.from(options.values()).sort((left, right) => left.order - right.order);
+  return Array.from(options.values())
+    .map((option) => ({ ...option, label: translateRaceCategory(option.key, t) }))
+    .sort((left, right) => left.order - right.order);
 }
 
 function buildRegionOptions(facets: PublicElectionRaceFacet[]): RegionOption[] {
@@ -76,6 +80,7 @@ function buildFilterPath(eventKey: string, searchParams: URLSearchParams, key: '
 }
 
 export function ElectionEventPage() {
+  const { language, t } = useI18n();
   const { eventKey } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [event, setEvent] = useState<ElectionEvent | null>(null);
@@ -124,7 +129,7 @@ export function ElectionEventPage() {
   }, [eventKey]);
 
   const selectedCategoryParam = searchParams.get('category') ?? '';
-  const categoryOptions = buildCategoryOptions(facets);
+  const categoryOptions = buildCategoryOptions(facets, t);
   const selectedCategoryOption = categoryOptions.find((option) => option.key === selectedCategoryParam)
     ?? categoryOptions[0];
   const selectedCategory = selectedCategoryOption?.key ?? '';
@@ -180,8 +185,8 @@ export function ElectionEventPage() {
   if (!event) {
     return (
       <AppShell>
-        <PixelFrame title={loading ? '大選資料載入中' : '找不到大選事件'} action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">返回選舉年份</Link>}>
-          <p className="text-sm text-slate-300">{loading ? '正在載入此大選的選區項目。' : '此大選事件尚未載入，或目前沒有可公開的選舉資料。'}</p>
+        <PixelFrame title={loading ? t('event.loadingTitle') : t('event.notFoundTitle')} action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('event.backYears')}</Link>}>
+          <p className="text-sm text-slate-300">{loading ? t('event.loadingBody') : t('event.notFoundBody')}</p>
         </PixelFrame>
       </AppShell>
     );
@@ -204,43 +209,44 @@ export function ElectionEventPage() {
 
     setSearchParams(nextParams);
   };
-  const selectedCategoryLabel = selectedCategoryOption?.label ?? '請選擇項目';
+  const selectedCategoryLabel = selectedCategoryOption?.label ?? t('event.selectCategory');
   const selectedRegionLabel = selectedRegion
     ? regionOptions.find((option) => option.key === selectedRegion)?.label ?? selectedRegion
-    : '全部區域';
+    : t('event.allRegions');
   const regionCount = regionOptions.length;
+  const categorySummary = categoryOptions.map((option) => option.label).join(language === 'en' ? ', ' : '、');
 
   return (
     <AppShell>
       <div className="space-y-4">
         <PixelFrame
-          title="大選總覽"
-          action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">返回選舉年份</Link>}
+          title={t('event.overview')}
+          action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('event.backYears')}</Link>}
         >
           <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.34fr)]">
             <div className="min-w-0">
-              <p className="text-xs uppercase tracking-[0.22em] text-accent">{event.votingDate ?? '投票日待公告'}</p>
-              <h1 className="mt-2 font-display text-4xl text-white">{event.title}</h1>
+              <p className="text-xs uppercase tracking-[0.22em] text-accent">{event.votingDate ?? t('event.voteDatePending')}</p>
+              <h1 className="mt-2 font-display text-4xl text-white">{translateElectionEventTitle(event, t)}</h1>
               <p className="mt-3 text-sm leading-6 text-slate-300">
-                這個事件合併 {event.elections.length} 筆原始選舉資料：{event.sourceNameSummary}。預設顯示層級最高的項目；可從左側切換項目，再從右側依縣市或區域縮小範圍。
+                {t('event.description', { count: event.elections.length, source: event.sourceNameSummary })}
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
-                <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{getElectionStatusLabel(event.status)}</span>
-                <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{event.categorySummary}</span>
-                <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{regionCount} 個區域</span>
+                <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{translateElectionStatus(event.status, t)}</span>
+                <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{categorySummary}</span>
+                <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{t('event.regionCount', { count: regionCount })}</span>
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              <HudStatCard label="原始選舉" value={<span className="font-display text-xl text-white">{event.elections.length}</span>} />
-              <HudStatCard label="選區項目" value={<span className="font-display text-xl text-white">{event.raceCount}</span>} />
-              <HudStatCard label="區域" value={<span className="font-display text-xl text-white">{regionCount}</span>} />
+              <HudStatCard label={t('event.sourceElections')} value={<span className="font-display text-xl text-white">{event.elections.length}</span>} />
+              <HudStatCard label={t('event.raceItems')} value={<span className="font-display text-xl text-white">{event.raceCount}</span>} />
+              <HudStatCard label={t('event.regions')} value={<span className="font-display text-xl text-white">{regionCount}</span>} />
             </div>
           </section>
         </PixelFrame>
 
         <div className="grid gap-4 xl:grid-cols-[240px_minmax(0,1fr)_240px]">
           <aside className="space-y-3">
-            <PixelFrame title="項目分類">
+            <PixelFrame title={t('event.categoryFilter')}>
               <div className="space-y-2">
                 {categoryOptions.map((option) => (
                   <Link
@@ -255,24 +261,24 @@ export function ElectionEventPage() {
             </PixelFrame>
           </aside>
 
-          <SectionPanel title="選區項目" eyebrow={`${selectedCategoryLabel} / ${selectedRegionLabel}`}>
+          <SectionPanel title={t('event.raceItems')} eyebrow={`${selectedCategoryLabel} / ${selectedRegionLabel}`}>
             {!selectedCategory ? (
-              <p className="text-sm text-slate-400">目前沒有可公開的選區項目。</p>
+              <p className="text-sm text-slate-400">{t('event.noPublicRaces')}</p>
             ) : racesLoading ? (
-              <p className="text-sm text-slate-400">正在載入符合條件的選區項目。</p>
+              <p className="text-sm text-slate-400">{t('event.loadingRaces')}</p>
             ) : filteredRaces.length > 0 ? (
               <div className="space-y-3">
-                <p className="text-sm text-slate-400">目前顯示第 {pageStart + 1}-{pageStart + filteredRaces.length} 項，共 {racePage.total} 個項目。點進單一項目後可查看候選人與當選資料。</p>
+                <p className="text-sm text-slate-400">{t('event.resultSummary', { start: pageStart + 1, end: pageStart + filteredRaces.length, total: racePage.total })}</p>
                 <div className="overflow-hidden pixel-corners border border-line/70">
                   <div className="grid gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid-cols-[minmax(180px,1fr)_130px_130px_110px]">
-                    <span>項目</span>
-                    <span>分類</span>
-                    <span>區域</span>
-                    <span>狀態</span>
+                    <span>{t('event.item')}</span>
+                    <span>{t('event.category')}</span>
+                    <span>{t('event.regions')}</span>
+                    <span>{t('event.status')}</span>
                   </div>
                   <div className="divide-y divide-line/60">
                     {filteredRaces.map((race) => {
-                      const category = getRaceCategory(race);
+                      const category = getRaceCategoryByType(race.race_type);
                       const region = getRaceRegionGroup(race);
 
                       return (
@@ -283,11 +289,11 @@ export function ElectionEventPage() {
                         >
                           <div className="min-w-0">
                             <p className="truncate font-display text-lg text-white">{race.title}</p>
-                            <p className="mt-1 truncate text-xs text-slate-500">{getRaceTypeLabel(race.race_type)}</p>
+                            <p className="mt-1 truncate text-xs text-slate-500">{translateRaceType(race.race_type, t)}</p>
                           </div>
-                          <p className="text-slate-300">{category.label}</p>
+                          <p className="text-slate-300">{translateRaceCategory(category.key, t)}</p>
                           <p className="text-slate-300">{region.label}</p>
-                          <p className="text-slate-300">{getRaceStatusLabel(race.status)}</p>
+                          <p className="text-slate-300">{translateRaceStatus(race.status, t)}</p>
                         </Link>
                       );
                     })}
@@ -295,7 +301,7 @@ export function ElectionEventPage() {
                 </div>
                 {racePage.total > PAGE_SIZE ? (
                   <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line/60 pt-4 text-sm text-slate-300">
-                    <p>第 {currentPage}/{pageCount} 頁</p>
+                    <p>{t('event.page', { current: currentPage, total: pageCount })}</p>
                     <div className="flex flex-wrap items-center gap-2">
                       <button
                         type="button"
@@ -303,7 +309,7 @@ export function ElectionEventPage() {
                         disabled={currentPage <= 1}
                         className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                       >
-                        第一頁
+                        {t('event.first')}
                       </button>
                       <button
                         type="button"
@@ -311,7 +317,7 @@ export function ElectionEventPage() {
                         disabled={currentPage <= 1}
                         className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                       >
-                        上一頁
+                        {t('event.previous')}
                       </button>
                       {visiblePageNumbers.map((pageNumber) => (
                         <button
@@ -334,7 +340,7 @@ export function ElectionEventPage() {
                         disabled={currentPage >= pageCount}
                         className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                       >
-                        下一頁
+                        {t('event.next')}
                       </button>
                       <button
                         type="button"
@@ -342,25 +348,25 @@ export function ElectionEventPage() {
                         disabled={currentPage >= pageCount}
                         className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs text-slate-300 transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                       >
-                        最後一頁
+                        {t('event.last')}
                       </button>
                     </div>
                   </div>
                 ) : null}
               </div>
             ) : (
-              <p className="text-sm text-slate-400">目前沒有符合此項目與區域的選區資料。</p>
+              <p className="text-sm text-slate-400">{t('event.noMatches')}</p>
             )}
           </SectionPanel>
 
           <aside className="space-y-3">
-            <PixelFrame title="縣市 / 區域">
+            <PixelFrame title={t('event.regionFilter')}>
               <div className="space-y-2">
                 <Link
                   to={buildFilterPath(event.key, searchParams, 'region', '')}
                   className={selectedRegion === '' ? 'block pixel-corners border border-accent bg-accent/20 px-3 py-2 text-sm text-white' : 'block pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-sm text-slate-300 hover:border-accent/55 hover:text-white'}
                 >
-                  全部區域 <span className="float-right text-slate-500">{selectedCategoryOption?.count ?? 0}</span>
+                  {t('event.allRegions')} <span className="float-right text-slate-500">{selectedCategoryOption?.count ?? 0}</span>
                 </Link>
                 {regionOptions.map((option) => (
                   <Link

@@ -1,5 +1,6 @@
 import type { PublicElection, PublicElectionRaceSummary, PublicRace } from '../types/publicViews';
 import { compareElectionRegionLabels, compareRacesForDisplay, getElectionCountyCityName, getRaceCategory, getRaceCategoryByType, groupRacesByCategory } from './electionLabels';
+import type { RaceCategoryKey } from './electionLabels';
 
 export type ElectionEventFamily = 'national' | 'local' | 'referendum' | 'recall' | 'by_election' | 'other';
 
@@ -19,6 +20,7 @@ export type ElectionEvent = {
   elections: PublicElection[];
   races: PublicRace[];
   raceCount: number;
+  categoryKeys: RaceCategoryKey[];
   categorySummary: string;
   regionSummary: string;
   sourceNameSummary: string;
@@ -183,6 +185,7 @@ function finalizeEvent(elections: PublicElection[], allRaces: PublicRace[], allS
     elections: elections.slice().sort((left, right) => left.name.localeCompare(right.name, 'zh-TW')),
     races,
     raceCount: races.length > 0 ? races.length : summaries.reduce((total, summary) => total + summary.race_count, 0),
+    categoryKeys: summaryCategories.map((category) => category.key),
     categorySummary: summarizeLabels(summaryCategories.map((category) => category.label), '尚未接入選舉項目'),
     regionSummary: races.length > 0 ? summarizeLabels(regionGroups.map((group) => group.label), '未指定區域', 3) : '進入查看區域',
     sourceNameSummary: summarizeLabels(uniqueValues(elections.map((election) => election.name)), '公開選舉資料', 3),

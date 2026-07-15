@@ -2,19 +2,21 @@ import { Link, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { LocalOfficeSummaryPanel } from '../components/LocalOfficeSummaryPanel';
 import { SectionPanel } from '../components/SectionPanel';
-import { getRaceStatusLabel } from '../data/electionLabels';
+import { translateRaceStatus } from '../data/electionI18n';
 import { getRegionHighlightBackground } from '../data/regionHighlights';
 import { compareUpcomingRacesForDisplay } from '../data/upcomingRaceSort';
+import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { electionsPath, homePath, peoplePath, racePath, regionPath } from '../routes/routePaths';
 
-function formatRegionLevel(level: string) {
-  if (level === 'county_city') return '縣市';
-  if (level === 'district') return '鄉鎮市區';
-  return '全國';
+function getRegionHighlightKey(level: string) {
+  if (level === 'county_city') return 'regionPage.countyHighlight' as const;
+  if (level === 'district') return 'regionPage.districtHighlight' as const;
+  return 'regionPage.countryHighlight' as const;
 }
 
 export function RegionPage() {
+  const { t } = useI18n();
   const { regionId } = useParams();
   const safeRegionId = regionId ?? '';
   const regionNode = publicDataProvider.getStageRegion(safeRegionId);
@@ -44,13 +46,13 @@ export function RegionPage() {
           >
             <div className="relative flex min-h-[330px] max-w-3xl flex-col justify-between p-5 sm:p-7">
               <div className="flex items-center gap-3 text-xs text-slate-400">
-                <Link to={homePath()} className="text-accent hover:text-white">縣市導覽</Link>
+                <Link to={homePath()} className="text-accent hover:text-white">{t('regionPage.guide')}</Link>
                 <span aria-hidden="true">/</span>
                 <span>{regionSummary.label}</span>
               </div>
 
               <div className="py-8">
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">{formatRegionLevel(regionNode.level)}重點</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">{t(getRegionHighlightKey(regionNode.level))}</p>
                 <h1 className="mt-3 font-display text-4xl text-white sm:text-5xl">{regionSummary.label}</h1>
                 <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300">
                   {highlight?.feature ?? regionCard?.tone ?? regionSummary.sourceNote}
@@ -59,16 +61,16 @@ export function RegionPage() {
 
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="border-l-2 border-signal bg-bg/60 px-3 py-2 backdrop-blur-sm">
-                  <p className="text-[11px] text-slate-500">最近選舉</p>
+                  <p className="text-[11px] text-slate-500">{t('regionPage.nearestElection')}</p>
                   <p className="mt-1 line-clamp-2 text-sm text-white">{regionSummary.nearestElectionName}</p>
                 </div>
                 <div className="border-l-2 border-accent bg-bg/60 px-3 py-2 backdrop-blur-sm">
-                  <p className="text-[11px] text-slate-500">投票日</p>
+                  <p className="text-[11px] text-slate-500">{t('regionPage.voteDate')}</p>
                   <p className="mt-1 font-display text-sm text-accent">{regionSummary.nearestElectionDate}</p>
                 </div>
                 <div className="border-l-2 border-cyan-300 bg-bg/60 px-3 py-2 backdrop-blur-sm">
-                  <p className="text-[11px] text-slate-500">公開選舉項目</p>
-                  <p className="mt-1 font-display text-sm text-white">{regionSummary.upcomingRaceCount} 項</p>
+                  <p className="text-[11px] text-slate-500">{t('regionPage.publicRaces')}</p>
+                  <p className="mt-1 font-display text-sm text-white">{t('regionPage.raceCount', { count: regionSummary.upcomingRaceCount })}</p>
                 </div>
               </div>
             </div>
@@ -77,9 +79,9 @@ export function RegionPage() {
           <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(420px,0.8fr)]">
             <main className="space-y-5">
               <SectionPanel
-                title="相關選舉"
-                eyebrow="選舉與選區"
-                action={<Link to={electionsPath()} className="text-xs text-accent hover:text-white">查看全部選舉</Link>}
+                title={t('regionPage.relatedElections')}
+                eyebrow={t('regionPage.electionsEyebrow')}
+                action={<Link to={electionsPath()} className="text-xs text-accent hover:text-white">{t('regionPage.viewAllElections')}</Link>}
               >
                 {relatedRaces.length > 0 ? (
                   <div className="divide-y divide-line/60 border-y border-line/60">
@@ -96,27 +98,27 @@ export function RegionPage() {
                             <span>{race.date}</span>
                           </div>
                           <h2 className="mt-2 font-display text-lg text-white">{race.title}</h2>
-                          <p className="mt-1 text-xs text-slate-400">{getRaceStatusLabel(race.status)}</p>
+                          <p className="mt-1 text-xs text-slate-400">{translateRaceStatus(race.status, t)}</p>
                         </div>
-                        <span className="font-display text-xs text-accent">查看候選人 →</span>
+                        <span className="font-display text-xs text-accent">{t('regionPage.viewCandidates')}</span>
                       </Link>
                     ))}
                   </div>
                 ) : (
                   <div className="border-y border-line/60 py-6 text-sm text-slate-400">
-                    <p>目前沒有已公開的近期選舉項目。</p>
-                    <Link to={electionsPath()} className="mt-3 inline-block text-accent hover:text-white">前往歷史選舉總覽</Link>
+                    <p>{t('regionPage.noRecentElections')}</p>
+                    <Link to={electionsPath()} className="mt-3 inline-block text-accent hover:text-white">{t('regionPage.viewHistory')}</Link>
                   </div>
                 )}
               </SectionPanel>
 
               {childRegions.length > 0 ? (
                 <SectionPanel
-                  title="行政區導覽"
-                  eyebrow="下一層地區"
+                  title={t('regionPage.districtGuide')}
+                  eyebrow={t('regionPage.nextLevel')}
                   action={
                     <Link to={peoplePath({ region: publicRegionId })} className="text-xs text-accent hover:text-white">
-                      查看此地區人物
+                      {t('regionPage.viewPeople')}
                     </Link>
                   }
                 >
@@ -143,9 +145,9 @@ export function RegionPage() {
         </div>
       ) : (
         <section className="border border-line/70 bg-panel p-6 text-sm text-slate-300">
-          <h1 className="font-display text-2xl text-white">找不到縣市資料</h1>
-          <p className="mt-3">此地區可能尚未公開，或網址已經失效。</p>
-          <Link to={homePath()} className="mt-5 inline-block text-accent hover:text-white">返回縣市導覽</Link>
+          <h1 className="font-display text-2xl text-white">{t('regionPage.notFound')}</h1>
+          <p className="mt-3">{t('regionPage.notFoundBody')}</p>
+          <Link to={homePath()} className="mt-5 inline-block text-accent hover:text-white">{t('regionPage.back')}</Link>
         </section>
       )}
     </AppShell>

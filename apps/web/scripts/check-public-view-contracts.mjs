@@ -38,6 +38,10 @@ const allowedPublicViews = {
   public_party_company_contribution_summaries: ['party_id', 'company_id', 'report_year', 'amount_total', 'confidence_level'],
 };
 
+const rolloutPublicViewFields = {
+  public_candidates: ['candidacy_status', 'election_result', 'status_updated_at'],
+};
+
 function parseEnvFile(content) {
   const env = {};
   for (const rawLine of content.split(/\r?\n/)) {
@@ -114,6 +118,16 @@ async function main() {
       if (missingFields.length > 0) {
         failed = true;
         console.log(`${viewName}: failed rowCount=${rowCount} missing-fields ${missingFields.join(',')}`);
+        continue;
+      }
+
+      const rolloutFields = rolloutPublicViewFields[viewName] ?? [];
+      const missingRolloutFields = firstRow
+        ? rolloutFields.filter((field) => !(field in firstRow))
+        : [];
+
+      if (missingRolloutFields.length > 0) {
+        console.log(viewName + ': ok rowCount=' + rowCount + ' rollout-pending ' + missingRolloutFields.join(','));
         continue;
       }
 

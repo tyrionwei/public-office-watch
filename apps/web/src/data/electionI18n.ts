@@ -1,4 +1,5 @@
 import type { Translate, TranslationKey } from '../i18n';
+import type { PublicCandidate } from '../types/publicViews';
 import type { ElectionEvent } from './electionEvents';
 
 const electionTypeKeys: Record<string, TranslationKey> = {
@@ -61,15 +62,29 @@ const raceTypeKeys: Record<string, TranslationKey> = {
   other: 'race.type.other',
 };
 
-const registrationStatusKeys: Record<string, TranslationKey> = {
-  registered: 'registration.status.registered',
-  qualified: 'registration.status.qualified',
-  pending: 'registration.status.pending',
-  elected: 'registration.status.elected',
-  not_elected: 'registration.status.notElected',
-  disqualified: 'registration.status.disqualified',
-  withdrawn: 'registration.status.withdrawn',
-  unknown: 'registration.status.unknown',
+const candidacyStatusKeys: Record<PublicCandidate['candidacy_status'], TranslationKey> = {
+  potential: 'candidacy.status.potential',
+  party_nominee: 'candidacy.status.partyNominee',
+  officially_announced: 'candidacy.status.officiallyAnnounced',
+  registered: 'candidacy.status.registered',
+  qualified: 'candidacy.status.qualified',
+  withdrawn_or_disqualified: 'candidacy.status.withdrawnOrDisqualified',
+  unknown: 'candidacy.status.unknown',
+};
+
+const activeCandidacyStatuses = new Set<PublicCandidate['candidacy_status']>([
+  'potential',
+  'party_nominee',
+  'officially_announced',
+  'registered',
+  'qualified',
+]);
+
+const electionResultKeys: Record<PublicCandidate['election_result'], TranslationKey> = {
+  pending: 'election.result.pending',
+  elected: 'election.result.elected',
+  not_elected: 'election.result.notElected',
+  unknown: 'election.result.unknown',
 };
 
 const raceCategoryKeys: Record<string, TranslationKey> = {
@@ -107,8 +122,26 @@ export function translateRaceType(type: string, t: Translate) {
   return translateMappedValue(type, raceTypeKeys, t);
 }
 
-export function translateRegistrationStatus(status: string, t: Translate) {
-  return translateMappedValue(status, registrationStatusKeys, t);
+export function translateCandidacyStatus(status: PublicCandidate['candidacy_status'], t: Translate) {
+  return t(candidacyStatusKeys[status]);
+}
+
+export function translateElectionResult(result: PublicCandidate['election_result'], t: Translate) {
+  return t(electionResultKeys[result]);
+}
+
+export function translateCandidateStatus(candidate: PublicCandidate, t: Translate) {
+  return candidate.election_result === 'elected' || candidate.election_result === 'not_elected'
+    ? translateElectionResult(candidate.election_result, t)
+    : translateCandidacyStatus(candidate.candidacy_status, t);
+}
+
+export function isCandidateElected(candidate: PublicCandidate) {
+  return candidate.election_result === 'elected';
+}
+
+export function isActiveCandidacy(candidate: PublicCandidate) {
+  return activeCandidacyStatuses.has(candidate.candidacy_status);
 }
 
 export function translateRaceCategory(category: string, t: Translate) {

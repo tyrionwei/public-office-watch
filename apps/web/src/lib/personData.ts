@@ -1,3 +1,4 @@
+import { isActiveCandidacy, isCandidateElected } from '../data/electionI18n';
 import type { StageRegionNode } from '../types/stageMap';
 import type {
   PublicCandidate,
@@ -55,13 +56,6 @@ const roleRank: Record<PublicPersonRole, number> = {
   candidate: 7,
   other: 8,
 };
-
-const awaitingCandidateStatus = `${'pen'}${'ding'}` as PublicCandidate['registration_status'];
-const activeCandidateStatuses = new Set<PublicCandidate['registration_status']>([
-  awaitingCandidateStatus,
-  'registered',
-  'qualified',
-]);
 
 const commonCompoundSurnames = [
   '歐陽',
@@ -317,7 +311,7 @@ function compareCandidateRecordsNewestFirst(left: PublicCandidate, right: Public
 }
 
 function isUpcomingCandidate(candidate: PublicCandidate) {
-  return activeCandidateStatuses.has(candidate.registration_status) && isUpcomingElectionYear(candidateElectionYear(candidate));
+  return isActiveCandidacy(candidate) && isUpcomingElectionYear(candidateElectionYear(candidate));
 }
 
 function compareUpcomingCandidates(left: PublicCandidate, right: PublicCandidate) {
@@ -369,7 +363,7 @@ function currentOfficeLabelFor(candidateRecords: PublicCandidate[]) {
 }
 
 function isLikelyCurrentElectedCandidate(candidate: PublicCandidate) {
-  const isElected = candidate.registration_status === 'elected' || candidate.is_elected === true;
+  const isElected = isCandidateElected(candidate);
 
   if (!isElected) {
     return false;
@@ -576,7 +570,7 @@ function timelineYearForCandidate(candidate: PublicCandidate) {
 }
 
 function timelineStatusForCandidate(candidate: PublicCandidate, isCurrentOffice: boolean): PublicPersonTimelineItem['status'] {
-  if (activeCandidateStatuses.has(candidate.registration_status)) return 'candidate';
+  if (isActiveCandidacy(candidate)) return 'candidate';
   if (isCurrentOffice) return 'current';
   return 'past';
 }
@@ -588,7 +582,7 @@ function buildTimelineRecords(
   const currentOfficeCandidateId = currentOfficeCandidateFor(candidateRecords)?.candidate_id ?? null;
   const candidateItems: PublicPersonTimelineItem[] = candidateRecords.map((candidate) => {
     const isCurrentOffice = candidate.candidate_id === currentOfficeCandidateId;
-    const isElected = candidate.registration_status === 'elected' || candidate.is_elected === true;
+    const isElected = isCandidateElected(candidate);
     return {
       id: 'candidate:' + candidate.candidate_id,
       year: timelineYearForCandidate(candidate),

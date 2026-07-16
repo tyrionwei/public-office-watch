@@ -198,6 +198,10 @@ export type PublicCandidate = {
   party: string | null;
   candidate_no: string | null;
   registration_status: 'pending' | 'registered' | 'qualified' | 'disqualified' | 'withdrawn' | 'elected' | 'not_elected' | 'unknown';
+  candidacy_status: 'potential' | 'party_nominee' | 'officially_announced' | 'registered' | 'qualified' | 'withdrawn_or_disqualified' | 'unknown';
+  election_result: 'pending' | 'elected' | 'not_elected' | 'unknown';
+  status_updated_at: string | null;
+  candidate_updated_at: string | null;
   vote_count: number | null;
   vote_rate: number | null;
   is_elected: boolean | null;

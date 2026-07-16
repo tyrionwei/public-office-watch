@@ -5,7 +5,7 @@ import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { buildElectionEvents, getElectionEventForRace, getRaceRegionGroup } from '../data/electionEvents';
-import { translateElectionEventTitle, translateElectionStatus, translateRaceCategory, translateRaceStatus, translateRaceType, translateRegistrationStatus } from '../data/electionI18n';
+import { isCandidateElected, translateCandidateStatus, translateElectionEventTitle, translateElectionStatus, translateRaceCategory, translateRaceStatus, translateRaceType } from '../data/electionI18n';
 import { getRaceCategory } from '../data/electionLabels';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
@@ -66,7 +66,7 @@ export function RacePage() {
 
   const { race, election } = detail;
   const candidates = detail.candidates.slice().sort((left, right) => compareCandidates(left, right, language));
-  const electedCount = candidates.filter((candidate) => candidate.is_elected || candidate.registration_status === 'elected').length;
+  const electedCount = candidates.filter(isCandidateElected).length;
   const events = buildElectionEvents(election ? [election] : [], race ? [race] : []);
   const event = getElectionEventForRace(events, race);
   const backPath = event ? electionEventPath(event.key) : electionsPath();
@@ -142,8 +142,8 @@ export function RacePage() {
                           {partyLabel}
                         </span>
                       </div>
-                      <p className={candidate.is_elected || candidate.registration_status === 'elected' ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
-                        {translateRegistrationStatus(candidate.registration_status, t)}
+                      <p className={isCandidateElected(candidate) ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
+                        {translateCandidateStatus(candidate, t)}
                       </p>
                       <p className="text-sm text-slate-300">{formatNumber(candidate.vote_count, language)}</p>
                       <p className="text-sm text-slate-300">{formatPercent(candidate.vote_rate)}</p>

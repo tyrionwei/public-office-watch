@@ -4,7 +4,7 @@ import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { pickDefaultCandidateSprite } from '../data/defaultCharacterAssets';
-import { translateRegistrationStatus } from '../data/electionI18n';
+import { translateCandidacyStatus, translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
@@ -156,6 +156,9 @@ function candidateDetailRows(candidate: PublicCandidate, t: ReturnType<typeof us
 
   if (candidate.region_name) rows.push([t('person.region'), candidate.region_name]);
   rows.push([t('person.party'), normalizePartyLabel(candidate.party)]);
+  if (candidate.election_result === 'elected' || candidate.election_result === 'not_elected') {
+    rows.push([t('person.electionResult'), translateElectionResult(candidate.election_result, t)]);
+  }
   if (candidate.candidate_no !== null) rows.push([t('race.number'), String(candidate.candidate_no)]);
   if (voteCount) rows.push([t('race.votes'), voteCount]);
   if (voteRate) rows.push([t('race.voteRate'), voteRate]);
@@ -437,7 +440,9 @@ export function PersonPage() {
                           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{getCandidateElectionLabel(candidate)}</p>
                           <h3 className="mt-2 font-display text-lg text-white">{candidate.race_title}</h3>
                         </div>
-                        <span className="text-xs text-signal">{translateRegistrationStatus(candidate.registration_status, t)}</span>
+                        <span className="text-xs text-signal">
+                          {t('person.candidacyStatusValue', { status: translateCandidacyStatus(candidate.candidacy_status, t) })}
+                        </span>
                       </div>
                       <dl className="mt-3 space-y-2 text-sm">
                         {candidateDetailRows(candidate, t, language).map(([label, value]) => (

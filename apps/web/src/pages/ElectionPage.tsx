@@ -6,12 +6,13 @@ import { PollComparisonPanel } from '../components/PollComparisonPanel';
 import { SectionPanel } from '../components/SectionPanel';
 import { groupRacesByCategory } from '../data/electionLabels';
 import {
+  isCandidateElected,
+  translateCandidateStatus,
   translateElectionStatus,
   translateElectionType,
   translateRaceCategory,
   translateRaceStatus,
   translateRaceType,
-  translateRegistrationStatus,
 } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
@@ -68,7 +69,7 @@ export function ElectionPage() {
   const racesWithCandidates = races.filter((race) => candidatesByRaceId.has(race.race_id));
   const raceGroups = groupCandidateRaces(races, candidatesByRaceId);
   const raceGroupsWithCandidates = groupCandidateRaces(racesWithCandidates, candidatesByRaceId);
-  const electedCount = candidates.filter((candidate) => candidate.is_elected || candidate.registration_status === 'elected').length;
+  const electedCount = candidates.filter(isCandidateElected).length;
   const sourcedCandidateCount = candidates.filter((candidate) => candidate.source_name).length;
   const regionCount = uniqueCount(races.map((race) => race.region_name));
   const raceCategorySummary = raceGroups.length > 0
@@ -171,7 +172,7 @@ export function ElectionPage() {
 
                         {group.races.map((race) => {
                           const raceCandidates = (candidatesByRaceId.get(race.race_id) ?? []).slice().sort((left, right) => compareCandidates(left, right, language));
-                          const raceElectedCount = raceCandidates.filter((candidate) => candidate.is_elected || candidate.registration_status === 'elected').length;
+                          const raceElectedCount = raceCandidates.filter(isCandidateElected).length;
 
                           return (
                             <article key={race.race_id} className="pixel-corners border border-line/70 bg-bg/35">
@@ -218,8 +219,8 @@ export function ElectionPage() {
                                           {partyLabel}
                                         </span>
                                       </div>
-                                      <p className={candidate.is_elected || candidate.registration_status === 'elected' ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
-                                        {translateRegistrationStatus(candidate.registration_status, t)}
+                                      <p className={isCandidateElected(candidate) ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
+                                        {translateCandidateStatus(candidate, t)}
                                       </p>
                                       <p className="text-sm text-slate-300">{formatNumber(candidate.vote_count, language)}</p>
                                       <p className="text-sm text-slate-300">{formatPercent(candidate.vote_rate)}</p>

@@ -158,6 +158,45 @@ function asCandidateRegistrationStatus(value: unknown): PublicCandidate['registr
     : 'unknown';
 }
 
+function asCandidateCandidacyStatus(value: unknown): PublicCandidate['candidacy_status'] {
+  const allowed: PublicCandidate['candidacy_status'][] = [
+    'potential',
+    'party_nominee',
+    'officially_announced',
+    'registered',
+    'qualified',
+    'withdrawn_or_disqualified',
+    'unknown',
+  ];
+  return typeof value === 'string' && allowed.includes(value as PublicCandidate['candidacy_status'])
+    ? (value as PublicCandidate['candidacy_status'])
+    : 'unknown';
+}
+
+function asCandidateElectionResult(value: unknown): PublicCandidate['election_result'] {
+  const allowed: PublicCandidate['election_result'][] = ['pending', 'elected', 'not_elected', 'unknown'];
+  return typeof value === 'string' && allowed.includes(value as PublicCandidate['election_result'])
+    ? (value as PublicCandidate['election_result'])
+    : 'unknown';
+}
+
+function candidacyStatusFromLegacy(status: PublicCandidate['registration_status']): PublicCandidate['candidacy_status'] {
+  if (status === 'pending') return 'potential';
+  if (status === 'registered' || status === 'qualified') return status;
+  if (status === 'disqualified' || status === 'withdrawn') return 'withdrawn_or_disqualified';
+  if (status === 'elected' || status === 'not_elected') return 'qualified';
+  return 'unknown';
+}
+
+function electionResultFromLegacy(
+  status: PublicCandidate['registration_status'],
+  isElected: boolean | null,
+): PublicCandidate['election_result'] {
+  if (isElected === true || status === 'elected') return 'elected';
+  if (isElected === false || status === 'not_elected') return 'not_elected';
+  return 'unknown';
+}
+
 function asPhotoLicenseType(value: unknown): PublicPersonPrimaryPhoto['license_type'] {
   const allowed: PublicPersonPrimaryPhoto['license_type'][] = [
     'government_open_data',
@@ -241,6 +280,9 @@ export function mapPublicRaceRow(row: PartialRow<PublicRace>): PublicRace {
 }
 
 export function mapPublicCandidateRow(row: PartialRow<PublicCandidate>): PublicCandidate {
+  const registrationStatus = asCandidateRegistrationStatus(row?.registration_status);
+  const isElected = typeof row?.is_elected === 'boolean' ? row.is_elected : null;
+
   return {
     candidate_id: asString(row?.candidate_id, ''),
     person_id: asString(row?.person_id, ''),
@@ -256,10 +298,18 @@ export function mapPublicCandidateRow(row: PartialRow<PublicCandidate>): PublicC
     region_name: asNullableString(row?.region_name),
     party: asNullableString(row?.party),
     candidate_no: asNullableString(row?.candidate_no),
-    registration_status: asCandidateRegistrationStatus(row?.registration_status),
+    registration_status: registrationStatus,
+    candidacy_status: row?.candidacy_status === undefined
+      ? candidacyStatusFromLegacy(registrationStatus)
+      : asCandidateCandidacyStatus(row.candidacy_status),
+    election_result: row?.election_result === undefined
+      ? electionResultFromLegacy(registrationStatus, isElected)
+      : asCandidateElectionResult(row.election_result),
+    status_updated_at: asNullableString(row?.status_updated_at),
+    candidate_updated_at: asNullableString(row?.candidate_updated_at),
     vote_count: asNullableNumber(row?.vote_count),
     vote_rate: asNullableNumber(row?.vote_rate),
-    is_elected: typeof row?.is_elected === 'boolean' ? row.is_elected : null,
+    is_elected: isElected,
     is_incumbent: typeof row?.is_incumbent === 'boolean' ? row.is_incumbent : null,
     source_name: asNullableString(row?.source_name),
     source_url: asNullableString(row?.source_url),

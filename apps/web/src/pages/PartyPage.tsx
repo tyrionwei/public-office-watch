@@ -3,7 +3,7 @@ import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
-import { translateRegistrationStatus } from '../data/electionI18n';
+import { isActiveCandidacy, translateCandidateStatus } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { dataGuidancePath, partiesPath } from '../routes/routePaths';
@@ -28,7 +28,7 @@ function matchesPartyLabel(value: string | null | undefined, party: PublicParty)
 }
 
 function isPublishedCandidate(candidate: PublicCandidate) {
-  return !['disqualified', 'withdrawn', 'unknown'].includes(candidate.registration_status);
+  return isActiveCandidacy(candidate) || candidate.election_result === 'elected' || candidate.election_result === 'not_elected';
 }
 
 function isCurrentOfficeholder(person: PublicPerson) {
@@ -53,7 +53,7 @@ function CandidateMiniCard({ candidate }: { candidate: PublicCandidate }) {
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
       <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-        {translateRegistrationStatus(candidate.registration_status, t)}
+        {translateCandidateStatus(candidate, t)}
       </p>
       <h3 className="mt-2 font-display text-lg text-white">{candidate.person_name}</h3>
       <p className="mt-2 text-sm text-slate-400">

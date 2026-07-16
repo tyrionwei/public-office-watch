@@ -35,6 +35,32 @@ function readLocalEnv() {
 
 const localEnv = readLocalEnv();
 
+function candidateCandidacyStatus(candidate) {
+  const explicitStatus = candidate.candidacyStatus ?? candidate.candidacy_status;
+  if (explicitStatus) return explicitStatus;
+
+  const legacyStatus = candidate.registrationStatus ?? candidate.registration_status ?? 'unknown';
+  if (legacyStatus === 'pending') return 'potential';
+  if (legacyStatus === 'registered' || legacyStatus === 'qualified') return legacyStatus;
+  if (legacyStatus === 'disqualified' || legacyStatus === 'withdrawn') return 'withdrawn_or_disqualified';
+  if (legacyStatus === 'elected' || legacyStatus === 'not_elected') return 'qualified';
+  return 'unknown';
+}
+
+function candidateElectionResult(candidate, raceStatus) {
+  const explicitResult = candidate.electionResult ?? candidate.election_result;
+  if (explicitResult) return explicitResult;
+
+  const legacyStatus = candidate.registrationStatus ?? candidate.registration_status ?? 'unknown';
+  const elected = candidate.isElected ?? candidate.is_elected ?? candidate.sourcePayload?.elected ?? null;
+  if (elected === true || legacyStatus === 'elected') return 'elected';
+  if (elected === false || legacyStatus === 'not_elected') return 'not_elected';
+  if (['draft', 'announced', 'upcoming', 'registration_open', 'candidates_announced', 'voting'].includes(raceStatus)) {
+    return 'pending';
+  }
+  return 'unknown';
+}
+
 function parseArgs(argv) {
   const args = {
     seedPath: defaultSeedPath,
@@ -3364,7 +3390,7 @@ async function writeSeed(seed, hash, args) {
 
   await upsertOrThrow(env, 'races', raceRows, { onConflict: 'external_id' });
 
-  const raceRefresh = await selectAllOrThrow(env, 'races', 'id,external_id');
+  const raceRefresh = await selectAllOrThrow(env, 'races', 'id,external_id,status');
   const raceByExternalId = new Map(raceRefresh.map((race) => [race.external_id, race]));
 
   const personRows = (seed.people ?? []).map((person) => {
@@ -3426,6 +3452,8 @@ async function writeSeed(seed, hash, args) {
       party: candidate.party ?? null,
       candidate_no: candidate.candidateNo ?? candidate.candidate_no ?? null,
       registration_status: candidate.registrationStatus ?? candidate.registration_status ?? 'unknown',
+      candidacy_status: candidateCandidacyStatus(candidate),
+      election_result: candidateElectionResult(candidate, raceByExternalId.get(raceExternalId)?.status),
       vote_count: candidate.voteCount ?? candidate.vote_count ?? candidate.sourcePayload?.votes ?? null,
       vote_rate: candidate.voteRate ?? candidate.vote_rate ?? candidate.sourcePayload?.voteRate ?? null,
       is_elected: candidate.isElected ?? candidate.is_elected ?? candidate.sourcePayload?.elected ?? null,

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { buildDecisionState, candidateIdentityKey, confidenceForRacePair, electionRelationSuggestion, isSuppressedByDecision, normalizeCandidateNumber, raceRegionCompatibility } from './report-election-race-duplicates.mjs';
+import { buildDecisionState, candidateIdentityKey, confidenceForRacePair, electionRelationSuggestion, isSuppressedByDecision, normalizeCandidateNumber, raceRegionCompatibility, semanticRaceType } from './report-election-race-duplicates.mjs';
 
 test('normalizes candidate numbers and keeps different numbers separate', () => {
   assert.equal(normalizeCandidateNumber('01'), '1');
@@ -25,6 +25,12 @@ test('suppresses decided pairs and active duplicate records', () => {
 test('classifies aggregate local elections separately from exact duplicates', () => {
   assert.equal(electionRelationSuggestion({ semanticType: 'local', candidateOverlap: { smallerRate: 1 }, left: { electionType: 'local', candidateCount: 1766, raceCount: 236 }, right: { electionType: 'councilor', candidateCount: 132, raceCount: 17 } }), 'aggregate_source_link');
   assert.equal(electionRelationSuggestion({ semanticType: 'local', candidateOverlap: { smallerRate: 1 }, left: { electionType: 'local', candidateCount: 59, raceCount: 15 }, right: { electionType: 'local_chief', candidateCount: 59, raceCount: 15 } }), 'same_election');
+});
+
+test('keeps subcounty chiefs separate from county and city chiefs', () => {
+  assert.equal(semanticRaceType('county_mayor'), 'local_chief');
+  assert.equal(semanticRaceType('municipality_mayor'), 'local_chief');
+  assert.equal(semanticRaceType('township_mayor'), 'township_mayor');
 });
 
 test('requires matching region context for automatic race confidence', () => {

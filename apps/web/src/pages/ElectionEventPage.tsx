@@ -18,7 +18,7 @@ import type { PublicElectionRaceFacet } from '../types/publicViews';
 
 type CategoryOption = RaceCategory & { count: number };
 type RegionOption = { key: string; label: string; count: number };
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 20;
 
 function getPage(searchParams: URLSearchParams) {
   const page = Number.parseInt(searchParams.get('page') ?? '1', 10);

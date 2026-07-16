@@ -564,7 +564,7 @@ async function fetchPeoplePage(
   await refreshSupabasePublicDataSnapshot();
 
   const snapshot = getSnapshot();
-  const view = fromPublicView('public_people_list');
+  const view = fromPublicView('public_people_list_cached');
   if (!snapshot || !view) {
     return { items: [], total: 0 };
   }

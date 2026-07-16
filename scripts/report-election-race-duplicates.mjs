@@ -153,7 +153,8 @@ function semanticElectionType(value) {
 function semanticRaceType(value) {
   if (['president', 'vice_president'].includes(value)) return 'president';
   if (['legislator', 'legislative_district', 'party_list_legislator', 'indigenous'].includes(value)) return 'legislator';
-  if (['municipality_mayor', 'county_mayor', 'township_mayor', 'local_chief'].includes(value)) return 'local_chief';
+  if (['municipality_mayor', 'county_mayor', 'local_chief'].includes(value)) return 'local_chief';
+  if (value === 'township_mayor') return 'township_mayor';
   if (['city_councilor', 'county_councilor', 'councilor_district'].includes(value)) return 'councilor';
   if (['township_representative', 'township_representative_district'].includes(value)) return 'township_representative';
   if (value === 'village_chief') return 'village_chief';
@@ -489,4 +490,4 @@ if (isMainModule) {
   });
 }
 
-export { buildDecisionState, candidateIdentityKey, confidenceForRacePair, electionRelationSuggestion, isSuppressedByDecision, normalizeCandidateNumber, raceRegionCompatibility };
+export { buildDecisionState, candidateIdentityKey, confidenceForRacePair, electionRelationSuggestion, isSuppressedByDecision, normalizeCandidateNumber, raceRegionCompatibility, semanticRaceType };

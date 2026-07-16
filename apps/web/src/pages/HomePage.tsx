@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, useTransition } from 'react';
 import { AppShell } from '../components/AppShell';
 import { LocalOfficeSummaryPanel } from '../components/LocalOfficeSummaryPanel';
 import { PollComparisonPanel } from '../components/PollComparisonPanel';
+import { RegionIssueConcernPanel } from '../components/RegionIssueConcernPanel';
 import { SelectedRegionHud } from '../components/SelectedRegionHud';
 import { TaiwanStageSelect } from '../components/TaiwanStageSelect';
 import { UpcomingElectionCards } from '../components/UpcomingElectionCards';
@@ -76,6 +77,10 @@ export function HomePage() {
             selectedRegionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? t('home.unspecifiedRegion')}
             selectedPublicRegionId={selectedRegionNode?.publicRegionId ?? null}
             compact
+          />
+          <RegionIssueConcernPanel
+            regionId={selectedRegionNode?.publicRegionId ?? null}
+            regionLabel={selectedRegionSummary?.label ?? selectedRegionNode?.label ?? t('home.unspecifiedRegion')}
           />
         </section>
 

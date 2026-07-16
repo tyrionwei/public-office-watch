@@ -183,6 +183,10 @@ function inferElectionType(name) {
   return 'other';
 }
 
+function isSubcountyChiefTitle(raceTitle) {
+  return /(鄉長|鎮長|區長)選舉$/.test(raceTitle) || /縣.+市市長選舉$/.test(raceTitle);
+}
+
 function inferRaceType(electionType, raceTitle) {
   if (electionType === 'president') return 'president';
   if (electionType === 'legislator') {
@@ -193,7 +197,7 @@ function inferRaceType(electionType, raceTitle) {
   if (electionType === 'village_chief') return 'village_chief';
   if (electionType === 'township_representative') return 'township_representative_district';
   if (electionType === 'councilor') return 'councilor_district';
-  if (electionType === 'local_chief') return 'local_chief';
+  if (electionType === 'local_chief') return isSubcountyChiefTitle(raceTitle) ? 'township_mayor' : 'local_chief';
   return 'other';
 }
 
@@ -203,6 +207,7 @@ function inferPosition(electionType, record = null) {
   if (electionType === 'village_chief') return '村里長候選人';
   if (electionType === 'township_representative') return '鄉鎮市民代表候選人';
   if (electionType === 'councilor') return '議員候選人';
+  if (record?.race?.raceType === 'township_mayor') return '鄉鎮市區長候選人';
   if (electionType === 'local_chief') return '地方首長候選人';
   return '候選人';
 }

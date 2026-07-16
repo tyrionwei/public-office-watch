@@ -95,6 +95,24 @@ async function insertRows(tableName, rows) {
   return body;
 }
 
+async function callRpc(functionName) {
+  const response = await fetch(restUrl('rpc/' + functionName), {
+    method: 'POST',
+    headers: {
+      apikey: serviceRoleKey,
+      authorization: 'Bearer ' + serviceRoleKey,
+      'content-type': 'application/json',
+    },
+    body: '{}',
+    signal: AbortSignal.timeout(30000),
+  });
+
+  if (!response.ok) {
+    const body = await response.json();
+    throw new Error('Failed to call ' + functionName + ': ' + (body?.message ?? response.statusText));
+  }
+}
+
 function decisionKey(leftPersonId, rightPersonId) {
   return [leftPersonId, rightPersonId].sort().join('|');
 }
@@ -163,8 +181,8 @@ function buildMergeRows(candidates, decisions) {
       continue;
     }
 
-    const canonicalPersonId = verifiedCanonicalByDuplicateId.get(cec.person_id) ?? votetw.person_id;
-    const duplicatePersonId = canonicalPersonId === votetw.person_id ? cec.person_id : votetw.person_id;
+    const canonicalPersonId = verifiedCanonicalByDuplicateId.get(cec.person_id) ?? cec.person_id;
+    const duplicatePersonId = votetw.person_id;
 
     if (activeDuplicatePersonIds.has(duplicatePersonId)) {
       skipped.push({ reason: 'duplicate_person_already_active', group });
@@ -229,6 +247,7 @@ async function main() {
 
   if (options.write) {
     const inserted = await insertRows('person_merge_decisions', rows);
+    await callRpc('refresh_public_people_list_cached');
     console.log(JSON.stringify({
       status: 'ok',
       dryRun: false,

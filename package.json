@@ -9,7 +9,7 @@
   "scripts": {
     "check": "npm run test:data-reports && npm --prefix apps/web run lint && npm --prefix apps/web run build && npm --prefix apps/web run check:data-boundary && npm --prefix apps/web run check:public-view-contracts",
     "test": "npm run check",
-    "test:data-reports": "node --test scripts/report-election-race-duplicates.test.mjs scripts/report-candidate-status-quality.test.mjs",
+    "test:data-reports": "node --test scripts/report-election-race-duplicates.test.mjs scripts/report-candidate-status-quality.test.mjs scripts/import-official-candidate-snapshot.test.mjs",
     "sync:real-data:dry-run": "node scripts/sync-real-public-data.mjs --weekly",
     "sync:real-data:historical-dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-historical-cec",
     "sync:real-data:daily": "node scripts/sync-real-public-data.mjs --daily",
@@ -133,7 +133,9 @@
     "sync:kinmen-county-official-person-profiles:write": "node scripts/sync-real-public-data.mjs --weekly --include-person-source-people --person-source-people data-sources/kinmen-county-official-person-profiles.seed.json --include-person-enrichment-claims --person-enrichment-claims data-sources/kinmen-county-official-person-profiles.seed.json --write --record-run",
     "fetch:lienchiang-county-official-person-profiles": "node scripts/fetch-lienchiang-county-official-person-profiles.mjs",
     "sync:lienchiang-county-official-person-profiles:dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-person-source-people --person-source-people data-sources/lienchiang-county-official-person-profiles.seed.json --include-person-enrichment-claims --person-enrichment-claims data-sources/lienchiang-county-official-person-profiles.seed.json",
-    "sync:lienchiang-county-official-person-profiles:write": "node scripts/sync-real-public-data.mjs --weekly --include-person-source-people --person-source-people data-sources/lienchiang-county-official-person-profiles.seed.json --include-person-enrichment-claims --person-enrichment-claims data-sources/lienchiang-county-official-person-profiles.seed.json --write --record-run"
+    "sync:lienchiang-county-official-person-profiles:write": "node scripts/sync-real-public-data.mjs --weekly --include-person-source-people --person-source-people data-sources/lienchiang-county-official-person-profiles.seed.json --include-person-enrichment-claims --person-enrichment-claims data-sources/lienchiang-county-official-person-profiles.seed.json --write --record-run",
+    "import:official-candidates:dry-run": "node scripts/import-official-candidate-snapshot.mjs",
+    "import:official-candidates:write": "node scripts/import-official-candidate-snapshot.mjs --write"
   },
   "repository": {
     "type": "git",

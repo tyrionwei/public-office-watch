@@ -6,6 +6,7 @@ import { createClient } from '@supabase/supabase-js';
 const allowedPublicViews = {
   public_people: ['person_id', 'name', 'gender', 'education', 'experience', 'updated_at'],
   public_people_list: ['person_id', 'name', 'list_role', 'list_status', 'list_is_grassroots', 'list_status_order', 'list_role_order'],
+  public_people_list_cached: ['person_id', 'name', 'list_role', 'list_status', 'list_is_grassroots', 'list_status_order', 'list_role_order'],
   public_companies: ['company_id', 'name', 'updated_at'],
   public_relation_details: ['relation_id', 'person_id', 'company_id', 'relation_type', 'verification_status'],
   public_regions: ['region_id', 'name', 'slug', 'region_type'],
@@ -26,6 +27,7 @@ const allowedPublicViews = {
   ],
   public_home_election_ticker: ['election_id', 'election_name', 'voting_date', 'status'],
   public_region_election_summary: ['region_id', 'region_name', 'region_slug', 'upcoming_race_count'],
+  public_region_issue_results: ['issue_id', 'region_id', 'region_name', 'issue_key', 'response_count', 'participant_count', 'selection_rate'],
   public_person_primary_photos: ['person_id', 'media_id', 'photo_url', 'source_name'],
   public_person_identity_sources: ['identity_source_id', 'person_id', 'source_type', 'source_name', 'election_year', 'match_status', 'match_score'],
   public_person_claims: ['claim_id', 'person_id', 'claim_type', 'confidence_level', 'review_score', 'source_name'],

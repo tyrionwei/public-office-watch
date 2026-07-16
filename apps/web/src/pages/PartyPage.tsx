@@ -1,14 +1,16 @@
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
-import { isActiveCandidacy, translateCandidateStatus } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
-import { dataGuidancePath, partiesPath } from '../routes/routePaths';
+import type { PublicPersonListPage } from '../lib/publicDataProvider';
+import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
+import { dataGuidancePath, partiesPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicCandidate, PublicParty, PublicPerson } from '../types/publicViews';
+import type { PublicPersonListItem, PublicPersonStatus } from '../types/publicViews';
 
 function formatCurrency(value: number, locale: string) {
   return new Intl.NumberFormat(locale, {
@@ -18,75 +20,210 @@ function formatCurrency(value: number, locale: string) {
   }).format(value);
 }
 
-function matchesPartyLabel(value: string | null | undefined, party: PublicParty) {
-  if (!value) {
-    return false;
+const PARTY_PEOPLE_PAGE_SIZE = 8;
+const CONTRIBUTION_PAGE_SIZE = 10;
+const emptyPeoplePage: PublicPersonListPage = { items: [], total: 0 };
+
+function getSectionPage(searchParams: URLSearchParams, key: string) {
+  const page = Number.parseInt(searchParams.get(key) ?? '1', 10);
+  return Number.isFinite(page) && page > 0 ? page : 1;
+}
+
+function getVisiblePageNumbers(currentPage: number, pageCount: number) {
+  const visibleCount = Math.min(5, pageCount);
+  const halfWindow = Math.floor(visibleCount / 2);
+  let start = Math.max(1, currentPage - halfWindow);
+  const endOverflow = start + visibleCount - 1 - pageCount;
+
+  if (endOverflow > 0) {
+    start = Math.max(1, start - endOverflow);
   }
 
-  const labels = [party.name, party.short_name].filter((label): label is string => Boolean(label));
-  return labels.some((label) => value === label || value.includes(label) || label.includes(value));
+  return Array.from({ length: visibleCount }, (_, index) => start + index);
 }
 
-function isPublishedCandidate(candidate: PublicCandidate) {
-  return isActiveCandidacy(candidate) || candidate.election_result === 'elected' || candidate.election_result === 'not_elected';
+function usePartyPeoplePage(
+  partyName: string | null,
+  status: PublicPersonStatus,
+  page: number,
+) {
+  const [result, setResult] = useState<PublicPersonListPage>(emptyPeoplePage);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setResult(emptyPeoplePage);
+
+    if (!partyName) {
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setLoading(true);
+
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadPeoplePage(
+        { party: partyName, status },
+        page,
+        PARTY_PEOPLE_PAGE_SIZE,
+      ))
+      .then((nextPage) => {
+        if (active) setResult(nextPage);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) {
+          console.warn('Failed to load party people page', error);
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [page, partyName, status]);
+
+  return { ...result, loading };
 }
 
-function isCurrentOfficeholder(person: PublicPerson) {
-  return Boolean(person.position) && !person.position?.includes('候選人');
-}
-
-function PersonMiniCard({ person }: { person: PublicPerson }) {
+function PersonMiniCard({
+  person,
+  eyebrow,
+}: {
+  person: PublicPersonListItem;
+  eyebrow: string;
+}) {
   const { t } = useI18n();
 
   return (
-    <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
-      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{person.position ?? t('partyDetail.currentOffice')}</p>
+    <Link
+      to={personPath(person.person_id)}
+      className="block pixel-corners border border-line/70 bg-bg/35 p-4 transition hover:border-accent/70 hover:bg-accent/5"
+    >
+      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{eyebrow}</p>
       <h3 className="mt-2 font-display text-lg text-white">{person.name}</h3>
-      <p className="mt-2 text-sm text-slate-400">{[person.district, person.election_year].filter(Boolean).join(' · ') || t('partyDetail.publicPerson')}</p>
-    </article>
+      <p className="mt-2 text-sm text-slate-400">
+        {[person.display_position_label, person.region_name ?? person.district]
+          .filter(Boolean)
+          .join(' / ') || t('partyDetail.publicPerson')}
+      </p>
+    </Link>
   );
 }
 
-function CandidateMiniCard({ candidate }: { candidate: PublicCandidate }) {
+function SectionPagination({
+  currentPage,
+  total,
+  pageSize,
+  onChange,
+}: {
+  currentPage: number;
+  total: number;
+  pageSize: number;
+  onChange: (page: number) => void;
+}) {
   const { t } = useI18n();
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
+
+  if (pageCount <= 1) return null;
 
   return (
-    <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
-      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-        {translateCandidateStatus(candidate, t)}
-      </p>
-      <h3 className="mt-2 font-display text-lg text-white">{candidate.person_name}</h3>
-      <p className="mt-2 text-sm text-slate-400">
-        {[candidate.race_title, candidate.region_name, candidate.candidate_no ? `#${candidate.candidate_no}` : null]
-          .filter(Boolean)
-          .join(' · ') || t('partyDetail.publicCandidate')}
-      </p>
-    </article>
+    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line/60 pt-4 text-sm text-slate-300">
+      <p>{t('event.page', { current: currentPage, total: pageCount })}</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => onChange(1)}
+          disabled={currentPage <= 1}
+          className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {t('event.first')}
+        </button>
+        <button
+          type="button"
+          onClick={() => onChange(currentPage - 1)}
+          disabled={currentPage <= 1}
+          className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {t('event.previous')}
+        </button>
+        {getVisiblePageNumbers(currentPage, pageCount).map((pageNumber) => (
+          <button
+            key={pageNumber}
+            type="button"
+            onClick={() => onChange(pageNumber)}
+            aria-current={pageNumber === currentPage ? 'page' : undefined}
+            className={pageNumber === currentPage
+              ? 'pixel-corners border border-accent bg-accent/20 px-3 py-2 text-xs text-white'
+              : 'pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs transition hover:border-accent/55 hover:text-white'}
+          >
+            {pageNumber}
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={() => onChange(currentPage + 1)}
+          disabled={currentPage >= pageCount}
+          className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {t('event.next')}
+        </button>
+        <button
+          type="button"
+          onClick={() => onChange(pageCount)}
+          disabled={currentPage >= pageCount}
+          className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2 text-xs transition hover:border-accent/55 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {t('event.last')}
+        </button>
+      </div>
+    </div>
   );
 }
 
 export function PartyPage() {
   const { language, t } = useI18n();
   const { partySlug } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const party = publicDataProvider.getPartyBySlug(partySlug ?? '');
+  const officeholderRequestedPage = getSectionPage(searchParams, 'officePage');
+  const candidateRequestedPage = getSectionPage(searchParams, 'candidatePage');
+  const contributionRequestedPage = getSectionPage(searchParams, 'contributionPage');
+  const officeholders = usePartyPeoplePage(party?.name ?? null, 'current', officeholderRequestedPage);
+  const candidates = usePartyPeoplePage(party?.name ?? null, 'candidate', candidateRequestedPage);
   const financeSummaries = party ? publicDataProvider.getPartyFinanceSummaries(party.party_id) : [];
   const companySummaries = party ? publicDataProvider.getPartyCompanyContributionSummaries(party.party_id) : [];
   const latestFinance = financeSummaries.slice().sort((left, right) => right.report_year - left.report_year)[0];
   const theme = party ? partyTheme[party.theme_key] : partyTheme.unknown;
-  const officeholders = party
-    ? publicDataProvider
-        .getPeople()
-        .filter((person) => matchesPartyLabel(person.party, party) && isCurrentOfficeholder(person))
-    : [];
-  const announcedCandidates = party
-    ? publicDataProvider
-        .getCandidates()
-        .filter(
-          (candidate) =>
-            isPublishedCandidate(candidate) &&
-            (matchesPartyLabel(candidate.party, party) || matchesPartyLabel(candidate.person_party, party)),
-        )
-    : [];
+  const officeholderPageCount = Math.max(1, Math.ceil(officeholders.total / PARTY_PEOPLE_PAGE_SIZE));
+  const candidatePageCount = Math.max(1, Math.ceil(candidates.total / PARTY_PEOPLE_PAGE_SIZE));
+  const contributionPageCount = Math.max(1, Math.ceil(companySummaries.length / CONTRIBUTION_PAGE_SIZE));
+  const officeholderPage = Math.min(officeholderRequestedPage, officeholderPageCount);
+  const candidatePage = Math.min(candidateRequestedPage, candidatePageCount);
+  const contributionPage = Math.min(contributionRequestedPage, contributionPageCount);
+  const visibleCompanySummaries = companySummaries.slice(
+    (contributionPage - 1) * CONTRIBUTION_PAGE_SIZE,
+    contributionPage * CONTRIBUTION_PAGE_SIZE,
+  );
+  const updateSectionPage = (
+    key: 'officePage' | 'candidatePage' | 'contributionPage',
+    page: number,
+    pageCount: number,
+  ) => {
+    const nextParams = new URLSearchParams(searchParams);
+    const nextPage = Math.min(Math.max(page, 1), pageCount);
+
+    if (nextPage <= 1) {
+      nextParams.delete(key);
+    } else {
+      nextParams.set(key, String(nextPage));
+    }
+
+    setSearchParams(nextParams);
+  };
   const currency = (value: number) => formatCurrency(value, language);
 
   return (
@@ -166,14 +303,30 @@ export function PartyPage() {
                 <div>
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <h3 className="font-display text-lg text-white">{t('partyDetail.officeholders')}</h3>
-                    <span className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('common.peopleCount', { count: officeholders.length })}</span>
+                    <span className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('common.peopleCount', { count: officeholders.total })}</span>
                   </div>
-                  {officeholders.length > 0 ? (
-                    <div className="grid gap-3">
-                      {officeholders.map((person) => (
-                        <PersonMiniCard key={person.person_id} person={person} />
-                      ))}
-                    </div>
+                  {officeholders.loading ? (
+                    <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                      {t('office.loading')}
+                    </p>
+                  ) : officeholders.items.length > 0 ? (
+                    <>
+                      <div className="grid gap-3">
+                        {officeholders.items.map((person) => (
+                          <PersonMiniCard
+                            key={person.person_id}
+                            person={person}
+                            eyebrow={person.role_label || t('partyDetail.currentOffice')}
+                          />
+                        ))}
+                      </div>
+                      <SectionPagination
+                        currentPage={officeholderPage}
+                        total={officeholders.total}
+                        pageSize={PARTY_PEOPLE_PAGE_SIZE}
+                        onChange={(page) => updateSectionPage('officePage', page, officeholderPageCount)}
+                      />
+                    </>
                   ) : (
                     <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
                       {t('partyDetail.noOfficeholders')}
@@ -184,14 +337,30 @@ export function PartyPage() {
                 <div>
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <h3 className="font-display text-lg text-white">{t('partyDetail.candidates')}</h3>
-                    <span className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('partyDetail.candidateCount', { count: announcedCandidates.length })}</span>
+                    <span className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('partyDetail.candidateCount', { count: candidates.total })}</span>
                   </div>
-                  {announcedCandidates.length > 0 ? (
-                    <div className="grid gap-3">
-                      {announcedCandidates.map((candidate) => (
-                        <CandidateMiniCard key={candidate.candidate_id} candidate={candidate} />
-                      ))}
-                    </div>
+                  {candidates.loading ? (
+                    <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                      {t('office.loading')}
+                    </p>
+                  ) : candidates.items.length > 0 ? (
+                    <>
+                      <div className="grid gap-3">
+                        {candidates.items.map((person) => (
+                          <PersonMiniCard
+                            key={person.person_id}
+                            person={person}
+                            eyebrow={person.status_label}
+                          />
+                        ))}
+                      </div>
+                      <SectionPagination
+                        currentPage={candidatePage}
+                        total={candidates.total}
+                        pageSize={PARTY_PEOPLE_PAGE_SIZE}
+                        onChange={(page) => updateSectionPage('candidatePage', page, candidatePageCount)}
+                      />
+                    </>
                   ) : (
                     <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
                       {t('partyDetail.noCandidates')}
@@ -233,47 +402,55 @@ export function PartyPage() {
 
             <SectionPanel title={t('partyDetail.companyTitle')} eyebrow={t('partyDetail.companyEyebrow')}>
               {companySummaries.length > 0 ? (
-                <div className="grid gap-3 lg:grid-cols-2">
-                  {companySummaries.map((summary) => (
-                    <article key={`${summary.party_id}-${summary.company_id}`} className="pixel-corners border border-line/70 bg-bg/35 p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <h3 className="font-display text-lg text-white">{summary.company_name}</h3>
-                          <p className="mt-1 text-sm text-slate-400">{t('partyDetail.yearSummary', { year: summary.report_year })}</p>
+                <>
+                  <div className="grid gap-3 lg:grid-cols-2">
+                    {visibleCompanySummaries.map((summary) => (
+                      <article key={`${summary.party_id}-${summary.company_id}`} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <h3 className="font-display text-lg text-white">{summary.company_name}</h3>
+                            <p className="mt-1 text-sm text-slate-400">{t('partyDetail.yearSummary', { year: summary.report_year })}</p>
+                          </div>
+                          <span className="rounded-sm border border-signal/50 bg-signal/10 px-2 py-1 text-xs text-signal">
+                            {summary.confidence_level}
+                          </span>
                         </div>
-                        <span className="rounded-sm border border-signal/50 bg-signal/10 px-2 py-1 text-xs text-signal">
-                          {summary.confidence_level}
-                        </span>
-                      </div>
-                      <dl className="mt-4 grid gap-2 text-sm text-slate-300">
-                        <div className="flex justify-between gap-3">
-                          <dt className="text-slate-500">{t('partyDetail.summaryAmount')}</dt>
-                          <dd>{currency(summary.amount_total)}</dd>
-                        </div>
-                        <div className="flex justify-between gap-3">
-                          <dt className="text-slate-500">{t('partyDetail.recordCount')}</dt>
-                          <dd>{summary.donation_count}</dd>
-                        </div>
-                        <div className="flex justify-between gap-3">
-                          <dt className="text-slate-500">{t('partyDetail.source')}</dt>
-                          <dd className="text-right">
-                            {summary.source_url ? (
-                              <a href={summary.source_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
-                                {summary.source_name ?? t('partyDetail.donationData')}
-                              </a>
-                            ) : (
-                              summary.source_name ?? t('partyDetail.sourceAwaiting')
-                            )}
-                          </dd>
-                        </div>
-                        <div className="flex justify-between gap-3">
-                          <dt className="text-slate-500">{t('partyDetail.reviewedAt')}</dt>
-                          <dd>{summary.reviewed_at ?? t('partyDetail.reviewAwaiting')}</dd>
-                        </div>
-                      </dl>
-                    </article>
+                        <dl className="mt-4 grid gap-2 text-sm text-slate-300">
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-500">{t('partyDetail.summaryAmount')}</dt>
+                            <dd>{currency(summary.amount_total)}</dd>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-500">{t('partyDetail.recordCount')}</dt>
+                            <dd>{summary.donation_count}</dd>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-500">{t('partyDetail.source')}</dt>
+                            <dd className="text-right">
+                              {summary.source_url ? (
+                                <a href={summary.source_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
+                                  {summary.source_name ?? t('partyDetail.donationData')}
+                                </a>
+                              ) : (
+                                summary.source_name ?? t('partyDetail.sourceAwaiting')
+                              )}
+                            </dd>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-500">{t('partyDetail.reviewedAt')}</dt>
+                            <dd>{summary.reviewed_at ?? t('partyDetail.reviewAwaiting')}</dd>
+                          </div>
+                        </dl>
+                      </article>
                   ))}
-                </div>
+                  </div>
+                  <SectionPagination
+                    currentPage={contributionPage}
+                    total={companySummaries.length}
+                    pageSize={CONTRIBUTION_PAGE_SIZE}
+                    onChange={(page) => updateSectionPage('contributionPage', page, contributionPageCount)}
+                  />
+                </>
               ) : (
                 <p className="text-sm text-slate-400">{t('partyDetail.noCompanySummaries')}</p>
               )}

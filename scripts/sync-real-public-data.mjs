@@ -659,6 +659,28 @@ function mergeByExternalId(collections) {
   return Array.from(merged.values());
 }
 
+function normalizeHistoricalRaceType(race) {
+  const title = String(race.title ?? '');
+  const isSubcountyChief = /(鄉長|鎮長|區長)選舉$/.test(title) || /縣.+市市長選舉$/.test(title);
+
+  return race.raceType === 'local_chief' && isSubcountyChief
+    ? { ...race, raceType: 'township_mayor' }
+    : race;
+}
+
+function mergePartiesByName(collections) {
+  const merged = new Map();
+
+  for (const collection of collections) {
+    for (const item of collection ?? []) {
+      const key = normalizePartyName(item.name).trim();
+      if (key && !merged.has(key)) merged.set(key, item);
+    }
+  }
+
+  return Array.from(merged.values());
+}
+
 function mergeById(collections) {
   const merged = new Map();
 
@@ -1948,8 +1970,11 @@ function enrichSeedWithElectionHistory(seed, args) {
       sources: mergeById([seed.sources, historySeed.sources ?? []]),
       regions: mergeByExternalId([seed.regions, historySeed.regions ?? []]),
       elections: mergeByExternalId([seed.elections, historySeed.elections ?? []]),
-      races: mergeByExternalId([seed.races, historySeed.races ?? []]),
-      parties: mergeByExternalId([seed.parties, historySeed.parties ?? []]),
+      races: mergeByExternalId([
+        seed.races,
+        (historySeed.races ?? []).map(normalizeHistoricalRaceType),
+      ]),
+      parties: mergePartiesByName([seed.parties, historySeed.parties ?? []]),
       people: mergeByExternalId([seed.people, historySeed.people ?? []]),
       sourcePeople: mergeBySourcePersonKey([seed.sourcePeople, historySeed.sourcePeople ?? []]),
       candidates: mergeByExternalId([seed.candidates, historySeed.candidates ?? []]),
@@ -3607,6 +3632,8 @@ async function writeSeed(seed, hash, args) {
   await upsertOrThrow(env, 'party_company_contribution_summaries', companyContributionRows, {
     onConflict: 'party_id,company_id,report_year',
   });
+
+  await supabaseRequest(env, 'rpc/refresh_public_people_list_cached', { method: 'POST', rows: {} });
 
   if (args.recordRun) {
     await upsertOrThrow(

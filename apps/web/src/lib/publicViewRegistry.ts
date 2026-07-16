@@ -1,6 +1,7 @@
 export const allowedPublicViews = [
   'public_people',
   'public_people_list',
+  'public_people_list_cached',
   'public_companies',
   'public_relation_details',
   'public_regions',
@@ -12,6 +13,7 @@ export const allowedPublicViews = [
   'public_candidates',
   'public_home_election_ticker',
   'public_region_election_summary',
+  'public_region_issue_results',
   'public_person_primary_photos',
   'public_person_identity_sources',
   'public_person_claims',
@@ -26,6 +28,8 @@ export type AllowedPublicViewName = (typeof allowedPublicViews)[number];
 export const blockedInternalTables = [
   'relation_candidates',
   'raw_source_records',
+  'region_issue_responses',
+  'region_issues',
   'source_documents',
   'person_media',
   'source_people',

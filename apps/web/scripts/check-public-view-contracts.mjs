@@ -14,7 +14,16 @@ const allowedPublicViews = {
   public_election_race_facets: ['election_id', 'race_type', 'region_key', 'region_label', 'race_count'],
   public_election_race_list: ['race_id', 'event_key', 'race_type', 'region_key', 'sort_category_order', 'sort_region_order', 'sort_district_order'],
   public_races: ['race_id', 'election_id', 'title', 'status'],
-  public_candidates: ['candidate_id', 'person_id', 'race_id', 'election_id', 'registration_status'],
+  public_candidates: [
+    'candidate_id',
+    'person_id',
+    'race_id',
+    'election_id',
+    'registration_status',
+    'candidacy_status',
+    'election_result',
+    'status_updated_at',
+  ],
   public_home_election_ticker: ['election_id', 'election_name', 'voting_date', 'status'],
   public_region_election_summary: ['region_id', 'region_name', 'region_slug', 'upcoming_race_count'],
   public_person_primary_photos: ['person_id', 'media_id', 'photo_url', 'source_name'],
@@ -38,9 +47,6 @@ const allowedPublicViews = {
   public_party_company_contribution_summaries: ['party_id', 'company_id', 'report_year', 'amount_total', 'confidence_level'],
 };
 
-const rolloutPublicViewFields = {
-  public_candidates: ['candidacy_status', 'election_result', 'status_updated_at'],
-};
 
 function parseEnvFile(content) {
   const env = {};
@@ -121,15 +127,6 @@ async function main() {
         continue;
       }
 
-      const rolloutFields = rolloutPublicViewFields[viewName] ?? [];
-      const missingRolloutFields = firstRow
-        ? rolloutFields.filter((field) => !(field in firstRow))
-        : [];
-
-      if (missingRolloutFields.length > 0) {
-        console.log(viewName + ': ok rowCount=' + rowCount + ' rollout-pending ' + missingRolloutFields.join(','));
-        continue;
-      }
 
       console.log(`${viewName}: ok rowCount=${rowCount}`);
     } catch (error) {

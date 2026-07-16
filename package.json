@@ -9,7 +9,7 @@
   "scripts": {
     "check": "npm run test:data-reports && npm --prefix apps/web run lint && npm --prefix apps/web run build && npm --prefix apps/web run check:data-boundary && npm --prefix apps/web run check:public-view-contracts",
     "test": "npm run check",
-    "test:data-reports": "node --test scripts/report-election-race-duplicates.test.mjs",
+    "test:data-reports": "node --test scripts/report-election-race-duplicates.test.mjs scripts/report-candidate-status-quality.test.mjs",
     "sync:real-data:dry-run": "node scripts/sync-real-public-data.mjs --weekly",
     "sync:real-data:historical-dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-historical-cec",
     "sync:real-data:daily": "node scripts/sync-real-public-data.mjs --daily",
@@ -57,6 +57,7 @@
     "report:person-data-quality": "node scripts/report-person-data-quality.mjs",
     "report:missing-person-external-ids": "node scripts/report-missing-person-external-ids.mjs",
     "report:election-race-duplicates": "node scripts/report-election-race-duplicates.mjs",
+    "report:candidate-status-quality": "node scripts/report-candidate-status-quality.mjs",
     "plan:election-race-merges": "node scripts/plan-election-race-merges.mjs",
     "merge:election-race-decisions:dry-run": "node scripts/apply-election-race-merge-plan.mjs",
     "merge:election-race-decisions:write": "node scripts/apply-election-race-merge-plan.mjs --write",

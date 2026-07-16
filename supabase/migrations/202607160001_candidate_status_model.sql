@@ -118,7 +118,7 @@ FROM candidates;
 CREATE OR REPLACE FUNCTION normalize_candidate_status_fields()
 RETURNS TRIGGER
 LANGUAGE plpgsql
-AS $
+AS $$
 DECLARE
     derived_election_result TEXT;
 BEGIN

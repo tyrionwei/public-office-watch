@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
+import { CandidateComparisonPanel } from '../components/CandidateComparisonPanel';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
@@ -14,7 +15,7 @@ import type { PublicRaceDetailData } from '../lib/publicDataProvider';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { electionEventPath, electionsPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicCandidate } from '../types/publicViews';
+import type { PublicCandidate, PublicPersonProfile } from '../types/publicViews';
 
 function formatNumber(value: number | null, locale: string) {
   return value === null ? '—' : new Intl.NumberFormat(locale).format(value);
@@ -39,8 +40,11 @@ export function RacePage() {
   const { language, t } = useI18n();
   const { raceId } = useParams();
   const safeRaceId = raceId ?? '';
+  const [searchParams, setSearchParams] = useSearchParams();
   const [detail, setDetail] = useState<PublicRaceDetailData>({ race: null, election: null, candidates: [] });
   const [loading, setLoading] = useState(true);
+  const [comparisonProfiles, setComparisonProfiles] = useState<PublicPersonProfile[]>([]);
+  const [comparisonLoading, setComparisonLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -65,11 +69,67 @@ export function RacePage() {
   }, [safeRaceId]);
 
   const { race, election } = detail;
-  const candidates = detail.candidates.slice().sort((left, right) => compareCandidates(left, right, language));
+  const candidates = useMemo(
+    () => detail.candidates.slice().sort((left, right) => compareCandidates(left, right, language)),
+    [detail.candidates, language],
+  );
+  const candidatePersonIds = useMemo(
+    () => new Set(candidates.map((candidate) => candidate.person_id).filter(Boolean)),
+    [candidates],
+  );
+  const selectedPersonIds = useMemo(
+    () => Array.from(new Set((searchParams.get('compare') ?? '').split(',').filter(Boolean)))
+      .filter((personId) => candidatePersonIds.has(personId))
+      .slice(0, 4),
+    [candidatePersonIds, searchParams],
+  );
+  const selectedCandidates = selectedPersonIds
+    .map((personId) => candidates.find((candidate) => candidate.person_id === personId))
+    .filter((candidate): candidate is PublicCandidate => Boolean(candidate));
+  const comparisonKey = selectedPersonIds.join(',');
   const electedCount = candidates.filter(isCandidateElected).length;
+  useEffect(() => {
+    let active = true;
+    const personIds = comparisonKey ? comparisonKey.split(',') : [];
+    if (personIds.length < 2) {
+      setComparisonProfiles([]);
+      setComparisonLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setComparisonLoading(true);
+    void publicDataProvider.loadPersonProfiles(personIds)
+      .then((profiles) => {
+        if (active) setComparisonProfiles(profiles);
+      })
+      .catch((error: unknown) => {
+        if (active) setComparisonProfiles([]);
+        if (import.meta.env.DEV) console.warn('Failed to load candidate comparison profiles', error);
+      })
+      .finally(() => {
+        if (active) setComparisonLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [comparisonKey]);
+
   const events = buildElectionEvents(election ? [election] : [], race ? [race] : []);
   const event = getElectionEventForRace(events, race);
   const backPath = event ? electionEventPath(event.key) : electionsPath();
+
+  function updateComparison(personId: string, selected: boolean) {
+    const nextIds = selected
+      ? [...selectedPersonIds, personId].slice(0, 4)
+      : selectedPersonIds.filter((selectedId) => selectedId !== personId);
+    const nextSearchParams = new URLSearchParams(searchParams);
+    if (nextIds.length > 0) nextSearchParams.set('compare', nextIds.join(','));
+    else nextSearchParams.delete('compare');
+    setSearchParams(nextSearchParams, { replace: true });
+  }
 
   if (!race) {
     return (
@@ -115,7 +175,8 @@ export function RacePage() {
         <SectionPanel title={candidates.length > 0 ? t('race.listTitle') : t('race.listFallbackTitle')} eyebrow={t('race.roster')}>
           {candidates.length > 0 ? (
             <div className="overflow-hidden pixel-corners border border-line/70">
-              <div className="grid gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid-cols-[72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]">
+              <div className="grid gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]">
+                <span>{t('race.compareSelect')}</span>
                 <span>{t('race.number')}</span>
                 <span>{t('race.name')}</span>
                 <span>{t('race.party')}</span>
@@ -127,11 +188,27 @@ export function RacePage() {
                 {candidates.map((candidate) => {
                   const partyLabel = normalizePartyLabel(candidate.party ?? candidate.person_party);
                   const theme = partyTheme[toPartyThemeKey(partyLabel)];
+                  const isSelected = selectedPersonIds.includes(candidate.person_id);
+                  const selectionDisabled = !candidate.person_id || (!isSelected && selectedPersonIds.length >= 4);
                   const rowContent = (
                     <>
+                      <label className="flex h-6 w-6 items-center justify-center" title={selectionDisabled ? t('race.compareLimit') : t('race.compareSelect')}>
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          disabled={selectionDisabled}
+                          onChange={(event) => updateComparison(candidate.person_id, event.target.checked)}
+                          className="h-4 w-4 accent-cyan-300 disabled:cursor-not-allowed disabled:opacity-30"
+                          aria-label={`${t('race.compareSelect')} ${candidate.person_name}`}
+                        />
+                      </label>
                       <p className="text-sm text-slate-300">{candidate.candidate_no ?? '—'}</p>
                       <div className="min-w-0">
-                        <p className="truncate font-display text-lg text-white">{candidate.person_name}</p>
+                        {candidate.person_id ? (
+                          <Link to={personPath(candidate.person_id)} className="truncate font-display text-lg text-white hover:text-accent">
+                            {candidate.person_name}
+                          </Link>
+                        ) : <p className="truncate font-display text-lg text-white">{candidate.person_name}</p>}
                         <p className="mt-1 truncate text-xs text-slate-500">{candidate.person_position ?? race.title}</p>
                       </div>
                       <div className="min-w-0">
@@ -149,19 +226,9 @@ export function RacePage() {
                       <p className="text-sm text-slate-300">{formatPercent(candidate.vote_rate)}</p>
                     </>
                   );
-                  const rowClassName = 'grid gap-3 px-4 py-3 lg:grid-cols-[72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]';
+                  const rowClassName = 'grid gap-3 px-4 py-3 transition hover:bg-accent/8 lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]';
 
-                  return candidate.person_id ? (
-                    <Link
-                      key={candidate.candidate_id}
-                      to={personPath(candidate.person_id)}
-                      className={`${rowClassName} transition hover:bg-accent/8 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent/35`}
-                    >
-                      {rowContent}
-                    </Link>
-                  ) : (
-                    <div key={candidate.candidate_id} className={rowClassName}>{rowContent}</div>
-                  );
+                  return <div key={candidate.candidate_id} className={rowClassName}>{rowContent}</div>;
                 })}
               </div>
             </div>
@@ -170,7 +237,25 @@ export function RacePage() {
               <p>{t('race.emptyCandidates')}</p>
             </div>
           )}
+          {candidates.length > 0 ? (
+            <div className="mt-4 flex flex-col gap-2 border-t border-line/50 pt-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-slate-400">{t('race.compareHint')}</p>
+              <p className={selectedPersonIds.length >= 2 ? 'text-signal' : 'text-accent'}>
+                {t('race.compareSelected', { count: selectedPersonIds.length })}
+              </p>
+            </div>
+          ) : null}
         </SectionPanel>
+
+        {selectedCandidates.length > 0 ? (
+          <CandidateComparisonPanel
+            candidates={selectedCandidates}
+            profiles={comparisonProfiles}
+            loading={comparisonLoading}
+            currentRaceId={race.race_id}
+            onRemove={(personId) => updateComparison(personId, false)}
+          />
+        ) : null}
 
         <SectionPanel title={t('race.sources')} eyebrow={t('race.publicData')}>
           <div className="grid gap-3 text-sm leading-6 text-slate-300 md:grid-cols-2">

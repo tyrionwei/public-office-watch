@@ -100,6 +100,7 @@ export interface PublicDataProvider {
   loadPeoplePage(filters: PublicPersonFilters, page: number, pageSize: number): Promise<PublicPersonListPage>;
   getPersonById(personId: string): PublicPerson | null;
   getPersonProfile(personId: string): PublicPersonProfile | null;
+  loadPersonProfiles(personIds: string[]): Promise<PublicPersonProfile[]>;
   getLocalOfficeSummaryByRegionId(regionId: string): PublicLocalOfficeSummary;
   loadLocalOfficeSummaryByRegionId(regionId: string): Promise<PublicLocalOfficeSummary>;
   getCompanies(): PublicCompany[];

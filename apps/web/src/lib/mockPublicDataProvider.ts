@@ -19,6 +19,7 @@ import { electionPath, partyPath, personPath, regionPath } from '../routes/route
 import { buildLocalOfficeSummary, buildPersonListItems, buildPersonProfile, filterPersonListItems } from './personData';
 import { assertPublicViewName, allowedPublicViews } from './publicViewRegistry';
 import type { PublicDataProvider, PublicSearchResult } from './publicDataProvider';
+import type { PublicPersonProfile } from '../types/publicViews';
 
 const providerViews = [
   'public_home_election_ticker',
@@ -251,6 +252,12 @@ export const mockPublicDataProvider: PublicDataProvider = {
       mockPublicPersonClaims,
       mockPublicPersonPartyAffiliations,
     );
+  },
+
+  async loadPersonProfiles(personIds: string[]) {
+    return personIds
+      .map((personId) => this.getPersonProfile(personId))
+      .filter((profile): profile is PublicPersonProfile => profile !== null);
   },
 
   getLocalOfficeSummaryByRegionId(regionId: string) {

@@ -122,6 +122,7 @@ let electionIndexDatasetLoaded = false;
 const electionSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
 const loadedElectionDatasets = new Set<string>();
 const personSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
+const loadedPersonProfileDatasets = new Set<string>();
 const peopleSearchSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
 const loadedPeopleSearchQueries = new Set<string>();
 const localOfficeSummaryCache = new Map<string, PublicLocalOfficeSummary>();
@@ -919,20 +920,20 @@ async function ensureElectionDataset(electionId: string) {
   return electionSnapshotPromises.get(electionId) ?? null;
 }
 
-async function ensurePersonProfileDataset(personId: string) {
-  if (!personId) return snapshotCache;
-  if (snapshotCache?.indexes.personById.has(personId) && snapshotCache.personClaims.some((claim) => claim.person_id === personId)) {
-    return snapshotCache;
-  }
+async function ensurePersonProfileDatasets(personIds: string[]) {
+  const missingPersonIds = Array.from(new Set(personIds.filter(Boolean)))
+    .filter((personId) => !loadedPersonProfileDatasets.has(personId));
+  if (missingPersonIds.length === 0) return snapshotCache;
 
-  if (!personSnapshotPromises.has(personId)) {
-    personSnapshotPromises.set(personId, (async () => {
+  const batchKey = missingPersonIds.slice().sort().join(',');
+  if (!personSnapshotPromises.has(batchKey)) {
+    personSnapshotPromises.set(batchKey, (async () => {
       await refreshSupabasePublicDataSnapshot();
       const [personRows, candidateRows, claimRows, partyAffiliationRows] = await Promise.all([
-        fetchRows('public_people', (query) => query.eq('person_id', personId)),
-        fetchRows('public_candidates', (query) => query.eq('person_id', personId)),
-        fetchRows('public_person_claims', (query) => query.eq('person_id', personId)),
-        fetchRows('public_person_party_affiliations', (query) => query.eq('person_id', personId)),
+        fetchRows('public_people', (query) => query.in('person_id', missingPersonIds)),
+        fetchRows('public_candidates', (query) => query.in('person_id', missingPersonIds)),
+        fetchRows('public_person_claims', (query) => query.in('person_id', missingPersonIds)),
+        fetchRows('public_person_party_affiliations', (query) => query.in('person_id', missingPersonIds)),
       ]);
       const base = snapshotCache;
       const people = mergeUniqueBy(
@@ -956,14 +957,19 @@ async function ensurePersonProfileDataset(personId: string) {
         (item) => item.affiliation_id,
       );
       const snapshot = mergeSnapshot({ people, candidates, personClaims, personPartyAffiliations });
+      missingPersonIds.forEach((personId) => loadedPersonProfileDatasets.add(personId));
       notifyPublicDataReady();
       return snapshot;
     })().finally(() => {
-      personSnapshotPromises.delete(personId);
+      personSnapshotPromises.delete(batchKey);
     }));
   }
 
-  return personSnapshotPromises.get(personId) ?? null;
+  return personSnapshotPromises.get(batchKey) ?? null;
+}
+
+async function ensurePersonProfileDataset(personId: string) {
+  return ensurePersonProfileDatasets([personId]);
 }
 
 async function ensurePartyDataset() {
@@ -997,6 +1003,23 @@ async function ensurePartyDataset() {
 
 function getSnapshot() {
   return snapshotCache;
+}
+
+function getPersonProfileFromSnapshot(snapshot: SupabasePublicSnapshot, personId: string) {
+  if (!snapshot.indexes.personProfilesById.has(personId)) {
+    snapshot.indexes.personProfilesById.set(
+      personId,
+      buildPersonProfileFromItems(
+        personId,
+        getPersonListItems(snapshot),
+        snapshot.candidates,
+        snapshot.personClaims,
+        snapshot.personPartyAffiliations,
+      ),
+    );
+  }
+
+  return snapshot.indexes.personProfilesById.get(personId) ?? null;
 }
 
 function getPersonListItems(snapshot: SupabasePublicSnapshot) {
@@ -1305,24 +1328,15 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   getPersonProfile(personId: string) {
     void ensurePersonProfileDataset(personId);
     const snapshot = getSnapshot();
-    if (!snapshot) {
-      return null;
-    }
+    return snapshot ? getPersonProfileFromSnapshot(snapshot, personId) : null;
+  },
 
-    if (!snapshot.indexes.personProfilesById.has(personId)) {
-      snapshot.indexes.personProfilesById.set(
-        personId,
-        buildPersonProfileFromItems(
-          personId,
-          getPersonListItems(snapshot),
-          snapshot.candidates,
-          snapshot.personClaims,
-          snapshot.personPartyAffiliations,
-        ),
-      );
-    }
-
-    return snapshot.indexes.personProfilesById.get(personId) ?? null;
+  async loadPersonProfiles(personIds: string[]) {
+    const snapshot = await ensurePersonProfileDatasets(personIds);
+    if (!snapshot) return [];
+    return personIds
+      .map((personId) => getPersonProfileFromSnapshot(snapshot, personId))
+      .filter((profile): profile is PublicPersonProfile => profile !== null);
   },
 
   getLocalOfficeSummaryByRegionId(regionId: string) {

@@ -34,6 +34,7 @@ export const blockedInternalTables = [
   'person_media',
   'source_people',
   'person_identity_matches',
+  'person_feedback_submissions',
   'person_claims',
   'identity_unmatched_source_people',
   'identity_probable_match_queue',

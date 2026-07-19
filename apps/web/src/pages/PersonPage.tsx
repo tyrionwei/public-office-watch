@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
+import { PersonFeedbackPanel } from '../components/PersonFeedbackPanel';
 import { SectionPanel } from '../components/SectionPanel';
 import { pickDefaultCandidateSprite } from '../data/defaultCharacterAssets';
 import { translateCandidacyStatus, translateElectionResult } from '../data/electionI18n';
@@ -402,6 +403,8 @@ export function PersonPage() {
                 </div>
               </div>
             </section>
+
+            <PersonFeedbackPanel personId={person.person_id} personName={person.name} />
 
             <SectionPanel title={t('person.basicTitle')} eyebrow={t('person.basicEyebrow')}>
               <dl className="grid gap-3 sm:grid-cols-2">

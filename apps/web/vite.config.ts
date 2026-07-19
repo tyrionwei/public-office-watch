@@ -41,6 +41,22 @@ type PersonRow = {
   education: string | null;
   experience: string | null;
 };
+type PersonFeedbackRow = {
+  id: string;
+  person_id: string;
+  feedback_kind: 'supplement_request' | 'problem_report';
+  section_key: string;
+  problem_type: string | null;
+  message: string | null;
+  evidence_url: string | null;
+  review_status: string;
+  submission_count: number;
+  review_note: string | null;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
 type SkippedTarget = {
   target?: {
     personId?: string | null;
@@ -393,6 +409,96 @@ function internalReviewApiPlugin(): Plugin {
           jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
       });
+      server.middlewares.use('/internal-api/person-feedback', async (request, response) => {
+        const devRequest = request as DevRequest;
+        if (devRequest.method !== 'GET') {
+          jsonResponse(response, 405, { error: 'Method not allowed.' });
+          return;
+        }
+
+        try {
+          const submissions = await supabaseRest(
+            'person_feedback_submissions?select=id,person_id,feedback_kind,section_key,problem_type,message,evidence_url,review_status,submission_count,review_note,reviewed_by,reviewed_at,created_at,updated_at&order=updated_at.desc&limit=500',
+          ) as PersonFeedbackRow[];
+          const personIds = Array.from(new Set(submissions.map((submission) => submission.person_id)));
+          const people = personIds.length > 0
+            ? await supabaseRest(
+              `people?select=id,name,party,position,district&id=in.(${personIds.map(encodeURIComponent).join(',')})`,
+            ) as PersonRow[]
+            : [];
+          const peopleById = new Map(people.map((person) => [person.id, person]));
+
+          jsonResponse(response, 200, {
+            items: submissions.map((submission) => ({
+              ...submission,
+              person: peopleById.get(submission.person_id) ?? null,
+            })),
+          });
+        } catch (error) {
+          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+        }
+      });
+
+      server.middlewares.use('/internal-api/review-person-feedback', async (request, response) => {
+        const devRequest = request as DevRequest;
+        if (devRequest.method !== 'POST') {
+          jsonResponse(response, 405, { error: 'Method not allowed.' });
+          return;
+        }
+
+        try {
+          const body = await readJsonBody(devRequest) as {
+            submissionId?: string;
+            action?: string;
+            note?: string;
+          };
+          const submissionId = body.submissionId?.trim();
+          const action = body.action;
+          const note = body.note?.trim() ?? '';
+
+          if (!submissionId || !['start', 'verify', 'reject'].includes(action ?? '')) {
+            jsonResponse(response, 400, { error: 'submissionId and action=start|verify|reject are required.' });
+            return;
+          }
+
+          if (note.length > 1000) {
+            jsonResponse(response, 400, { error: 'Review note must not exceed 1000 characters.' });
+            return;
+          }
+
+          if (action === 'reject' && note.length < 5) {
+            jsonResponse(response, 400, { error: 'Rejecting a submission requires a review note of at least 5 characters.' });
+            return;
+          }
+
+          const submissions = await supabaseRest(
+            `person_feedback_submissions?select=id&id=eq.${encodeURIComponent(submissionId)}&limit=1`,
+          ) as Pick<PersonFeedbackRow, 'id'>[];
+          if (!submissions[0]) {
+            jsonResponse(response, 404, { error: 'Feedback submission not found.' });
+            return;
+          }
+
+          const now = new Date().toISOString();
+          const reviewStatus = action === 'start' ? 'reviewing' : action === 'verify' ? 'verified' : 'rejected';
+          await supabaseRest(`person_feedback_submissions?id=eq.${encodeURIComponent(submissionId)}`, {
+            method: 'PATCH',
+            headers: { prefer: 'return=minimal' },
+            body: JSON.stringify({
+              review_status: reviewStatus,
+              review_note: note || null,
+              reviewed_by: 'local_internal_review',
+              reviewed_at: action === 'start' ? null : now,
+              updated_at: now,
+            }),
+          });
+
+          jsonResponse(response, 200, { status: 'ok', reviewStatus });
+        } catch (error) {
+          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+        }
+      });
+
 
       server.middlewares.use('/internal-api/review-identity-match', async (request, response) => {
         const devRequest = request as DevRequest;
@@ -407,41 +513,82 @@ function internalReviewApiPlugin(): Plugin {
           const candidatePersonId = body.candidatePersonId?.trim();
           const action = body.action;
 
-          if (!sourcePersonId || !candidatePersonId || (action !== 'approve' && action !== 'reject')) {
-            jsonResponse(response, 400, { error: 'sourcePersonId, candidatePersonId and action=approve|reject are required.' });
+          const validAction = action === 'approve' || action === 'reject' || action === 'create';
+          if (!sourcePersonId || !validAction || (action !== 'create' && !candidatePersonId)) {
+            jsonResponse(response, 400, { error: 'sourcePersonId and action=approve|reject|create are required; candidatePersonId is required unless action=create.' });
             return;
           }
 
           const sourcePeople = await supabaseRest(
-            'source_people?select=id,source_person_key,raw_name,source_name,position,district&id=eq.' + encodeURIComponent(sourcePersonId) + '&limit=1',
-          ) as { id: string; source_person_key: string; raw_name: string; source_name: string; position: string | null; district: string | null }[];
+            'source_people?select=id,source_person_key,raw_name,alias,gender,party,position,district,election_year,source_name,source_url&id=eq.' + encodeURIComponent(sourcePersonId) + '&limit=1',
+          ) as {
+            id: string;
+            source_person_key: string;
+            raw_name: string;
+            alias: string | null;
+            gender: string | null;
+            party: string | null;
+            position: string | null;
+            district: string | null;
+            election_year: number | null;
+            source_name: string;
+            source_url: string | null;
+          }[];
           const sourcePerson = sourcePeople[0];
           if (!sourcePerson) {
             jsonResponse(response, 404, { error: 'Source person not found.' });
             return;
           }
 
-          const people = await supabaseRest(
-            'people?select=id,name,party,position,district&id=eq.' + encodeURIComponent(candidatePersonId) + '&limit=1',
-          ) as { id: string; name: string; party: string | null; position: string | null; district: string | null }[];
-          const candidatePerson = people[0];
+          const now = new Date().toISOString();
+          let candidatePerson: { id: string; name: string; party: string | null; position: string | null; district: string | null };
+
+          if (action === 'create') {
+            const createdPeople = await supabaseRest('people?on_conflict=external_id', {
+              method: 'POST',
+              headers: { prefer: 'resolution=merge-duplicates,return=representation' },
+              body: JSON.stringify({
+                external_id: 'internal-review-source-' + sourcePerson.id,
+                name: sourcePerson.raw_name,
+                alias: sourcePerson.alias,
+                gender: sourcePerson.gender ?? 'unknown',
+                party: sourcePerson.party || null,
+                position: sourcePerson.position,
+                election_year: sourcePerson.election_year,
+                district: sourcePerson.district,
+                source_url: sourcePerson.source_url,
+                is_public: true,
+                updated_at: now,
+              }),
+            }) as { id: string; name: string; party: string | null; position: string | null; district: string | null }[];
+            candidatePerson = createdPeople[0];
+          } else {
+            const people = await supabaseRest(
+              'people?select=id,name,party,position,district&id=eq.' + encodeURIComponent(candidatePersonId as string) + '&limit=1',
+            ) as { id: string; name: string; party: string | null; position: string | null; district: string | null }[];
+            candidatePerson = people[0];
+          }
+
           if (!candidatePerson) {
-            jsonResponse(response, 404, { error: 'Candidate person not found.' });
+            jsonResponse(response, 404, { error: action === 'create' ? 'New person could not be created.' : 'Candidate person not found.' });
             return;
           }
 
-          const now = new Date().toISOString();
-          const approved = action === 'approve';
+          const approved = action !== 'reject';
           await supabaseRest('person_identity_matches?on_conflict=source_person_id,person_id', {
             method: 'POST',
             headers: { prefer: 'resolution=merge-duplicates,return=minimal' },
             body: JSON.stringify({
               source_person_id: sourcePersonId,
-              person_id: candidatePersonId,
+              person_id: candidatePerson.id,
               match_status: approved ? 'auto_matched' : 'rejected_match',
               score: approved ? 100 : 0,
               match_method: 'manual_internal_review',
-              match_reason: approved ? 'confirmed via internal identity review queue' : 'rejected via internal identity review queue',
+              match_reason: action === 'create'
+                ? 'created from official source via internal identity review queue'
+                : approved
+                  ? 'confirmed via internal identity review queue'
+                  : 'rejected via internal identity review queue',
               evidence_json: {
                 version: 'internal-identity-review-ui-v1',
                 action,
@@ -476,7 +623,7 @@ function internalReviewApiPlugin(): Plugin {
             await supabaseRest('person_claims?source_person_id=eq.' + encodeURIComponent(sourcePersonId), {
               method: 'PATCH',
               headers: { prefer: 'return=minimal' },
-              body: JSON.stringify({ person_id: candidatePersonId, review_status: 'verified', visibility: 'public', is_public: true, updated_at: now }),
+              body: JSON.stringify({ person_id: candidatePerson.id, review_status: 'verified', visibility: 'public', is_public: true, updated_at: now }),
             });
           }
 

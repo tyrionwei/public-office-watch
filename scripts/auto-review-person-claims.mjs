@@ -29,7 +29,7 @@ const localEnv = readLocalEnv();
 const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || localEnv.SUPABASE_URL || 'http://127.0.0.1:54321';
 const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || localEnv.SUPABASE_SERVICE_ROLE_KEY;
 
-const autoReviewVersion = 'auto-verified-external-id-or-identity-match-v2';
+const autoReviewVersion = 'auto-verified-external-id-or-identity-match-v3';
 const wikidataSourceName = 'Wikidata 人物補充資料';
 const voteTwSourceName = 'VoteTW';
 const voteTwSourceId = 'votetw-person-enrichment';
@@ -125,21 +125,33 @@ async function supabaseJson(url, init = {}) {
 }
 
 async function fetchReviewCandidates(options) {
-  const url = supabaseUrl('person_claims');
-  url.searchParams.set(
-    'select',
-    'id,person_id,claim_type,claim_value,claim_json,confidence_level,review_score,source_name,source_url,scoring_reasons,updated_at',
-  );
-  if (options.sourceName) {
-    url.searchParams.set('source_name', `eq.${options.sourceName}`);
-  }
-  url.searchParams.set('review_status', 'in.(pending,needs_more_evidence)');
-  url.searchParams.set('claim_type', 'not.eq.legal_case');
-  url.searchParams.set('review_score', `gte.${options.minScore}`);
-  url.searchParams.set('order', 'review_score.desc,updated_at.desc');
-  url.searchParams.set('limit', String(options.limit));
+  const pageSize = 1000;
+  const claims = [];
 
-  const claims = await supabaseJson(url);
+  while (true) {
+    const url = supabaseUrl('person_claims');
+    url.searchParams.set(
+      'select',
+      'id,claim_key,person_id,claim_type,claim_value,claim_json,confidence_level,review_score,source_name,source_url,scoring_reasons,updated_at',
+    );
+    if (options.sourceName) {
+      url.searchParams.set('source_name', `eq.${options.sourceName}`);
+    }
+    url.searchParams.set('review_status', 'in.(pending,needs_more_evidence)');
+    url.searchParams.set('claim_type', 'not.eq.legal_case');
+    url.searchParams.set('review_score', `gte.${options.minScore}`);
+    url.searchParams.set('order', 'review_score.desc,updated_at.desc,id.asc');
+    url.searchParams.set('offset', String(claims.length));
+    url.searchParams.set('limit', String(pageSize));
+
+    const page = await supabaseJson(url);
+    claims.push(...page);
+
+    if (page.length < pageSize) {
+      break;
+    }
+  }
+
   return claims.map((claim) => ({
     ...claim,
     claim_id: claim.id,
@@ -222,13 +234,10 @@ async function fetchPrimaryPublicClaimKeys(claims) {
 }
 
 async function fetchVerifiedExternalIdKeys(sourceName) {
-  const url = supabaseUrl('person_claims');
+  const url = supabaseUrl('public_person_claims');
   url.searchParams.set('select', 'person_id,claim_value,claim_json');
   url.searchParams.set('source_name', `eq.${sourceName}`);
   url.searchParams.set('claim_type', 'eq.external_id');
-  url.searchParams.set('review_status', 'eq.verified');
-  url.searchParams.set('visibility', 'eq.public');
-  url.searchParams.set('is_public', 'eq.true');
   url.searchParams.set('limit', '10000');
 
   const rows = await supabaseJson(url);
@@ -239,6 +248,38 @@ async function fetchVerifiedExternalIdKeys(sourceName) {
       .filter((qid) => row.person_id && typeof qid === 'string' && /^Q\d+$/i.test(qid))
       .map((qid) => `${row.person_id}:wikidata:${qid.toUpperCase()}`);
   }));
+}
+
+function normalizePartyAffiliation(value) {
+  return String(value ?? '')
+    .trim()
+    .replace(/臺/g, '台')
+    .replace(/\s+/g, '')
+    .replace(/^無黨派$/, '無黨籍');
+}
+
+async function fetchCurrentPartyByPersonId(claims) {
+  const personIds = new Set(
+    claims
+      .filter((claim) =>
+        claim.source_name === wikidataSourceName &&
+        claim.claim_type === 'party_affiliation' &&
+        claim.person_id,
+      )
+      .map((claim) => claim.person_id),
+  );
+
+  if (personIds.size === 0) {
+    return new Map();
+  }
+
+  const url = supabaseUrl('people');
+  url.searchParams.set('select', 'id,party');
+  url.searchParams.set('id', inFilter(personIds));
+  url.searchParams.set('limit', String(personIds.size));
+
+  const rows = await supabaseJson(url);
+  return new Map(rows.map((row) => [row.id, row.party]));
 }
 
 async function countPublicClaimsByType(claimType) {
@@ -302,7 +343,29 @@ function explainVoteTwEligibility(claim) {
   return { eligible: true, reason: 'votetw-publication-gate-passed' };
 }
 
-function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys) {
+function explainWikidataPartyAffiliationEligibility(claim, verifiedExternalIdKeys, currentPartyByPersonId) {
+  const externalIdKey = verifiedExternalIdKeyForClaim(claim);
+  if (!externalIdKey || !verifiedExternalIdKeys.has(externalIdKey)) {
+    return { eligible: false, reason: 'wikidata-party-affiliation-qid-not-verified' };
+  }
+
+  const hasExplicitDates =
+    claim.claim_json?.explicitDateSource === true &&
+    (Boolean(claim.claim_json?.startDate) || Boolean(claim.claim_json?.endDate));
+  if (hasExplicitDates) {
+    return { eligible: true, reason: 'wikidata-party-affiliation-dated-verified-qid' };
+  }
+
+  const currentParty = normalizePartyAffiliation(currentPartyByPersonId.get(claim.person_id));
+  const claimedParty = normalizePartyAffiliation(claim.claim_value);
+  if (currentParty && claimedParty === currentParty) {
+    return { eligible: true, reason: 'wikidata-party-affiliation-current-party-corroborated' };
+  }
+
+  return { eligible: false, reason: 'wikidata-party-affiliation-undated-conflict' };
+}
+
+function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys, currentPartyByPersonId) {
   if (blockedClaimTypes.has(claim.claim_type)) {
     return { eligible: false, reason: 'blocked-sensitive-claim-type' };
   }
@@ -317,6 +380,10 @@ function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPubli
 
   if (claim.source_name !== wikidataSourceName) {
     return { eligible: true, reason: 'non-wikidata-non-sensitive' };
+  }
+
+  if (claim.claim_type === 'party_affiliation') {
+    return explainWikidataPartyAffiliationEligibility(claim, verifiedExternalIdKeys, currentPartyByPersonId);
   }
 
   if (!wikidataExternalIdUnlockedClaimTypes.has(claim.claim_type)) {
@@ -348,8 +415,15 @@ function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPubli
   return { eligible: false, reason: 'wikidata-external-id-not-verified' };
 }
 
-function isEligibleClaim(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys) {
-  return explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys).eligible;
+function isEligibleClaim(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys, currentPartyByPersonId) {
+  return explainEligibility(
+    claim,
+    options,
+    verifiedExternalIdKeys,
+    primaryPublicFieldKeys,
+    primaryPublicClaimKeys,
+    currentPartyByPersonId,
+  ).eligible;
 }
 
 function incrementReason(reasonCounts, reason) {
@@ -372,6 +446,7 @@ async function approveClaim(claim) {
   const url = supabaseUrl('person_claims');
   url.searchParams.set('id', `eq.${claim.claim_id}`);
 
+  const reviewedAt = new Date().toISOString();
   await supabaseJson(url, {
     method: 'PATCH',
     headers: {
@@ -383,10 +458,26 @@ async function approveClaim(claim) {
       is_public: true,
       scoring_version: autoReviewVersion,
       scoring_reasons: nextScoringReasons(claim),
-      auto_reviewed_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      auto_reviewed_at: reviewedAt,
+      updated_at: reviewedAt,
     }),
   });
+
+  if (claim.claim_type === 'party_affiliation' && claim.claim_key) {
+    const affiliationUrl = supabaseUrl('person_party_affiliations');
+    affiliationUrl.searchParams.set('source_claim_key', 'eq.' + claim.claim_key);
+    await supabaseJson(affiliationUrl, {
+      method: 'PATCH',
+      headers: {
+        prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        review_status: 'verified',
+        is_public: true,
+        updated_at: reviewedAt,
+      }),
+    });
+  }
 }
 
 async function main() {
@@ -408,15 +499,17 @@ async function main() {
     const candidates = await fetchReviewCandidates(options);
     const primaryPublicFieldKeys = await fetchPrimaryPublicFieldKeys(candidates);
     const primaryPublicClaimKeys = await fetchPrimaryPublicClaimKeys(candidates);
+    const currentPartyByPersonId = await fetchCurrentPartyByPersonId(candidates);
     for (const claim of candidates) {
       incrementReason(
         eligibilityReasonCounts,
-        explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys).reason,
+        explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys, currentPartyByPersonId).reason,
       );
     }
-    const eligibleClaims = candidates.filter((claim) =>
-      isEligibleClaim(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys),
+    const allEligibleClaims = candidates.filter((claim) =>
+      isEligibleClaim(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys, currentPartyByPersonId),
     );
+    const eligibleClaims = options.write ? allEligibleClaims.slice(0, options.limit) : allEligibleClaims;
     totalScanned += candidates.length;
     totalEligible += eligibleClaims.length;
     totalSkipped += candidates.length - eligibleClaims.length;
@@ -462,7 +555,7 @@ async function main() {
     skipped: totalSkipped,
     verifiedExternalIdKeyCount: verifiedExternalIdKeys.size,
     eligibilityReasonCounts,
-    autoReviewedRule: 'VoteTW claims require a passed publicationGate; other non-Wikidata claims pass the existing non-sensitive rule; Wikidata low-sensitivity claims require either a verified external_id for the same person/QID or matched identity evidence',
+    autoReviewedRule: 'VoteTW claims require a passed publicationGate; Wikidata party affiliations require a canonical verified QID plus explicit dates or agreement with the current party; other Wikidata low-sensitivity claims require a verified external_id or matched identity evidence',
     sourceSpecificRules: {
       votetw: {
         requiresIdentityMatch: true,
@@ -471,9 +564,13 @@ async function main() {
       },
       wikidata: {
         requiresIdentityMatch: 'when external_id has not been verified yet',
-        requiresVerifiedExternalId: false,
+        requiresVerifiedExternalId: 'party affiliations only',
         fallbackOnlyClaimTypes: Array.from(wikidataFallbackOnlyClaimTypes),
-        autoClaimTypes: Array.from(wikidataExternalIdUnlockedClaimTypes),
+        autoClaimTypes: [...wikidataExternalIdUnlockedClaimTypes, 'party_affiliation'],
+        partyAffiliationRules: {
+          explicitDatesOrCurrentPartyAgreement: true,
+          usesCanonicalPersonMapping: true,
+        },
       },
     },
     keptManualReview: Array.from(blockedClaimTypes),

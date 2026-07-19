@@ -35,12 +35,18 @@ const blockedTermAllowlist = {
     path.join(srcRoot, 'types', 'publicViews.ts'),
     path.join(srcRoot, 'pages', 'ElectionPage.tsx'),
     path.join(srcRoot, 'pages', 'InternalDataProgressPage.tsx'),
+    path.join(srcRoot, 'pages', 'InternalReviewQueuePage.tsx'),
     path.join(srcRoot, 'pages', 'PartyPage.tsx'),
     path.join(srcRoot, 'lib', 'internalDataProgress.ts'),
+    path.join(srcRoot, 'lib', 'internalReviewData.ts'),
     path.join(srcRoot, 'lib', 'supabasePublicViewMappers.ts'),
     path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
   ]),
-  rejected: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
+  rejected: new Set([
+    path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
+    path.join(srcRoot, 'lib', 'internalReviewData.ts'),
+    path.join(srcRoot, 'components', 'PersonFeedbackReviewPanel.tsx'),
+  ]),
 };
 const allowedCreateClientFile = path.join(srcRoot, 'lib', 'supabasePublicClient.ts');
 const allowedSupabaseImportFiles = new Set([allowedCreateClientFile]);

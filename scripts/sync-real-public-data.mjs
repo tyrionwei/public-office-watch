@@ -816,6 +816,99 @@ function buildCecRegionByCountyKey(seed) {
   );
 }
 
+function historicalCecLegacyCountyKey(row) {
+  return `${cleanCecCell(row[0])}-${cleanCecCell(row[1])}`;
+}
+
+function historicalCecLegacyRaceKey(row) {
+  return `${historicalCecLegacyCountyKey(row)}-${cleanCecCell(row[2])}`;
+}
+
+function normalizeHistoricalCecRegionName(name) {
+  return normalizeIdentityText(String(name ?? '').replace('桃園縣', '桃園市'));
+}
+
+function buildHistoricalCecBaseIndex({ zipBuffer, entryName, seed }) {
+  const baseEntryName = `${zipDirname(entryName)}/elbase.csv`;
+  const entries = listZipEntries(zipBuffer);
+  const baseEntry = entries.find((item) => item.name === baseEntryName);
+  const countyNameByKey = new Map();
+  const districtNameByKey = new Map();
+  const regionByCountyKey = new Map();
+
+  if (!baseEntry) {
+    return { countyNameByKey, districtNameByKey, regionByCountyKey };
+  }
+
+  const regionByName = new Map(
+    seed.regions.map((region) => [normalizeHistoricalCecRegionName(region.name), region]),
+  );
+  const baseRows = parseDelimitedRows(readZipTextByEntry(zipBuffer, baseEntryName), ',');
+
+  for (const row of baseRows) {
+    const countyKey = historicalCecLegacyCountyKey(row);
+    const districtKey = historicalCecLegacyRaceKey(row);
+    const districtCode = cleanCecCell(row[2]);
+    const subdistrictCode = cleanCecCell(row[3]);
+    const villageCode = cleanCecCell(row[4]);
+    const name = cleanCecCell(row[5]);
+
+    if (!name || subdistrictCode !== '000' || villageCode !== '0000') {
+      continue;
+    }
+
+    if (districtCode === '00') {
+      countyNameByKey.set(countyKey, name);
+      const region = name === '全國'
+        ? seed.regions.find((item) => item.externalId === 'tw')
+        : regionByName.get(normalizeHistoricalCecRegionName(name));
+      if (region) regionByCountyKey.set(countyKey, region);
+      continue;
+    }
+
+    districtNameByKey.set(districtKey, name);
+  }
+
+  return { countyNameByKey, districtNameByKey, regionByCountyKey };
+}
+
+function buildHistoricalCecAggregateResultByKey({ zipBuffer, entryName, classification }) {
+  const resultEntryName = `${zipDirname(entryName)}/elctks.csv`;
+  const resultEntry = listZipEntries(zipBuffer).find((item) => item.name === resultEntryName);
+  const resultByKey = new Map();
+
+  if (!resultEntry) {
+    return resultByKey;
+  }
+
+  const resultRows = parseDelimitedRows(readZipTextByEntry(zipBuffer, resultEntryName), ',');
+  const nationalRace = classification.kind === 'president' || classification.kind.includes('indigenous');
+
+  for (const row of resultRows) {
+    const aggregateRow =
+      cleanCecCell(row[3]) === '000' &&
+      cleanCecCell(row[4]) === '0000' &&
+      cleanCecCell(row[5]) === '0';
+    const nationalTotal = cleanCecCell(row[0]) === '00' && cleanCecCell(row[1]) === '000';
+
+    if (!aggregateRow || (nationalRace && !nationalTotal)) {
+      continue;
+    }
+
+    const candidateNo = cleanCecCell(row[6]);
+    const key = nationalRace
+      ? candidateNo
+      : `${historicalCecLegacyRaceKey(row)}-${candidateNo}`;
+    resultByKey.set(key, {
+      voteCount: Number.parseInt(cleanCecCell(row[7]), 10),
+      voteRate: Number.parseFloat(cleanCecCell(row[8])),
+      elected: cleanCecCell(row[9]) === '*',
+    });
+  }
+
+  return resultByKey;
+}
+
 function toLegislativeCandidateRows({ rows, partyByCode, raceExternalIdForRow, districtNameForRow, roleLabel, source }) {
   return rows
     .map((row) => {
@@ -930,34 +1023,34 @@ function classifyHistoricalCecCandidateEntry(entryName) {
   return null;
 }
 
-function toHistoricalCecDistrictName(row, classification, regionByCountyKey) {
+function toHistoricalCecDistrictName(row, classification, baseIndex) {
   if (classification.districtLabel) {
     return classification.districtLabel;
   }
 
-  const countyKey = toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1]));
-  const region = regionByCountyKey.get(countyKey);
-  const regionName = region?.name ?? historicalCecCountyNameByKey[countyKey] ?? null;
+  const countyKey = historicalCecLegacyCountyKey(row);
+  const region = baseIndex.regionByCountyKey.get(countyKey);
+  const regionName = region?.name ?? baseIndex.countyNameByKey.get(countyKey) ?? null;
   const districtCode = Number(cleanCecCell(row[2]));
 
   if (classification.kind === 'legislator-district') {
-    return regionName ? `${regionName}第${districtCode}選舉區` : `縣市代碼${countyKey}第${districtCode}選舉區`;
+    return regionName ? `${regionName}第${districtCode}選舉區` : `選區代碼${historicalCecLegacyRaceKey(row)}`;
   }
 
   if (classification.kind === 'local-mayor') {
-    return regionName ?? `縣市代碼${countyKey}`;
+    return regionName ?? `地區代碼${countyKey}`;
   }
 
   if (classification.kind.startsWith('local-councilor')) {
     const suffix = classification.districtLabel ? `${classification.districtLabel}議員` : '議員';
-    return regionName ? `${regionName}第${districtCode}選舉區${suffix}` : `縣市代碼${countyKey}第${districtCode}選舉區${suffix}`;
+    return regionName ? `${regionName}第${districtCode}選舉區${suffix}` : `選區代碼${historicalCecLegacyRaceKey(row)}${suffix}`;
   }
 
   return null;
 }
 
-function toHistoricalCecPosition(row, classification, regionByCountyKey) {
-  const elected = cleanCecCell(row[14]) === '*';
+function toHistoricalCecPosition(row, classification, baseIndex, electedOverride = null) {
+  const elected = electedOverride ?? cleanCecCell(row[14]) === '*';
 
   if (classification.kind === 'president') {
     const role = cleanCecCell(row[15]) === 'Y' ? '副總統' : '總統';
@@ -965,17 +1058,17 @@ function toHistoricalCecPosition(row, classification, regionByCountyKey) {
   }
 
   if (classification.kind === 'local-mayor') {
-    const countyKey = toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1]));
-    const region = regionByCountyKey.get(countyKey);
-    const regionName = region?.name ?? historicalCecCountyNameByKey[countyKey] ?? null;
+    const countyKey = historicalCecLegacyCountyKey(row);
+    const region = baseIndex.regionByCountyKey.get(countyKey);
+    const regionName = region?.name ?? baseIndex.countyNameByKey.get(countyKey) ?? null;
     const officeTitle = region ? toLocalMayorOfficeTitle(region) : regionName ? `${regionName}首長` : '縣市首長';
     return elected ? officeTitle : `${officeTitle}候選人`;
   }
 
   if (classification.kind.startsWith('local-councilor')) {
-    const countyKey = toCecCountyKey(cleanCecCell(row[0]), cleanCecCell(row[1]));
-    const region = regionByCountyKey.get(countyKey);
-    const regionName = region?.name ?? historicalCecCountyNameByKey[countyKey] ?? null;
+    const countyKey = historicalCecLegacyCountyKey(row);
+    const region = baseIndex.regionByCountyKey.get(countyKey);
+    const regionName = region?.name ?? baseIndex.countyNameByKey.get(countyKey) ?? null;
     const kindLabel = classification.districtLabel ?? '';
     const officeTitle = region ? toLocalCouncilorOfficeTitle(region, kindLabel) : `${regionName ?? ''}${kindLabel}議員`;
     return elected ? officeTitle : `${officeTitle}候選人`;
@@ -984,11 +1077,86 @@ function toHistoricalCecPosition(row, classification, regionByCountyKey) {
   return elected ? `${classification.year}年立法委員當選人` : `${classification.year}年立法委員候選人`;
 }
 
+function build2012HistoricalCecRace(row, classification, baseIndex) {
+  if (classification.kind === 'president') {
+    return {
+      externalId: 'cec-2012-president-national',
+      electionExternalId: 'cec-2012-president-vice-president',
+      regionExternalId: 'tw',
+      raceType: 'president',
+      title: '總統副總統全國選舉',
+      votingDate: '2012-01-14',
+      status: 'completed',
+      sourceId: 'cec-election-data',
+    };
+  }
+
+  if (classification.kind === 'legislator-plain-indigenous') {
+    return {
+      externalId: 'cec-2012-legislative-plain-indigenous',
+      electionExternalId: 'cec-2012-legislative-yuan',
+      regionExternalId: 'tw',
+      raceType: 'legislator',
+      title: '平地原住民立法委員選舉',
+      votingDate: '2012-01-14',
+      status: 'completed',
+      sourceId: 'cec-election-data',
+    };
+  }
+
+  if (classification.kind === 'legislator-mountain-indigenous') {
+    return {
+      externalId: 'cec-2012-legislative-mountain-indigenous',
+      electionExternalId: 'cec-2012-legislative-yuan',
+      regionExternalId: 'tw',
+      raceType: 'legislator',
+      title: '山地原住民立法委員選舉',
+      votingDate: '2012-01-14',
+      status: 'completed',
+      sourceId: 'cec-election-data',
+    };
+  }
+
+  if (classification.kind !== 'legislator-district') {
+    return null;
+  }
+
+  const countyKey = historicalCecLegacyCountyKey(row);
+  const region = baseIndex.regionByCountyKey.get(countyKey);
+  const districtCode = Number.parseInt(cleanCecCell(row[2]), 10);
+
+  if (!region || !Number.isFinite(districtCode)) {
+    return null;
+  }
+
+  return {
+    externalId: `cec-2012-legislative-district-${historicalCecLegacyRaceKey(row)}`,
+    electionExternalId: 'cec-2012-legislative-yuan',
+    regionExternalId: region.externalId,
+    raceType: 'legislator',
+    title: `${region.name}第${districtCode}選舉區立法委員選舉`,
+    votingDate: '2012-01-14',
+    status: 'completed',
+    sourceId: 'cec-election-data',
+  };
+}
+
+function to2012HistoricalCecPosition(classification, vicePresident, elected) {
+  if (classification.kind === 'president') {
+    const role = vicePresident ? '副總統' : '總統';
+    return elected ? `第13任${role}` : `第13任${role}候選人`;
+  }
+
+  return elected ? '第8屆立法委員' : '第8屆立法委員候選人';
+}
+
 function toHistoricalCecSourcePeople({ zipBuffer, source, seed }) {
-  const regionByCountyKey = buildCecRegionByCountyKey(seed);
   const entries = listZipEntries(zipBuffer);
   const sourcePeople = [];
   const skippedEntries = [];
+  const raceByExternalId = new Map();
+  const people = [];
+  const candidates = [];
 
   for (const entry of entries) {
     const classification = classifyHistoricalCecCandidateEntry(entry.name);
@@ -1008,6 +1176,12 @@ function toHistoricalCecSourcePeople({ zipBuffer, source, seed }) {
     const partyRows = parseDelimitedRows(readZipTextByEntry(zipBuffer, partyEntry.name), ',');
     const candidateRows = parseDelimitedRows(readZipTextByEntry(zipBuffer, entry.name), ',');
     const partyByCode = new Map(partyRows.map((row) => [cleanCecCell(row[0]), normalizePartyName(cleanCecCell(row[1]))]));
+    const baseIndex = buildHistoricalCecBaseIndex({ zipBuffer, entryName: entry.name, seed });
+    const resultByKey = buildHistoricalCecAggregateResultByKey({
+      zipBuffer,
+      entryName: entry.name,
+      classification,
+    });
 
     for (const row of candidateRows) {
       const candidateNo = cleanCecCell(row[5]);
@@ -1022,9 +1196,17 @@ function toHistoricalCecSourcePeople({ zipBuffer, source, seed }) {
       const districtCode = cleanCecCell(row[2]);
       const partyCode = cleanCecCell(row[7]);
       const vicePresident = cleanCecCell(row[15]) === 'Y';
-      const elected = cleanCecCell(row[14]) === '*';
+      const nationalRace = classification.kind === 'president' || classification.kind.includes('indigenous');
+      const resultKey = nationalRace
+        ? candidateNo
+        : `${historicalCecLegacyRaceKey(row)}-${candidateNo}`;
+      const aggregateResult = resultByKey.get(resultKey);
+      const elected = aggregateResult?.elected ?? cleanCecCell(row[14]) === '*';
+      const incumbent = cleanCecCell(row[13]) === 'Y';
       const party = normalizePartyName(partyByCode.get(partyCode) ?? '');
-      const countyKey = toCecCountyKey(countyCode, countySubCode);
+      const countyKey = historicalCecLegacyCountyKey(row);
+      const position = toHistoricalCecPosition(row, classification, baseIndex, elected);
+      const district = toHistoricalCecDistrictName(row, classification, baseIndex);
       const sourcePersonKey = `cec-historical:${hashId([entry.name, candidateNo, name, row[0], row[1], row[2], row[15]].join('|'))}`;
 
       sourcePeople.push({
@@ -1037,9 +1219,9 @@ function toHistoricalCecSourcePeople({ zipBuffer, source, seed }) {
         alias: null,
         gender: normalizeGender(cleanCecCell(row[8])),
         party,
-        position: toHistoricalCecPosition(row, classification, regionByCountyKey),
-        normalizedRole: normalizedRoleForPosition(toHistoricalCecPosition(row, classification, regionByCountyKey)),
-        district: toHistoricalCecDistrictName(row, classification, regionByCountyKey),
+        position,
+        normalizedRole: normalizedRoleForPosition(position),
+        district,
         electionYear: classification.year,
         externalRecordId: sourcePersonKey,
         sourcePayload: {
@@ -1053,14 +1235,100 @@ function toHistoricalCecSourcePeople({ zipBuffer, source, seed }) {
           elected,
           vicePresident,
           kind: classification.kind,
+          voteCount: aggregateResult?.voteCount ?? null,
+          voteRate: aggregateResult?.voteRate ?? null,
         },
         confidenceSuggestion: 'A',
         isPublic: false,
       });
+
+      if (classification.year !== 2012 || !['president', 'legislator-district', 'legislator-plain-indigenous', 'legislator-mountain-indigenous'].includes(classification.kind)) {
+        continue;
+      }
+
+      const race = build2012HistoricalCecRace(row, classification, baseIndex);
+      if (!race) {
+        skippedEntries.push({ entry: entry.name, reason: `unmapped 2012 race ${historicalCecLegacyRaceKey(row)}` });
+        continue;
+      }
+
+      raceByExternalId.set(race.externalId, race);
+      const personExternalId = `cec-2012-person-${hashId(sourcePersonKey)}`;
+      const candidateExternalId = `cec-2012-candidate-${hashId([race.externalId, candidateNo, name, vicePresident].join('|'))}`;
+      const sourcePayload = {
+        zipEntry: entry.name,
+        votes: aggregateResult?.voteCount ?? null,
+        voteRate: aggregateResult?.voteRate ?? null,
+        elected,
+        incumbent,
+        vicePresident,
+      };
+
+      people.push({
+        externalId: personExternalId,
+        sourcePersonKey,
+        name,
+        alias: null,
+        party,
+        position: to2012HistoricalCecPosition(classification, vicePresident, elected),
+        electionYear: 2012,
+        district,
+        sourceUrl: source.url,
+        isPublic: true,
+        sourceId: source.id,
+        sourcePayload,
+        gender: normalizeGender(cleanCecCell(row[8])),
+      });
+      candidates.push({
+        externalId: candidateExternalId,
+        personExternalId,
+        raceExternalId: race.externalId,
+        party,
+        candidateNo,
+        registrationStatus: elected ? 'elected' : 'not_elected',
+        voteCount: aggregateResult?.voteCount ?? null,
+        voteRate: aggregateResult?.voteRate ?? null,
+        isElected: elected,
+        isIncumbent: incumbent,
+        sourceUrl: source.url,
+        isPublic: true,
+        sourceId: source.id,
+        sourcePayload,
+      });
     }
   }
 
-  return { sourcePeople, skippedEntries };
+  const elections = people.length > 0
+    ? [
+        {
+          externalId: 'cec-2012-president-vice-president',
+          name: '2012年第13任總統副總統選舉',
+          year: 2012,
+          electionType: 'presidential',
+          votingDate: '2012-01-14',
+          status: 'completed',
+          sourceId: 'cec-election-data',
+        },
+        {
+          externalId: 'cec-2012-legislative-yuan',
+          name: '2012年第8屆立法委員選舉',
+          year: 2012,
+          electionType: 'legislative',
+          votingDate: '2012-01-14',
+          status: 'completed',
+          sourceId: 'cec-election-data',
+        },
+      ]
+    : [];
+
+  return {
+    elections,
+    races: Array.from(raceByExternalId.values()),
+    people,
+    candidates,
+    sourcePeople,
+    skippedEntries,
+  };
 }
 
 function toLocalCandidateRows({ rows, partyByCode, source, roleLabel, raceExternalIdForRow, districtNameForRow, officeTitleForRow }) {
@@ -1448,11 +1716,19 @@ async function enrichSeedWithHistoricalCecSourcePeople(seed, args) {
 
   try {
     const zipBuffer = await fetchBytes(source.downloadUrl);
-    const { sourcePeople, skippedEntries } = toHistoricalCecSourcePeople({ zipBuffer, source, seed });
+    const { elections, races, people, candidates, sourcePeople, skippedEntries } = toHistoricalCecSourcePeople({
+      zipBuffer,
+      source,
+      seed,
+    });
 
     return {
       seed: {
         ...seed,
+        elections: mergeByExternalId([seed.elections, elections]),
+        races: mergeByExternalId([seed.races, races]),
+        people: mergeByExternalId([seed.people, people]),
+        candidates: mergeByExternalId([seed.candidates, candidates]),
         sourcePeople: mergeBySourcePersonKey([seed.sourcePeople, sourcePeople]),
       },
       historicalCecSourcePeople: {
@@ -1460,7 +1736,10 @@ async function enrichSeedWithHistoricalCecSourcePeople(seed, args) {
         count: sourcePeople.length,
         url: source.downloadUrl,
         skippedEntryCount: skippedEntries.length,
-        scope: 'historical CEC candidate source people since 1989, excluding current baseline 2024 national and 2022 local imports',
+        imported2012ElectionCount: elections.length,
+        imported2012RaceCount: races.length,
+        imported2012CandidateCount: candidates.length,
+        scope: 'historical CEC candidate source people since 1989 plus complete 2012 national election races and results; excludes current baseline 2024 national and 2022 local imports',
       },
     };
   } catch (error) {
@@ -2212,7 +2491,7 @@ async function selectOrThrow(env, table, select) {
   return supabaseRequest(env, table, { method: 'GET', select });
 }
 
-async function selectAllOrThrow(env, table, select, pageSize = 1000, filters = {}) {
+async function selectAllOrThrow(env, table, select, pageSize = 1000, filters = {}, order = 'id.asc') {
   const rows = [];
   let offset = 0;
 
@@ -2220,7 +2499,7 @@ async function selectAllOrThrow(env, table, select, pageSize = 1000, filters = {
     const page = await supabaseRequest(env, table, {
       method: 'GET',
       select,
-      filters: { ...filters, order: 'id.asc' },
+      filters: { ...filters, order },
       range: { from: offset, to: offset + pageSize - 1 },
     });
 
@@ -2645,6 +2924,91 @@ function buildProbableIdentityMatchRows(seed, sourcePersonByKey, canonicalPeople
   }
 
   return rows;
+}
+
+async function reconcileHistoricalCecImportedPeople(
+  env,
+  seed,
+  sourcePersonByKey,
+  personByExternalId,
+  canonicalPeople,
+  startedAt,
+) {
+  const importedPeople = (seed.people ?? []).filter((person) =>
+    person.externalId.startsWith('cec-2012-person-'),
+  );
+
+  if (importedPeople.length === 0) {
+    return 0;
+  }
+
+  const [identityMatches, canonicalMapRows, existingDecisions] = await Promise.all([
+    selectAllOrThrow(env, 'person_identity_matches', 'source_person_id,person_id,match_status'),
+    selectAllOrThrow(env, 'person_canonical_map', 'person_id,canonical_person_id', 1000, {}, 'person_id.asc'),
+    selectAllOrThrow(env, 'person_merge_decisions', 'duplicate_person_id,status'),
+  ]);
+  const canonicalByPersonId = new Map(
+    canonicalMapRows.map((row) => [row.person_id, row.canonical_person_id]),
+  );
+  const personById = new Map(canonicalPeople.map((person) => [person.id, person]));
+  const matchesBySourcePersonId = new Map();
+  const activeDuplicateIds = new Set(
+    existingDecisions
+      .filter((decision) => ['suggested', 'verified'].includes(decision.status))
+      .map((decision) => decision.duplicate_person_id),
+  );
+
+  for (const match of identityMatches) {
+    if (!['matched', 'auto_matched'].includes(match.match_status)) {
+      continue;
+    }
+    const group = matchesBySourcePersonId.get(match.source_person_id) ?? [];
+    group.push(match);
+    matchesBySourcePersonId.set(match.source_person_id, group);
+  }
+
+  const mergeRows = [];
+
+  for (const importedPerson of importedPeople) {
+    const duplicatePerson = personByExternalId.get(importedPerson.externalId);
+    const sourcePerson = sourcePersonByKey.get(sourcePersonKeyFor(importedPerson));
+
+    if (!duplicatePerson || !sourcePerson || activeDuplicateIds.has(duplicatePerson.id)) {
+      continue;
+    }
+
+    const canonicalTargets = new Set(
+      (matchesBySourcePersonId.get(sourcePerson.id) ?? [])
+        .map((match) => canonicalByPersonId.get(match.person_id) ?? match.person_id)
+        .filter((personId) => personId !== duplicatePerson.id)
+        .filter((personId) => !personById.get(personId)?.external_id?.startsWith('cec-2012-person-')),
+    );
+
+    if (canonicalTargets.size !== 1) {
+      continue;
+    }
+
+    const [canonicalPersonId] = canonicalTargets;
+    mergeRows.push({
+      duplicate_person_id: duplicatePerson.id,
+      canonical_person_id: canonicalPersonId,
+      status: 'verified',
+      confidence_level: 'A',
+      reason: 'The same official 2012 CEC source record has one existing canonical person match.',
+      evidence_json: {
+        sourcePersonKey: sourcePerson.source_person_key,
+        importedExternalId: importedPerson.externalId,
+        canonicalExternalId: personById.get(canonicalPersonId)?.external_id ?? null,
+        electionYear: 2012,
+      },
+      reviewed_by: 'system:cec-2012-source-identity-reconciliation',
+      reviewed_at: startedAt,
+      updated_at: startedAt,
+    });
+  }
+
+  await upsertOrThrow(env, 'person_merge_decisions', mergeRows, { batchSize: 100 });
+  return mergeRows.length;
 }
 
 function toClaimValue(value) {
@@ -3497,6 +3861,15 @@ async function writeSeed(seed, hash, args) {
 
   const probableIdentityMatchRows = buildProbableIdentityMatchRows(seed, sourcePersonByKey, people, startedAt, args);
   await upsertOrThrow(env, 'person_identity_matches', probableIdentityMatchRows, { onConflict: 'source_person_id,person_id' });
+
+  args.reconciledHistoricalCecPersonMerges = await reconcileHistoricalCecImportedPeople(
+    env,
+    seed,
+    sourcePersonByKey,
+    personByExternalId,
+    peopleRefresh,
+    startedAt,
+  );
 
   const autoApprovedPersonBySourceKey = new Map(
     probableIdentityMatchRows

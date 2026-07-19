@@ -1897,6 +1897,12 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
           sourceUrl: source.url,
           isPublic: true,
           sourceId: 'ly-current-legislators',
+          sourcePayload: {
+            isCurrent: true,
+            term,
+            onboardDate: onboardDate || null,
+            leaveFlag: pickField(row, ['leaveFlag']) || null,
+          },
         };
       })
       .filter((person) => person.name);

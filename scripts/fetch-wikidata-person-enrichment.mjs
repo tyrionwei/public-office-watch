@@ -174,6 +174,7 @@ function targetFromRecord(record) {
     district: record.district ?? '',
     education: record.education ?? '',
     experience: record.experience ?? '',
+    missingSignals: Array.isArray(record.missingSignals) ? record.missingSignals : null,
     rejectedWikidataQids: record.rejectedWikidataQids ?? record.rejected_wikidata_qids ?? [],
   };
 }
@@ -560,6 +561,10 @@ function partyAffiliations(entity, relatedEntities) {
     .filter(Boolean);
 }
 
+function needsClaim(target, claimType) {
+  return !Array.isArray(target.missingSignals) || target.missingSignals.includes(claimType);
+}
+
 function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvidence }) {
   const claims = [];
   const gender = genderFromEntityId(claimEntityIds(entity, 'P21')[0]);
@@ -569,21 +574,23 @@ function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvide
   const occupations = labelsForIds(relatedEntities, claimEntityIds(entity, 'P106')).map((item) => item.label);
   const parties = partyAffiliations(entity, relatedEntities);
 
-  claims.push(claimRecord({ target, qid, claimType: 'external_id', claimValue: `wikidata:${qid}`, matchEvidence }));
+  if (needsClaim(target, 'external_id')) {
+    claims.push(claimRecord({ target, qid, claimType: 'external_id', claimValue: `wikidata:${qid}`, matchEvidence }));
+  }
 
-  if (gender) {
+  if (gender && needsClaim(target, 'gender')) {
     claims.push(claimRecord({ target, qid, claimType: 'gender', claimValue: gender, matchEvidence }));
   }
 
-  if (birthDate) {
+  if (birthDate && needsClaim(target, 'birth_date')) {
     claims.push(claimRecord({ target, qid, claimType: 'birth_date', claimValue: birthDate, matchEvidence }));
   }
 
-  if (education.length > 0) {
+  if (education.length > 0 && needsClaim(target, 'education')) {
     claims.push(claimRecord({ target, qid, claimType: 'education', claimValue: Array.from(new Set(education)).join('；'), matchEvidence }));
   }
 
-  if (positions.length > 0 || occupations.length > 0) {
+  if ((positions.length > 0 || occupations.length > 0) && needsClaim(target, 'experience')) {
     claims.push(claimRecord({
       target,
       qid,
@@ -594,7 +601,7 @@ function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvide
     }));
   }
 
-  for (const party of parties) {
+  for (const party of needsClaim(target, 'party_affiliation') ? parties : []) {
     claims.push(claimRecord({
       target,
       qid,
@@ -610,7 +617,7 @@ function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvide
     }));
   }
 
-  for (const [property, relationType] of Object.entries(relationProperties)) {
+  for (const [property, relationType] of needsClaim(target, 'family_relation') ? Object.entries(relationProperties) : []) {
     for (const relative of labelsForIds(relatedEntities, claimEntityIds(entity, property))) {
       claims.push(claimRecord({
         target,

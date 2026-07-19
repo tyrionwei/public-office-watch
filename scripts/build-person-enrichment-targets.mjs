@@ -85,7 +85,7 @@ async function supabaseJson(url) {
   return body;
 }
 
-async function fetchAllRows(viewName, select, pageSize = 1000) {
+async function fetchAllRows(viewName, select, pageSize = 1000, params = {}, order = null) {
   const rows = [];
 
   for (let offset = 0; ; offset += pageSize) {
@@ -93,6 +93,10 @@ async function fetchAllRows(viewName, select, pageSize = 1000) {
     url.searchParams.set('select', select);
     url.searchParams.set('offset', String(offset));
     url.searchParams.set('limit', String(pageSize));
+    if (order) url.searchParams.set('order', order);
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
 
     const page = await supabaseJson(url);
     rows.push(...page);
@@ -107,11 +111,19 @@ function isBlank(value) {
   return value == null || String(value).trim() === '';
 }
 
-function rolePriority(position) {
-  const text = String(position ?? '');
+function currentPriority(person) {
+  return isBlank(person.current_office_label) ? 1 : 0;
+}
+
+function profileGapPriority(missing) {
+  return missing.includes('education') || missing.includes('experience') ? 0 : 1;
+}
+
+function rolePriority(person) {
+  const text = String(person.current_office_label ?? person.position ?? '');
   if (text.includes('總統') || text.includes('副總統')) return 0;
   if (text.includes('立法委員')) return 1;
-  if (text.includes('縣長') || text.includes('市長')) return 2;
+  if (/(縣長|市長)$/.test(text)) return 2;
   if (text.includes('議員')) return 3;
   return 4;
 }
@@ -158,6 +170,7 @@ function targetFromPerson(person, missing) {
     gender: person.gender ?? 'unknown',
     party: person.party ?? '',
     position: person.position ?? '',
+    currentOfficeLabel: person.current_office_label ?? '',
     district: person.district ?? '',
     education: person.education ?? '',
     experience: person.experience ?? '',
@@ -172,15 +185,25 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [people, publicClaims] = await Promise.all([
-    fetchAllRows('public_people', 'person_id,name,gender,party,position,district,education,experience'),
-    fetchAllRows('public_person_claims', 'person_id,claim_type'),
+    fetchAllRows(
+      'public_people',
+      'person_id,name,gender,party,position,current_office_label,district,education,experience',
+      1000,
+      {},
+      'person_id.asc',
+    ),
+    fetchAllRows('public_person_claims', 'claim_id,person_id,claim_type', 1000, {
+      claim_type: 'in.(birth_date,external_id,education,experience)',
+    }, 'claim_id.asc'),
   ]);
   const publicClaimTypes = claimTypesByPerson(publicClaims);
   const targets = people
     .map((person) => ({ person, missing: missingSignals(person, publicClaimTypes) }))
     .filter(({ missing }) => missing.includes('birth_date') || missing.includes('education') || missing.includes('experience'))
     .sort((left, right) =>
-      rolePriority(left.person.position) - rolePriority(right.person.position) ||
+      currentPriority(left.person) - currentPriority(right.person) ||
+      profileGapPriority(left.missing) - profileGapPriority(right.missing) ||
+      rolePriority(left.person) - rolePriority(right.person) ||
       right.missing.length - left.missing.length ||
       left.person.name.localeCompare(right.person.name, 'zh-Hant-TW'),
     )
@@ -205,6 +228,7 @@ async function main() {
     firstTargets: targets.slice(0, 10).map((target) => ({
       name: target.name,
       position: target.position,
+      currentOfficeLabel: target.currentOfficeLabel,
       missingSignals: target.missingSignals,
     })),
   }, null, 2));

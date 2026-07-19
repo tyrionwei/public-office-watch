@@ -181,19 +181,42 @@ function publicClaimCoverageByPerson(claims, claimType) {
   return covered;
 }
 
-function summarizeMissingFields(people, claims, options) {
+function summarizeMissingFields(people, candidates, claims, options) {
   const publicEducationClaimPersonIds = publicClaimCoverageByPerson(claims, 'education');
   const publicExperienceClaimPersonIds = publicClaimCoverageByPerson(claims, 'experience');
-  const missing = {
-    gender: countMissing(people, 'gender', (person) => isBlank(person.gender) || person.gender === 'unknown'),
-    party: countMissing(people, 'party'),
-    position: countMissing(people, 'position'),
-    district: countMissing(people, 'district'),
-    election_year: countMissing(people, 'election_year'),
-    education: countMissing(people, 'education', (person) => isBlank(person.education) && !publicEducationClaimPersonIds.has(person.person_id)),
-    experience: countMissing(people, 'experience', (person) => isBlank(person.experience) && !publicExperienceClaimPersonIds.has(person.person_id)),
-    primary_photo_url: countMissing(people, 'primary_photo_url'),
+  const candidatePersonIds = new Set();
+  const candidatePartyPersonIds = new Set();
+  const candidatePositionPersonIds = new Set();
+  const candidateElectionYearPersonIds = new Set();
+
+  for (const candidate of candidates) {
+    candidatePersonIds.add(candidate.person_id);
+    if (!isBlank(candidate.party)) candidatePartyPersonIds.add(candidate.person_id);
+    if (!isBlank(candidate.race_title)) candidatePositionPersonIds.add(candidate.person_id);
+    if (!isBlank(candidate.election_year)) candidateElectionYearPersonIds.add(candidate.person_id);
+  }
+
+  const missingPredicates = {
+    gender: (person) => isBlank(person.gender) || person.gender === 'unknown',
+    party: (person) =>
+      isBlank(person.party) &&
+      candidatePersonIds.has(person.person_id) &&
+      !candidatePartyPersonIds.has(person.person_id),
+    position: (person) =>
+      isBlank(person.position) &&
+      !candidatePositionPersonIds.has(person.person_id),
+    district: (person) => isBlank(person.district),
+    election_year: (person) =>
+      isBlank(person.election_year) &&
+      candidatePersonIds.has(person.person_id) &&
+      !candidateElectionYearPersonIds.has(person.person_id),
+    education: (person) => isBlank(person.education) && !publicEducationClaimPersonIds.has(person.person_id),
+    experience: (person) => isBlank(person.experience) && !publicExperienceClaimPersonIds.has(person.person_id),
+    primary_photo_url: (person) => isBlank(person.primary_photo_url),
   };
+  const missing = Object.fromEntries(
+    Object.entries(missingPredicates).map(([field, predicate]) => [field, people.filter(predicate).length]),
+  );
   const primaryFieldMissing = {
     education: countMissing(people, 'education'),
     experience: countMissing(people, 'experience'),
@@ -203,21 +226,7 @@ function summarizeMissingFields(people, claims, options) {
   for (const field of Object.keys(missing)) {
     samples[field] = sample(
       people
-        .filter((person) => {
-          if (field === 'gender') {
-            return isBlank(person.gender) || person.gender === 'unknown';
-          }
-
-          if (field === 'education') {
-            return isBlank(person.education) && !publicEducationClaimPersonIds.has(person.person_id);
-          }
-
-          if (field === 'experience') {
-            return isBlank(person.experience) && !publicExperienceClaimPersonIds.has(person.person_id);
-          }
-
-          return isBlank(person[field]);
-        })
+        .filter(missingPredicates[field])
         .map((person) => ({
           personId: person.person_id,
           name: person.name,
@@ -235,6 +244,15 @@ function summarizeMissingFields(people, claims, options) {
     publicClaimCoverage: {
       education: publicEducationClaimPersonIds.size,
       experience: publicExperienceClaimPersonIds.size,
+    },
+    resolvedByElectionContext: {
+      party: people.filter((person) => isBlank(person.party) && candidatePartyPersonIds.has(person.person_id)).length,
+      position: people.filter((person) => isBlank(person.position) && candidatePositionPersonIds.has(person.person_id)).length,
+      election_year: people.filter((person) => isBlank(person.election_year) && candidateElectionYearPersonIds.has(person.person_id)).length,
+    },
+    notApplicable: {
+      party: people.filter((person) => isBlank(person.party) && !candidatePersonIds.has(person.person_id)).length,
+      election_year: people.filter((person) => isBlank(person.election_year) && !candidatePersonIds.has(person.person_id)).length,
     },
     samples,
   };
@@ -413,7 +431,7 @@ async function main() {
     reviewQueue,
   ] = await Promise.all([
     fetchRows('public_people', 'person_id,name,alias,gender,party,position,election_year,district,education,experience,updated_at,primary_photo_url', options, 'person_id.asc'),
-    fetchRows('public_candidates', 'candidate_id,person_id,person_name,person_party,person_position,race_title,election_name,region_name,party,registration_status', options, 'candidate_id.asc'),
+    fetchRows('public_candidates', 'candidate_id,person_id,person_name,person_party,person_position,race_title,election_name,election_year,region_name,party,registration_status', options, 'candidate_id.asc'),
     fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json,confidence_level,source_name,source_url', options, 'claim_id.asc'),
     fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json,confidence_level,source_name,source_url', options, 'claim_id.asc', { claim_type: 'eq.external_id' }),
     fetchRows('person_claims', 'id,person_id,claim_type,claim_value,claim_json,confidence_level,review_status,visibility,is_public,source_name,source_url', options, 'id.asc', { claim_type: 'eq.external_id' }),
@@ -444,7 +462,7 @@ async function main() {
       mergeDecisions: mergeDecisions.length,
       reviewQueue: reviewQueue.length,
     },
-    missingFields: summarizeMissingFields(people, claims, options),
+    missingFields: summarizeMissingFields(people, candidates, claims, options),
     externalIds: externalIdSummaryFromMissingReport(people, options) ?? summarizeExternalIds(
       people,
       [...externalIdClaims, ...publicExternalIdClaimsFromRawClaims(rawExternalIdClaims)],

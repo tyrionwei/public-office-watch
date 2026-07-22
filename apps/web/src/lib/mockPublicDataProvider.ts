@@ -218,6 +218,14 @@ export const mockPublicDataProvider: PublicDataProvider = {
     };
   },
 
+  async loadElectionDetail(electionId: string) {
+    return {
+      election: this.getElectionById(electionId),
+      races: this.getRacesByElectionId(electionId),
+      candidates: this.getCandidatesByElectionId(electionId),
+    };
+  },
+
   getPollComparisonByElectionId(electionId: string) {
     return mockPollComparisons.find((comparison) => comparison.electionId === electionId) ?? null;
   },

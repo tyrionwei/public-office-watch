@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
@@ -9,6 +10,7 @@ import { translateCandidacyStatus, translateElectionResult } from '../data/elect
 import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
+import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { getCandidateElectionLabel, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
@@ -320,7 +322,39 @@ function PlatformClaimCard({ claim }: { claim: PublicPersonClaim }) {
 export function PersonPage() {
   const { language, t } = useI18n();
   const { personId } = useParams();
-  const profile = publicDataProvider.getPersonProfile(personId ?? '');
+  const safePersonId = personId ?? '';
+  const [loadedPersonId, setLoadedPersonId] = useState<string | null>(null);
+  const [failedPersonId, setFailedPersonId] = useState<string | null>(null);
+  const loading = loadedPersonId !== safePersonId;
+
+  useEffect(() => {
+    let active = true;
+    setFailedPersonId(null);
+
+    if (!safePersonId) {
+      setLoadedPersonId(safePersonId);
+      return () => {
+        active = false;
+      };
+    }
+
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadPersonProfiles([safePersonId]))
+      .catch((error: unknown) => {
+        if (!active) return;
+        setFailedPersonId(safePersonId);
+        if (import.meta.env.DEV) console.warn('Failed to load person profile', error);
+      })
+      .finally(() => {
+        if (active) setLoadedPersonId(safePersonId);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [safePersonId]);
+
+  const profile = loading ? null : publicDataProvider.getPersonProfile(safePersonId);
   const person = profile?.person ?? null;
   const theme = partyTheme[toPartyThemeKey(person?.party)];
   const publicClaims = profile ? visibleProfileClaims(profile.public_claims) : [];
@@ -575,9 +609,13 @@ export function PersonPage() {
               </SectionPanel>
             ) : null}
           </div>
+        ) : loading ? (
+          <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center text-sm text-slate-300">
+            {t('person.loading')}
+          </div>
         ) : (
           <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center text-sm text-slate-300">
-            {t('person.notFound')}
+            {failedPersonId === safePersonId ? t('person.loadError') : t('person.notFound')}
           </div>
         )}
       </PixelFrame>

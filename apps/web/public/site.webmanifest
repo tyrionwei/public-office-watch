@@ -1,0 +1,22 @@
+{
+  "name": "點將臺｜公職資料觀測站",
+  "short_name": "點將臺",
+  "description": "整理臺灣公職人物、政黨、選舉與地方議題的公開資料。",
+  "lang": "zh-Hant",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#071126",
+  "theme_color": "#071126",
+  "icons": [
+    {
+      "src": "/assets/brand/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/brand/dianjiangtai-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

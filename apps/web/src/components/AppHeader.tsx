@@ -30,18 +30,25 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
           <div className="flex min-w-0 items-center gap-4">
             <Link
               to={homePath()}
-              className="pixel-corners grid h-16 w-16 shrink-0 place-items-center border border-accent/50 bg-bg/60 text-center shadow-[inset_0_0_22px_rgba(114,232,255,0.12)] focus:outline-none focus:ring-2 focus:ring-accent/35"
+              className="pixel-corners grid h-16 w-16 shrink-0 place-items-center overflow-hidden border border-accent/50 bg-bg/60 text-center shadow-[inset_0_0_22px_rgba(114,232,255,0.12)] focus:outline-none focus:ring-2 focus:ring-accent/35"
               aria-label={t('nav.homeAria')}
             >
-              <span className="font-display text-lg leading-none text-signal">POW</span>
+              <img
+                src="/assets/brand/dianjiangtai-icon.png"
+                alt=""
+                width="64"
+                height="64"
+                className="h-full w-full object-cover"
+              />
             </Link>
             <div className="min-w-0">
               <Link to={homePath()} className="inline-block focus:outline-none focus:ring-2 focus:ring-accent/35">
                 <h1 className="font-display text-2xl leading-none text-white sm:text-3xl">
-                  {t('brand.name')}
+                  {t('brand.productName')}
                 </h1>
               </Link>
-              <p className="mt-1 font-display text-xs uppercase tracking-[0.26em] text-accent">
+              <p className="mt-1 text-sm leading-tight text-slate-200">{t('brand.name')}</p>
+              <p className="mt-1 font-display text-[10px] uppercase tracking-[0.2em] text-accent">
                 {t('brand.subtitle')}
               </p>
             </div>

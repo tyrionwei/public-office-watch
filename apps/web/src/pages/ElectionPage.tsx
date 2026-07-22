@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
@@ -16,6 +17,7 @@ import {
 } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
+import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { electionsPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
@@ -56,10 +58,41 @@ export function ElectionPage() {
   const { language, t } = useI18n();
   const { electionId } = useParams();
   const safeElectionId = electionId ?? '';
-  const election = publicDataProvider.getElectionById(safeElectionId);
-  const races = publicDataProvider.getRacesByElectionId(safeElectionId);
-  const candidates = publicDataProvider.getCandidatesByElectionId(safeElectionId);
-  const pollComparison = publicDataProvider.getPollComparisonByElectionId(safeElectionId);
+  const [loadedElectionId, setLoadedElectionId] = useState<string | null>(null);
+  const [failedElectionId, setFailedElectionId] = useState<string | null>(null);
+  const loading = loadedElectionId !== safeElectionId;
+
+  useEffect(() => {
+    let active = true;
+    setFailedElectionId(null);
+
+    if (!safeElectionId) {
+      setLoadedElectionId(safeElectionId);
+      return () => {
+        active = false;
+      };
+    }
+
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadElectionDetail(safeElectionId))
+      .catch((error: unknown) => {
+        if (!active) return;
+        setFailedElectionId(safeElectionId);
+        if (import.meta.env.DEV) console.warn('Failed to load election detail', error);
+      })
+      .finally(() => {
+        if (active) setLoadedElectionId(safeElectionId);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [safeElectionId]);
+
+  const election = loading ? null : publicDataProvider.getElectionById(safeElectionId);
+  const races = loading ? [] : publicDataProvider.getRacesByElectionId(safeElectionId);
+  const candidates = loading ? [] : publicDataProvider.getCandidatesByElectionId(safeElectionId);
+  const pollComparison = loading ? null : publicDataProvider.getPollComparisonByElectionId(safeElectionId);
   const candidatesByRaceId = candidates.reduce<Map<string, PublicCandidate[]>>((groups, candidate) => {
     const values = groups.get(candidate.race_id) ?? [];
     values.push(candidate);
@@ -309,11 +342,15 @@ export function ElectionPage() {
               </div>
             </SectionPanel>
           </div>
+        ) : loading ? (
+          <p className="text-sm text-slate-300">{t('legacyElection.loading')}</p>
         ) : (
           <div className="space-y-3 text-sm text-slate-300">
-            <h2 className="font-display text-2xl text-white">{t('legacyElection.notFound')}</h2>
-            <p>{t('legacyElection.notFoundBody')}</p>
-            <p>{t('legacyElection.notFoundHint')}</p>
+            <h2 className="font-display text-2xl text-white">
+              {failedElectionId === safeElectionId ? t('legacyElection.loadError') : t('legacyElection.notFound')}
+            </h2>
+            {failedElectionId === safeElectionId ? null : <p>{t('legacyElection.notFoundBody')}</p>}
+            {failedElectionId === safeElectionId ? null : <p>{t('legacyElection.notFoundHint')}</p>}
           </div>
         )}
       </PixelFrame>

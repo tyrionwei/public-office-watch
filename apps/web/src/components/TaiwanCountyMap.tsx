@@ -148,7 +148,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
         </span>
       </div>
 
-      <div className="relative mx-auto aspect-[9/10] w-full max-w-[720px] min-w-0 overflow-hidden rounded-sm bg-[#0b5f91] bg-[url('/assets/map/pixel-ocean-panel-bg-preview.png')] bg-cover bg-center bg-no-repeat p-2 shadow-[inset_0_0_36px_rgba(2,8,23,0.55)] [image-rendering:pixelated]">
+      <div className="relative mx-auto aspect-[9/10] w-full max-w-[720px] min-w-0 overflow-hidden rounded-sm bg-[#0b5f91] bg-[url('/assets/map/pixel-ocean-panel-bg-preview.webp')] bg-cover bg-center bg-no-repeat p-2 shadow-[inset_0_0_36px_rgba(2,8,23,0.55)] [image-rendering:pixelated]">
         <div className="relative grid h-full min-h-0 min-w-0 grid-cols-[clamp(104px,26%,156px)_minmax(0,1fr)] gap-2 2xl:gap-3">
           <div className="relative z-20 grid h-full min-h-0 grid-rows-3 gap-2">
             {offshoreCounties.map((county) => {

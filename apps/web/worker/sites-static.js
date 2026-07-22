@@ -24,7 +24,7 @@ function isDocumentRoute(request) {
 const worker = {
   async fetch(request, env) {
     if (isDocumentRoute(request)) {
-      const indexUrl = new URL('/index.html', request.url);
+      const indexUrl = new URL('/', request.url);
       const indexRequest = new Request(indexUrl, request);
       const indexResponse = await env.ASSETS.fetch(indexRequest);
       return addSecurityHeaders(indexResponse);

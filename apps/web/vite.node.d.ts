@@ -3,6 +3,9 @@ declare module 'node:fs' {
     existsSync(path: string): boolean;
     readFileSync(path: string, encoding: string): string;
     writeFileSync(path: string, data: string): void;
+    rmSync(path: string, options: { recursive?: boolean; force?: boolean }): void;
+    mkdirSync(path: string, options: { recursive?: boolean }): void;
+    cpSync(source: string, destination: string, options?: { recursive?: boolean }): void;
   };
   export default fs;
 }

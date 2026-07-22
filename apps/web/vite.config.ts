@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import { sites } from './build/sites-vite-plugin';
 
 type EnvMap = Record<string, string>;
 type JsonObject = Record<string, unknown>;
@@ -637,5 +638,5 @@ function internalReviewApiPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), internalReviewApiPlugin()],
+  plugins: [react(), sites(), internalReviewApiPlugin()],
 });

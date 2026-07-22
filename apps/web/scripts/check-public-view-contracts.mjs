@@ -109,28 +109,15 @@ async function main() {
 
   for (const [viewName, requiredFields] of Object.entries(allowedPublicViews)) {
     try {
-      const { data, error } = await client.from(viewName).select('*').limit(1);
+      const { error } = await client.from(viewName).select(requiredFields.join(',')).limit(0);
 
       if (error) {
         failed = true;
-        console.log(`${viewName}: failed rowCount=0 ${error.code ?? 'unknown'} ${error.message}`);
+        console.log(`${viewName}: failed ${error.code ?? 'unknown'} ${error.message}`);
         continue;
       }
 
-      const rowCount = Array.isArray(data) ? data.length : 0;
-      const firstRow = rowCount > 0 ? data[0] : null;
-      const missingFields = firstRow
-        ? requiredFields.filter((field) => !(field in firstRow))
-        : [];
-
-      if (missingFields.length > 0) {
-        failed = true;
-        console.log(`${viewName}: failed rowCount=${rowCount} missing-fields ${missingFields.join(',')}`);
-        continue;
-      }
-
-
-      console.log(`${viewName}: ok rowCount=${rowCount}`);
+      console.log(`${viewName}: ok fields=${requiredFields.length}`);
     } catch (error) {
       failed = true;
       const message = error instanceof Error ? error.message : 'Unknown error';

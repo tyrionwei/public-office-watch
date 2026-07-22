@@ -52,6 +52,8 @@ SELECT
   NOW(),
   NOW()
 FROM reviewed_matches AS reviewed
+JOIN source_people AS source_person ON source_person.id = reviewed.source_person_id
+JOIN people AS canonical_person ON canonical_person.id = reviewed.person_id
 ON CONFLICT (source_person_id, person_id) DO UPDATE
 SET
   match_status = EXCLUDED.match_status,

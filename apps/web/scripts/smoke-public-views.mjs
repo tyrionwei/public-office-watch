@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 
 const allowedPublicViews = [
-  'public_people',
+  'public_people_list_cached',
   'public_companies',
   'public_relation_details',
   'public_regions',
@@ -110,12 +110,25 @@ async function main() {
       autoRefreshToken: false,
     },
   });
+  const { data: anchorRaces, error: anchorError } = await client
+    .from('public_races')
+    .select('race_id')
+    .limit(1);
+  const anchorRaceId = anchorRaces?.[0]?.race_id;
+
+  if (anchorError || !anchorRaceId) {
+    throw anchorError ?? new Error('Public races does not contain an anchor race.');
+  }
 
   for (const viewName of allowedPublicViews) {
     assertAllowedViewName(viewName);
 
     try {
-      const { data, error } = await client.from(viewName).select('*').limit(1);
+      let request = client.from(viewName).select('*');
+      if (viewName === 'public_candidates') {
+        request = request.eq('race_id', anchorRaceId);
+      }
+      const { data, error } = await request.limit(1);
 
       if (error) {
         console.log(`${viewName}: error ${error.code ?? 'unknown'} ${error.message}`);

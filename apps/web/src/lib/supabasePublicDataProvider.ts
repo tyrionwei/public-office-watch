@@ -731,7 +731,7 @@ async function loadLocalOfficeSummary(regionId: string): Promise<PublicLocalOffi
       }
 
       const labels = regionLabelVariants(region.label);
-      const personRows = await fetchRows('public_people', (query) =>
+      const personRows = await fetchRows('public_people_list_cached', (query) =>
         query.or(labels.map((label) => 'district.ilike.' + label + '%').join(',')),
       );
       const people = personRows
@@ -763,23 +763,18 @@ async function ensurePeopleDataset(filters: { query?: string | null } = {}) {
 
   peopleSnapshotPromise ??= (async () => {
     await refreshSupabasePublicDataSnapshot();
-    const [personRows, candidateRows] = await Promise.all([
-      fetchRows('public_people', (query) => query.not('position', 'ilike', '%村里%').not('position', 'ilike', '%代表%')),
-      fetchRows('public_candidates', (query) => query.not('person_position', 'ilike', '%村里%').not('person_position', 'ilike', '%代表%')),
-    ]);
+    const personRows = await fetchRows(
+      'public_people_list_cached',
+      (query) => query.not('position', 'ilike', '%村里%').not('position', 'ilike', '%代表%'),
+    );
     const base = snapshotCache;
     const people = mergeUniqueBy(
       base?.people ?? [],
       personRows.map((row) => mapPublicPersonRow(row as PublicPerson)),
       (item) => item.person_id,
     );
-    const candidates = mergeUniqueBy(
-      base?.candidates ?? [],
-      candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate)),
-      (item) => item.candidate_id,
-    );
     defaultPeopleDatasetLoaded = true;
-    const snapshot = mergeSnapshot({ people, candidates });
+    const snapshot = mergeSnapshot({ people });
     notifyPublicDataReady();
     return snapshot;
   })().finally(() => {
@@ -801,7 +796,7 @@ async function ensurePeopleSearchDataset(query: string) {
       await refreshSupabasePublicDataSnapshot();
       const pattern = '%' + query.trim() + '%';
       const personRows = await fetchRows(
-        'public_people',
+        'public_people_list_cached',
         (request) =>
           request.or([
             'name.ilike.' + pattern,
@@ -813,22 +808,9 @@ async function ensurePeopleSearchDataset(query: string) {
         12,
       );
       const people = personRows.map((row) => mapPublicPersonRow(row as PublicPerson));
-      const personIds = people.map((person) => person.person_id).filter(Boolean);
-      const candidateRows: unknown[] = [];
-
-      for (let index = 0; index < personIds.length; index += 200) {
-        const chunk = personIds.slice(index, index + 200);
-        candidateRows.push(...await fetchRows('public_candidates', (request) => request.in('person_id', chunk)));
-      }
-
       const base = snapshotCache;
       const snapshot = mergeSnapshot({
         people: mergeUniqueBy(base?.people ?? [], people, (item) => item.person_id),
-        candidates: mergeUniqueBy(
-          base?.candidates ?? [],
-          candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate)),
-          (item) => item.candidate_id,
-        ),
       });
       loadedPeopleSearchQueries.add(normalizedQuery);
       notifyPublicDataReady();
@@ -930,7 +912,7 @@ async function ensurePersonProfileDatasets(personIds: string[]) {
     personSnapshotPromises.set(batchKey, (async () => {
       await refreshSupabasePublicDataSnapshot();
       const [personRows, candidateRows, claimRows, partyAffiliationRows] = await Promise.all([
-        fetchRows('public_people', (query) => query.in('person_id', missingPersonIds)),
+        fetchRows('public_people_list_cached', (query) => query.in('person_id', missingPersonIds)),
         fetchRows('public_candidates', (query) => query.in('person_id', missingPersonIds)),
         fetchRows('public_person_claims', (query) => query.in('person_id', missingPersonIds)),
         fetchRows('public_person_party_affiliations', (query) => query.in('person_id', missingPersonIds)),

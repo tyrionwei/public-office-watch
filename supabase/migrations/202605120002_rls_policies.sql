@@ -16,11 +16,6 @@ ALTER TABLE raw_source_records ENABLE ROW LEVEL SECURITY;
 ALTER TABLE source_documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE relation_candidates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE person_company_relations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE regions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE elections ENABLE ROW LEVEL SECURITY;
-ALTER TABLE races ENABLE ROW LEVEL SECURITY;
-ALTER TABLE candidates ENABLE ROW LEVEL SECURITY;
-ALTER TABLE person_media ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY public_read_people
     ON people
@@ -104,41 +99,6 @@ CREATE POLICY admin_manage_source_documents
 
 CREATE POLICY admin_manage_relations
     ON person_company_relations
-    FOR ALL
-    TO admin_role
-    USING (TRUE)
-    WITH CHECK (TRUE);
-
-CREATE POLICY admin_manage_regions
-    ON regions
-    FOR ALL
-    TO admin_role
-    USING (TRUE)
-    WITH CHECK (TRUE);
-
-CREATE POLICY admin_manage_elections
-    ON elections
-    FOR ALL
-    TO admin_role
-    USING (TRUE)
-    WITH CHECK (TRUE);
-
-CREATE POLICY admin_manage_races
-    ON races
-    FOR ALL
-    TO admin_role
-    USING (TRUE)
-    WITH CHECK (TRUE);
-
-CREATE POLICY admin_manage_candidates
-    ON candidates
-    FOR ALL
-    TO admin_role
-    USING (TRUE)
-    WITH CHECK (TRUE);
-
-CREATE POLICY admin_manage_person_media
-    ON person_media
     FOR ALL
     TO admin_role
     USING (TRUE)

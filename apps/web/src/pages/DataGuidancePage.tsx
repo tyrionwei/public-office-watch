@@ -20,19 +20,52 @@ const confidenceLevels = [
 
 const sourceLinks = [
   {
+    labelKey: 'dataGuidance.sourceCecLabel',
+    descriptionKey: 'dataGuidance.sourceCecDescription',
+    kindKey: 'dataGuidance.sourceOfficial',
+    href: 'https://db.cec.gov.tw/',
+  },
+  {
+    labelKey: 'dataGuidance.sourceLegislatureLabel',
+    descriptionKey: 'dataGuidance.sourceLegislatureDescription',
+    kindKey: 'dataGuidance.sourceOfficial',
+    href: 'https://www.ly.gov.tw/Pages/List.aspx?nodeid=109',
+  },
+  {
+    labelKey: 'dataGuidance.sourcePartyRegistryLabel',
+    descriptionKey: 'dataGuidance.sourcePartyRegistryDescription',
+    kindKey: 'dataGuidance.sourceOfficial',
+    href: 'https://party.moi.gov.tw/',
+  },
+  {
     labelKey: 'dataGuidance.sourceDonationLabel',
     descriptionKey: 'dataGuidance.sourceDonationDescription',
+    kindKey: 'dataGuidance.sourceOfficial',
     href: 'https://ardata.cy.gov.tw/home',
   },
   {
     labelKey: 'dataGuidance.sourceReportLabel',
     descriptionKey: 'dataGuidance.sourceReportDescription',
+    kindKey: 'dataGuidance.sourceOfficial',
     href: 'https://data.gov.tw/dataset/175227',
   },
   {
     labelKey: 'dataGuidance.sourceJudicialLabel',
     descriptionKey: 'dataGuidance.sourceJudicialDescription',
+    kindKey: 'dataGuidance.sourceOfficial',
     href: 'https://opendata.judicial.gov.tw/api/',
+  },
+  {
+    labelKey: 'dataGuidance.sourceVoteTwLabel',
+    descriptionKey: 'dataGuidance.sourceVoteTwDescription',
+    kindKey: 'dataGuidance.sourceCommunity',
+    href: 'https://www.votetw.com/data/',
+  },
+  {
+    labelKey: 'dataGuidance.sourceWikidataLabel',
+    descriptionKey: 'dataGuidance.sourceWikidataDescription',
+    kindKey: 'dataGuidance.sourceCommunity',
+    href: 'https://www.wikidata.org/wiki/Wikidata:WikiProject_Taiwan/Politics/Politician_List',
   },
 ] as const;
 
@@ -80,7 +113,8 @@ export function DataGuidancePage() {
         </SectionPanel>
 
         <SectionPanel title={t('dataGuidance.sourcesTitle')} eyebrow={t('dataGuidance.sourcesEyebrow')}>
-          <div className="grid gap-3 md:grid-cols-3">
+          <p className="mb-4 max-w-4xl text-sm leading-6 text-slate-300">{t('dataGuidance.sourcesThanks')}</p>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {sourceLinks.map((source) => (
               <a
                 key={source.href}
@@ -89,8 +123,9 @@ export function DataGuidancePage() {
                 rel="noreferrer"
                 className="pixel-corners border border-line/70 bg-bg/35 p-4 transition hover:border-accent/55"
               >
-                <h3 className="font-display text-lg text-white">{t(source.labelKey)}</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-300">{t(source.descriptionKey)}</p>
+                <p className="text-xs uppercase tracking-[0.16em] text-accent">{t(source.kindKey)}</p>
+                <h3 className="mt-2 font-display text-lg text-white">{t(source.labelKey)}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-300">{t(source.descriptionKey)}</p>
               </a>
             ))}
           </div>

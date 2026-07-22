@@ -20,8 +20,8 @@ import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 
 export type HomeTicker = {
   title: string;
-  subtitle: string;
   date: string;
+  electionId: string | null;
 };
 
 export type HomePageData = {

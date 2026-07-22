@@ -46,8 +46,8 @@ const nextTicker = mockPublicHomeElectionTicker[0];
 
 export const nextEvent = {
   title: nextTicker?.election_name ?? '範例公開選舉',
-  subtitle: '依公開公告整理的下一個重點選舉節點',
   date: nextTicker?.voting_date ?? '2026-11-28',
+  electionId: nextTicker?.election_id ?? null,
 };
 
 export const regions: RegionCard[] = mockPublicRegionElectionSummary.map((summary) => ({

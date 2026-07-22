@@ -228,7 +228,7 @@ export function ElectionEventPage() {
               <p className="text-xs uppercase tracking-[0.22em] text-accent">{event.votingDate ?? t('event.voteDatePending')}</p>
               <h1 className="mt-2 font-display text-4xl text-white">{translateElectionEventTitle(event, t)}</h1>
               <p className="mt-3 text-sm leading-6 text-slate-300">
-                {t('event.description', { count: event.elections.length, source: event.sourceNameSummary })}
+                {t('event.description', { categories: categorySummary, regions: regionCount })}
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
                 <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{translateElectionStatus(event.status, t)}</span>

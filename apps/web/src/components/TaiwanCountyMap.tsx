@@ -138,7 +138,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
     taiwanCountyMapBounds.fullViewBox;
 
   return (
-    <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(4,23,52,0.96),rgba(4,16,38,0.94)_58%,rgba(3,10,24,0.96))] p-3">
+    <div className="pixel-corners min-w-0 border border-line/70 bg-[linear-gradient(180deg,rgba(4,23,52,0.96),rgba(4,16,38,0.94)_58%,rgba(3,10,24,0.96))] p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">{t('map.title')}</p>
@@ -148,9 +148,9 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
         </span>
       </div>
 
-      <div className="relative overflow-hidden rounded-sm bg-[#0b5f91] bg-[url('/assets/map/pixel-ocean-panel-bg-preview.png')] bg-cover bg-center bg-no-repeat p-2 shadow-[inset_0_0_36px_rgba(2,8,23,0.55)] [image-rendering:pixelated] xl:aspect-[9/10]">
-        <div className="relative grid h-full gap-3 xl:grid-cols-[132px_minmax(0,1fr)] 2xl:grid-cols-[148px_minmax(0,1fr)]">
-          <div className="relative z-20 grid content-center gap-2 xl:order-1">
+      <div className="relative mx-auto aspect-[9/10] w-full max-w-[720px] min-w-0 overflow-hidden rounded-sm bg-[#0b5f91] bg-[url('/assets/map/pixel-ocean-panel-bg-preview.png')] bg-cover bg-center bg-no-repeat p-2 shadow-[inset_0_0_36px_rgba(2,8,23,0.55)] [image-rendering:pixelated]">
+        <div className="relative grid h-full min-h-0 min-w-0 grid-cols-[clamp(104px,26%,156px)_minmax(0,1fr)] gap-2 2xl:gap-3">
+          <div className="relative z-20 grid h-full min-h-0 grid-rows-3 gap-2">
             {offshoreCounties.map((county) => {
               const regionId = getRegionIdByCountyCode(regions, county.code);
               const selected = selectedRegionId === regionId;
@@ -163,7 +163,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                   aria-current={selected ? 'true' : undefined}
                   aria-label={t('map.selectCounty', { name: county.name })}
                   className={[
-                    'pixel-corners relative overflow-hidden border bg-slate-950/12 p-1.5 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
+                    'pixel-corners relative flex min-h-0 flex-col overflow-hidden border bg-slate-950/12 p-1.5 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
                     selected
                       ? 'border-yellow-300 text-white shadow-[0_0_18px_rgba(250,204,21,0.18)]'
                       : 'border-white/20 text-slate-200 hover:border-accent/55',
@@ -172,11 +172,11 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                   <span className="relative z-10 mb-1 block rounded-sm border border-bg/60 bg-bg/75 px-1.5 py-0.5 text-center font-display text-[12px] leading-tight text-white [text-shadow:1px_1px_0_#06101f,-1px_1px_0_#06101f,1px_-1px_0_#06101f,-1px_-1px_0_#06101f]">
                     {county.name.replace('臺', '台')}
                   </span>
-                  <div className="relative z-10 overflow-hidden rounded-sm bg-slate-950/12 p-1">
+                  <div className="relative z-10 min-h-0 flex-1 overflow-hidden rounded-sm bg-slate-950/12 p-1">
                     <svg
                       viewBox="0 0 92 92"
                       preserveAspectRatio="xMidYMid meet"
-                      className="block h-[92px] w-full drop-shadow-[0_8px_8px_rgba(0,0,0,0.22)] 2xl:h-[104px]"
+                      className="block h-full min-h-0 w-full drop-shadow-[0_8px_8px_rgba(0,0,0,0.22)]"
                       role="img"
                       aria-label={`${county.name} inset map`}
                     >
@@ -194,11 +194,11 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
             })}
           </div>
 
-          <div className="relative flex min-h-[500px] items-center justify-center overflow-hidden xl:order-2 xl:min-h-0">
+          <div className="relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden">
             <svg
               viewBox={mainIslandViewBox ?? undefined}
               preserveAspectRatio="xMidYMid meet"
-              className="relative z-20 block h-[500px] w-full max-w-full drop-shadow-[0_18px_18px_rgba(0,0,0,0.28)] xl:h-full"
+              className="relative z-20 block h-full min-h-0 w-full max-w-full drop-shadow-[0_18px_18px_rgba(0,0,0,0.28)]"
               role="img"
               aria-label={t('map.outlineAria')}
             >

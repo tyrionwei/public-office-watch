@@ -42,7 +42,6 @@ export function HomePage() {
 
   const selectedRegionSummary = publicDataProvider.getRegionSummary(selectedRegionId) ?? homeData.stageRegionSummaries[0];
 
-  const selectedRegion = publicDataProvider.getRegionCardByStageRegionId(selectedRegionId) ?? homeData.regions[0];
 
   const handleSelectRegion = useCallback((regionId: string) => {
     startTransition(() => {
@@ -66,7 +65,7 @@ export function HomePage() {
 
         <section className="min-w-0 space-y-3">
           <SelectedRegionHud
-            region={selectedRegion}
+            races={relatedRaces}
             regionNode={selectedRegionNode}
             regionSummary={selectedRegionSummary}
           />

@@ -25,14 +25,14 @@ export const partyTheme = {
     label: '時代力量',
     primary: '#F2D43D',
     accent: '#FFF4A8',
-    text: '#2C2400',
+    text: '#FFF7CC',
   },
   pfp: {
     key: 'pfp',
     label: '親民黨',
     primary: '#F28A24',
     accent: '#FFD0A3',
-    text: '#2A1700',
+    text: '#FFF4E8',
   },
   tsp: {
     key: 'tsp',

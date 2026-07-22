@@ -56,8 +56,8 @@ import {
 
 const emptyHomeTicker: HomeTicker = {
   title: '公開選舉資料待載入',
-  subtitle: '尚未接入 Supabase public views。',
   date: '待公告',
+  electionId: null,
 };
 
 const emptyHomePageData: HomePageData = {

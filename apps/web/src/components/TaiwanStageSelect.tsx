@@ -66,8 +66,8 @@ export function TaiwanStageSelect({
   const { t } = useI18n();
   const topLevelRegions = regions.filter((region) => region.level === 'county_city');
   return (
-    <div className="h-full space-y-4">
-        <div className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(7,22,45,0.96),rgba(8,27,52,0.94)_55%,rgba(7,18,38,0.96))] p-3 sm:p-4">
+    <div className="h-full min-w-0 space-y-4">
+        <div className="pixel-corners min-w-0 border border-line/70 bg-[linear-gradient(180deg,rgba(7,22,45,0.96),rgba(8,27,52,0.94)_55%,rgba(7,18,38,0.96))] p-3 sm:p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <p className="font-display text-sm uppercase tracking-[0.24em] text-slate-200">{t('stage.countyGuide')}</p>
@@ -77,7 +77,7 @@ export function TaiwanStageSelect({
             </span>
           </div>
 
-          <Suspense fallback={<div className="pixel-corners min-h-[560px] border border-line/70 bg-panelAlt/35" />}>
+          <Suspense fallback={<div className="pixel-corners mx-auto aspect-[9/10] w-full max-w-[720px] border border-line/70 bg-panelAlt/35" />}>
             <LazyTaiwanCountyMap
               regions={topLevelRegions}
               selectedRegionId={selectedRegionId}

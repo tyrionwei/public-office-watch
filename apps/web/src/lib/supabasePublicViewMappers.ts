@@ -530,8 +530,8 @@ export function mapTickerToHomeTicker(row: PartialRow<PublicHomeElectionTicker>)
   const ticker = mapPublicHomeElectionTickerRow(row);
   return {
     title: ticker.election_name || '尚無公開選舉資料',
-    subtitle: '依公開公告整理的下一個重點選舉節點',
     date: ticker.voting_date || '待公告',
+    electionId: ticker.election_id || null,
   };
 }
 

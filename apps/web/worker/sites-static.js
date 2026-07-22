@@ -12,23 +12,26 @@ function addSecurityHeaders(response) {
   });
 }
 
+function isDocumentRoute(request) {
+  if (request.method !== 'GET' || !request.headers.get('accept')?.includes('text/html')) {
+    return false;
+  }
+
+  const pathSegment = new URL(request.url).pathname.split('/').at(-1) ?? '';
+  return !pathSegment.includes('.');
+}
+
 const worker = {
   async fetch(request, env) {
+    if (isDocumentRoute(request)) {
+      const indexUrl = new URL('/index.html', request.url);
+      const indexRequest = new Request(indexUrl, request);
+      const indexResponse = await env.ASSETS.fetch(indexRequest);
+      return addSecurityHeaders(indexResponse);
+    }
+
     const assetResponse = await env.ASSETS.fetch(request);
-
-    if (assetResponse.status !== 404) {
-      return addSecurityHeaders(assetResponse);
-    }
-
-    const acceptsHtml = request.headers.get('accept')?.includes('text/html');
-    if (request.method !== 'GET' || !acceptsHtml) {
-      return addSecurityHeaders(assetResponse);
-    }
-
-    const indexUrl = new URL('/index.html', request.url);
-    const indexRequest = new Request(indexUrl, request);
-    const indexResponse = await env.ASSETS.fetch(indexRequest);
-    return addSecurityHeaders(indexResponse);
+    return addSecurityHeaders(assetResponse);
   },
 };
 

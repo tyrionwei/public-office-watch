@@ -4,6 +4,12 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultOutputPath = path.join(repoRoot, 'data-sources', 'person-profile-gap-targets.json');
+const countyCityChiefOffices = new Set([
+  '臺北市市長', '新北市市長', '桃園市市長', '臺中市市長', '臺南市市長', '高雄市市長',
+  '基隆市市長', '新竹市市長', '嘉義市市長', '新竹縣縣長', '苗栗縣縣長', '彰化縣縣長',
+  '南投縣縣長', '雲林縣縣長', '嘉義縣縣長', '屏東縣縣長', '宜蘭縣縣長', '花蓮縣縣長',
+  '臺東縣縣長', '澎湖縣縣長', '金門縣縣長', '連江縣縣長',
+]);
 
 function readLocalEnv() {
   const envPath = path.join(repoRoot, '.env.local');
@@ -121,11 +127,12 @@ function profileGapPriority(missing) {
 
 function rolePriority(person) {
   const text = String(person.current_office_label ?? person.position ?? '');
-  if (text.includes('總統') || text.includes('副總統')) return 0;
-  if (text.includes('立法委員')) return 1;
-  if (/(縣長|市長)$/.test(text)) return 2;
-  if (text.includes('議員')) return 3;
-  return 4;
+  if (countyCityChiefOffices.has(text)) return 0;
+  if (text.includes('議員') && !text.includes('立法委員')) return 1;
+  if (text.includes('總統') || text.includes('副總統')) return 2;
+  if (text.includes('立法委員')) return 3;
+  if (/(縣長|市長)$/.test(text)) return 4;
+  return 5;
 }
 
 function claimTypesByPerson(claims) {
@@ -202,8 +209,8 @@ async function main() {
     .filter(({ missing }) => missing.includes('birth_date') || missing.includes('education') || missing.includes('experience'))
     .sort((left, right) =>
       currentPriority(left.person) - currentPriority(right.person) ||
-      profileGapPriority(left.missing) - profileGapPriority(right.missing) ||
       rolePriority(left.person) - rolePriority(right.person) ||
+      profileGapPriority(left.missing) - profileGapPriority(right.missing) ||
       right.missing.length - left.missing.length ||
       left.person.name.localeCompare(right.person.name, 'zh-Hant-TW'),
     )

@@ -460,7 +460,7 @@ function parseCouncilRows(html) {
       rows.push({
         sourceId: councilSourceId,
         sourceName: councilSourceName,
-        sourceUrl: councilListUrl,
+        sourceUrl: profileUrl,
         externalId: 'current-councilor-' + hashId([councilListUrl, districtLabel, name].join('|')),
         name,
         gender: 'unknown',
@@ -488,10 +488,65 @@ function parseCouncilRows(html) {
   return [...byExternalId.values()];
 }
 
+function councilProfileSection(html, className, nextClassName) {
+  const classPattern = new RegExp(`class="[^"]*\\b${className}\\b[^"]*"`, 'u');
+  const startMatch = classPattern.exec(html);
+  if (!startMatch) return '';
+
+  const start = startMatch.index + startMatch[0].length;
+  const nextPattern = new RegExp(`class="[^"]*\\b${nextClassName}\\b[^"]*"`, 'u');
+  const nextMatch = nextPattern.exec(html.slice(start));
+  const nextClassIndex = nextMatch ? start + nextMatch.index : html.length;
+  const nextElementIndex = nextMatch ? html.lastIndexOf('<', nextClassIndex) : -1;
+  const end = nextElementIndex >= start ? nextElementIndex : nextClassIndex;
+  const section = html.slice(start, end);
+  const bodyStart = section.indexOf('<div class="p">');
+  return cleanText(bodyStart >= 0 ? section.slice(bodyStart + 15) : section);
+}
+
+function parseCouncilProfile(html, row) {
+  const content = cleanText(html);
+  if (!content.includes(row.name)) {
+    throw new Error('Unable to verify official name from ' + row.sourcePayload.profileUrl);
+  }
+
+  const education = councilProfileSection(html, 'content-edu', 'content-exp');
+  const currentPosition = councilProfileSection(html, 'content-nowjob', 'content-social');
+  const rawExperience = councilProfileSection(html, 'content-exp', 'content-nowjob');
+  const experience = currentPosition && rawExperience.endsWith(currentPosition[0])
+    ? rawExperience.slice(0, -1).trim()
+    : rawExperience;
+
+  return {
+    ...row,
+    education,
+    experience,
+  };
+}
+
 async function fetchCouncilProfiles() {
   try {
     const html = await fetchText(councilListUrl);
-    return { profiles: parseCouncilRows(html), skippedRows: [] };
+    const rows = parseCouncilRows(html);
+    const skippedRows = [];
+    const profiles = await mapLimit(rows, 4, async (row) => {
+      try {
+        const profileHtml = await fetchText(row.sourcePayload.profileUrl);
+        return parseCouncilProfile(profileHtml, row);
+      } catch (error) {
+        skippedRows.push({
+          sourceId: row.sourceId,
+          name: row.name,
+          position: row.position,
+          district: row.district,
+          sourceUrl: row.sourcePayload.profileUrl,
+          reason: error instanceof Error ? error.message : String(error),
+        });
+        return row;
+      }
+    });
+
+    return { profiles, skippedRows };
   } catch (error) {
     return {
       profiles: [],

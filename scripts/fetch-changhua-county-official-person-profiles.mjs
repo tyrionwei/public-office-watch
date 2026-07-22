@@ -577,6 +577,24 @@ function fieldBetween(text, startLabel, endLabels) {
   return text.slice(contentStart, contentEnd).trim();
 }
 
+function rocDateToIso(value) {
+  const match = String(value ?? '').match(/民國\s*(\d{1,3})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日/);
+  if (!match) return null;
+
+  const year = Number.parseInt(match[1], 10) + 1911;
+  const month = match[2].padStart(2, '0');
+  const day = match[3].padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function memberSection(html, className) {
+  const pattern = new RegExp(
+    `<div\\b[^>]*class=["'][^"']*\\b${className}\\b[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>`,
+    'i',
+  );
+  return cleanText(html.match(pattern)?.[1] ?? '');
+}
+
 function parseCouncilRows(html) {
   const rows = [];
   const tooltipPattern = /toolTip:\s*'<strong[^>]*>(第[一二三四五六七八九]選區)&nbsp;([^<]+)<\/strong><br\/><span[^>]*>([\s\S]*?)<\/span>'/gu;
@@ -619,13 +637,74 @@ function parseCouncilRows(html) {
     throw new Error('Unable to parse council members from ' + councilListUrl);
   }
 
-  const byExternalId = new Map(rows.map((row) => [row.externalId, row]));
+  const detailUrlByName = new Map();
+  const detailPattern = /href=["'](details\.aspx\?[^"']+)["'][^>]*>([\p{Script=Han}]{2,4})<\/a>/gu;
+  for (const match of html.matchAll(detailPattern)) {
+    detailUrlByName.set(match[2], new URL(decodeHtml(match[1]), councilListUrl).toString());
+  }
+
+  const byExternalId = new Map(rows.map((row) => {
+    const profileUrl = detailUrlByName.get(row.name) ?? councilListUrl;
+    return [row.externalId, {
+      ...row,
+      sourceUrl: profileUrl,
+      sourcePayload: {
+        ...row.sourcePayload,
+        profileUrl,
+      },
+    }];
+  }));
   return [...byExternalId.values()];
 }
+
+function parseCouncilDetail(html, row) {
+  const content = cleanText(html);
+  const genderLabel = content.match(/性別：\s*(男|女)/u)?.[1];
+  const party = normalizePartyName(content.match(/政黨：\s*([^\n]+)/u)?.[1] ?? '');
+  const education = memberSection(html, 'member_title3');
+  const experience = memberSection(html, 'member_title4');
+
+  return {
+    ...row,
+    gender: genderLabel === '男' ? 'male' : genderLabel === '女' ? 'female' : row.gender,
+    party: party || row.party,
+    birthDate: rocDateToIso(content),
+    education,
+    experience,
+  };
+}
+
 async function fetchCouncilProfiles() {
   try {
     const html = await fetchText(councilListUrl);
-    return { profiles: parseCouncilRows(html), skippedRows: [] };
+    const rows = parseCouncilRows(html);
+    const parsedRows = await mapLimit(rows, 4, async (row) => {
+      if (row.sourceUrl === councilListUrl) {
+        return { profile: row, skippedRow: null };
+      }
+
+      try {
+        const detailHtml = await fetchText(row.sourceUrl);
+        return { profile: parseCouncilDetail(detailHtml, row), skippedRow: null };
+      } catch (error) {
+        return {
+          profile: row,
+          skippedRow: {
+            sourceId: councilSourceId,
+            name: row.name,
+            position: row.position,
+            district: row.district,
+            sourceUrl: row.sourceUrl,
+            reason: error instanceof Error ? error.message : String(error),
+          },
+        };
+      }
+    });
+
+    return {
+      profiles: parsedRows.map((row) => row.profile),
+      skippedRows: parsedRows.map((row) => row.skippedRow).filter(Boolean),
+    };
   } catch (error) {
     return {
       profiles: [],
@@ -763,6 +842,7 @@ async function fetchGovProfiles() {
 function claimsForMatchedRow(row, match) {
   const fields = [
     ['gender', row.gender],
+    ['birth_date', row.birthDate],
     ['party', row.party],
     ['position', row.position],
     ['district', row.district],

@@ -370,6 +370,21 @@ function overlap(left, right) {
   );
 }
 
+function councilDistrictNumber(value) {
+  const text = normalizeIdentityText(value);
+  const arabic = text.match(/第0*(\d+)(?:選舉區|區)/u);
+  if (arabic) return Number.parseInt(arabic[1], 10);
+
+  const chineseNumbers = new Map([
+    ["一", 1], ["二", 2], ["三", 3], ["四", 4],
+    ["五", 5], ["六", 6], ["七", 7], ["八", 8],
+  ]);
+  for (const [label, number] of chineseNumbers) {
+    if (text.includes(`第${label}選舉區`)) return number;
+  }
+  return null;
+}
+
 function scoreMatch(row, person) {
   let score = 0;
   const reasons = [];
@@ -400,6 +415,18 @@ function scoreMatch(row, person) {
   if (row.district && overlap(row.district, person.district)) {
     score += 15;
     reasons.push('district matched');
+  }
+
+  const rowDistrictNumber = councilDistrictNumber(row.sourcePayload?.districtLabel || row.district);
+  const personDistrictNumber = councilDistrictNumber(`${person.position ?? ""} ${person.district ?? ""}`);
+  if (rowDistrictNumber && rowDistrictNumber === personDistrictNumber) {
+    score += 20;
+    reasons.push("council district number matched");
+  }
+
+  if (String(row.position ?? "").includes("議員") && String(person.current_office_label ?? "").startsWith("南投縣") && String(person.current_office_label ?? "").includes("議員")) {
+    score += 30;
+    reasons.push("current Nantou council office matched");
   }
 
   if (String(row.position ?? '').includes('議員') && String(person.position ?? '').includes('議員')) {
@@ -484,6 +511,31 @@ function decodeUriFragment(value) {
   }
 }
 
+function councilDetailField(block, label) {
+  const pattern = new RegExp(`<label>\\s*${label}[:：]?\\s*</label>\\s*<span\\b[^>]*class=["'][^"']*det[^"']*["'][^>]*>([\\s\\S]*?)</span>`, "iu");
+  const match = block.match(pattern);
+  return match ? cleanText(match[1]).replace(/\n+/g, "；") : "";
+}
+
+function parseCouncilDetailRows(html, districtId) {
+  const detailsByKey = new Map();
+  const blockPattern = /<div\b[^>]*class=["'][^"']*item\s+col-xs-12[^"']*["'][^>]*id=["']([^"']+)["'][^>]*>([\s\S]*?)<\/ul>/giu;
+
+  for (const match of html.matchAll(blockPattern)) {
+    const name = normalizeCouncilName(decodeHtml(match[1]));
+    if (!name) continue;
+
+    const block = match[2];
+    detailsByKey.set(`${districtId}:${name}`, {
+      party: councilDetailField(block, "政黨"),
+      education: councilDetailField(block, "學歷"),
+      experience: councilDetailField(block, "經歷"),
+    });
+  }
+
+  return detailsByKey;
+}
+
 function parseCouncilRows(html) {
   const rowsByKey = new Map();
   const linkPattern = /<a\b[^>]*href=["']([^"']*p02\.aspx\?district=(\d+)[^"']*#([^"']+))["'][^>]*>([\s\S]*?)<\/a>/giu;
@@ -536,15 +588,52 @@ function parseCouncilRows(html) {
 async function fetchCouncilProfiles() {
   try {
     const html = await fetchText(councilListUrl);
-    return { profiles: parseCouncilRows(html), skippedRows: [] };
+    const profiles = parseCouncilRows(html);
+    const detailsByKey = new Map();
+    const skippedRows = [];
+
+    for (const districtId of councilDistricts.keys()) {
+      const detailUrl = new URL(`/tw/rep/p02.aspx?district=${districtId}&period=20`, councilListUrl).toString();
+
+      try {
+        const detailHtml = await fetchText(detailUrl);
+        for (const [key, details] of parseCouncilDetailRows(detailHtml, districtId)) {
+          detailsByKey.set(key, details);
+        }
+      } catch (error) {
+        skippedRows.push({
+          sourceId: councilSourceId,
+          name: "",
+          position: "南投縣議員",
+          district: `南投縣${councilDistricts.get(districtId)?.district ?? ""}`,
+          sourceUrl: detailUrl,
+          reason: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+
+    return {
+      profiles: profiles.map((row) => {
+        const districtId = row.sourcePayload.profileUrl.match(/[?&]district=(\d+)/)?.[1] ?? "";
+        const details = detailsByKey.get(`${districtId}:${row.name}`);
+        return {
+          ...row,
+          party: details?.party || row.party,
+          education: details?.education || row.education,
+          experience: details?.experience || row.experience,
+          sourceUrl: row.sourcePayload.profileUrl,
+        };
+      }),
+      skippedRows,
+    };
   } catch (error) {
     return {
       profiles: [],
       skippedRows: [{
         sourceId: councilSourceId,
-        name: '',
-        position: '南投縣議員',
-        district: '南投縣',
+        name: "",
+        position: "南投縣議員",
+        district: "南投縣",
         sourceUrl: councilListUrl,
         reason: error instanceof Error ? error.message : String(error),
       }],
@@ -634,7 +723,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [publicPeople, councilResult, govResult] = await Promise.all([
-    fetchAllRows('public_people', 'person_id,name,gender,party,position,district,education,experience'),
+    fetchAllRows('public_people', 'person_id,name,gender,party,position,current_office_label,district,education,experience'),
     fetchCouncilProfiles(),
     fetchGovProfiles(),
   ]);

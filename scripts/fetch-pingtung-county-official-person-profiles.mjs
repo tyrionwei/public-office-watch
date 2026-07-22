@@ -515,7 +515,7 @@ function parseCouncilRows(html) {
       rows.push({
         sourceId: councilSourceId,
         sourceName: councilSourceName,
-        sourceUrl: councilListUrl,
+        sourceUrl: profileUrl,
         externalId: 'current-councilor-' + hashId([profileUrl, districtLabel, townships, name].join('|')),
         name,
         gender: 'unknown',
@@ -541,10 +541,56 @@ function parseCouncilRows(html) {
   return [...new Map(rows.map((row) => [row.externalId, row])).values()];
 }
 
+function parseCouncilProfile(html, row) {
+  const content = cleanText(html);
+  if (!content.includes(row.name)) {
+    throw new Error('Unable to verify official name from ' + row.sourcePayload.profileUrl);
+  }
+
+  const historyMatch = html.match(
+    /學經歷\s*[：:]\s*<br\s*\/?>([\s\S]*?)(?:<br\s*\/?>(?:\s|&nbsp;)*){2}/iu,
+  );
+  const historyLines = cleanText(historyMatch?.[1] ?? '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const officePattern = /(議員|代表|里長|鄉長|鎮長|市長|會長|主任|顧問|理事|監事|助理|秘書|黨代表|委員)/u;
+  const educationPattern = /(大學|學院|專科|高中|高職|國中|國小|研究所|博士|碩士|學士|畢業|肄業)/u;
+  const educationLines = historyLines.filter(
+    (line) => educationPattern.test(line) && !officePattern.test(line),
+  );
+  const experienceLines = historyLines.filter((line) => !educationLines.includes(line));
+
+  return {
+    ...row,
+    education: educationLines.join('\n'),
+    experience: experienceLines.join('\n'),
+  };
+}
+
 async function fetchCouncilProfiles() {
   try {
     const html = await fetchText(councilListUrl);
-    return { profiles: parseCouncilRows(html), skippedRows: [] };
+    const rows = parseCouncilRows(html);
+    const skippedRows = [];
+    const profiles = await mapLimit(rows, 4, async (row) => {
+      try {
+        const profileHtml = await fetchText(row.sourcePayload.profileUrl);
+        return parseCouncilProfile(profileHtml, row);
+      } catch (error) {
+        skippedRows.push({
+          sourceId: row.sourceId,
+          name: row.name,
+          position: row.position,
+          district: row.district,
+          sourceUrl: row.sourcePayload.profileUrl,
+          reason: error instanceof Error ? error.message : String(error),
+        });
+        return row;
+      }
+    });
+
+    return { profiles, skippedRows };
   } catch (error) {
     return {
       profiles: [],

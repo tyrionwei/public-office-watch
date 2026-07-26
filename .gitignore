@@ -65,3 +65,6 @@ data-sources/*.html
 data-sources/tpp/*.html
 data-sources/tpp/*_files/
 data-sources/tpp/*:Zone.Identifier
+
+# Production EXPLAIN exports reveal database structure.
+/docs/phase-0-production-explain.json

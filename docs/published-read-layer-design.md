@@ -9,7 +9,7 @@ Create a small, explicit Supabase read boundary for public traffic while retaini
 The design must:
 
 - keep canonicalization and deduplication out of high-frequency requests
-- exclude deferred low-level geography and races from published output
+- publish reviewed election geography and races at every administrative level once the shadow performance gates pass
 - give the frontend access only to the published schema after cutover
 - make a failed promote transaction leave the previous published state intact
 - preserve the legacy public views until the published layer has been validated
@@ -45,34 +45,27 @@ The `published` schema is a public product boundary, not a synonym for the curre
 
 ## Publication scope
 
-### Recommended initial scope
+### Performance-gated scope
 
 Publish:
 
-- national, municipality, county, and city geography
+- national, municipality, county, city, township, and village geography used by reviewed public election data
 - presidential and vice-presidential races
 - legislators and party-list legislators
 - municipality and county mayors
 - city and county councilors
-- referendums and recalls associated with an allowed published region or national scope
-- election districts required by an allowed legislative or council race
-- people who hold a published office, have an allowed candidacy, or have a verified current party-office role
-
-Defer:
-
-- township mayors
-- township representatives and representative districts
+- township mayors, township representatives, and representative districts
 - village chiefs and village geography
-- generic `other`, `local_chief`, `indigenous`, or `special` rows until they are mapped to an explicitly allowed product category
-- people whose only public association is a deferred low-level candidacy
+- indigenous and special constituencies after their existing enum values are mapped to explicit public product categories
+- referendums and recalls associated with a published region or national scope
+- election districts required by any published race
+- people who hold a published office, have a published candidacy, or have a verified current party-office role, including people associated only with lower-level elections
 
-If a person has both allowed and deferred history, publish the person and only the allowed candidacies.
+The allowlist protects fields, review status, and known product categories; it must not exclude otherwise publishable rows solely because their administrative level is lower. New or generic `other` enum values remain private only until they are mapped to an explicit public category, not as a way to reduce row counts.
 
-This is intentionally an allowlist. New core enum values remain private until the publication predicate is reviewed.
+### Performance gate before cutover
 
-### Decision required before migration
-
-Product must confirm whether township mayors and indigenous constituencies belong in the first public release. The recommended default is to defer both rather than infer scope from labels.
+Populate shadow tables with the complete reviewed scope above, including lower-level rows, before running parity and `EXPLAIN ANALYZE`. If the full dataset misses the performance targets, optimize the physical shape, indexes, materialized aggregates, or query contract and measure again. Do not meet the targets by silently excluding lower-level elections. If the targets cannot be met, keep the legacy provider active and bring the measured tradeoff back for an explicit product decision.
 
 ## Physical published tables
 
@@ -80,11 +73,11 @@ Published tables contain denormalized display snapshots. They do not have foreig
 
 | Table | Primary key | Required read indexes | Notes |
 | --- | --- | --- | --- |
-| `published.regions` | `region_id` | unique `slug`; `(region_type, display_order)`; `parent_region_id` | Only allowed geography plus electoral regions required by allowed races. |
-| `published.elections` | `election_id` | `(voting_date, election_id)`; `(election_type, status)` | Include an election only when it has an allowed race or is an allowed national referendum/recall. |
+| `published.regions` | `region_id` | unique `slug`; `(region_type, display_order)`; `parent_region_id` | Include all geography required by reviewed public races, including township and village levels. |
+| `published.elections` | `election_id` | `(voting_date, election_id)`; `(election_type, status)` | Include an election when it has a reviewed public race or is a reviewed public referendum/recall. |
 | `published.races` | `race_id` | `election_id`; `region_id`; `(status, voting_date)`; event sort index | Store `event_key`, `region_key`, category order, region order, and district order at promote time. |
 | `published.candidates` | `candidate_id` | `election_id`; `race_id`; `person_id`; `(race_id, candidate_no, person_name)`; `(person_id, election_year DESC, race_id)` | Store the canonical winner row and all display snapshots currently produced by `public_candidates`. |
-| `published.people` | `person_id` | directory order; party/status filters; primary region | Include list status/role fields plus `candidate_count`, latest allowed candidacy, and current-office summary so list pages need no candidate join. |
+| `published.people` | `person_id` | directory order; party/status filters; primary region | Include list status/role fields plus `candidate_count`, latest published candidacy, and current-office summary so list pages need no candidate join. |
 | `published.companies` | `company_id` | unique business number where present | Only the already-approved company fields used by public relation and search results. |
 | `published.parties` | `party_id` | unique slug; normalized name | Preserve existing public party profile fields. |
 | `published.person_claims` | `claim_id` | `(person_id, observed_at DESC)` | Verified public claims only; keep the source snapshot fields already approved for display. |
@@ -289,7 +282,7 @@ At final cutover, revoke `anon` and `authenticated` from the legacy `public_*` r
 
 ### Data safety
 
-- zero village, village-chief, township-representative, or deferred-only rows
+- lower-level row counts match the reviewed core source by election, race type, and region level
 - zero orphan candidates, races, or published region references
 - unique primary and natural keys
 - only reviewed public claims, affiliations, relations, and finance aggregates
@@ -297,15 +290,16 @@ At final cutover, revoke `anon` and `authenticated` from the legacy `public_*` r
 
 ### Parity
 
-- compare row counts by allowed election/race type
+- compare row counts by every published election/race type, including township, village, indigenous, and special categories
 - compare representative home, region, election, race, people, person, party, and search outputs
-- explicitly explain every expected difference caused by the publication allowlist
+- explicitly explain every expected difference caused by field review, product-category mapping, or deduplication
 - verify `台` and `臺` return equivalent search matches
 
 ### Performance
 
 On warmed shadow data:
 
+- run all performance checks against the complete reviewed scope, including lower-level elections
 - key lookups and 20-row pages should execute below 50 ms
 - no interactive query should scan or return more than 1,000 rows
 - no selective person/election/race query should use temporary blocks

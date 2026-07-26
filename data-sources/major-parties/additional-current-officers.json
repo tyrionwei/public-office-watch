@@ -1,0 +1,409 @@
+{
+  "observed_date": "2026-07-26",
+  "officers": [
+    {
+      "party_name": "中國國民黨",
+      "name": "鄭麗文",
+      "role_title": "革命實踐研究院院長",
+      "organization_unit": "革命實踐研究院",
+      "is_current": true,
+      "start_date": "2025-11-12",
+      "source_name": "鄭麗文主席宣布親自兼任革實院院長",
+      "source_url": "https://www.kmt.org.tw/2025/11/blog-post_12.html",
+      "display_order": 2
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "萬美玲",
+      "role_title": "副秘書長兼婦女部主任",
+      "organization_unit": "中央黨部／婦女部",
+      "is_current": true,
+      "source_name": "國民黨副秘書長官方名單",
+      "source_url": "https://www1.kmt.org.tw/people.aspx?mid=233",
+      "display_order": 21
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "連勝武",
+      "role_title": "青年事務發展委員會主任委員",
+      "organization_unit": "青年事務發展委員會",
+      "is_current": true,
+      "source_name": "國民黨黨務主管官方名單",
+      "source_url": "https://www1.kmt.org.tw/people.aspx?mid=21",
+      "display_order": 60
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "董佳瑜",
+      "role_title": "國際事務部主任",
+      "organization_unit": "國際事務部",
+      "is_current": true,
+      "source_name": "國民黨黨務主管官方名單",
+      "source_url": "https://www1.kmt.org.tw/people.aspx?mid=21",
+      "display_order": 70
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "呂孫綾",
+      "role_title": "特別助理",
+      "organization_unit": "主席室",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 31
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "何思穎",
+      "role_title": "政務副執行長",
+      "organization_unit": "政策委員會",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 42
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "陳致錚",
+      "role_title": "常務副執行長",
+      "organization_unit": "財務委員會",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 50
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "廖韶吟",
+      "role_title": "主任",
+      "organization_unit": "秘書處",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 60
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "張煥榮",
+      "role_title": "政務副主任",
+      "organization_unit": "秘書處",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 61
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "黃鈺婷",
+      "role_title": "常務副主任",
+      "organization_unit": "秘書處",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 62
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "劉厚承",
+      "role_title": "主任",
+      "organization_unit": "組織推廣部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 70
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "邵維倫",
+      "role_title": "政務副主任",
+      "organization_unit": "組織推廣部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 71
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "吳忠晏",
+      "role_title": "政務副主任",
+      "organization_unit": "組織推廣部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 72
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "洪淑芳",
+      "role_title": "常務副主任",
+      "organization_unit": "組織推廣部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 73
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "吳易翰",
+      "role_title": "主任",
+      "organization_unit": "社會運動部",
+      "is_current": true,
+      "appointment_announced_date": "2025-08-27",
+      "source_name": "民進黨第二十一屆第四十七次中常會新聞稿",
+      "source_url": "https://www.dpp.org.tw/media/contents/11291",
+      "display_order": 80
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "王建智",
+      "role_title": "政務副主任",
+      "organization_unit": "社會運動部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 81
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "黃子一",
+      "role_title": "政務副主任",
+      "organization_unit": "新聞輿情部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 91
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "謝易峻",
+      "role_title": "常務副主任",
+      "organization_unit": "新聞輿情部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 92
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "黃聖文",
+      "role_title": "主任",
+      "organization_unit": "青年發展部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 100
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "吳奕柔",
+      "role_title": "政務副主任",
+      "organization_unit": "青年發展部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 101
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "黃駿翔",
+      "role_title": "主任",
+      "organization_unit": "客家事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 110
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "呂秋美",
+      "role_title": "政務副主任",
+      "organization_unit": "客家事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 111
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "谷暮·哈就",
+      "role_title": "主任",
+      "organization_unit": "原住民族事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 120
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "謝建宇",
+      "role_title": "政務副主任",
+      "organization_unit": "原住民族事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 121
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "林秉忠",
+      "role_title": "主任",
+      "organization_unit": "台灣民主學院",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 130
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "陳俊良",
+      "role_title": "政務副主任",
+      "organization_unit": "台灣民主學院",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 131
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "陳文昊",
+      "role_title": "主任",
+      "organization_unit": "國際事務部",
+      "is_current": true,
+      "appointment_announced_date": "2025-08-27",
+      "source_name": "民進黨第二十一屆第四十七次中常會新聞稿",
+      "source_url": "https://www.dpp.org.tw/media/contents/11291",
+      "display_order": 140
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "邱雯莉",
+      "role_title": "政務副主任",
+      "organization_unit": "國際事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 141
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "吳峻鋕",
+      "role_title": "主任",
+      "organization_unit": "中國事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 150
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "劉秀專",
+      "role_title": "常務副主任",
+      "organization_unit": "民意調查中心",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 160
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "徐美華",
+      "role_title": "主任",
+      "organization_unit": "會計室",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 170
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "阮俊達",
+      "role_title": "主任",
+      "organization_unit": "新媒體中心",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 180
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "李庭瑄",
+      "role_title": "政務副主任",
+      "organization_unit": "新媒體中心",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 181
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "張欣芳",
+      "role_title": "政務副主任",
+      "organization_unit": "新媒體中心",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 182
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "曾弘傑",
+      "role_title": "政務副主任",
+      "organization_unit": "新媒體中心",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 183
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "李晏榕",
+      "role_title": "主任",
+      "organization_unit": "性別平等事務部",
+      "is_current": true,
+      "start_date": "2023-02-01",
+      "source_name": "民主進步黨第二十屆第七次中執會新聞稿",
+      "source_url": "https://www.dpp.org.tw/content_print/media/9948",
+      "display_order": 190
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "張百君",
+      "role_title": "政務副主任",
+      "organization_unit": "性別平等事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 191
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "游本明",
+      "role_title": "政務副主任",
+      "organization_unit": "性別平等事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 192
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "張瑜庭",
+      "role_title": "主任",
+      "organization_unit": "新住民事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 200
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "羅宜菁",
+      "role_title": "政務副主任",
+      "organization_unit": "新住民事務部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 201
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "source_name": "內政部政黨資訊網",
+  "observed_date": "2026-07-26",
+  "parties": [
+    {
+      "name": "中國國民黨",
+      "registry_no": "1",
+      "founded_date_text": "1894-11-24",
+      "filed_date_text": "1989-02-10",
+      "headquarters_address": "臺北市中山區八德路二段232號",
+      "contact_phone": "(02)8771-1234",
+      "source_url": "https://party.moi.gov.tw/PartyMainContent.aspx?n=16100&s=2&sms=13073"
+    },
+    {
+      "name": "民主進步黨",
+      "registry_no": "16",
+      "founded_date_text": "1986-09-28",
+      "filed_date_text": "1989-05-05",
+      "headquarters_address": "臺北市中正區北平東路30號10樓",
+      "contact_phone": "(02)2392-9989",
+      "source_url": "https://party.moi.gov.tw/PartyMainContent.aspx?n=16100&s=31&sms=13073"
+    },
+    {
+      "name": "台灣民眾黨",
+      "registry_no": "350",
+      "founded_date_text": "2019-08-06",
+      "filed_date_text": "2019-08-23",
+      "headquarters_address": "臺北市松山區南京東路三段261號3樓（B1區）",
+      "contact_phone": "(02)2752-0806",
+      "source_url": "https://party.moi.gov.tw/PartyMainContent.aspx?n=16100&sms=13073&s=409"
+    }
+  ]
+}

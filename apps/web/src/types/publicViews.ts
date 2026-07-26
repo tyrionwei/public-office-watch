@@ -31,12 +31,35 @@ export type PublicPersonPartyAffiliation = {
   source_claim_key: string | null;
   party_name: string;
   role_context: 'candidate' | 'officeholder' | 'party_officer' | 'self_declared' | 'wiki_record' | 'official_record' | 'other';
+  role_title: string | null;
+  organization_unit: string | null;
+  display_order: number | null;
+  role_tier: 'primary' | 'secondary' | 'committee';
   observed_year: number | null;
   observed_date: string | null;
   start_date: string | null;
   end_date: string | null;
   is_current: boolean;
   confidence_level: 'A' | 'B' | 'C' | 'D';
+  source_name: string | null;
+  source_url: string | null;
+  updated_at: string;
+};
+
+export type PublicPartyOfficer = {
+  affiliation_id: string;
+  person_id: string;
+  person_name: string;
+  party_id: string;
+  party_name: string;
+  role_title: string | null;
+  organization_unit: string | null;
+  display_order: number | null;
+  role_tier: 'primary' | 'secondary' | 'committee';
+  start_date: string | null;
+  observed_date: string | null;
+  current_office_label: string | null;
+  primary_photo_thumbnail_url: string | null;
   source_name: string | null;
   source_url: string | null;
   updated_at: string;

@@ -8,6 +8,7 @@ import type {
   PublicParty,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
+  PublicPartyOfficer,
   PublicPerson,
   PublicPersonClaim,
   PublicPersonPartyAffiliation,
@@ -434,6 +435,10 @@ function asPartyAffiliationRoleContext(value: unknown): PublicPersonPartyAffilia
     : 'other';
 }
 
+function asPartyOfficerRoleTier(value: unknown): PublicPersonPartyAffiliation['role_tier'] {
+  return value === 'secondary' || value === 'committee' ? value : 'primary';
+}
+
 export function mapPublicPersonPartyAffiliationRow(row: PartialRow<PublicPersonPartyAffiliation>): PublicPersonPartyAffiliation {
   const confidenceLevels: PublicPersonPartyAffiliation['confidence_level'][] = ['A', 'B', 'C', 'D'];
 
@@ -445,6 +450,10 @@ export function mapPublicPersonPartyAffiliationRow(row: PartialRow<PublicPersonP
     source_claim_key: asNullableString(row?.source_claim_key),
     party_name: asString(row?.party_name, '未知政黨'),
     role_context: asPartyAffiliationRoleContext(row?.role_context),
+    role_title: asNullableString(row?.role_title),
+    organization_unit: asNullableString(row?.organization_unit),
+    display_order: asNullableNumber(row?.display_order),
+    role_tier: asPartyOfficerRoleTier(row?.role_tier),
     observed_year: asNullableNumber(row?.observed_year),
     observed_date: asNullableString(row?.observed_date),
     start_date: asNullableString(row?.start_date),
@@ -454,6 +463,27 @@ export function mapPublicPersonPartyAffiliationRow(row: PartialRow<PublicPersonP
       typeof row?.confidence_level === 'string' && confidenceLevels.includes(row.confidence_level)
         ? row.confidence_level
         : 'D',
+    source_name: asNullableString(row?.source_name),
+    source_url: asNullableString(row?.source_url),
+    updated_at: asString(row?.updated_at, ''),
+  };
+}
+
+export function mapPublicPartyOfficerRow(row: PartialRow<PublicPartyOfficer>): PublicPartyOfficer {
+  return {
+    affiliation_id: asString(row?.affiliation_id, ''),
+    person_id: asString(row?.person_id, ''),
+    person_name: asString(row?.person_name, '未命名人物'),
+    party_id: asString(row?.party_id, ''),
+    party_name: asString(row?.party_name, '未知政黨'),
+    role_title: asNullableString(row?.role_title),
+    organization_unit: asNullableString(row?.organization_unit),
+    display_order: asNullableNumber(row?.display_order),
+    role_tier: asPartyOfficerRoleTier(row?.role_tier),
+    start_date: asNullableString(row?.start_date),
+    observed_date: asNullableString(row?.observed_date),
+    current_office_label: asNullableString(row?.current_office_label),
+    primary_photo_thumbnail_url: asNullableString(row?.primary_photo_thumbnail_url),
     source_name: asNullableString(row?.source_name),
     source_url: asNullableString(row?.source_url),
     updated_at: asString(row?.updated_at, ''),

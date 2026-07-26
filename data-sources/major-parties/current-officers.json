@@ -1,0 +1,216 @@
+{
+  "observed_date": "2026-07-26",
+  "date_semantics": "Start and end dates are stored only when an official source states the effective change. Announcement-only dates remain separate.",
+  "officers": [
+    {
+      "party_name": "中國國民黨",
+      "name": "鄭麗文",
+      "role_title": "主席",
+      "organization_unit": "中央委員會",
+      "is_current": true,
+      "start_date": "2025-11-01",
+      "source_name": "第22屆第1次全代會 鄭麗文主席宣誓就職",
+      "source_url": "https://www.kmt.org.tw/2025/11/221.html",
+      "display_order": 1
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "李乾龍",
+      "role_title": "副主席兼秘書長",
+      "organization_unit": "中央委員會",
+      "is_current": true,
+      "source_name": "國民黨新春團拜",
+      "source_url": "https://www.kmt.org.tw/2026/02/blog-post_23.html",
+      "display_order": 10
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "季麟連",
+      "role_title": "副主席",
+      "organization_unit": "中央委員會",
+      "is_current": true,
+      "source_name": "國民黨新春團拜",
+      "source_url": "https://www.kmt.org.tw/2026/02/blog-post_23.html",
+      "display_order": 11
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "張榮恭",
+      "role_title": "副主席",
+      "organization_unit": "中央委員會",
+      "is_current": true,
+      "source_name": "國民黨新春團拜",
+      "source_url": "https://www.kmt.org.tw/2026/02/blog-post_23.html",
+      "display_order": 12
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "蕭旭岑",
+      "role_title": "副主席",
+      "organization_unit": "中央委員會",
+      "is_current": true,
+      "source_name": "國民黨新春團拜",
+      "source_url": "https://www.kmt.org.tw/2026/02/blog-post_23.html",
+      "display_order": 13
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "李哲華",
+      "role_title": "副秘書長兼組織發展委員會主任委員",
+      "organization_unit": "中央黨部",
+      "is_current": true,
+      "source_name": "國民黨副秘書長官方資料",
+      "source_url": "https://www1.kmt.org.tw/people.aspx?mid=233&pid=2487",
+      "display_order": 20
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "陳以信",
+      "role_title": "文化傳播委員會主任委員",
+      "organization_unit": "文化傳播委員會",
+      "is_current": true,
+      "start_date": "2026-06-22",
+      "source_name": "國民黨發布黨務人事命令",
+      "source_url": "https://www.kmt.org.tw/2026/06/blog-post_22.html",
+      "display_order": 30
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "傅崐萁",
+      "role_title": "政策委員會執行長",
+      "organization_unit": "政策委員會",
+      "is_current": true,
+      "source_name": "國民黨新春團拜",
+      "source_url": "https://www.kmt.org.tw/2026/02/blog-post_23.html",
+      "display_order": 40
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "張雅屏",
+      "role_title": "考核紀律委員會主任委員",
+      "organization_unit": "考核紀律委員會",
+      "is_current": true,
+      "start_date": "2025-11-06",
+      "source_name": "國民黨公布新一波黨務主管人事案",
+      "source_url": "https://www.kmt.org.tw/2025/11/blog-post_6.html",
+      "display_order": 50
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "張雅屏",
+      "role_title": "大陸事務部主任",
+      "organization_unit": "大陸事務部",
+      "is_current": true,
+      "start_date": "2025-11-10",
+      "source_name": "國民黨公布大陸事務部主任由張雅屏兼任",
+      "source_url": "https://www.kmt.org.tw/2025/11/blog-post_10.html",
+      "display_order": 51
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "吳宗憲",
+      "role_title": "文化傳播委員會主任委員",
+      "organization_unit": "文化傳播委員會",
+      "is_current": false,
+      "end_date": "2026-03-18",
+      "source_name": "中常會通過尹乃菁擔任文傳會主委案",
+      "source_url": "https://www.kmt.org.tw/2026/03/blog-post_18.html",
+      "display_order": 900
+    },
+    {
+      "party_name": "中國國民黨",
+      "name": "尹乃菁",
+      "role_title": "文化傳播委員會主任委員",
+      "organization_unit": "文化傳播委員會",
+      "is_current": false,
+      "start_date": "2026-03-18",
+      "end_date": "2026-06-22",
+      "source_name": "國民黨發布黨務人事命令",
+      "source_url": "https://www.kmt.org.tw/2026/06/blog-post_22.html",
+      "display_order": 901
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "賴清德",
+      "role_title": "主席",
+      "organization_unit": "中央黨部",
+      "is_current": true,
+      "start_date": "2023-01-18",
+      "source_name": "第十七屆黨主席宣誓就職暨交接典禮",
+      "source_url": "https://www.dpp.org.tw/media/contents/9940",
+      "display_order": 1
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "徐國勇",
+      "role_title": "秘書長",
+      "organization_unit": "中央黨部",
+      "is_current": true,
+      "appointment_announced_date": "2025-08-20",
+      "source_name": "第二十一屆第四十六次中常會新聞稿",
+      "source_url": "https://www.dpp.org.tw/media/contents/11289",
+      "display_order": 10
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "何博文",
+      "role_title": "副秘書長",
+      "organization_unit": "中央黨部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 20
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "翁世豪",
+      "role_title": "副秘書長",
+      "organization_unit": "中央黨部",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 21
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "周威佑",
+      "role_title": "主席辦公室主任",
+      "organization_unit": "主席辦公室",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 30
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "吳思瑤",
+      "role_title": "政策委員會執行長",
+      "organization_unit": "政策委員會",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 40
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "李俊俋",
+      "role_title": "首席政務副執行長兼主席辦公室特別助理",
+      "organization_unit": "政策委員會／主席辦公室",
+      "is_current": true,
+      "source_name": "民進黨主席及黨務主管",
+      "source_url": "https://www.dpp.org.tw/about/political",
+      "display_order": 41
+    },
+    {
+      "party_name": "民主進步黨",
+      "name": "吳崢",
+      "role_title": "新聞輿情部主任兼發言人",
+      "organization_unit": "新聞輿情部",
+      "is_current": true,
+      "source_name": "民主進步黨第二十屆第五十二次中常會新聞稿",
+      "source_url": "https://www.dpp.org.tw/media/contents/10702",
+      "display_order": 50,
+      "start_date": "2024-01-24"
+    }
+  ]
+}

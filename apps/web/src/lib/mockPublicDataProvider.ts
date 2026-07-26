@@ -288,6 +288,10 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return mockPublicParties.find((party) => party.slug === partySlug) ?? null;
   },
 
+  async loadPartyOfficers() {
+    return [];
+  },
+
   getPartyFinanceSummaries(partyId: string) {
     return mockPublicPartyFinanceSummaries.filter((summary) => summary.party_id === partyId);
   },

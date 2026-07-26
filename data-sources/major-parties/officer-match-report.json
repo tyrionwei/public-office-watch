@@ -1,0 +1,1523 @@
+{
+  "observed_date": "2026-07-26",
+  "generated_at": "2026-07-26T10:30:12.297Z",
+  "summary": {
+    "unique_names": 58,
+    "unique_name_matches": 25,
+    "ambiguous_name_matches": 3,
+    "not_found": 30
+  },
+  "matches": [
+    {
+      "name": "尹乃菁",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "e4913664-2025-5591-8654-15fe29672e0f",
+          "name": "尹乃菁",
+          "party": "中國國民黨",
+          "position": "文化傳播委員會主任委員",
+          "district": null,
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "王建智",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "26014b8a-7fde-4672-a429-f63e52f91238",
+          "name": "王建智",
+          "party": "無黨籍",
+          "position": null,
+          "district": "嘉義縣東石鄉東崙村（縣市）村里長選舉",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "何思穎",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "何博文",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "8969a11b-cbe0-4182-b759-8edcbe58e68b",
+          "name": "何博文",
+          "party": "民主進步黨",
+          "position": "新北市區域議員",
+          "district": "新北市第1選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "吳宗憲",
+      "match_status": "ambiguous_name",
+      "candidates": [
+        {
+          "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+          "name": "吳宗憲",
+          "party": "無黨籍",
+          "position": "嘉義縣朴子市松華里里長",
+          "district": "嘉義縣朴子市松華里里長選舉",
+          "candidacies": [
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "election_name": "2018年地方公職人員選舉",
+              "election_year": 2018,
+              "race_title": "嘉義縣朴子市松華里里長選舉",
+              "party": "無黨籍",
+              "candidate_no": "2",
+              "election_result": "elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%98%89%E7%BE%A9%E7%B8%A3%E6%9C%B4%E5%AD%90%E5%B8%82%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "election_name": "2022年村里長選舉",
+              "election_year": 2022,
+              "race_title": "嘉義縣朴子市松華里里長選舉",
+              "party": "無黨籍",
+              "candidate_no": "2",
+              "election_result": "not_elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%98%89%E7%BE%A9%E7%B8%A3%E6%9C%B4%E5%AD%90%E5%B8%82%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            }
+          ],
+          "claims": [
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "district",
+              "claim_value": "嘉義縣朴子市松華里里長選舉",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-d480f5452cdef7e1",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "name",
+              "claim_value": "吳宗憲",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "party",
+              "claim_value": "無黨籍",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "position",
+              "claim_value": "村里長候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "district",
+              "claim_value": "嘉義縣朴子市松華里（縣市）村里長選舉",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-486a33b57538ed1b",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "name",
+              "claim_value": "吳宗憲",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "party",
+              "claim_value": "無黨籍",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "0390218b-b4af-4e3c-accc-b86f4c816a20",
+              "claim_type": "position",
+              "claim_value": "村里長候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            }
+          ]
+        },
+        {
+          "person_id": "234d0eaf-6e23-428c-976f-1165c25be22f",
+          "name": "吳宗憲",
+          "party": "無黨籍",
+          "position": null,
+          "district": "臺中市外埔區土城里里長選舉",
+          "candidacies": [
+            {
+              "person_id": "234d0eaf-6e23-428c-976f-1165c25be22f",
+              "election_name": "2022年村里長選舉",
+              "election_year": 2022,
+              "race_title": "臺中市外埔區土城里里長選舉",
+              "party": "無黨籍",
+              "candidate_no": "1",
+              "election_result": "not_elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%87%BA%E4%B8%AD%E5%B8%82%E5%A4%96%E5%9F%94%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            }
+          ],
+          "claims": [
+            {
+              "person_id": "234d0eaf-6e23-428c-976f-1165c25be22f",
+              "claim_type": "district",
+              "claim_value": "臺中市外埔區土城里里長選舉",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "234d0eaf-6e23-428c-976f-1165c25be22f",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-f2f7772e352be8ad",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "234d0eaf-6e23-428c-976f-1165c25be22f",
+              "claim_type": "name",
+              "claim_value": "吳宗憲",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "234d0eaf-6e23-428c-976f-1165c25be22f",
+              "claim_type": "party",
+              "claim_value": "無黨籍",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "234d0eaf-6e23-428c-976f-1165c25be22f",
+              "claim_type": "position",
+              "claim_value": "村里長候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            }
+          ]
+        },
+        {
+          "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+          "name": "吳宗憲",
+          "party": "民主進步黨",
+          "position": "桃園市區域議員",
+          "district": "桃園市第12選舉區",
+          "candidacies": [
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "election_name": "2018年地方公職人員選舉",
+              "election_year": 2018,
+              "race_title": "桃園市第12選舉區區域議員選舉",
+              "party": "民主進步黨",
+              "candidate_no": "3",
+              "election_result": "elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E6%A1%83%E5%9C%92%E5%B8%82%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "election_name": "2022年地方公職人員選舉",
+              "election_year": 2022,
+              "race_title": "桃園市第12選舉區議員選舉",
+              "party": "民主進步黨",
+              "candidate_no": "3",
+              "election_result": "not_elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E6%A1%83%E5%9C%92%E5%B8%82%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            }
+          ],
+          "claims": [
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "district",
+              "claim_value": "桃園市第12選舉區",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-ba29c749e16a2119",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "name",
+              "claim_value": "吳宗憲",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "party",
+              "claim_value": "民主進步黨",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "position",
+              "claim_value": "議員候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "district",
+              "claim_value": "桃園市第12選舉區",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "external_id",
+              "claim_value": "cec-2022-local-councilor-regional-person-5daf48c7de38",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "gender",
+              "claim_value": "male",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "name",
+              "claim_value": "吳宗憲",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "party",
+              "claim_value": "民主進步黨",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "position",
+              "claim_value": "桃園市議員候選人",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "district",
+              "claim_value": "第12選舉區",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-d90af0dd6fdf7a64",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "name",
+              "claim_value": "吳宗憲",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "party",
+              "claim_value": "民主進步黨",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            },
+            {
+              "person_id": "6dad34bb-07e4-4669-9e82-90b9763187d1",
+              "claim_type": "position",
+              "claim_value": "議員候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E5%90%B3%E5%AE%97%E6%86%B2"
+            }
+          ]
+        },
+        {
+          "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+          "name": "吳宗憲",
+          "party": "中國國民黨",
+          "position": "第11屆立法委員",
+          "district": "全國不分區及僑居國外國民",
+          "candidacies": [],
+          "claims": [
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "alias",
+              "claim_value": "WuTsung-Hsien",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "district",
+              "claim_value": "全國不分區及僑居國外國民",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "education",
+              "claim_value": "國立台灣大學工業工程碩士",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "education",
+              "claim_value": "國立台灣大學工業工程碩士;",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "experience",
+              "claim_value": "檢察官;警察大學講師;台中科大副教授級專門技術人員;人工智慧法律國際研究基金會副執行長;台灣大學公衛學院健康政策管理所博士生;  ;",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "experience",
+              "claim_value": "檢察官；警察大學講師；台中科大副教授級專門技術人員；人工智慧法律國際研究基金會副執行長；台灣大學公衛學院健康政策管理所博士生",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "external_id",
+              "claim_value": "ly-legislator-11-110012",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "gender",
+              "claim_value": "male",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "name",
+              "claim_value": "吳宗憲",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "party",
+              "claim_value": "中國國民黨",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "de2668ba-8834-427c-ae45-d1f8d0f21e49",
+              "claim_type": "position",
+              "claim_value": "第11屆立法委員",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "吳忠晏",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "吳易翰",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "4d624558-609d-4301-b367-acb5a1975dd7",
+          "name": "吳易翰",
+          "party": "無黨籍",
+          "position": null,
+          "district": "新北市雙溪區三港里里長選舉",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "吳奕柔",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "吳思瑤",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "2ddedfab-1640-49e6-86fe-97f4ffa90a53",
+          "name": "吳思瑤",
+          "party": "民主進步黨",
+          "position": "第11屆立法委員",
+          "district": "臺北市第1選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "吳峻鋕",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "吳崢",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "9573d7bd-c309-4afa-ad9e-5f9a82c08030",
+          "name": "吳崢",
+          "party": "民主進步黨",
+          "position": null,
+          "district": "臺北市第3選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "呂秋美",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "呂孫綾",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "347c2237-b5de-4a3e-a8c9-8580d7f1a017",
+          "name": "呂孫綾",
+          "party": "民主進步黨",
+          "position": null,
+          "district": "新北市第1選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "李俊俋",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "53ae0343-7d96-4dfa-b5d2-a2787795cbd3",
+          "name": "李俊俋",
+          "party": "民主進步黨",
+          "position": "第8屆立法委員",
+          "district": "嘉義市第1選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "李哲華",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "f6663181-3990-542e-bd60-dd81084675cb",
+          "name": "李哲華",
+          "party": "中國國民黨",
+          "position": "副秘書長兼組織發展委員會主任委員",
+          "district": null,
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "李庭瑄",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "李晏榕",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "59719854-a6af-4888-93f2-8d3b33b725de",
+          "name": "李晏榕",
+          "party": "綠黨社會民主黨聯盟",
+          "position": null,
+          "district": "臺北市第3選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "李乾龍",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "99b5d0c9-24c3-4ec7-8bb0-fdcc3ae78463",
+          "name": "李乾龍",
+          "party": "中國國民黨",
+          "position": null,
+          "district": "新北市第3選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "谷暮·哈就",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "阮俊達",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "周威佑",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "6e89e934-1ca8-452e-8d23-d82b0a54f14e",
+          "name": "周威佑",
+          "party": "民主進步黨",
+          "position": "臺北市區域議員",
+          "district": "臺北市第5選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "季麟連",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "3eb19975-cefb-57ee-85d6-1c1c9dbe624a",
+          "name": "季麟連",
+          "party": "中國國民黨",
+          "position": "副主席",
+          "district": null,
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "林秉忠",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "邱雯莉",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "邵維倫",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "4a2a41e5-d1bb-4b26-8822-7b4226b49e6a",
+          "name": "邵維倫",
+          "party": "民主進步黨",
+          "position": null,
+          "district": "臺北市第5選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "洪淑芳",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "徐美華",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "徐國勇",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "cd65ca43-0459-57aa-9d6b-6cccfc16722a",
+          "name": "徐國勇",
+          "party": "民主進步黨",
+          "position": "秘書長",
+          "district": null,
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "翁世豪",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "071e148d-c985-5873-891f-1235218c60d0",
+          "name": "翁世豪",
+          "party": "民主進步黨",
+          "position": "副秘書長",
+          "district": null,
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "張百君",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "張欣芳",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "張雅屏",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "d7fb471f-cab8-55fb-8e3e-482bc7578c12",
+          "name": "張雅屏",
+          "party": "中國國民黨",
+          "position": "考核紀律委員會主任委員",
+          "district": null,
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "張煥榮",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "張瑜庭",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "張榮恭",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "bdbc6a1c-1504-52cf-8b42-a6c6b69cfd57",
+          "name": "張榮恭",
+          "party": "中國國民黨",
+          "position": "副主席",
+          "district": null,
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "連勝武",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "陳文昊",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "陳以信",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "fbb5d13e-cbf7-44a6-b9b3-48e2801df19c",
+          "name": "陳以信",
+          "party": "中國國民黨",
+          "position": null,
+          "district": "臺南市第6選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "陳俊良",
+      "match_status": "ambiguous_name",
+      "candidates": [
+        {
+          "person_id": "334eb199-1609-48ee-8c09-011d37c85c89",
+          "name": "陳俊良",
+          "party": "無黨籍",
+          "position": "臺東縣成功鎮忠智里里長",
+          "district": "臺東縣成功鎮忠智里里長選舉",
+          "candidacies": [
+            {
+              "person_id": "334eb199-1609-48ee-8c09-011d37c85c89",
+              "election_name": "2022年村里長選舉",
+              "election_year": 2022,
+              "race_title": "臺東縣成功鎮忠智里里長選舉",
+              "party": "無黨籍",
+              "candidate_no": "1",
+              "election_result": "elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%88%90%E5%8A%9F%E9%8E%AE%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            }
+          ],
+          "claims": [
+            {
+              "person_id": "334eb199-1609-48ee-8c09-011d37c85c89",
+              "claim_type": "district",
+              "claim_value": "臺東縣成功鎮忠智里里長選舉",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "334eb199-1609-48ee-8c09-011d37c85c89",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-1a06a895dfdd3def",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "334eb199-1609-48ee-8c09-011d37c85c89",
+              "claim_type": "name",
+              "claim_value": "陳俊良",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "334eb199-1609-48ee-8c09-011d37c85c89",
+              "claim_type": "party",
+              "claim_value": "無黨籍",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "334eb199-1609-48ee-8c09-011d37c85c89",
+              "claim_type": "position",
+              "claim_value": "村里長候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            }
+          ]
+        },
+        {
+          "person_id": "8180aa8d-eefd-47c1-b8df-e585d02f0f56",
+          "name": "陳俊良",
+          "party": "無黨籍",
+          "position": null,
+          "district": "宜蘭縣蘇澳鎮第3選舉區鎮民代表選舉",
+          "candidacies": [
+            {
+              "person_id": "8180aa8d-eefd-47c1-b8df-e585d02f0f56",
+              "election_name": "2022年宜蘭縣蘇澳鎮鎮民代表選舉",
+              "election_year": 2022,
+              "race_title": "宜蘭縣蘇澳鎮第3選舉區鎮民代表選舉",
+              "party": "無黨籍",
+              "candidate_no": "2",
+              "election_result": "not_elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            }
+          ],
+          "claims": [
+            {
+              "person_id": "8180aa8d-eefd-47c1-b8df-e585d02f0f56",
+              "claim_type": "district",
+              "claim_value": "宜蘭縣蘇澳鎮第3選舉區鎮民代表選舉",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "8180aa8d-eefd-47c1-b8df-e585d02f0f56",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-7662e68847cc8ec7",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "8180aa8d-eefd-47c1-b8df-e585d02f0f56",
+              "claim_type": "name",
+              "claim_value": "陳俊良",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "8180aa8d-eefd-47c1-b8df-e585d02f0f56",
+              "claim_type": "party",
+              "claim_value": "無黨籍",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "8180aa8d-eefd-47c1-b8df-e585d02f0f56",
+              "claim_type": "position",
+              "claim_value": "鄉鎮市民代表候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            }
+          ]
+        },
+        {
+          "person_id": "ca45d43c-065e-4091-8640-3540e2b5c97d",
+          "name": "陳俊良",
+          "party": "無黨籍",
+          "position": "桃園市新屋區大坡里里長",
+          "district": "桃園市新屋區大坡里里長選舉",
+          "candidacies": [
+            {
+              "person_id": "ca45d43c-065e-4091-8640-3540e2b5c97d",
+              "election_name": "2022年村里長選舉",
+              "election_year": 2022,
+              "race_title": "桃園市新屋區大坡里里長選舉",
+              "party": "無黨籍",
+              "candidate_no": "3",
+              "election_result": "elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E6%A1%83%E5%9C%92%E5%B8%82%E6%96%B0%E5%B1%8B%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            }
+          ],
+          "claims": [
+            {
+              "person_id": "ca45d43c-065e-4091-8640-3540e2b5c97d",
+              "claim_type": "district",
+              "claim_value": "桃園市新屋區大坡里里長選舉",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "ca45d43c-065e-4091-8640-3540e2b5c97d",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-ad5493bbcd8feb48",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "ca45d43c-065e-4091-8640-3540e2b5c97d",
+              "claim_type": "name",
+              "claim_value": "陳俊良",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "ca45d43c-065e-4091-8640-3540e2b5c97d",
+              "claim_type": "party",
+              "claim_value": "無黨籍",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            },
+            {
+              "person_id": "ca45d43c-065e-4091-8640-3540e2b5c97d",
+              "claim_type": "position",
+              "claim_value": "村里長候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E9%99%B3%E4%BF%8A%E8%89%AF"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "陳致錚",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "傅崐萁",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "2ebb787e-5abb-45fe-9dd0-364e5418e046",
+          "name": "傅崐萁",
+          "party": "中國國民黨",
+          "position": "第11屆立法委員",
+          "district": "花蓮縣選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "曾弘傑",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "游本明",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "黃子一",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "黃聖文",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "黃鈺婷",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "黃駿翔",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "萬美玲",
+      "match_status": "ambiguous_name",
+      "candidates": [
+        {
+          "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+          "name": "萬美玲",
+          "party": "中國國民黨",
+          "position": "第11屆立法委員",
+          "district": "桃園市第4選舉區",
+          "candidacies": [
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "election_name": "2024年第11屆立法委員選舉",
+              "election_year": 2024,
+              "race_title": "桃園市第4選舉區立法委員選舉",
+              "party": "中國國民黨",
+              "candidate_no": "3",
+              "election_result": "elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2024%E5%B9%B4%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "election_name": "2020年立法委員選舉",
+              "election_year": 2020,
+              "race_title": "桃園市第4選舉區",
+              "party": "中國國民黨",
+              "candidate_no": "4",
+              "election_result": "elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2020%E5%B9%B4%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            }
+          ],
+          "claims": [
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "birth_date",
+              "claim_value": "1969-09-25",
+              "source_name": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+              "source_url": "https://2024.cec.gov.tw/data/json/cand/L1/68000.json"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "district",
+              "claim_value": "桃園市第4選舉區",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "education",
+              "claim_value": "政治大學行政管理碩士；美國明尼蘇達州立曼徹普立敦大學",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "education",
+              "claim_value": "國立政治大學行政管理碩士；美國明尼蘇達州立曼徹普立敦大學；廣州暨南大學國際關係研究所碩士",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "experience",
+              "claim_value": "桃園縣第15、16、17屆縣議員；桃園市第1、2屆市議員；桃園市議會教育審查小組召集人；朱立倫競選總統辦公室新聞發言人；中山國小家長會長；中興國中管樂班後援會會長；兒童少年保護協會理事長；桃園區女青年會理事長婦女企管協會理事長；嘉義同鄉會副理事長；江西同鄉",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "experience",
+              "claim_value": "第10屆立法委員；立法院教育及文化委員會召委；國民黨立法院黨團書記長；桃園縣第15、16、17屆縣議員；桃園市第1、2屆市議員；中山國小家長會長；桃園市家長會長協會理事長；兒少保護協會理事長；女青年會理事長；婦女企管協會理事長；江西同鄉會理事長；嘉義同鄉會",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "external_id",
+              "claim_value": "cec-2024-candidate-json:L1:桃園市第4選舉區:中國國民黨:3:L1:萬美玲:0580925",
+              "source_name": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+              "source_url": "https://2024.cec.gov.tw/data/json/cand/L1/68000.json"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-c277ce90f535dbb9",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "gender",
+              "claim_value": "female",
+              "source_name": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+              "source_url": "https://2024.cec.gov.tw/data/json/cand/L1/68000.json"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "name",
+              "claim_value": "萬美玲",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "party",
+              "claim_value": "中國國民黨",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "position",
+              "claim_value": "立法委員候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "district",
+              "claim_value": "桃園市第4選舉區",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "district",
+              "claim_value": "桃園市第4選舉區",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "external_id",
+              "claim_value": "cec-historical:e34fdaae28ac",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "external_id",
+              "claim_value": "cec-2024-legislative-district-person-bb43d57ced71",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "gender",
+              "claim_value": "female",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "gender",
+              "claim_value": "female",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "name",
+              "claim_value": "萬美玲",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "name",
+              "claim_value": "萬美玲",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "party",
+              "claim_value": "中國國民黨",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "party",
+              "claim_value": "中國國民黨",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "position",
+              "claim_value": "第11屆立法委員候選人（現任）",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "position",
+              "claim_value": "2020年立法委員當選人",
+              "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+              "source_url": "https://data.gov.tw/dataset/13119"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "district",
+              "claim_value": "桃園市第4選舉區",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-27dd3c577dbfe78f",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "name",
+              "claim_value": "萬美玲",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "party",
+              "claim_value": "中國國民黨",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "position",
+              "claim_value": "立法委員候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "alias",
+              "claim_value": "WanMei-Ling",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "birth_date",
+              "claim_value": "1969-09-25",
+              "source_name": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+              "source_url": "https://2024.cec.gov.tw/data/json/cand/L1/68000.json"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "district",
+              "claim_value": "桃園市第4選舉區",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "education",
+              "claim_value": "政治大學行政管理碩士；美國明尼蘇達州立曼徹普立敦大學",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "education",
+              "claim_value": "政治大學行政管理碩士;美國明尼蘇達州立曼徹普立敦大學;",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "education",
+              "claim_value": "國立政治大學行政管理碩士；美國明尼蘇達州立曼徹普立敦大學；廣州暨南大學國際關係研究所碩士",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "experience",
+              "claim_value": "第10屆立法委員;立法院教育及文化委員會召委;國民黨立法院黨團書記長;桃園縣第15、16、17屆縣議員;桃園市第1、2屆市議員;中山國小家長會長;桃園市家長會長協會理事長;兒少保護協會理事長;女青年會理事長;婦女企管協會理事長;江西同鄉會理事長;嘉義同鄉會",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "experience",
+              "claim_value": "桃園縣第15、16、17屆縣議員；桃園市第1、2屆市議員；桃園市議會教育審查小組召集人；朱立倫競選總統辦公室新聞發言人；中山國小家長會長；中興國中管樂班後援會會長；兒童少年保護協會理事長；桃園區女青年會理事長婦女企管協會理事長；嘉義同鄉會副理事長；江西同鄉",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "experience",
+              "claim_value": "第10屆立法委員；立法院教育及文化委員會召委；國民黨立法院黨團書記長；桃園縣第15、16、17屆縣議員；桃園市第1、2屆市議員；中山國小家長會長；桃園市家長會長協會理事長；兒少保護協會理事長；女青年會理事長；婦女企管協會理事長；江西同鄉會理事長；嘉義同鄉會",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "external_id",
+              "claim_value": "cec-2024-candidate-json:L1:桃園市第4選舉區:中國國民黨:3:L1:萬美玲:0580925",
+              "source_name": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+              "source_url": "https://2024.cec.gov.tw/data/json/cand/L1/68000.json"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "external_id",
+              "claim_value": "ly-legislator-11-110088",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "gender",
+              "claim_value": "female",
+              "source_name": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+              "source_url": "https://2024.cec.gov.tw/data/json/cand/L1/68000.json"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "gender",
+              "claim_value": "female",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "name",
+              "claim_value": "萬美玲",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "party",
+              "claim_value": "中國國民黨",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            },
+            {
+              "person_id": "4f25892a-b0c5-484e-bb26-88f1e7aea483",
+              "claim_type": "position",
+              "claim_value": "第11屆立法委員",
+              "source_name": "立法院開放資料：歷屆委員資料",
+              "source_url": "https://data.ly.gov.tw/getds.action?id=16"
+            }
+          ]
+        },
+        {
+          "person_id": "5dbb6bb3-ba3e-43ac-bb78-96afecc9019d",
+          "name": "萬美玲",
+          "party": "中國國民黨",
+          "position": "桃園市區域議員",
+          "district": "桃園市第1選舉區",
+          "candidacies": [
+            {
+              "person_id": "5dbb6bb3-ba3e-43ac-bb78-96afecc9019d",
+              "election_name": "2018年地方公職人員選舉",
+              "election_year": 2018,
+              "race_title": "桃園市第01選舉區區域議員選舉",
+              "party": "中國國民黨",
+              "candidate_no": "19",
+              "election_result": "elected",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E6%A1%83%E5%9C%92%E5%B8%82%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+            }
+          ],
+          "claims": [
+            {
+              "person_id": "5dbb6bb3-ba3e-43ac-bb78-96afecc9019d",
+              "claim_type": "district",
+              "claim_value": "桃園市第1選舉區",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "5dbb6bb3-ba3e-43ac-bb78-96afecc9019d",
+              "claim_type": "external_id",
+              "claim_value": "votetw-person-7fcab39d0bec9832",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "5dbb6bb3-ba3e-43ac-bb78-96afecc9019d",
+              "claim_type": "name",
+              "claim_value": "萬美玲",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "5dbb6bb3-ba3e-43ac-bb78-96afecc9019d",
+              "claim_type": "party",
+              "claim_value": "中國國民黨",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            },
+            {
+              "person_id": "5dbb6bb3-ba3e-43ac-bb78-96afecc9019d",
+              "claim_type": "position",
+              "claim_value": "議員候選人",
+              "source_name": "VoteTW historical election results",
+              "source_url": "https://votetw.com/wiki/%E8%90%AC%E7%BE%8E%E7%8E%B2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "董佳瑜",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "廖韶吟",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "劉秀專",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "5f446e31-3f4b-4bf0-994c-d1034fb44767",
+          "name": "劉秀專",
+          "party": "無黨籍",
+          "position": "屏東縣新埤鄉第1區鄉民代表",
+          "district": "屏東縣新埤鄉第1選舉區鄉民代表選舉",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "劉厚承",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "40e8860f-cd45-4c90-9bdb-e131efd0e1ee",
+          "name": "劉厚承",
+          "party": "民主進步黨",
+          "position": null,
+          "district": "臺中市第4選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "鄭麗文",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "08a24225-3ba4-4603-8183-987743865bb1",
+          "name": "鄭麗文",
+          "party": "中國國民黨",
+          "position": null,
+          "district": "臺中市第7選舉區",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "蕭旭岑",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "c440c300-b7ba-5183-8b38-8e1085a56400",
+          "name": "蕭旭岑",
+          "party": "中國國民黨",
+          "position": "副主席",
+          "district": null,
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "賴清德",
+      "match_status": "unique_name",
+      "candidates": [
+        {
+          "person_id": "e333ae37-8821-4f98-8a90-54a4d217dbce",
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "position": "總統",
+          "district": "全國",
+          "candidacies": [],
+          "claims": []
+        }
+      ]
+    },
+    {
+      "name": "謝易峻",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "謝建宇",
+      "match_status": "not_found",
+      "candidates": []
+    },
+    {
+      "name": "羅宜菁",
+      "match_status": "not_found",
+      "candidates": []
+    }
+  ]
+}

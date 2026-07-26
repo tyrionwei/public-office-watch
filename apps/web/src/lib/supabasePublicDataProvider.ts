@@ -11,6 +11,7 @@ import type {
   PublicParty,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
+  PublicPartyOfficer,
   PublicPerson,
   PublicPersonClaim,
   PublicPersonFilters,
@@ -40,6 +41,7 @@ import {
   mapPublicHomeElectionTickerRow,
   mapPublicPartyCompanyContributionSummaryRow,
   mapPublicPartyFinanceSummaryRow,
+  mapPublicPartyOfficerRow,
   mapPublicPartyRow,
   mapPublicPersonClaimRow,
   mapPublicPersonPartyAffiliationRow,
@@ -117,6 +119,8 @@ let homeSnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
 let peopleSnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
 let defaultPeopleDatasetLoaded = false;
 let partySnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
+const partyOfficerCache = new Map<string, PublicPartyOfficer[]>();
+const partyOfficerPromises = new Map<string, Promise<PublicPartyOfficer[]>>();
 let electionIndexSnapshotPromise: Promise<SupabasePublicSnapshot | null> | null = null;
 let electionIndexDatasetLoaded = false;
 const electionSnapshotPromises = new Map<string, Promise<SupabasePublicSnapshot | null>>();
@@ -565,7 +569,7 @@ async function fetchPeoplePage(
   await refreshSupabasePublicDataSnapshot();
 
   const snapshot = getSnapshot();
-  const view = fromPublicView('public_people_list_cached');
+  const view = fromPublicView('public_people_directory');
   if (!snapshot || !view) {
     return { items: [], total: 0 };
   }
@@ -577,6 +581,9 @@ async function fetchPeoplePage(
     query = query.ilike('name', '%' + normalizedQuery + '%');
   } else {
     query = query.eq('list_is_grassroots', false);
+    if (filters.role !== 'party_officer') {
+      query = query.eq('list_is_party_only', false);
+    }
   }
 
   if (filters.party) {
@@ -983,6 +990,28 @@ async function ensurePartyDataset() {
   return partySnapshotPromise;
 }
 
+async function loadPartyOfficersByPartyId(partyId: string) {
+  const cached = partyOfficerCache.get(partyId);
+  if (cached) return cached;
+
+  if (!partyOfficerPromises.has(partyId)) {
+    partyOfficerPromises.set(partyId, (async () => {
+      await refreshSupabasePublicDataSnapshot();
+      const rows = await fetchRows(
+        'public_party_officers',
+        (query) => query.eq('party_id', partyId).order('display_order', { ascending: true, nullsFirst: false }).order('person_name'),
+      );
+      const officers = rows.map((row) => mapPublicPartyOfficerRow(row as PublicPartyOfficer));
+      partyOfficerCache.set(partyId, officers);
+      return officers;
+    })().finally(() => {
+      partyOfficerPromises.delete(partyId);
+    }));
+  }
+
+  return partyOfficerPromises.get(partyId) ?? [];
+}
+
 function getSnapshot() {
   return snapshotCache;
 }
@@ -1354,6 +1383,10 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   getPartyBySlug(partySlug: string) {
     void ensurePartyDataset();
     return getSnapshot()?.indexes.partyBySlug.get(partySlug) ?? null;
+  },
+
+  loadPartyOfficers(partyId: string) {
+    return loadPartyOfficersByPartyId(partyId);
   },
 
   getPartyFinanceSummaries(partyId: string) {

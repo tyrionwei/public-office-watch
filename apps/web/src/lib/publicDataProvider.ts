@@ -10,6 +10,7 @@ import type {
   PublicParty,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
+  PublicPartyOfficer,
   PublicPerson,
   PublicPersonFilters,
   PublicPersonListItem,
@@ -113,6 +114,7 @@ export interface PublicDataProvider {
   getCompanies(): PublicCompany[];
   getParties(): PublicParty[];
   getPartyBySlug(partySlug: string): PublicParty | null;
+  loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
   getPartyFinanceSummaries(partyId: string): PublicPartyFinanceSummary[];
   getPartyCompanyContributionSummaries(partyId: string): PublicPartyCompanyContributionSummary[];
   searchPublicRecords(query: string): Promise<PublicSearchResult[]>;

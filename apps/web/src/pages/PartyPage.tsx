@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
@@ -10,7 +10,7 @@ import type { PublicPersonListPage } from '../lib/publicDataProvider';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { dataGuidancePath, partiesPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicPersonListItem, PublicPersonStatus } from '../types/publicViews';
+import type { PublicPartyOfficer, PublicPersonListItem, PublicPersonStatus } from '../types/publicViews';
 
 function formatCurrency(value: number, locale: string) {
   return new Intl.NumberFormat(locale, {
@@ -21,6 +21,7 @@ function formatCurrency(value: number, locale: string) {
 }
 
 const PARTY_PEOPLE_PAGE_SIZE = 8;
+const PARTY_OFFICER_PAGE_SIZE = 8;
 const CONTRIBUTION_PAGE_SIZE = 10;
 const emptyPeoplePage: PublicPersonListPage = { items: [], total: 0 };
 
@@ -87,6 +88,99 @@ function usePartyPeoplePage(
   }, [page, partyName, status]);
 
   return { ...result, loading };
+}
+
+function usePartyOfficers(partyId: string | null) {
+  const [officers, setOfficers] = useState<PublicPartyOfficer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setOfficers([]);
+
+    if (!partyId) {
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setLoading(true);
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadPartyOfficers(partyId))
+      .then((items) => {
+        if (active) setOfficers(items);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) console.warn('Failed to load party officers', error);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [partyId]);
+
+  return { officers, loading };
+}
+
+type PartyOfficerGroup = {
+  person_id: string;
+  person_name: string;
+  current_office_label: string | null;
+  role_tier: PublicPartyOfficer['role_tier'];
+  display_order: number;
+  roles: PublicPartyOfficer[];
+};
+
+function groupPartyOfficers(officers: PublicPartyOfficer[]) {
+  const groups = new Map<string, PublicPartyOfficer[]>();
+
+  officers.forEach((officer) => {
+    groups.set(officer.person_id, [...(groups.get(officer.person_id) ?? []), officer]);
+  });
+
+  return Array.from(groups.values())
+    .map((roles): PartyOfficerGroup => {
+      const sortedRoles = roles.slice().sort((left, right) =>
+        (left.display_order ?? 9999) - (right.display_order ?? 9999));
+      const first = sortedRoles[0];
+      return {
+        person_id: first.person_id,
+        person_name: first.person_name,
+        current_office_label: sortedRoles.find((role) => role.current_office_label)?.current_office_label ?? null,
+        role_tier: sortedRoles.some((role) => role.role_tier === 'primary') ? 'primary' : sortedRoles[0].role_tier,
+        display_order: Math.min(...sortedRoles.map((role) => role.display_order ?? 9999)),
+        roles: sortedRoles,
+      };
+    })
+    .sort((left, right) => left.display_order - right.display_order || left.person_name.localeCompare(right.person_name, 'zh-Hant-TW'));
+}
+
+function PartyOfficerCard({ officer }: { officer: PartyOfficerGroup }) {
+  const { t } = useI18n();
+
+  return (
+    <Link
+      to={personPath(officer.person_id)}
+      className="block pixel-corners border border-line/70 bg-bg/35 p-4 transition hover:border-accent/70 hover:bg-accent/5"
+    >
+      <h3 className="font-display text-lg text-white">{officer.person_name}</h3>
+      <div className="mt-2 space-y-1.5">
+        {officer.roles.map((role) => (
+          <p key={role.affiliation_id} className="text-sm text-slate-300">
+            <span className="text-accent">{role.role_title ?? t('partyDetail.partyOfficer')}</span>
+            {role.organization_unit ? <span className="text-slate-500"> / {role.organization_unit}</span> : null}
+          </p>
+        ))}
+      </div>
+      {officer.current_office_label ? (
+        <p className="mt-3 border-t border-line/50 pt-2 text-xs text-slate-400">{officer.current_office_label}</p>
+      ) : null}
+    </Link>
+  );
 }
 
 function PersonMiniCard({
@@ -191,25 +285,50 @@ export function PartyPage() {
   const party = publicDataProvider.getPartyBySlug(partySlug ?? '');
   const officeholderRequestedPage = getSectionPage(searchParams, 'officePage');
   const candidateRequestedPage = getSectionPage(searchParams, 'candidatePage');
+  const officerRequestedPage = getSectionPage(searchParams, 'officerPage');
   const contributionRequestedPage = getSectionPage(searchParams, 'contributionPage');
+  const partyOfficers = usePartyOfficers(party?.party_id ?? null);
   const officeholders = usePartyPeoplePage(party?.name ?? null, 'current', officeholderRequestedPage);
   const candidates = usePartyPeoplePage(party?.name ?? null, 'candidate', candidateRequestedPage);
   const financeSummaries = party ? publicDataProvider.getPartyFinanceSummaries(party.party_id) : [];
   const companySummaries = party ? publicDataProvider.getPartyCompanyContributionSummaries(party.party_id) : [];
+  const sortedCompanySummaries = companySummaries.slice().sort((left, right) =>
+    right.amount_total - left.amount_total || left.company_name.localeCompare(right.company_name, 'zh-Hant-TW'));
+  const groupedPartyOfficers = useMemo(() => groupPartyOfficers(partyOfficers.officers), [partyOfficers.officers]);
+  const primaryPartyOfficers = groupedPartyOfficers.filter((officer) => officer.role_tier === 'primary');
+  const secondaryPartyOfficers = groupedPartyOfficers.filter((officer) => officer.role_tier !== 'primary');
+  const secondaryOfficerUnits = Array.from(secondaryPartyOfficers.reduce((units, officer) => {
+    const unit = officer.roles[0]?.organization_unit ?? t('partyDetail.otherOfficersTitle');
+    units.set(unit, [...(units.get(unit) ?? []), officer]);
+    return units;
+  }, new Map<string, PartyOfficerGroup[]>()));
   const latestFinance = financeSummaries.slice().sort((left, right) => right.report_year - left.report_year)[0];
+  const hasRegistryProfile = party ? [
+    party.registry_no,
+    party.founded_date_text,
+    party.filed_date_text,
+    party.headquarters_address,
+    party.contact_phone,
+  ].some(Boolean) : false;
   const theme = party ? partyTheme[party.theme_key] : partyTheme.unknown;
   const officeholderPageCount = Math.max(1, Math.ceil(officeholders.total / PARTY_PEOPLE_PAGE_SIZE));
   const candidatePageCount = Math.max(1, Math.ceil(candidates.total / PARTY_PEOPLE_PAGE_SIZE));
-  const contributionPageCount = Math.max(1, Math.ceil(companySummaries.length / CONTRIBUTION_PAGE_SIZE));
+  const officerPageCount = Math.max(1, Math.ceil(primaryPartyOfficers.length / PARTY_OFFICER_PAGE_SIZE));
+  const contributionPageCount = Math.max(1, Math.ceil(sortedCompanySummaries.length / CONTRIBUTION_PAGE_SIZE));
+  const officerPage = Math.min(officerRequestedPage, officerPageCount);
   const officeholderPage = Math.min(officeholderRequestedPage, officeholderPageCount);
   const candidatePage = Math.min(candidateRequestedPage, candidatePageCount);
   const contributionPage = Math.min(contributionRequestedPage, contributionPageCount);
-  const visibleCompanySummaries = companySummaries.slice(
+  const visiblePartyOfficers = primaryPartyOfficers.slice(
+    (officerPage - 1) * PARTY_OFFICER_PAGE_SIZE,
+    officerPage * PARTY_OFFICER_PAGE_SIZE,
+  );
+  const visibleCompanySummaries = sortedCompanySummaries.slice(
     (contributionPage - 1) * CONTRIBUTION_PAGE_SIZE,
     contributionPage * CONTRIBUTION_PAGE_SIZE,
   );
   const updateSectionPage = (
-    key: 'officePage' | 'candidatePage' | 'contributionPage',
+    key: 'officerPage' | 'officePage' | 'candidatePage' | 'contributionPage',
     page: number,
     pageCount: number,
   ) => {
@@ -280,22 +399,81 @@ export function PartyPage() {
               </dl>
             </section>
 
-            <SectionPanel title={t('partyDetail.registryTitle')} eyebrow={t('partyDetail.registryEyebrow')}>
-              <dl className="grid gap-3 text-sm text-slate-300 md:grid-cols-2 xl:grid-cols-3">
-                {[
-                  [t('partyDetail.registryNo'), party.registry_no ?? t('parties.registryPending')],
-                  [t('partyDetail.filedDate'), party.filed_date_text ?? t('parties.registryPending')],
-                  [t('partyDetail.headquarters'), party.headquarters_address ?? t('parties.registryPending')],
-                  [t('partyDetail.phone'), party.contact_phone ?? t('parties.registryPending')],
-                  [t('partyDetail.source'), party.source_name ?? t('partyDetail.sourceAwaiting')],
-                  [t('partyDetail.updated'), party.updated_at || t('partyDetail.awaitingSync')],
-                ].map(([label, value]) => (
-                  <div key={label} className="pixel-corners border border-line/70 bg-bg/35 p-4">
-                    <dt className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</dt>
-                    <dd className="mt-2 break-words text-white">{value}</dd>
+            {hasRegistryProfile ? (
+              <SectionPanel title={t('partyDetail.registryTitle')} eyebrow={t('partyDetail.registryEyebrow')}>
+                <dl className="grid gap-3 text-sm text-slate-300 md:grid-cols-2 xl:grid-cols-3">
+                  {[
+                    [t('partyDetail.registryNo'), party.registry_no],
+                    [t('partyDetail.foundedDate'), party.founded_date_text],
+                    [t('partyDetail.filedDate'), party.filed_date_text],
+                    [t('partyDetail.headquarters'), party.headquarters_address],
+                    [t('partyDetail.phone'), party.contact_phone],
+                  ].filter((item): item is [string, string] => Boolean(item[1])).map(([label, value]) => (
+                    <div key={label} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                      <dt className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</dt>
+                      <dd className="mt-2 break-words text-white">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-line/60 pt-4 text-sm">
+                  {party.source_url ? (
+                    <a href={party.source_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
+                      {t('partyDetail.registrySourceLink')}
+                    </a>
+                  ) : null}
+                  {party.official_site_url ? (
+                    <a href={party.official_site_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
+                      {t('partyDetail.officialSite')}
+                    </a>
+                  ) : null}
+                </div>
+              </SectionPanel>
+            ) : null}
+
+            <SectionPanel title={t('partyDetail.officersTitle')} eyebrow={t('partyDetail.officersEyebrow')}>
+              {partyOfficers.loading ? (
+                <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                  {t('office.loading')}
+                </p>
+              ) : visiblePartyOfficers.length > 0 ? (
+                <>
+                  <div className="grid gap-3 lg:grid-cols-2">
+                    {visiblePartyOfficers.map((officer) => (
+                      <PartyOfficerCard key={officer.person_id} officer={officer} />
+                    ))}
                   </div>
-                ))}
-              </dl>
+                  <SectionPagination
+                    currentPage={officerPage}
+                    total={primaryPartyOfficers.length}
+                    pageSize={PARTY_OFFICER_PAGE_SIZE}
+                    onChange={(page) => updateSectionPage('officerPage', page, officerPageCount)}
+                  />
+                  {secondaryPartyOfficers.length > 0 ? (
+                    <details className="mt-5 pixel-corners border border-line/70 bg-bg/25">
+                      <summary className="cursor-pointer px-4 py-3 text-sm text-white marker:text-accent">
+                        <span className="font-semibold">{t('partyDetail.otherOfficersTitle')}</span>
+                        <span className="ml-3 text-xs text-slate-500">{t('partyDetail.otherOfficersSummary')} ({secondaryPartyOfficers.length})</span>
+                      </summary>
+                      <div className="space-y-5 border-t border-line/60 p-4">
+                        {secondaryOfficerUnits.map(([unit, officers]) => (
+                          <section key={unit}>
+                            <h4 className="mb-3 text-xs uppercase tracking-[0.2em] text-slate-500">{unit}</h4>
+                            <div className="grid gap-3 lg:grid-cols-2">
+                              {officers.map((officer) => (
+                                <PartyOfficerCard key={officer.person_id} officer={officer} />
+                              ))}
+                            </div>
+                          </section>
+                        ))}
+                      </div>
+                    </details>
+                  ) : null}
+                </>
+              ) : (
+                <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                  {t('partyDetail.noOfficers')}
+                </p>
+              )}
             </SectionPanel>
 
             <SectionPanel title={t('partyDetail.peopleTitle')} eyebrow={t('partyDetail.peopleEyebrow')}>

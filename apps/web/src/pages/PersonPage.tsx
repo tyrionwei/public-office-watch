@@ -295,6 +295,27 @@ function PartyAffiliationList({ affiliations, currentParty }: { affiliations: Pu
   );
 }
 
+function PartyOfficeList({ affiliations }: { affiliations: PublicPersonPartyAffiliation[] }) {
+  const { t } = useI18n();
+
+  return (
+    <div className="grid gap-3 md:grid-cols-2">
+      {affiliations.map((affiliation) => (
+        <article key={affiliation.affiliation_id} className="pixel-corners border border-accent/45 bg-accent/5 p-4">
+          <p className="text-xs uppercase tracking-[0.2em] text-accent">{affiliation.organization_unit ?? normalizePartyLabel(affiliation.party_name)}</p>
+          <h3 className="mt-2 text-base font-semibold text-white">{affiliation.role_title ?? t('person.partyOffice')}</h3>
+          <p className="mt-2 text-sm text-slate-300">{normalizePartyLabel(affiliation.party_name)}</p>
+          {affiliation.start_date ? (
+            <p className="mt-3 text-xs text-slate-500">{t('person.affiliation.start')} {affiliation.start_date}</p>
+          ) : affiliation.observed_date ? (
+            <p className="mt-3 text-xs text-slate-500">{t('person.affiliation.observed')} {affiliation.observed_date}</p>
+          ) : null}
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function ClaimGrid({ claims }: { claims: PublicPersonClaim[] }) {
   return (
     <div className="grid gap-3">
@@ -356,6 +377,8 @@ export function PersonPage() {
 
   const profile = loading ? null : publicDataProvider.getPersonProfile(safePersonId);
   const person = profile?.person ?? null;
+  const partyOffices = profile?.party_affiliations.filter((affiliation) => affiliation.role_context === 'party_officer' && affiliation.is_current) ?? [];
+  const partyAffiliations = profile?.party_affiliations.filter((affiliation) => affiliation.role_context !== 'party_officer') ?? [];
   const theme = partyTheme[toPartyThemeKey(person?.party)];
   const publicClaims = profile ? visibleProfileClaims(profile.public_claims) : [];
   const birthDateClaim = profile ? claimsByType(profile.public_claims, 'birth_date')[0] ?? null : null;
@@ -497,9 +520,15 @@ export function PersonPage() {
               )}
             </SectionPanel>
 
-            {profile.timeline_records.length > 0 || profile.party_affiliations.length > 0 ? (
+            {partyOffices.length > 0 ? (
+              <SectionPanel title={t('person.partyOfficesTitle')} eyebrow={t('person.partyOfficesEyebrow')}>
+                <PartyOfficeList affiliations={partyOffices} />
+              </SectionPanel>
+            ) : null}
+
+            {profile.timeline_records.length > 0 || partyAffiliations.length > 0 ? (
               <div className={
-                profile.timeline_records.length > 0 && profile.party_affiliations.length > 0
+                profile.timeline_records.length > 0 && partyAffiliations.length > 0
                   ? 'grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]'
                   : 'grid gap-4'
               }>
@@ -508,9 +537,9 @@ export function PersonPage() {
                     <TimelineList items={profile.timeline_records} />
                   </SectionPanel>
                 ) : null}
-                {profile.party_affiliations.length > 0 ? (
+                {partyAffiliations.length > 0 ? (
                   <SectionPanel title={t('person.affiliationsTitle')} eyebrow={t('person.affiliationsEyebrow')}>
-                    <PartyAffiliationList affiliations={profile.party_affiliations} currentParty={person.party} />
+                    <PartyAffiliationList affiliations={partyAffiliations} currentParty={person.party} />
                   </SectionPanel>
                 ) : null}
               </div>

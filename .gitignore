@@ -60,3 +60,8 @@ data-sources/*.html
 !data-sources/source-fetch-recipes.json
 !data-sources/official-person-source-inventory.json
 !data-sources/legal-record-target-names.example.json
+
+# Browser-saved party pages are local research inputs; commit only extracted data.
+data-sources/tpp/*.html
+data-sources/tpp/*_files/
+data-sources/tpp/*:Zone.Identifier

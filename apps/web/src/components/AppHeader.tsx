@@ -44,10 +44,9 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
             <div className="min-w-0">
               <Link to={homePath()} className="inline-block focus:outline-none focus:ring-2 focus:ring-accent/35">
                 <h1 className="font-display text-2xl leading-none text-white sm:text-3xl">
-                  {t('brand.productName')}
+                  {t('brand.name')}
                 </h1>
               </Link>
-              <p className="mt-1 text-sm leading-tight text-slate-200">{t('brand.name')}</p>
               <p className="mt-1 font-display text-[10px] uppercase tracking-[0.2em] text-accent">
                 {t('brand.subtitle')}
               </p>

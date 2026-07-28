@@ -77,3 +77,47 @@ Do not cut frontend traffic to `published` yet. Phase 2.2 should remain storage-
 4. Re-run the same production plan suite and re-check database size plus promote peak before considering schema exposure or frontend cutover.
 
 The target is under 100 ms warm for all list/search routes, with no temporary block spill for people directory and search. Any additional physical layer must keep projected refresh peak below the 500 MiB allowance.
+
+## Phase 2.2 production shadow deployment
+
+Source commit `b7460ac perf: add storage-bounded published hot paths` was deployed to the same production branch as migration `202607280001_published_hot_path_surfaces.sql`. The migration file was transferred only after its 3,841 bytes matched Git SHA-256 `7bc18561f66de2ec390ba93d22bbd866cb6fec8de57524b56a0368a58dfae381`. Its schema changes, initial promote, and migration-history row committed atomically.
+
+Immediately before deployment, the database was still `431,115,411` bytes. The local peak measurement projected `511,134,867` bytes during a future promote, leaving `13,153,133` bytes of headroom; this passed the agreed 10 MiB safety gate.
+
+After deployment:
+
+| Measurement | Bytes | Approximate size |
+| --- | ---: | ---: |
+| Database | 457,952,403 | 437 MB |
+| All physical `published` relations | 56,098,816 | 54 MB |
+| `published.people_directory` | 9,150,464 | 8.7 MiB |
+| `published.search_results` | 17,317,888 | 16.5 MiB |
+| Projected next-promote peak | 511,503,507 | 487.8 MiB |
+| Projected next-promote headroom | 12,784,493 | 12.2 MiB |
+
+The remaining next-promote headroom is above the gate but narrow. Every production promote must re-read the live database size and retain at least 10 MiB projected peak headroom. A physical race-list surface must not be added under the current capacity and atomic-refresh design.
+
+Release `d0cf89d4-6167-46fe-8903-3326481ba5c7` was published at `2026-07-28T06:29:13.797429+00:00` with schema version `202607280001-people-search-surfaces`. The people directory matched its 30,934-row source; search results matched all 67,922 source documents with zero duplicate document keys. Migration `202607280001` is present in `supabase_migrations.schema_migrations`.
+
+Access remained private after deployment:
+
+- `anon` and `authenticated` still have no `USAGE` on `published` and no `SELECT` on the new surfaces;
+- `PUBLIC` cannot execute `published.promote(uuid)`;
+- `service_role` can execute only the wrapper and cannot directly execute `published.promote_compact_base(uuid)`;
+- no frontend provider, PostgREST schema exposure, or legacy grant was changed.
+
+The production plan harness completed without temporary block spill:
+
+| Query | Execution ms | Temp read / write blocks | Decision |
+| --- | ---: | ---: | --- |
+| people directory default | 2.010 | 0 / 0 | accepted |
+| people name search | 37.401 | 0 / 0 | accepted |
+| search `台北` | 70.338 | 0 / 0 | accepted |
+| election races | 168.417 | 0 / 0 | deferred |
+| event races | 394.068 | 0 / 0 | deferred |
+
+Compared with the prior warm production plans, the default people directory fell from 556.201 ms to 2.010 ms and search fell from 382.323 ms to 70.338 ms. Both Phase 2.2 targets are below 100 ms and no longer spill. Race-list work remains deliberately deferred; this deployment does not claim an improvement for those paths.
+
+## Updated decision
+
+Keep Phase 2.2 in production shadow. The next phase should design the frontend read adapter and request-shape changes against the private schema locally, including 20-row cursor/page contracts, while leaving production exposure and provider cutover for a separate reviewed phase. Race-list optimization requires a non-duplicating refresh strategy or more database capacity before another physical surface is safe.

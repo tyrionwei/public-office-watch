@@ -144,6 +144,104 @@ END;
 $$;
 
 SELECT *
+FROM admin_set_chat_profile_mute(
+    '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+    (SELECT id FROM moderation_message),
+    TRUE,
+    10,
+    'spam'
+);
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM public_chat_messages
+        WHERE id = (SELECT id FROM moderation_message)
+          AND body IS NULL
+          AND visibility_state = 'author_muted'
+          AND visibility_until > NOW()
+    ) THEN
+        RAISE EXCEPTION 'expected temporary mute placeholder';
+    END IF;
+END;
+$$;
+
+SELECT *
+FROM admin_set_chat_profile_mute(
+    '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+    (SELECT id FROM moderation_message),
+    FALSE,
+    NULL,
+    'operator_correction'
+);
+
+SELECT *
+FROM admin_set_chat_profile_mute(
+    '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+    (SELECT id FROM moderation_message),
+    TRUE,
+    NULL,
+    'spam'
+);
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM public_chat_messages
+        WHERE id = (SELECT id FROM moderation_message)
+          AND body IS NULL
+          AND visibility_state = 'author_banned'
+          AND visibility_until IS NULL
+    ) THEN
+        RAISE EXCEPTION 'expected permanent mute placeholder';
+    END IF;
+END;
+$$;
+
+SELECT *
+FROM admin_set_chat_profile_mute(
+    '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+    (SELECT id FROM moderation_message),
+    FALSE,
+    NULL,
+    'operator_correction'
+);
+
+SELECT *
+FROM admin_set_chat_profile_mute(
+    '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+    (SELECT id FROM moderation_message),
+    TRUE,
+    10080,
+    'spam'
+);
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM chat_profiles
+        WHERE user_id = '318f9e79-7399-7fd0-bfca-5aae32014bd9'
+          AND status = 'muted'
+          AND muted_until > NOW() + INTERVAL '6 days'
+    ) THEN
+        RAISE EXCEPTION 'expected seven-day mute';
+    END IF;
+END;
+$$;
+
+SELECT *
+FROM admin_set_chat_profile_mute(
+    '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+    (SELECT id FROM moderation_message),
+    FALSE,
+    NULL,
+    'operator_correction'
+);
+
+SELECT *
 FROM admin_set_chat_message_visibility(
     '118f9e79-7399-7fd0-bfca-5aae32014bd9',
     (SELECT id FROM moderation_message),
@@ -187,8 +285,8 @@ BEGIN
         SELECT COUNT(*)
         FROM chat_moderation_actions
         WHERE admin_user_id = '118f9e79-7399-7fd0-bfca-5aae32014bd9'
-    ) <> 3 THEN
-        RAISE EXCEPTION 'expected three audited admin actions';
+    ) <> 9 THEN
+        RAISE EXCEPTION 'expected nine audited admin actions';
     END IF;
 
     IF has_function_privilege(
@@ -273,7 +371,7 @@ BEGIN
         SELECT COUNT(*)
         FROM chat_moderation_actions
         WHERE admin_user_id = '118f9e79-7399-7fd0-bfca-5aae32014bd9'
-    ) <> 5 THEN
+    ) <> 11 THEN
         RAISE EXCEPTION 'expected audited Legal Hold actions';
     END IF;
 END;

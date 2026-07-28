@@ -1,6 +1,7 @@
 import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
 import { partyTheme } from '../styles/partyThemes.ts';
 import type { StageRegionLevel, StageRegionNode, StageRegionSummary } from '../types/stageMap';
+import { buildPersonProfileFromItems } from './personData.ts';
 import type {
   HomePageData,
   PublicDataProvider,
@@ -10,6 +11,7 @@ import type {
 import type {
   PublishedHomeTickerRow,
   PublishedPeopleDirectoryRow,
+  PublishedPersonProfileRow,
   PublishedRaceRow,
   PublishedReadAdapter,
   PublishedRegionRow,
@@ -21,6 +23,7 @@ import type {
   PublicPersonListItem,
   PublicPersonRole,
   PublicPersonStatus,
+  PublicPersonProfile,
 } from '../types/publicViews';
 
 const roleLabels: Record<PublicPersonRole, string> = {
@@ -80,6 +83,7 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadElectionIndex'
   | 'loadElectionRaceFacets'
   | 'loadPeoplePage'
+  | 'loadPersonProfiles'
   | 'searchPublicRecords'
 > & {
   loadHomePageData(): Promise<HomePageData>;
@@ -147,6 +151,37 @@ function mapPeopleRow(
     merged_role_labels: [roleLabel],
     merged_candidate_count: 0,
   };
+}
+
+function mapProfilePersonRow(row: PublishedPersonProfileRow): PublicPersonListItem {
+  const region = row.primary_region_id
+    ? {
+        regionId: row.primary_region_id,
+        regionName: row.primary_region_name ?? row.district ?? row.primary_region_id,
+        districtPrefixes: [],
+      }
+    : null;
+  const person = mapPeopleRow(row, region);
+
+  return {
+    ...person,
+    education: row.education,
+    experience: row.experience,
+    primary_photo_url: row.primary_photo_url,
+    photo_source_name: row.photo_source_name,
+    photo_source_url: row.photo_source_url,
+    photo_license_type: row.photo_license_type,
+    photo_license_url: row.photo_license_url,
+    photo_attribution: row.photo_attribution,
+    candidate_count: row.candidate_count,
+    merged_candidate_count: row.candidate_count,
+  };
+}
+
+function normalizePersonIds(personIds: string[]) {
+  return Array.from(new Set(
+    personIds.map((personId) => personId.trim()).filter(Boolean),
+  ));
 }
 
 function mapSearchRow(row: PublishedSearchResultRow): PublicSearchResult {
@@ -340,6 +375,25 @@ export function createPublishedPublicDataBridge(
         items: result.rows.map((row) => mapPeopleRow(row, region)),
         total: result.total,
       };
+    },
+
+    async loadPersonProfiles(personIds) {
+      const normalizedIds = normalizePersonIds(personIds);
+      const rows = await adapter.loadPersonProfiles(normalizedIds);
+      const people = rows.personRows.map(mapProfilePersonRow);
+      const candidates = rows.candidateRows;
+      const claims = rows.claimRows;
+      const partyAffiliations = rows.partyAffiliationRows;
+
+      return normalizedIds
+        .map((personId) => buildPersonProfileFromItems(
+          personId,
+          people,
+          candidates,
+          claims,
+          partyAffiliations,
+        ))
+        .filter((profile): profile is PublicPersonProfile => profile !== null);
     },
 
     async searchPublicRecords(query) {

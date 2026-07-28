@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import type {
   PublishedPeopleDirectoryRow,
+  PublishedPersonProfileRow,
   PublishedPeoplePageRequest,
   PublishedReadAdapter,
 } from '../src/lib/publishedReadAdapter.ts';
@@ -44,6 +45,9 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
     },
     async loadPeoplePage() {
       return { rows: [], total: 0 };
+    },
+    async loadPersonProfiles() {
+      return { personRows: [], candidateRows: [], claimRows: [], partyAffiliationRows: [] };
     },
     async search() {
       return [];
@@ -211,6 +215,117 @@ test('bridge keeps a safe region fallback when no resolver is provided', async (
     role: undefined,
     status: undefined,
   });
+});
+
+test('bridge maps complete published person profile rows to the existing frontend contract', async () => {
+  const profileRow: PublishedPersonProfileRow = {
+    ...peopleRow,
+    education: '測試大學',
+    experience: '測試經歷',
+    primary_photo_url: 'https://example.test/person-1.png',
+    photo_source_name: '測試來源',
+    photo_source_url: 'https://example.test/source',
+    photo_license_type: 'government_open_data',
+    photo_license_url: 'https://example.test/license',
+    photo_attribution: '測試署名',
+    candidate_count: 1,
+    primary_region_id: 'region-taipei',
+    primary_region_name: '臺北市',
+  };
+  const candidate = {
+    candidate_id: 'candidate-1',
+    person_id: 'person-1',
+    person_name: '測試市長',
+    person_party: '民主進步黨',
+    person_position: '市長',
+    race_id: 'race-1',
+    race_title: '臺北市長',
+    election_id: 'election-2022',
+    election_name: '2022 地方選舉',
+    election_year: 2022,
+    region_id: 'region-taipei',
+    region_name: '臺北市',
+    party: '民主進步黨',
+    candidate_no: '1',
+    registration_status: 'elected' as const,
+    candidacy_status: 'qualified' as const,
+    election_result: 'elected' as const,
+    status_updated_at: '2022-11-26T00:00:00Z',
+    candidate_updated_at: '2022-11-26T00:00:00Z',
+    vote_count: 100,
+    vote_rate: 51.2,
+    is_elected: true,
+    is_incumbent: false,
+    source_name: '中選會',
+    source_url: 'https://example.test/election',
+    primary_photo_url: null,
+    primary_photo_thumbnail_url: null,
+    photo_attribution: null,
+    photo_license_type: null,
+  };
+  const claim = {
+    claim_id: 'claim-1',
+    person_id: 'person-1',
+    claim_type: 'platform' as const,
+    claim_value: '測試政見',
+    claim_json: {},
+    confidence_level: 'A' as const,
+    review_score: 100,
+    source_name: '官方政見',
+    source_url: 'https://example.test/platform',
+    observed_at: '2022-11-01',
+    updated_at: '2022-11-01T00:00:00Z',
+  };
+  const affiliation = {
+    affiliation_id: 'affiliation-1',
+    affiliation_key: 'person-1:dpp',
+    person_id: 'person-1',
+    person_name: '測試市長',
+    source_claim_key: null,
+    party_name: '民主進步黨',
+    role_context: 'candidate' as const,
+    role_title: null,
+    organization_unit: null,
+    display_order: 1,
+    role_tier: 'primary' as const,
+    observed_year: 2022,
+    observed_date: '2022-11-01',
+    start_date: null,
+    end_date: null,
+    is_current: true,
+    confidence_level: 'A' as const,
+    source_name: '中選會',
+    source_url: 'https://example.test/election',
+    updated_at: '2022-11-01T00:00:00Z',
+  };
+  const requestedIds: string[][] = [];
+  const adapter = createAdapter({
+    async loadPersonProfiles(personIds) {
+      requestedIds.push(personIds);
+      return {
+        personRows: [profileRow],
+        candidateRows: [candidate],
+        claimRows: [claim],
+        partyAffiliationRows: [affiliation],
+      };
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter);
+
+  const profiles = await bridge.loadPersonProfiles([' person-1 ', 'person-1']);
+
+  assert.deepEqual(requestedIds, [['person-1']]);
+  assert.equal(profiles.length, 1);
+  assert.equal(profiles[0]?.person.education, '測試大學');
+  assert.equal(profiles[0]?.person.primary_photo_url, 'https://example.test/person-1.png');
+  assert.equal(profiles[0]?.person.candidate_count, 1);
+  assert.equal(profiles[0]?.person.region_id, 'region-taipei');
+  assert.equal(profiles[0]?.candidate_records[0]?.source_name, '中選會');
+  assert.equal(profiles[0]?.public_claims[0]?.claim_type, 'platform');
+  assert.equal(profiles[0]?.party_affiliations[0]?.party_name, '民主進步黨');
+  assert.equal(profiles[0]?.platform_status, 'available');
+  assert.equal(profiles[0]?.experience_status, 'available');
+  assert.equal(profiles[0]?.identity_records.length, 1);
 });
 
 test('bridge maps bounded home and region reads into existing frontend contracts', async () => {

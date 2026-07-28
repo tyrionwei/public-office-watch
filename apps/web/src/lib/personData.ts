@@ -1,5 +1,5 @@
-import { isActiveCandidacy, isCandidateElected } from '../data/electionI18n';
-import type { StageRegionNode } from '../types/stageMap';
+import { isActiveCandidacy, isCandidateElected } from '../data/electionI18n.ts';
+import type { StageRegionNode } from '../types/stageMap.ts';
 import type {
   PublicCandidate,
   PublicCouncilorPartyCount,
@@ -14,8 +14,8 @@ import type {
   PublicPersonProfile,
   PublicPersonRole,
   PublicPersonStatus,
-} from '../types/publicViews';
-import type { PartyThemeKey } from '../styles/partyThemes';
+} from '../types/publicViews.ts';
+import type { PartyThemeKey } from '../styles/partyThemes.ts';
 
 const statusLabels: Record<PublicPersonStatus, string> = {
   current: '現任',

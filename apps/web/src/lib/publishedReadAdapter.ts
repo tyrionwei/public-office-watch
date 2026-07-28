@@ -2,6 +2,9 @@ import type {
   PublicElection,
   PublicElectionRaceFacet,
   PublicElectionRaceSummary,
+  PublicCandidate,
+  PublicPersonClaim,
+  PublicPersonPartyAffiliation,
   PublicPersonRole,
   PublicPersonStatus,
   PublicRace,
@@ -21,6 +24,10 @@ export const REGION_RACE_LIMIT = 24;
 export const ELECTION_INDEX_LIMIT = 500;
 export const ELECTION_ID_BATCH_SIZE = 200;
 export const ELECTION_FACET_BATCH_LIMIT = 1000;
+export const PERSON_PROFILE_BATCH_LIMIT = 4;
+export const PERSON_CANDIDATE_LIMIT = 100;
+export const PERSON_CLAIM_LIMIT = 400;
+export const PERSON_PARTY_AFFILIATION_LIMIT = 100;
 
 const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
   'announced',
@@ -117,6 +124,107 @@ export const PEOPLE_DIRECTORY_COLUMNS = [
   'list_role_order',
 ].join(',');
 
+export const PERSON_PROFILE_COLUMNS = [
+  'person_id',
+  'name',
+  'alias',
+  'gender',
+  'party',
+  'position',
+  'current_office_label',
+  'upcoming_candidate_label',
+  'election_year',
+  'district',
+  'education',
+  'experience',
+  'updated_at',
+  'primary_photo_url',
+  'primary_photo_thumbnail_url',
+  'photo_source_name',
+  'photo_source_url',
+  'photo_license_type',
+  'photo_license_url',
+  'photo_attribution',
+  'list_role',
+  'list_status',
+  'list_is_grassroots',
+  'list_is_party_only',
+  'list_status_order',
+  'list_role_order',
+  'candidate_count',
+  'primary_region_id',
+  'primary_region_name',
+].join(',');
+
+export const PERSON_CANDIDATE_COLUMNS = [
+  'candidate_id',
+  'person_id',
+  'person_name',
+  'person_party',
+  'person_position',
+  'race_id',
+  'race_title',
+  'election_id',
+  'election_name',
+  'region_id',
+  'region_name',
+  'party',
+  'candidate_no',
+  'registration_status',
+  'vote_count',
+  'vote_rate',
+  'is_elected',
+  'is_incumbent',
+  'election_year',
+  'candidacy_status',
+  'election_result',
+  'status_updated_at',
+  'candidate_updated_at',
+  'source_name',
+  'source_url',
+  'primary_photo_url',
+  'primary_photo_thumbnail_url',
+  'photo_attribution',
+  'photo_license_type',
+].join(',');
+
+export const PERSON_CLAIM_COLUMNS = [
+  'claim_id',
+  'person_id',
+  'claim_type',
+  'claim_value',
+  'claim_json',
+  'confidence_level',
+  'review_score',
+  'source_name',
+  'source_url',
+  'observed_at',
+  'updated_at',
+].join(',');
+
+export const PERSON_PARTY_AFFILIATION_COLUMNS = [
+  'affiliation_id',
+  'affiliation_key',
+  'person_id',
+  'person_name',
+  'source_claim_key',
+  'party_name',
+  'role_context',
+  'role_title',
+  'organization_unit',
+  'display_order',
+  'role_tier',
+  'observed_year',
+  'observed_date',
+  'start_date',
+  'end_date',
+  'is_current',
+  'confidence_level',
+  'source_name',
+  'source_url',
+  'updated_at',
+].join(',');
+
 export const SEARCH_RESULT_COLUMNS = [
   'document_key',
   'entity_type',
@@ -186,6 +294,20 @@ export type PublishedPeopleDirectoryRow = {
   list_role_order: number;
 };
 
+export type PublishedPersonProfileRow = PublishedPeopleDirectoryRow & {
+  education: string | null;
+  experience: string | null;
+  primary_photo_url: string | null;
+  photo_source_name: string | null;
+  photo_source_url: string | null;
+  photo_license_type: string | null;
+  photo_license_url: string | null;
+  photo_attribution: string | null;
+  candidate_count: number;
+  primary_region_id: string | null;
+  primary_region_name: string | null;
+};
+
 export type PublishedSearchResultRow = {
   document_key: string;
   entity_type: 'person' | 'company' | 'party' | 'election' | 'region';
@@ -229,6 +351,13 @@ export type PublishedElectionIndexRows = {
   raceSummaryRows: PublishedElectionRaceSummaryRow[];
 };
 
+export type PublishedPersonProfileRows = {
+  personRows: PublishedPersonProfileRow[];
+  candidateRows: PublicCandidate[];
+  claimRows: PublicPersonClaim[];
+  partyAffiliationRows: PublicPersonPartyAffiliation[];
+};
+
 type PublishedQueryError = {
   message: string;
 };
@@ -263,6 +392,7 @@ export type PublishedReadAdapter = {
   loadElectionIndex(): Promise<PublishedElectionIndexRows>;
   loadElectionRaceFacets(electionIds: string[]): Promise<PublishedElectionRaceFacetRow[]>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
+  loadPersonProfiles(personIds: string[]): Promise<PublishedPersonProfileRows>;
   search(query: string): Promise<PublishedSearchResultRow[]>;
 };
 
@@ -278,6 +408,28 @@ function getRowsOrThrow<Row>(response: PublishedQueryResponse<Row>, label: strin
   }
 
   return response.data ?? [];
+}
+
+function getBoundedRowsOrThrow<Row>(
+  response: PublishedQueryResponse<Row>,
+  label: string,
+  limit: number,
+) {
+  const rows = getRowsOrThrow(response, label);
+  if (rows.length > limit) {
+    throw new Error(`${label} exceeded the ${limit}-row batch limit.`);
+  }
+  return rows;
+}
+
+function normalizePersonIds(personIds: string[]) {
+  const normalized = Array.from(new Set(
+    personIds.map((personId) => personId.trim()).filter(Boolean),
+  ));
+  if (normalized.length > PERSON_PROFILE_BATCH_LIMIT) {
+    throw new Error(`Published person profiles accept at most ${PERSON_PROFILE_BATCH_LIMIT} person ids.`);
+  }
+  return normalized;
 }
 
 function normalizeElectionIds(electionIds: string[]) {
@@ -477,6 +629,69 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       return {
         rows: getRowsOrThrow(response, 'Published people directory'),
         total: response.count ?? 0,
+      };
+    },
+
+    async loadPersonProfiles(rawPersonIds) {
+      const personIds = normalizePersonIds(rawPersonIds);
+      if (personIds.length === 0) {
+        return { personRows: [], candidateRows: [], claimRows: [], partyAffiliationRows: [] };
+      }
+
+      const published = client.schema('published');
+      const [personResponse, candidateResponse, claimResponse, partyAffiliationResponse] = await Promise.all([
+        published
+          .from<PublishedPersonProfileRow>('people')
+          .select(PERSON_PROFILE_COLUMNS)
+          .in('person_id', personIds)
+          .order('person_id', { ascending: true })
+          .limit(personIds.length),
+        published
+          .from<PublicCandidate>('candidates')
+          .select(PERSON_CANDIDATE_COLUMNS)
+          .in('person_id', personIds)
+          .order('person_id', { ascending: true })
+          .order('election_year', { ascending: false, nullsFirst: false })
+          .order('race_id', { ascending: true })
+          .order('candidate_id', { ascending: true })
+          .limit(PERSON_CANDIDATE_LIMIT + 1),
+        published
+          .from<PublicPersonClaim>('person_claims')
+          .select(PERSON_CLAIM_COLUMNS)
+          .in('person_id', personIds)
+          .order('person_id', { ascending: true })
+          .order('observed_at', { ascending: false, nullsFirst: false })
+          .order('claim_id', { ascending: true })
+          .limit(PERSON_CLAIM_LIMIT + 1),
+        published
+          .from<PublicPersonPartyAffiliation>('person_party_affiliations')
+          .select(PERSON_PARTY_AFFILIATION_COLUMNS)
+          .in('person_id', personIds)
+          .order('person_id', { ascending: true })
+          .order('is_current', { ascending: false })
+          .order('observed_year', { ascending: false, nullsFirst: false })
+          .order('display_order', { ascending: true, nullsFirst: false })
+          .order('affiliation_id', { ascending: true })
+          .limit(PERSON_PARTY_AFFILIATION_LIMIT + 1),
+      ]);
+
+      return {
+        personRows: getRowsOrThrow(personResponse, 'Published person profiles'),
+        candidateRows: getBoundedRowsOrThrow(
+          candidateResponse,
+          'Published person candidates',
+          PERSON_CANDIDATE_LIMIT,
+        ),
+        claimRows: getBoundedRowsOrThrow(
+          claimResponse,
+          'Published person claims',
+          PERSON_CLAIM_LIMIT,
+        ),
+        partyAffiliationRows: getBoundedRowsOrThrow(
+          partyAffiliationResponse,
+          'Published person party affiliations',
+          PERSON_PARTY_AFFILIATION_LIMIT,
+        ),
       };
     },
 

@@ -1,6 +1,6 @@
-import type { Translate, TranslationKey } from '../i18n';
-import type { PublicCandidate } from '../types/publicViews';
-import type { ElectionEvent } from './electionEvents';
+import type { Translate, TranslationKey } from '../i18n.tsx';
+import type { PublicCandidate } from '../types/publicViews.ts';
+import type { ElectionEvent } from './electionEvents.ts';
 
 const electionTypeKeys: Record<string, TranslationKey> = {
   presidential: 'election.type.presidential',

@@ -7,6 +7,10 @@ import {
   HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
+  PERSON_CANDIDATE_LIMIT,
+  PERSON_CLAIM_LIMIT,
+  PERSON_PARTY_AFFILIATION_LIMIT,
+  PERSON_PROFILE_BATCH_LIMIT,
   REGION_CHILD_LIMIT,
   REGION_RACE_LIMIT,
   SEARCH_RESULT_COLUMNS,
@@ -320,4 +324,83 @@ test('election facets de-duplicate and batch at 200 ids with a fixed row ceiling
     ['limit', ELECTION_FACET_BATCH_LIMIT],
     ['limit', ELECTION_FACET_BATCH_LIMIT],
   ]);
+});
+
+test('person profiles de-duplicate at most four ids and bound every published relation', async () => {
+  const person = { person_id: 'person-2', name: '測試人物' };
+  const candidate = { candidate_id: 'candidate-1', person_id: 'person-2' };
+  const claim = { claim_id: 'claim-1', person_id: 'person-2' };
+  const affiliation = { affiliation_id: 'affiliation-1', person_id: 'person-2' };
+  const fake = createFakeClient({
+    people: { data: [person], error: null, count: null },
+    candidates: { data: [candidate], error: null, count: 1 },
+    person_claims: { data: [claim], error: null, count: 1 },
+    person_party_affiliations: { data: [affiliation], error: null, count: 1 },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(
+    await adapter.loadPersonProfiles([' person-2 ', 'person-1', 'person-2', '']),
+    {
+      personRows: [person],
+      candidateRows: [candidate],
+      claimRows: [claim],
+      partyAffiliationRows: [affiliation],
+    },
+  );
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
+    ['from', 'people'],
+    ['from', 'candidates'],
+    ['from', 'person_claims'],
+    ['from', 'person_party_affiliations'],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'in'), [
+    ['in', 'person_id', ['person-2', 'person-1']],
+    ['in', 'person_id', ['person-2', 'person-1']],
+    ['in', 'person_id', ['person-2', 'person-1']],
+    ['in', 'person_id', ['person-2', 'person-1']],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
+    ['limit', 2],
+    ['limit', PERSON_CANDIDATE_LIMIT + 1],
+    ['limit', PERSON_CLAIM_LIMIT + 1],
+    ['limit', PERSON_PARTY_AFFILIATION_LIMIT + 1],
+  ]);
+});
+
+test('person profile reads reject more than four unique ids before querying', async () => {
+  const fake = createFakeClient({});
+  const adapter = createPublishedReadAdapter(fake.client);
+  const personIds = Array.from(
+    { length: PERSON_PROFILE_BATCH_LIMIT + 1 },
+    (_, index) => `person-${index}`,
+  );
+
+  await assert.rejects(
+    () => adapter.loadPersonProfiles(personIds),
+    /Published person profiles accept at most 4 person ids/,
+  );
+  assert.deepEqual(fake.calls, []);
+});
+
+test('person profile reads fail closed when a related-row limit truncates data', async () => {
+  const fake = createFakeClient({
+    people: { data: [], error: null, count: null },
+    candidates: {
+      data: Array.from({ length: PERSON_CANDIDATE_LIMIT + 1 }, (_, index) => ({
+        candidate_id: `candidate-${index}`,
+        person_id: 'person-1',
+      })),
+      error: null,
+      count: null,
+    },
+    person_claims: { data: [], error: null, count: 0 },
+    person_party_affiliations: { data: [], error: null, count: 0 },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await assert.rejects(
+    () => adapter.loadPersonProfiles(['person-1']),
+    new RegExp(`Published person candidates exceeded the ${PERSON_CANDIDATE_LIMIT}-row batch limit`),
+  );
 });

@@ -19,6 +19,10 @@ const adminMigration = readFileSync(
   new URL('../supabase/migrations/202607290004_chat_moderation_admin.sql', import.meta.url),
   'utf8',
 );
+const securityMigration = readFileSync(
+  new URL('../supabase/migrations/202607290005_chat_security_retention.sql', import.meta.url),
+  'utf8',
+);
 const app = readFileSync(
   new URL('../apps/web/src/App.tsx', import.meta.url),
   'utf8',
@@ -156,6 +160,18 @@ test('chat admin writes are server-authorized, narrowly scoped and audited', () 
   assert.match(adminMigration, /p_reason NOT IN \(\s*'bot',\s*'spam'/);
 });
 
+test('security records are cleaned in batches while Legal Hold remains service-only and audited', () => {
+  assert.match(securityMigration, /CREATE FUNCTION cleanup_expired_chat_security_logs/);
+  assert.match(securityMigration, /legal_hold_until IS NULL/);
+  assert.match(securityMigration, /FOR UPDATE SKIP LOCKED/);
+  assert.match(securityMigration, /'chat-security-log-cleanup'/);
+  assert.match(securityMigration, /CREATE FUNCTION admin_set_chat_security_hold/);
+  assert.match(securityMigration, /'infinity'::TIMESTAMPTZ/);
+  assert.match(securityMigration, /security_hold_applied/);
+  assert.match(securityMigration, /GRANT EXECUTE ON FUNCTION admin_set_chat_security_hold\(UUID, UUID, BOOLEAN, TEXT\)\s+TO service_role/);
+  assert.doesNotMatch(securityMigration, /TO (?:anon|authenticated);/);
+});
+
 test('chat admin edge function verifies a non-anonymous admin without exposing private identifiers', () => {
   assert.match(adminEdgeFunction, /authClient\.auth\.getUser\(\)/);
   assert.match(adminEdgeFunction, /adminUser\.is_anonymous === true/);
@@ -171,6 +187,8 @@ test('chat admin page uses one-time email login and remains available during pub
   assert.match(app, /publicDataStatus !== 'ready' && !isChatAdminRoute/);
   assert.match(adminPage, /立即關閉聊天室/);
   assert.match(adminPage, /一般政治立場或用語爭議不在處理範圍/);
+  assert.match(adminPage, /安全紀錄保存/);
+  assert.match(adminPage, /設定 Legal Hold/);
 });
 
 test('emergency shutdown and message removal are pushed to active private chat clients', () => {

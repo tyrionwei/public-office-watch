@@ -8,6 +8,10 @@ export type ChatAdminReason =
   | 'rate_limit_evasion'
   | 'illegal_or_legal_notice';
 
+export type ChatSecurityHoldReason =
+  | 'legal_investigation'
+  | 'major_security_incident';
+
 export type ChatAdminMessage = {
   id: string;
   displayName: string;
@@ -18,6 +22,9 @@ export type ChatAdminMessage = {
   removedAt: string | null;
   profileStatus: 'active' | 'muted' | 'banned' | 'unknown';
   mutedUntil: string | null;
+  securityLogPresent: boolean;
+  securityExpiresAt: string | null;
+  securityHoldActive: boolean;
   createdAt: string;
 };
 
@@ -42,6 +49,8 @@ export type ChatAdminDashboard = {
     visibleMessages: number;
     removedMessages: number;
     mutedProfiles: number;
+    securityLogs: number;
+    heldSecurityLogs: number;
   };
   messages: ChatAdminMessage[];
   actions: ChatAdminAction[];
@@ -143,6 +152,19 @@ export async function setChatProfileMute(
   });
 }
 
+export async function setChatSecurityHold(
+  messageId: string,
+  held: boolean,
+  reason: ChatSecurityHoldReason,
+) {
+  await invoke({
+    action: 'set-security-hold',
+    messageId,
+    held,
+    reason,
+  });
+}
+
 export const chatAdminReasonOptions: Array<{
   value: ChatAdminReason;
   label: string;
@@ -162,4 +184,14 @@ export const chatAdminActionLabels: Record<string, string> = {
   message_restored: '恢復訊息',
   user_muted: '禁言使用者',
   user_unmuted: '解除禁言',
+  security_hold_applied: '設定 Legal Hold',
+  security_hold_released: '解除 Legal Hold',
 };
+
+export const chatSecurityHoldReasonOptions: Array<{
+  value: ChatSecurityHoldReason;
+  label: string;
+}> = [
+  { value: 'legal_investigation', label: '正式調查／有效權利通知' },
+  { value: 'major_security_incident', label: '重大安全事件' },
+];

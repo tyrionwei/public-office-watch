@@ -147,8 +147,77 @@ BEGIN
         'authenticated',
         'admin_set_chat_message_visibility(uuid,uuid,boolean,text)',
         'EXECUTE'
+    ) OR has_function_privilege(
+        'anon',
+        'admin_set_chat_security_hold(uuid,uuid,boolean,text)',
+        'EXECUTE'
+    ) OR has_function_privilege(
+        'authenticated',
+        'cleanup_expired_chat_security_logs(integer)',
+        'EXECUTE'
     ) THEN
         RAISE EXCEPTION 'public roles must not execute chat admin functions';
+    END IF;
+END;
+$$;
+
+SELECT *
+FROM admin_set_chat_security_hold(
+    '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+    (SELECT id FROM moderation_message),
+    TRUE,
+    'legal_investigation'
+);
+
+UPDATE chat_message_security_logs
+SET expires_at = NOW() - INTERVAL '1 day'
+WHERE message_id = (SELECT id FROM moderation_message);
+
+DO $$
+BEGIN
+    IF cleanup_expired_chat_security_logs(1000) <> 0 THEN
+        RAISE EXCEPTION 'held security log must not be deleted';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM chat_message_security_logs
+        WHERE message_id = (SELECT id FROM moderation_message)
+          AND legal_hold_until = 'infinity'::TIMESTAMPTZ
+    ) THEN
+        RAISE EXCEPTION 'expected active Legal Hold';
+    END IF;
+END;
+$$;
+
+SELECT *
+FROM admin_set_chat_security_hold(
+    '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+    (SELECT id FROM moderation_message),
+    FALSE,
+    'hold_released'
+);
+
+DO $$
+BEGIN
+    IF cleanup_expired_chat_security_logs(1000) <> 1 THEN
+        RAISE EXCEPTION 'released expired security log should be deleted';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM chat_message_security_logs
+        WHERE message_id = (SELECT id FROM moderation_message)
+    ) THEN
+        RAISE EXCEPTION 'expected security log cleanup';
+    END IF;
+
+    IF (
+        SELECT COUNT(*)
+        FROM chat_moderation_actions
+        WHERE admin_user_id = '118f9e79-7399-7fd0-bfca-5aae32014bd9'
+    ) <> 5 THEN
+        RAISE EXCEPTION 'expected audited Legal Hold actions';
     END IF;
 END;
 $$;

@@ -6,21 +6,28 @@ import {
   ChatAdminApiError,
   chatAdminActionLabels,
   chatAdminReasonOptions,
+  chatSecurityHoldReasonOptions,
   loadChatAdminDashboard,
   loadChatAdminSession,
   requestChatAdminMagicLink,
   setChatEnabled,
   setChatMessageVisibility,
   setChatProfileMute,
+  setChatSecurityHold,
   signOutChatAdmin,
   type ChatAdminDashboard,
   type ChatAdminReason,
+  type ChatSecurityHoldReason,
 } from '../lib/chatAdmin';
 
 type AccessState = 'loading' | 'signed-out' | 'checking' | 'ready' | 'forbidden';
 
 const reasonLabels = Object.fromEntries(
-  chatAdminReasonOptions.map((option) => [option.value, option.label]),
+  [
+    ...chatAdminReasonOptions,
+    ...chatSecurityHoldReasonOptions,
+    { value: 'hold_released', label: '保全需求結束' },
+  ].map((option) => [option.value, option.label]),
 );
 
 function formatDateTime(value: string | null) {
@@ -41,6 +48,8 @@ function displayError(error: unknown) {
     if (error.code === 'CHAT_ADMIN_FORBIDDEN') return '此帳號沒有聊天室管理權限。';
     if (error.code === 'CHAT_ADMIN_AUTH_FAILED') return '登入未完成，請確認 Email 後再試。';
     if (error.code === 'CHAT_ADMIN_MESSAGE_HELD') return '此訊息正處於法律保全狀態，不能由一般管理操作變更。';
+    if (error.code === 'CHAT_ADMIN_SECURITY_LOG_NOT_FOUND') return '這則訊息的安全紀錄已到期清除，無法設定 Legal Hold。';
+    if (error.code === 'CHAT_ADMIN_INVALID_HOLD_REASON') return '請選擇有效的安全紀錄保全原因。';
   }
   return '操作未完成，請稍後再試。';
 }
@@ -51,6 +60,7 @@ export function InternalChatAdminPage() {
   const [email, setEmail] = useState('');
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [reason, setReason] = useState<ChatAdminReason>('spam');
+  const [securityHoldReason, setSecurityHoldReason] = useState<ChatSecurityHoldReason>('legal_investigation');
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -131,6 +141,17 @@ export function InternalChatAdminPage() {
     } finally {
       setBusyAction(null);
     }
+  }
+
+  function handleSecurityHold(messageId: string, currentlyHeld: boolean) {
+    const prompt = currentlyHeld
+      ? '確定解除這則訊息的 Legal Hold？若安全紀錄已超過 180 日，將在下一次清理時刪除。'
+      : '確定設定 Legal Hold？安全紀錄將停止自動清理，直到管理員解除。';
+    if (!window.confirm(prompt)) return;
+    void runAction(
+      `security-hold-${messageId}`,
+      () => setChatSecurityHold(messageId, !currentlyHeld, securityHoldReason),
+    );
   }
 
   if (accessState === 'loading' || accessState === 'checking' && !dashboard) {
@@ -241,6 +262,40 @@ export function InternalChatAdminPage() {
           </SectionPanel>
         </div>
 
+        <SectionPanel title="安全紀錄保存" eyebrow="180-day retention / legal hold">
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.8fr)]">
+            <div>
+              <dl className="grid grid-cols-2 gap-3 text-center sm:max-w-md">
+                <div className="border border-line/70 bg-bg/35 p-3">
+                  <dt className="text-xs text-slate-500">保存中的安全紀錄</dt>
+                  <dd className="mt-2 font-display text-2xl text-white">{dashboard.counts.securityLogs}</dd>
+                </div>
+                <div className="border border-signal/30 bg-signal/[0.06] p-3">
+                  <dt className="text-xs text-slate-500">Legal Hold</dt>
+                  <dd className="mt-2 font-display text-2xl text-signal">{dashboard.counts.heldSecurityLogs}</dd>
+                </div>
+              </dl>
+              <p className="mt-3 text-xs leading-5 text-slate-500">
+                一般安全紀錄保存 180 日後由系統分批清除。此頁只顯示保存狀態，不顯示或解密 IP。
+              </p>
+            </div>
+            <div>
+              <label htmlFor="security-hold-reason" className="block text-xs text-slate-400">Legal Hold 原因</label>
+              <select
+                id="security-hold-reason"
+                value={securityHoldReason}
+                onChange={(event) => setSecurityHoldReason(event.target.value as ChatSecurityHoldReason)}
+                className="mt-2 w-full border border-line bg-bg px-3 py-2 text-sm text-white"
+              >
+                {chatSecurityHoldReasonOptions.map((option) => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+              <p className="mt-2 text-xs leading-5 text-slate-500">僅限正式調查、有效權利通知或重大安全事件，所有設定與解除都會留下稽核紀錄。</p>
+            </div>
+          </div>
+        </SectionPanel>
+
         <SectionPanel title="近期訊息" eyebrow="latest 50">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
             <label htmlFor="moderation-reason" className="text-xs text-slate-400">處理原因</label>
@@ -263,6 +318,13 @@ export function InternalChatAdminPage() {
                       <p className="mt-2 break-words text-sm leading-6 text-slate-200">{message.body}</p>
                       <p className="mt-2 text-xs text-slate-500">{formatDateTime(message.createdAt)}{isRemoved ? `・已隱藏：${reasonLabels[message.removalReason ?? ''] ?? message.removalReason}` : ''}</p>
                       {isMuted ? <p className="mt-1 text-xs text-accent">禁言至 {formatDateTime(message.mutedUntil)}</p> : null}
+                      {message.securityHoldActive ? (
+                        <p className="mt-1 text-xs text-signal">Legal Hold 生效中・停止自動清理</p>
+                      ) : message.securityLogPresent ? (
+                        <p className="mt-1 text-xs text-slate-500">安全紀錄保存至 {formatDateTime(message.securityExpiresAt)}</p>
+                      ) : (
+                        <p className="mt-1 text-xs text-slate-600">安全紀錄已到期清除</p>
+                      )}
                     </div>
                     <div className="flex shrink-0 flex-wrap gap-2">
                       <button type="button" disabled={busyAction !== null || message.moderationStatus === 'held'} onClick={() => void runAction(`visibility-${message.id}`, () => setChatMessageVisibility(message.id, isRemoved, reason))} className="border border-line px-3 py-2 text-xs text-slate-300 hover:text-white disabled:opacity-40">
@@ -276,6 +338,14 @@ export function InternalChatAdminPage() {
                           <button type="button" disabled={busyAction !== null} onClick={() => void runAction(`mute-1440-${message.id}`, () => setChatProfileMute(message.id, true, 1440, reason))} className="border border-accent/50 px-3 py-2 text-xs text-accent disabled:opacity-40">禁言 24 小時</button>
                         </>
                       )}
+                      <button
+                        type="button"
+                        disabled={busyAction !== null || !message.securityLogPresent}
+                        onClick={() => handleSecurityHold(message.id, message.securityHoldActive)}
+                        className={`border px-3 py-2 text-xs disabled:opacity-40 ${message.securityHoldActive ? 'border-signal/60 text-signal' : 'border-line text-slate-400'}`}
+                      >
+                        {message.securityHoldActive ? '解除 Legal Hold' : '設定 Legal Hold'}
+                      </button>
                     </div>
                   </div>
                 </article>

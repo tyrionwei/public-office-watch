@@ -15,6 +15,11 @@ const moderationReasons = new Set([
   'illegal_or_legal_notice',
 ]);
 
+const securityHoldReasons = new Set([
+  'legal_investigation',
+  'major_security_incident',
+]);
+
 function jsonResponse(status: number, payload: unknown) {
   return new Response(JSON.stringify(payload), {
     status,
@@ -41,6 +46,8 @@ function adminError(error: { message?: string; code?: string } | null) {
     'CHAT_ADMIN_MESSAGE_NOT_FOUND',
     'CHAT_ADMIN_MESSAGE_HELD',
     'CHAT_ADMIN_TARGET_BANNED',
+    'CHAT_ADMIN_INVALID_HOLD_REASON',
+    'CHAT_ADMIN_SECURITY_LOG_NOT_FOUND',
   ];
   return knownCodes.find((code) => error?.message?.includes(code));
 }
@@ -90,6 +97,8 @@ Deno.serve(async (request) => {
         visibleCountResult,
         removedCountResult,
         mutedCountResult,
+        securityCountResult,
+        securityHoldCountResult,
       ] = await Promise.all([
         serviceClient
           .from('chat_settings')
@@ -120,6 +129,8 @@ Deno.serve(async (request) => {
         serviceClient.from('chat_messages').select('id', { count: 'exact', head: true }).eq('moderation_status', 'visible'),
         serviceClient.from('chat_messages').select('id', { count: 'exact', head: true }).eq('moderation_status', 'removed'),
         serviceClient.from('chat_profiles').select('user_id', { count: 'exact', head: true }).eq('status', 'muted'),
+        serviceClient.from('chat_message_security_logs').select('message_id', { count: 'exact', head: true }),
+        serviceClient.from('chat_message_security_logs').select('message_id', { count: 'exact', head: true }).not('legal_hold_until', 'is', null),
       ]);
 
       const readError = settingsResult.error
@@ -127,7 +138,9 @@ Deno.serve(async (request) => {
         ?? actionsResult.error
         ?? visibleCountResult.error
         ?? removedCountResult.error
-        ?? mutedCountResult.error;
+        ?? mutedCountResult.error
+        ?? securityCountResult.error
+        ?? securityHoldCountResult.error;
       if (readError) {
         console.error('chat admin dashboard failed', readError.code);
         return jsonResponse(500, { error: 'CHAT_ADMIN_SERVER_ERROR' });
@@ -146,12 +159,21 @@ Deno.serve(async (request) => {
           .in('user_id', Array.from(userIds))
         : { data: [], error: null };
 
-      if (profilesResult.error) {
-        console.error('chat admin profiles failed', profilesResult.error.code);
+      const messageIds = (messagesResult.data ?? []).map((message) => message.id);
+      const securityResult = messageIds.length > 0
+        ? await serviceClient
+          .from('chat_message_security_logs')
+          .select('message_id,expires_at,legal_hold_until')
+          .in('message_id', messageIds)
+        : { data: [], error: null };
+
+      if (profilesResult.error || securityResult.error) {
+        console.error('chat admin private status failed', profilesResult.error?.code ?? securityResult.error?.code);
         return jsonResponse(500, { error: 'CHAT_ADMIN_SERVER_ERROR' });
       }
 
       const profiles = new Map((profilesResult.data ?? []).map((profile) => [profile.user_id, profile]));
+      const securityLogs = new Map((securityResult.data ?? []).map((log) => [log.message_id, log]));
       return jsonResponse(200, {
         adminEmail: adminUser.email ?? null,
         status: settingsResult.data,
@@ -159,9 +181,12 @@ Deno.serve(async (request) => {
           visibleMessages: visibleCountResult.count ?? 0,
           removedMessages: removedCountResult.count ?? 0,
           mutedProfiles: mutedCountResult.count ?? 0,
+          securityLogs: securityCountResult.count ?? 0,
+          heldSecurityLogs: securityHoldCountResult.count ?? 0,
         },
         messages: (messagesResult.data ?? []).map((message) => {
           const profile = profiles.get(message.user_id);
+          const securityLog = securityLogs.get(message.id);
           return {
             id: message.id,
             displayName: message.display_name_snapshot,
@@ -172,6 +197,9 @@ Deno.serve(async (request) => {
             removedAt: message.removed_at,
             profileStatus: profile?.status ?? 'unknown',
             mutedUntil: profile?.muted_until ?? null,
+            securityLogPresent: Boolean(securityLog),
+            securityExpiresAt: securityLog?.expires_at ?? null,
+            securityHoldActive: securityLog?.legal_hold_until != null,
             createdAt: message.created_at,
           };
         }),
@@ -250,6 +278,27 @@ Deno.serve(async (request) => {
         return jsonResponse(code === 'CHAT_ADMIN_FORBIDDEN' ? 403 : 400, { error: code ?? 'CHAT_ADMIN_SERVER_ERROR' });
       }
       return jsonResponse(200, { profile: data });
+    }
+
+    if (payload.action === 'set-security-hold') {
+      if (!isUuid(payload.messageId) || typeof payload.held !== 'boolean') {
+        return jsonResponse(400, { error: 'CHAT_ADMIN_INVALID_REQUEST' });
+      }
+      const reason = payload.held ? payload.reason : 'hold_released';
+      if (typeof reason !== 'string' || (payload.held && !securityHoldReasons.has(reason))) {
+        return jsonResponse(400, { error: 'CHAT_ADMIN_INVALID_HOLD_REASON' });
+      }
+      const { data, error } = await serviceClient.rpc('admin_set_chat_security_hold', {
+        p_admin_user_id: adminUser.id,
+        p_message_id: payload.messageId,
+        p_held: payload.held,
+        p_reason: reason,
+      }).single();
+      if (error) {
+        const code = adminError(error);
+        return jsonResponse(code === 'CHAT_ADMIN_FORBIDDEN' ? 403 : 400, { error: code ?? 'CHAT_ADMIN_SERVER_ERROR' });
+      }
+      return jsonResponse(200, { security: data });
     }
 
     return jsonResponse(400, { error: 'CHAT_ADMIN_UNKNOWN_ACTION' });

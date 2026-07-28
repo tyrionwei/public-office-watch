@@ -21,7 +21,7 @@ const reviewedRelations = [
   'regions',
   'search_results',
 ];
-const reviewedFunctions = ['person_claims_for'];
+const reviewedFunctions = ['election_race_page', 'person_claims_for'];
 const issues = [];
 
 function read(relativePath) {

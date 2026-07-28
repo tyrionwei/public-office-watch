@@ -82,6 +82,7 @@ export type PublishedPublicDataBridge = Pick<
   PublicDataProvider,
   | 'loadElectionIndex'
   | 'loadElectionRaceFacets'
+  | 'loadElectionRacePage'
   | 'loadPeoplePage'
   | 'loadPersonProfiles'
   | 'searchPublicRecords'
@@ -357,6 +358,10 @@ export function createPublishedPublicDataBridge(
 
     loadElectionRaceFacets(electionIds) {
       return adapter.loadElectionRaceFacets(electionIds);
+    },
+
+    loadElectionRacePage(eventKey, electionIds, filters, page, pageSize) {
+      return adapter.loadElectionRacePage(eventKey, electionIds, filters, page, pageSize);
     },
 
     async loadPeoplePage(filters, page, pageSize) {

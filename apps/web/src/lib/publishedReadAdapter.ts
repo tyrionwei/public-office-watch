@@ -11,6 +11,7 @@ import type {
   PublicRegion,
 } from '../types/publicViews';
 import {
+  PUBLIC_ELECTION_RACE_PAGE_SIZE,
   PUBLIC_PEOPLE_PAGE_SIZE,
   PUBLIC_SEARCH_RESULT_LIMIT,
   normalizePublishedSearchQuery,
@@ -24,6 +25,8 @@ export const REGION_RACE_LIMIT = 24;
 export const ELECTION_INDEX_LIMIT = 500;
 export const ELECTION_ID_BATCH_SIZE = 200;
 export const ELECTION_FACET_BATCH_LIMIT = 1000;
+export const ELECTION_RACE_PAGE_ELECTION_LIMIT = 500;
+export const ELECTION_RACE_PAGE_SIZE = PUBLIC_ELECTION_RACE_PAGE_SIZE;
 export const PERSON_PROFILE_BATCH_LIMIT = 4;
 export const PERSON_CANDIDATE_LIMIT = 100;
 export const PERSON_CLAIM_LIMIT = 400;
@@ -337,6 +340,11 @@ export type PublishedElectionIndexRows = {
   raceSummaryRows: PublishedElectionRaceSummaryRow[];
 };
 
+export type PublishedElectionRacePage = {
+  items: PublicRace[];
+  total: number;
+};
+
 export type PublishedPersonProfileRows = {
   personRows: PublishedPersonProfileRow[];
   candidateRows: PublicCandidate[];
@@ -381,6 +389,13 @@ export type PublishedReadAdapter = {
   loadRegionPage(regionSlug: string): Promise<PublishedRegionPageRows>;
   loadElectionIndex(): Promise<PublishedElectionIndexRows>;
   loadElectionRaceFacets(electionIds: string[]): Promise<PublishedElectionRaceFacetRow[]>;
+  loadElectionRacePage(
+    eventKey: string,
+    electionIds: string[],
+    filters: { raceTypes?: PublicRace['race_type'][]; regionKey?: string },
+    page: number,
+    pageSize: number,
+  ): Promise<PublishedElectionRacePage>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
   loadPersonProfiles(personIds: string[]): Promise<PublishedPersonProfileRows>;
   search(query: string): Promise<PublishedSearchResultRow[]>;
@@ -426,6 +441,18 @@ function normalizeElectionIds(electionIds: string[]) {
   return Array.from(new Set(
     electionIds.map((electionId) => electionId.trim()).filter(Boolean),
   )).slice(0, ELECTION_INDEX_LIMIT);
+}
+
+function normalizeElectionRacePageIds(electionIds: string[]) {
+  const normalized = Array.from(new Set(
+    electionIds.map((electionId) => electionId.trim()).filter(Boolean),
+  ));
+  if (normalized.length > ELECTION_RACE_PAGE_ELECTION_LIMIT) {
+    throw new Error(
+      `Published election race pages accept at most ${ELECTION_RACE_PAGE_ELECTION_LIMIT} election ids.`,
+    );
+  }
+  return normalized;
 }
 
 export function createPublishedReadAdapter(client: PublishedSchemaClient): PublishedReadAdapter {
@@ -583,6 +610,42 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       }
 
       return facetRows;
+    },
+
+    async loadElectionRacePage(eventKey, rawElectionIds, filters, page, pageSize) {
+      const electionIds = normalizeElectionRacePageIds(rawElectionIds);
+      if (electionIds.length === 0) return { items: [], total: 0 };
+
+      const normalizedEventKey = eventKey.trim();
+      if (!normalizedEventKey) {
+        throw new Error('Published election race pages require an event key.');
+      }
+
+      const range = toPublicPageRange(page, pageSize);
+      const normalizedPageSize = range.to - range.from + 1;
+      const normalizedPage = Math.floor(range.from / normalizedPageSize) + 1;
+      const raceTypes = Array.from(new Set(filters.raceTypes ?? []));
+      const regionKey = filters.regionKey?.trim() || null;
+      const response = await client
+        .schema('published')
+        .rpc<PublishedElectionRacePage>('election_race_page', {
+          p_event_key: normalizedEventKey,
+          p_election_ids: electionIds,
+          p_race_types: raceTypes.length > 0 ? raceTypes : null,
+          p_region_key: regionKey,
+          p_page: normalizedPage,
+          p_page_size: normalizedPageSize,
+        });
+      const rows = getRowsOrThrow(response, 'Published election race page');
+      const result = rows[0];
+      if (!result || !Array.isArray(result.items) || !Number.isFinite(Number(result.total))) {
+        throw new Error('Published election race page returned an invalid response.');
+      }
+      if (result.items.length > ELECTION_RACE_PAGE_SIZE) {
+        throw new Error(`Published election race page exceeded the ${ELECTION_RACE_PAGE_SIZE}-row limit.`);
+      }
+
+      return { items: result.items, total: Number(result.total) };
     },
 
     async loadPeoplePage(request) {

@@ -43,6 +43,9 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
     async loadElectionRaceFacets() {
       return [];
     },
+    async loadElectionRacePage() {
+      return { items: [], total: 0 };
+    },
     async loadPeoplePage() {
       return { rows: [], total: 0 };
     },
@@ -498,4 +501,47 @@ test('bridge maps election index and facets into public provider contracts', asy
   });
   assert.deepEqual(await bridge.loadElectionRaceFacets(['election-2028']), [facet]);
   assert.deepEqual(facetRequests, [['election-2028']]);
+});
+
+test('bridge forwards election race pagination without remapping public rows', async () => {
+  const requests: unknown[][] = [];
+  const page = {
+    items: [{
+      race_id: 'race-1',
+      election_id: 'election-1',
+      election_name: '地方公職人員選舉',
+      region_id: null,
+      region_name: null,
+      region_slug: null,
+      race_type: 'village_chief' as const,
+      title: '里長選舉',
+      voting_date: '2022-11-26',
+      status: 'completed' as const,
+      source_name: null,
+      source_url: null,
+    }],
+    total: 1,
+  };
+  const adapter = createAdapter({
+    async loadElectionRacePage(...args) {
+      requests.push(args);
+      return page;
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter);
+  const filters = { raceTypes: ['village_chief' as const], regionKey: '新北市' };
+
+  assert.deepEqual(
+    await bridge.loadElectionRacePage(
+      '2022-2022-11-26-local',
+      ['election-1'],
+      filters,
+      2,
+      20,
+    ),
+    page,
+  );
+  assert.deepEqual(requests, [[
+    '2022-2022-11-26-local', ['election-1'], filters, 2, 20,
+  ]]);
 });

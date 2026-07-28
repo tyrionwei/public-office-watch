@@ -4,6 +4,8 @@ import {
   ELECTION_FACET_BATCH_LIMIT,
   ELECTION_ID_BATCH_SIZE,
   ELECTION_INDEX_LIMIT,
+  ELECTION_RACE_PAGE_ELECTION_LIMIT,
+  ELECTION_RACE_PAGE_SIZE,
   HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
@@ -432,5 +434,93 @@ test('person profile reads reject the claims RPC sentinel row', async () => {
   await assert.rejects(
     () => adapter.loadPersonProfiles(['person-1']),
     new RegExp(`Published person claims exceeded the ${PERSON_CLAIM_LIMIT}-row batch limit`),
+  );
+});
+
+test('election race page uses one bounded RPC with normalized filters', async () => {
+  const race = {
+    race_id: 'race-1',
+    election_id: 'election-1',
+    election_name: '地方公職人員選舉',
+    region_id: 'region-1',
+    region_name: '新北市板橋區',
+    region_slug: 'new-taipei-banqiao',
+    race_type: 'village_chief',
+    title: '里長選舉',
+    voting_date: '2022-11-26',
+    status: 'completed',
+    source_name: '中選會',
+    source_url: 'https://example.test/race-1',
+  };
+  const fake = createFakeClient({
+    'rpc:election_race_page': {
+      data: [{ items: [race], total: 1032 }],
+      error: null,
+      count: null,
+    },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  const result = await adapter.loadElectionRacePage(
+    ' 2022-2022-11-26-local ',
+    ['election-2', 'election-1', 'election-2'],
+    { raceTypes: ['village_chief', 'village_chief'], regionKey: ' 新北市 ' },
+    2,
+    200,
+  );
+
+  assert.deepEqual(result, { items: [race], total: 1032 });
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['rpc', 'election_race_page', {
+      p_event_key: '2022-2022-11-26-local',
+      p_election_ids: ['election-2', 'election-1'],
+      p_race_types: ['village_chief'],
+      p_region_key: '新北市',
+      p_page: 2,
+      p_page_size: ELECTION_RACE_PAGE_SIZE,
+    }],
+  ]);
+});
+
+test('election race page skips the RPC when no election ids remain', async () => {
+  const fake = createFakeClient({});
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(
+    await adapter.loadElectionRacePage('event', [' ', ''], {}, 1, 20),
+    { items: [], total: 0 },
+  );
+  assert.deepEqual(fake.calls, []);
+});
+
+test('election race page rejects oversized election id batches', async () => {
+  const fake = createFakeClient({});
+  const adapter = createPublishedReadAdapter(fake.client);
+  const electionIds = Array.from(
+    { length: ELECTION_RACE_PAGE_ELECTION_LIMIT + 1 },
+    (_, index) => `election-${index}`,
+  );
+
+  await assert.rejects(
+    adapter.loadElectionRacePage('event', electionIds, {}, 1, 20),
+    new RegExp(`at most ${ELECTION_RACE_PAGE_ELECTION_LIMIT} election ids`),
+  );
+  assert.deepEqual(fake.calls, []);
+});
+
+test('election race page surfaces function failures', async () => {
+  const fake = createFakeClient({
+    'rpc:election_race_page': {
+      data: null,
+      error: { message: 'function unavailable' },
+      count: null,
+    },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await assert.rejects(
+    adapter.loadElectionRacePage('event', ['election-1'], {}, 1, 20),
+    /Published election race page query failed: function unavailable/,
   );
 });

@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  ELECTION_FACET_BATCH_LIMIT,
+  ELECTION_ID_BATCH_SIZE,
+  ELECTION_INDEX_LIMIT,
   HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
@@ -259,5 +262,62 @@ test('region page resolves one slug and bounds direct children and related races
     ['limit', 1],
     ['limit', REGION_RACE_LIMIT],
     ['limit', REGION_CHILD_LIMIT],
+  ]);
+});
+
+test('election index bounds elections and loads only matching summaries', async () => {
+  const elections = [
+    { election_id: 'election-2', name: '選舉二' },
+    { election_id: 'election-1', name: '選舉一' },
+  ];
+  const summaries = [
+    { election_id: 'election-1', race_count: 3, race_types: ['legislator'] },
+    { election_id: 'election-2', race_count: 1, race_types: ['president'] },
+  ];
+  const fake = createFakeClient({
+    elections: { data: elections, error: null, count: null },
+    election_race_summaries: { data: summaries, error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadElectionIndex(), {
+    electionRows: elections,
+    raceSummaryRows: summaries,
+  });
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
+    ['from', 'elections'],
+    ['from', 'election_race_summaries'],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'in'), [
+    ['in', 'election_id', ['election-2', 'election-1']],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
+    ['limit', ELECTION_INDEX_LIMIT],
+    ['limit', 2],
+  ]);
+});
+
+test('election facets de-duplicate and batch at 200 ids with a fixed row ceiling', async () => {
+  const electionIds = Array.from({ length: ELECTION_ID_BATCH_SIZE + 1 }, (_, index) => `election-${index}`);
+  const firstFacet = { election_id: 'election-0', race_type: 'president', region_key: 'national' };
+  const secondFacet = { election_id: `election-${ELECTION_ID_BATCH_SIZE}`, race_type: 'legislator', region_key: 'national' };
+  const fake = createFakeClient({
+    election_race_facets: [
+      { data: [firstFacet], error: null, count: 1 },
+      { data: [secondFacet], error: null, count: 1 },
+    ],
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(
+    await adapter.loadElectionRaceFacets([...electionIds, electionIds[0], '']),
+    [firstFacet, secondFacet],
+  );
+  const idFilters = fake.calls.filter((call) => call[0] === 'in');
+  assert.equal((idFilters[0]?.[2] as string[]).length, ELECTION_ID_BATCH_SIZE);
+  assert.deepEqual(idFilters[1], ['in', 'election_id', [`election-${ELECTION_ID_BATCH_SIZE}`]]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
+    ['limit', ELECTION_FACET_BATCH_LIMIT],
+    ['limit', ELECTION_FACET_BATCH_LIMIT],
   ]);
 });

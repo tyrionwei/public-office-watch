@@ -34,6 +34,9 @@ summary AS (
         COUNT(*) FILTER (
             WHERE can_select
               AND relname NOT IN (
+                  'election_race_facets',
+                  'election_race_summaries',
+                  'elections',
                   'home_region_summary',
                   'home_ticker',
                   'people_directory',

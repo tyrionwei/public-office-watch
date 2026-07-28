@@ -28,9 +28,33 @@ const peopleRow: PublishedPeopleDirectoryRow = {
   list_role_order: 3,
 };
 
+function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadAdapter {
+  return {
+    async loadHomePage() {
+      return { tickerRows: [], regionSummaryRows: [], regionRows: [], raceRows: [] };
+    },
+    async loadRegionPage() {
+      return { regionRow: null, summaryRow: null, childRegionRows: [], raceRows: [] };
+    },
+    async loadElectionIndex() {
+      return { electionRows: [], raceSummaryRows: [] };
+    },
+    async loadElectionRaceFacets() {
+      return [];
+    },
+    async loadPeoplePage() {
+      return { rows: [], total: 0 };
+    },
+    async search() {
+      return [];
+    },
+    ...overrides,
+  };
+}
+
 test('bridge resolves region filters and maps a published people page to frontend rows', async () => {
   const requests: PublishedPeoplePageRequest[] = [];
-  const adapter: PublishedReadAdapter = {
+  const adapter = createAdapter({
     async loadHomePage() {
       return { tickerRows: [], regionSummaryRows: [], regionRows: [], raceRows: [] };
     },
@@ -44,7 +68,7 @@ test('bridge resolves region filters and maps a published people page to fronten
     async search() {
       return [];
     },
-  };
+  });
   const bridge = createPublishedPublicDataBridge(adapter, (regionId) => ({
     regionId,
     regionName: '臺北市',
@@ -104,7 +128,7 @@ test('bridge resolves region filters and maps a published people page to fronten
 });
 
 test('bridge maps compact search rows to existing frontend result types', async () => {
-  const adapter: PublishedReadAdapter = {
+  const adapter = createAdapter({
     async loadHomePage() {
       return { tickerRows: [], regionSummaryRows: [], regionRows: [], raceRows: [] };
     },
@@ -134,7 +158,7 @@ test('bridge maps compact search rows to existing frontend result types', async 
         },
       ];
     },
-  };
+  });
   const bridge = createPublishedPublicDataBridge(adapter);
 
   assert.deepEqual(await bridge.searchPublicRecords('臺北'), [
@@ -159,7 +183,7 @@ test('bridge maps compact search rows to existing frontend result types', async 
 
 test('bridge keeps a safe region fallback when no resolver is provided', async () => {
   let request: PublishedPeoplePageRequest | null = null;
-  const adapter: PublishedReadAdapter = {
+  const adapter = createAdapter({
     async loadHomePage() {
       return { tickerRows: [], regionSummaryRows: [], regionRows: [], raceRows: [] };
     },
@@ -173,7 +197,7 @@ test('bridge keeps a safe region fallback when no resolver is provided', async (
     async search() {
       return [];
     },
-  };
+  });
   const bridge = createPublishedPublicDataBridge(adapter);
 
   await bridge.loadPeoplePage({ regionId: '臺北市' }, 1, 20);
@@ -232,7 +256,7 @@ test('bridge maps bounded home and region reads into existing frontend contracts
     voting_date: '2026-11-28',
     status: 'upcoming' as const,
   };
-  const adapter: PublishedReadAdapter = {
+  const adapter = createAdapter({
     async loadHomePage() {
       return {
         tickerRows: [{
@@ -259,7 +283,7 @@ test('bridge maps bounded home and region reads into existing frontend contracts
     async search() {
       return [];
     },
-  };
+  });
   const bridge = createPublishedPublicDataBridge(adapter);
 
   const home = await bridge.loadHomePageData();
@@ -316,4 +340,47 @@ test('bridge maps bounded home and region reads into existing frontend contracts
   assert.equal(regionPage.card?.id, 'taipei');
   assert.deepEqual(regionPage.childRegions.map((child) => [child.id, child.parentId]), [['xinyi', 'taipei']]);
   assert.deepEqual(regionPage.relatedRaces.map((item) => item.id), ['race-taipei-mayor']);
+});
+
+test('bridge maps election index and facets into public provider contracts', async () => {
+  const election = {
+    election_id: 'election-2028',
+    name: '2028 全國選舉',
+    year: 2028,
+    election_type: 'presidential' as const,
+    voting_date: '2028-01-08',
+    status: 'upcoming' as const,
+    source_name: '中央選舉委員會',
+    source_url: 'https://example.test/election-2028',
+  };
+  const summary = {
+    election_id: 'election-2028',
+    race_count: 1,
+    race_types: ['president' as const],
+  };
+  const facet = {
+    election_id: 'election-2028',
+    race_type: 'president' as const,
+    region_key: 'national',
+    region_label: '全國',
+    race_count: 1,
+  };
+  const facetRequests: string[][] = [];
+  const adapter = createAdapter({
+    async loadElectionIndex() {
+      return { electionRows: [election], raceSummaryRows: [summary] };
+    },
+    async loadElectionRaceFacets(electionIds) {
+      facetRequests.push(electionIds);
+      return [facet];
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter);
+
+  assert.deepEqual(await bridge.loadElectionIndex(), {
+    elections: [election],
+    raceSummaries: [summary],
+  });
+  assert.deepEqual(await bridge.loadElectionRaceFacets(['election-2028']), [facet]);
+  assert.deepEqual(facetRequests, [['election-2028']]);
 });

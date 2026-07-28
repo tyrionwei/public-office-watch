@@ -75,7 +75,13 @@ export type PublishedRegionPageData = {
   relatedRaces: UpcomingRace[];
 };
 
-export type PublishedPublicDataBridge = Pick<PublicDataProvider, 'loadPeoplePage' | 'searchPublicRecords'> & {
+export type PublishedPublicDataBridge = Pick<
+  PublicDataProvider,
+  | 'loadElectionIndex'
+  | 'loadElectionRaceFacets'
+  | 'loadPeoplePage'
+  | 'searchPublicRecords'
+> & {
   loadHomePageData(): Promise<HomePageData>;
   loadRegionPageData(regionSlug: string): Promise<PublishedRegionPageData>;
 };
@@ -304,6 +310,18 @@ export function createPublishedPublicDataBridge(
         childRegions: rows.childRegionRows.map((region, index) => mapRegionNode(region, index, rows.regionRow?.slug ?? null)),
         relatedRaces: rows.raceRows.map(mapRace),
       };
+    },
+
+    async loadElectionIndex() {
+      const rows = await adapter.loadElectionIndex();
+      return {
+        elections: rows.electionRows,
+        raceSummaries: rows.raceSummaryRows,
+      };
+    },
+
+    loadElectionRaceFacets(electionIds) {
+      return adapter.loadElectionRaceFacets(electionIds);
     },
 
     async loadPeoplePage(filters, page, pageSize) {

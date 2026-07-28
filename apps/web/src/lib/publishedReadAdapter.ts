@@ -1,4 +1,7 @@
 import type {
+  PublicElection,
+  PublicElectionRaceFacet,
+  PublicElectionRaceSummary,
   PublicPersonRole,
   PublicPersonStatus,
   PublicRace,
@@ -15,6 +18,9 @@ export const HOME_REGION_LIMIT = 32;
 export const HOME_RACE_LIMIT = 24;
 export const REGION_CHILD_LIMIT = 64;
 export const REGION_RACE_LIMIT = 24;
+export const ELECTION_INDEX_LIMIT = 500;
+export const ELECTION_ID_BATCH_SIZE = 200;
+export const ELECTION_FACET_BATCH_LIMIT = 1000;
 
 const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
   'announced',
@@ -23,6 +29,31 @@ const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
   'candidates_announced',
   'voting',
 ];
+
+export const ELECTION_COLUMNS = [
+  'election_id',
+  'name',
+  'year',
+  'election_type',
+  'voting_date',
+  'status',
+  'source_name',
+  'source_url',
+].join(',');
+
+export const ELECTION_RACE_SUMMARY_COLUMNS = [
+  'election_id',
+  'race_count',
+  'race_types',
+].join(',');
+
+export const ELECTION_RACE_FACET_COLUMNS = [
+  'election_id',
+  'race_type',
+  'region_key',
+  'region_label',
+  'race_count',
+].join(',');
 
 export const HOME_TICKER_COLUMNS = [
   'election_id',
@@ -114,6 +145,12 @@ export type PublishedRegionSummaryRow = {
 
 export type PublishedRegionRow = PublicRegion;
 
+export type PublishedElectionRow = PublicElection;
+
+export type PublishedElectionRaceSummaryRow = PublicElectionRaceSummary;
+
+export type PublishedElectionRaceFacetRow = PublicElectionRaceFacet;
+
 export type PublishedRaceRow = Pick<
   PublicRace,
   | 'race_id'
@@ -187,6 +224,11 @@ export type PublishedRegionPageRows = {
   raceRows: PublishedRaceRow[];
 };
 
+export type PublishedElectionIndexRows = {
+  electionRows: PublishedElectionRow[];
+  raceSummaryRows: PublishedElectionRaceSummaryRow[];
+};
+
 type PublishedQueryError = {
   message: string;
 };
@@ -204,7 +246,7 @@ export interface PublishedQueryBuilder<Row> extends PromiseLike<PublishedQueryRe
   like(column: string, pattern: string): PublishedQueryBuilder<Row>;
   in(column: string, values: readonly unknown[]): PublishedQueryBuilder<Row>;
   or(filters: string): PublishedQueryBuilder<Row>;
-  order(column: string, options: { ascending: boolean }): PublishedQueryBuilder<Row>;
+  order(column: string, options: { ascending: boolean; nullsFirst?: boolean }): PublishedQueryBuilder<Row>;
   range(from: number, to: number): PublishedQueryBuilder<Row>;
   limit(count: number): PublishedQueryBuilder<Row>;
 }
@@ -218,6 +260,8 @@ export interface PublishedSchemaClient {
 export type PublishedReadAdapter = {
   loadHomePage(): Promise<PublishedHomePageRows>;
   loadRegionPage(regionSlug: string): Promise<PublishedRegionPageRows>;
+  loadElectionIndex(): Promise<PublishedElectionIndexRows>;
+  loadElectionRaceFacets(electionIds: string[]): Promise<PublishedElectionRaceFacetRow[]>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
   search(query: string): Promise<PublishedSearchResultRow[]>;
 };
@@ -234,6 +278,12 @@ function getRowsOrThrow<Row>(response: PublishedQueryResponse<Row>, label: strin
   }
 
   return response.data ?? [];
+}
+
+function normalizeElectionIds(electionIds: string[]) {
+  return Array.from(new Set(
+    electionIds.map((electionId) => electionId.trim()).filter(Boolean),
+  )).slice(0, ELECTION_INDEX_LIMIT);
 }
 
 export function createPublishedReadAdapter(client: PublishedSchemaClient): PublishedReadAdapter {
@@ -337,6 +387,60 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         childRegionRows: getRowsOrThrow(childResponse, 'Published child regions'),
         raceRows,
       };
+    },
+
+    async loadElectionIndex() {
+      const published = client.schema('published');
+      const electionResponse = await published
+        .from<PublishedElectionRow>('elections')
+        .select(ELECTION_COLUMNS)
+        .order('year', { ascending: false, nullsFirst: false })
+        .order('voting_date', { ascending: false, nullsFirst: false })
+        .order('name', { ascending: true })
+        .order('election_id', { ascending: true })
+        .limit(ELECTION_INDEX_LIMIT);
+      const electionRows = getRowsOrThrow(electionResponse, 'Published elections');
+      const electionIds = electionRows.map((row) => row.election_id);
+      const raceSummaryRows: PublishedElectionRaceSummaryRow[] = [];
+
+      for (let index = 0; index < electionIds.length; index += ELECTION_ID_BATCH_SIZE) {
+        const chunk = electionIds.slice(index, index + ELECTION_ID_BATCH_SIZE);
+        const response = await published
+          .from<PublishedElectionRaceSummaryRow>('election_race_summaries')
+          .select(ELECTION_RACE_SUMMARY_COLUMNS)
+          .in('election_id', chunk)
+          .order('election_id', { ascending: true })
+          .limit(chunk.length);
+        raceSummaryRows.push(...getRowsOrThrow(response, 'Published election race summaries'));
+      }
+
+      return { electionRows, raceSummaryRows };
+    },
+
+    async loadElectionRaceFacets(rawElectionIds) {
+      const electionIds = normalizeElectionIds(rawElectionIds);
+      const facetRows: PublishedElectionRaceFacetRow[] = [];
+      const published = client.schema('published');
+
+      for (let index = 0; index < electionIds.length; index += ELECTION_ID_BATCH_SIZE) {
+        const chunk = electionIds.slice(index, index + ELECTION_ID_BATCH_SIZE);
+        const response = await published
+          .from<PublishedElectionRaceFacetRow>('election_race_facets')
+          .select(ELECTION_RACE_FACET_COLUMNS, { count: 'exact' })
+          .in('election_id', chunk)
+          .order('election_id', { ascending: true })
+          .order('race_type', { ascending: true })
+          .order('region_key', { ascending: true })
+          .limit(ELECTION_FACET_BATCH_LIMIT);
+        const rows = getRowsOrThrow(response, 'Published election race facets');
+
+        if ((response.count ?? rows.length) > rows.length) {
+          throw new Error(`Published election race facets exceeded the ${ELECTION_FACET_BATCH_LIMIT}-row batch limit.`);
+        }
+        facetRows.push(...rows);
+      }
+
+      return facetRows;
     },
 
     async loadPeoplePage(request) {

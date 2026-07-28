@@ -8,6 +8,9 @@ const repoRoot = path.resolve(webRoot, '..', '..');
 const srcRoot = path.join(webRoot, 'src');
 const migrationsRoot = path.join(repoRoot, 'supabase', 'migrations');
 const reviewedRelations = [
+  'election_race_facets',
+  'election_race_summaries',
+  'elections',
   'home_region_summary',
   'home_ticker',
   'people_directory',

@@ -55,6 +55,12 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
     async loadLocalOfficePeople() {
       return [];
     },
+    async loadPartyData() {
+      return { partyRows: [], financeRows: [], companyContributionRows: [] };
+    },
+    async loadPartyOfficers() {
+      return [];
+    },
     async loadPersonProfiles() {
       return { personRows: [], candidateRows: [], claimRows: [], partyAffiliationRows: [] };
     },
@@ -641,4 +647,51 @@ test('bridge does not query local offices when the region cannot be resolved', a
   assert.equal(queried, false);
   assert.equal(result.region_id, 'unknown-region');
   assert.equal(result.councilor_total, 0);
+});
+
+test('bridge maps the bounded party data family', async () => {
+  const party = { party_id: 'party-1', name: '測試政黨' };
+  const finance = { party_id: 'party-1', report_year: 2024 };
+  const contribution = { party_id: 'party-1', company_id: 'company-1' };
+  const adapter = createAdapter({
+    async loadPartyData() {
+      return {
+        partyRows: [party] as never[],
+        financeRows: [finance] as never[],
+        companyContributionRows: [contribution] as never[],
+      };
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter);
+
+  assert.deepEqual(await bridge.loadPartyData(), {
+    parties: [party],
+    financeSummaries: [finance],
+    companyContributionSummaries: [contribution],
+  });
+});
+
+test('bridge forwards one bounded party-officer roster', async () => {
+  const officer = {
+    affiliation_id: 'affiliation-1',
+    person_id: 'person-1',
+    person_name: '測試幹部',
+    party_id: 'party-1',
+    party_name: '測試政黨',
+    role_title: '主席',
+    organization_unit: null,
+    display_order: 1,
+    role_tier: 'primary' as const,
+    start_date: null,
+    observed_date: null,
+    current_office_label: null,
+    primary_photo_thumbnail_url: null,
+    source_name: null,
+    source_url: null,
+    updated_at: '2026-07-28T00:00:00Z',
+  };
+  const adapter = createAdapter({ async loadPartyOfficers() { return [officer]; } });
+  const bridge = createPublishedPublicDataBridge(adapter);
+
+  assert.deepEqual(await bridge.loadPartyOfficers('party-1'), [officer]);
 });

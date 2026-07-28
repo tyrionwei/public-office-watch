@@ -3,6 +3,10 @@ import type {
   PublicElectionRaceFacet,
   PublicElectionRaceSummary,
   PublicCandidate,
+  PublicParty,
+  PublicPartyCompanyContributionSummary,
+  PublicPartyFinanceSummary,
+  PublicPartyOfficer,
   PublicPersonClaim,
   PublicPersonPartyAffiliation,
   PublicPersonRole,
@@ -32,6 +36,10 @@ export const PERSON_CANDIDATE_LIMIT = 100;
 export const PERSON_CLAIM_LIMIT = 400;
 export const LOCAL_OFFICE_PERSON_LIMIT = 200;
 export const RACE_DETAIL_CANDIDATE_LIMIT = 100;
+export const PARTY_LIMIT = 200;
+export const PARTY_FINANCE_LIMIT = 100;
+export const PARTY_COMPANY_CONTRIBUTION_LIMIT = 1000;
+export const PARTY_OFFICER_LIMIT = 200;
 export const PERSON_PARTY_AFFILIATION_LIMIT = 100;
 
 const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
@@ -215,6 +223,74 @@ export const PERSON_CANDIDATE_COLUMNS = [
   'photo_license_type',
 ].join(',');
 
+export const PARTY_COLUMNS = [
+  'party_id',
+  'name',
+  'short_name',
+  'slug',
+  'theme_key',
+  'official_site_url',
+  'chairperson_name',
+  'registry_no',
+  'founded_date_text',
+  'filed_date_text',
+  'headquarters_address',
+  'contact_phone',
+  'status',
+  'source_name',
+  'source_url',
+  'updated_at',
+].join(',');
+
+export const PARTY_FINANCE_COLUMNS = [
+  'party_id',
+  'party_name',
+  'report_year',
+  'income_total',
+  'expense_total',
+  'balance_amount',
+  'individual_donation_total',
+  'business_donation_total',
+  'civil_group_donation_total',
+  'anonymous_donation_total',
+  'other_income_total',
+  'source_name',
+  'source_url',
+  'updated_at',
+].join(',');
+
+export const PARTY_COMPANY_CONTRIBUTION_COLUMNS = [
+  'party_id',
+  'company_id',
+  'company_name',
+  'report_year',
+  'amount_total',
+  'donation_count',
+  'confidence_level',
+  'source_name',
+  'source_url',
+  'reviewed_at',
+].join(',');
+
+export const PARTY_OFFICER_COLUMNS = [
+  'affiliation_id',
+  'person_id',
+  'person_name',
+  'party_id',
+  'party_name',
+  'role_title',
+  'organization_unit',
+  'display_order',
+  'start_date',
+  'observed_date',
+  'current_office_label',
+  'primary_photo_thumbnail_url',
+  'source_name',
+  'source_url',
+  'updated_at',
+  'role_tier',
+].join(',');
+
 export const PERSON_PARTY_AFFILIATION_COLUMNS = [
   'affiliation_id',
   'affiliation_key',
@@ -375,6 +451,12 @@ export type PublishedRaceDetailRows = {
   candidateRows: PublicCandidate[];
 };
 
+export type PublishedPartyDataRows = {
+  partyRows: PublicParty[];
+  financeRows: PublicPartyFinanceSummary[];
+  companyContributionRows: PublicPartyCompanyContributionSummary[];
+};
+
 export type PublishedPersonProfileRows = {
   personRows: PublishedPersonProfileRow[];
   candidateRows: PublicCandidate[];
@@ -429,6 +511,8 @@ export type PublishedReadAdapter = {
   loadRaceDetail(raceId: string): Promise<PublishedRaceDetailRows>;
   loadLocalOfficePeople(districtPrefixes: string[]): Promise<PublishedPeopleDirectoryRow[]>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
+  loadPartyData(): Promise<PublishedPartyDataRows>;
+  loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
   loadPersonProfiles(personIds: string[]): Promise<PublishedPersonProfileRows>;
   search(query: string): Promise<PublishedSearchResultRow[]>;
 };
@@ -747,6 +831,71 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         response,
         'Published local office people',
         LOCAL_OFFICE_PERSON_LIMIT,
+      );
+    },
+
+    async loadPartyData() {
+      const published = client.schema('published');
+      const [partyResponse, financeResponse, companyContributionResponse] = await Promise.all([
+        published
+          .from<PublicParty>('parties')
+          .select(PARTY_COLUMNS)
+          .order('name', { ascending: true })
+          .order('party_id', { ascending: true })
+          .limit(PARTY_LIMIT + 1),
+        published
+          .from<PublicPartyFinanceSummary>('party_finance_summaries')
+          .select(PARTY_FINANCE_COLUMNS)
+          .order('party_id', { ascending: true })
+          .order('report_year', { ascending: false })
+          .limit(PARTY_FINANCE_LIMIT + 1),
+        published
+          .from<PublicPartyCompanyContributionSummary>('party_company_contribution_summaries')
+          .select(PARTY_COMPANY_CONTRIBUTION_COLUMNS)
+          .order('party_id', { ascending: true })
+          .order('amount_total', { ascending: false })
+          .order('company_name', { ascending: true })
+          .order('company_id', { ascending: true })
+          .limit(PARTY_COMPANY_CONTRIBUTION_LIMIT + 1),
+      ]);
+
+      return {
+        partyRows: getBoundedRowsOrThrow(
+          partyResponse,
+          'Published parties',
+          PARTY_LIMIT,
+        ),
+        financeRows: getBoundedRowsOrThrow(
+          financeResponse,
+          'Published party finance summaries',
+          PARTY_FINANCE_LIMIT,
+        ),
+        companyContributionRows: getBoundedRowsOrThrow(
+          companyContributionResponse,
+          'Published party company contributions',
+          PARTY_COMPANY_CONTRIBUTION_LIMIT,
+        ),
+      };
+    },
+
+    async loadPartyOfficers(rawPartyId) {
+      const partyId = rawPartyId.trim();
+      if (!partyId) return [];
+
+      const response = await client
+        .schema('published')
+        .from<PublicPartyOfficer>('party_officers')
+        .select(PARTY_OFFICER_COLUMNS)
+        .eq('party_id', partyId)
+        .order('display_order', { ascending: true, nullsFirst: false })
+        .order('person_name', { ascending: true })
+        .order('affiliation_id', { ascending: true })
+        .limit(PARTY_OFFICER_LIMIT + 1);
+
+      return getBoundedRowsOrThrow(
+        response,
+        'Published party officers',
+        PARTY_OFFICER_LIMIT,
       );
     },
 

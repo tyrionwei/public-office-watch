@@ -11,6 +11,14 @@ import {
   HOME_REGION_LIMIT,
   LOCAL_OFFICE_PERSON_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
+  PARTY_COLUMNS,
+  PARTY_COMPANY_CONTRIBUTION_COLUMNS,
+  PARTY_COMPANY_CONTRIBUTION_LIMIT,
+  PARTY_FINANCE_COLUMNS,
+  PARTY_FINANCE_LIMIT,
+  PARTY_LIMIT,
+  PARTY_OFFICER_COLUMNS,
+  PARTY_OFFICER_LIMIT,
   PERSON_CANDIDATE_LIMIT,
   PERSON_CANDIDATE_COLUMNS,
   PERSON_CLAIM_LIMIT,
@@ -681,4 +689,86 @@ test('local office rejects a person sentinel row', async () => {
     adapter.loadLocalOfficePeople(['臺北市']),
     new RegExp(`Published local office people exceeded the ${LOCAL_OFFICE_PERSON_LIMIT}-row`),
   );
+});
+
+test('party data reads three small published relations with fixed limits', async () => {
+  const party = { party_id: 'party-1', name: '測試政黨' };
+  const finance = { party_id: 'party-1', report_year: 2024 };
+  const contribution = { party_id: 'party-1', company_id: 'company-1' };
+  const fake = createFakeClient({
+    parties: { data: [party], error: null, count: null },
+    party_finance_summaries: { data: [finance], error: null, count: null },
+    party_company_contribution_summaries: { data: [contribution], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadPartyData(), {
+    partyRows: [party],
+    financeRows: [finance],
+    companyContributionRows: [contribution],
+  });
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
+    ['from', 'parties'],
+    ['from', 'party_finance_summaries'],
+    ['from', 'party_company_contribution_summaries'],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'select'), [
+    ['select', PARTY_COLUMNS],
+    ['select', PARTY_FINANCE_COLUMNS],
+    ['select', PARTY_COMPANY_CONTRIBUTION_COLUMNS],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
+    ['limit', PARTY_LIMIT + 1],
+    ['limit', PARTY_FINANCE_LIMIT + 1],
+    ['limit', PARTY_COMPANY_CONTRIBUTION_LIMIT + 1],
+  ]);
+});
+
+test('party data rejects a company-contribution sentinel row', async () => {
+  const fake = createFakeClient({
+    parties: { data: [], error: null, count: null },
+    party_finance_summaries: { data: [], error: null, count: null },
+    party_company_contribution_summaries: {
+      data: Array.from({ length: PARTY_COMPANY_CONTRIBUTION_LIMIT + 1 }, (_, index) => ({
+        party_id: 'party-1',
+        company_id: `company-${index}`,
+      })),
+      error: null,
+      count: null,
+    },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await assert.rejects(
+    adapter.loadPartyData(),
+    new RegExp(`Published party company contributions exceeded the ${PARTY_COMPANY_CONTRIBUTION_LIMIT}-row`),
+  );
+});
+
+test('party officers read one deterministic bounded roster', async () => {
+  const officer = { affiliation_id: 'affiliation-1', party_id: 'party-1' };
+  const fake = createFakeClient({
+    party_officers: { data: [officer], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadPartyOfficers(' party-1 '), [officer]);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['from', 'party_officers'],
+    ['select', PARTY_OFFICER_COLUMNS],
+    ['eq', 'party_id', 'party-1'],
+    ['order', 'display_order', { ascending: true, nullsFirst: false }],
+    ['order', 'person_name', { ascending: true }],
+    ['order', 'affiliation_id', { ascending: true }],
+    ['limit', PARTY_OFFICER_LIMIT + 1],
+  ]);
+});
+
+test('party officers skip the database for an empty party id', async () => {
+  const fake = createFakeClient({});
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadPartyOfficers(' '), []);
+  assert.deepEqual(fake.calls, []);
 });

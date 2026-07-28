@@ -21,6 +21,9 @@ import type {
 import type {
   PublicPersonFilters,
   PublicPersonListItem,
+  PublicParty,
+  PublicPartyCompanyContributionSummary,
+  PublicPartyFinanceSummary,
   PublicPersonRole,
   PublicPersonStatus,
   PublicPersonProfile,
@@ -78,6 +81,12 @@ export type PublishedRegionPageData = {
   relatedRaces: UpcomingRace[];
 };
 
+export type PublishedPartyData = {
+  parties: PublicParty[];
+  financeSummaries: PublicPartyFinanceSummary[];
+  companyContributionSummaries: PublicPartyCompanyContributionSummary[];
+};
+
 export type PublishedPublicDataBridge = Pick<
   PublicDataProvider,
   | 'loadElectionIndex'
@@ -87,10 +96,12 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadPeoplePage'
   | 'loadPersonProfiles'
   | 'loadLocalOfficeSummaryByRegionId'
+  | 'loadPartyOfficers'
   | 'searchPublicRecords'
 > & {
   loadHomePageData(): Promise<HomePageData>;
   loadRegionPageData(regionSlug: string): Promise<PublishedRegionPageData>;
+  loadPartyData(): Promise<PublishedPartyData>;
 };
 
 const publishedDataPrinciples = [
@@ -394,6 +405,19 @@ export function createPublishedPublicDataBridge(
         region_id: region.regionId,
         region_name: region.regionName,
       };
+    },
+
+    async loadPartyData() {
+      const rows = await adapter.loadPartyData();
+      return {
+        parties: rows.partyRows,
+        financeSummaries: rows.financeRows,
+        companyContributionSummaries: rows.companyContributionRows,
+      };
+    },
+
+    loadPartyOfficers(partyId) {
+      return adapter.loadPartyOfficers(partyId);
     },
 
     async loadPeoplePage(filters, page, pageSize) {

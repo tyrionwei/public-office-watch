@@ -66,12 +66,6 @@ export type PublicRaceDetailData = {
   candidates: PublicCandidate[];
 };
 
-export type PublicElectionDetailData = {
-  election: PublicElection | null;
-  races: PublicRace[];
-  candidates: PublicCandidate[];
-};
-
 export type PublicRaceQueryFilters = {
   raceTypes?: PublicRace['race_type'][];
   regionKey?: string;
@@ -101,7 +95,6 @@ export interface PublicDataProvider {
   loadRacesByElectionIds(electionIds: string[], filters?: PublicRaceQueryFilters): Promise<PublicRace[]>;
   loadElectionRacePage(eventKey: string, electionIds: string[], filters: PublicRaceQueryFilters, page: number, pageSize: number): Promise<PublicRaceListPage>;
   loadRaceDetail(raceId: string): Promise<PublicRaceDetailData>;
-  loadElectionDetail(electionId: string): Promise<PublicElectionDetailData>;
   getPollComparisonByElectionId(electionId: string): PollComparison | null;
   getPeople(): PublicPerson[];
   getPeopleByFilters(filters?: PublicPersonFilters): PublicPersonListItem[];

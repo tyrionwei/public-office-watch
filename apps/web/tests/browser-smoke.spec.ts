@@ -93,6 +93,25 @@ test('county highlight panel provides a distinct background for every county cit
   await expectNoHorizontalOverflow(page);
 });
 
+test('legacy election links redirect to the bounded event page', async ({ page }) => {
+  await page.goto('/');
+  const legacyElectionLinks = page.locator(
+    'main a[href^="/elections/"]:not([href^="/elections/events/"]):not([href^="/elections/races/"])',
+  );
+  const linkCount = await legacyElectionLinks.count();
+
+  if (linkCount === 0) {
+    await expectNoHorizontalOverflow(page);
+    return;
+  }
+
+  await legacyElectionLinks.first().click();
+
+  await expect(page).toHaveURL(/\/elections\/events\/[^/?]+$/);
+  await expect(page.getByRole('heading', { name: '大選總覽' })).toBeVisible();
+  await expect(page.getByText('項目分類')).toBeVisible();
+});
+
 
 test('elections page groups elections into events and opens race detail', async ({ page }) => {
   await page.goto('/elections');

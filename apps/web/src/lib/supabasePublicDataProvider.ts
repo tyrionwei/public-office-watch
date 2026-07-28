@@ -1302,17 +1302,6 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     };
   },
 
-  async loadElectionDetail(electionId: string) {
-    await ensureElectionDataset(electionId);
-    const snapshot = getSnapshot();
-
-    return {
-      election: snapshot?.indexes.electionById.get(electionId) ?? null,
-      races: snapshot?.indexes.racesByElectionId.get(electionId) ?? [],
-      candidates: snapshot?.indexes.candidatesByElectionId.get(electionId) ?? [],
-    };
-  },
-
   getPollComparisonByElectionId(): PollComparison | null {
     // TODO: Add a mapped poll comparison source after an approved public poll view exists.
     return null;

@@ -225,6 +225,8 @@ Replace `loadElectionDetail`, which currently downloads the entire election grap
 
 The legacy all-candidates screen must not be carried unchanged onto the published layer.
 
+Phase 2.5E implements this contract by keeping `/elections/:electionId` as a compatibility redirect to the matching event page. The event page owns the bounded race list, and candidate rows are fetched only from a selected race page.
+
 ### People index
 
 - fetch the requested 20 rows rather than the current 200-row ten-page prefetch block

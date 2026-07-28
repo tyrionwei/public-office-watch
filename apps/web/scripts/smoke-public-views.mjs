@@ -113,15 +113,33 @@ async function main() {
       autoRefreshToken: false,
     },
   });
-  const { data: anchorRaces, error: anchorError } = await client
-    .from('public_races')
-    .select('race_id')
-    .limit(1);
-  const anchorRaceId = anchorRaces?.[0]?.race_id;
+  const [raceAnchorResponse, personAnchorResponse] = await Promise.all([
+    client.from('public_races').select('race_id').limit(1),
+    client
+      .from('public_people_list_cached')
+      .select('person_id')
+      .eq('list_is_grassroots', false)
+      .limit(1),
+  ]);
+  const anchorRaceId = raceAnchorResponse.data?.[0]?.race_id;
+  const anchorPersonId = personAnchorResponse.data?.[0]?.person_id;
 
-  if (anchorError || !anchorRaceId) {
-    throw anchorError ?? new Error('Public races does not contain an anchor race.');
+  if (raceAnchorResponse.error || !anchorRaceId) {
+    throw raceAnchorResponse.error ?? new Error('Public races does not contain an anchor race.');
   }
+  if (personAnchorResponse.error || !anchorPersonId) {
+    throw personAnchorResponse.error ?? new Error('Public people does not contain an anchor person.');
+  }
+
+  const failedViews = [];
+  const personScopedViews = new Set([
+    'public_relation_details',
+    'public_person_primary_photos',
+    'public_person_identity_sources',
+    'public_person_claims',
+    'public_person_party_affiliations',
+    'public_person_party_events',
+  ]);
 
   for (const viewName of allowedPublicViews) {
     assertAllowedViewName(viewName);
@@ -131,18 +149,27 @@ async function main() {
       if (viewName === 'public_candidates') {
         request = request.eq('race_id', anchorRaceId);
       }
+      if (personScopedViews.has(viewName)) {
+        request = request.eq('person_id', anchorPersonId);
+      }
       const { data, error } = await request.limit(1);
 
       if (error) {
-        console.log(`${viewName}: error ${error.code ?? 'unknown'} ${error.message}`);
+        failedViews.push(viewName);
+        console.error(`${viewName}: error ${error.code ?? 'unknown'} ${error.message}`);
         continue;
       }
 
       console.log(`${viewName}: ok rowCount=${Array.isArray(data) ? data.length : 0}`);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
-      console.log(`${viewName}: error runtime ${message}`);
+      failedViews.push(viewName);
+      console.error(`${viewName}: error runtime ${message}`);
     }
+  }
+
+  if (failedViews.length > 0) {
+    throw new Error(`Public view smoke failed: ${failedViews.join(', ')}`);
   }
 }
 

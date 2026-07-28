@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.1.2 — 2026-07-28
+
+### Fixed
+
+- Stopped the People index from issuing a redundant candidate-history query for every visible row.
+- Distinguished People query failures from valid empty results and added an explicit retry action.
+- Made public-view readiness checks fail on query errors instead of reporting a false pass.
+
+### Safety and verification
+
+- Required local browser tests to use a loopback Supabase URL.
+- Required Sites production builds and production smoke tests to use a non-local HTTPS Supabase URL.
+- Added separate production-route smoke coverage without reusing the local Playwright server.
+- Added deployment-environment documentation and regression coverage for the environment guards.
+
 ## 1.1.1 — 2026-07-28
 
 ### Fixed

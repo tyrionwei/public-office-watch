@@ -86,7 +86,7 @@ export function GlobalSearch() {
       </div>
 
       {showPanel ? (
-        <div className="pixel-corners absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[420px] overflow-auto border border-accent/60 bg-[#030817] p-3 shadow-[0_20px_48px_rgba(0,0,0,0.82)]">
+        <div data-testid="global-search-results" className="pixel-corners absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[420px] overflow-auto border border-accent/60 bg-[#030817] p-3 shadow-[0_20px_48px_rgba(0,0,0,0.82)]">
           {query.trim().length < 2 ? (
             <p className="px-2 py-3 text-xs text-slate-400">{t('search.minChars')}</p>
           ) : loading ? (

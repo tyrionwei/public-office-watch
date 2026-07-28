@@ -178,10 +178,13 @@ export function PeoplePage() {
   const requestedPage = getPage(searchParams);
   const [peoplePage, setPeoplePage] = useState<{ items: PublicPersonListItem[]; total: number }>({ items: [], total: 0 });
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [requestVersion, setRequestVersion] = useState(0);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setLoadError(false);
     setPeoplePage({ items: [], total: 0 });
 
     const requestFilters = { party, query, regionId, role, status };
@@ -197,6 +200,7 @@ export function PeoplePage() {
       .catch((error: unknown) => {
         if (active) {
           setLoading(false);
+          setLoadError(true);
           if (import.meta.env.DEV) {
             console.warn('Failed to load people page', error);
           }
@@ -206,7 +210,7 @@ export function PeoplePage() {
     return () => {
       active = false;
     };
-  }, [party, query, regionId, role, status, requestedPage]);
+  }, [party, query, regionId, role, status, requestedPage, requestVersion]);
 
   const people = peoplePage.items;
   const pageCount = Math.max(1, Math.ceil(peoplePage.total / PAGE_SIZE));
@@ -289,7 +293,7 @@ export function PeoplePage() {
           title={t('people.title')}
           action={
             <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">
-              {t('common.recordsPage', { count: loading ? '...' : peoplePage.total, currentPage, pageCount })}
+              {t('common.recordsPage', { count: loading ? '...' : loadError ? '—' : peoplePage.total, currentPage, pageCount })}
             </span>
           }
         >
@@ -313,7 +317,7 @@ export function PeoplePage() {
             </div>
             <div className="pixel-corners border border-accent/35 bg-accent/10 px-3 py-2 text-xs leading-5 text-slate-300">
               <p>
-                {t('people.currentResults')} <span className="font-display text-base text-white">{loading ? '...' : peoplePage.total}</span> {t('people.recordsUnit')}
+                {t('people.currentResults')} <span className="font-display text-base text-white">{loading ? '...' : loadError ? '—' : peoplePage.total}</span> {t('people.recordsUnit')}
               </p>
               <p className="mt-1 text-slate-400">{t('people.sortHint')}</p>
             </div>
@@ -322,6 +326,17 @@ export function PeoplePage() {
           {loading ? (
             <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center text-sm text-slate-300">
               {t('people.loading')}
+            </div>
+          ) : loadError ? (
+            <div role="alert" className="pixel-corners border border-arcadePink/55 bg-arcadePink/10 px-4 py-8 text-center text-sm text-slate-200">
+              <p>{t('people.loadError')}</p>
+              <button
+                type="button"
+                onClick={() => setRequestVersion((value) => value + 1)}
+                className="mt-4 pixel-corners border border-accent/70 bg-accent/15 px-4 py-2 text-sm text-accent transition hover:bg-accent/25 hover:text-white"
+              >
+                {t('people.retry')}
+              </button>
             </div>
           ) : people.length > 0 ? (
             <div className="overflow-hidden pixel-corners border border-line/70">
@@ -370,7 +385,7 @@ export function PeoplePage() {
             </div>
           )}
 
-          {!loading && peoplePage.total > PAGE_SIZE ? (
+          {!loading && !loadError && peoplePage.total > PAGE_SIZE ? (
             <div className="mt-4 flex flex-col gap-3 border-t border-line/60 pt-4 text-sm text-slate-300 sm:flex-row sm:items-center sm:justify-between">
               <p>
                 {t('people.showing', { start: pageStart + 1, end: pageStart + people.length, total: peoplePage.total })}

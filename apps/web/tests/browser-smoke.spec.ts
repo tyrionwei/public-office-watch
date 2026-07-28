@@ -76,11 +76,20 @@ test('desktop public pages do not introduce horizontal overflow in English', asy
 });
 
 test('people page loads public people results', async ({ page }) => {
+  let candidateRequestCount = 0;
+  page.on('request', (request) => {
+    const url = new URL(request.url());
+    if (url.pathname.endsWith('/rest/v1/public_candidates')) {
+      candidateRequestCount += 1;
+    }
+  });
+
   await page.goto('/people');
 
   const profileLinks = page.locator('main a[href^="/people/"]');
   await expect(profileLinks.first()).toBeVisible();
   expect(await profileLinks.count()).toBeGreaterThan(0);
+  expect(candidateRequestCount).toBe(0);
 });
 
 test('county highlight panel provides a distinct background for every county city', async ({ page }) => {
@@ -117,7 +126,29 @@ test('legacy election links redirect to the bounded event page', async ({ page }
 
   await expect(page).toHaveURL(/\/elections\/events\/[^/?]+$/);
   await expect(page.getByRole('heading', { name: '大選總覽' })).toBeVisible();
-  await expect(page.getByText('項目分類')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '項目分類' })).toBeVisible();
+});
+
+test('people page distinguishes a load failure and retries', async ({ page }) => {
+  let failOnce = true;
+  await page.route('**/rest/v1/public_people_list_cached**', async (route) => {
+    if (failOnce) {
+      failOnce = false;
+      await route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({ message: 'test failure' }),
+      });
+      return;
+    }
+    await route.continue();
+  });
+
+  await page.goto('/people');
+  await expect(page.getByText('人物資料載入失敗，請稍後再試。')).toBeVisible();
+  await expect(page.getByText('沒有符合目前篩選條件的人物資料。')).toHaveCount(0);
+  await page.getByRole('button', { name: '重新載入' }).click();
+  await expect(page.locator('main a[href^="/people/"]').first()).toBeVisible();
 });
 
 
@@ -141,7 +172,7 @@ test('elections page groups elections into events and opens race detail', async 
   await eventLinks.first().click();
 
   await expect(page.getByRole('heading', { name: '大選總覽' })).toBeVisible();
-  await expect(page.getByText('項目分類')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '項目分類' })).toBeVisible();
   await expect(page.getByText('縣市 / 區域')).toBeVisible();
 
   const raceLinks = page.locator('main a[href^="/elections/races/"]');

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build:sites": "node scripts/prepare-sites-build.mjs --clean && tsc -b && vite build --outDir dist/client && node scripts/prepare-sites-build.mjs",
+    "build:sites": "node scripts/check-environment.mjs production && node scripts/prepare-sites-build.mjs --clean && tsc -b && vite build --outDir dist/client && node scripts/prepare-sites-build.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
@@ -17,7 +17,10 @@
     "test:read-contracts": "node --test --experimental-strip-types tests/*.test.ts",
     "preflight:production-readiness": "node scripts/preflight-production-readiness.mjs",
     "prepare:tw-map:counties": "node scripts/prepare-taiwan-county-map.mjs",
-    "test:browser": "playwright test"
+    "check:local-test-env": "node scripts/check-environment.mjs local",
+    "check:production-env": "node scripts/check-environment.mjs production",
+    "test:browser": "npm run check:local-test-env && playwright test",
+    "test:browser:production": "node scripts/check-environment.mjs production-smoke && playwright test --config=playwright.production.config.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",

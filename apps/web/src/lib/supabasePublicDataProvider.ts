@@ -18,6 +18,8 @@ import type {
   PublicPersonListItem,
   PublicPersonPartyAffiliation,
   PublicPersonProfile,
+  PublicPersonRole,
+  PublicPersonStatus,
   PublicRace,
   PublicRegion,
   PublicRegionElectionSummary,
@@ -74,6 +76,31 @@ const emptyHomePageData: HomePageData = {
     '尚未啟用 Supabase provider，畫面需保留 safe fallback。',
     '不顯示未審核資料。',
   ],
+};
+
+const peopleRoleLabels: Record<PublicPersonRole, string> = {
+  president: '總統',
+  vice_president: '副總統',
+  legislator: '立法委員',
+  local_chief: '縣市首長',
+  local_deputy: '副縣市首長',
+  agency_head: '主要單位首長',
+  councilor: '議員',
+  party_officer: '政黨職務',
+  candidate: '候選人',
+  other: '其他公眾人物',
+};
+
+const peopleStatusLabels: Record<PublicPersonStatus, string> = {
+  current: '現任',
+  candidate: '參選中',
+  former: '曾任／卸任',
+  other: '其他',
+};
+
+type PublicPeopleListCachedRow = PublicPerson & {
+  list_role: PublicPersonRole;
+  list_status: PublicPersonStatus;
 };
 
 type SupabasePublicSnapshotIndexes = {
@@ -299,17 +326,6 @@ async function fetchRows<T>(
 
     offset += pageSize;
   }
-}
-
-async function fetchCandidateRowsByPersonIds(personIds: string[]) {
-  const candidateRows: unknown[] = [];
-
-  for (let index = 0; index < personIds.length; index += 200) {
-    const chunk = personIds.slice(index, index + 200);
-    candidateRows.push(...await fetchRows('public_candidates', (query) => query.in('person_id', chunk)));
-  }
-
-  return candidateRows;
 }
 
 function buildStageRegions(regions: PublicRegion[]) {
@@ -606,23 +622,45 @@ async function fetchPeoplePage(
     .order('name', { ascending: true })
     .range(pageRange.from, pageRange.to);
 
-  if (error || !Array.isArray(data)) {
-    if (error && import.meta.env.DEV) {
+  if (error) {
+    if (import.meta.env.DEV) {
       console.warn('Failed to fetch public people page: ' + error.message);
     }
-    return { items: [], total: 0 };
+    throw new Error('Failed to fetch public people page.');
   }
 
-  const people = data.map((row) => mapPublicPersonRow(row as PublicPerson));
-  const candidateRows = await fetchCandidateRowsByPersonIds(people.map((person) => person.person_id));
-  const candidates = candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate));
-  const itemsByPersonId = new Map(
-    buildPersonListItems(people, candidates, snapshot.stageRegions)
-      .map((item) => [item.person_id, item] as const),
-  );
-  const items = people
-    .map((person) => itemsByPersonId.get(person.person_id))
-    .filter((item): item is PublicPersonListItem => Boolean(item));
+  if (!Array.isArray(data)) {
+    throw new Error('Public people page returned an invalid response.');
+  }
+
+  const listRows = data as PublicPeopleListCachedRow[];
+  const people = listRows.map((row) => mapPublicPersonRow(row));
+  const items = buildPersonListItems(people, [], snapshot.stageRegions).map((item, index) => {
+    const row = listRows[index];
+    const role = row.list_role ?? item.role;
+    const status = row.list_status ?? item.status;
+    const roleLabel = peopleRoleLabels[role];
+    const regionName = item.region_name ?? row.district;
+    const displayPositionLabel = status === 'current'
+      ? row.current_office_label?.trim()
+        || row.position?.trim()
+        || (role === 'other' ? null : `${regionName ?? ''}${roleLabel}`)
+      : status === 'candidate'
+        ? row.upcoming_candidate_label?.trim() || row.position?.trim() || null
+        : null;
+
+    return {
+      ...item,
+      role,
+      role_label: roleLabel,
+      status,
+      status_label: peopleStatusLabels[status],
+      display_position_label: displayPositionLabel,
+      candidate_count: 0,
+      merged_role_labels: [roleLabel],
+      merged_candidate_count: 0,
+    };
+  });
 
   return { items, total: count ?? items.length };
 }

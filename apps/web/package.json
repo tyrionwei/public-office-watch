@@ -13,7 +13,7 @@
     "measure:public-reads": "node scripts/measure-public-read-performance.mjs",
     "check:data-boundary": "node scripts/check-public-data-boundary.mjs",
     "check:public-view-contracts": "node scripts/check-public-view-contracts.mjs",
-    "test:read-contracts": "node --test --experimental-strip-types tests/publicReadContracts.test.ts",
+    "test:read-contracts": "node --test --experimental-strip-types tests/*.test.ts",
     "preflight:production-readiness": "node scripts/preflight-production-readiness.mjs",
     "prepare:tw-map:counties": "node scripts/prepare-taiwan-county-map.mjs",
     "test:browser": "playwright test"

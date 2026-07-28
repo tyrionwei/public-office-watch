@@ -46,6 +46,9 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
     async loadElectionRacePage() {
       return { items: [], total: 0 };
     },
+    async loadRaceDetail() {
+      return { raceRow: null, electionRow: null, candidateRows: [] };
+    },
     async loadPeoplePage() {
       return { rows: [], total: 0 };
     },
@@ -544,4 +547,44 @@ test('bridge forwards election race pagination without remapping public rows', a
   assert.deepEqual(requests, [[
     '2022-2022-11-26-local', ['election-1'], filters, 2, 20,
   ]]);
+});
+
+test('bridge maps bounded race detail rows to the public provider contract', async () => {
+  const race = {
+    race_id: 'race-1',
+    election_id: 'election-1',
+    election_name: '地方公職人員選舉',
+    region_id: null,
+    region_name: null,
+    region_slug: null,
+    race_type: 'municipality_mayor' as const,
+    title: '市長選舉',
+    voting_date: '2022-11-26',
+    status: 'completed' as const,
+    source_name: null,
+    source_url: null,
+  };
+  const election = {
+    election_id: 'election-1',
+    name: '地方公職人員選舉',
+    year: 2022,
+    election_type: 'local' as const,
+    voting_date: '2022-11-26',
+    status: 'completed' as const,
+    source_name: null,
+    source_url: null,
+  };
+  const candidates = [{ candidate_id: 'candidate-1', race_id: 'race-1' }];
+  const adapter = createAdapter({
+    async loadRaceDetail() {
+      return { raceRow: race, electionRow: election, candidateRows: candidates as never[] };
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter);
+
+  assert.deepEqual(await bridge.loadRaceDetail('race-1'), {
+    race,
+    election,
+    candidates,
+  });
 });

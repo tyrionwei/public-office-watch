@@ -30,6 +30,7 @@ export const ELECTION_RACE_PAGE_SIZE = PUBLIC_ELECTION_RACE_PAGE_SIZE;
 export const PERSON_PROFILE_BATCH_LIMIT = 4;
 export const PERSON_CANDIDATE_LIMIT = 100;
 export const PERSON_CLAIM_LIMIT = 400;
+export const RACE_DETAIL_CANDIDATE_LIMIT = 100;
 export const PERSON_PARTY_AFFILIATION_LIMIT = 100;
 
 const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
@@ -104,6 +105,21 @@ export const RACE_COLUMNS = [
   'title',
   'voting_date',
   'status',
+].join(',');
+
+export const RACE_DETAIL_COLUMNS = [
+  'race_id',
+  'election_id',
+  'election_name',
+  'region_id',
+  'region_name',
+  'region_slug',
+  'race_type',
+  'title',
+  'voting_date',
+  'status',
+  'source_name',
+  'source_url',
 ].join(',');
 
 export const PEOPLE_DIRECTORY_COLUMNS = [
@@ -345,6 +361,12 @@ export type PublishedElectionRacePage = {
   total: number;
 };
 
+export type PublishedRaceDetailRows = {
+  raceRow: PublicRace | null;
+  electionRow: PublicElection | null;
+  candidateRows: PublicCandidate[];
+};
+
 export type PublishedPersonProfileRows = {
   personRows: PublishedPersonProfileRow[];
   candidateRows: PublicCandidate[];
@@ -396,6 +418,7 @@ export type PublishedReadAdapter = {
     page: number,
     pageSize: number,
   ): Promise<PublishedElectionRacePage>;
+  loadRaceDetail(raceId: string): Promise<PublishedRaceDetailRows>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
   loadPersonProfiles(personIds: string[]): Promise<PublishedPersonProfileRows>;
   search(query: string): Promise<PublishedSearchResultRow[]>;
@@ -646,6 +669,51 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       }
 
       return { items: result.items, total: Number(result.total) };
+    },
+
+    async loadRaceDetail(rawRaceId) {
+      const raceId = rawRaceId.trim();
+      if (!raceId) {
+        return { raceRow: null, electionRow: null, candidateRows: [] };
+      }
+
+      const published = client.schema('published');
+      const raceResponse = await published
+        .from<PublicRace>('races')
+        .select(RACE_DETAIL_COLUMNS)
+        .eq('race_id', raceId)
+        .limit(1);
+      const raceRow = getRowsOrThrow(raceResponse, 'Published race detail')[0] ?? null;
+
+      if (!raceRow) {
+        return { raceRow: null, electionRow: null, candidateRows: [] };
+      }
+
+      const [electionResponse, candidateResponse] = await Promise.all([
+        published
+          .from<PublicElection>('elections')
+          .select(ELECTION_COLUMNS)
+          .eq('election_id', raceRow.election_id)
+          .limit(1),
+        published
+          .from<PublicCandidate>('candidates')
+          .select(PERSON_CANDIDATE_COLUMNS)
+          .eq('race_id', raceId)
+          .order('candidate_no', { ascending: true, nullsFirst: false })
+          .order('person_name', { ascending: true })
+          .order('candidate_id', { ascending: true })
+          .limit(RACE_DETAIL_CANDIDATE_LIMIT + 1),
+      ]);
+
+      return {
+        raceRow,
+        electionRow: getRowsOrThrow(electionResponse, 'Published race election')[0] ?? null,
+        candidateRows: getBoundedRowsOrThrow(
+          candidateResponse,
+          'Published race candidates',
+          RACE_DETAIL_CANDIDATE_LIMIT,
+        ),
+      };
     },
 
     async loadPeoplePage(request) {

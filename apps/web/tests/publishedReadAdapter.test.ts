@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  ELECTION_COLUMNS,
   ELECTION_FACET_BATCH_LIMIT,
   ELECTION_ID_BATCH_SIZE,
   ELECTION_INDEX_LIMIT,
@@ -10,9 +11,12 @@ import {
   HOME_REGION_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
   PERSON_CANDIDATE_LIMIT,
+  PERSON_CANDIDATE_COLUMNS,
   PERSON_CLAIM_LIMIT,
   PERSON_PARTY_AFFILIATION_LIMIT,
   PERSON_PROFILE_BATCH_LIMIT,
+  RACE_DETAIL_CANDIDATE_LIMIT,
+  RACE_DETAIL_COLUMNS,
   REGION_CHILD_LIMIT,
   REGION_RACE_LIMIT,
   SEARCH_RESULT_COLUMNS,
@@ -522,5 +526,107 @@ test('election race page surfaces function failures', async () => {
   await assert.rejects(
     adapter.loadElectionRacePage('event', ['election-1'], {}, 1, 20),
     /Published election race page query failed: function unavailable/,
+  );
+});
+
+test('race detail reads one race then bounded election and candidate rows', async () => {
+  const race = {
+    race_id: 'race-1',
+    election_id: 'election-1',
+    election_name: '地方公職人員選舉',
+    region_id: 'region-1',
+    region_name: '新北市',
+    region_slug: 'new-taipei',
+    race_type: 'municipality_mayor',
+    title: '新北市長選舉',
+    voting_date: '2022-11-26',
+    status: 'completed',
+    source_name: '中央選舉委員會',
+    source_url: 'https://example.test/race-1',
+  };
+  const election = {
+    election_id: 'election-1',
+    name: '地方公職人員選舉',
+    year: 2022,
+    election_type: 'local',
+    voting_date: '2022-11-26',
+    status: 'completed',
+    source_name: '中央選舉委員會',
+    source_url: 'https://example.test/election-1',
+  };
+  const candidate = {
+    candidate_id: 'candidate-1',
+    person_id: 'person-1',
+    person_name: '測試候選人',
+    race_id: 'race-1',
+    election_id: 'election-1',
+  };
+  const fake = createFakeClient({
+    races: { data: [race], error: null, count: null },
+    elections: { data: [election], error: null, count: null },
+    candidates: { data: [candidate], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadRaceDetail(' race-1 '), {
+    raceRow: race,
+    electionRow: election,
+    candidateRows: [candidate],
+  });
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['from', 'races'],
+    ['select', RACE_DETAIL_COLUMNS],
+    ['eq', 'race_id', 'race-1'],
+    ['limit', 1],
+    ['from', 'elections'],
+    ['select', ELECTION_COLUMNS],
+    ['eq', 'election_id', 'election-1'],
+    ['limit', 1],
+    ['from', 'candidates'],
+    ['select', PERSON_CANDIDATE_COLUMNS],
+    ['eq', 'race_id', 'race-1'],
+    ['order', 'candidate_no', { ascending: true, nullsFirst: false }],
+    ['order', 'person_name', { ascending: true }],
+    ['order', 'candidate_id', { ascending: true }],
+    ['limit', RACE_DETAIL_CANDIDATE_LIMIT + 1],
+  ]);
+});
+
+test('race detail stops after a missing race', async () => {
+  const fake = createFakeClient({
+    races: { data: [], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadRaceDetail('missing-race'), {
+    raceRow: null,
+    electionRow: null,
+    candidateRows: [],
+  });
+  assert.equal(fake.calls.some((call) => call[0] === 'from' && call[1] === 'candidates'), false);
+});
+
+test('race detail rejects a candidate sentinel row', async () => {
+  const fake = createFakeClient({
+    races: {
+      data: [{ race_id: 'race-1', election_id: 'election-1' }],
+      error: null,
+      count: null,
+    },
+    elections: { data: [], error: null, count: null },
+    candidates: {
+      data: Array.from({ length: RACE_DETAIL_CANDIDATE_LIMIT + 1 }, (_, index) => ({
+        candidate_id: `candidate-${index}`,
+      })),
+      error: null,
+      count: null,
+    },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await assert.rejects(
+    adapter.loadRaceDetail('race-1'),
+    new RegExp(`Published race candidates exceeded the ${RACE_DETAIL_CANDIDATE_LIMIT}-row`),
   );
 });

@@ -1,19 +1,31 @@
-# Published read layer local validation — 2026-07-26
+# Published read layer local validation — 2026-07-28
 
-Status: Phase 2 local validation. Nothing in this result authorizes a production migration or frontend cutover.
+Status: Phase 2.1 compact-hybrid local validation. Nothing in this result authorizes a frontend cutover. Production deployment remains gated by a fresh capacity check and migration review.
 
-## Scope
+## Why Phase 2.1 replaced the full physical copy
 
-The local Supabase database applied:
+The first complete physical `published` schema occupied 426 MB locally while the production project showed about 416 MB used of a 500 MB allocation. The largest duplicate was `published.person_claims` at 251 MB; lower-level election rows were not the storage problem.
 
-- `202607260008_published_promote.sql`
-- `202607260009_published_query_indexes.sql`
+The user selected the no-additional-monthly-cost path. The unpublished migrations `202607260007`–`202607260009` were therefore revised to a compact hybrid boundary:
 
-The promote source is the existing reviewed public-view boundary. All currently public election levels are included; township, village, indigenous, and special categories are not removed to meet performance targets.
+- snapshot the expensive canonical candidate graph into narrow `published.candidate_facts`
+- expose `published.candidates` as a security-barrier view that restores source and photo fields by stable candidate/person IDs
+- keep a small materialized person/candidate summary for directory and region reads
+- materialize only small home, election, event, party-officer, and issue aggregates
+- expose already-reviewed, lower-frequency public projections through security-barrier views
+- keep unified search as a zero-storage view instead of a 41 MB trigram materialized view
 
-## Published snapshot
+All election levels remain included. No township, village, indigenous, or special race was excluded to meet the capacity target.
 
-The second complete promote finished in 14,835 ms and recorded:
+## Upgrade-path validation
+
+The local database was rebuilt to production's currently observed migration boundary, `202607220005`, restored from the existing data-only snapshot, and then upgraded through `202607260001`–`202607260009`.
+
+This matters because a schema-only reset cannot apply `202607260001`: that migration references reviewed people supplied by the production-sized data snapshot rather than the repository seed. With the correct snapshot-first upgrade path, all nine migrations applied successfully.
+
+## Published scope
+
+The promote release recorded:
 
 | Relation | Rows |
 | --- | ---: |
@@ -27,69 +39,70 @@ The second complete promote finished in 14,835 ms and recorded:
 | Parties | 112 |
 | Search documents | 67,922 |
 
-Lower-level race counts were:
+Candidate source URLs and the tested photo/source fields had zero parity mismatches against `public.public_candidates`. `list_is_party_only` also had zero mismatches against `public.public_people_directory`.
 
-| Race type | Rows |
+## Storage and promote peak
+
+| Physical relation | Total size |
 | --- | ---: |
-| `township_mayor` | 408 |
-| `township_representative` | 681 |
-| `township_representative_district` | 681 |
-| `village_chief` | 15,502 |
-| `indigenous` | 4 |
+| `candidate_facts` | 22 MB |
+| `person_candidate_summaries` | 5.4 MB |
+| All other materialized aggregates and release state | less than 1 MB |
+| **Complete persistent published layer** | **28 MB / 29,630,464 bytes** |
 
-Materialized results contained 22 home regions, 421 election summaries, 716 election facets, 8 event summaries, 11,082 local-office people, 95 party officers, 176 region-issue aggregates, and 67,922 search documents.
+During a live promote, `pg_database_size()` was sampled every 50 ms:
+
+- minimum: 847,768,723 bytes
+- maximum: 877,464,723 bytes
+- measured promote peak increase: 29,696,000 bytes
+
+Using the previously observed production size of about 416 MB, the projected future refresh peak is roughly 474 MB. A fresh production check must still pass before deployment; use 420 MB as the maximum pre-deployment database size so at least about 20 MB remains after the measured refresh peak.
+
+`published.promote()` sets `work_mem = '64MB'` only for the function. It does not change the database or API default. The measured complete promote took 1,611.855 ms and reported zero temporary read/write blocks.
 
 ## Atomicity and permissions
 
-- Running promote a second time completed successfully and produced a new release ID.
-- A transaction-local check constraint forced failure during candidate insertion. The failed promote rolled back in 2,020 ms and preserved the previous release ID and validated row counts.
-- `anon` and `authenticated` have no `USAGE` privilege on `published`, no published relation grants, and no execute privilege on `published.promote(UUID)`.
-- `service_role` is the only application role granted published writes and promote execution.
+- A check constraint forced failure at the final release-state insert after candidate replacement and materialized refresh work.
+- The failed promote preserved both the prior release ID and all 42,052 candidate rows.
+- `anon` and `authenticated` have no `USAGE` on `published`, no relation grants, and no execute privilege on `published.promote(UUID)`.
 - The published schema remains absent from the Supabase API exposed-schema configuration.
+- Supabase database lint reported no schema errors.
 
 ## Warm query plans
 
-The repeatable harness is [phase-2-published-explain.sql](./phase-2-published-explain.sql). Representative route IDs are selected outside the measured statements so their discovery cost is not confused with a real route request.
+The repeatable harness is [phase-2-published-explain.sql](./phase-2-published-explain.sql).
 
 | Query contract | Execution ms | Result rows | Maximum rows in one plan node | Temp read/write blocks |
 | --- | ---: | ---: | ---: | ---: |
-| Search `台北` | 18.059 | 20 | 459 | 0 / 0 |
-| Elections page | 0.321 | 20 | 450 | 0 / 0 |
-| Home region summary | 0.267 | 22 | 22 | 0 / 0 |
-| People directory page | 0.129 | 20 | 20 | 0 / 0 |
-| Election races page | 0.045 | 20 | 20 | 0 / 0 |
-| Race candidates page | 0.045 | 20 | 20 | 0 / 0 |
-| Person candidacies | 0.039 | 6 | 6 | 0 / 0 |
-| Event races page | 0.034 | 20 | 20 | 0 / 0 |
-| Home ticker | 0.034 | 1 | 1 | 0 / 0 |
-| Local-office people page | 0.029 | 20 | 20 | 0 / 0 |
+| People directory page | 247.592 | 20 | 57,808 | 2,306 / 2,308 |
+| Search `台北` | 163.795 | 20 | 67,923 | 0 / 0 |
+| Election races page | 69.282 | 20 | 8,875 | 0 / 0 |
+| Event races page | 65.664 | 20 | 8,875 | 0 / 0 |
+| Local-office people page | 5.169 | 20 | 11,107 | 0 / 0 |
+| Race candidates page | 3.493 | 20 | 27 | 0 / 0 |
+| Elections page | 1.403 | 20 | 891 | 0 / 0 |
+| Person candidacies | 1.103 | 6 | 6 | 0 / 0 |
+| Home region summary | 0.072 | 22 | 22 | 0 / 0 |
+| Home ticker | 0.035 | 1 | 1 | 0 / 0 |
 
-All local design gates passed:
+The compact option intentionally does not preserve the earlier all-queries-below-50-ms gate. Its measured tradeoff is:
 
-- every measured query executed below 50 ms
-- no measured query returned more than 22 rows
-- no plan node processed more than 459 rows
-- no measured query used temporary blocks
+- the production bottleneck—candidate canonicalization by election, race, or person—is removed from request time
+- candidate reads that previously took 1.13–1.69 seconds now use the narrow physical snapshot
+- home aggregates and local-office reads remain bounded
+- people ordering, unified search, and race-list reads remain pass-through work at about 66–248 ms locally to avoid another 50–100 MB of persistent copies and indexes
 
-The broad search contract must order by trigram distance before stable entity/title keys. A GIN-only substring query processed 3,221 matches; the measured GiST distance-order contract reduced the maximum plan-node work to 459 rows.
+Frontend cutover must also reduce the existing 200-row prefetches to 20 rows and stop downloading complete election graphs; a database layer alone cannot fix payload over-fetching.
 
-## Comparison with Phase 0
+## Remaining production gate
 
-The plan shape changed from high-frequency canonical graph expansion to bounded reads:
+Before any frontend change:
 
-- election candidate/detail paths previously returned up to 20,853 rows and took about 1.69 seconds; the new election and candidate page contracts return 20 rows
-- person candidacies previously took about 1.13 seconds; the physical person-history lookup measured 0.039 ms locally
-- the county/city path previously transferred 1,789 people and filtered in JavaScript; the region-specific materialized lookup processes 20 rows
-- home region summaries previously processed 36,304 rows; the materialized read processes 22 rows
-- the event page previously processed 8,875 rows to return 200; cursor-sized published reads process 20 rows
+1. confirm the branch and production project again
+2. confirm current production database size is no more than 420 MB
+3. review and apply prerequisite migrations `202607260001`–`202607260006`
+4. apply the compact `202607260007`–`202607260009` schema without exposing it to the Data API
+5. validate row parity, permissions, release metadata, measured storage, and rollback
+6. run the same plan harness against production
 
-Execution times are not a direct production speedup ratio because Phase 0 was measured on production while Phase 2 was measured against local Supabase. The important validated change is the bounded plan shape, absence of temporary blocks, and removal of request-time canonicalization.
-
-## Findings handled during promote implementation
-
-- Party affiliations and party events contained pre-merge person IDs. Promote maps them to canonical people before enforcing published foreign keys.
-- Fifty-five identity sources appeared multiple times because several match records pointed to the same canonical person. Promote deterministically keeps the highest match score, then the latest updated row.
-
-## Remaining gate
-
-Before frontend cutover, apply the migrations to an unexposed production shadow schema, run the same harness against the complete production snapshot, and compare row counts and plans. Keep the legacy provider and grants unchanged until that production shadow validation passes.
+Keep the legacy provider, exposed schemas, and public grants unchanged until this shadow validation passes.

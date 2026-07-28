@@ -2,6 +2,89 @@ BEGIN;
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA extensions;
 
+CREATE MATERIALIZED VIEW published.person_candidate_summaries AS
+WITH ranked_candidates AS (
+    SELECT
+        candidate.*,
+        COUNT(*) OVER (PARTITION BY candidate.person_id) AS candidate_count,
+        ROW_NUMBER() OVER (
+            PARTITION BY candidate.person_id
+            ORDER BY
+                candidate.election_year DESC NULLS LAST,
+                candidate.candidate_updated_at DESC NULLS LAST,
+                candidate.race_id,
+                candidate.candidate_id
+        ) AS candidate_rank
+    FROM published.candidate_facts candidate
+)
+SELECT
+    candidate.person_id,
+    candidate.candidate_count,
+    candidate.candidate_id AS latest_candidate_id,
+    candidate.region_id AS primary_region_id,
+    NOW() AS published_at
+FROM ranked_candidates candidate
+WHERE candidate.candidate_rank = 1
+WITH NO DATA;
+
+CREATE UNIQUE INDEX person_candidate_summaries_person_idx
+    ON published.person_candidate_summaries (person_id);
+CREATE INDEX person_candidate_summaries_region_idx
+    ON published.person_candidate_summaries (primary_region_id, person_id);
+
+CREATE VIEW published.people WITH (security_barrier = true) AS
+SELECT
+    person.*,
+    (
+        EXISTS (
+            SELECT 1
+            FROM public.person_party_affiliations affiliation
+            WHERE affiliation.person_id = person.person_id
+              AND affiliation.role_context = 'party_officer'
+              AND affiliation.is_current = TRUE
+              AND affiliation.is_public = TRUE
+              AND affiliation.review_status = 'verified'
+        )
+        AND person.current_office_label IS NULL
+        AND person.upcoming_candidate_label IS NULL
+        AND summary.person_id IS NULL
+    ) AS list_is_party_only,
+    COALESCE(summary.candidate_count, 0)::BIGINT AS candidate_count,
+    CASE
+        WHEN latest.candidate_id IS NULL THEN NULL
+        ELSE JSONB_STRIP_NULLS(JSONB_BUILD_OBJECT(
+            'candidateId', latest.candidate_id,
+            'raceId', latest.race_id,
+            'raceTitle', latest.race_title,
+            'electionId', latest.election_id,
+            'electionName', latest.election_name,
+            'electionYear', latest.election_year,
+            'party', latest.party,
+            'candidateNo', latest.candidate_no,
+            'registrationStatus', latest.registration_status,
+            'candidacyStatus', latest.candidacy_status,
+            'electionResult', latest.election_result,
+            'isElected', latest.is_elected
+        ))
+    END AS latest_candidacy,
+    summary.primary_region_id,
+    latest.region_name AS primary_region_name,
+    region.slug AS primary_region_slug,
+    summary.published_at
+FROM public.public_people_list_cached person
+LEFT JOIN published.person_candidate_summaries summary
+  ON summary.person_id = person.person_id
+LEFT JOIN published.candidate_facts latest
+  ON latest.candidate_id = summary.latest_candidate_id
+LEFT JOIN published.regions region
+  ON region.region_id = summary.primary_region_id;
+
+CREATE VIEW published.local_office_people WITH (security_barrier = true) AS
+SELECT *
+FROM published.people
+WHERE current_office_label IS NOT NULL
+  AND primary_region_id IS NOT NULL;
+
 CREATE MATERIALIZED VIEW published.home_ticker AS
 SELECT
     election_id,
@@ -11,7 +94,7 @@ SELECT
     status,
     source_name,
     source_url,
-    published_at
+    NOW() AS published_at
 FROM published.elections
 WHERE status IN ('announced', 'upcoming', 'active')
   AND voting_date IS NOT NULL
@@ -39,8 +122,7 @@ WITH ranked_races AS (
         ROW_NUMBER() OVER (
             PARTITION BY region.region_id
             ORDER BY race.voting_date ASC NULLS LAST, election.name, race.title
-        ) AS row_number,
-        region.published_at
+        ) AS row_number
     FROM published.regions region
     LEFT JOIN published.races race
         ON race.region_id = region.region_id
@@ -64,7 +146,7 @@ SELECT
     election_name AS next_election_name,
     voting_date AS next_voting_date,
     COALESCE(upcoming_race_count, 0)::INTEGER AS upcoming_race_count,
-    published_at
+    NOW() AS published_at
 FROM ranked_races
 WHERE row_number = 1
 WITH NO DATA;
@@ -74,7 +156,7 @@ SELECT
     election_id,
     COUNT(*)::INTEGER AS race_count,
     ARRAY_AGG(DISTINCT race_type ORDER BY race_type) AS race_types,
-    MAX(published_at) AS published_at
+    NOW() AS published_at
 FROM published.races
 GROUP BY election_id
 WITH NO DATA;
@@ -86,7 +168,7 @@ SELECT
     region_key,
     CASE WHEN region_key = 'national' THEN '全國' ELSE region_key END AS region_label,
     COUNT(*)::INTEGER AS race_count,
-    MAX(published_at) AS published_at
+    NOW() AS published_at
 FROM published.races
 GROUP BY election_id, race_type, region_key
 WITH NO DATA;
@@ -98,16 +180,9 @@ SELECT
     ARRAY_AGG(DISTINCT election_id ORDER BY election_id) AS election_ids,
     ARRAY_AGG(DISTINCT election_name ORDER BY election_name) AS election_names,
     COUNT(*)::INTEGER AS race_count,
-    MAX(published_at) AS published_at
+    NOW() AS published_at
 FROM published.races
 GROUP BY event_key
-WITH NO DATA;
-
-CREATE MATERIALIZED VIEW published.local_office_people AS
-SELECT *
-FROM published.people
-WHERE current_office_label IS NOT NULL
-  AND primary_region_id IS NOT NULL
 WITH NO DATA;
 
 CREATE MATERIALIZED VIEW published.party_officers AS
@@ -128,7 +203,7 @@ SELECT
     affiliation.source_url,
     affiliation.updated_at,
     affiliation.role_tier,
-    affiliation.published_at
+    NOW() AS published_at
 FROM published.person_party_affiliations affiliation
 JOIN published.people person ON person.person_id = affiliation.person_id
 JOIN published.parties party
@@ -144,7 +219,7 @@ SELECT
 FROM public.public_region_issue_results issue
 WITH NO DATA;
 
-CREATE MATERIALIZED VIEW published.search_documents AS
+CREATE VIEW published.search_documents WITH (security_barrier = true) AS
 WITH documents AS (
     SELECT
         'person:' || person_id::TEXT AS document_key,
@@ -167,7 +242,7 @@ WITH documents AS (
         CONCAT_WS(' · ', year::TEXT, election_type, status),
         CONCAT_WS(' ', name, year::TEXT, election_type, status),
         '/elections/' || election_id::TEXT,
-        published_at
+        NOW()
     FROM published.elections
 
     UNION ALL
@@ -180,7 +255,7 @@ WITH documents AS (
         CONCAT_WS(' · ', unified_business_no, representative_name, address_region),
         CONCAT_WS(' ', name, unified_business_no, representative_name, address_region),
         NULL::TEXT,
-        published_at
+        NOW()
     FROM published.companies
 
     UNION ALL
@@ -193,7 +268,7 @@ WITH documents AS (
         CONCAT_WS(' · ', short_name, status),
         CONCAT_WS(' ', name, short_name, status),
         '/parties/' || slug,
-        published_at
+        NOW()
     FROM published.parties
 
     UNION ALL
@@ -206,7 +281,7 @@ WITH documents AS (
         region_type,
         CONCAT_WS(' ', name, slug, official_code, region_type),
         '/regions/' || region_id::TEXT,
-        published_at
+        NOW()
     FROM published.regions
 )
 SELECT
@@ -226,8 +301,7 @@ SELECT
     ) AS normalized_search_text,
     href,
     published_at
-FROM documents
-WITH NO DATA;
+FROM documents;
 
 CREATE UNIQUE INDEX home_ticker_election_idx
     ON published.home_ticker (election_id);
@@ -239,27 +313,19 @@ CREATE UNIQUE INDEX election_race_facets_key_idx
     ON published.election_race_facets (election_id, race_type, region_key);
 CREATE UNIQUE INDEX event_summaries_event_idx
     ON published.event_summaries (event_key);
-CREATE UNIQUE INDEX local_office_people_person_idx
-    ON published.local_office_people (person_id);
-CREATE INDEX local_office_people_region_idx
-    ON published.local_office_people (primary_region_id, list_role_order, name, person_id);
 CREATE UNIQUE INDEX party_officers_affiliation_idx
     ON published.party_officers (affiliation_id);
 CREATE INDEX party_officers_party_order_idx
     ON published.party_officers (party_id, role_tier, display_order, person_name);
 CREATE UNIQUE INDEX region_issue_results_issue_idx
     ON published.region_issue_results (issue_id);
-CREATE UNIQUE INDEX search_documents_key_idx
-    ON published.search_documents (document_key);
-CREATE INDEX search_documents_normalized_trgm_idx
-    ON published.search_documents
-    USING GIN (normalized_search_text extensions.gin_trgm_ops);
 
 CREATE OR REPLACE FUNCTION published.promote(p_source_sync_run_id UUID DEFAULT NULL)
 RETURNS UUID
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = pg_catalog, public, published, extensions
+SET work_mem = '64MB'
 AS $$
 DECLARE
     v_release_id UUID := gen_random_uuid();
@@ -282,259 +348,42 @@ BEGIN
         RAISE EXCEPTION 'Source sync run % is not a successful write run', p_source_sync_run_id;
     END IF;
 
-    TRUNCATE TABLE
-        published.party_company_contribution_summaries,
-        published.party_finance_summaries,
-        published.relation_details,
-        published.person_identity_sources,
-        published.person_party_events,
-        published.person_party_affiliations,
-        published.person_claims,
-        published.candidates,
-        published.races,
-        published.people,
-        published.parties,
-        published.companies,
-        published.elections,
-        published.regions,
-        published.release_state;
+    TRUNCATE TABLE published.candidate_facts, published.release_state;
 
-    INSERT INTO published.regions
-    SELECT source.*, v_published_at, core.updated_at
-    FROM public.public_regions source
-    JOIN public.regions core ON core.id = source.region_id;
-
-    INSERT INTO published.elections
-    SELECT source.*, v_published_at, core.updated_at
-    FROM public.public_elections source
-    JOIN public.elections core ON core.id = source.election_id;
-
-    INSERT INTO published.people
+    INSERT INTO published.candidate_facts
     SELECT
-        source.*,
-        0::BIGINT,
-        NULL::JSONB,
-        NULL::UUID,
-        NULL::TEXT,
-        NULL::TEXT,
-        v_published_at,
-        source.updated_at
-    FROM public.public_people_directory source;
-
-    INSERT INTO published.companies
-    SELECT source.*, v_published_at, source.updated_at
-    FROM public.public_companies source;
-
-    INSERT INTO published.parties
-    SELECT
-        source.*,
-        LOWER(REGEXP_REPLACE(REPLACE(source.name, '臺', '台'), '[[:space:]]+', '', 'g')),
-        v_published_at,
-        source.updated_at
-    FROM public.public_parties source;
-
-    INSERT INTO published.races
-    SELECT source.*, v_published_at, core.updated_at
-    FROM public.public_election_race_list source
-    JOIN public.races core ON core.id = source.race_id;
-
-    INSERT INTO published.candidates
-    SELECT source.*, v_published_at, source.candidate_updated_at
-    FROM public.public_candidates source;
-
-    WITH ranked_candidates AS (
-        SELECT
-            candidate.*,
-            COUNT(*) OVER (PARTITION BY candidate.person_id) AS candidate_count,
-            ROW_NUMBER() OVER (
-                PARTITION BY candidate.person_id
-                ORDER BY
-                    candidate.election_year DESC NULLS LAST,
-                    candidate.candidate_updated_at DESC NULLS LAST,
-                    candidate.race_id,
-                    candidate.candidate_id
-            ) AS candidate_rank
-        FROM published.candidates candidate
-    ),
-    latest_candidates AS (
-        SELECT *
-        FROM ranked_candidates
-        WHERE candidate_rank = 1
-    )
-    UPDATE published.people person
-    SET
-        candidate_count = latest.candidate_count,
-        latest_candidacy = JSONB_STRIP_NULLS(JSONB_BUILD_OBJECT(
-            'candidateId', latest.candidate_id,
-            'raceId', latest.race_id,
-            'raceTitle', latest.race_title,
-            'electionId', latest.election_id,
-            'electionName', latest.election_name,
-            'electionYear', latest.election_year,
-            'party', latest.party,
-            'candidateNo', latest.candidate_no,
-            'registrationStatus', latest.registration_status,
-            'candidacyStatus', latest.candidacy_status,
-            'electionResult', latest.election_result,
-            'isElected', latest.is_elected
-        )),
-        primary_region_id = latest.region_id,
-        primary_region_name = latest.region_name,
-        primary_region_slug = region.slug
-    FROM latest_candidates latest
-    LEFT JOIN published.regions region ON region.region_id = latest.region_id
-    WHERE person.person_id = latest.person_id;
-
-    INSERT INTO published.person_claims
-    SELECT source.*, v_published_at, source.updated_at
-    FROM public.public_person_claims source;
-
-    INSERT INTO published.person_party_affiliations (
-        affiliation_id,
-        affiliation_key,
+        candidate_id,
         person_id,
         person_name,
-        source_claim_key,
-        party_name,
-        role_context,
-        role_title,
-        organization_unit,
-        display_order,
-        observed_year,
-        observed_date,
-        start_date,
-        end_date,
-        is_current,
-        confidence_level,
-        source_name,
-        source_url,
-        updated_at,
-        role_tier,
-        normalized_party,
-        published_at,
-        source_updated_at
-    )
-    SELECT
-        source.affiliation_id,
-        source.affiliation_key,
-        canonical.canonical_person_id,
-        person.name,
-        source.source_claim_key,
-        source.party_name,
-        source.role_context,
-        source.role_title,
-        source.organization_unit,
-        source.display_order,
-        source.observed_year,
-        source.observed_date,
-        source.start_date,
-        source.end_date,
-        source.is_current,
-        source.confidence_level,
-        source.source_name,
-        source.source_url,
-        source.updated_at,
-        source.role_tier,
-        LOWER(REGEXP_REPLACE(REPLACE(source.party_name, '臺', '台'), '[[:space:]]+', '', 'g')),
-        v_published_at,
-        source.updated_at
-    FROM public.public_person_party_affiliations source
-    JOIN public.person_canonical_map canonical
-      ON canonical.person_id = source.person_id
-    JOIN published.people person
-      ON person.person_id = canonical.canonical_person_id;
-
-    INSERT INTO published.person_party_events (
-        event_id,
-        event_key,
-        person_id,
-        person_name,
-        party_name,
-        event_type,
-        event_date,
-        end_date,
-        summary,
-        confidence_level,
-        source_name,
-        source_url,
-        updated_at,
-        published_at,
-        source_updated_at
-    )
-    SELECT
-        source.event_id,
-        source.event_key,
-        canonical.canonical_person_id,
-        person.name,
-        source.party_name,
-        source.event_type,
-        source.event_date,
-        source.end_date,
-        source.summary,
-        source.confidence_level,
-        source.source_name,
-        source.source_url,
-        source.updated_at,
-        v_published_at,
-        source.updated_at
-    FROM public.public_person_party_events source
-    JOIN public.person_canonical_map canonical
-      ON canonical.person_id = source.person_id
-    JOIN published.people person
-      ON person.person_id = canonical.canonical_person_id;
-
-    INSERT INTO published.person_identity_sources
-    SELECT DISTINCT ON (source.identity_source_id)
-        source.*,
-        source.election_year,
-        v_published_at,
-        source.updated_at
-    FROM public.public_person_identity_sources source
-    ORDER BY
-        source.identity_source_id,
-        source.match_score DESC NULLS LAST,
-        source.updated_at DESC NULLS LAST,
-        source.person_id;
-
-    INSERT INTO published.relation_details
-    SELECT source.*, v_published_at, source.relation_updated_at
-    FROM public.public_relation_details source;
-
-    INSERT INTO published.party_finance_summaries
-    SELECT source.*, v_published_at, source.updated_at
-    FROM public.public_party_finance_summaries source;
-
-    INSERT INTO published.party_company_contribution_summaries
-    SELECT source.*, v_published_at, core.updated_at
-    FROM public.public_party_company_contribution_summaries source
-    JOIN public.party_company_contribution_summaries core
-      ON core.party_id = source.party_id
-     AND core.company_id = source.company_id
-     AND core.report_year = source.report_year;
-
-    SELECT COUNT(*) INTO v_expected_count FROM public.public_regions;
-    SELECT COUNT(*) INTO v_actual_count FROM published.regions;
-    IF v_expected_count <> v_actual_count THEN
-        RAISE EXCEPTION 'Region parity failed: expected %, got %', v_expected_count, v_actual_count;
-    END IF;
-
-    SELECT COUNT(*) INTO v_expected_count FROM public.public_elections;
-    SELECT COUNT(*) INTO v_actual_count FROM published.elections;
-    IF v_expected_count <> v_actual_count THEN
-        RAISE EXCEPTION 'Election parity failed: expected %, got %', v_expected_count, v_actual_count;
-    END IF;
-
-    SELECT COUNT(*) INTO v_expected_count FROM public.public_election_race_list;
-    SELECT COUNT(*) INTO v_actual_count FROM published.races;
-    IF v_expected_count <> v_actual_count THEN
-        RAISE EXCEPTION 'Race parity failed: expected %, got %', v_expected_count, v_actual_count;
-    END IF;
+        person_party,
+        person_position,
+        race_id,
+        race_title,
+        election_id,
+        election_name,
+        region_id,
+        region_name,
+        party,
+        candidate_no,
+        registration_status,
+        vote_count,
+        vote_rate,
+        is_elected,
+        is_incumbent,
+        election_year,
+        candidacy_status,
+        election_result,
+        status_updated_at,
+        candidate_updated_at
+    FROM public.public_candidates;
 
     SELECT COUNT(*) INTO v_expected_count FROM public.public_candidates;
-    SELECT COUNT(*) INTO v_actual_count FROM published.candidates;
+    SELECT COUNT(*) INTO v_actual_count FROM published.candidate_facts;
     IF v_expected_count <> v_actual_count THEN
         RAISE EXCEPTION 'Candidate parity failed: expected %, got %', v_expected_count, v_actual_count;
     END IF;
+
+    REFRESH MATERIALIZED VIEW published.person_candidate_summaries;
 
     SELECT COUNT(*) INTO v_expected_count FROM public.public_people_directory;
     SELECT COUNT(*) INTO v_actual_count FROM published.people;
@@ -573,10 +422,8 @@ BEGIN
     REFRESH MATERIALIZED VIEW published.election_race_summaries;
     REFRESH MATERIALIZED VIEW published.election_race_facets;
     REFRESH MATERIALIZED VIEW published.event_summaries;
-    REFRESH MATERIALIZED VIEW published.local_office_people;
     REFRESH MATERIALIZED VIEW published.party_officers;
     REFRESH MATERIALIZED VIEW published.region_issue_results;
-    REFRESH MATERIALIZED VIEW published.search_documents;
 
     v_validated_counts := JSONB_BUILD_OBJECT(
         'regions', (SELECT COUNT(*) FROM published.regions),
@@ -603,7 +450,7 @@ BEGIN
         v_release_id,
         v_published_at,
         p_source_sync_run_id,
-        '202607260008',
+        '202607260008-compact-hybrid',
         v_validated_counts,
         v_published_at
     );
@@ -616,11 +463,10 @@ REVOKE ALL ON FUNCTION published.promote(UUID) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION published.promote(UUID) TO service_role;
 
 REVOKE ALL ON ALL TABLES IN SCHEMA published FROM PUBLIC, anon, authenticated;
-GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE
-    ON ALL TABLES IN SCHEMA published TO service_role;
+GRANT SELECT ON ALL TABLES IN SCHEMA published TO service_role;
 
 COMMENT ON FUNCTION published.promote(UUID) IS
-    'Atomically rebuilds and validates the complete reviewed published snapshot, then refreshes all published materialized views.';
+    'Atomically refreshes the compact candidate snapshot and small published aggregates, then records validated release metadata.';
 
 SELECT published.promote(NULL);
 

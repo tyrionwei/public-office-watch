@@ -2,6 +2,18 @@
 
 Status: Phase 1 design only. This document does not authorize a production migration, frontend cutover, or privilege revocation.
 
+## Phase 2.1 capacity revision — 2026-07-28
+
+The all-physical relation list below records the original design, but it cannot fit the production project's current 500 MB allocation: the complete local copy occupied 426 MB. The selected no-additional-cost implementation is therefore a compact hybrid boundary:
+
+- `published.candidate_facts` is the narrow physical snapshot for the measured canonical-graph bottleneck
+- `published.person_candidate_summaries` and the small home/election/event aggregates are materialized
+- `published.candidates` restores repeated source and photo fields through stable-ID joins
+- reviewed lower-frequency relations remain security-barrier views in the `published` namespace
+- unified search remains a zero-storage view until a larger storage allocation is justified
+
+This revision preserves all lower-level election data and the atomic candidate release while accepting slower pass-through people, search, and race-list reads. The measured storage, plans, and remaining production gate are in [published-read-layer-local-validation-2026-07-26.md](./published-read-layer-local-validation-2026-07-26.md).
+
 ## Objective
 
 Create a small, explicit Supabase read boundary for public traffic while retaining the complete election dataset in the private core tables.

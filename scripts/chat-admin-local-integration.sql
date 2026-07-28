@@ -54,6 +54,14 @@ FROM upsert_chat_profile(
     TRUE
 );
 
+SELECT *
+FROM upsert_chat_profile(
+    '218f9e79-7399-7fd0-bfca-5aae32014bd9',
+    '回覆測試者',
+    'R7K2F9',
+    TRUE
+);
+
 DO $$
 BEGIN
     BEGIN
@@ -164,6 +172,26 @@ BEGIN
     ) THEN
         RAISE EXCEPTION 'expected temporary mute placeholder';
     END IF;
+
+    BEGIN
+        PERFORM *
+        FROM create_chat_message(
+            '218f9e79-7399-7fd0-bfca-5aae32014bd9',
+            '不應成功的隱藏訊息回覆',
+            (SELECT id FROM moderation_message),
+            REPEAT('c', 64),
+            'gcm.test.hidden.reply',
+            1,
+            'chat-admin-hidden-reply',
+            REPEAT('d', 64)
+        );
+        RAISE EXCEPTION 'expected CHAT_REPLY_UNAVAILABLE';
+    EXCEPTION
+        WHEN OTHERS THEN
+            IF SQLERRM <> 'CHAT_REPLY_UNAVAILABLE' THEN
+                RAISE;
+            END IF;
+    END;
 END;
 $$;
 

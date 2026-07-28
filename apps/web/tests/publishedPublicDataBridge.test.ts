@@ -52,6 +52,9 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
     async loadPeoplePage() {
       return { rows: [], total: 0 };
     },
+    async loadLocalOfficePeople() {
+      return [];
+    },
     async loadPersonProfiles() {
       return { personRows: [], candidateRows: [], claimRows: [], partyAffiliationRows: [] };
     },
@@ -587,4 +590,55 @@ test('bridge maps bounded race detail rows to the public provider contract', asy
     election,
     candidates,
   });
+});
+
+test('bridge builds a local office summary from bounded published people', async () => {
+  const requests: string[][] = [];
+  const councilorRow: PublishedPeopleDirectoryRow = {
+    ...peopleRow,
+    person_id: 'person-2',
+    name: '測試議員',
+    party: '無黨籍',
+    position: '市議員',
+    current_office_label: '臺北市議員',
+    list_role: 'councilor',
+    list_role_order: 6,
+  };
+  const adapter = createAdapter({
+    async loadLocalOfficePeople(prefixes) {
+      requests.push(prefixes);
+      return [peopleRow, councilorRow];
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter, (regionId) => ({
+    regionId,
+    regionName: '臺北市',
+    districtPrefixes: ['台北市', '臺北市'],
+  }));
+
+  const result = await bridge.loadLocalOfficeSummaryByRegionId('taipei-city');
+
+  assert.deepEqual(requests, [['台北市', '臺北市']]);
+  assert.equal(result.region_id, 'taipei-city');
+  assert.equal(result.region_name, '臺北市');
+  assert.equal(result.chief_executive?.person_id, 'person-1');
+  assert.equal(result.councilor_total, 1);
+  assert.deepEqual(result.councilor_party_counts, [{ party: '無黨籍', count: 1 }]);
+});
+
+test('bridge does not query local offices when the region cannot be resolved', async () => {
+  let queried = false;
+  const adapter = createAdapter({
+    async loadLocalOfficePeople() {
+      queried = true;
+      return [];
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter);
+
+  const result = await bridge.loadLocalOfficeSummaryByRegionId('unknown-region');
+
+  assert.equal(queried, false);
+  assert.equal(result.region_id, 'unknown-region');
+  assert.equal(result.councilor_total, 0);
 });

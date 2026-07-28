@@ -30,6 +30,7 @@ export const ELECTION_RACE_PAGE_SIZE = PUBLIC_ELECTION_RACE_PAGE_SIZE;
 export const PERSON_PROFILE_BATCH_LIMIT = 4;
 export const PERSON_CANDIDATE_LIMIT = 100;
 export const PERSON_CLAIM_LIMIT = 400;
+export const LOCAL_OFFICE_PERSON_LIMIT = 200;
 export const RACE_DETAIL_CANDIDATE_LIMIT = 100;
 export const PERSON_PARTY_AFFILIATION_LIMIT = 100;
 
@@ -39,6 +40,13 @@ const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
   'registration_open',
   'candidates_announced',
   'voting',
+];
+
+const LOCAL_OFFICE_ROLES: PublicPersonRole[] = [
+  'local_chief',
+  'local_deputy',
+  'agency_head',
+  'councilor',
 ];
 
 export const ELECTION_COLUMNS = [
@@ -419,6 +427,7 @@ export type PublishedReadAdapter = {
     pageSize: number,
   ): Promise<PublishedElectionRacePage>;
   loadRaceDetail(raceId: string): Promise<PublishedRaceDetailRows>;
+  loadLocalOfficePeople(districtPrefixes: string[]): Promise<PublishedPeopleDirectoryRow[]>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
   loadPersonProfiles(personIds: string[]): Promise<PublishedPersonProfileRows>;
   search(query: string): Promise<PublishedSearchResultRow[]>;
@@ -714,6 +723,31 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           RACE_DETAIL_CANDIDATE_LIMIT,
         ),
       };
+    },
+
+    async loadLocalOfficePeople(rawDistrictPrefixes) {
+      const districtPrefixes = Array.from(new Set(
+        rawDistrictPrefixes.map((prefix) => prefix.trim()).filter(Boolean),
+      ));
+      if (districtPrefixes.length === 0) return [];
+
+      const response = await client
+        .schema('published')
+        .from<PublishedPeopleDirectoryRow>('people_directory')
+        .select(PEOPLE_DIRECTORY_COLUMNS)
+        .eq('list_status', 'current')
+        .in('list_role', LOCAL_OFFICE_ROLES)
+        .or(districtPrefixes.map((prefix) => `district.ilike.${prefix}%`).join(','))
+        .order('list_role_order', { ascending: true })
+        .order('name', { ascending: true })
+        .order('person_id', { ascending: true })
+        .limit(LOCAL_OFFICE_PERSON_LIMIT + 1);
+
+      return getBoundedRowsOrThrow(
+        response,
+        'Published local office people',
+        LOCAL_OFFICE_PERSON_LIMIT,
+      );
     },
 
     async loadPeoplePage(request) {

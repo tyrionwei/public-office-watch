@@ -9,6 +9,7 @@ import {
   ELECTION_RACE_PAGE_SIZE,
   HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
+  LOCAL_OFFICE_PERSON_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
   PERSON_CANDIDATE_LIMIT,
   PERSON_CANDIDATE_COLUMNS,
@@ -628,5 +629,56 @@ test('race detail rejects a candidate sentinel row', async () => {
   await assert.rejects(
     adapter.loadRaceDetail('race-1'),
     new RegExp(`Published race candidates exceeded the ${RACE_DETAIL_CANDIDATE_LIMIT}-row`),
+  );
+});
+
+test('local office reads one bounded current-role set for trusted district prefixes', async () => {
+  const row = { person_id: 'person-1', name: '測試首長' };
+  const fake = createFakeClient({
+    people_directory: { data: [row], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(
+    await adapter.loadLocalOfficePeople([' 臺北市 ', '台北市', '臺北市']),
+    [row],
+  );
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['from', 'people_directory'],
+    ['select', PEOPLE_DIRECTORY_COLUMNS],
+    ['eq', 'list_status', 'current'],
+    ['in', 'list_role', ['local_chief', 'local_deputy', 'agency_head', 'councilor']],
+    ['or', 'district.ilike.臺北市%,district.ilike.台北市%'],
+    ['order', 'list_role_order', { ascending: true }],
+    ['order', 'name', { ascending: true }],
+    ['order', 'person_id', { ascending: true }],
+    ['limit', LOCAL_OFFICE_PERSON_LIMIT + 1],
+  ]);
+});
+
+test('local office skips the database when no trusted district prefix remains', async () => {
+  const fake = createFakeClient({});
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadLocalOfficePeople([' ', '']), []);
+  assert.deepEqual(fake.calls, []);
+});
+
+test('local office rejects a person sentinel row', async () => {
+  const fake = createFakeClient({
+    people_directory: {
+      data: Array.from({ length: LOCAL_OFFICE_PERSON_LIMIT + 1 }, (_, index) => ({
+        person_id: `person-${index}`,
+      })),
+      error: null,
+      count: null,
+    },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await assert.rejects(
+    adapter.loadLocalOfficePeople(['臺北市']),
+    new RegExp(`Published local office people exceeded the ${LOCAL_OFFICE_PERSON_LIMIT}-row`),
   );
 });

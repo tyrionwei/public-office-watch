@@ -1,7 +1,7 @@
 import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
 import { partyTheme } from '../styles/partyThemes.ts';
 import type { StageRegionLevel, StageRegionNode, StageRegionSummary } from '../types/stageMap';
-import { buildPersonProfileFromItems } from './personData.ts';
+import { buildLocalOfficeSummaryFromItems, buildPersonProfileFromItems } from './personData.ts';
 import type {
   HomePageData,
   PublicDataProvider,
@@ -86,6 +86,7 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadRaceDetail'
   | 'loadPeoplePage'
   | 'loadPersonProfiles'
+  | 'loadLocalOfficeSummaryByRegionId'
   | 'searchPublicRecords'
 > & {
   loadHomePageData(): Promise<HomePageData>;
@@ -372,6 +373,26 @@ export function createPublishedPublicDataBridge(
         race: rows.raceRow,
         election: rows.electionRow,
         candidates: rows.candidateRows,
+      };
+    },
+
+    async loadLocalOfficeSummaryByRegionId(regionId) {
+      const region = resolveRegion(regionId);
+      if (!region) {
+        return buildLocalOfficeSummaryFromItems(regionId, [], []);
+      }
+
+      const rows = await adapter.loadLocalOfficePeople(region.districtPrefixes);
+      const summary = buildLocalOfficeSummaryFromItems(
+        region.regionId,
+        rows.map((row) => mapPeopleRow(row, region)),
+        [],
+      );
+
+      return {
+        ...summary,
+        region_id: region.regionId,
+        region_name: region.regionName,
       };
     },
 

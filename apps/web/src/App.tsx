@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { BgmProvider } from './components/BgmProvider';
 import { LanguageProvider, useI18n } from './i18n';
 import { publicDataReadyEvent, refreshConfiguredPublicDataProvider } from './lib/publicDataProviderFactory';
@@ -64,10 +64,7 @@ function AppRoutes({
   publicDataStatus: 'loading' | 'ready' | 'error';
   onRetry: () => void;
 }) {
-  const location = useLocation();
-  const canRenderRoute = location.pathname === homePath() || publicDataStatus === 'ready';
-
-  if (!canRenderRoute) {
+  if (publicDataStatus !== 'ready') {
     return <PublicDataBootstrapScreen failed={publicDataStatus === 'error'} onRetry={onRetry} />;
   }
 

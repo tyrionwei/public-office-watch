@@ -15,6 +15,10 @@ const interfaceMigration = readFileSync(
   new URL('../supabase/migrations/202607290003_chat_terms_and_realtime.sql', import.meta.url),
   'utf8',
 );
+const adminMigration = readFileSync(
+  new URL('../supabase/migrations/202607290004_chat_moderation_admin.sql', import.meta.url),
+  'utf8',
+);
 const app = readFileSync(
   new URL('../apps/web/src/App.tsx', import.meta.url),
   'utf8',
@@ -29,6 +33,18 @@ const chatClient = readFileSync(
 );
 const edgeFunction = readFileSync(
   new URL('../supabase/functions/chat-api/index.ts', import.meta.url),
+  'utf8',
+);
+const adminEdgeFunction = readFileSync(
+  new URL('../supabase/functions/chat-admin/index.ts', import.meta.url),
+  'utf8',
+);
+const adminPage = readFileSync(
+  new URL('../apps/web/src/pages/InternalChatAdminPage.tsx', import.meta.url),
+  'utf8',
+);
+const adminClient = readFileSync(
+  new URL('../apps/web/src/lib/chatAdmin.ts', import.meta.url),
   'utf8',
 );
 
@@ -129,4 +145,39 @@ test('history uses a 50-row cursor RPC rather than offset pagination', () => {
   assert.match(interfaceMigration, /COALESCE\(p_limit, 50\)/);
   assert.match(chatClient, /p_before_created_at: before\?\.created_at \?\? null/);
   assert.doesNotMatch(chatClient, /offset/i);
+});
+
+test('chat admin writes are server-authorized, narrowly scoped and audited', () => {
+  assert.match(adminMigration, /raw_app_meta_data ->> 'chat_admin'/);
+  assert.match(adminMigration, /CREATE TABLE chat_moderation_actions/);
+  assert.match(adminMigration, /CHAT_ADMIN_FORBIDDEN/);
+  assert.match(adminMigration, /GRANT EXECUTE ON FUNCTION admin_set_chat_enabled\(UUID, BOOLEAN\) TO service_role/);
+  assert.doesNotMatch(adminMigration, /GRANT .*chat_moderation_actions.* TO (?:anon|authenticated)/);
+  assert.match(adminMigration, /p_reason NOT IN \(\s*'bot',\s*'spam'/);
+});
+
+test('chat admin edge function verifies a non-anonymous admin without exposing private identifiers', () => {
+  assert.match(adminEdgeFunction, /authClient\.auth\.getUser\(\)/);
+  assert.match(adminEdgeFunction, /adminUser\.is_anonymous === true/);
+  assert.match(adminEdgeFunction, /adminUser\.app_metadata\?\.chat_admin !== true/);
+  assert.doesNotMatch(adminEdgeFunction, /ip_hmac|ip_ciphertext/);
+  assert.doesNotMatch(adminEdgeFunction, /userId:/);
+});
+
+test('chat admin page uses one-time email login and remains available during public-data failure', () => {
+  assert.match(adminClient, /shouldCreateUser: false/);
+  assert.match(adminClient, /getSupabaseChatAdminClient/);
+  assert.match(app, /isChatAdminRoute/);
+  assert.match(app, /publicDataStatus !== 'ready' && !isChatAdminRoute/);
+  assert.match(adminPage, /立即關閉聊天室/);
+  assert.match(adminPage, /一般政治立場或用語爭議不在處理範圍/);
+});
+
+test('emergency shutdown and message removal are pushed to active private chat clients', () => {
+  assert.match(adminMigration, /'message_removed',\s*'global-chat',\s*TRUE/);
+  assert.match(adminMigration, /'status_changed',\s*'global-chat',\s*TRUE/);
+  assert.match(chatClient, /event: 'message_removed'/);
+  assert.match(chatClient, /event: 'status_changed'/);
+  assert.match(widget, /setMessages\(\(current\) => current\s*\.filter/);
+  assert.match(widget, /const currentStatus = await loadChatStatus\(\)/);
 });

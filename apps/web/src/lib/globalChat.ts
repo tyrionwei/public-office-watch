@@ -134,6 +134,8 @@ export async function sendChatMessage(body: string, replyToMessageId: string | n
 export async function subscribeToChatMessages(
   onMessage: (message: ChatMessage) => void,
   onStatus: (status: string) => void,
+  onMessageRemoved: (messageId: string) => void,
+  onChatStatusChanged: (status: ChatStatus) => void,
 ): Promise<ChatRealtimeChannel> {
   const client = requireChatClient();
   const session = await ensureAnonymousChatSession();
@@ -143,6 +145,18 @@ export async function subscribeToChatMessages(
     .channel('global-chat', { config: { private: true } })
     .on('broadcast', { event: 'message_created' }, ({ payload }) => {
       if (isChatMessage(payload)) onMessage(payload);
+    })
+    .on('broadcast', { event: 'message_removed' }, ({ payload }) => {
+      if (
+        payload
+        && typeof payload === 'object'
+        && typeof (payload as { id?: unknown }).id === 'string'
+      ) {
+        onMessageRemoved((payload as { id: string }).id);
+      }
+    })
+    .on('broadcast', { event: 'status_changed' }, ({ payload }) => {
+      if (isChatStatus(payload)) onChatStatusChanged(payload);
     })
     .subscribe((status) => onStatus(status));
 
@@ -226,4 +240,12 @@ function isChatMessage(value: unknown): value is ChatMessage {
     && typeof message.public_code_snapshot === 'string'
     && typeof message.body === 'string'
     && typeof message.created_at === 'string';
+}
+
+function isChatStatus(value: unknown): value is ChatStatus {
+  if (!value || typeof value !== 'object') return false;
+  const status = value as Partial<ChatStatus>;
+  return typeof status.is_enabled === 'boolean'
+    && typeof status.updated_at === 'string'
+    && typeof status.terms_version === 'string';
 }

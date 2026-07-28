@@ -1,10 +1,10 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { BgmProvider } from './components/BgmProvider';
 import { GlobalChatWidget } from './components/GlobalChatWidget';
 import { LanguageProvider, useI18n } from './i18n';
 import { publicDataReadyEvent, refreshConfiguredPublicDataProvider } from './lib/publicDataProviderFactory';
-import { aboutPath, dataGuidancePath, electionsPath, homePath, internalDataProgressPath, internalReviewQueuePath, partiesPath, peoplePath } from './routes/routePaths';
+import { aboutPath, dataGuidancePath, electionsPath, homePath, internalChatAdminPath, internalDataProgressPath, internalReviewQueuePath, partiesPath, peoplePath } from './routes/routePaths';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })));
 const PeoplePage = lazy(() => import('./pages/PeoplePage').then((module) => ({ default: module.PeoplePage })));
@@ -19,6 +19,7 @@ const AboutPage = lazy(() => import('./pages/AboutPage').then((module) => ({ def
 const RegionPage = lazy(() => import('./pages/RegionPage').then((module) => ({ default: module.RegionPage })));
 const ElectionPage = lazy(() => import('./pages/ElectionPage').then((module) => ({ default: module.ElectionPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })));
+const InternalChatAdminPage = lazy(() => import('./pages/InternalChatAdminPage').then((module) => ({ default: module.InternalChatAdminPage })));
 
 const InternalReviewQueuePage = import.meta.env.DEV
   ? lazy(() => import('./pages/InternalReviewQueuePage').then((module) => ({ default: module.InternalReviewQueuePage })))
@@ -65,7 +66,10 @@ function AppRoutes({
   publicDataStatus: 'loading' | 'ready' | 'error';
   onRetry: () => void;
 }) {
-  if (publicDataStatus !== 'ready') {
+  const location = useLocation();
+  const isChatAdminRoute = location.pathname === internalChatAdminPath();
+
+  if (publicDataStatus !== 'ready' && !isChatAdminRoute) {
     return <PublicDataBootstrapScreen failed={publicDataStatus === 'error'} onRetry={onRetry} />;
   }
 
@@ -84,6 +88,7 @@ function AppRoutes({
         <Route path={aboutPath()} element={<AboutPage />} />
         <Route path="/regions/:regionId" element={<RegionPage />} />
         <Route path="/elections/:electionId" element={<ElectionPage />} />
+        <Route path={internalChatAdminPath()} element={<InternalChatAdminPage />} />
         {InternalReviewQueuePage ? <Route path={internalReviewQueuePath()} element={<InternalReviewQueuePage />} /> : null}
         {InternalDataProgressPage ? <Route path={internalDataProgressPath()} element={<InternalDataProgressPage />} /> : null}
         <Route path="*" element={<NotFoundPage />} />

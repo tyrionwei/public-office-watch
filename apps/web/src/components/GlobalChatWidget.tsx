@@ -198,13 +198,40 @@ export function GlobalChatWidget() {
     const receiveMessage = (message: ChatMessage) => {
       const list = listRef.current;
       scrollToBottomRef.current = !list || list.scrollHeight - list.scrollTop - list.clientHeight < 80;
-      setMessages((current) => mergeChatMessages(current, [message]));
+      setMessages((current) => mergeChatMessages(
+        current.map((currentMessage) => currentMessage.reply_to_message_id === message.id
+          ? { ...currentMessage, reply_state: 'available' }
+          : currentMessage),
+        [message],
+      ));
+    };
+
+    const removeMessage = (messageId: string) => {
+      setMessages((current) => current
+        .filter((message) => message.id !== messageId)
+        .map((message) => message.reply_to_message_id === messageId
+          ? {
+            ...message,
+            reply_state: 'removed',
+          }
+          : message));
+      setReplyTo((current) => current?.id === messageId ? null : current);
+    };
+
+    const receiveChatStatus = (updatedStatus: ChatStatus) => {
+      setStatus(updatedStatus.is_enabled ? updatedStatus : null);
+      if (!updatedStatus.is_enabled) setIsOpen(false);
     };
 
     void (async () => {
       try {
         await ensureAnonymousChatSession();
-        const channel = await subscribeToChatMessages(receiveMessage, setRealtimeStatus);
+        const channel = await subscribeToChatMessages(
+          receiveMessage,
+          setRealtimeStatus,
+          removeMessage,
+          receiveChatStatus,
+        );
         if (cancelled) {
           await unsubscribeFromChat(channel);
           return;
@@ -355,6 +382,20 @@ export function GlobalChatWidget() {
     window.setTimeout(() => setHighlightedMessageId(null), 1600);
   }
 
+  async function openChat() {
+    try {
+      const currentStatus = await loadChatStatus();
+      if (!currentStatus?.is_enabled) {
+        setStatus(null);
+        return;
+      }
+      setStatus(currentStatus);
+      setIsOpen(true);
+    } catch {
+      setStatus(null);
+    }
+  }
+
   if (!status) return null;
 
   return (
@@ -362,7 +403,7 @@ export function GlobalChatWidget() {
       {!isOpen ? (
         <button
           type="button"
-          onClick={() => setIsOpen(true)}
+          onClick={() => void openChat()}
           aria-label={text.launcher}
           title={text.tooltip}
           className="group fixed bottom-5 right-4 z-[70] grid h-12 w-12 place-items-center border-2 border-cyan-300/80 bg-[#07101f] text-cyan-200 shadow-[4px_4px_0_rgba(34,211,238,0.2)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:text-white sm:right-5"

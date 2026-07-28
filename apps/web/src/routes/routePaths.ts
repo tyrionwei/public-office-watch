@@ -68,3 +68,7 @@ export function internalReviewQueuePath() {
 export function internalDataProgressPath() {
   return '/internal/data-progress';
 }
+
+export function internalChatAdminPath() {
+  return '/internal/chat-admin';
+}

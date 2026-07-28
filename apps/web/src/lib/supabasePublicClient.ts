@@ -3,6 +3,7 @@ import { getSupabasePublicEnv } from './supabaseEnv.ts';
 
 let cachedClient: SupabaseClient | null | undefined;
 let cachedChatClient: SupabaseClient | null | undefined;
+let cachedChatAdminClient: SupabaseClient | null | undefined;
 
 export type PublicRealtimeChannel = RealtimeChannel;
 
@@ -53,4 +54,31 @@ export function getSupabaseChatClient(): SupabaseClient | null {
   });
 
   return cachedChatClient;
+}
+
+export function getSupabaseChatAdminClient(): SupabaseClient | null {
+  if (cachedChatAdminClient !== undefined) {
+    return cachedChatAdminClient;
+  }
+
+  const env = getSupabasePublicEnv();
+
+  if (!env) {
+    cachedChatAdminClient = null;
+    return cachedChatAdminClient;
+  }
+
+  cachedChatAdminClient = createClient(env.url, env.anonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      storageKey: 'public-office-watch-chat-admin-auth',
+    },
+    realtime: {
+      params: { eventsPerSecond: 2 },
+    },
+  });
+
+  return cachedChatAdminClient;
 }

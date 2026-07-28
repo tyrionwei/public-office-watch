@@ -148,7 +148,7 @@ export async function setChatMessageVisibility(
 export async function setChatProfileMute(
   messageId: string,
   muted: boolean,
-  durationMinutes: 60 | 1440,
+  durationMinutes: 10 | 60 | 1440 | 10080 | null,
   reason: ChatAdminReason,
 ) {
   await invoke({
@@ -191,6 +191,7 @@ export const chatAdminActionLabels: Record<string, string> = {
   message_removed: '隱藏訊息',
   message_restored: '恢復訊息',
   user_muted: '禁言使用者',
+  user_banned: '永久禁言使用者',
   user_unmuted: '解除禁言',
   security_hold_applied: '設定 Legal Hold',
   security_hold_released: '解除 Legal Hold',

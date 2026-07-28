@@ -21,6 +21,8 @@ function message(id: string, createdAt: string, body = id): ChatMessage {
     reply_to_public_code_snapshot: null,
     reply_to_body_snapshot: null,
     created_at: createdAt,
+    visibility_state: 'visible',
+    visibility_until: null,
   };
 }
 

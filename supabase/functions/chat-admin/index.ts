@@ -129,7 +129,10 @@ Deno.serve(async (request) => {
           .limit(20),
         serviceClient.from('chat_messages').select('id', { count: 'exact', head: true }).eq('moderation_status', 'visible'),
         serviceClient.from('chat_messages').select('id', { count: 'exact', head: true }).eq('moderation_status', 'removed'),
-        serviceClient.from('chat_profiles').select('user_id', { count: 'exact', head: true }).eq('status', 'muted'),
+        serviceClient
+          .from('chat_profiles')
+          .select('user_id', { count: 'exact', head: true })
+          .or(`status.eq.banned,and(status.eq.muted,muted_until.gt.${new Date().toISOString()})`),
         serviceClient.from('chat_message_security_logs').select('message_id', { count: 'exact', head: true }),
         serviceClient.from('chat_message_security_logs').select('message_id', { count: 'exact', head: true }).not('legal_hold_until', 'is', null),
       ]);
@@ -258,10 +261,11 @@ Deno.serve(async (request) => {
       if (!isUuid(payload.messageId) || typeof payload.muted !== 'boolean') {
         return jsonResponse(400, { error: 'CHAT_ADMIN_INVALID_REQUEST' });
       }
-      const durationMinutes = payload.muted ? payload.durationMinutes : null;
+      const durationMinutes = payload.muted ? payload.durationMinutes ?? null : null;
       const reason = payload.muted ? payload.reason : 'operator_correction';
+      const allowedDurations = new Set([10, 60, 1440, 10080, null]);
       if (
-        (payload.muted && durationMinutes !== 60 && durationMinutes !== 1440)
+        (payload.muted && !allowedDurations.has(durationMinutes as number | null))
         || typeof reason !== 'string'
         || (payload.muted && !moderationReasons.has(reason))
       ) {

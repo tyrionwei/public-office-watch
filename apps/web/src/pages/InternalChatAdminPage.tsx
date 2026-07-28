@@ -367,6 +367,7 @@ export function InternalChatAdminPage() {
             {displayedMessages.map((message) => {
               const isRemoved = message.moderationStatus === 'removed';
               const isMuted = message.profileStatus === 'muted' && (!message.mutedUntil || new Date(message.mutedUntil) > new Date());
+              const isBanned = message.profileStatus === 'banned';
               return (
                 <article key={message.id} className={`border p-3 ${isRemoved ? 'border-rose-400/30 bg-rose-500/[0.06]' : 'border-line/70 bg-bg/35'}`}>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -376,6 +377,7 @@ export function InternalChatAdminPage() {
                       <p className="mt-2 text-xs text-slate-500">{formatDateTime(message.createdAt)}{isRemoved ? `・已隱藏：${reasonLabels[message.removalReason ?? ''] ?? message.removalReason}` : ''}</p>
                       <p className="mt-1 break-all font-mono text-[10px] text-slate-600">ID: {message.id}</p>
                       {isMuted ? <p className="mt-1 text-xs text-accent">禁言至 {formatDateTime(message.mutedUntil)}</p> : null}
+                      {isBanned ? <p className="mt-1 text-xs text-rose-300">永久禁言中</p> : null}
                       {message.securityHoldActive ? (
                         <p className="mt-1 text-xs text-signal">Legal Hold 生效中・停止自動清理</p>
                       ) : message.securityLogPresent ? (
@@ -388,12 +390,15 @@ export function InternalChatAdminPage() {
                       <button type="button" disabled={busyAction !== null || message.moderationStatus === 'held'} onClick={() => void runAction(`visibility-${message.id}`, () => setChatMessageVisibility(message.id, isRemoved, reason))} className="border border-line px-3 py-2 text-xs text-slate-300 hover:text-white disabled:opacity-40">
                         {isRemoved ? '恢復訊息' : '隱藏訊息'}
                       </button>
-                      {isMuted ? (
-                        <button type="button" disabled={busyAction !== null} onClick={() => void runAction(`unmute-${message.id}`, () => setChatProfileMute(message.id, false, 60, reason))} className="border border-line px-3 py-2 text-xs text-slate-300 hover:text-white disabled:opacity-40">解除禁言</button>
+                      {isMuted || isBanned ? (
+                        <button type="button" disabled={busyAction !== null} onClick={() => void runAction(`unmute-${message.id}`, () => setChatProfileMute(message.id, false, null, reason))} className="border border-line px-3 py-2 text-xs text-slate-300 hover:text-white disabled:opacity-40">{isBanned ? '解除永久禁言' : '解除禁言'}</button>
                       ) : (
                         <>
+                          <button type="button" disabled={busyAction !== null} onClick={() => void runAction(`mute-10-${message.id}`, () => setChatProfileMute(message.id, true, 10, reason))} className="border border-accent/50 px-3 py-2 text-xs text-accent disabled:opacity-40">禁言 10 分鐘</button>
                           <button type="button" disabled={busyAction !== null} onClick={() => void runAction(`mute-60-${message.id}`, () => setChatProfileMute(message.id, true, 60, reason))} className="border border-accent/50 px-3 py-2 text-xs text-accent disabled:opacity-40">禁言 1 小時</button>
                           <button type="button" disabled={busyAction !== null} onClick={() => void runAction(`mute-1440-${message.id}`, () => setChatProfileMute(message.id, true, 1440, reason))} className="border border-accent/50 px-3 py-2 text-xs text-accent disabled:opacity-40">禁言 24 小時</button>
+                          <button type="button" disabled={busyAction !== null} onClick={() => void runAction(`mute-10080-${message.id}`, () => setChatProfileMute(message.id, true, 10080, reason))} className="border border-accent/50 px-3 py-2 text-xs text-accent disabled:opacity-40">禁言 7 天</button>
+                          <button type="button" disabled={busyAction !== null} onClick={() => void runAction(`ban-${message.id}`, () => setChatProfileMute(message.id, true, null, reason))} className="border border-rose-400/60 px-3 py-2 text-xs text-rose-200 disabled:opacity-40">永久禁言</button>
                         </>
                       )}
                       <button

@@ -19,19 +19,31 @@ export type ChatProfile = {
   terms_version: string | null;
   terms_accepted_at: string | null;
   display_name_updated_at: string;
+  status: 'active' | 'muted' | 'banned';
+  muted_until: string | null;
 };
+
+export type ChatMessageVisibility = 'visible' | 'removed' | 'author_muted' | 'author_banned';
 
 export type ChatMessage = {
   id: string;
   display_name_snapshot: string;
   public_code_snapshot: string;
-  body: string;
+  body: string | null;
   reply_to_message_id: string | null;
   reply_state: 'available' | 'removed' | null;
   reply_to_display_name_snapshot: string | null;
   reply_to_public_code_snapshot: string | null;
   reply_to_body_snapshot: string | null;
   created_at: string;
+  visibility_state: ChatMessageVisibility;
+  visibility_until: string | null;
+};
+
+export type ChatProfileModeration = {
+  public_code: string;
+  visibility_state: 'visible' | 'author_muted' | 'author_banned';
+  visibility_until: string | null;
 };
 
 export type ChatRealtimeChannel = PublicRealtimeChannel;
@@ -39,12 +51,14 @@ export type ChatRealtimeChannel = PublicRealtimeChannel;
 export class ChatApiError extends Error {
   readonly code: string;
   readonly status: number | null;
+  readonly mutedUntil: string | null;
 
-  constructor(code: string, status: number | null = null) {
+  constructor(code: string, status: number | null = null, mutedUntil: string | null = null) {
     super(code);
     this.name = 'ChatApiError';
     this.code = code;
     this.status = status;
+    this.mutedUntil = mutedUntil;
   }
 }
 
@@ -69,8 +83,13 @@ async function invokeChatApi<T>(body: Record<string, unknown>): Promise<T> {
   const context = 'context' in error ? error.context : null;
   if (context instanceof Response) {
     status = context.status;
-    const payload = await context.clone().json().catch(() => null) as { error?: unknown } | null;
+    const payload = await context.clone().json().catch(() => null) as {
+      error?: unknown;
+      mutedUntil?: unknown;
+    } | null;
     if (typeof payload?.error === 'string') code = payload.error;
+    const mutedUntil = typeof payload?.mutedUntil === 'string' ? payload.mutedUntil : null;
+    throw new ChatApiError(code, status, mutedUntil);
   }
 
   throw new ChatApiError(code, status);
@@ -130,7 +149,11 @@ export async function sendChatMessage(body: string, replyToMessageId: string | n
     body,
     replyToMessageId,
   });
-  return result.message;
+  return {
+    ...result.message,
+    visibility_state: result.message.visibility_state ?? 'visible',
+    visibility_until: result.message.visibility_until ?? null,
+  };
 }
 
 export async function subscribeToChatMessages(
@@ -138,6 +161,7 @@ export async function subscribeToChatMessages(
   onStatus: (status: string) => void,
   onMessageRemoved: (messageId: string) => void,
   onChatStatusChanged: (status: ChatStatus) => void,
+  onProfileModerationChanged: (moderation: ChatProfileModeration) => void,
 ): Promise<ChatRealtimeChannel> {
   const client = requireChatClient();
   const session = await ensureAnonymousChatSession();
@@ -159,6 +183,9 @@ export async function subscribeToChatMessages(
     })
     .on('broadcast', { event: 'status_changed' }, ({ payload }) => {
       if (isChatStatus(payload)) onChatStatusChanged(payload);
+    })
+    .on('broadcast', { event: 'profile_moderation_changed' }, ({ payload }) => {
+      if (isChatProfileModeration(payload)) onProfileModerationChanged(payload);
     })
     .subscribe((status) => onStatus(status));
 
@@ -240,8 +267,26 @@ function isChatMessage(value: unknown): value is ChatMessage {
   return typeof message.id === 'string'
     && typeof message.display_name_snapshot === 'string'
     && typeof message.public_code_snapshot === 'string'
-    && typeof message.body === 'string'
+    && (typeof message.body === 'string' || message.body === null)
+    && (
+      message.visibility_state === 'visible'
+      || message.visibility_state === 'removed'
+      || message.visibility_state === 'author_muted'
+      || message.visibility_state === 'author_banned'
+    )
     && typeof message.created_at === 'string';
+}
+
+function isChatProfileModeration(value: unknown): value is ChatProfileModeration {
+  if (!value || typeof value !== 'object') return false;
+  const moderation = value as Partial<ChatProfileModeration>;
+  return typeof moderation.public_code === 'string'
+    && (
+      moderation.visibility_state === 'visible'
+      || moderation.visibility_state === 'author_muted'
+      || moderation.visibility_state === 'author_banned'
+    )
+    && (typeof moderation.visibility_until === 'string' || moderation.visibility_until === null);
 }
 
 function isChatStatus(value: unknown): value is ChatStatus {

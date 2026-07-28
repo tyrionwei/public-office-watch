@@ -99,6 +99,8 @@ Deno.serve(async (request) => {
           'terms_version',
           'terms_accepted_at',
           'display_name_updated_at',
+          'status',
+          'muted_until',
         ].join(','))
         .eq('user_id', authData.user.id)
         .maybeSingle();
@@ -128,7 +130,18 @@ Deno.serve(async (request) => {
           .single();
 
         if (!error) {
-          return jsonResponse(200, { profile: data });
+          const { data: moderation } = await serviceClient
+            .from('chat_profiles')
+            .select('status,muted_until')
+            .eq('user_id', authData.user.id)
+            .single();
+          return jsonResponse(200, {
+            profile: {
+              ...data,
+              status: moderation?.status ?? 'active',
+              muted_until: moderation?.muted_until ?? null,
+            },
+          });
         }
 
         if (error.message.includes('CHAT_TERMS_REQUIRED')) {
@@ -210,6 +223,20 @@ Deno.serve(async (request) => {
       }
       if (errorCode === 'CHAT_TERMS_REQUIRED') {
         return jsonResponse(428, { error: errorCode });
+      }
+      if (errorCode === 'CHAT_MUTED') {
+        const { data: restrictedProfile } = await serviceClient
+          .from('chat_profiles')
+          .select('muted_until')
+          .eq('user_id', authData.user.id)
+          .maybeSingle();
+        return jsonResponse(403, {
+          error: errorCode,
+          mutedUntil: restrictedProfile?.muted_until ?? null,
+        });
+      }
+      if (errorCode === 'CHAT_BANNED') {
+        return jsonResponse(403, { error: errorCode });
       }
       if (errorCode) {
         return jsonResponse(400, { error: errorCode });

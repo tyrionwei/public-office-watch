@@ -28,6 +28,7 @@ import {
   unsubscribeFromChat,
   type ChatMessage,
   type ChatProfile,
+  type ChatProfileModeration,
   type ChatRealtimeChannel,
   type ChatStatus,
 } from '../lib/globalChat';
@@ -69,6 +70,12 @@ const copy = {
     cooldown: '{seconds} 秒後可再次發言',
     externalLink: '聊天室不接受網址或 Email。',
     duplicate: '相同訊息短時間內不能重複送出。',
+    muted: '你已被禁言至 {time}，期間無法發言。',
+    mutedUnknown: '你目前已被禁言，暫時無法發言。',
+    banned: '你的聊天室發言權限已被永久停用。',
+    hiddenMessage: '此訊息因疑似違反聊天室規則而被隱藏。',
+    mutedMessage: '此使用者目前被禁言，訊息暫時隱藏。',
+    bannedMessage: '此使用者已被永久禁言，訊息已隱藏。',
     genericError: '操作未完成，請稍後再試。',
     authError: '匿名身分建立失敗，請稍後再試。',
     nameCooldownError: '名稱每 30 分鐘只能修改一次。',
@@ -109,6 +116,12 @@ const copy = {
     cooldown: 'Send again in {seconds}s',
     externalLink: 'Links and email addresses are not allowed.',
     duplicate: 'The same message cannot be repeated yet.',
+    muted: 'You are muted until {time} and cannot post during this period.',
+    mutedUnknown: 'You are currently muted and cannot post.',
+    banned: 'Your chat posting access has been permanently disabled.',
+    hiddenMessage: 'This message is hidden for a possible chat rule violation.',
+    mutedMessage: 'This user is currently muted. Their message is temporarily hidden.',
+    bannedMessage: 'This user is permanently muted. Their message is hidden.',
     genericError: 'The action could not be completed. Please try again.',
     authError: 'Anonymous identity could not be created. Please try again.',
     nameCooldownError: 'Your name can only be changed once every 30 minutes.',
@@ -138,7 +151,20 @@ function errorMessage(error: unknown, text: ChatCopy) {
   if (code === 'CHAT_DUPLICATE') return text.duplicate;
   if (code === 'CHAT_AUTH_FAILED' || code === 'CHAT_UNAUTHENTICATED') return text.authError;
   if (code === 'CHAT_NAME_COOLDOWN') return text.nameCooldownError;
+  if (code === 'CHAT_MUTED') {
+    return error instanceof ChatApiError && error.mutedUntil
+      ? interpolate(text.muted, { time: formatChatTimestamp(error.mutedUntil) })
+      : text.mutedUnknown;
+  }
+  if (code === 'CHAT_BANNED') return text.banned;
   return text.genericError;
+}
+
+function visibleMessageBody(message: ChatMessage, text: ChatCopy) {
+  if (message.visibility_state === 'removed') return text.hiddenMessage;
+  if (message.visibility_state === 'author_muted') return text.mutedMessage;
+  if (message.visibility_state === 'author_banned') return text.bannedMessage;
+  return message.body ?? text.hiddenMessage;
 }
 
 export function GlobalChatWidget() {
@@ -172,6 +198,14 @@ export function GlobalChatWidget() {
   const nameCooldownUntil = profile
     ? Date.parse(profile.display_name_updated_at) + chatNameCooldownMinutes * 60 * 1000
     : 0;
+  const profileMuteUntil = profile?.status === 'muted' && profile.muted_until
+    ? Date.parse(profile.muted_until)
+    : 0;
+  const nextVisibilityExpiry = useMemo(() => messages
+    .filter((message) => message.visibility_state === 'author_muted' && message.visibility_until)
+    .map((message) => Date.parse(message.visibility_until as string))
+    .filter((value) => value > Date.now())
+    .sort((left, right) => left - right)[0] ?? 0, [messages]);
 
   useEffect(() => {
     let active = true;
@@ -233,14 +267,60 @@ export function GlobalChatWidget() {
 
     const removeMessage = (messageId: string) => {
       setMessages((current) => current
-        .filter((message) => message.id !== messageId)
         .map((message) => message.reply_to_message_id === messageId
           ? {
             ...message,
             reply_state: 'removed',
+            reply_to_display_name_snapshot: null,
+            reply_to_public_code_snapshot: null,
+            reply_to_body_snapshot: null,
+          }
+          : message)
+        .map((message) => message.id === messageId
+          ? {
+            ...message,
+            body: null,
+            visibility_state: 'removed',
+            visibility_until: null,
           }
           : message));
       setReplyTo((current) => current?.id === messageId ? null : current);
+    };
+
+    const receiveProfileModeration = (moderation: ChatProfileModeration) => {
+      setProfile((current) => {
+        if (!current || current.public_code !== moderation.public_code) return current;
+        return {
+          ...current,
+          status: moderation.visibility_state === 'author_banned'
+            ? 'banned'
+            : moderation.visibility_state === 'author_muted' ? 'muted' : 'active',
+          muted_until: moderation.visibility_until,
+        };
+      });
+
+      if (moderation.visibility_state === 'visible') {
+        void loadChatMessages().then((page) => {
+          if (!cancelled) setMessages((current) => mergeChatMessages(current, page));
+        }).catch(() => undefined);
+        return;
+      }
+
+      setMessages((current) => current.map((message) => {
+        const isAuthor = message.public_code_snapshot === moderation.public_code;
+        const isReplyTarget = message.reply_to_public_code_snapshot === moderation.public_code;
+        return {
+          ...message,
+          body: isAuthor ? null : message.body,
+          visibility_state: isAuthor ? moderation.visibility_state : message.visibility_state,
+          visibility_until: isAuthor ? moderation.visibility_until : message.visibility_until,
+          reply_state: isReplyTarget ? 'removed' : message.reply_state,
+          reply_to_display_name_snapshot: isReplyTarget ? null : message.reply_to_display_name_snapshot,
+          reply_to_public_code_snapshot: isReplyTarget ? null : message.reply_to_public_code_snapshot,
+          reply_to_body_snapshot: isReplyTarget ? null : message.reply_to_body_snapshot,
+        };
+      }));
+      setReplyTo((current) => current?.public_code_snapshot === moderation.public_code ? null : current);
     };
 
     const receiveChatStatus = (updatedStatus: ChatStatus) => {
@@ -259,6 +339,7 @@ export function GlobalChatWidget() {
           setRealtimeStatus,
           removeMessage,
           receiveChatStatus,
+          receiveProfileModeration,
         );
         if (cancelled) {
           await unsubscribeFromChat(channel);
@@ -295,10 +376,23 @@ export function GlobalChatWidget() {
   }, [isOpen, status, text]);
 
   useEffect(() => {
-    if (Math.max(cooldownUntil, nameCooldownUntil) <= Date.now()) return undefined;
+    if (Math.max(cooldownUntil, nameCooldownUntil, profileMuteUntil) <= Date.now()) return undefined;
     const timer = window.setInterval(() => setClock(Date.now()), 250);
     return () => window.clearInterval(timer);
-  }, [cooldownUntil, nameCooldownUntil]);
+  }, [cooldownUntil, nameCooldownUntil, profileMuteUntil]);
+
+  useEffect(() => {
+    if (!isOpen || nextVisibilityExpiry === 0) return undefined;
+    const timer = window.setTimeout(() => {
+      void loadChatMessages().then((page) => {
+        setMessages((current) => mergeChatMessages(current, page));
+        setProfile((current) => current?.status === 'muted'
+          ? { ...current, status: 'active', muted_until: null }
+          : current);
+      }).catch(() => undefined);
+    }, Math.max(0, nextVisibilityExpiry - Date.now()) + 250);
+    return () => window.clearTimeout(timer);
+  }, [isOpen, nextVisibilityExpiry]);
 
   useLayoutEffect(() => {
     const list = listRef.current;
@@ -321,10 +415,15 @@ export function GlobalChatWidget() {
   const cooldownSeconds = Math.max(0, Math.ceil((cooldownUntil - clock) / 1000));
   const nameCooldownSeconds = Math.max(0, Math.ceil((nameCooldownUntil - clock) / 1000));
   const nameCooldownMinutes = Math.max(1, Math.ceil(nameCooldownSeconds / 60));
+  const profileBanned = profile?.status === 'banned';
+  const profileMuted = profile?.status === 'muted'
+    && (!profile.muted_until || Date.parse(profile.muted_until) > clock);
   const isChangingName = Boolean(profile && displayName.trim() !== profile.current_display_name);
   const nameChangeBlocked = isChangingName && nameCooldownSeconds > 0;
   const canSend = Boolean(profile)
     && !needsTerms
+    && !profileBanned
+    && !profileMuted
     && characterCount > 0
     && cooldownSeconds === 0
     && !isSending;
@@ -398,6 +497,16 @@ export function GlobalChatWidget() {
       }
       if (caught instanceof ChatApiError && caught.code === 'CHAT_TERMS_REQUIRED') {
         setIsEditingName(true);
+      }
+      if (caught instanceof ChatApiError && caught.code === 'CHAT_MUTED') {
+        setProfile((current) => current
+          ? { ...current, status: 'muted', muted_until: caught.mutedUntil }
+          : current);
+      }
+      if (caught instanceof ChatApiError && caught.code === 'CHAT_BANNED') {
+        setProfile((current) => current
+          ? { ...current, status: 'banned', muted_until: null }
+          : current);
       }
       setError(errorMessage(caught, text));
     } finally {
@@ -499,9 +608,9 @@ export function GlobalChatWidget() {
                   ) : null}
                   <article
                     id={`chat-message-${message.id}`}
-                    className={`group border px-3 py-2 transition ${highlightedMessageId === message.id ? 'border-pink-300/80 bg-pink-300/10' : 'border-transparent bg-white/[0.025] hover:border-line/80'}`}
+                    className={`group border px-3 py-2 transition ${highlightedMessageId === message.id ? 'border-pink-300/80 bg-pink-300/10' : message.visibility_state === 'visible' ? 'border-transparent bg-white/[0.025] hover:border-line/80' : 'border-amber-300/20 bg-amber-300/[0.04]'}`}
                   >
-                    {message.reply_to_message_id ? (
+                    {message.visibility_state === 'visible' && message.reply_to_message_id ? (
                       <button
                         type="button"
                         onClick={() => jumpToReply(message.reply_to_message_id)}
@@ -516,10 +625,12 @@ export function GlobalChatWidget() {
                       </p>
                       <time className="shrink-0 text-[10px] text-slate-500">{formatChatTimestamp(message.created_at)}</time>
                     </div>
-                    <p className="mt-1 break-words text-sm leading-6 text-slate-100">{message.body}</p>
-                    <div className="mt-1 flex justify-end">
-                      <button type="button" onClick={() => setReplyTo(message)} className="text-[10px] text-slate-500 hover:text-cyan-200">{text.reply}</button>
-                    </div>
+                    <p className={`mt-1 break-words text-sm leading-6 ${message.visibility_state === 'visible' ? 'text-slate-100' : 'italic text-amber-100/75'}`}>{visibleMessageBody(message, text)}</p>
+                    {message.visibility_state === 'visible' ? (
+                      <div className="mt-1 flex justify-end">
+                        <button type="button" onClick={() => setReplyTo(message)} className="text-[10px] text-slate-500 hover:text-cyan-200">{text.reply}</button>
+                      </div>
+                    ) : null}
                   </article>
                 </div>
               ))}
@@ -530,7 +641,15 @@ export function GlobalChatWidget() {
             {realtimeStatus !== 'SUBSCRIBED' && !isLoading ? <p className="mb-2 text-[10px] text-amber-200/80">{text.reconnecting}</p> : null}
             {error ? <p role="alert" className="mb-2 border-l-2 border-pink-400 bg-pink-400/10 px-2 py-1 text-[11px] text-pink-100">{error}</p> : null}
 
-            {isEditingName || !profile || needsTerms ? (
+            {profileBanned || profileMuted ? (
+              <div className="border border-amber-300/30 bg-amber-300/[0.06] px-3 py-2 text-xs leading-5 text-amber-100">
+                {profileBanned
+                  ? text.banned
+                  : profile?.muted_until
+                    ? interpolate(text.muted, { time: formatChatTimestamp(profile.muted_until) })
+                    : text.mutedUnknown}
+              </div>
+            ) : isEditingName || !profile || needsTerms ? (
               <form onSubmit={handleProfileSubmit} className="space-y-2">
                 <div>
                   <p className="font-display text-xs text-white">{profile ? text.nameEditTitle : text.nameTitle}</p>

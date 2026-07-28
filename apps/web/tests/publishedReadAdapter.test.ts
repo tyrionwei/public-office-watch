@@ -30,6 +30,16 @@ function createFakeClient(responses: Record<string, FakeResponse | FakeResponse[
   const calls: RecordedCall[] = [];
   const responseIndexes = new Map<string, number>();
 
+  function nextResponse(key: string) {
+    const configuredResponse = responses[key];
+    const responseIndex = responseIndexes.get(key) ?? 0;
+    const response = Array.isArray(configuredResponse)
+      ? configuredResponse[responseIndex]
+      : configuredResponse;
+    responseIndexes.set(key, responseIndex + 1);
+    return response ?? { data: [], error: null, count: null };
+  }
+
   const client = {
     schema(schemaName: string) {
       calls.push(['schema', schemaName]);
@@ -74,17 +84,15 @@ function createFakeClient(responses: Record<string, FakeResponse | FakeResponse[
               return query;
             },
             then(onFulfilled: (value: FakeResponse) => unknown, onRejected?: (reason: unknown) => unknown) {
-              const configuredResponse = responses[relationName];
-              const responseIndex = responseIndexes.get(relationName) ?? 0;
-              const response = Array.isArray(configuredResponse)
-                ? configuredResponse[responseIndex]
-                : configuredResponse;
-              responseIndexes.set(relationName, responseIndex + 1);
-              return Promise.resolve(response ?? { data: [], error: null, count: null })
+              return Promise.resolve(nextResponse(relationName))
                 .then(onFulfilled, onRejected);
             },
           };
           return query;
+        },
+        rpc(functionName: string, args: Record<string, unknown>) {
+          calls.push(['rpc', functionName, args]);
+          return Promise.resolve(nextResponse(`rpc:${functionName}`));
         },
       };
     },
@@ -334,7 +342,7 @@ test('person profiles de-duplicate at most four ids and bound every published re
   const fake = createFakeClient({
     people: { data: [person], error: null, count: null },
     candidates: { data: [candidate], error: null, count: 1 },
-    person_claims: { data: [claim], error: null, count: 1 },
+    'rpc:person_claims_for': { data: [claim], error: null, count: null },
     person_party_affiliations: { data: [affiliation], error: null, count: 1 },
   });
   const adapter = createPublishedReadAdapter(fake.client);
@@ -351,11 +359,12 @@ test('person profiles de-duplicate at most four ids and bound every published re
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
     ['from', 'people'],
     ['from', 'candidates'],
-    ['from', 'person_claims'],
     ['from', 'person_party_affiliations'],
   ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc'), [
+    ['rpc', 'person_claims_for', { p_person_ids: ['person-2', 'person-1'] }],
+  ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'in'), [
-    ['in', 'person_id', ['person-2', 'person-1']],
     ['in', 'person_id', ['person-2', 'person-1']],
     ['in', 'person_id', ['person-2', 'person-1']],
     ['in', 'person_id', ['person-2', 'person-1']],
@@ -363,7 +372,6 @@ test('person profiles de-duplicate at most four ids and bound every published re
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
     ['limit', 2],
     ['limit', PERSON_CANDIDATE_LIMIT + 1],
-    ['limit', PERSON_CLAIM_LIMIT + 1],
     ['limit', PERSON_PARTY_AFFILIATION_LIMIT + 1],
   ]);
 });
@@ -394,7 +402,7 @@ test('person profile reads fail closed when a related-row limit truncates data',
       error: null,
       count: null,
     },
-    person_claims: { data: [], error: null, count: 0 },
+    'rpc:person_claims_for': { data: [], error: null, count: null },
     person_party_affiliations: { data: [], error: null, count: 0 },
   });
   const adapter = createPublishedReadAdapter(fake.client);
@@ -402,5 +410,27 @@ test('person profile reads fail closed when a related-row limit truncates data',
   await assert.rejects(
     () => adapter.loadPersonProfiles(['person-1']),
     new RegExp(`Published person candidates exceeded the ${PERSON_CANDIDATE_LIMIT}-row batch limit`),
+  );
+});
+
+test('person profile reads reject the claims RPC sentinel row', async () => {
+  const fake = createFakeClient({
+    people: { data: [], error: null, count: null },
+    candidates: { data: [], error: null, count: null },
+    'rpc:person_claims_for': {
+      data: Array.from({ length: PERSON_CLAIM_LIMIT + 1 }, (_, index) => ({
+        claim_id: `claim-${index}`,
+        person_id: 'person-1',
+      })),
+      error: null,
+      count: null,
+    },
+    person_party_affiliations: { data: [], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await assert.rejects(
+    () => adapter.loadPersonProfiles(['person-1']),
+    new RegExp(`Published person claims exceeded the ${PERSON_CLAIM_LIMIT}-row batch limit`),
   );
 });

@@ -188,20 +188,6 @@ export const PERSON_CANDIDATE_COLUMNS = [
   'photo_license_type',
 ].join(',');
 
-export const PERSON_CLAIM_COLUMNS = [
-  'claim_id',
-  'person_id',
-  'claim_type',
-  'claim_value',
-  'claim_json',
-  'confidence_level',
-  'review_score',
-  'source_name',
-  'source_url',
-  'observed_at',
-  'updated_at',
-].join(',');
-
 export const PERSON_PARTY_AFFILIATION_COLUMNS = [
   'affiliation_id',
   'affiliation_key',
@@ -383,6 +369,10 @@ export interface PublishedQueryBuilder<Row> extends PromiseLike<PublishedQueryRe
 export interface PublishedSchemaClient {
   schema(schemaName: string): {
     from<Row>(relationName: string): PublishedQueryBuilder<Row>;
+    rpc<Row>(
+      functionName: string,
+      args: Record<string, unknown>,
+    ): PromiseLike<PublishedQueryResponse<Row>>;
   };
 }
 
@@ -655,14 +645,9 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           .order('race_id', { ascending: true })
           .order('candidate_id', { ascending: true })
           .limit(PERSON_CANDIDATE_LIMIT + 1),
-        published
-          .from<PublicPersonClaim>('person_claims')
-          .select(PERSON_CLAIM_COLUMNS)
-          .in('person_id', personIds)
-          .order('person_id', { ascending: true })
-          .order('observed_at', { ascending: false, nullsFirst: false })
-          .order('claim_id', { ascending: true })
-          .limit(PERSON_CLAIM_LIMIT + 1),
+        published.rpc<PublicPersonClaim>('person_claims_for', {
+          p_person_ids: personIds,
+        }),
         published
           .from<PublicPersonPartyAffiliation>('person_party_affiliations')
           .select(PERSON_PARTY_AFFILIATION_COLUMNS)

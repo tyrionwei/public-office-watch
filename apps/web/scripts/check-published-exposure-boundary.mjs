@@ -16,12 +16,12 @@ const reviewedRelations = [
   'home_ticker',
   'people',
   'people_directory',
-  'person_claims',
   'person_party_affiliations',
   'races',
   'regions',
   'search_results',
 ];
+const reviewedFunctions = ['person_claims_for'];
 const issues = [];
 
 function read(relativePath) {
@@ -82,11 +82,21 @@ const adapterSource = fs.readFileSync(adapterPath, 'utf8');
 const adapterRelations = Array.from(new Set(
   Array.from(adapterSource.matchAll(/\.from<[^>]+>\('([^']+)'\)/g), (match) => match[1]),
 )).sort();
+const adapterFunctions = Array.from(new Set(
+  Array.from(adapterSource.matchAll(/\.rpc(?:<[^>]+>)?\('([^']+)'/g), (match) => match[1]),
+)).sort();
 
 if (JSON.stringify(adapterRelations) !== JSON.stringify(reviewedRelations)) {
   addIssue(
     'adapter-relation-allowlist-mismatch',
     `Expected ${reviewedRelations.join(', ')}, found ${adapterRelations.join(', ') || 'none'}.`,
+  );
+}
+
+if (JSON.stringify(adapterFunctions) !== JSON.stringify(reviewedFunctions)) {
+  addIssue(
+    'adapter-function-allowlist-mismatch',
+    `Expected ${reviewedFunctions.join(', ')}, found ${adapterFunctions.join(', ') || 'none'}.`,
   );
 }
 
@@ -109,4 +119,4 @@ if (issues.length > 0) {
   process.exit(1);
 }
 
-console.log(`Published exposure boundary check OK. Schema remains private; reviewed adapter relations: ${reviewedRelations.join(', ')}.`);
+console.log(`Published exposure boundary check OK. Schema remains private; reviewed adapter relations: ${reviewedRelations.join(', ')}; functions: ${reviewedFunctions.join(', ')}.`);

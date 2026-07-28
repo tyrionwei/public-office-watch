@@ -10,6 +10,7 @@ import { useI18n } from '../i18n';
 import {
   ChatApiError,
   chatCooldownSeconds,
+  chatNameCooldownMinutes,
   chatDateKey,
   chatPageSize,
   countChatCharacters,
@@ -36,8 +37,8 @@ const copy = {
     launcher: '開啟全站即時討論',
     tooltip: '即時討論',
     title: '全站即時討論',
-    subtitle: '短句交流・發言者自行負責',
     close: '關閉聊天室',
+    minimize: '縮小聊天室',
     loading: '正在讀取最近訊息…',
     empty: '目前還沒有訊息。',
     earliest: '已到最早訊息',
@@ -48,11 +49,13 @@ const copy = {
     cancelReply: '取消回覆',
     cancel: '取消',
     removed: '原訊息已移除',
-    nameAction: '名稱',
+    nameAction: '修改名稱',
     nameTitle: '設定聊天名稱',
     nameEditTitle: '更改聊天名稱',
     namePlaceholder: '輸入 2～12 字名稱',
-    identityNote: '名稱可重複且可隨時更改；公開短碼建立後不會改變。',
+    identityNote: '名稱可重複，每 30 分鐘可修改一次；公開短碼建立後不會改變。',
+    nameCooldown: '{minutes} 分鐘後可再次修改名稱',
+    nameCooldownShort: '{minutes} 分',
     responsibility: '我了解發言將公開顯示，並應自行對內容負責；不得張貼連結、廣告、洗版、侵權或違法內容。',
     privacy: '為防止濫用及依法配合調查，本站會記錄匿名識別碼、發言時間與 IP 安全紀錄，一般保存 180 日。',
     rules: '聊天室規則與隱私說明',
@@ -68,13 +71,14 @@ const copy = {
     duplicate: '相同訊息短時間內不能重複送出。',
     genericError: '操作未完成，請稍後再試。',
     authError: '匿名身分建立失敗，請稍後再試。',
+    nameCooldownError: '名稱每 30 分鐘只能修改一次。',
   },
   en: {
     launcher: 'Open site-wide live chat',
     tooltip: 'Live chat',
     title: 'Site-wide live chat',
-    subtitle: 'Short messages · You are responsible for your posts',
     close: 'Close chat',
+    minimize: 'Minimize chat',
     loading: 'Loading recent messages…',
     empty: 'No messages yet.',
     earliest: 'You have reached the first message',
@@ -85,11 +89,13 @@ const copy = {
     cancelReply: 'Cancel reply',
     cancel: 'Cancel',
     removed: 'Original message removed',
-    nameAction: 'Name',
+    nameAction: 'Change name',
     nameTitle: 'Set your chat name',
     nameEditTitle: 'Change your chat name',
     namePlaceholder: 'Enter a 2–12 character name',
-    identityNote: 'Names may repeat and can be changed. Your public code never changes.',
+    identityNote: 'Names may repeat and can be changed every 30 minutes. Your public code never changes.',
+    nameCooldown: 'You can change your name again in {minutes} minutes',
+    nameCooldownShort: '{minutes}m',
     responsibility: 'I understand my posts are public and I am responsible for them. Links, ads, spam, infringement, and illegal content are prohibited.',
     privacy: 'To prevent abuse and respond to lawful requests, anonymous ID, posting time, and protected IP records are normally retained for 180 days.',
     rules: 'Chat rules and privacy notice',
@@ -105,6 +111,7 @@ const copy = {
     duplicate: 'The same message cannot be repeated yet.',
     genericError: 'The action could not be completed. Please try again.',
     authError: 'Anonymous identity could not be created. Please try again.',
+    nameCooldownError: 'Your name can only be changed once every 30 minutes.',
   },
 } as const;
 
@@ -130,6 +137,7 @@ function errorMessage(error: unknown, text: ChatCopy) {
   if (code === 'CHAT_EXTERNAL_LINK') return text.externalLink;
   if (code === 'CHAT_DUPLICATE') return text.duplicate;
   if (code === 'CHAT_AUTH_FAILED' || code === 'CHAT_UNAUTHENTICATED') return text.authError;
+  if (code === 'CHAT_NAME_COOLDOWN') return text.nameCooldownError;
   return text.genericError;
 }
 
@@ -138,6 +146,7 @@ export function GlobalChatWidget() {
   const text = copy[language];
   const [status, setStatus] = useState<ChatStatus | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isPanelEngaged, setIsPanelEngaged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -155,10 +164,14 @@ export function GlobalChatWidget() {
   const [cooldownUntil, setCooldownUntil] = useState(0);
   const [clock, setClock] = useState(Date.now());
   const [highlightedMessageId, setHighlightedMessageId] = useState<string | null>(null);
+  const panelRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const channelRef = useRef<ChatRealtimeChannel | null>(null);
   const preserveHeightRef = useRef<number | null>(null);
   const scrollToBottomRef = useRef(false);
+  const nameCooldownUntil = profile
+    ? Date.parse(profile.display_name_updated_at) + chatNameCooldownMinutes * 60 * 1000
+    : 0;
 
   useEffect(() => {
     let active = true;
@@ -175,7 +188,10 @@ export function GlobalChatWidget() {
   useEffect(() => {
     if (!isOpen) return undefined;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        setIsPanelEngaged(false);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     const previousOverflow = document.body.style.overflow;
@@ -184,6 +200,15 @@ export function GlobalChatWidget() {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = previousOverflow;
     };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!panelRef.current?.contains(event.target as Node)) setIsPanelEngaged(false);
+    };
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
   }, [isOpen]);
 
   useEffect(() => {
@@ -220,7 +245,10 @@ export function GlobalChatWidget() {
 
     const receiveChatStatus = (updatedStatus: ChatStatus) => {
       setStatus(updatedStatus.is_enabled ? updatedStatus : null);
-      if (!updatedStatus.is_enabled) setIsOpen(false);
+      if (!updatedStatus.is_enabled) {
+        setIsOpen(false);
+        setIsPanelEngaged(false);
+      }
     };
 
     void (async () => {
@@ -267,10 +295,10 @@ export function GlobalChatWidget() {
   }, [isOpen, status, text]);
 
   useEffect(() => {
-    if (cooldownUntil <= Date.now()) return undefined;
+    if (Math.max(cooldownUntil, nameCooldownUntil) <= Date.now()) return undefined;
     const timer = window.setInterval(() => setClock(Date.now()), 250);
     return () => window.clearInterval(timer);
-  }, [cooldownUntil]);
+  }, [cooldownUntil, nameCooldownUntil]);
 
   useLayoutEffect(() => {
     const list = listRef.current;
@@ -291,6 +319,10 @@ export function GlobalChatWidget() {
     || !profile.terms_accepted_at;
   const characterCount = countChatCharacters(body);
   const cooldownSeconds = Math.max(0, Math.ceil((cooldownUntil - clock) / 1000));
+  const nameCooldownSeconds = Math.max(0, Math.ceil((nameCooldownUntil - clock) / 1000));
+  const nameCooldownMinutes = Math.max(1, Math.ceil(nameCooldownSeconds / 60));
+  const isChangingName = Boolean(profile && displayName.trim() !== profile.current_display_name);
+  const nameChangeBlocked = isChangingName && nameCooldownSeconds > 0;
   const canSend = Boolean(profile)
     && !needsTerms
     && characterCount > 0
@@ -390,6 +422,7 @@ export function GlobalChatWidget() {
         return;
       }
       setStatus(currentStatus);
+      setIsPanelEngaged(false);
       setIsOpen(true);
     } catch {
       setStatus(null);
@@ -408,31 +441,39 @@ export function GlobalChatWidget() {
           title={text.tooltip}
           className="group fixed bottom-5 right-4 z-[70] grid h-12 w-12 place-items-center border-2 border-cyan-300/80 bg-[#07101f] text-cyan-200 shadow-[4px_4px_0_rgba(34,211,238,0.2)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:text-white sm:right-5"
         >
+          <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap border border-cyan-300/40 bg-[#07101f] px-2 py-1 text-[11px] text-cyan-100 opacity-0 shadow-[3px_3px_0_rgba(34,211,238,0.14)] transition-opacity group-hover:opacity-100 md:block">
+            {text.tooltip}
+          </span>
           <PixelChatIcon />
         </button>
       ) : null}
 
-      {isOpen ? <button type="button" aria-label={text.close} onClick={() => setIsOpen(false)} className="fixed inset-0 z-[71] bg-black/65 md:hidden" /> : null}
+      {isOpen ? <button type="button" aria-label={text.close} onClick={() => { setIsOpen(false); setIsPanelEngaged(false); }} className="fixed inset-0 z-[71] bg-black/65 md:hidden" /> : null}
 
       {isOpen ? (
         <section
+          ref={panelRef}
           role="dialog"
           aria-modal="true"
           aria-label={text.title}
-          className="pixel-corners fixed inset-x-0 bottom-0 z-[72] flex h-[82dvh] flex-col border-2 border-cyan-300/70 bg-[#07101f] shadow-[0_-8px_32px_rgba(0,0,0,0.55)] md:bottom-5 md:left-auto md:right-5 md:h-[72vh] md:max-h-[720px] md:min-h-[520px] md:w-[400px] md:shadow-[-8px_8px_32px_rgba(0,0,0,0.55)]"
+          onPointerDown={() => setIsPanelEngaged(true)}
+          className={`pixel-corners fixed inset-x-0 bottom-0 z-[72] flex h-[82dvh] flex-col border-2 border-cyan-300/70 bg-[#07101f] shadow-[0_-8px_32px_rgba(0,0,0,0.55)] transition-opacity duration-200 md:bottom-5 md:left-auto md:right-5 md:h-[72vh] md:max-h-[720px] md:min-h-[520px] md:w-[400px] md:shadow-[-8px_8px_32px_rgba(0,0,0,0.55)] ${isPanelEngaged ? 'md:opacity-100' : 'md:opacity-60 md:hover:opacity-100 md:focus-within:opacity-100'}`}
         >
-          <header className="flex items-start justify-between gap-3 border-b border-cyan-300/25 bg-cyan-300/[0.06] px-4 py-3">
-            <div>
-              <h2 className="font-display text-sm tracking-[0.14em] text-cyan-100">{text.title}</h2>
-              <p className="mt-1 text-[11px] text-slate-400">{text.subtitle}</p>
-            </div>
+          <header className="flex items-center justify-between gap-3 border-b border-cyan-300/25 bg-cyan-300/[0.06] px-4 py-3">
+            <h2 className="font-display text-sm tracking-[0.14em] text-cyan-100">{text.title}</h2>
             <div className="flex items-center gap-2">
               {profile && !isEditingName ? (
-                <button type="button" onClick={() => setIsEditingName(true)} className="border border-line px-2 py-1 text-[11px] text-slate-300 hover:border-cyan-300/60 hover:text-white">
-                  {text.nameAction}
+                <button
+                  type="button"
+                  disabled={nameCooldownSeconds > 0}
+                  onClick={() => setIsEditingName(true)}
+                  title={nameCooldownSeconds > 0 ? interpolate(text.nameCooldown, { minutes: nameCooldownMinutes }) : text.nameAction}
+                  className="border border-line px-2 py-1 text-[11px] text-slate-300 hover:border-cyan-300/60 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {text.nameAction}{nameCooldownSeconds > 0 ? ` · ${interpolate(text.nameCooldownShort, { minutes: nameCooldownMinutes })}` : ''}
                 </button>
               ) : null}
-              <button type="button" onClick={() => setIsOpen(false)} aria-label={text.close} className="grid h-7 w-7 place-items-center border border-line text-slate-300 hover:border-pink-300/70 hover:text-white">×</button>
+              <button type="button" onClick={() => { setIsOpen(false); setIsPanelEngaged(false); }} aria-label={text.minimize} title={text.minimize} className="grid h-7 w-7 place-items-center border border-line text-lg leading-none text-slate-300 hover:border-cyan-300/70 hover:text-white">−</button>
             </div>
           </header>
 
@@ -512,11 +553,14 @@ export function GlobalChatWidget() {
                   <summary className="cursor-pointer text-cyan-300/80">{text.rules}</summary>
                   <p className="mt-1 leading-5">{text.privacy}</p>
                 </details>
+                {nameChangeBlocked ? (
+                  <p className="text-[10px] text-amber-200/80">{interpolate(text.nameCooldown, { minutes: nameCooldownMinutes })}</p>
+                ) : null}
                 <div className="flex justify-end gap-2">
                   {profile && !needsTerms ? <button type="button" onClick={() => { setDisplayName(profile.current_display_name); setIsEditingName(false); }} className="px-3 py-2 text-xs text-slate-400 hover:text-white">{text.cancel}</button> : null}
                   <button
                     type="submit"
-                    disabled={isSavingProfile || countChatCharacters(displayName.trim()) < 2 || (needsTerms && !acceptedTerms)}
+                    disabled={isSavingProfile || nameChangeBlocked || countChatCharacters(displayName.trim()) < 2 || (needsTerms && !acceptedTerms)}
                     className="border border-cyan-300/60 bg-cyan-300/10 px-3 py-2 text-xs text-cyan-100 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {isSavingProfile ? text.saving : profile ? text.updateName : text.saveName}

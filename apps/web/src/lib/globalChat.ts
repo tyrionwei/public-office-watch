@@ -5,6 +5,7 @@ import {
 
 export const chatPageSize = 50;
 export const chatCooldownSeconds = 8;
+export const chatNameCooldownMinutes = 30;
 
 export type ChatStatus = {
   is_enabled: boolean;
@@ -17,6 +18,7 @@ export type ChatProfile = {
   current_display_name: string;
   terms_version: string | null;
   terms_accepted_at: string | null;
+  display_name_updated_at: string;
 };
 
 export type ChatMessage = {

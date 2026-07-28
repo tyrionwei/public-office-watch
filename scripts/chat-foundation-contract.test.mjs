@@ -27,6 +27,10 @@ const adminSearchMigration = readFileSync(
   new URL('../supabase/migrations/202607290006_chat_admin_message_search.sql', import.meta.url),
   'utf8',
 );
+const nameCooldownMigration = readFileSync(
+  new URL('../supabase/migrations/202607290007_chat_profile_name_cooldown.sql', import.meta.url),
+  'utf8',
+);
 const app = readFileSync(
   new URL('../apps/web/src/App.tsx', import.meta.url),
   'utf8',
@@ -130,6 +134,15 @@ test('terms acceptance is durable, versioned and enforced before writes', () => 
   assert.match(edgeFunction, /payload\.action === 'get-profile'/);
 });
 
+test('display names can only change every 30 minutes and the server is authoritative', () => {
+  assert.match(nameCooldownMigration, /display_name_updated_at TIMESTAMPTZ/);
+  assert.match(nameCooldownMigration, /INTERVAL '30 minutes'/);
+  assert.match(nameCooldownMigration, /MESSAGE = 'CHAT_NAME_COOLDOWN'/);
+  assert.match(nameCooldownMigration, /FOR UPDATE/);
+  assert.match(edgeFunction, /CHAT_NAME_COOLDOWN/);
+  assert.match(chatClient, /chatNameCooldownMinutes = 30/);
+});
+
 test('realtime broadcasts only the public message shape on a private channel', () => {
   assert.match(interfaceMigration, /PERFORM realtime\.send\(/);
   assert.match(interfaceMigration, /'global-chat',\s+TRUE/);
@@ -146,6 +159,10 @@ test('the global widget survives route changes and follows the agreed quiet UI',
   assert.match(widget, /type="checkbox"/);
   assert.match(widget, /characterCount >= 40/);
   assert.match(widget, /h-\[82dvh\][\s\S]+md:w-\[400px\]/);
+  assert.match(widget, /group-hover:opacity-100/);
+  assert.match(widget, /md:opacity-60/);
+  assert.match(widget, /text\.minimize/);
+  assert.doesNotMatch(widget, /text\.subtitle/);
 });
 
 test('history uses a 50-row cursor RPC rather than offset pagination', () => {

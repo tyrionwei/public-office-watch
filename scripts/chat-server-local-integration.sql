@@ -19,6 +19,11 @@ VALUES (
     NOW()
 );
 
+UPDATE chat_settings
+SET is_enabled = FALSE,
+    updated_at = NOW()
+WHERE id = 1;
+
 DO $$
 BEGIN
     BEGIN
@@ -45,6 +50,38 @@ FROM upsert_chat_profile(
     '本機測試者',
     'A7K2F9',
     TRUE
+);
+
+DO $$
+BEGIN
+    BEGIN
+        PERFORM *
+        FROM upsert_chat_profile(
+            '018f9e79-7399-7fd0-bfca-5aae32014bd9',
+            '冷卻中的新名稱',
+            'A7K2F9',
+            FALSE
+        );
+        RAISE EXCEPTION 'expected CHAT_NAME_COOLDOWN';
+    EXCEPTION
+        WHEN OTHERS THEN
+            IF SQLERRM <> 'CHAT_NAME_COOLDOWN' THEN
+                RAISE;
+            END IF;
+    END;
+END;
+$$;
+
+UPDATE chat_profiles
+SET display_name_updated_at = NOW() - INTERVAL '31 minutes'
+WHERE user_id = '018f9e79-7399-7fd0-bfca-5aae32014bd9';
+
+SELECT *
+FROM upsert_chat_profile(
+    '018f9e79-7399-7fd0-bfca-5aae32014bd9',
+    '冷卻後新名稱',
+    'A7K2F9',
+    FALSE
 );
 
 DO $$
@@ -186,7 +223,7 @@ BEGIN
         SELECT 1
         FROM chat_messages
         WHERE reply_to_message_id = (SELECT id FROM first_chat_message)
-          AND reply_to_display_name_snapshot = '本機測試者'
+          AND reply_to_display_name_snapshot = '冷卻後新名稱'
           AND reply_to_public_code_snapshot = 'A7K2F9'
           AND reply_to_body_snapshot = '第一則本機測試訊息'
     ) THEN

@@ -47,6 +47,7 @@ function databaseErrorCode(error: { message?: string } | null) {
     'CHAT_REPLY_UNAVAILABLE',
     'CHAT_INVALID_BODY',
     'CHAT_TERMS_REQUIRED',
+    'CHAT_NAME_COOLDOWN',
   ];
   return knownCodes.find((code) => error?.message?.includes(code));
 }
@@ -97,6 +98,7 @@ Deno.serve(async (request) => {
           'current_display_name',
           'terms_version',
           'terms_accepted_at',
+          'display_name_updated_at',
         ].join(','))
         .eq('user_id', authData.user.id)
         .maybeSingle();
@@ -131,6 +133,10 @@ Deno.serve(async (request) => {
 
         if (error.message.includes('CHAT_TERMS_REQUIRED')) {
           return jsonResponse(428, { error: 'CHAT_TERMS_REQUIRED' });
+        }
+
+        if (error.message.includes('CHAT_NAME_COOLDOWN')) {
+          return jsonResponse(429, { error: 'CHAT_NAME_COOLDOWN' });
         }
 
         if (error.code !== '23505') {

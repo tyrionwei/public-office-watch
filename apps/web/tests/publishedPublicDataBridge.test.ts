@@ -695,3 +695,36 @@ test('bridge forwards one bounded party-officer roster', async () => {
 
   assert.deepEqual(await bridge.loadPartyOfficers('party-1'), [officer]);
 });
+
+test('bridge learns published region labels from the home snapshot', async () => {
+  const requests: PublishedPeoplePageRequest[] = [];
+  const adapter = createAdapter({
+    async loadHomePage() {
+      return {
+        tickerRows: [],
+        regionSummaryRows: [],
+        regionRows: [{
+          region_id: 'region-taipei',
+          name: '臺北市',
+          slug: 'taipei',
+          region_type: 'municipality',
+          parent_region_id: null,
+          official_code: '63000',
+          map_code: 'TPE',
+          display_order: 1,
+        }],
+        raceRows: [],
+      };
+    },
+    async loadPeoplePage(request) {
+      requests.push(request);
+      return { rows: [], total: 0 };
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter);
+
+  await bridge.loadHomePageData();
+  await bridge.loadPeoplePage({ regionId: 'region-taipei' }, 1, 20);
+
+  assert.deepEqual(requests[0]?.districtPrefixes, ['臺北市', '台北市']);
+});

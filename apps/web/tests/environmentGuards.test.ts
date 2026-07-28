@@ -12,6 +12,7 @@ const sharedEnvironment = {
   VITE_SUPABASE_ANON_KEY: 'anon-public-key',
   VITE_PUBLIC_DATA_PROVIDER: 'supabase',
   VITE_ENABLE_SUPABASE_PROVIDER: 'true',
+  VITE_ENABLE_PUBLISHED_PROVIDER: 'false',
 };
 
 function fakeJwt(payload: Record<string, unknown>) {
@@ -33,6 +34,24 @@ test('local browser tests require loopback Supabase', () => {
   );
 });
 
+test('local published validation requires its explicit flag', () => {
+  const publishedEnvironment = {
+    ...sharedEnvironment,
+    VITE_SUPABASE_URL: 'http://127.0.0.1:54321',
+    VITE_PUBLIC_DATA_PROVIDER: 'published',
+    VITE_ENABLE_PUBLISHED_PROVIDER: 'true',
+  };
+
+  assert.doesNotThrow(() => validateLocalTestEnvironment(publishedEnvironment));
+  assert.throws(
+    () => validateLocalTestEnvironment({
+      ...publishedEnvironment,
+      VITE_ENABLE_PUBLISHED_PROVIDER: 'false',
+    }),
+    /VITE_ENABLE_PUBLISHED_PROVIDER must be true/,
+  );
+});
+
 test('production builds reject local Supabase and require HTTPS', () => {
   assert.doesNotThrow(() => validateProductionEnvironment({
     ...sharedEnvironment,
@@ -44,6 +63,24 @@ test('production builds reject local Supabase and require HTTPS', () => {
       VITE_SUPABASE_URL: 'http://127.0.0.1:54321',
     }),
     /non-local HTTPS Supabase URL/,
+  );
+});
+
+test('production builds allow the published provider only behind its explicit flag', () => {
+  const publishedEnvironment = {
+    ...sharedEnvironment,
+    VITE_SUPABASE_URL: 'https://project.supabase.co',
+    VITE_PUBLIC_DATA_PROVIDER: 'published',
+    VITE_ENABLE_PUBLISHED_PROVIDER: 'true',
+  };
+
+  assert.doesNotThrow(() => validateProductionEnvironment(publishedEnvironment));
+  assert.throws(
+    () => validateProductionEnvironment({
+      ...publishedEnvironment,
+      VITE_ENABLE_PUBLISHED_PROVIDER: 'false',
+    }),
+    /VITE_ENABLE_PUBLISHED_PROVIDER must be true/,
   );
 });
 
@@ -76,8 +113,10 @@ test('local file parsing and explicit environment overrides are deterministic', 
   ].join('\n'));
   const merged = mergeLocalEnvironment(parsed, {
     VITE_PUBLIC_DATA_PROVIDER: 'mock',
+    VITE_ENABLE_PUBLISHED_PROVIDER: 'false',
   });
 
   assert.equal(parsed.VITE_PUBLIC_DATA_PROVIDER, 'supabase');
   assert.equal(merged.VITE_PUBLIC_DATA_PROVIDER, 'mock');
+  assert.equal(merged.VITE_ENABLE_PUBLISHED_PROVIDER, 'false');
 });

@@ -1,4 +1,4 @@
-type PublicDataProviderMode = 'mock' | 'supabase';
+type PublicDataProviderMode = 'mock' | 'supabase' | 'published';
 
 type SupabasePublicEnv = {
   url: string;
@@ -13,8 +13,8 @@ function looksLikeServiceRole(value: string) {
 export function getPublicDataProviderMode(): PublicDataProviderMode {
   const rawMode = import.meta.env.VITE_PUBLIC_DATA_PROVIDER;
 
-  if (rawMode === 'supabase') {
-    return 'supabase';
+  if (rawMode === 'supabase' || rawMode === 'published') {
+    return rawMode;
   }
 
   return 'mock';

@@ -11,16 +11,8 @@ function isSupabaseProviderAllowed() {
   return import.meta.env.DEV || import.meta.env.VITE_ENABLE_SUPABASE_PROVIDER === 'true';
 }
 
-function shouldUseSupabaseProvider() {
-  if (getPublicDataProviderMode() !== 'supabase') {
-    return false;
-  }
-
-  if (!isSupabaseProviderAllowed()) {
-    return false;
-  }
-
-  return getSupabasePublicEnv() !== null;
+function isPublishedProviderAllowed() {
+  return import.meta.env.VITE_ENABLE_PUBLISHED_PROVIDER === 'true';
 }
 
 export function createPublicDataProvider(): PublicDataProvider {
@@ -33,21 +25,48 @@ export function createPublicDataProvider(): PublicDataProvider {
 }
 
 export function refreshConfiguredPublicDataProvider(): Promise<PublicDataProvider> {
-  if (!shouldUseSupabaseProvider()) {
+  const mode = getPublicDataProviderMode();
+  const supabaseEnv = getSupabasePublicEnv();
+
+  if (mode === 'mock' || !supabaseEnv) {
     activePublicDataProvider = mockPublicDataProvider;
     return Promise.resolve(activePublicDataProvider);
   }
 
-  configuredProviderPromise ??= import('./supabasePublicDataProvider')
-    .then(async (module) => {
-      activePublicDataProvider = module.supabasePublicDataProvider;
-      await module.refreshSupabasePublicDataSnapshot();
-      return activePublicDataProvider;
-    })
-    .catch((error: unknown) => {
-      configuredProviderPromise = null;
-      throw error;
-    });
+  if (mode === 'published') {
+    if (!isPublishedProviderAllowed()) {
+      activePublicDataProvider = mockPublicDataProvider;
+      return Promise.resolve(activePublicDataProvider);
+    }
+
+    configuredProviderPromise ??= import('./configuredPublishedPublicDataProvider')
+      .then(async (module) => {
+        const assembly = module.getConfiguredPublishedPublicDataProvider();
+        await assembly.refresh();
+        activePublicDataProvider = assembly.provider;
+        return activePublicDataProvider;
+      })
+      .catch((error: unknown) => {
+        configuredProviderPromise = null;
+        throw error;
+      });
+  } else {
+    if (!isSupabaseProviderAllowed()) {
+      activePublicDataProvider = mockPublicDataProvider;
+      return Promise.resolve(activePublicDataProvider);
+    }
+
+    configuredProviderPromise ??= import('./supabasePublicDataProvider')
+      .then(async (module) => {
+        await module.refreshSupabasePublicDataSnapshot();
+        activePublicDataProvider = module.supabasePublicDataProvider;
+        return activePublicDataProvider;
+      })
+      .catch((error: unknown) => {
+        configuredProviderPromise = null;
+        throw error;
+      });
+  }
 
   return configuredProviderPromise;
 }

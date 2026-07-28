@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Assembled the reviewed published adapter and bridge into a complete local-only public data provider.
+- Added an explicit development flag, atomic snapshot refresh, retry-safe fallback, and bounded cache updates.
+- Added local Supabase schema exposure and exact read-only seed grants without changing production migrations.
+
+### Verification
+
+- Added provider assembly, local/production environment guard, region resolution, and dual-provider failure injection coverage.
+- Passed all 54 read-contract tests and all 7 browser smoke tests with the published provider active against local Supabase.
+- Kept production published exposure and cutover as a separate reviewed release.
+
 ## 1.1.2 — 2026-07-28
 
 ### Fixed

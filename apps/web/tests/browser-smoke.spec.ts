@@ -131,7 +131,7 @@ test('legacy election links redirect to the bounded event page', async ({ page }
 
 test('people page distinguishes a load failure and retries', async ({ page }) => {
   let failOnce = true;
-  await page.route('**/rest/v1/public_people_list_cached**', async (route) => {
+  await page.route(/\/rest\/v1\/(?:public_people_list_cached|people_directory)(?:\?|$)/, async (route) => {
     if (failOnce) {
       failOnce = false;
       await route.fulfill({

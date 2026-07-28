@@ -3,6 +3,7 @@ const frontendEnvironmentKeys = [
   'VITE_SUPABASE_ANON_KEY',
   'VITE_PUBLIC_DATA_PROVIDER',
   'VITE_ENABLE_SUPABASE_PROVIDER',
+  'VITE_ENABLE_PUBLISHED_PROVIDER',
 ];
 
 function requireValue(environment, key) {
@@ -40,13 +41,28 @@ function hasServiceRoleCredential(value) {
   }
 }
 
+function validateProviderMode(environment) {
+  const mode = requireValue(environment, 'VITE_PUBLIC_DATA_PROVIDER');
+
+  if (mode === 'supabase') {
+    if (requireValue(environment, 'VITE_ENABLE_SUPABASE_PROVIDER') !== 'true') {
+      throw new Error('VITE_ENABLE_SUPABASE_PROVIDER must be true.');
+    }
+    return;
+  }
+
+  if (mode === 'published') {
+    if (requireValue(environment, 'VITE_ENABLE_PUBLISHED_PROVIDER') !== 'true') {
+      throw new Error('VITE_ENABLE_PUBLISHED_PROVIDER must be true.');
+    }
+    return;
+  }
+
+  throw new Error('VITE_PUBLIC_DATA_PROVIDER must be supabase or published.');
+}
+
 function validateSharedFrontendEnvironment(environment) {
-  if (requireValue(environment, 'VITE_PUBLIC_DATA_PROVIDER') !== 'supabase') {
-    throw new Error('VITE_PUBLIC_DATA_PROVIDER must be supabase.');
-  }
-  if (requireValue(environment, 'VITE_ENABLE_SUPABASE_PROVIDER') !== 'true') {
-    throw new Error('VITE_ENABLE_SUPABASE_PROVIDER must be true.');
-  }
+  validateProviderMode(environment);
 
   const anonKey = requireValue(environment, 'VITE_SUPABASE_ANON_KEY');
   if (hasServiceRoleCredential(anonKey)) {

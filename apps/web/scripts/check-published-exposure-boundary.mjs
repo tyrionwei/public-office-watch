@@ -8,6 +8,9 @@ const repoRoot = path.resolve(webRoot, '..', '..');
 const srcRoot = path.join(webRoot, 'src');
 const migrationsRoot = path.join(repoRoot, 'supabase', 'migrations');
 const publicAccessMigration = 'supabase/migrations/202607280004_published_public_read_access.sql';
+const supplementalPublicAccessMigrations = [
+  'supabase/migrations/202607280005_published_ranked_search.sql',
+];
 const reviewedRelations = [
   'candidates',
   'election_race_facets',
@@ -26,7 +29,8 @@ const reviewedRelations = [
   'regions',
   'search_results',
 ];
-const reviewedFunctions = ['election_race_page', 'person_claims_for'];
+const directlyQueriedRelations = reviewedRelations.filter((relation) => relation !== 'search_results');
+const reviewedFunctions = ['election_race_page', 'person_claims_for', 'search_public_records'];
 const issues = [];
 
 function read(relativePath) {
@@ -81,7 +85,9 @@ for (const functionName of reviewedFunctions) {
   }
 }
 
-const productionGrant = read(publicAccessMigration);
+const productionGrant = [publicAccessMigration, ...supplementalPublicAccessMigrations]
+  .map(read)
+  .join('\n');
 if (!/GRANT USAGE ON SCHEMA published TO anon, authenticated/i.test(productionGrant)) {
   addIssue('production-published-schema-grant-missing', `${publicAccessMigration} must grant schema usage to browser roles.`);
 }
@@ -106,7 +112,10 @@ for (const migrationPath of walk(migrationsRoot).filter((filePath) => filePath.e
   const sql = fs.readFileSync(migrationPath, 'utf8').replace(/\s+/g, ' ');
   const relativePath = path.relative(repoRoot, migrationPath).replaceAll(path.sep, '/');
 
-  if (relativePath === publicAccessMigration) continue;
+  if (
+    relativePath === publicAccessMigration
+    || supplementalPublicAccessMigrations.includes(relativePath)
+  ) continue;
 
   if (/GRANT USAGE ON SCHEMA published TO [^;]*(?:PUBLIC|anon|authenticated)/i.test(sql)) {
     addIssue('frontend-schema-usage-grant-forbidden', `${relativePath} grants published schema usage to a frontend role.`);
@@ -138,10 +147,10 @@ const adapterFunctions = Array.from(new Set(
   Array.from(adapterSource.matchAll(/\.rpc(?:<[^>]+>)?\('([^']+)'/g), (match) => match[1]),
 )).sort();
 
-if (JSON.stringify(adapterRelations) !== JSON.stringify(reviewedRelations)) {
+if (JSON.stringify(adapterRelations) !== JSON.stringify(directlyQueriedRelations)) {
   addIssue(
     'adapter-relation-allowlist-mismatch',
-    `Expected ${reviewedRelations.join(', ')}, found ${adapterRelations.join(', ') || 'none'}.`,
+    `Expected ${directlyQueriedRelations.join(', ')}, found ${adapterRelations.join(', ') || 'none'}.`,
   );
 }
 

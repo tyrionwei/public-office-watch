@@ -1000,13 +1000,10 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
 
       const response = await client
         .schema('published')
-        .from<PublishedSearchResultRow>('search_results')
-        .select(SEARCH_RESULT_COLUMNS)
-        .like('normalized_search_text', `%${normalizedQuery}%`)
-        .order('entity_type', { ascending: true })
-        .order('title', { ascending: true })
-        .order('document_key', { ascending: true })
-        .limit(PUBLIC_SEARCH_RESULT_LIMIT);
+        .rpc<PublishedSearchResultRow>('search_public_records', {
+          p_query: normalizedQuery,
+          p_limit: PUBLIC_SEARCH_RESULT_LIMIT,
+        });
 
       return getRowsOrThrow(response, 'Published search');
     },

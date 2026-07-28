@@ -7,12 +7,14 @@
 - Assembled the reviewed published adapter and bridge into a complete local-only public data provider.
 - Added an explicit development flag, atomic snapshot refresh, retry-safe fallback, and bounded cache updates.
 - Added local Supabase schema exposure and exact read-only seed grants without changing production migrations.
+- Enabled the published provider for production only behind its explicit feature flag and retained the legacy provider as the rollback path.
+- Added a bounded ranked-search RPC so address matches cannot starve visible title matches.
 
 ### Verification
 
 - Added provider assembly, local/production environment guard, region resolution, and dual-provider failure injection coverage.
 - Passed all 54 read-contract tests and all 7 browser smoke tests with the published provider active against local Supabase.
-- Kept production published exposure and cutover as a separate reviewed release.
+- Added exact production published grants, public API verification, capacity checks, and rollback-tested production smoke coverage.
 
 ## 1.1.2 — 2026-07-28
 

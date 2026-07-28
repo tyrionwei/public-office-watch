@@ -32,3 +32,6 @@ GRANT EXECUTE ON FUNCTION published.election_race_page(
 
 GRANT EXECUTE ON FUNCTION published.person_claims_for(UUID[])
 TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.search_public_records(TEXT, INTEGER)
+TO anon, authenticated;

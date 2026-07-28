@@ -82,6 +82,14 @@ SELECT jsonb_build_object(
             'EXECUTE'
         )
     END,
+    'anonSearch', CASE
+        WHEN to_regprocedure('published.search_public_records(text,integer)') IS NULL THEN false
+        ELSE has_function_privilege(
+            'anon',
+            to_regprocedure('published.search_public_records(text,integer)'),
+            'EXECUTE'
+        )
+    END,
     'anonPromote', has_function_privilege(
         'anon', 'published.promote(uuid)', 'EXECUTE'
     )

@@ -28,7 +28,6 @@ import {
   RACE_DETAIL_COLUMNS,
   REGION_CHILD_LIMIT,
   REGION_RACE_LIMIT,
-  SEARCH_RESULT_COLUMNS,
   createPublishedReadAdapter,
   type PublishedSchemaClient,
 } from '../src/lib/publishedReadAdapter.ts';
@@ -165,10 +164,10 @@ test('people directory applies published filters without hiding party officers',
   assert.equal(fake.calls.some((call) => call[0] === 'eq' && call[1] === 'list_is_party_only'), false);
 });
 
-test('search reads at most 12 normalized published results', async () => {
+test('search calls the ranked published search function with a bounded limit', async () => {
   const row = { document_key: 'region:tp', entity_type: 'region', entity_id: 'tp', title: '臺北市' };
   const fake = createFakeClient({
-    search_results: { data: [row], error: null, count: null },
+    'rpc:search_public_records': { data: [row], error: null, count: null },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -177,13 +176,7 @@ test('search reads at most 12 normalized published results', async () => {
   assert.deepEqual(result, [row]);
   assert.deepEqual(fake.calls, [
     ['schema', 'published'],
-    ['from', 'search_results'],
-    ['select', SEARCH_RESULT_COLUMNS],
-    ['like', 'normalized_search_text', '%台北%'],
-    ['order', 'entity_type', { ascending: true }],
-    ['order', 'title', { ascending: true }],
-    ['order', 'document_key', { ascending: true }],
-    ['limit', 12],
+    ['rpc', 'search_public_records', { p_query: '台北', p_limit: 12 }],
   ]);
 });
 
@@ -197,7 +190,7 @@ test('short search does not query the database', async () => {
 
 test('adapter surfaces database errors', async () => {
   const fake = createFakeClient({
-    search_results: { data: null, error: { message: 'permission denied' }, count: null },
+    'rpc:search_public_records': { data: null, error: { message: 'permission denied' }, count: null },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 

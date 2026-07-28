@@ -53,7 +53,7 @@ test('production routes load real public data without Supabase failures', async 
     page.locator('#global-search').locator('xpath=../following-sibling::div'),
   );
   await expect(searchResults).toBeVisible();
-  await expect(searchResults.getByText(/台北/).first()).toBeVisible();
+  await expect(searchResults.getByText(/臺北|台北/).first()).toBeVisible();
 
   await page.waitForTimeout(500);
   expect(apiRequests.length).toBeGreaterThan(0);

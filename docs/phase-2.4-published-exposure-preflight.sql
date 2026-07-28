@@ -33,7 +33,14 @@ summary AS (
         COUNT(*) FILTER (WHERE can_select) AS frontend_select_grant_count,
         COUNT(*) FILTER (
             WHERE can_select
-              AND relname NOT IN ('people_directory', 'search_results')
+              AND relname NOT IN (
+                  'home_region_summary',
+                  'home_ticker',
+                  'people_directory',
+                  'races',
+                  'regions',
+                  'search_results'
+              )
         ) AS unexpected_frontend_select_grant_count,
         COALESCE(
             JSONB_AGG(

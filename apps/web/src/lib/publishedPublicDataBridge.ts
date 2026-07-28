@@ -1,7 +1,19 @@
-import type { PublicDataProvider, PublicSearchResult, PublicSearchResultType } from './publicDataProvider';
+import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
+import { partyTheme } from '../styles/partyThemes.ts';
+import type { StageRegionLevel, StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import type {
+  HomePageData,
+  PublicDataProvider,
+  PublicSearchResult,
+  PublicSearchResultType,
+} from './publicDataProvider';
+import type {
+  PublishedHomeTickerRow,
   PublishedPeopleDirectoryRow,
+  PublishedRaceRow,
   PublishedReadAdapter,
+  PublishedRegionRow,
+  PublishedRegionSummaryRow,
   PublishedSearchResultRow,
 } from './publishedReadAdapter.ts';
 import type {
@@ -55,7 +67,24 @@ export type PublishedRegionResolution = {
 
 export type PublishedRegionResolver = (regionId: string) => PublishedRegionResolution | null;
 
-export type PublishedPublicDataBridge = Pick<PublicDataProvider, 'loadPeoplePage' | 'searchPublicRecords'>;
+export type PublishedRegionPageData = {
+  region: StageRegionNode | null;
+  summary: StageRegionSummary | null;
+  card: RegionCard | null;
+  childRegions: StageRegionNode[];
+  relatedRaces: UpcomingRace[];
+};
+
+export type PublishedPublicDataBridge = Pick<PublicDataProvider, 'loadPeoplePage' | 'searchPublicRecords'> & {
+  loadHomePageData(): Promise<HomePageData>;
+  loadRegionPageData(regionSlug: string): Promise<PublishedRegionPageData>;
+};
+
+const publishedDataPrinciples = [
+  '只呈現公開且可追溯的資料。',
+  '前端只讀經審核且有界的 published 發布資料。',
+  '行政區導覽不等於正式選舉選區。',
+];
 
 function getDisplayPosition(row: PublishedPeopleDirectoryRow, roleLabel: string, regionName: string | null) {
   if (row.list_status === 'current') {
@@ -138,11 +167,145 @@ function resolveRegionFilter(
   };
 }
 
+function toStageRegionLevel(regionType: PublishedRegionRow['region_type']): StageRegionLevel {
+  if (regionType === 'country') return 'country';
+  if (regionType === 'district' || regionType === 'township' || regionType === 'village') return 'district';
+  return 'county_city';
+}
+
+function mapRegionNode(
+  row: PublishedRegionRow,
+  index: number,
+  parentId: string | null,
+): StageRegionNode {
+  return {
+    id: row.slug,
+    label: row.name,
+    level: toStageRegionLevel(row.region_type),
+    parentId,
+    publicRegionId: row.region_id,
+    displayOrder: row.display_order ?? index,
+    stageLabel: row.map_code ?? row.official_code ?? `PV-${index + 1}`,
+    isPlaceholder: false,
+    note: 'published region',
+  };
+}
+
+function mapRegionSummary(row: PublishedRegionSummaryRow): StageRegionSummary {
+  return {
+    regionId: row.region_slug,
+    label: row.region_name,
+    nearestElectionName: row.next_election_name ?? '尚無公開選舉資料',
+    nearestElectionDate: row.next_voting_date ?? '待公告',
+    upcomingRaceCount: row.upcoming_race_count,
+    sourceNote: '依 published 發布摘要資料整理。',
+    boundaryNote: '僅顯示已審核的 published 發布資料。',
+  };
+}
+
+function mapRegionCard(row: PublishedRegionSummaryRow): RegionCard {
+  return {
+    id: row.region_slug,
+    name: row.region_name,
+    tone: '公開資料導覽區塊',
+    electionName: row.next_election_name ?? '尚無公開選舉資料',
+    nextVotingDate: row.next_voting_date ?? '待公告',
+    upcomingRaceCount: row.upcoming_race_count,
+  };
+}
+
+function mapRace(row: PublishedRaceRow): UpcomingRace {
+  return {
+    id: row.race_id,
+    electionId: row.election_id,
+    title: row.title,
+    region: row.region_name ?? '未指定區域',
+    regionId: row.region_slug ?? row.region_id ?? 'unknown-region',
+    date: row.voting_date ?? '待公告',
+    status: row.status,
+    raceType: row.race_type,
+    partyTag: 'unknown',
+    partyLabel: partyTheme.unknown.label,
+  };
+}
+
+function mapTicker(row: PublishedHomeTickerRow | undefined) {
+  return {
+    title: row?.election_name ?? '尚無公開選舉資料',
+    date: row?.voting_date ?? '待公告',
+    electionId: row?.election_id ?? null,
+  };
+}
+
+function fallbackRegionSummary(region: PublishedRegionRow): StageRegionSummary {
+  return {
+    regionId: region.slug,
+    label: region.name,
+    nearestElectionName: '尚無公開選舉資料',
+    nearestElectionDate: '待公告',
+    upcomingRaceCount: 0,
+    sourceNote: 'published 尚無此區域的近期選舉摘要。',
+    boundaryNote: '僅顯示已審核的 published 發布資料。',
+  };
+}
+
 export function createPublishedPublicDataBridge(
   adapter: PublishedReadAdapter,
   resolveRegion: PublishedRegionResolver = () => null,
 ): PublishedPublicDataBridge {
   return {
+    async loadHomePageData() {
+      const rows = await adapter.loadHomePage();
+      const regionById = new Map(rows.regionRows.map((region) => [region.region_id, region]));
+
+      return {
+        ticker: mapTicker(rows.tickerRows[0]),
+        regions: rows.regionSummaryRows.map(mapRegionCard),
+        stageRegions: rows.regionRows.map((region, index) => {
+          const parent = region.parent_region_id ? regionById.get(region.parent_region_id) : null;
+          return mapRegionNode(region, index, parent?.slug ?? null);
+        }),
+        stageRegionSummaries: rows.regionSummaryRows.map(mapRegionSummary),
+        upcomingRaces: rows.raceRows.map(mapRace),
+        dataPrinciples: publishedDataPrinciples,
+      };
+    },
+
+    async loadRegionPageData(regionSlug) {
+      const rows = await adapter.loadRegionPage(regionSlug);
+      if (!rows.regionRow) {
+        return {
+          region: null,
+          summary: null,
+          card: null,
+          childRegions: [],
+          relatedRaces: rows.raceRows.map(mapRace),
+        };
+      }
+
+      const summary = rows.summaryRow
+        ? mapRegionSummary(rows.summaryRow)
+        : fallbackRegionSummary(rows.regionRow);
+      const card = rows.summaryRow
+        ? mapRegionCard(rows.summaryRow)
+        : {
+            id: rows.regionRow.slug,
+            name: rows.regionRow.name,
+            tone: '公開資料導覽區塊',
+            electionName: summary.nearestElectionName,
+            nextVotingDate: summary.nearestElectionDate,
+            upcomingRaceCount: summary.upcomingRaceCount,
+          };
+
+      return {
+        region: mapRegionNode(rows.regionRow, 0, null),
+        summary,
+        card,
+        childRegions: rows.childRegionRows.map((region, index) => mapRegionNode(region, index, rows.regionRow?.slug ?? null)),
+        relatedRaces: rows.raceRows.map(mapRace),
+      };
+    },
+
     async loadPeoplePage(filters, page, pageSize) {
       const region = resolveRegionFilter(filters, resolveRegion);
       const result = await adapter.loadPeoplePage({

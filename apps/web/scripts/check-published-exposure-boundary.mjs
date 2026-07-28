@@ -7,7 +7,14 @@ const webRoot = path.resolve(scriptDir, '..');
 const repoRoot = path.resolve(webRoot, '..', '..');
 const srcRoot = path.join(webRoot, 'src');
 const migrationsRoot = path.join(repoRoot, 'supabase', 'migrations');
-const reviewedRelations = ['people_directory', 'search_results'];
+const reviewedRelations = [
+  'home_region_summary',
+  'home_ticker',
+  'people_directory',
+  'races',
+  'regions',
+  'search_results',
+];
 const issues = [];
 
 function read(relativePath) {
@@ -65,7 +72,9 @@ for (const migrationPath of walk(migrationsRoot).filter((filePath) => filePath.e
 const adapterPath = path.join(srcRoot, 'lib', 'publishedReadAdapter.ts');
 const bridgePath = path.join(srcRoot, 'lib', 'publishedPublicDataBridge.ts');
 const adapterSource = fs.readFileSync(adapterPath, 'utf8');
-const adapterRelations = Array.from(adapterSource.matchAll(/\.from<[^>]+>\('([^']+)'\)/g), (match) => match[1]);
+const adapterRelations = Array.from(new Set(
+  Array.from(adapterSource.matchAll(/\.from<[^>]+>\('([^']+)'\)/g), (match) => match[1]),
+)).sort();
 
 if (JSON.stringify(adapterRelations) !== JSON.stringify(reviewedRelations)) {
   addIssue(

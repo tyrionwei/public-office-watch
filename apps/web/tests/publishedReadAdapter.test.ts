@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  HOME_RACE_LIMIT,
+  HOME_REGION_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
+  REGION_CHILD_LIMIT,
+  REGION_RACE_LIMIT,
   SEARCH_RESULT_COLUMNS,
   createPublishedReadAdapter,
   type PublishedSchemaClient,
@@ -15,8 +19,9 @@ type FakeResponse = {
 
 type RecordedCall = [string, ...unknown[]];
 
-function createFakeClient(responses: Record<string, FakeResponse>) {
+function createFakeClient(responses: Record<string, FakeResponse | FakeResponse[]>) {
   const calls: RecordedCall[] = [];
+  const responseIndexes = new Map<string, number>();
 
   const client = {
     schema(schemaName: string) {
@@ -62,7 +67,14 @@ function createFakeClient(responses: Record<string, FakeResponse>) {
               return query;
             },
             then(onFulfilled: (value: FakeResponse) => unknown, onRejected?: (reason: unknown) => unknown) {
-              return Promise.resolve(responses[relationName]).then(onFulfilled, onRejected);
+              const configuredResponse = responses[relationName];
+              const responseIndex = responseIndexes.get(relationName) ?? 0;
+              const response = Array.isArray(configuredResponse)
+                ? configuredResponse[responseIndex]
+                : configuredResponse;
+              responseIndexes.set(relationName, responseIndex + 1);
+              return Promise.resolve(response ?? { data: [], error: null, count: null })
+                .then(onFulfilled, onRejected);
             },
           };
           return query;
@@ -160,4 +172,92 @@ test('adapter surfaces database errors', async () => {
   const adapter = createPublishedReadAdapter(fake.client);
 
   await assert.rejects(() => adapter.search('台北'), /Published search query failed: permission denied/);
+});
+
+test('home reads four published surfaces with fixed limits and deterministic order', async () => {
+  const ticker = { election_id: 'election-1', election_name: '測試選舉' };
+  const regionSummary = { region_id: 'region-taipei', region_name: '臺北市' };
+  const region = { region_id: 'region-taipei', name: '臺北市', slug: 'taipei' };
+  const race = { race_id: 'race-1', title: '臺北市長' };
+  const fake = createFakeClient({
+    home_ticker: { data: [ticker], error: null, count: null },
+    home_region_summary: { data: [regionSummary], error: null, count: null },
+    regions: { data: [region], error: null, count: null },
+    races: { data: [race], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadHomePage(), {
+    tickerRows: [ticker],
+    regionSummaryRows: [regionSummary],
+    regionRows: [region],
+    raceRows: [race],
+  });
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
+    ['from', 'home_ticker'],
+    ['from', 'home_region_summary'],
+    ['from', 'regions'],
+    ['from', 'races'],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
+    ['limit', 1],
+    ['limit', HOME_REGION_LIMIT],
+    ['limit', HOME_REGION_LIMIT],
+    ['limit', HOME_RACE_LIMIT],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'in'), [
+    ['in', 'region_type', ['country', 'municipality', 'county', 'city']],
+    ['in', 'status', ['announced', 'upcoming', 'registration_open', 'candidates_announced', 'voting']],
+  ]);
+});
+
+test('region page resolves one slug and bounds direct children and related races', async () => {
+  const region = {
+    region_id: 'region-taipei',
+    name: '臺北市',
+    slug: 'taipei',
+    parent_region_id: 'region-taiwan',
+  };
+  const child = {
+    region_id: 'region-xinyi',
+    name: '信義區',
+    slug: 'xinyi',
+    parent_region_id: 'region-taipei',
+  };
+  const summary = { region_id: 'region-taipei', region_slug: 'taipei' };
+  const race = { race_id: 'race-1', region_slug: 'taipei' };
+  const fake = createFakeClient({
+    regions: [
+      { data: [region], error: null, count: null },
+      { data: [child], error: null, count: null },
+    ],
+    home_region_summary: { data: [summary], error: null, count: null },
+    races: { data: [race], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadRegionPage(' taipei '), {
+    regionRow: region,
+    summaryRow: summary,
+    childRegionRows: [child],
+    raceRows: [race],
+  });
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
+    ['from', 'regions'],
+    ['from', 'home_region_summary'],
+    ['from', 'races'],
+    ['from', 'regions'],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'eq'), [
+    ['eq', 'slug', 'taipei'],
+    ['eq', 'region_slug', 'taipei'],
+    ['eq', 'region_slug', 'taipei'],
+    ['eq', 'parent_region_id', 'region-taipei'],
+  ]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
+    ['limit', 1],
+    ['limit', 1],
+    ['limit', REGION_RACE_LIMIT],
+    ['limit', REGION_CHILD_LIMIT],
+  ]);
 });

@@ -1,10 +1,69 @@
-import type { PublicPersonRole, PublicPersonStatus } from '../types/publicViews';
+import type {
+  PublicPersonRole,
+  PublicPersonStatus,
+  PublicRace,
+  PublicRegion,
+} from '../types/publicViews';
 import {
   PUBLIC_PEOPLE_PAGE_SIZE,
   PUBLIC_SEARCH_RESULT_LIMIT,
   normalizePublishedSearchQuery,
   toPublicPageRange,
 } from './publicReadContracts.ts';
+
+export const HOME_REGION_LIMIT = 32;
+export const HOME_RACE_LIMIT = 24;
+export const REGION_CHILD_LIMIT = 64;
+export const REGION_RACE_LIMIT = 24;
+
+const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
+  'announced',
+  'upcoming',
+  'registration_open',
+  'candidates_announced',
+  'voting',
+];
+
+export const HOME_TICKER_COLUMNS = [
+  'election_id',
+  'election_name',
+  'voting_date',
+].join(',');
+
+export const HOME_REGION_SUMMARY_COLUMNS = [
+  'region_id',
+  'region_name',
+  'region_slug',
+  'region_type',
+  'next_election_id',
+  'next_election_name',
+  'next_voting_date',
+  'upcoming_race_count',
+].join(',');
+
+export const REGION_COLUMNS = [
+  'region_id',
+  'name',
+  'slug',
+  'region_type',
+  'parent_region_id',
+  'official_code',
+  'map_code',
+  'display_order',
+].join(',');
+
+export const RACE_COLUMNS = [
+  'race_id',
+  'election_id',
+  'election_name',
+  'region_id',
+  'region_name',
+  'region_slug',
+  'race_type',
+  'title',
+  'voting_date',
+  'status',
+].join(',');
 
 export const PEOPLE_DIRECTORY_COLUMNS = [
   'person_id',
@@ -35,6 +94,39 @@ export const SEARCH_RESULT_COLUMNS = [
   'normalized_search_text',
   'href',
 ].join(',');
+
+export type PublishedHomeTickerRow = {
+  election_id: string;
+  election_name: string;
+  voting_date: string;
+};
+
+export type PublishedRegionSummaryRow = {
+  region_id: string;
+  region_name: string;
+  region_slug: string;
+  region_type: PublicRegion['region_type'];
+  next_election_id: string | null;
+  next_election_name: string | null;
+  next_voting_date: string | null;
+  upcoming_race_count: number;
+};
+
+export type PublishedRegionRow = PublicRegion;
+
+export type PublishedRaceRow = Pick<
+  PublicRace,
+  | 'race_id'
+  | 'election_id'
+  | 'election_name'
+  | 'region_id'
+  | 'region_name'
+  | 'region_slug'
+  | 'race_type'
+  | 'title'
+  | 'voting_date'
+  | 'status'
+>;
 
 export type PublishedPeopleDirectoryRow = {
   person_id: string;
@@ -81,6 +173,20 @@ export type PublishedPeoplePage = {
   total: number;
 };
 
+export type PublishedHomePageRows = {
+  tickerRows: PublishedHomeTickerRow[];
+  regionSummaryRows: PublishedRegionSummaryRow[];
+  regionRows: PublishedRegionRow[];
+  raceRows: PublishedRaceRow[];
+};
+
+export type PublishedRegionPageRows = {
+  regionRow: PublishedRegionRow | null;
+  summaryRow: PublishedRegionSummaryRow | null;
+  childRegionRows: PublishedRegionRow[];
+  raceRows: PublishedRaceRow[];
+};
+
 type PublishedQueryError = {
   message: string;
 };
@@ -110,6 +216,8 @@ export interface PublishedSchemaClient {
 }
 
 export type PublishedReadAdapter = {
+  loadHomePage(): Promise<PublishedHomePageRows>;
+  loadRegionPage(regionSlug: string): Promise<PublishedRegionPageRows>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
   search(query: string): Promise<PublishedSearchResultRow[]>;
 };
@@ -130,6 +238,107 @@ function getRowsOrThrow<Row>(response: PublishedQueryResponse<Row>, label: strin
 
 export function createPublishedReadAdapter(client: PublishedSchemaClient): PublishedReadAdapter {
   return {
+    async loadHomePage() {
+      const published = client.schema('published');
+      const [tickerResponse, regionSummaryResponse, regionResponse, raceResponse] = await Promise.all([
+        published
+          .from<PublishedHomeTickerRow>('home_ticker')
+          .select(HOME_TICKER_COLUMNS)
+          .order('voting_date', { ascending: true })
+          .order('election_id', { ascending: true })
+          .limit(1),
+        published
+          .from<PublishedRegionSummaryRow>('home_region_summary')
+          .select(HOME_REGION_SUMMARY_COLUMNS)
+          .order('region_name', { ascending: true })
+          .order('region_id', { ascending: true })
+          .limit(HOME_REGION_LIMIT),
+        published
+          .from<PublishedRegionRow>('regions')
+          .select(REGION_COLUMNS)
+          .in('region_type', ['country', 'municipality', 'county', 'city'])
+          .order('display_order', { ascending: true })
+          .order('name', { ascending: true })
+          .order('region_id', { ascending: true })
+          .limit(HOME_REGION_LIMIT),
+        published
+          .from<PublishedRaceRow>('races')
+          .select(RACE_COLUMNS)
+          .in('status', ACTIVE_RACE_STATUSES)
+          .order('voting_date', { ascending: true })
+          .order('title', { ascending: true })
+          .order('race_id', { ascending: true })
+          .limit(HOME_RACE_LIMIT),
+      ]);
+
+      return {
+        tickerRows: getRowsOrThrow(tickerResponse, 'Published home ticker'),
+        regionSummaryRows: getRowsOrThrow(regionSummaryResponse, 'Published home region summary'),
+        regionRows: getRowsOrThrow(regionResponse, 'Published home regions'),
+        raceRows: getRowsOrThrow(raceResponse, 'Published home races'),
+      };
+    },
+
+    async loadRegionPage(rawRegionSlug) {
+      const regionSlug = rawRegionSlug.trim();
+      if (!regionSlug) {
+        return {
+          regionRow: null,
+          summaryRow: null,
+          childRegionRows: [],
+          raceRows: [],
+        };
+      }
+
+      const published = client.schema('published');
+      const [regionResponse, summaryResponse, raceResponse] = await Promise.all([
+        published
+          .from<PublishedRegionRow>('regions')
+          .select(REGION_COLUMNS)
+          .eq('slug', regionSlug)
+          .order('region_id', { ascending: true })
+          .limit(1),
+        published
+          .from<PublishedRegionSummaryRow>('home_region_summary')
+          .select(HOME_REGION_SUMMARY_COLUMNS)
+          .eq('region_slug', regionSlug)
+          .order('region_id', { ascending: true })
+          .limit(1),
+        published
+          .from<PublishedRaceRow>('races')
+          .select(RACE_COLUMNS)
+          .eq('region_slug', regionSlug)
+          .in('status', ACTIVE_RACE_STATUSES)
+          .order('voting_date', { ascending: true })
+          .order('title', { ascending: true })
+          .order('race_id', { ascending: true })
+          .limit(REGION_RACE_LIMIT),
+      ]);
+      const regionRow = getRowsOrThrow(regionResponse, 'Published region')[0] ?? null;
+      const summaryRow = getRowsOrThrow(summaryResponse, 'Published region summary')[0] ?? null;
+      const raceRows = getRowsOrThrow(raceResponse, 'Published region races');
+
+      if (!regionRow) {
+        return { regionRow: null, summaryRow, childRegionRows: [], raceRows };
+      }
+
+      const childResponse = await published
+        .from<PublishedRegionRow>('regions')
+        .select(REGION_COLUMNS)
+        .eq('parent_region_id', regionRow.region_id)
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true })
+        .order('region_id', { ascending: true })
+        .limit(REGION_CHILD_LIMIT);
+
+      return {
+        regionRow,
+        summaryRow,
+        childRegionRows: getRowsOrThrow(childResponse, 'Published child regions'),
+        raceRows,
+      };
+    },
+
     async loadPeoplePage(request) {
       const pageRange = toPublicPageRange(request.page, request.pageSize ?? PUBLIC_PEOPLE_PAGE_SIZE);
       const normalizedQuery = request.query?.trim();

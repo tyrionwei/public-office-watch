@@ -170,7 +170,8 @@ FROM admin_set_chat_security_hold(
 );
 
 UPDATE chat_message_security_logs
-SET expires_at = NOW() - INTERVAL '1 day'
+SET created_at = NOW() - INTERVAL '181 days',
+    expires_at = NOW() - INTERVAL '1 day'
 WHERE message_id = (SELECT id FROM moderation_message);
 
 DO $$

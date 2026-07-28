@@ -270,7 +270,7 @@ export function GlobalChatWidget() {
         .map((message) => message.reply_to_message_id === messageId
           ? {
             ...message,
-            reply_state: 'removed',
+            reply_state: 'removed' as const,
             reply_to_display_name_snapshot: null,
             reply_to_public_code_snapshot: null,
             reply_to_body_snapshot: null,

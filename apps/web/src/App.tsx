@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { BgmProvider } from './components/BgmProvider';
+import { GlobalChatWidget } from './components/GlobalChatWidget';
 import { LanguageProvider, useI18n } from './i18n';
 import { publicDataReadyEvent, refreshConfiguredPublicDataProvider } from './lib/publicDataProviderFactory';
 import { aboutPath, dataGuidancePath, electionsPath, homePath, internalDataProgressPath, internalReviewQueuePath, partiesPath, peoplePath } from './routes/routePaths';
@@ -126,10 +127,13 @@ function App() {
     <BrowserRouter>
       <LanguageProvider>
         <BgmProvider>
-          <AppRoutes
-            publicDataStatus={publicDataStatus}
-            onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
-          />
+          <>
+            <AppRoutes
+              publicDataStatus={publicDataStatus}
+              onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
+            />
+            {publicDataStatus === 'ready' ? <GlobalChatWidget /> : null}
+          </>
         </BgmProvider>
       </LanguageProvider>
     </BrowserRouter>

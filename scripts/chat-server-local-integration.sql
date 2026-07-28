@@ -19,11 +19,32 @@ VALUES (
     NOW()
 );
 
+DO $$
+BEGIN
+    BEGIN
+        PERFORM *
+        FROM upsert_chat_profile(
+            '018f9e79-7399-7fd0-bfca-5aae32014bd9',
+            '本機測試者',
+            'A7K2F9',
+            FALSE
+        );
+        RAISE EXCEPTION 'expected CHAT_TERMS_REQUIRED';
+    EXCEPTION
+        WHEN OTHERS THEN
+            IF SQLERRM <> 'CHAT_TERMS_REQUIRED' THEN
+                RAISE;
+            END IF;
+    END;
+END;
+$$;
+
 SELECT *
 FROM upsert_chat_profile(
     '018f9e79-7399-7fd0-bfca-5aae32014bd9',
     '本機測試者',
-    'A7K2F9'
+    'A7K2F9',
+    TRUE
 );
 
 DO $$
@@ -148,6 +169,17 @@ BEGIN
         WHERE user_id = '018f9e79-7399-7fd0-bfca-5aae32014bd9'
     ) <> 2 THEN
         RAISE EXCEPTION 'expected one security log per message';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM chat_profiles profile
+        JOIN chat_settings setting ON setting.id = 1
+        WHERE profile.user_id = '018f9e79-7399-7fd0-bfca-5aae32014bd9'
+          AND profile.terms_version = setting.terms_version
+          AND profile.terms_accepted_at IS NOT NULL
+    ) THEN
+        RAISE EXCEPTION 'expected current terms acceptance';
     END IF;
 
     IF NOT EXISTS (

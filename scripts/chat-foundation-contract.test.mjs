@@ -11,6 +11,22 @@ const serverMigration = readFileSync(
   new URL('../supabase/migrations/202607290002_chat_server_functions.sql', import.meta.url),
   'utf8',
 );
+const interfaceMigration = readFileSync(
+  new URL('../supabase/migrations/202607290003_chat_terms_and_realtime.sql', import.meta.url),
+  'utf8',
+);
+const app = readFileSync(
+  new URL('../apps/web/src/App.tsx', import.meta.url),
+  'utf8',
+);
+const widget = readFileSync(
+  new URL('../apps/web/src/components/GlobalChatWidget.tsx', import.meta.url),
+  'utf8',
+);
+const chatClient = readFileSync(
+  new URL('../apps/web/src/lib/globalChat.ts', import.meta.url),
+  'utf8',
+);
 const edgeFunction = readFileSync(
   new URL('../supabase/functions/chat-api/index.ts', import.meta.url),
   'utf8',
@@ -80,4 +96,37 @@ test('the edge function authenticates users and keeps IP secrets server-side', (
   assert.match(edgeFunction, /CHAT_IP_ENCRYPTION_KEY/);
   assert.match(edgeFunction, /p_ip_ciphertext: ipCiphertext/);
   assert.doesNotMatch(edgeFunction, /payload\.ip/);
+});
+
+test('terms acceptance is durable, versioned and enforced before writes', () => {
+  assert.match(interfaceMigration, /terms_version TEXT NOT NULL DEFAULT '2026-07-29-v1'/);
+  assert.match(interfaceMigration, /terms_accepted_at TIMESTAMPTZ/);
+  assert.match(interfaceMigration, /MESSAGE = 'CHAT_TERMS_REQUIRED'/);
+  assert.match(edgeFunction, /p_accept_terms: payload\.acceptTerms === true/);
+  assert.match(edgeFunction, /payload\.action === 'get-profile'/);
+});
+
+test('realtime broadcasts only the public message shape on a private channel', () => {
+  assert.match(interfaceMigration, /PERFORM realtime\.send\(/);
+  assert.match(interfaceMigration, /'global-chat',\s+TRUE/);
+  assert.doesNotMatch(interfaceMigration, /'user_id', NEW\.user_id/);
+  assert.match(interfaceMigration, /TO authenticated\s+USING/);
+  assert.match(chatClient, /channel\('global-chat', \{ config: \{ private: true \} \}\)/);
+  assert.match(chatClient, /removeChannel\(channel\)/);
+});
+
+test('the global widget survives route changes and follows the agreed quiet UI', () => {
+  assert.match(app, /<AppRoutes[\s\S]+<GlobalChatWidget \/>/);
+  assert.match(widget, /aria-label=\{text\.launcher\}/);
+  assert.doesNotMatch(widget, /unread|badge|notification/i);
+  assert.match(widget, /type="checkbox"/);
+  assert.match(widget, /characterCount >= 40/);
+  assert.match(widget, /h-\[82dvh\][\s\S]+md:w-\[400px\]/);
+});
+
+test('history uses a 50-row cursor RPC rather than offset pagination', () => {
+  assert.match(interfaceMigration, /\(message\.created_at, message\.id\) < \(p_before_created_at, p_before_id\)/);
+  assert.match(interfaceMigration, /COALESCE\(p_limit, 50\)/);
+  assert.match(chatClient, /p_before_created_at: before\?\.created_at \?\? null/);
+  assert.doesNotMatch(chatClient, /offset/i);
 });

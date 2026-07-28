@@ -46,6 +46,7 @@ function databaseErrorCode(error: { message?: string } | null) {
     'CHAT_DUPLICATE',
     'CHAT_REPLY_UNAVAILABLE',
     'CHAT_INVALID_BODY',
+    'CHAT_TERMS_REQUIRED',
   ];
   return knownCodes.find((code) => error?.message?.includes(code));
 }
@@ -88,6 +89,26 @@ Deno.serve(async (request) => {
       auth: { autoRefreshToken: false, persistSession: false },
     });
 
+    if (payload.action === 'get-profile') {
+      const { data, error } = await serviceClient
+        .from('chat_profiles')
+        .select([
+          'public_code',
+          'current_display_name',
+          'terms_version',
+          'terms_accepted_at',
+        ].join(','))
+        .eq('user_id', authData.user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('chat profile load failed', error.code);
+        return jsonResponse(500, { error: 'CHAT_SERVER_ERROR' });
+      }
+
+      return jsonResponse(200, { profile: data });
+    }
+
     if (payload.action === 'set-profile') {
       const displayName = validateDisplayName(payload.displayName);
       if (!displayName.ok) {
@@ -100,11 +121,16 @@ Deno.serve(async (request) => {
             p_user_id: authData.user.id,
             p_display_name: displayName.value,
             p_public_code: generatePublicCode(),
+            p_accept_terms: payload.acceptTerms === true,
           })
           .single();
 
         if (!error) {
           return jsonResponse(200, { profile: data });
+        }
+
+        if (error.message.includes('CHAT_TERMS_REQUIRED')) {
+          return jsonResponse(428, { error: 'CHAT_TERMS_REQUIRED' });
         }
 
         if (error.code !== '23505') {
@@ -175,6 +201,9 @@ Deno.serve(async (request) => {
           { error: errorCode, retryAfterSeconds: 8 },
           { 'Retry-After': '8' },
         );
+      }
+      if (errorCode === 'CHAT_TERMS_REQUIRED') {
+        return jsonResponse(428, { error: errorCode });
       }
       if (errorCode) {
         return jsonResponse(400, { error: errorCode });

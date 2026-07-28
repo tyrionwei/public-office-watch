@@ -12,13 +12,13 @@ import type { RaceCategory } from '../data/electionLabels';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import type { PublicRaceListPage } from '../lib/publicDataProvider';
+import { PUBLIC_ELECTION_RACE_PAGE_SIZE as PAGE_SIZE } from '../lib/publicReadContracts';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { electionEventPath, electionsPath, racePath } from '../routes/routePaths';
 import type { PublicElectionRaceFacet } from '../types/publicViews';
 
 type CategoryOption = RaceCategory & { count: number };
 type RegionOption = { key: string; label: string; count: number };
-const PAGE_SIZE = 20;
 
 function getPage(searchParams: URLSearchParams) {
   const page = Number.parseInt(searchParams.get('page') ?? '1', 10);

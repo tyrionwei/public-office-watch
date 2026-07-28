@@ -55,6 +55,7 @@ import {
   mapRegionToStageRegionNode,
   mapTickerToHomeTicker,
 } from './supabasePublicViewMappers';
+import { PUBLIC_SEARCH_RESULT_LIMIT, toPublicPageRange } from './publicReadContracts';
 
 const emptyHomeTicker: HomeTicker = {
   title: '公開選舉資料待載入',
@@ -133,10 +134,10 @@ const localOfficeSummaryCache = new Map<string, PublicLocalOfficeSummary>();
 const localOfficeSummaryPromises = new Map<string, Promise<PublicLocalOfficeSummary>>();
 const peoplePageCache = new Map<string, PublicPersonListPage>();
 const peoplePagePromises = new Map<string, Promise<PublicPersonListPage>>();
-const peoplePageBlockSize = 10;
+const peoplePageBlockSize = 1;
 const electionRacePageCache = new Map<string, PublicRaceListPage>();
 const electionRacePagePromises = new Map<string, Promise<PublicRaceListPage>>();
-const electionRacePageBlockSize = 10;
+const electionRacePageBlockSize = 1;
 
 function addLookupValue<T>(index: Map<string, T>, key: string | null | undefined, value: T) {
   if (!key) return;
@@ -538,7 +539,7 @@ function loadCachedPeoplePage(filters: PublicPersonFilters, page: number, pageSi
   let blockPromise = peoplePagePromises.get(blockCacheKey);
 
   if (!blockPromise) {
-    blockPromise = fetchPeoplePage(filters, blockStartPage, pageSize, peoplePageBlockSize)
+    blockPromise = fetchPeoplePage(filters, blockStartPage, pageSize)
       .then((result) => {
         for (let index = 0; index < peoplePageBlockSize; index += 1) {
           const blockPage = blockStartPage + index;
@@ -564,7 +565,6 @@ async function fetchPeoplePage(
   filters: PublicPersonFilters,
   page: number,
   pageSize: number,
-  pageCount = 1,
 ): Promise<PublicPersonListPage> {
   await refreshSupabasePublicDataSnapshot();
 
@@ -602,12 +602,12 @@ async function fetchPeoplePage(
   if (filters.role) query = query.eq('list_role', filters.role);
   if (filters.status) query = query.eq('list_status', filters.status);
 
-  const pageStart = (page - 1) * pageSize;
+  const pageRange = toPublicPageRange(page, pageSize);
   const { data, error, count } = await query
     .order('list_status_order', { ascending: true })
     .order('list_role_order', { ascending: true })
     .order('name', { ascending: true })
-    .range(pageStart, pageStart + pageSize * pageCount - 1);
+    .range(pageRange.from, pageRange.to);
 
   if (error || !Array.isArray(data)) {
     if (error && import.meta.env.DEV) {
@@ -660,7 +660,7 @@ function loadCachedElectionRacePage(
   let blockPromise = electionRacePagePromises.get(blockCacheKey);
 
   if (!blockPromise) {
-    blockPromise = fetchElectionRacePage(eventKey, filters, blockStartPage, pageSize, electionRacePageBlockSize)
+    blockPromise = fetchElectionRacePage(eventKey, filters, blockStartPage, pageSize)
       .then((result) => {
         for (let index = 0; index < electionRacePageBlockSize; index += 1) {
           const blockPage = blockStartPage + index;
@@ -687,7 +687,6 @@ async function fetchElectionRacePage(
   filters: PublicRaceQueryFilters,
   page: number,
   pageSize: number,
-  pageCount = 1,
 ): Promise<PublicRaceListPage> {
   await refreshSupabasePublicDataSnapshot();
 
@@ -698,7 +697,7 @@ async function fetchElectionRacePage(
   if (filters.raceTypes?.length) query = query.in('race_type', filters.raceTypes);
   if (filters.regionKey) query = query.eq('region_key', filters.regionKey);
 
-  const pageStart = (page - 1) * pageSize;
+  const pageRange = toPublicPageRange(page, pageSize);
   const { data, error, count } = await query
     .order('sort_category_order', { ascending: true })
     .order('sort_region_order', { ascending: true })
@@ -706,7 +705,7 @@ async function fetchElectionRacePage(
     .order('region_name', { ascending: true, nullsFirst: true })
     .order('title', { ascending: true })
     .order('race_id', { ascending: true })
-    .range(pageStart, pageStart + pageSize * pageCount - 1);
+    .range(pageRange.from, pageRange.to);
 
   if (error || !Array.isArray(data)) {
     if (error && import.meta.env.DEV) {
@@ -1413,7 +1412,7 @@ export const supabasePublicDataProvider: PublicDataProvider = {
 
     const pattern = '%' + query.trim() + '%';
     const [electionRows, companyRows] = await Promise.all([
-      fetchRows('public_elections', (request) => request.ilike('name', pattern), 12),
+      fetchRows('public_elections', (request) => request.ilike('name', pattern), PUBLIC_SEARCH_RESULT_LIMIT),
       fetchRows(
         'public_companies',
         (request) =>
@@ -1423,7 +1422,7 @@ export const supabasePublicDataProvider: PublicDataProvider = {
             'representative_name.ilike.' + pattern,
             'address_region.ilike.' + pattern,
           ].join(',')),
-        12,
+        PUBLIC_SEARCH_RESULT_LIMIT,
       ),
     ]);
 
@@ -1510,6 +1509,6 @@ export const supabasePublicDataProvider: PublicDataProvider = {
         })),
     ];
 
-    return results.slice(0, 12);
+    return results.slice(0, PUBLIC_SEARCH_RESULT_LIMIT);
   },
 };

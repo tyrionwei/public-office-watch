@@ -6,13 +6,12 @@ import { PixelFrame } from '../components/PixelFrame';
 import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
+import { PUBLIC_PEOPLE_PAGE_SIZE as PAGE_SIZE } from '../lib/publicReadContracts';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicPersonFilters, PublicPersonListItem, PublicPersonRole, PublicPersonStatus } from '../types/publicViews';
-
-const PAGE_SIZE = 20;
 
 const roleOptionDefinitions: { value: PublicPersonRole; labelKey: TranslationKey }[] = [
   { value: 'president', labelKey: 'people.role.president' },

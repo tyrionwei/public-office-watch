@@ -74,26 +74,29 @@ function AppRoutes({
   }
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#050a16]" />}>
-      <Routes>
-        <Route path={homePath()} element={<HomePage />} />
-        <Route path={peoplePath()} element={<PeoplePage />} />
-        <Route path="/people/:personId" element={<PersonPage />} />
-        <Route path={electionsPath()} element={<ElectionsPage />} />
-        <Route path="/elections/events/:eventKey" element={<ElectionEventPage />} />
-        <Route path="/elections/races/:raceId" element={<RacePage />} />
-        <Route path={partiesPath()} element={<PartiesPage />} />
-        <Route path="/parties/:partySlug" element={<PartyPage />} />
-        <Route path={dataGuidancePath()} element={<DataGuidancePage />} />
-        <Route path={aboutPath()} element={<AboutPage />} />
-        <Route path="/regions/:regionId" element={<RegionPage />} />
-        <Route path="/elections/:electionId" element={<ElectionPage />} />
-        <Route path={internalChatAdminPath()} element={<InternalChatAdminPage />} />
-        {InternalReviewQueuePage ? <Route path={internalReviewQueuePath()} element={<InternalReviewQueuePage />} /> : null}
-        {InternalDataProgressPage ? <Route path={internalDataProgressPath()} element={<InternalDataProgressPage />} /> : null}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Suspense>
+    <>
+      <Suspense fallback={<div className="min-h-screen bg-[#050a16]" />}>
+        <Routes>
+          <Route path={homePath()} element={<HomePage />} />
+          <Route path={peoplePath()} element={<PeoplePage />} />
+          <Route path="/people/:personId" element={<PersonPage />} />
+          <Route path={electionsPath()} element={<ElectionsPage />} />
+          <Route path="/elections/events/:eventKey" element={<ElectionEventPage />} />
+          <Route path="/elections/races/:raceId" element={<RacePage />} />
+          <Route path={partiesPath()} element={<PartiesPage />} />
+          <Route path="/parties/:partySlug" element={<PartyPage />} />
+          <Route path={dataGuidancePath()} element={<DataGuidancePage />} />
+          <Route path={aboutPath()} element={<AboutPage />} />
+          <Route path="/regions/:regionId" element={<RegionPage />} />
+          <Route path="/elections/:electionId" element={<ElectionPage />} />
+          <Route path={internalChatAdminPath()} element={<InternalChatAdminPage />} />
+          {InternalReviewQueuePage ? <Route path={internalReviewQueuePath()} element={<InternalReviewQueuePage />} /> : null}
+          {InternalDataProgressPage ? <Route path={internalDataProgressPath()} element={<InternalDataProgressPage />} /> : null}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
+      {publicDataStatus === 'ready' && !isChatAdminRoute ? <GlobalChatWidget /> : null}
+    </>
   );
 }
 
@@ -137,7 +140,6 @@ function App() {
               publicDataStatus={publicDataStatus}
               onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
             />
-            {publicDataStatus === 'ready' ? <GlobalChatWidget /> : null}
           </>
         </BgmProvider>
       </LanguageProvider>

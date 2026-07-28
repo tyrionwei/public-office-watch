@@ -120,6 +120,14 @@ export function loadChatAdminDashboard() {
   return invoke<ChatAdminDashboard>({ action: 'dashboard' });
 }
 
+export async function searchChatAdminMessages(query: string) {
+  const result = await invoke<{ messages: ChatAdminMessage[] }>({
+    action: 'search-messages',
+    query,
+  });
+  return result.messages;
+}
+
 export async function setChatEnabled(enabled: boolean) {
   await invoke({ action: 'set-enabled', enabled });
 }

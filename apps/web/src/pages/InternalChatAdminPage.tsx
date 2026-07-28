@@ -10,6 +10,7 @@ import {
   loadChatAdminDashboard,
   loadChatAdminSession,
   requestChatAdminMagicLink,
+  searchChatAdminMessages,
   setChatEnabled,
   setChatMessageVisibility,
   setChatProfileMute,
@@ -50,6 +51,7 @@ function displayError(error: unknown) {
     if (error.code === 'CHAT_ADMIN_MESSAGE_HELD') return '此訊息正處於法律保全狀態，不能由一般管理操作變更。';
     if (error.code === 'CHAT_ADMIN_SECURITY_LOG_NOT_FOUND') return '這則訊息的安全紀錄已到期清除，無法設定 Legal Hold。';
     if (error.code === 'CHAT_ADMIN_INVALID_HOLD_REASON') return '請選擇有效的安全紀錄保全原因。';
+    if (error.code === 'CHAT_ADMIN_INVALID_SEARCH') return '請輸入完整訊息 ID，或 6 位公開短碼。';
   }
   return '操作未完成，請稍後再試。';
 }
@@ -61,6 +63,9 @@ export function InternalChatAdminPage() {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [reason, setReason] = useState<ChatAdminReason>('spam');
   const [securityHoldReason, setSecurityHoldReason] = useState<ChatSecurityHoldReason>('legal_investigation');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchedMessages, setSearchedMessages] =
+    useState<ChatAdminDashboard['messages'] | null>(null);
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -136,6 +141,22 @@ export function InternalChatAdminPage() {
     try {
       await action();
       await refreshDashboard();
+      if (searchedMessages !== null && searchQuery.trim()) {
+        setSearchedMessages(await searchChatAdminMessages(searchQuery.trim()));
+      }
+    } catch (caught) {
+      setError(displayError(caught));
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
+  async function handleMessageSearch(event: FormEvent) {
+    event.preventDefault();
+    setBusyAction('search');
+    setError(null);
+    try {
+      setSearchedMessages(await searchChatAdminMessages(searchQuery.trim()));
     } catch (caught) {
       setError(displayError(caught));
     } finally {
@@ -213,6 +234,8 @@ export function InternalChatAdminPage() {
   }
 
   if (!dashboard) return null;
+
+  const displayedMessages = searchedMessages ?? dashboard.messages;
 
   return (
     <AppShell>
@@ -296,7 +319,37 @@ export function InternalChatAdminPage() {
           </div>
         </SectionPanel>
 
-        <SectionPanel title="近期訊息" eyebrow="latest 50">
+        <SectionPanel
+          title={searchedMessages === null ? '近期訊息' : '訊息搜尋結果'}
+          eyebrow={searchedMessages === null ? 'latest 50' : 'exact search'}
+        >
+          <form className="mb-4 flex flex-col gap-2 sm:flex-row" onSubmit={handleMessageSearch}>
+            <label className="sr-only" htmlFor="chat-message-search">搜尋訊息</label>
+            <input
+              id="chat-message-search"
+              className="min-w-0 flex-1 border border-line bg-bg px-3 py-2 text-sm text-white"
+              maxLength={37}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="完整訊息 ID 或 #A7K2F9"
+              value={searchQuery}
+            />
+            <button
+              className="border border-accent/70 px-4 py-2 text-sm text-accent disabled:opacity-50"
+              disabled={busyAction !== null || !searchQuery.trim()}
+              type="submit"
+            >
+              {busyAction === 'search' ? '搜尋中…' : '搜尋'}
+            </button>
+            {searchedMessages !== null ? (
+              <button
+                className="border border-line px-4 py-2 text-sm text-slate-300"
+                onClick={() => setSearchedMessages(null)}
+                type="button"
+              >
+                回到近期訊息
+              </button>
+            ) : null}
+          </form>
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
             <label htmlFor="moderation-reason" className="text-xs text-slate-400">處理原因</label>
             <select id="moderation-reason" value={reason} onChange={(event) => setReason(event.target.value as ChatAdminReason)} className="border border-line bg-bg px-3 py-2 text-sm text-white">
@@ -306,8 +359,12 @@ export function InternalChatAdminPage() {
           </div>
 
           <div className="space-y-3">
-            {dashboard.messages.length === 0 ? <p className="text-sm text-slate-400">目前沒有聊天室訊息。</p> : null}
-            {dashboard.messages.map((message) => {
+            {displayedMessages.length === 0 ? (
+              <p className="text-sm text-slate-400">
+                {searchedMessages === null ? '目前沒有聊天室訊息。' : '找不到符合條件的訊息。'}
+              </p>
+            ) : null}
+            {displayedMessages.map((message) => {
               const isRemoved = message.moderationStatus === 'removed';
               const isMuted = message.profileStatus === 'muted' && (!message.mutedUntil || new Date(message.mutedUntil) > new Date());
               return (
@@ -317,6 +374,7 @@ export function InternalChatAdminPage() {
                       <p className="text-sm font-semibold text-white">{message.displayName} <span className="font-normal text-slate-500">（#{message.publicCode}）</span></p>
                       <p className="mt-2 break-words text-sm leading-6 text-slate-200">{message.body}</p>
                       <p className="mt-2 text-xs text-slate-500">{formatDateTime(message.createdAt)}{isRemoved ? `・已隱藏：${reasonLabels[message.removalReason ?? ''] ?? message.removalReason}` : ''}</p>
+                      <p className="mt-1 break-all font-mono text-[10px] text-slate-600">ID: {message.id}</p>
                       {isMuted ? <p className="mt-1 text-xs text-accent">禁言至 {formatDateTime(message.mutedUntil)}</p> : null}
                       {message.securityHoldActive ? (
                         <p className="mt-1 text-xs text-signal">Legal Hold 生效中・停止自動清理</p>

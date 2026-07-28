@@ -23,6 +23,10 @@ const securityMigration = readFileSync(
   new URL('../supabase/migrations/202607290005_chat_security_retention.sql', import.meta.url),
   'utf8',
 );
+const adminSearchMigration = readFileSync(
+  new URL('../supabase/migrations/202607290006_chat_admin_message_search.sql', import.meta.url),
+  'utf8',
+);
 const app = readFileSync(
   new URL('../apps/web/src/App.tsx', import.meta.url),
   'utf8',
@@ -170,6 +174,17 @@ test('security records are cleaned in batches while Legal Hold remains service-o
   assert.match(securityMigration, /security_hold_applied/);
   assert.match(securityMigration, /GRANT EXECUTE ON FUNCTION admin_set_chat_security_hold\(UUID, UUID, BOOLEAN, TEXT\)\s+TO service_role/);
   assert.doesNotMatch(securityMigration, /TO (?:anon|authenticated);/);
+});
+
+test('older admin messages use exact indexed lookup without exposing private security fields', () => {
+  assert.match(adminSearchMigration, /idx_chat_messages_admin_public_code_cursor/);
+  assert.match(adminSearchMigration, /CREATE FUNCTION admin_search_chat_messages/);
+  assert.match(adminSearchMigration, /message\.public_code_snapshot = normalized_query/);
+  assert.match(adminSearchMigration, /LIMIT 50/);
+  assert.match(adminSearchMigration, /GRANT EXECUTE ON FUNCTION admin_search_chat_messages\(UUID, TEXT\)\s+TO service_role/);
+  assert.doesNotMatch(adminSearchMigration, /ip_hmac|ip_ciphertext/);
+  assert.match(adminEdgeFunction, /payload\.action === 'search-messages'/);
+  assert.match(adminPage, /完整訊息 ID 或 #A7K2F9/);
 });
 
 test('chat admin edge function verifies a non-anonymous admin without exposing private identifiers', () => {

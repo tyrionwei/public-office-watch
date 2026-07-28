@@ -48,6 +48,7 @@ function adminError(error: { message?: string; code?: string } | null) {
     'CHAT_ADMIN_TARGET_BANNED',
     'CHAT_ADMIN_INVALID_HOLD_REASON',
     'CHAT_ADMIN_SECURITY_LOG_NOT_FOUND',
+    'CHAT_ADMIN_INVALID_SEARCH',
   ];
   return knownCodes.find((code) => error?.message?.includes(code));
 }
@@ -299,6 +300,37 @@ Deno.serve(async (request) => {
         return jsonResponse(code === 'CHAT_ADMIN_FORBIDDEN' ? 403 : 400, { error: code ?? 'CHAT_ADMIN_SERVER_ERROR' });
       }
       return jsonResponse(200, { security: data });
+    }
+
+    if (payload.action === 'search-messages') {
+      if (typeof payload.query !== 'string' || payload.query.trim().length > 37) {
+        return jsonResponse(400, { error: 'CHAT_ADMIN_INVALID_SEARCH' });
+      }
+      const { data, error } = await serviceClient.rpc('admin_search_chat_messages', {
+        p_admin_user_id: adminUser.id,
+        p_query: payload.query,
+      });
+      if (error) {
+        const code = adminError(error);
+        return jsonResponse(code === 'CHAT_ADMIN_FORBIDDEN' ? 403 : 400, { error: code ?? 'CHAT_ADMIN_SERVER_ERROR' });
+      }
+      return jsonResponse(200, {
+        messages: (data ?? []).map((message) => ({
+          id: message.message_id,
+          displayName: message.display_name,
+          publicCode: message.public_code,
+          body: message.body,
+          moderationStatus: message.moderation_status,
+          removalReason: message.removal_reason,
+          removedAt: message.removed_at,
+          profileStatus: message.profile_status,
+          mutedUntil: message.muted_until,
+          securityLogPresent: message.security_log_present,
+          securityExpiresAt: message.security_expires_at,
+          securityHoldActive: message.security_hold_active,
+          createdAt: message.created_at,
+        })),
+      });
     }
 
     return jsonResponse(400, { error: 'CHAT_ADMIN_UNKNOWN_ACTION' });

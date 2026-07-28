@@ -91,6 +91,58 @@ FROM create_chat_message(
     REPEAT('b', 64)
 );
 
+DO $$
+BEGIN
+    IF (
+        SELECT COUNT(*)
+        FROM admin_search_chat_messages(
+            '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+            (SELECT id::TEXT FROM moderation_message)
+        )
+    ) <> 1 THEN
+        RAISE EXCEPTION 'expected exact message id search result';
+    END IF;
+
+    IF (
+        SELECT COUNT(*)
+        FROM admin_search_chat_messages(
+            '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+            '#m7k2f9'
+        )
+    ) <> 1 THEN
+        RAISE EXCEPTION 'expected normalized public code search result';
+    END IF;
+
+    BEGIN
+        PERFORM *
+        FROM admin_search_chat_messages(
+            '218f9e79-7399-7fd0-bfca-5aae32014bd9',
+            '#M7K2F9'
+        );
+        RAISE EXCEPTION 'expected CHAT_ADMIN_FORBIDDEN';
+    EXCEPTION
+        WHEN OTHERS THEN
+            IF SQLERRM <> 'CHAT_ADMIN_FORBIDDEN' THEN
+                RAISE;
+            END IF;
+    END;
+
+    BEGIN
+        PERFORM *
+        FROM admin_search_chat_messages(
+            '118f9e79-7399-7fd0-bfca-5aae32014bd9',
+            'not-a-valid-search'
+        );
+        RAISE EXCEPTION 'expected CHAT_ADMIN_INVALID_SEARCH';
+    EXCEPTION
+        WHEN OTHERS THEN
+            IF SQLERRM <> 'CHAT_ADMIN_INVALID_SEARCH' THEN
+                RAISE;
+            END IF;
+    END;
+END;
+$$;
+
 SELECT *
 FROM admin_set_chat_message_visibility(
     '118f9e79-7399-7fd0-bfca-5aae32014bd9',
@@ -154,6 +206,10 @@ BEGIN
     ) OR has_function_privilege(
         'authenticated',
         'cleanup_expired_chat_security_logs(integer)',
+        'EXECUTE'
+    ) OR has_function_privilege(
+        'anon',
+        'admin_search_chat_messages(uuid,text)',
         'EXECUTE'
     ) THEN
         RAISE EXCEPTION 'public roles must not execute chat admin functions';

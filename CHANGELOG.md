@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 — 2026-07-28
+
+### Fixed
+
+- Restored the People index to the indexed materialized read surface.
+- Removed the per-row party-only filter that caused the production People request to exceed the statement timeout.
+- Added browser coverage requiring the People page to return at least one public profile.
+
 ## 1.1.0 — 2026-07-28
 
 ### Changed

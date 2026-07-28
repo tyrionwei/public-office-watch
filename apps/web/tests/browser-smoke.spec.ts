@@ -75,6 +75,14 @@ test('desktop public pages do not introduce horizontal overflow in English', asy
   }
 });
 
+test('people page loads public people results', async ({ page }) => {
+  await page.goto('/people');
+
+  const profileLinks = page.locator('main a[href^="/people/"]');
+  await expect(profileLinks.first()).toBeVisible();
+  expect(await profileLinks.count()).toBeGreaterThan(0);
+});
+
 test('county highlight panel provides a distinct background for every county city', async ({ page }) => {
   await page.goto('/');
 

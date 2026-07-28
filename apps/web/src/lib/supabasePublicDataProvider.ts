@@ -569,7 +569,7 @@ async function fetchPeoplePage(
   await refreshSupabasePublicDataSnapshot();
 
   const snapshot = getSnapshot();
-  const view = fromPublicView('public_people_directory');
+  const view = fromPublicView('public_people_list_cached');
   if (!snapshot || !view) {
     return { items: [], total: 0 };
   }
@@ -581,9 +581,6 @@ async function fetchPeoplePage(
     query = query.ilike('name', '%' + normalizedQuery + '%');
   } else {
     query = query.eq('list_is_grassroots', false);
-    if (filters.role !== 'party_officer') {
-      query = query.eq('list_is_party_only', false);
-    }
   }
 
   if (filters.party) {

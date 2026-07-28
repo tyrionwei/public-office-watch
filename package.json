@@ -1,6 +1,6 @@
 {
   "name": "public-office-watch",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "台灣民代、候選人與其可驗證公司關聯的官方資料整理專案。",
   "main": "index.js",
   "directories": {

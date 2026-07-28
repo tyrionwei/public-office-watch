@@ -89,7 +89,7 @@ Published tables contain denormalized display snapshots. They do not have foreig
 | `published.elections` | `election_id` | `(voting_date, election_id)`; `(election_type, status)` | Include an election when it has a reviewed public race or is a reviewed public referendum/recall. |
 | `published.races` | `race_id` | `election_id`; `region_id`; `(status, voting_date)`; event sort index | Store `event_key`, `region_key`, category order, region order, and district order at promote time. |
 | `published.candidates` | `candidate_id` | `election_id`; `race_id`; `person_id`; `(race_id, candidate_no, person_name)`; `(person_id, election_year DESC, race_id)` | Store the canonical winner row and all display snapshots currently produced by `public_candidates`. |
-| `published.people` | `person_id` | directory order; party/status filters; primary region | Include list status/role fields plus `candidate_count`, latest published candidacy, and current-office summary so list pages need no candidate join. |
+| `published.people_directory` | `person_id` | directory order | Narrow materialized list surface; full detail and candidacy summary remain available through selective person/candidate reads. |
 | `published.companies` | `company_id` | unique business number where present | Only the already-approved company fields used by public relation and search results. |
 | `published.parties` | `party_id` | unique slug; normalized name | Preserve existing public party profile fields. |
 | `published.person_claims` | `claim_id` | `(person_id, observed_at DESC)` | Verified public claims only; keep the source snapshot fields already approved for display. |
@@ -134,9 +134,9 @@ The final migration must verify the intended `NULLS FIRST` behavior against the 
 | `published.local_office_people` | published people | County/city page | Apply allowed office and region criteria before transfer. |
 | `published.party_officers` | affiliations/people/parties | Party detail | Stable verified current officer projection. |
 | `published.region_issue_results` | approved issue aggregates | Region detail | Publish aggregates only; never individual responses. |
-| `published.search_documents` | people/elections/companies/parties/regions | Global search | One normalized, indexed result shape instead of three substring scans. |
+| `published.search_results` | published search documents | Global search | Compact normalized result shape; at the current row count a sequential scan is smaller and still meets the local target. |
 
-Each materialized view must have a unique index even though the first promote implementation uses regular transactional refresh. This keeps a later concurrent-refresh option open without changing its logical contract.
+Materialized views that may later use concurrent refresh need a unique index. Storage-bounded relations using ordinary transactional refresh may instead validate key uniqueness during promote when the extra index would consume the remaining capacity margin.
 
 ## Current registry consolidation
 
@@ -144,7 +144,7 @@ The frontend currently allows 25 relations. Cutover should reduce aliases that e
 
 | Current relation(s) | Published contract |
 | --- | --- |
-| `public_people`, `public_people_list`, `public_people_list_cached`, `public_people_directory` | `published.people` physical table |
+| `public_people`, `public_people_list`, `public_people_list_cached`, `public_people_directory` | `published.people_directory` for lists; selective `published.people` and candidate reads for detail |
 | `public_person_primary_photos` | Embed the approved primary-photo snapshot in people and candidates; remove the direct frontend relation unless a verified consumer remains. |
 | `public_person_claims` | `published.person_claims` physical table |
 | `public_person_identity_sources` | `published.person_identity_sources` physical table |
@@ -152,7 +152,7 @@ The frontend currently allows 25 relations. Cutover should reduce aliases that e
 | `public_person_party_events` | `published.person_party_events` physical table |
 | `public_regions` | `published.regions` physical table |
 | `public_elections` | `published.elections` physical table |
-| `public_races`, `public_election_race_list` | `published.races` physical table with event and sort fields |
+| `public_races`, `public_election_race_list` | `published.races` reviewed view; physical race-list optimization is deferred until refresh capacity is redesigned |
 | `public_candidates` | `published.candidates` physical table |
 | `public_election_race_summaries` | `published.election_race_summaries` materialized view |
 | `public_election_race_facets` | `published.election_race_facets` materialized view |
@@ -228,9 +228,9 @@ The legacy all-candidates screen must not be carried unchanged onto the publishe
 ### People index
 
 - fetch the requested 20 rows rather than the current 200-row ten-page prefetch block
-- keep exact count initially because the physical directory plan is already inexpensive
-- render candidate summary fields embedded in `published.people`
-- do not issue a second candidate query for all people on the page
+- keep exact count initially because `published.people_directory` is already inexpensive
+- render list fields from `published.people_directory`
+- fetch candidates only for the displayed people when the list UI needs candidacy details
 
 ### Person detail
 
@@ -242,7 +242,7 @@ The selective filters must be satisfied before any sort or join.
 
 ### Global search
 
-- issue one query to `published.search_documents`
+- issue one query to `published.search_results`
 - normalize the input with the same `台`/`臺` rule used during promote
 - return at most 12 typed result rows
 

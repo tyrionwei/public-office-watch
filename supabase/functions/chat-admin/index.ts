@@ -338,3 +338,4 @@ Deno.serve(async (request) => {
     console.error('chat admin API failed', error instanceof Error ? error.message : 'unknown error');
     return jsonResponse(500, { error: 'CHAT_ADMIN_SERVER_ERROR' });
   }
+});

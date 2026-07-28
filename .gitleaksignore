@@ -1,0 +1,4 @@
+# Historical README copied two redacted gitleaks documentation examples.
+# Ignore only those exact findings; current README and all other commits remain scanned.
+62ed16169ec7d9593acb14bed33422b82a6a53fe:README.md:sidekiq-secret:47
+62ed16169ec7d9593acb14bed33422b82a6a53fe:README.md:generic-api-key:574

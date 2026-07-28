@@ -53,7 +53,7 @@ test('language toggle switches the public shell copy without resizing controls',
 
   await page.getByRole('button', { name: 'EN' }).click();
 
-  await expect(page.getByRole('heading', { name: 'Public Office Watch' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '⌂ Home' })).toBeVisible();
   await expect(page.getByPlaceholder('Search people, companies, parties, elections, regions')).toBeVisible();
 
   const afterToggle = await getBox(page, languageToggleSelector);
@@ -87,7 +87,7 @@ test('county highlight panel provides a distinct background for every county cit
     await expect(highlightPanel).toHaveAttribute('data-region-highlight', county.id);
 
     const backgroundImage = await highlightPanel.evaluate((element) => window.getComputedStyle(element).backgroundImage);
-    expect(backgroundImage).toContain('/assets/regions/' + county.id + '-day.png');
+    expect(backgroundImage).toContain('/assets/regions/' + county.id + '-day.webp');
   }
 
   await expectNoHorizontalOverflow(page);
@@ -120,10 +120,12 @@ test('elections page groups elections into events and opens race detail', async 
   await expect(page.getByText('選舉年份')).toBeVisible();
 
   const eventLinks = page.locator('main a[href^="/elections/events/"]');
+  const emptyState = page.getByText('目前尚未載入可公開的選舉事件資料。');
+  await expect(eventLinks.first().or(emptyState)).toBeVisible();
   const eventCount = await eventLinks.count();
 
   if (eventCount === 0) {
-    await expect(page.getByText('目前尚未載入可公開的選舉事件資料。')).toBeVisible();
+    await expect(emptyState).toBeVisible();
     await expectNoHorizontalOverflow(page);
     return;
   }

@@ -23,6 +23,7 @@ export function getSupabasePublicClient(): SupabaseClient | null {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
+      detectSessionInUrl: false,
     },
   });
 

@@ -7,6 +7,14 @@ const migration = readFileSync(
   new URL('../supabase/migrations/202607290001_chat_foundation.sql', import.meta.url),
   'utf8',
 );
+const serverMigration = readFileSync(
+  new URL('../supabase/migrations/202607290002_chat_server_functions.sql', import.meta.url),
+  'utf8',
+);
+const edgeFunction = readFileSync(
+  new URL('../supabase/functions/chat-api/index.ts', import.meta.url),
+  'utf8',
+);
 
 test('local Supabase explicitly enables anonymous auth for chat development', () => {
   assert.match(config, /^enable_anonymous_sign_ins = true$/m);
@@ -47,4 +55,29 @@ test('public roles can only read the reviewed chat views', () => {
   assert.match(migration, /GRANT SELECT ON public_chat_status TO anon, authenticated;/);
   assert.match(migration, /GRANT SELECT ON public_chat_messages TO anon, authenticated;/);
   assert.doesNotMatch(migration, /GRANT (?:INSERT|UPDATE|DELETE).* TO (?:anon|authenticated)/);
+});
+
+test('chat writes are serialized and enforce server-side abuse controls', () => {
+  assert.match(serverMigration, /pg_advisory_xact_lock/);
+  assert.match(serverMigration, /INTERVAL '8 seconds'/);
+  assert.match(serverMigration, /INTERVAL '5 minutes'/);
+  assert.match(serverMigration, /MESSAGE = 'CHAT_DISABLED'/);
+  assert.match(serverMigration, /MESSAGE = 'CHAT_COOLDOWN'/);
+  assert.match(serverMigration, /MESSAGE = 'CHAT_DUPLICATE'/);
+  assert.match(serverMigration, /INSERT INTO chat_message_security_logs/);
+});
+
+test('chat write functions are service-only', () => {
+  assert.match(serverMigration, /SECURITY DEFINER/g);
+  assert.match(serverMigration, /FROM PUBLIC, anon, authenticated;/g);
+  assert.match(serverMigration, /TO service_role;/g);
+});
+
+test('the edge function authenticates users and keeps IP secrets server-side', () => {
+  assert.match(edgeFunction, /authClient\.auth\.getUser\(\)/);
+  assert.match(edgeFunction, /getTrustedClientIp\(request\.headers\)/);
+  assert.match(edgeFunction, /CHAT_IP_HMAC_KEY/);
+  assert.match(edgeFunction, /CHAT_IP_ENCRYPTION_KEY/);
+  assert.match(edgeFunction, /p_ip_ciphertext: ipCiphertext/);
+  assert.doesNotMatch(edgeFunction, /payload\.ip/);
 });

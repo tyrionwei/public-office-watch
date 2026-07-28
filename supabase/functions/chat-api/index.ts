@@ -1,0 +1,192 @@
+import { createClient } from 'npm:@supabase/supabase-js@2.105.4';
+
+import {
+  encryptIp,
+  generatePublicCode,
+  getTrustedClientIp,
+  hmacSha256Hex,
+  sha256Hex,
+  validateDisplayName,
+  validateMessageBody,
+  validateReplyId,
+} from '../_shared/chat.ts';
+
+const corsHeaders = {
+  'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Origin': '*',
+};
+
+function jsonResponse(status: number, payload: unknown, extraHeaders: HeadersInit = {}) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: {
+      ...corsHeaders,
+      ...extraHeaders,
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+  });
+}
+
+function requireEnvironment(name: string) {
+  const value = Deno.env.get(name);
+  if (!value) {
+    throw new Error(`Missing server secret: ${name}`);
+  }
+  return value;
+}
+
+function databaseErrorCode(error: { message?: string } | null) {
+  const knownCodes = [
+    'CHAT_DISABLED',
+    'CHAT_PROFILE_REQUIRED',
+    'CHAT_BANNED',
+    'CHAT_MUTED',
+    'CHAT_COOLDOWN',
+    'CHAT_DUPLICATE',
+    'CHAT_REPLY_UNAVAILABLE',
+    'CHAT_INVALID_BODY',
+  ];
+  return knownCodes.find((code) => error?.message?.includes(code));
+}
+
+Deno.serve(async (request) => {
+  if (request.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
+  if (request.method !== 'POST') {
+    return jsonResponse(405, { error: 'METHOD_NOT_ALLOWED' });
+  }
+
+  try {
+    const supabaseUrl = requireEnvironment('SUPABASE_URL');
+    const anonKey = requireEnvironment('SUPABASE_ANON_KEY');
+    const serviceRoleKey = requireEnvironment('SUPABASE_SERVICE_ROLE_KEY');
+    const authHeader = request.headers.get('Authorization');
+
+    if (!authHeader?.startsWith('Bearer ')) {
+      return jsonResponse(401, { error: 'CHAT_UNAUTHENTICATED' });
+    }
+
+    const authClient = createClient(supabaseUrl, anonKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: authData, error: authError } = await authClient.auth.getUser();
+
+    if (authError || !authData.user) {
+      return jsonResponse(401, { error: 'CHAT_UNAUTHENTICATED' });
+    }
+
+    const payload = await request.json().catch(() => null) as Record<string, unknown> | null;
+    if (!payload || typeof payload.action !== 'string') {
+      return jsonResponse(400, { error: 'CHAT_INVALID_REQUEST' });
+    }
+
+    const serviceClient = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+
+    if (payload.action === 'set-profile') {
+      const displayName = validateDisplayName(payload.displayName);
+      if (!displayName.ok) {
+        return jsonResponse(400, { error: displayName.code });
+      }
+
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        const { data, error } = await serviceClient
+          .rpc('upsert_chat_profile', {
+            p_user_id: authData.user.id,
+            p_display_name: displayName.value,
+            p_public_code: generatePublicCode(),
+          })
+          .single();
+
+        if (!error) {
+          return jsonResponse(200, { profile: data });
+        }
+
+        if (error.code !== '23505') {
+          console.error('chat profile update failed', error.code);
+          return jsonResponse(500, { error: 'CHAT_SERVER_ERROR' });
+        }
+      }
+
+      return jsonResponse(503, { error: 'CHAT_CODE_ALLOCATION_FAILED' });
+    }
+
+    if (payload.action === 'send-message') {
+      const body = validateMessageBody(payload.body);
+      if (!body.ok) {
+        return jsonResponse(400, { error: body.code });
+      }
+
+      const replyToMessageId = validateReplyId(payload.replyToMessageId);
+      if (replyToMessageId === undefined) {
+        return jsonResponse(400, { error: 'CHAT_INVALID_REPLY' });
+      }
+
+      const clientIp = getTrustedClientIp(request.headers);
+      if (!clientIp) {
+        return jsonResponse(503, { error: 'CHAT_CLIENT_IP_UNAVAILABLE' });
+      }
+
+      const hmacKey = requireEnvironment('CHAT_IP_HMAC_KEY');
+      const encryptionKey = requireEnvironment('CHAT_IP_ENCRYPTION_KEY');
+      const keyVersion = Number.parseInt(
+        requireEnvironment('CHAT_IP_ENCRYPTION_KEY_VERSION'),
+        10,
+      );
+      if (!Number.isInteger(keyVersion) || keyVersion < 1) {
+        throw new Error('CHAT_IP_ENCRYPTION_KEY_VERSION must be a positive integer');
+      }
+
+      const userAgent = request.headers.get('user-agent');
+      const [ipHmac, ipCiphertext, userAgentHash] = await Promise.all([
+        hmacSha256Hex(clientIp, hmacKey),
+        encryptIp(clientIp, encryptionKey),
+        userAgent ? sha256Hex(userAgent) : Promise.resolve(null),
+      ]);
+      const { data, error } = await serviceClient
+        .rpc('create_chat_message', {
+          p_user_id: authData.user.id,
+          p_body: body.value,
+          p_reply_to_message_id: replyToMessageId,
+          p_ip_hmac: ipHmac,
+          p_ip_ciphertext: ipCiphertext,
+          p_encryption_key_version: keyVersion,
+          p_request_id: crypto.randomUUID(),
+          p_user_agent_hash: userAgentHash,
+        })
+        .single();
+
+      if (!error) {
+        return jsonResponse(201, { message: data });
+      }
+
+      const errorCode = databaseErrorCode(error);
+      if (errorCode === 'CHAT_DISABLED') {
+        return jsonResponse(503, { error: errorCode });
+      }
+      if (errorCode === 'CHAT_COOLDOWN') {
+        return jsonResponse(
+          429,
+          { error: errorCode, retryAfterSeconds: 8 },
+          { 'Retry-After': '8' },
+        );
+      }
+      if (errorCode) {
+        return jsonResponse(400, { error: errorCode });
+      }
+
+      console.error('chat message insert failed', error.code);
+      return jsonResponse(500, { error: 'CHAT_SERVER_ERROR' });
+    }
+
+    return jsonResponse(400, { error: 'CHAT_UNKNOWN_ACTION' });
+  } catch (error) {
+    console.error('chat API failed', error instanceof Error ? error.message : 'unknown error');
+    return jsonResponse(500, { error: 'CHAT_SERVER_ERROR' });
+  }
+});

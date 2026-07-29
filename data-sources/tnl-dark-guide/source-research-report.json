@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T20:52:41.389Z",
+  "generatedAt": "2026-07-29T21:06:00.417Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -23,8 +23,8 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 608,
-      "manual_review": 827,
-      "external_search_needed": 3263,
+      "manual_review": 851,
+      "external_search_needed": 3239,
       "not_found_after_stop_loss": 58
     },
     "categoryCounts": {
@@ -40,8 +40,8 @@
         "people": 263,
         "claims": 445,
         "autoReviewable": 0,
-        "manualReview": 288,
-        "externalSearchNeeded": 128,
+        "manualReview": 312,
+        "externalSearchNeeded": 104,
         "notFoundAfterStopLoss": 29
       },
       "涉案紀錄": {
@@ -29381,10 +29381,54 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃成峻\" \"父親是2屆縣議員黃哲鐘\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃哲鍾曾任第15、17屆桃園縣議員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃哲鍾為黃成峻父親及前議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/newspapers/20220302000443-260118"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-1-2-政治家族-1",
+        "query": "黃成峻 黃哲鐘 黃哲鍾 父親 2屆縣議員",
+        "outcome": "source_found_conflict_manual_review",
+        "notes": "中國時報確認黃哲鍾為黃成峻父親；中選會公報列出黃哲鍾曾任第15、17屆桃園縣議員。暗公報使用「黃哲鐘」，與官方姓名用字不同，需先確認標準姓名再採用。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/newspapers/20220302000443-260118",
+            "supports": "黃哲鍾為黃成峻父親及前議員"
+          },
+          {
+            "tier": "official",
+            "name": "中央選舉委員會選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+            "supports": "黃哲鍾曾任第15、17屆桃園縣議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-1-2-政治家族-2",
@@ -29412,10 +29456,54 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃成峻\" \"母親是曾任市民代表的李秋惠\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "李秋惠曾任第9、11屆桃園市民代表",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃哲鍾、李秋惠為黃成峻父母",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Yahoo新聞轉載",
+          "sourceUrl": "https://tw.news.yahoo.com/%E6%B0%91%E7%9C%BE%E9%BB%A8%E8%AD%B0%E5%93%A1%E6%8F%90%E5%90%8D%E6%A8%99%E6%BA%96%E9%9B%99%E6%A8%99-%E6%9C%B1%E5%93%B2%E6%88%90%E9%BB%9E%E5%90%8D%E9%80%99%E4%B8%89%E4%BA%BA-%E6%9F%AF%E4%B8%BB%E5%B8%AD%E5%86%8D%E6%83%B3%E6%83%B3%E5%90%A7-032254852.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-1-2-政治家族-2",
+        "query": "黃成峻 李秋惠 母親 前市民代表",
+        "outcome": "source_found_manual_review",
+        "notes": "媒體報導把黃哲鍾、李秋惠列為黃成峻父母；中選會公報另列李秋惠為第9、11屆桃園市民代表，可完整交叉支持關係與職務。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "Yahoo新聞轉載",
+            "url": "https://tw.news.yahoo.com/%E6%B0%91%E7%9C%BE%E9%BB%A8%E8%AD%B0%E5%93%A1%E6%8F%90%E5%90%8D%E6%A8%99%E6%BA%96%E9%9B%99%E6%A8%99-%E6%9C%B1%E5%93%B2%E6%88%90%E9%BB%9E%E5%90%8D%E9%80%99%E4%B8%89%E4%BA%BA-%E6%9F%AF%E4%B8%BB%E5%B8%AD%E5%86%8D%E6%83%B3%E6%83%B3%E5%90%A7-032254852.html",
+            "supports": "黃哲鍾、李秋惠為黃成峻父母"
+          },
+          {
+            "tier": "official",
+            "name": "中央選舉委員會選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+            "supports": "李秋惠曾任第9、11屆桃園市民代表"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-1-72-政治家族-1",
@@ -29443,10 +29531,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃成峻\" \"爸爸是2屆縣議員黃哲鐘\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃哲鍾曾任第15、17屆桃園縣議員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃哲鍾為黃成峻父親及前議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/newspapers/20220302000443-260118"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-1-72-政治家族-1",
+        "query": "黃成峻 黃哲鐘 黃哲鍾 父親 2屆縣議員",
+        "outcome": "source_found_conflict_manual_review",
+        "notes": "中國時報確認黃哲鍾為黃成峻父親；中選會公報列出黃哲鍾曾任第15、17屆桃園縣議員。暗公報使用「黃哲鐘」，與官方姓名用字不同，需先確認標準姓名再採用。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/newspapers/20220302000443-260118",
+            "supports": "黃哲鍾為黃成峻父親及前議員"
+          },
+          {
+            "tier": "official",
+            "name": "中央選舉委員會選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+            "supports": "黃哲鍾曾任第15、17屆桃園縣議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-1-72-政治家族-2",
@@ -29474,10 +29606,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃成峻\" \"媽媽是前市民代表李秋惠\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "李秋惠曾任第9、11屆桃園市民代表",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃哲鍾、李秋惠為黃成峻父母",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Yahoo新聞轉載",
+          "sourceUrl": "https://tw.news.yahoo.com/%E6%B0%91%E7%9C%BE%E9%BB%A8%E8%AD%B0%E5%93%A1%E6%8F%90%E5%90%8D%E6%A8%99%E6%BA%96%E9%9B%99%E6%A8%99-%E6%9C%B1%E5%93%B2%E6%88%90%E9%BB%9E%E5%90%8D%E9%80%99%E4%B8%89%E4%BA%BA-%E6%9F%AF%E4%B8%BB%E5%B8%AD%E5%86%8D%E6%83%B3%E6%83%B3%E5%90%A7-032254852.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-1-72-政治家族-2",
+        "query": "黃成峻 李秋惠 母親 前市民代表",
+        "outcome": "source_found_manual_review",
+        "notes": "媒體報導把黃哲鍾、李秋惠列為黃成峻父母；中選會公報另列李秋惠為第9、11屆桃園市民代表，可完整交叉支持關係與職務。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "Yahoo新聞轉載",
+            "url": "https://tw.news.yahoo.com/%E6%B0%91%E7%9C%BE%E9%BB%A8%E8%AD%B0%E5%93%A1%E6%8F%90%E5%90%8D%E6%A8%99%E6%BA%96%E9%9B%99%E6%A8%99-%E6%9C%B1%E5%93%B2%E6%88%90%E9%BB%9E%E5%90%8D%E9%80%99%E4%B8%89%E4%BA%BA-%E6%9F%AF%E4%B8%BB%E5%B8%AD%E5%86%8D%E6%83%B3%E6%83%B3%E5%90%A7-032254852.html",
+            "supports": "黃哲鍾、李秋惠為黃成峻父母"
+          },
+          {
+            "tier": "official",
+            "name": "中央選舉委員會選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+            "supports": "李秋惠曾任第9、11屆桃園市民代表"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-txg-12-7-政治家族-1",
@@ -29505,10 +29681,72 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃佳恬\" \"母親是4屆議員李麗華\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃佳恬接棒母親李麗華參選市議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央社",
+          "sourceUrl": "https://www.cna.com.tw/news/aloc/202410080159.aspx"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "李麗華交棒女兒黃佳恬參選",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2022/news/breakingnews/4137491"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "李麗華從縣議員至合併後市議員連任4屆",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中廣新聞網",
+          "sourceUrl": "https://bccnews.com.tw/archives/307447"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-12-7-政治家族-1",
+        "query": "黃佳恬 李麗華 母親 4屆議員",
+        "outcome": "source_found_manual_review",
+        "notes": "中央社與自由時報確認黃佳恬為李麗華女兒並接棒參選；廣播媒體報導確認李麗華從縣議員到合併後市議員連任4屆。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中央社",
+            "url": "https://www.cna.com.tw/news/aloc/202410080159.aspx",
+            "supports": "黃佳恬接棒母親李麗華參選市議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2022/news/breakingnews/4137491",
+            "supports": "李麗華交棒女兒黃佳恬參選"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中廣新聞網",
+            "url": "https://bccnews.com.tw/archives/307447",
+            "supports": "李麗華從縣議員至合併後市議員連任4屆"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-5-16-政治家族-1",
@@ -29536,10 +29774,72 @@
           "candidateNumber": 16
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃俊哲\" \"父親是2屆議員黃忠信\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃忠信為黃俊哲父親及前台北縣議員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "警察廣播電臺",
+          "sourceUrl": "https://www.pbs.gov.tw/cht/index.php?code=list&flag=detail&ids=160&article_id=76877"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃忠信為黃俊哲父親",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央社",
+          "sourceUrl": "https://www.cna.com.tw/news/asoc/202408300158.aspx"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃忠信曾任2屆台北縣議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "ETtoday新聞雲",
+          "sourceUrl": "https://www.ettoday.net/news/20231221/2648358.htm"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-5-16-政治家族-1",
+        "query": "黃俊哲 黃忠信 父親 2屆台北縣議員",
+        "outcome": "source_found_manual_review",
+        "notes": "警廣與中央社確認黃忠信為黃俊哲父親；ETtoday直接記載黃忠信曾任2屆台北縣議員。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "警察廣播電臺",
+            "url": "https://www.pbs.gov.tw/cht/index.php?code=list&flag=detail&ids=160&article_id=76877",
+            "supports": "黃忠信為黃俊哲父親及前台北縣議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中央社",
+            "url": "https://www.cna.com.tw/news/asoc/202408300158.aspx",
+            "supports": "黃忠信為黃俊哲父親"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "ETtoday新聞雲",
+            "url": "https://www.ettoday.net/news/20231221/2648358.htm",
+            "supports": "黃忠信曾任2屆台北縣議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-4-55-政治家族-1",
@@ -29567,10 +29867,72 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃俊哲\" \"爸爸是2屆議員黃忠信\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃忠信為黃俊哲父親及前台北縣議員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "警察廣播電臺",
+          "sourceUrl": "https://www.pbs.gov.tw/cht/index.php?code=list&flag=detail&ids=160&article_id=76877"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃忠信為黃俊哲父親",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央社",
+          "sourceUrl": "https://www.cna.com.tw/news/asoc/202408300158.aspx"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃忠信曾任2屆台北縣議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "ETtoday新聞雲",
+          "sourceUrl": "https://www.ettoday.net/news/20231221/2648358.htm"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-4-55-政治家族-1",
+        "query": "黃俊哲 黃忠信 父親 2屆台北縣議員",
+        "outcome": "source_found_manual_review",
+        "notes": "警廣與中央社確認黃忠信為黃俊哲父親；ETtoday直接記載黃忠信曾任2屆台北縣議員。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "警察廣播電臺",
+            "url": "https://www.pbs.gov.tw/cht/index.php?code=list&flag=detail&ids=160&article_id=76877",
+            "supports": "黃忠信為黃俊哲父親及前台北縣議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中央社",
+            "url": "https://www.cna.com.tw/news/asoc/202408300158.aspx",
+            "supports": "黃忠信為黃俊哲父親"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "ETtoday新聞雲",
+            "url": "https://www.ettoday.net/news/20231221/2648358.htm",
+            "supports": "黃忠信曾任2屆台北縣議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-7-48-政治家族-1",
@@ -29598,10 +29960,72 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃柏霖\" \"叔叔是7屆議員、前任議長黃啟川\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃啟川歷屆議員任職紀錄",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會歷屆議員資料",
+          "sourceUrl": "https://www.kcc.gov.tw/Member_HistoryList.aspx?n=122&sms=0&s=27"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃啟川為黃柏霖叔叔及前議長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃啟川為黃柏霖叔叔及前議長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "華視新聞",
+          "sourceUrl": "https://news.cts.com.tw/cts/politics/202312/202312022259024.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-7-48-政治家族-1",
+        "query": "黃柏霖 黃啟川 叔叔 7屆議員 前議長",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "自由時報與華視確認黃啟川為黃柏霖叔叔及前議長；高雄市議會歷屆資料可見黃啟川跨多屆任職，但本次未逐屆完成「7屆」計數。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246",
+            "supports": "黃啟川為黃柏霖叔叔及前議長"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "華視新聞",
+            "url": "https://news.cts.com.tw/cts/politics/202312/202312022259024.html",
+            "supports": "黃啟川為黃柏霖叔叔及前議長"
+          },
+          {
+            "tier": "official",
+            "name": "高雄市議會歷屆議員資料",
+            "url": "https://www.kcc.gov.tw/Member_HistoryList.aspx?n=122&sms=0&s=27",
+            "supports": "黃啟川歷屆議員任職紀錄"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-12-政治家族-1",
@@ -29629,10 +30053,54 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃柏霖\" \"叔叔是國民黨前議員、前議長黃啟川\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃啟川為黃柏霖叔叔及前議長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃啟川為黃柏霖叔叔及前議長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "華視新聞",
+          "sourceUrl": "https://news.cts.com.tw/cts/politics/202312/202312022259024.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-7-12-政治家族-1",
+        "query": "黃柏霖 黃啟川 叔叔 國民黨 前議員 前議長",
+        "outcome": "source_found_manual_review",
+        "notes": "自由時報與華視確認黃啟川為黃柏霖叔叔、前高雄市議長；其國民黨背景可由同篇選舉報導脈絡及歷屆議會資料交叉確認。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246",
+            "supports": "黃啟川為黃柏霖叔叔及前議長"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "華視新聞",
+            "url": "https://news.cts.com.tw/cts/politics/202312/202312022259024.html",
+            "supports": "黃啟川為黃柏霖叔叔及前議長"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-12-政治家族-3",
@@ -29660,10 +30128,36 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃柏霖\" \"堂妹是國民黨議員黃香菽\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃香菽為黃柏霖堂妹及高雄市議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-7-12-政治家族-3",
+        "query": "黃柏霖 黃香菽 堂妹 國民黨議員",
+        "outcome": "source_found_manual_review",
+        "notes": "自由時報直接確認黃香菽為黃柏霖堂妹且同為高雄市議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246",
+            "supports": "黃香菽為黃柏霖堂妹及高雄市議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-7-48-政治家族-2",
@@ -29691,10 +30185,72 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃柏霖\" \"嬸嬸是4屆立委侯彩鳳\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "侯彩鳳曾任第4至第7屆立法委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院全球資訊網",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1403"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "侯彩鳳為黃柏霖嬸嬸及前立委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "侯彩鳳為黃柏霖嬸嬸及前立委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "華視新聞",
+          "sourceUrl": "https://news.cts.com.tw/cts/politics/202312/202312022259024.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-7-48-政治家族-2",
+        "query": "黃柏霖 侯彩鳳 嬸嬸 4屆立委",
+        "outcome": "source_found_manual_review",
+        "notes": "自由時報與華視確認侯彩鳳為黃柏霖嬸嬸及前立委；立法院歷屆資料確認侯彩鳳曾任第4至第7屆立委。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246",
+            "supports": "侯彩鳳為黃柏霖嬸嬸及前立委"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "華視新聞",
+            "url": "https://news.cts.com.tw/cts/politics/202312/202312022259024.html",
+            "supports": "侯彩鳳為黃柏霖嬸嬸及前立委"
+          },
+          {
+            "tier": "official",
+            "name": "立法院全球資訊網",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1403",
+            "supports": "侯彩鳳曾任第4至第7屆立法委員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-12-政治家族-2",
@@ -29722,10 +30278,54 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃柏霖\" \"嬸嬸是國民黨立委侯彩鳳\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "侯彩鳳歷屆立委與黨籍資料",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院全球資訊網",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1403"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "侯彩鳳為黃柏霖嬸嬸及前立委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-7-12-政治家族-2",
+        "query": "黃柏霖 侯彩鳳 嬸嬸 國民黨立委",
+        "outcome": "source_found_manual_review",
+        "notes": "自由時報、華視及立法院資料可交叉確認侯彩鳳為黃柏霖嬸嬸、國民黨籍前立委。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246",
+            "supports": "侯彩鳳為黃柏霖嬸嬸及前立委"
+          },
+          {
+            "tier": "official",
+            "name": "立法院全球資訊網",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1403",
+            "supports": "侯彩鳳歷屆立委與黨籍資料"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-3-6-政治家族-2",
@@ -29753,10 +30353,36 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃秋媖\" \"父親是台灣團結聯盟前議員、前田寮鄉長黃萬全\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃萬全為黃秋媖父親，曾具台聯黨籍並任田寮鄉長、高雄縣議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://news.ltn.com.tw/news/politics/breakingnews/4229920"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-3-6-政治家族-2",
+        "query": "黃秋媖 黃萬全 父親 台聯 前議員 前田寮鄉長",
+        "outcome": "source_found_manual_review",
+        "notes": "自由時報直接確認黃萬全為黃秋媖父親，曾為民進黨、台聯黨員並任田寮鄉長及高雄縣議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://news.ltn.com.tw/news/politics/breakingnews/4229920",
+            "supports": "黃萬全為黃秋媖父親，曾具台聯黨籍並任田寮鄉長、高雄縣議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-3-6-政治家族-1",
@@ -29784,10 +30410,54 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃秋媖\" \"母親是民進黨前議員翁瑞珠\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "翁瑞珠為黃秋媖母親及前議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "聯合新聞網",
+          "sourceUrl": "https://udn.com/news/story/124652/9627963"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "翁瑞珠為黃秋媖母親並於2010年參選市議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://news.ltn.com.tw/news/politics/breakingnews/4229920"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-3-6-政治家族-1",
+        "query": "黃秋媖 翁瑞珠 母親 民進黨 前議員",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "聯合報與自由時報確認翁瑞珠為黃秋媖母親及前高雄市議員；本次可靠來源未在同一段直接標示翁瑞珠的民進黨籍，黨籍仍需人工核對。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "聯合新聞網",
+            "url": "https://udn.com/news/story/124652/9627963",
+            "supports": "翁瑞珠為黃秋媖母親及前議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://news.ltn.com.tw/news/politics/breakingnews/4229920",
+            "supports": "翁瑞珠為黃秋媖母親並於2010年參選市議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-3-102-政治家族-1",
@@ -29815,10 +30485,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃秋媖\" \"媽媽是2屆議員翁瑞珠\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "翁瑞珠為黃秋媖母親及前議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "聯合新聞網",
+          "sourceUrl": "https://udn.com/news/story/124652/9627963"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "翁瑞珠曾任縣市合併後兩屆高雄市議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Yahoo新聞轉載",
+          "sourceUrl": "https://tw.news.yahoo.com/%E5%85%A8%E6%96%B9%E4%BD%8D%E9%81%B8%E6%B0%91%E6%9C%8D%E5%8B%99-%E4%B8%8D%E5%81%9C%E6%AD%87-%E9%BB%83%E7%A7%8B%E5%AA%96%E5%BF%83%E7%B9%AB%E5%8C%97%E9%AB%98%E9%9B%84%E6%9C%AA%E4%BE%86%E7%99%BC%E5%B1%95-062310645.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-3-102-政治家族-1",
+        "query": "黃秋媖 翁瑞珠 母親 2屆議員",
+        "outcome": "source_found_manual_review",
+        "notes": "聯合報確認翁瑞珠為黃秋媖母親及前議員；Yahoo新聞轉載報導直接記載翁瑞珠曾任縣市合併後兩屆高雄市議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "聯合新聞網",
+            "url": "https://udn.com/news/story/124652/9627963",
+            "supports": "翁瑞珠為黃秋媖母親及前議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "Yahoo新聞轉載",
+            "url": "https://tw.news.yahoo.com/%E5%85%A8%E6%96%B9%E4%BD%8D%E9%81%B8%E6%B0%91%E6%9C%8D%E5%8B%99-%E4%B8%8D%E5%81%9C%E6%AD%87-%E9%BB%83%E7%A7%8B%E5%AA%96%E5%BF%83%E7%B9%AB%E5%8C%97%E9%AB%98%E9%9B%84%E6%9C%AA%E4%BE%86%E7%99%BC%E5%B1%95-062310645.html",
+            "supports": "翁瑞珠曾任縣市合併後兩屆高雄市議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-5-1-政治家族-1",
@@ -29846,10 +30560,54 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃飛鳳\" \"二哥是前民進黨議員黃登丕\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "林芳如夫婿為前議員黃登丕",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會公報",
+          "sourceUrl": "https://cissearch.kcc.gov.tw/system/bulletin/Pdfview.aspx?file=~/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/22%E5%8D%B7/1%E6%9C%9F/22%E5%8D%B71%E6%9C%9F04639%E8%B5%B7%E9%A0%8104711%E8%BF%84%E9%A0%81.pdf&page=1"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "林芳如為黃飛鳳二嫂",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://news.ltn.com.tw/news/politics/breakingnews/3941888"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-5-1-政治家族-1",
+        "query": "黃飛鳳 黃登丕 二哥 前民進黨議員",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "自由時報確認林芳如為黃飛鳳二嫂；高雄市議會公報確認林芳如夫婿為前議員黃登丕，可推知黃登丕為黃飛鳳兄長，但「二哥」次序及民進黨籍仍缺直接可靠來源。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://news.ltn.com.tw/news/politics/breakingnews/3941888",
+            "supports": "林芳如為黃飛鳳二嫂"
+          },
+          {
+            "tier": "official",
+            "name": "高雄市議會公報",
+            "url": "https://cissearch.kcc.gov.tw/system/bulletin/Pdfview.aspx?file=~/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/22%E5%8D%B7/1%E6%9C%9F/22%E5%8D%B71%E6%9C%9F04639%E8%B5%B7%E9%A0%8104711%E8%BF%84%E9%A0%81.pdf&page=1",
+            "supports": "林芳如夫婿為前議員黃登丕"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-5-1-政治家族-2",
@@ -29877,10 +30635,54 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃飛鳳\" \"二嫂是前民進黨議員參選人林芳如\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "林芳如曾任高雄市議員，夫婿為前議員黃登丕",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會公報",
+          "sourceUrl": "https://cissearch.kcc.gov.tw/system/bulletin/Pdfview.aspx?file=~/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/22%E5%8D%B7/1%E6%9C%9F/22%E5%8D%B71%E6%9C%9F04639%E8%B5%B7%E9%A0%8104711%E8%BF%84%E9%A0%81.pdf&page=1"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "林芳如為黃飛鳳二嫂及前高雄市議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://news.ltn.com.tw/news/politics/breakingnews/3941888"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-5-1-政治家族-2",
+        "query": "黃飛鳳 林芳如 二嫂 前民進黨議員參選人",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "自由時報直接確認林芳如為黃飛鳳二嫂，且林芳如是2018年連任失利的前市議員；暗公報「前民進黨議員參選人」的精確黨籍與身分措辭仍需人工核對。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://news.ltn.com.tw/news/politics/breakingnews/3941888",
+            "supports": "林芳如為黃飛鳳二嫂及前高雄市議員"
+          },
+          {
+            "tier": "official",
+            "name": "高雄市議會公報",
+            "url": "https://cissearch.kcc.gov.tw/system/bulletin/Pdfview.aspx?file=~/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/22%E5%8D%B7/1%E6%9C%9F/22%E5%8D%B71%E6%9C%9F04639%E8%B5%B7%E9%A0%8104711%E8%BF%84%E9%A0%81.pdf&page=1",
+            "supports": "林芳如曾任高雄市議員，夫婿為前議員黃登丕"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-13-政治家族-1",
@@ -29908,10 +30710,72 @@
           "candidateNumber": 13
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃香菽\" \"父親是國民黨前議員、前議長黃啟川\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃啟川歷屆議員任職紀錄",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會歷屆議員資料",
+          "sourceUrl": "https://www.kcc.gov.tw/Member_HistoryList.aspx?n=122&sms=0&s=27"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃啟川為黃香菽父親及前高雄市議長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "風傳媒",
+          "sourceUrl": "https://www.storm.mg/article/491914"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃香菽為黃啟川與侯彩鳳女兒",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Newtalk新聞",
+          "sourceUrl": "https://newtalk.tw/news/view/2022-05-18/756501"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-7-13-政治家族-1",
+        "query": "黃香菽 黃啟川 父親 國民黨前議員 前議長",
+        "outcome": "source_found_manual_review",
+        "notes": "風傳媒與Newtalk直接確認前議長黃啟川為黃香菽父親；高雄市議會歷屆資料可核對其議員與議長經歷。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "風傳媒",
+            "url": "https://www.storm.mg/article/491914",
+            "supports": "黃啟川為黃香菽父親及前高雄市議長"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "Newtalk新聞",
+            "url": "https://newtalk.tw/news/view/2022-05-18/756501",
+            "supports": "黃香菽為黃啟川與侯彩鳳女兒"
+          },
+          {
+            "tier": "official",
+            "name": "高雄市議會歷屆議員資料",
+            "url": "https://www.kcc.gov.tw/Member_HistoryList.aspx?n=122&sms=0&s=27",
+            "supports": "黃啟川歷屆議員任職紀錄"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-13-政治家族-2",
@@ -29939,10 +30803,72 @@
           "candidateNumber": 13
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃香菽\" \"母親是國民黨立委侯彩鳳\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "侯彩鳳歷屆立委與黨籍資料",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院全球資訊網",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1403"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "侯彩鳳為黃香菽母親及前立委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "風傳媒",
+          "sourceUrl": "https://www.storm.mg/article/491914"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃香菽為黃啟川與侯彩鳳女兒",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Newtalk新聞",
+          "sourceUrl": "https://newtalk.tw/news/view/2022-05-18/756501"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-7-13-政治家族-2",
+        "query": "黃香菽 侯彩鳳 母親 國民黨立委",
+        "outcome": "source_found_manual_review",
+        "notes": "風傳媒與Newtalk確認侯彩鳳為黃香菽母親；立法院資料確認侯彩鳳為國民黨籍歷屆立委。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "風傳媒",
+            "url": "https://www.storm.mg/article/491914",
+            "supports": "侯彩鳳為黃香菽母親及前立委"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "Newtalk新聞",
+            "url": "https://newtalk.tw/news/view/2022-05-18/756501",
+            "supports": "黃香菽為黃啟川與侯彩鳳女兒"
+          },
+          {
+            "tier": "official",
+            "name": "立法院全球資訊網",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1403",
+            "supports": "侯彩鳳歷屆立委與黨籍資料"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-7-1-政治家族-1",
@@ -29970,10 +30896,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃香菽\" \"爸爸是7屆議員、前議長黃啟川\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃啟川歷屆議員任職紀錄",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會歷屆議員資料",
+          "sourceUrl": "https://www.kcc.gov.tw/Member_HistoryList.aspx?n=122&sms=0&s=27"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃啟川為黃香菽父親及前高雄市議長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "風傳媒",
+          "sourceUrl": "https://www.storm.mg/article/491914"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-7-1-政治家族-1",
+        "query": "黃香菽 黃啟川 父親 7屆議員 前議長",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "風傳媒及Newtalk確認父女關係與前議長身分；高雄市議會歷屆資料可見黃啟川跨多屆任職，但本次未逐屆完成「7屆」計數。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "風傳媒",
+            "url": "https://www.storm.mg/article/491914",
+            "supports": "黃啟川為黃香菽父親及前高雄市議長"
+          },
+          {
+            "tier": "official",
+            "name": "高雄市議會歷屆議員資料",
+            "url": "https://www.kcc.gov.tw/Member_HistoryList.aspx?n=122&sms=0&s=27",
+            "supports": "黃啟川歷屆議員任職紀錄"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-7-1-政治家族-3",
@@ -30009,10 +30979,36 @@
           "candidateNumber": 13
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃香菽\" \"堂哥是現任議員黃柏霖\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃柏霖為黃香菽堂哥且為高雄市議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-7-1-政治家族-3",
+        "query": "黃香菽 黃柏霖 堂哥 現任議員",
+        "outcome": "source_found_manual_review",
+        "notes": "自由時報直接確認黃香菽為黃柏霖堂妹，兩人當時均為高雄市議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2020/news/Sum/paper/1338246",
+            "supports": "黃柏霖為黃香菽堂哥且為高雄市議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-7-1-政治家族-2",
@@ -30040,10 +31036,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃香菽\" \"媽媽是4屆立委侯彩鳳\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "侯彩鳳曾任第4至第7屆立法委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院全球資訊網",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1403"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "侯彩鳳為黃香菽母親及前立委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "風傳媒",
+          "sourceUrl": "https://www.storm.mg/article/491914"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-7-1-政治家族-2",
+        "query": "黃香菽 侯彩鳳 母親 4屆立委",
+        "outcome": "source_found_manual_review",
+        "notes": "風傳媒與Newtalk確認侯彩鳳為黃香菽母親；立法院歷屆資料確認侯彩鳳曾任第4至第7屆立委。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "風傳媒",
+            "url": "https://www.storm.mg/article/491914",
+            "supports": "侯彩鳳為黃香菽母親及前立委"
+          },
+          {
+            "tier": "official",
+            "name": "立法院全球資訊網",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1403",
+            "supports": "侯彩鳳曾任第4至第7屆立法委員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-1-19-政治家族-1",
@@ -30071,10 +31111,72 @@
           "candidateNumber": 19
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃家齊\" \"父親是曾任2屆議員、3屆桃園市代表的黃享欽\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃享欽為黃家齊父親及曾任桃園市民代表",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Yahoo新聞轉載",
+          "sourceUrl": "https://tw.news.yahoo.com/%E7%B6%A0%E8%AD%B0%E5%93%A1%E5%88%9D%E9%81%B8-%E6%96%B0%E7%94%9F%E4%BB%A3%E6%90%B6%E5%87%BA%E9%A0%AD-215005315.html"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃享欽為黃家齊父親及前議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "信傳媒",
+          "sourceUrl": "https://www.cmmedia.com.tw/home/articles/9398"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃家齊接棒父親黃享欽政治香火",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://news.ltn.com.tw/news/life/paper/1522814"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-1-19-政治家族-1",
+        "query": "黃家齊 黃享欽 父親 2屆議員 3屆桃園市代表",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "媒體報導確認黃享欽為黃家齊父親、前議員及曾任桃園市民代表；本次未找到可靠來源直接完整列出「2屆議員、3屆市民代表」任期數。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "Yahoo新聞轉載",
+            "url": "https://tw.news.yahoo.com/%E7%B6%A0%E8%AD%B0%E5%93%A1%E5%88%9D%E9%81%B8-%E6%96%B0%E7%94%9F%E4%BB%A3%E6%90%B6%E5%87%BA%E9%A0%AD-215005315.html",
+            "supports": "黃享欽為黃家齊父親及曾任桃園市民代表"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "信傳媒",
+            "url": "https://www.cmmedia.com.tw/home/articles/9398",
+            "supports": "黃享欽為黃家齊父親及前議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://news.ltn.com.tw/news/life/paper/1522814",
+            "supports": "黃家齊接棒父親黃享欽政治香火"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-1-73-政治家族-1",
@@ -30102,10 +31204,72 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃家齊\" \"爸爸是2屆議員、3屆桃園市代表黃享欽\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃享欽為黃家齊父親及曾任桃園市民代表",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Yahoo新聞轉載",
+          "sourceUrl": "https://tw.news.yahoo.com/%E7%B6%A0%E8%AD%B0%E5%93%A1%E5%88%9D%E9%81%B8-%E6%96%B0%E7%94%9F%E4%BB%A3%E6%90%B6%E5%87%BA%E9%A0%AD-215005315.html"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃享欽為黃家齊父親及前議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "信傳媒",
+          "sourceUrl": "https://www.cmmedia.com.tw/home/articles/9398"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃家齊接棒父親黃享欽政治香火",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://news.ltn.com.tw/news/life/paper/1522814"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-1-73-政治家族-1",
+        "query": "黃家齊 黃享欽 父親 2屆議員 3屆桃園市代表",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "媒體報導確認黃享欽為黃家齊父親、前議員及曾任桃園市民代表；本次未找到可靠來源直接完整列出「2屆議員、3屆市民代表」任期數。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "Yahoo新聞轉載",
+            "url": "https://tw.news.yahoo.com/%E7%B6%A0%E8%AD%B0%E5%93%A1%E5%88%9D%E9%81%B8-%E6%96%B0%E7%94%9F%E4%BB%A3%E6%90%B6%E5%87%BA%E9%A0%AD-215005315.html",
+            "supports": "黃享欽為黃家齊父親及曾任桃園市民代表"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "信傳媒",
+            "url": "https://www.cmmedia.com.tw/home/articles/9398",
+            "supports": "黃享欽為黃家齊父親及前議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://news.ltn.com.tw/news/life/paper/1522814",
+            "supports": "黃家齊接棒父親黃享欽政治香火"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-4-17-政治家族-1",

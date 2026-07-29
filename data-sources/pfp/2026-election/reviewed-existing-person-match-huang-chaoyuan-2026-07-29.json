@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "party": "親民黨",
+  "reviewedBy": "user-confirmed:2026-07-29-huang-chaoyuan",
+  "decisions": [
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-007",
+      "personName": "黃朝淵",
+      "decision": "use_existing",
+      "personId": "93355508-4337-4787-a512-7be370417c3e",
+      "reason": "確認 2020 親民黨立委候選人、2022 無黨籍臺中市議員候選人及 2026 親民黨候選人皆為同一人",
+      "reviewedAt": "2026-07-29T22:31:54.9913433+08:00"
+    }
+  ]
+}

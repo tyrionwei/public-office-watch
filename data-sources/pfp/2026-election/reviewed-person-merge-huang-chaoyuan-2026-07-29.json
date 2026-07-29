@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "user-confirmed:2026-07-29-huang-chaoyuan",
+  "groups": [
+    {
+      "name": "黃朝淵",
+      "canonicalPersonId": "93355508-4337-4787-a512-7be370417c3e",
+      "duplicatePersonIds": [
+        "b773d556-fb52-4253-8a97-a28a2a31798e"
+      ],
+      "evidence": {
+        "basis": "使用者確認為同一人；2020 年以親民黨參選臺中市第 1 選區立法委員、2022 年以無黨籍參選臺中市第 4 選區議員，2026 年再獲親民黨提名參選臺中市第 4 選區議員",
+        "candidateYears": [2020, 2022, 2026],
+        "candidateOffices": ["立法委員", "直轄市議員"],
+        "historicalParties": ["親民黨", "無黨籍"],
+        "canonicalSource": "中央選舉委員會 2022 年臺中市議員候選人資料"
+      }
+    }
+  ]
+}

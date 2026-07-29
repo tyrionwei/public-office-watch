@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "party": "中國國民黨",
+  "reviewedBy": "user-confirmed:2026-07-29-xie-longjie",
+  "decisions": [
+    {
+      "sourceCandidateKey": "kmt-2026-mayor-67000-7f67d3f12a96",
+      "personName": "謝龍介",
+      "decision": "use_existing",
+      "personId": "320c38ea-48a7-4cfb-a77b-5842abcda5ac",
+      "reason": "確認所有既有謝龍介候選及公職紀錄與 2026 國民黨臺南市長候選人皆為同一人",
+      "reviewedAt": "2026-07-29T22:31:54.9913433+08:00"
+    }
+  ]
+}

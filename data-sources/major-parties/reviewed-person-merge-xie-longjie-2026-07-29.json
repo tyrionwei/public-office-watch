@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "user-confirmed:2026-07-29-xie-longjie",
+  "groups": [
+    {
+      "name": "謝龍介",
+      "canonicalPersonId": "320c38ea-48a7-4cfb-a77b-5842abcda5ac",
+      "duplicatePersonIds": [
+        "5384207d-0fc5-4487-a557-e0d15fdb3cdc",
+        "8f912b41-277c-4cde-abcb-9c26ccd655f4"
+      ],
+      "evidence": {
+        "basis": "使用者確認為同一人；2012、2016 立委候選紀錄、2018 臺南市議員候選紀錄、2022 臺南市長候選紀錄、2024 立法委員及 2026 國民黨臺南市長候選人皆屬同一公眾人物",
+        "candidateYears": [2012, 2016, 2018, 2022, 2024, 2026],
+        "candidateOffices": ["立法委員", "直轄市議員", "直轄市長"],
+        "historicalParties": ["中國國民黨"],
+        "canonicalSource": "立法院第 11 屆立法委員資料"
+      }
+    }
+  ]
+}

@@ -25,6 +25,41 @@ const PARTY_OFFICER_PAGE_SIZE = 8;
 const CONTRIBUTION_PAGE_SIZE = 10;
 const emptyPeoplePage: PublicPersonListPage = { items: [], total: 0 };
 
+function CompanyDirectorNames({ companyId, names }: { companyId: string; names: string[] }) {
+  const { t } = useI18n();
+  const [isOpen, setIsOpen] = useState(false);
+  const [primaryDirector, ...otherDirectors] = names;
+  const panelId = `company-${companyId}-other-directors`;
+
+  if (!primaryDirector) return <span>—</span>;
+
+  return (
+    <div className="flex max-w-[14rem] flex-col items-end gap-1 text-right">
+      <span>{primaryDirector}</span>
+      {otherDirectors.length > 0 ? (
+        <>
+          <button
+            type="button"
+            aria-controls={panelId}
+            aria-expanded={isOpen}
+            onClick={() => setIsOpen((current) => !current)}
+            className="text-xs text-accent hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/35"
+          >
+            {isOpen ? t('office.collapseOthers') : t('office.showMorePeople', { count: otherDirectors.length })}
+          </button>
+          {isOpen ? (
+            <div id={panelId} className="grid gap-1 border-r border-line/60 pr-2 text-xs text-slate-400">
+              {otherDirectors.map((name, index) => (
+                <span key={`${name}-${index}`}>{name}</span>
+              ))}
+            </div>
+          ) : null}
+        </>
+      ) : null}
+    </div>
+  );
+}
+
 function getSectionPage(searchParams: URLSearchParams, key: string) {
   const page = Number.parseInt(searchParams.get(key) ?? '1', 10);
   return Number.isFinite(page) && page > 0 ? page : 1;
@@ -602,6 +637,28 @@ export function PartyPage() {
                             <dt className="text-slate-500">{t('partyDetail.recordCount')}</dt>
                             <dd>{summary.donation_count}</dd>
                           </div>
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-500">{t('partyDetail.companyRepresentative')}</dt>
+                            <dd className="text-right">{summary.representative_name ?? '—'}</dd>
+                          </div>
+                          <div className="flex items-start justify-between gap-3">
+                            <dt className="text-slate-500">{t('partyDetail.companyDirectors')}</dt>
+                            <dd><CompanyDirectorNames companyId={summary.company_id} names={summary.director_names} /></dd>
+                          </div>
+                          {summary.registry_source_name ? (
+                            <div className="flex justify-between gap-3">
+                              <dt className="text-slate-500">{t('partyDetail.registrySource')}</dt>
+                              <dd className="text-right">
+                                {summary.registry_source_url ? (
+                                  <a href={summary.registry_source_url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
+                                    {summary.registry_source_name}
+                                  </a>
+                                ) : (
+                                  summary.registry_source_name
+                                )}
+                              </dd>
+                            </div>
+                          ) : null}
                           <div className="flex justify-between gap-3">
                             <dt className="text-slate-500">{t('partyDetail.source')}</dt>
                             <dd className="text-right">

@@ -3817,7 +3817,6 @@ async function writeSeed(seed, hash, args) {
       return {
         unified_business_no: company.unifiedBusinessNo,
         name: company.name,
-        representative_name: company.representativeName ?? null,
         status: company.status ?? null,
         capital: company.capital ?? null,
         address_region: company.addressRegion ?? null,

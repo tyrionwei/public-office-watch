@@ -39,6 +39,12 @@ function asNullableNumber(value: unknown) {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
+function asStringArray(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+    : [];
+}
+
 function asPersonGender(value: unknown): PublicPerson['gender'] {
   return value === 'male' || value === 'female' || value === 'unknown' ? value : null;
 }
@@ -260,6 +266,10 @@ export function mapPublicCompanyRow(row: PartialRow<PublicCompany>): PublicCompa
     capital: asNullableNumber(row?.capital),
     address_region: asNullableString(row?.address_region),
     updated_at: asString(row?.updated_at, ''),
+    director_names: asStringArray(row?.director_names),
+    registry_source_name: asNullableString(row?.registry_source_name),
+    registry_source_url: asNullableString(row?.registry_source_url),
+    registry_checked_at: asNullableString(row?.registry_checked_at),
   };
 }
 
@@ -553,6 +563,11 @@ export function mapPublicPartyCompanyContributionSummaryRow(
     source_name: asNullableString(row?.source_name),
     source_url: asNullableString(row?.source_url),
     reviewed_at: asNullableString(row?.reviewed_at),
+    representative_name: asNullableString(row?.representative_name),
+    director_names: asStringArray(row?.director_names),
+    registry_source_name: asNullableString(row?.registry_source_name),
+    registry_source_url: asNullableString(row?.registry_source_url),
+    registry_checked_at: asNullableString(row?.registry_checked_at),
   };
 }
 

@@ -270,6 +270,11 @@ export const PARTY_COMPANY_CONTRIBUTION_COLUMNS = [
   'source_name',
   'source_url',
   'reviewed_at',
+  'representative_name',
+  'director_names',
+  'registry_source_name',
+  'registry_source_url',
+  'registry_checked_at',
 ].join(',');
 
 export const PARTY_OFFICER_COLUMNS = [

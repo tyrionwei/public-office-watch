@@ -327,6 +327,10 @@ export const mockPublicCompanies: PublicCompany[] = [
     capital: 5000000,
     address_region: '北部都會區',
     updated_at: '2026-05-20T09:00:00+08:00',
+    director_names: ['範例代表甲', '範例董事乙', '範例董事丙'],
+    registry_source_name: '經濟部商業發展署商工行政資料開放平臺',
+    registry_source_url: 'https://data.gcis.nat.gov.tw/od/rule',
+    registry_checked_at: '2026-07-29T09:00:00+08:00',
   },
   {
     company_id: 'company-example-b',
@@ -337,6 +341,10 @@ export const mockPublicCompanies: PublicCompany[] = [
     capital: 3200000,
     address_region: '中部山線',
     updated_at: '2026-05-21T09:30:00+08:00',
+    director_names: ['範例代表乙'],
+    registry_source_name: '經濟部商業發展署商工行政資料開放平臺',
+    registry_source_url: 'https://data.gcis.nat.gov.tw/od/rule',
+    registry_checked_at: '2026-07-29T09:00:00+08:00',
   },
 ];
 
@@ -636,6 +644,11 @@ export const mockPublicPartyCompanyContributionSummaries: PublicPartyCompanyCont
     source_name: '範例政治獻金會計報告書',
     source_url: 'https://example.com/sources/political-contributions/company-a',
     reviewed_at: '2026-06-10T09:00:00+08:00',
+    representative_name: '範例代表甲',
+    director_names: ['範例代表甲', '範例董事乙', '範例董事丙'],
+    registry_source_name: '經濟部商業發展署商工行政資料開放平臺',
+    registry_source_url: 'https://data.gcis.nat.gov.tw/od/rule',
+    registry_checked_at: '2026-07-29T09:00:00+08:00',
   },
   {
     party_id: 'party-kmt',
@@ -648,6 +661,11 @@ export const mockPublicPartyCompanyContributionSummaries: PublicPartyCompanyCont
     source_name: '範例政治獻金會計報告書',
     source_url: 'https://example.com/sources/political-contributions/company-b',
     reviewed_at: '2026-06-10T09:00:00+08:00',
+    representative_name: '範例代表乙',
+    director_names: ['範例代表乙'],
+    registry_source_name: '經濟部商業發展署商工行政資料開放平臺',
+    registry_source_url: 'https://data.gcis.nat.gov.tw/od/rule',
+    registry_checked_at: '2026-07-29T09:00:00+08:00',
   },
 ];
 

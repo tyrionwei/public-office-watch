@@ -74,6 +74,10 @@ export type PublicCompany = {
   capital: number | null;
   address_region: string | null;
   updated_at: string;
+  director_names: string[];
+  registry_source_name: string | null;
+  registry_source_url: string | null;
+  registry_checked_at: string | null;
 };
 
 export type PublicRelationDetail = {
@@ -387,6 +391,11 @@ export type PublicPartyCompanyContributionSummary = {
   source_name: string | null;
   source_url: string | null;
   reviewed_at: string | null;
+  representative_name: string | null;
+  director_names: string[];
+  registry_source_name: string | null;
+  registry_source_url: string | null;
+  registry_checked_at: string | null;
 };
 
 export type PublicPersonStatus = 'current' | 'candidate' | 'former' | 'other';

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T23:09:54.634Z",
+  "generatedAt": "2026-07-29T23:16:46.614Z",
   "policy": {
     "maxQueriesPerClaim": 1,
     "maxResultsInspected": 2,
@@ -9547,6 +9547,90 @@
           "name": "中國國民黨黨代表名冊",
           "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
           "supports": "名冊以「劉茂群」列於黃復興黨代表；不支持複合敘述中的黨部委員部分"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-7-43-政治工作-2",
+      "query": "朱暖英 國民黨 全國黨代表 名冊",
+      "outcome": "source_found_manual_review",
+      "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中國國民黨黨代表名冊",
+          "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+          "supports": "朱暖英列於國民黨黨代表名冊"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-10-8-政治工作-2",
+      "query": "陳駿霖 國民黨 全國黨代表 名冊",
+      "outcome": "source_found_manual_review",
+      "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中國國民黨黨代表名冊",
+          "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+          "supports": "陳駿霖列於國民黨黨代表名冊"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-9-14-政治工作-1",
+      "query": "徐尚賢 國民黨 黃復興 黃國山 黨代表",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "國民黨官方名冊列有徐尚賢為黃復興黨代表，但未在同一來源確認其所屬為「黃國山黨部」。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中國國民黨黨代表名冊",
+          "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+          "supports": "徐尚賢列於黃復興黨代表名冊；不支持複合敘述中的黃國山黨部歸屬"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-1-69-政治工作-2",
+      "query": "陳美梅 國民黨 全國黨代表 市民代表",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "國民黨官方名冊只支持黨代表部分，尚未由此來源確認市民代表經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中國國民黨黨代表名冊",
+          "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+          "supports": "陳美梅列於國民黨黨代表名冊；不支持複合敘述中的市民代表部分"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-4-85-政治工作-2",
+      "query": "翁美春 民進黨 第19屆 全國黨代表 當選名單",
+      "outcome": "source_found_manual_review",
+      "notes": "民進黨官方第19屆全國黨代表當選名單列有翁美春，支持曾任全國黨代表。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨2020年第19屆全國黨代表當選名單",
+          "url": "https://www.dpp.org.tw/upload/news/20200528%E5%85%AC%E5%91%8A-2020%E5%B9%B4%E7%AC%AC19%E5%B1%86%E5%85%A8%E5%9C%8B%E9%BB%A8%E4%BB%A3%E8%A1%A8%E7%95%B6%E9%81%B8%E5%90%8D%E5%96%AE.pdf",
+          "supports": "台中市黨部當選名單列有翁美春"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-9-8-政治工作-4",
+      "query": "李啓維 李啟維 民進黨 黨代表 提案 2016 全代會",
+      "outcome": "source_found_manual_review",
+      "notes": "民進黨官方2016年全代會新聞稿明確記載「李啟維黨代表提案」，支持曾任黨代表；姓名異體字仍保留人工確認。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民進黨第十七屆第一次全代會大會新聞稿暨大會宣言全文",
+          "url": "https://www.dpp.org.tw/media/contents/7585",
+          "supports": "新聞稿明確記載「李啟維黨代表提案」"
         }
       ]
     }

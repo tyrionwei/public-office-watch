@@ -235,6 +235,79 @@ function sameDistrict(left, right) {
     && leftDescriptor.subtype === rightDescriptor.subtype;
 }
 
+function canonicalIdentityGroups(snapshot, record, people, state, regionsById) {
+  const canonicalByPersonId = new Map(
+    (state.canonicalMap ?? []).map((row) => [row.person_id, row.canonical_person_id]),
+  );
+  const candidatesByPersonId = new Map();
+  for (const candidate of state.candidates ?? []) {
+    candidatesByPersonId.set(
+      candidate.person_id,
+      [...(candidatesByPersonId.get(candidate.person_id) ?? []), candidate],
+    );
+  }
+  const historyRacesById = new Map(
+    (state.historyRaces ?? []).map((race) => [race.id, race]),
+  );
+  const groups = new Map();
+
+  for (const person of people) {
+    const canonicalPersonId = canonicalByPersonId.get(person.id) ?? person.id;
+    const group = groups.get(canonicalPersonId) ?? {
+      canonicalPersonId,
+      people: [],
+      partyMatch: false,
+      geographyMatch: false,
+      evidence: [],
+    };
+    group.people.push(person);
+
+    const personCandidates = candidatesByPersonId.get(person.id) ?? [];
+    const partyValues = [person.party, ...personCandidates.map((candidate) => candidate.party)];
+    if (partyValues.some((party) => normalizeText(party) === normalizeText(snapshot.party))) {
+      group.partyMatch = true;
+    }
+
+    const personDistrict = normalizeText(person.district);
+    const sameRegionFromProfile = personDistrict.includes(normalizeText(record.regionName));
+    if (mayorRaceTypes.has(record.raceType) && sameRegionFromProfile) {
+      group.geographyMatch = true;
+    }
+    if (
+      !mayorRaceTypes.has(record.raceType)
+      && String(person.position ?? '').includes('議員')
+      && sameRegionFromProfile
+      && sameDistrict(record.districtName, person.district)
+    ) {
+      group.geographyMatch = true;
+    }
+
+    for (const candidate of personCandidates) {
+      const historyRace = historyRacesById.get(candidate.race_id);
+      const historyRegion = historyRace ? regionsById.get(historyRace.region_id) : null;
+      if (!historyRace || normalizeText(historyRegion?.name) !== normalizeText(record.regionName)) continue;
+      if (mayorRaceTypes.has(record.raceType)) {
+        group.geographyMatch = true;
+      } else if (
+        ['city_councilor', 'county_councilor'].includes(historyRace.race_type)
+        && sameDistrict(record.districtName, historyRace.title)
+      ) {
+        group.geographyMatch = true;
+      }
+    }
+
+    groups.set(canonicalPersonId, group);
+  }
+
+  return Array.from(groups.values()).map((group) => ({
+    ...group,
+    evidence: [
+      ...(group.partyMatch ? ['party'] : []),
+      ...(group.geographyMatch ? ['geography'] : []),
+    ],
+  }));
+}
+
 function planPartyCandidateImport(snapshot, state) {
   const targetElections = state.elections.filter((row) => row.external_id === targetElectionExternalId);
   const globalBlocking = [];
@@ -250,6 +323,8 @@ function planPartyCandidateImport(snapshot, state) {
   }
 
   const matched = [];
+  const highConfidenceMatch = [];
+  const probableMatch = [];
   const identityReview = [];
   const newPersonReview = [];
   const blocking = [...globalBlocking];
@@ -280,13 +355,34 @@ function planPartyCandidateImport(snapshot, state) {
     const existingCandidates = state.candidates.filter((candidate) => (
       candidate.race_id === race.id && people.some((person) => person.id === candidate.person_id)
     ));
-    const planned = { record, race, people, existingCandidates };
+    const canonicalGroups = canonicalIdentityGroups(snapshot, record, people, state, regionsById);
+    const strongMatches = canonicalGroups.filter((group) => group.partyMatch && group.geographyMatch);
+    const partialMatches = canonicalGroups.filter((group) => group.partyMatch || group.geographyMatch);
+    const selectedGroup = strongMatches.length === 1
+      ? strongMatches[0]
+      : partialMatches.length === 1
+        ? partialMatches[0]
+        : canonicalGroups.length === 1
+          ? canonicalGroups[0]
+          : null;
+    const identityResolution = people.length === 0
+      ? 'new_person'
+      : strongMatches.length === 1
+        ? 'high_confidence_match'
+        : selectedGroup
+          ? 'probable_match'
+          : 'needs_identity_review';
+    const planned = {
+      record, race, people, existingCandidates, canonicalGroups, selectedGroup, identityResolution,
+    };
     matched.push(planned);
     if (people.length === 0) newPersonReview.push(planned);
+    else if (identityResolution === 'high_confidence_match') highConfidenceMatch.push(planned);
+    else if (identityResolution === 'probable_match') probableMatch.push(planned);
     else identityReview.push(planned);
   }
 
-  return { matched, identityReview, newPersonReview, blocking };
+  return { matched, highConfidenceMatch, probableMatch, identityReview, newPersonReview, blocking };
 }
 
 function restUrl(supabaseUrl, pathname) {
@@ -350,12 +446,26 @@ async function main() {
   const races = elections.length === 1
     ? await fetchRows(config, 'races', 'id,election_id,region_id,race_type,title,is_public', { election_id: `eq.${elections[0].id}` })
     : [];
-  const [regions, people, candidates] = await Promise.all([
+  const [targetRegions, people] = await Promise.all([
     fetchRowsByValues(config, 'regions', 'id,name', 'id', races.map((row) => row.region_id)),
-    fetchRowsByValues(config, 'people', 'id,external_id,name,party,is_public', 'name', snapshot.records.map((row) => row.personName)),
-    fetchRowsByValues(config, 'candidates', 'id,person_id,race_id,candidacy_status,party,source_url', 'race_id', races.map((row) => row.id)),
+    fetchRowsByValues(config, 'people', 'id,external_id,name,party,position,district,is_public', 'name', snapshot.records.map((row) => row.personName)),
   ]);
-  const plan = planPartyCandidateImport(snapshot, { elections, races, regions, people, candidates });
+  const [canonicalMap, candidates] = await Promise.all([
+    fetchRowsByValues(config, 'person_canonical_map', 'person_id,canonical_person_id', 'person_id', people.map((row) => row.id)),
+    fetchRowsByValues(config, 'candidates', 'id,person_id,race_id,candidacy_status,party,source_url', 'person_id', people.map((row) => row.id)),
+  ]);
+  const historyRaces = await fetchRowsByValues(
+    config, 'races', 'id,region_id,race_type,title', 'id', candidates.map((row) => row.race_id),
+  );
+  const historyRegions = await fetchRowsByValues(
+    config, 'regions', 'id,name', 'id', historyRaces.map((row) => row.region_id),
+  );
+  const regions = Array.from(
+    new Map([...targetRegions, ...historyRegions].map((region) => [region.id, region])).values(),
+  );
+  const plan = planPartyCandidateImport(snapshot, {
+    elections, races, regions, people, candidates, canonicalMap, historyRaces,
+  });
   const result = {
     status: plan.blocking.length > 0 ? 'blocked' : 'ok',
     dryRun: true,
@@ -363,6 +473,8 @@ async function main() {
     party: snapshot.party,
     recordCount: snapshot.records.length,
     matchedRaceCount: plan.matched.length,
+    highConfidenceMatchCount: plan.highConfidenceMatch.length,
+    probableMatchCount: plan.probableMatch.length,
     identityReviewCount: plan.identityReview.length,
     newPersonReviewCount: plan.newPersonReview.length,
     existingCandidateReviewCount: plan.matched.filter((item) => item.existingCandidates.length > 0).length,
@@ -373,7 +485,10 @@ async function main() {
       personName: item.record.personName,
       raceTitle: item.race.title,
       personMatchCount: item.people.length,
+      canonicalMatchCount: item.canonicalGroups.length,
       existingCandidateMatchCount: item.existingCandidates.length,
+      identityResolution: item.identityResolution,
+      selectedCanonicalPersonId: item.selectedGroup?.canonicalPersonId ?? null,
     })),
   };
   console.log(JSON.stringify(result, null, 2));

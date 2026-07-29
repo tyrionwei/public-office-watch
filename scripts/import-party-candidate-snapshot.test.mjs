@@ -98,6 +98,55 @@ test('matches a mayor race while keeping same-name people for identity review', 
   assert.equal(plan.identityReview[0].people.length, 2);
 });
 
+test('uses canonical identity, party and historical district for one high-confidence suggestion', () => {
+  const input = snapshot({
+    records: [{
+      sourceCandidateKey: 'dpp-2026-new-taipei-4-example',
+      personName: '同名人物',
+      candidacyStatus: 'party_nominee',
+      raceType: 'city_councilor',
+      regionName: '新北市',
+      districtName: '第4選區',
+    }],
+  });
+  const plan = planPartyCandidateImport(input, {
+    elections: [{ id: 'election-1', external_id: 'planned-2026-local-public-officials' }],
+    regions: [{ id: 'region-1', name: '新北市' }],
+    races: [{
+      id: 'race-4',
+      election_id: 'election-1',
+      region_id: 'region-1',
+      race_type: 'city_councilor',
+      title: '新北市第4選舉區議員選舉',
+      is_public: true,
+    }],
+    historyRaces: [
+      { id: 'history-4', region_id: 'region-1', race_type: 'city_councilor', title: '新北市第4選舉區議員選舉' },
+      { id: 'history-5', region_id: 'region-1', race_type: 'city_councilor', title: '新北市第5選舉區議員選舉' },
+    ],
+    people: [
+      { id: 'person-a1', name: '同名人物', party: '民主進步黨', position: '市議員', district: '新北市第4選舉區' },
+      { id: 'person-a2', name: '同名人物', party: '民主進步黨', position: '市議員', district: '新北市第4選舉區' },
+      { id: 'person-b', name: '同名人物', party: '中國國民黨', position: '市議員', district: '新北市第5選舉區' },
+    ],
+    canonicalMap: [
+      { person_id: 'person-a1', canonical_person_id: 'canonical-a' },
+      { person_id: 'person-a2', canonical_person_id: 'canonical-a' },
+      { person_id: 'person-b', canonical_person_id: 'canonical-b' },
+    ],
+    candidates: [
+      { id: 'candidate-a', person_id: 'person-a1', race_id: 'history-4', party: '民主進步黨' },
+      { id: 'candidate-b', person_id: 'person-b', race_id: 'history-5', party: '中國國民黨' },
+    ],
+  });
+
+  assert.equal(plan.highConfidenceMatch.length, 1);
+  assert.equal(plan.probableMatch.length, 0);
+  assert.equal(plan.identityReview.length, 0);
+  assert.equal(plan.highConfidenceMatch[0].canonicalGroups.length, 2);
+  assert.equal(plan.highConfidenceMatch[0].selectedGroup.canonicalPersonId, 'canonical-a');
+});
+
 test('matches councilor districts without guessing a different district', () => {
   const input = snapshot({
     records: [{

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T23:29:57.276Z",
+  "generatedAt": "2026-07-29T23:37:17.656Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -23,8 +23,8 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 704,
-      "manual_review": 1488,
-      "external_search_needed": 2496,
+      "manual_review": 1489,
+      "external_search_needed": 2495,
       "not_found_after_stop_loss": 68
     },
     "categoryCounts": {
@@ -32,8 +32,8 @@
         "people": 881,
         "claims": 2577,
         "autoReviewable": 543,
-        "manualReview": 851,
-        "externalSearchNeeded": 1183,
+        "manualReview": 852,
+        "externalSearchNeeded": 1182,
         "notFoundAfterStopLoss": 0
       },
       "政治家族": {
@@ -121513,10 +121513,36 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"廖芝晏\" \"曾任民進黨全國黨代表\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "台中市黨部當選名單列有廖芝晏",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民主進步黨2020年第19屆全國黨代表當選名單",
+          "sourceUrl": "https://www.dpp.org.tw/upload/news/20200528%E5%85%AC%E5%91%8A-2020%E5%B9%B4%E7%AC%AC19%E5%B1%86%E5%85%A8%E5%9C%8B%E9%BB%A8%E4%BB%A3%E8%A1%A8%E7%95%B6%E9%81%B8%E5%90%8D%E5%96%AE.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-4-4-政治工作-3",
+        "query": "廖芝晏 民進黨 第19屆 全國黨代表 當選名單",
+        "outcome": "source_found_manual_review",
+        "notes": "民進黨官方第19屆全國黨代表當選名單的台中市黨部名單列有廖芝晏，支持曾任全國黨代表。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民主進步黨2020年第19屆全國黨代表當選名單",
+            "url": "https://www.dpp.org.tw/upload/news/20200528%E5%85%AC%E5%91%8A-2020%E5%B9%B4%E7%AC%AC19%E5%B1%86%E5%85%A8%E5%9C%8B%E9%BB%A8%E4%BB%A3%E8%A1%A8%E7%95%B6%E9%81%B8%E5%90%8D%E5%96%AE.pdf",
+            "supports": "台中市黨部當選名單列有廖芝晏"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tnn-5-1-政治工作-1",

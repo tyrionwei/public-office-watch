@@ -9633,6 +9633,20 @@
           "supports": "新聞稿明確記載「李啟維黨代表提案」"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-4-4-政治工作-3",
+      "query": "廖芝晏 民進黨 第19屆 全國黨代表 當選名單",
+      "outcome": "source_found_manual_review",
+      "notes": "民進黨官方第19屆全國黨代表當選名單的台中市黨部名單列有廖芝晏，支持曾任全國黨代表。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨2020年第19屆全國黨代表當選名單",
+          "url": "https://www.dpp.org.tw/upload/news/20200528%E5%85%AC%E5%91%8A-2020%E5%B9%B4%E7%AC%AC19%E5%B1%86%E5%85%A8%E5%9C%8B%E9%BB%A8%E4%BB%A3%E8%A1%A8%E7%95%B6%E9%81%B8%E5%90%8D%E5%96%AE.pdf",
+          "supports": "台中市黨部當選名單列有廖芝晏"
+        }
+      ]
     }
   ]
 }

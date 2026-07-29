@@ -6,6 +6,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const localHostnames = new Set(['127.0.0.1', 'localhost', '::1']);
 const expectedCandidateCount = 317;
 const expectedExcludedSourceCount = 1;
+const profileFields = ['education', 'experience', 'platform'];
 
 function readLocalEnv() {
   const envPath = path.join(repoRoot, '.env.local');
@@ -141,6 +142,47 @@ function planReviewedPartyCandidatePublication(dataset, options = {}) {
   return { eligible, excluded, blocking };
 }
 
+function profileItems(sourcePayload, field) {
+  const values = objectValue(sourcePayload)?.[field];
+  if (!Array.isArray(values)) return [];
+  return Array.from(new Set(values.map((value) => String(value ?? '').replace(/\s+/g, ' ').trim()).filter(Boolean)));
+}
+
+function buildProfileClaimRows(plan, publishedAt) {
+  return plan.eligible.flatMap((item) => profileFields.flatMap((field) => {
+    const items = profileItems(item.source.source_payload, field);
+    if (items.length === 0) return [];
+    const claimValue = items.join('；');
+    return [{
+      claim_key: `${item.source.source_person_key}:${field}`,
+      person_id: item.candidate.person_id,
+      source_person_id: item.source.id,
+      claim_type: field,
+      claim_value: claimValue,
+      claim_json: {
+        schemaVersion: 1,
+        sourcePersonKey: item.source.source_person_key,
+        sourceCandidateKey: objectValue(item.source.source_payload)?.sourceCandidateKey ?? null,
+        field,
+        items,
+        ...(field === 'platform' ? { platformText: claimValue } : {}),
+      },
+      confidence_level: 'A',
+      review_status: 'verified',
+      visibility: 'public',
+      source_name: item.claim.source_name,
+      source_url: item.claim.source_url,
+      observed_at: item.claim.observed_at ?? publishedAt,
+      is_public: true,
+      review_score: 100,
+      scoring_version: 'party-candidate-official-profile-v1',
+      scoring_reasons: ['Official party profile field linked after manual candidate identity review.'],
+      auto_reviewed_at: publishedAt,
+      updated_at: publishedAt,
+    }];
+  }));
+}
+
 function restUrl(config, tableName) {
   return new URL(`${config.supabaseUrl.replace(/\/$/, '')}/rest/v1/${tableName}`);
 }
@@ -213,6 +255,23 @@ async function patchRowsByIds(config, tableName, ids, row) {
   }
 }
 
+async function upsertRows(config, tableName, rows, conflictKey) {
+  if (rows.length === 0) return [];
+  const written = [];
+  for (let index = 0; index < rows.length; index += 80) {
+    const url = restUrl(config, tableName);
+    url.searchParams.set('on_conflict', conflictKey);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers(config, { prefer: 'resolution=merge-duplicates,return=representation' }),
+      body: JSON.stringify(rows.slice(index, index + 80)),
+      signal: AbortSignal.timeout(30000),
+    });
+    written.push(...await responseJson(response, `Failed to upsert ${tableName}`));
+  }
+  return written;
+}
+
 async function promotePublishedLayer(config) {
   const url = restUrl(config, 'rpc/promote');
   const response = await fetch(url, {
@@ -236,6 +295,8 @@ async function refreshPublicPeopleList(config) {
 }
 
 async function applyPublication(config, plan, publishedAt) {
+  const profileClaims = buildProfileClaimRows(plan, publishedAt);
+  const writtenProfileClaims = await upsertRows(config, 'person_claims', profileClaims, 'claim_key');
   await patchRowsByIds(config, 'source_people', plan.eligible.map((item) => item.source.id), {
     is_public: true,
     updated_at: publishedAt,
@@ -254,7 +315,8 @@ async function applyPublication(config, plan, publishedAt) {
     updated_at: publishedAt,
   });
   await refreshPublicPeopleList(config);
-  return promotePublishedLayer(config);
+  const releaseId = await promotePublishedLayer(config);
+  return { releaseId, profileClaimCount: writtenProfileClaims.length };
 }
 
 async function loadDataset(config) {
@@ -267,7 +329,7 @@ async function loadDataset(config) {
   const sourceIds = sources.map((row) => row.id);
   const [matches, claims, candidates] = await Promise.all([
     fetchRowsByValues(config, 'person_identity_matches', 'id,source_person_id,person_id,match_status', 'source_person_id', sourceIds),
-    fetchRowsByValues(config, 'person_claims', 'id,source_person_id,person_id,claim_type,review_status,visibility,is_public', 'source_person_id', sourceIds),
+    fetchRowsByValues(config, 'person_claims', 'id,source_person_id,person_id,claim_type,review_status,visibility,is_public,source_name,source_url,observed_at', 'source_person_id', sourceIds),
     fetchRows(config, 'candidates', 'id,external_id,person_id,race_id,party,registration_status,candidacy_status,election_result,is_public', {
       external_id: 'like.party-candidate:*',
     }),
@@ -324,7 +386,8 @@ async function main() {
   }
 
   const publishedAt = new Date().toISOString();
-  const releaseId = options.write ? await applyPublication(config, plan, publishedAt) : null;
+  const profileClaimPlan = buildProfileClaimRows(plan, publishedAt);
+  const publication = options.write ? await applyPublication(config, plan, publishedAt) : null;
   const publishedCandidateCount = options.write ? await verifyPublishedCandidates(config, plan) : null;
   console.log(JSON.stringify({
     status: 'ok',
@@ -332,8 +395,13 @@ async function main() {
     eligibleCandidateCount: plan.eligible.length,
     excludedSourceCount: plan.excluded.length,
     candidatesByParty: countByParty(plan.eligible),
-    releaseId,
+    releaseId: publication?.releaseId ?? null,
     publishedCandidateCount,
+    profileClaimCount: options.write ? publication.profileClaimCount : profileClaimPlan.length,
+    profileClaimsByType: Object.fromEntries(profileFields.map((field) => [
+      field,
+      profileClaimPlan.filter((claim) => claim.claim_type === field).length,
+    ])),
     publishedAt: options.write ? publishedAt : null,
   }, null, 2));
 }
@@ -345,4 +413,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { planReviewedPartyCandidatePublication };
+export { buildProfileClaimRows, planReviewedPartyCandidatePublication };

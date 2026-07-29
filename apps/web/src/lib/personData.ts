@@ -650,6 +650,17 @@ function joinClaimTexts(claims: PublicPersonClaim[], claimType: PublicPersonClai
   return Array.from(new Set(values)).join('；') || null;
 }
 
+function structuredClaimText(claims: PublicPersonClaim[], claimType: PublicPersonClaim['claim_type']) {
+  for (const claim of claims) {
+    if (claim.claim_type !== claimType || !Array.isArray(claim.claim_json.items)) continue;
+    const items = claim.claim_json.items
+      .map((value) => typeof value === 'string' ? value.trim() : '')
+      .filter(Boolean);
+    if (items.length > 0) return Array.from(new Set(items)).join('；');
+  }
+  return null;
+}
+
 function genderFromClaimText(value: string | null | undefined): PublicPerson['gender'] {
   const normalized = value?.trim().toLowerCase();
 
@@ -662,14 +673,16 @@ function genderFromClaimText(value: string | null | undefined): PublicPerson['ge
 
 function applyClaimBackfill(person: PublicPerson, claims: PublicPersonClaim[]): PublicPerson {
   const genderClaim = genderFromClaimText(firstClaimText(claims, 'gender'));
+  const structuredEducationClaim = structuredClaimText(claims, 'education');
+  const structuredExperienceClaim = structuredClaimText(claims, 'experience');
   const educationClaim = joinClaimTexts(claims, 'education');
   const experienceClaim = joinClaimTexts(claims, 'experience');
 
   return {
     ...person,
     gender: person.gender && person.gender !== 'unknown' ? person.gender : genderClaim ?? person.gender,
-    education: hasText(person.education) ? person.education : educationClaim,
-    experience: hasText(person.experience) ? person.experience : experienceClaim,
+    education: structuredEducationClaim ?? (hasText(person.education) ? person.education : educationClaim),
+    experience: structuredExperienceClaim ?? (hasText(person.experience) ? person.experience : experienceClaim),
   };
 }
 

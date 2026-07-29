@@ -291,6 +291,22 @@ test('bridge maps complete published person profile rows to the existing fronten
     observed_at: '2022-11-01',
     updated_at: '2022-11-01T00:00:00Z',
   };
+  const educationClaim = {
+    ...claim,
+    claim_id: 'claim-education',
+    claim_type: 'education' as const,
+    claim_value: '官方大學；官方研究所',
+    claim_json: { items: ['官方大學', '官方研究所'] },
+    source_name: '候選人官方頁面',
+  };
+  const experienceClaim = {
+    ...claim,
+    claim_id: 'claim-experience',
+    claim_type: 'experience' as const,
+    claim_value: '官方經歷一；官方經歷二',
+    claim_json: { items: ['官方經歷一', '官方經歷二'] },
+    source_name: '候選人官方頁面',
+  };
   const affiliation = {
     affiliation_id: 'affiliation-1',
     affiliation_key: 'person-1:dpp',
@@ -320,7 +336,7 @@ test('bridge maps complete published person profile rows to the existing fronten
       return {
         personRows: [profileRow],
         candidateRows: [candidate],
-        claimRows: [claim],
+        claimRows: [claim, educationClaim, experienceClaim],
         partyAffiliationRows: [affiliation],
       };
     },
@@ -331,12 +347,13 @@ test('bridge maps complete published person profile rows to the existing fronten
 
   assert.deepEqual(requestedIds, [['person-1']]);
   assert.equal(profiles.length, 1);
-  assert.equal(profiles[0]?.person.education, '測試大學');
+  assert.equal(profiles[0]?.person.education, '官方大學；官方研究所');
+  assert.equal(profiles[0]?.person.experience, '官方經歷一；官方經歷二');
   assert.equal(profiles[0]?.person.primary_photo_url, 'https://example.test/person-1.png');
   assert.equal(profiles[0]?.person.candidate_count, 1);
   assert.equal(profiles[0]?.person.region_id, 'region-taipei');
   assert.equal(profiles[0]?.candidate_records[0]?.source_name, '中選會');
-  assert.equal(profiles[0]?.public_claims[0]?.claim_type, 'platform');
+  assert.ok(profiles[0]?.public_claims.some((publicClaim) => publicClaim.claim_type === 'platform'));
   assert.equal(profiles[0]?.party_affiliations[0]?.party_name, '民主進步黨');
   assert.equal(profiles[0]?.platform_status, 'available');
   assert.equal(profiles[0]?.experience_status, 'available');

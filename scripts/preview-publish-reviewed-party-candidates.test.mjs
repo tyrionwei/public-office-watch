@@ -2,7 +2,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { planReviewedPartyCandidatePublication } from './preview-publish-reviewed-party-candidates.mjs';
+import {
+  buildProfileClaimRows,
+  planReviewedPartyCandidatePublication,
+} from './preview-publish-reviewed-party-candidates.mjs';
 
 function validDataset() {
   return {
@@ -13,7 +16,13 @@ function validDataset() {
         raw_name: '測試候選人',
         party: '民主進步黨',
         is_public: false,
-        source_payload: { targetRace: { id: 'race-valid' } },
+        source_payload: {
+          sourceCandidateKey: 'dpp-valid',
+          targetRace: { id: 'race-valid' },
+          education: ['測試大學', '測試大學'],
+          experience: ['地方服務'],
+          platform: ['改善交通', '增加托育'],
+        },
       },
       {
         id: 'source-rejected',
@@ -47,6 +56,9 @@ function validDataset() {
         review_status: 'verified',
         visibility: 'review_only',
         is_public: false,
+        source_name: '政黨官方網站',
+        source_url: 'https://example.test/candidate',
+        observed_at: '2026-07-01T00:00:00.000Z',
       },
       {
         id: 'claim-rejected',
@@ -151,6 +163,19 @@ test('refreshes the public people cache before promoting the published snapshot'
   );
   assert.match(
     source,
-    /await refreshPublicPeopleList\(config\);\s+return promotePublishedLayer\(config\);/,
+    /await refreshPublicPeopleList\(config\);\s+const releaseId = await promotePublishedLayer\(config\);/,
   );
+});
+
+test('turns official profile arrays into verified public claims without duplicate items', () => {
+  const plan = planReviewedPartyCandidatePublication(validDataset(), {
+    expectedCount: 1,
+    expectedExcludedCount: 1,
+  });
+  const claims = buildProfileClaimRows(plan, '2026-07-30T00:00:00.000Z');
+
+  assert.deepEqual(claims.map((claim) => claim.claim_type), ['education', 'experience', 'platform']);
+  assert.equal(claims[0].claim_value, '測試大學');
+  assert.equal(claims[2].claim_json.platformText, '改善交通；增加托育');
+  assert.ok(claims.every((claim) => claim.review_status === 'verified' && claim.visibility === 'public' && claim.is_public));
 });

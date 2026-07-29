@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 1,
+  "electionYear": 2026,
+  "sourceType": "official_party_nomination",
+  "party": "親民黨",
+  "source": {
+    "name": "親民黨青年團 2026 年選舉專區",
+    "url": "https://youth.pfpnext.com/2026/",
+    "publishedAt": null,
+    "retrievedAt": "2026-07-29T10:31:47.352Z"
+  },
+  "records": [
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-001",
+      "personName": "楊秀玉",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "基隆市",
+      "districtName": "第七選區",
+      "nominationAnnouncedAt": "2026-05-26",
+      "profileUrl": "https://youth.pfpnext.com/2026/candidate-detail.php?id=pfp2026-001",
+      "photoUrl": "https://youth.pfpnext.com/2026/photo/pfp2026-001.jpg?2",
+      "education": [],
+      "experience": [
+        "現任：第 19 屆基隆市議員(副議長)",
+        "曾任：第 18 屆基隆市議員",
+        "現任：基隆市警察之友會第三分局第三辦事處主任",
+        "現任：百福巡守隊顧問",
+        "現任：義消七堵第一二婦宣分隊顧問",
+        "經歷：中信金融管理學院金融管理研究所研究生"
+      ],
+      "platform": [
+        "教育品質優化：協助七堵區校園周邊環境改善。 優化教育品質，提升學童學習成效。",
+        "弱勢族群照顧：爭取基隆市第三處「身障洗車中心」設立於七堵區。",
+        "綠能交通建設：開元停車場拆除後，爭取車棚綠能化。 全面運用太陽能板，增設汽機車加電站、電池交換站。 爭取百福車站汽機車停車處增設綠能雨陽棚。",
+        "社區環境與維護：推動「社區公園是我的家」理念，加強公園設施維護與綠化管理。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/yang.xiu.yu.726745/"
+      ]
+    },
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-005",
+      "personName": "陳傑麟",
+      "candidacyStatus": "party_nominee",
+      "raceType": "county_councilor",
+      "regionName": "宜蘭縣",
+      "districtName": "第十二選區｜山地原住民",
+      "nominationAnnouncedAt": "2026-05-26",
+      "profileUrl": "https://youth.pfpnext.com/2026/candidate-detail.php?id=pfp2026-005",
+      "photoUrl": "https://youth.pfpnext.com/2026/photo/pfp2026-005.jpg",
+      "education": [],
+      "experience": [
+        "曾任：宜蘭縣議會第18屆、第19屆縣議員",
+        "曾任：宜蘭縣政府民政處副處長、縣府秘書",
+        "曾任：宜蘭縣大同鄉第14、15屆鄉長",
+        "曾任：宜蘭縣大同鄉公所村幹事、課員、托兒所所長、清潔隊隊長"
+      ],
+      "platform": [
+        "農業與基礎建設：推動農業協會：協助成立農業發展協會，爭取政策補助並維護農民權益。 爭取肥料中心：爭取在地肥料供貨中心，降低農民購肥與運輸成本。 改善部落農路：積極爭取農路改善經費，嚴格把關施工品質與用路安全。",
+        "部落觀光與文化傳承：行銷生態旅遊：督促縣府推廣部落生態旅遊與文化體驗，創造地方就業機會。 支持歲時祭儀：爭取縣府經費，協助鄉公所擴大辦理各項運動賽事與傳統祭儀。",
+        "長照、社福與防災量能：強化長者照顧：協助文化健康站爭取長照經費，改善基礎設施與社區關懷據點。 都會原民扶助：重視並協助都會區原住民的居住、就學、就業及社會福利事宜。 提升救災量能：督促縣府辦理部落消防演習，爭取經費以改善警消設備。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/profile.php?id=100000472412243"
+      ]
+    },
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-002",
+      "personName": "劉成謙",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "新北市",
+      "districtName": "第四選區",
+      "nominationAnnouncedAt": "2026-05-26",
+      "profileUrl": "https://youth.pfpnext.com/2026/candidate-detail.php?id=pfp2026-002",
+      "photoUrl": "https://youth.pfpnext.com/2026/photo/pfp2026-002.jpg?2",
+      "education": [],
+      "experience": [
+        "現任：親民黨青年團副團長",
+        "現任：社團法人台灣機車路權促進會秘書長、創會理事",
+        "現任：社團法人行人零死亡推動聯盟理事",
+        "現任：士林高商校友會第10～12屆監事",
+        "曾任：郭台銘三重連署4站站長",
+        "曾任：台北大學第3.4屆學生議員、第5屆學生會副會長"
+      ],
+      "platform": [
+        "交通改革實踐：推動更友善、安全且具效率的交通環境，確保每位市民參與社會的權利。 重新檢視並改善三重、蘆洲等大溪北地區聯外橋樑（如淡江大橋及相關機車道）的建設，免除對市井小民苛刻的出行限制。",
+        "更多社會住宅：積極爭取並興建更多社會住宅，縮補新北市對青年宜居政策的缺漏，落實居住正義。",
+        "更多青年補貼：規劃多元的青年補貼政策，降低年輕世代的生活負擔，打造更實質的青年支持網絡。",
+        "更多在地創業：推動在地創業扶持計畫，為青年創造更多在地發展的機會與友善環境。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/LIOUCHENGCHIEN",
+        "https://www.instagram.com/liouchengchien2026",
+        "https://www.youtube.com/@liouchengchien"
+      ]
+    },
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-003",
+      "personName": "陳泓維",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "桃園市",
+      "districtName": "第二選區",
+      "nominationAnnouncedAt": "2026-05-26",
+      "profileUrl": "https://youth.pfpnext.com/2026/candidate-detail.php?id=pfp2026-003",
+      "photoUrl": "https://youth.pfpnext.com/2026/photo/pfp2026-003.jpg",
+      "education": [],
+      "experience": [
+        "經歷：立法委員賴香伶桃園辦公室 主任",
+        "經歷：民眾黨中央黨部組織發展部 副主任",
+        "經歷：立法委員賴香伶國會辦公室 助理",
+        "2020：桃園市第一選區立委參選人",
+        "經歷：桃園市議員 助理"
+      ],
+      "platform": [
+        "AI時代青年培力：讓年輕人跟上時代，而不是被時代淘汰 AI快速改變工作與生活模式，許多年輕人面臨職涯焦慮與轉型壓力。未來，我將推動青年AI培力資源，爭取社區與校園合作課程，協助青年學習AI工具應用、自媒體經營、數位設計、影音剪輯與新型態工作技能。 推動： AI工具應用課程 AI履歷與求職培力 青年數位技能講座 自媒體與接案能力培養 社區AI學習資源 讓AI不只是少數人的工具，而是每位年輕人都能接觸與運用的能力。",
+        "改善通勤與生活壓力：把時間還給龜山人 龜山是大量通勤人口聚集區，長時間塞車與交通壓力，早已影響許多年輕家庭與上班族的生活品質。 我將持續關注： A7與林口交流道交通問題 長庚周邊車流改善 公車轉乘與班次優化 人行環境與通學安全 大眾運輸接駁效率提升 讓市政不只是道路工程，而是真正改善市民每天的生活時間。",
+        "舊城翻新與捷運棕線城市發展：讓龜山舊城區重新活起來 捷運棕線未來將改變龜山的城市發展，但城市進步不能只有新重劃區，更不能讓舊城區被邊緣化。 我主張： 推動舊城區街道與商圈環境改善 強化捷運棕線沿線商業區整體規劃 提升步行空間與街區景觀 活化老舊市場與閒置空間 引入青年創業與在地品牌進駐 結合夜間經濟與生活型商圈 讓捷運帶來的不只是交通建設，更能真正帶動地方更新與青年就業機會。 未來的捷運棕線，不應只有通勤功能，而是能兼具生活、工作與商業發展的新城市。",
+        "青年共享與創作空間：讓年輕人有地方開始自己的未來 許多年輕人想創業、接案、拍片、經營品牌，卻缺乏低成本的工作與交流空間。 我將推動： 青年共享工作空間 夜間自習與創作空間 免費講座與技能交流活動 在地青年品牌與市集支持 青年創業交流平台 讓龜山不只是居住地，也能成為年輕人發展夢想的地方。",
+        "透明與數位化服務：讓政治真正看得見、找得到 年輕世代重視效率與透明，但許多人認為政治離生活太遠。 未來我將推動： 陳情案件進度透明化 社群與LINE即時服務 定期公開工作報告 用短影音與數位方式說明市政 建立更即時的民意回應機制 讓政治不再只是選舉時出現，而是平時就能被看見、被找到。",
+        "支持青年家庭與友善生活環境：讓年輕人願意留下來生活 房價、育兒、工作與生活平衡，已成為年輕世代最大的壓力來源。 我將持續關注： 青年租屋與居住資訊 公共托育與親子空間 社區友善休憩環境 青年家庭生活支持政策 公園與公共空間品質提升 讓努力生活的人，能真正看見未來與希望。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/LAG555",
+        "https://www.instagram.com/chwlag555/",
+        "https://line.me/R/ti/p/@259sbzvg"
+      ]
+    },
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-004",
+      "personName": "徐慈檉",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "桃園市",
+      "districtName": "第六選區",
+      "nominationAnnouncedAt": "2026-05-26",
+      "profileUrl": "https://youth.pfpnext.com/2026/candidate-detail.php?id=pfp2026-004",
+      "photoUrl": "https://youth.pfpnext.com/2026/photo/pfp2026-004.jpg",
+      "education": [],
+      "experience": [
+        "曾任：開南大學資訊傳播學系講師",
+        "曾任：立法委員孫大千、陳學聖、趙正宇、蔡壁如秘書",
+        "曾任：市長初選候選人楊麗環秘書",
+        "曾任：復旦中學社會科兼任教師"
+      ],
+      "platform": [
+        "青創成家：針對大溪人口逐步高齡化的問題，主張為回鄉青年打造完善的創業與就業環境，提供青年友善的在地成家支持，減緩人口外流。",
+        "古城新生：結合其民俗藝術與文化資產的專業背景，主張透過創新的「文化城市行銷」活化大溪老街與歷史古城，將在地文化資產轉化為兼具教育與經濟價值的觀光財。",
+        "交通除弊：改善大溪、復興區長年面臨的交通壅塞與觀光配套不足問題，推動交通工程的通盤檢討與改革。",
+        "神鄉教育：結合大溪在地的多元信仰與傳統廟宇文化（如大溪普濟堂關聖帝君聖誕等），推動結合在地民俗的特色教育，並提倡透過翻轉式的公民課教育，提升在地學子的公民參與意識。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/ThomasHsu1207",
+        "https://www.instagram.com/thomashsu83/",
+        "https://line.me/R/ti/p/@737rxasl"
+      ]
+    },
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-006",
+      "personName": "蕭夙玲",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "新北市",
+      "districtName": "第三選區",
+      "nominationAnnouncedAt": "2026-07-09",
+      "profileUrl": "https://youth.pfpnext.com/2026/candidate-detail.php?id=pfp2026-006",
+      "photoUrl": "https://youth.pfpnext.com/2026/photo/pfp2026-006.jpg?3",
+      "education": [],
+      "experience": [
+        "新北市議員宋明宗新莊區服務處主任",
+        "新北市議長蔣根煌福營區服務處主任",
+        "中華民國保齡球國家代表隊及縣市代表隊選手",
+        "新北市保齡球運動協會教練"
+      ],
+      "platform": [
+        "用心服務：為您解決問題",
+        "傾聽民意：關心地方",
+        "認真打拼：爭取建設資源",
+        "建設新莊：打造幸福家園"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/xiao.su.ling.773964",
+        "https://www.instagram.com/hsiao_suling/",
+        "https://line.me/R/ti/p/@038vehpu"
+      ]
+    },
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-007",
+      "personName": "黃朝淵",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "臺中市",
+      "districtName": "第四選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://youth.pfpnext.com/2026/candidate-detail.php?id=pfp2026-007",
+      "photoUrl": "https://youth.pfpnext.com/2026/photo/pfp2026-007.jpg?1",
+      "education": [],
+      "experience": [
+        "可翔科技總經理",
+        "東森集團副總經理",
+        "亞洲醫美集團法務長兼副總經理",
+        "警政時報副社長",
+        "社團法人台中市大樓社區協進會理事",
+        "勞工司法正義聯盟"
+      ],
+      "platform": [
+        "解決各式消費爭議與詐騙：長期打擊美容詐騙、保養品消費爭議退費，無懼人情關說及黑道恐嚇，全力協助圓滿解決。",
+        "解決各式不平等勞資爭議：幫助弱勢勞方維護應有的勞務報酬，爭取遲來的勞動正義。",
+        "協助民眾以零成本或最低成本討公道：所有陳情，均親自出面，並全程參與、全力協助協助弱勢族群以零成本或最低成本，討回應有公道。",
+        "活化豐原、打造豐原新都心：台中縣市合併升格後，豐原失去原本核心重要地位，年輕人外移，發展遲滯，希望打造豐原成為大台中新都心，重返榮耀地位。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/ch225530",
+        "https://www.instagram.com/ch225530",
+        "https://youtube.com/channel/UC51LDUmzxQDY5ptfpfnRyBA",
+        "https://www.threads.com/@ch225530",
+        "https://www.tiktok.com/@user6967353162375",
+        "https://line.me/ti/g2/Addy06aup8a2NZ2NfsD--JMsCUNXu4Zt06QGfw"
+      ]
+    }
+  ]
+}

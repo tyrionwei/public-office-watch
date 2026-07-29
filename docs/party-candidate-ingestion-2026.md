@@ -210,6 +210,29 @@ node scripts/build-taiwan-forward-2026-candidate-snapshots.mjs \
   --capture-output /tmp/taiwan-forward-2026-capture.json
 ```
 
+### Phase 7：親民黨 2026 選舉專區（本機完成）
+
+- 集中候選人頁：`https://youth.pfpnext.com/2026/`，目前列出 7 位縣市議員參選人。
+- 前 5 位可由親民黨中央黨部 2026-05-26 首波提名公告確認；蕭夙玲另有
+  2026-07-09 中央黨部徵召公告。黃朝淵目前未找到中央站獨立公告，
+  但已列在親民黨青年團正式候選人頁，依本文件既定規則仍標為 `party_nominee`。
+- `build-pfp-2026-candidate-snapshot.mjs` 只解析頁面內的候選人 JSON，
+  不執行遠端 JavaScript；保存姓名、選區、照片、主要經歷、核心政見與公開社群連結。
+- 原頁面另含服務處電話、地址及政治獻金銀行帳號，這些欄位不進正規化快照，
+  也不保存原始 HTML；只保存已移除上述資料的
+  `data-sources/pfp/2026-election/normalized-candidates-2026-07-29.json`。
+- 7 筆均唯一匹配 2026 選區並寫入本機待審核層：2 筆高信心、2 筆可能配對、
+  1 筆需人工辨識、2 筆新人物；建立 4 筆非確認性身分建議，正式 candidate 仍為 0。
+- 黃朝淵有多個同名 canonical 候選，流程維持人工審核，未自動選取人物。
+- 集中頁沒有將學歷獨立成欄位；本階段不從主要經歷文字推測學歷，7 筆均保留官網經歷與政見。
+
+執行方式：
+
+```bash
+node scripts/build-pfp-2026-candidate-snapshot.mjs \
+  --output /tmp/pfp-2026-candidates.json
+```
+
 ## 本機執行
 
 ```bash

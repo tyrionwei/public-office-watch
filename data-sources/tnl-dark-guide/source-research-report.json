@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T23:44:14.781Z",
+  "generatedAt": "2026-07-29T23:47:40.997Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -23,8 +23,8 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 704,
-      "manual_review": 1494,
-      "external_search_needed": 2490,
+      "manual_review": 1501,
+      "external_search_needed": 2483,
       "not_found_after_stop_loss": 68
     },
     "categoryCounts": {
@@ -32,8 +32,8 @@
         "people": 881,
         "claims": 2577,
         "autoReviewable": 543,
-        "manualReview": 857,
-        "externalSearchNeeded": 1177,
+        "manualReview": 864,
+        "externalSearchNeeded": 1170,
         "notFoundAfterStopLoss": 0
       },
       "政治家族": {
@@ -43356,10 +43356,54 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"王淑慧\" \"曾任2屆立委\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "王淑慧為第5屆立法委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院第5屆王淑慧委員",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1093"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "王淑慧為第6屆立法委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院第6屆王淑慧委員",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1326"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-5-5-政治工作-3",
+        "query": "王淑慧 立法院 第5屆 第6屆 立法委員",
+        "outcome": "source_found_manual_review",
+        "notes": "立法院官方第5屆及第6屆委員頁均列有王淑慧，支持曾任2屆立法委員。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "立法院第5屆王淑慧委員",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1093",
+            "supports": "王淑慧為第5屆立法委員"
+          },
+          {
+            "tier": "official",
+            "name": "立法院第6屆王淑慧委員",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1326",
+            "supports": "王淑慧為第6屆立法委員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-4-103-政治工作-1",
@@ -63875,10 +63919,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李慶元\" \"曾任國大代表\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方經歷欄列有國民大會代表",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "臺北市議會歷屆議員：李慶元",
+          "sourceUrl": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=580829&n=13513&name=%E6%9D%8E%E6%85%B6%E5%85%83&s=2053&termsn=16"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-6-104-政治工作-2",
+        "query": "李慶元 國民大會代表 臺北市議會",
+        "outcome": "source_found_manual_review",
+        "notes": "臺北市議會官方歷屆議員頁的經歷明確列有國民大會代表，支持此項經歷。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "臺北市議會歷屆議員：李慶元",
+            "url": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=580829&n=13513&name=%E6%9D%8E%E6%85%B6%E5%85%83&s=2053&termsn=16",
+            "supports": "官方經歷欄列有國民大會代表"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tpe-6-116-政治工作-1",
@@ -72547,10 +72617,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"林益陸\" \"曾任國大代表\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方新聞將林益陸列為中國國民黨籍國大代表",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "總統府：總統接見國大代表",
+          "sourceUrl": "https://www.president.gov.tw/NEWS/3926"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-17-107-政治工作-2",
+        "query": "林益陸 國民大會代表 總統府",
+        "outcome": "source_found_manual_review",
+        "notes": "總統府官方新聞明確將林益陸列為中國國民黨籍國大代表，支持此項經歷。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "總統府：總統接見國大代表",
+            "url": "https://www.president.gov.tw/NEWS/3926",
+            "supports": "官方新聞將林益陸列為中國國民黨籍國大代表"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-13-46-政治工作-1",
@@ -83935,10 +84031,54 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"秦慧珠\" \"曾任2屆立委\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "秦慧珠為第4屆立法委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院第4屆秦慧珠委員",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=950"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "秦慧珠為第5屆立法委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院第5屆秦慧珠委員",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1180"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-3-54-政治工作-2",
+        "query": "秦慧珠 立法院 第4屆 第5屆 立法委員",
+        "outcome": "source_found_manual_review",
+        "notes": "立法院官方第4屆及第5屆委員頁均列有秦慧珠，支持曾任2屆立法委員。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "立法院第4屆秦慧珠委員",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=950",
+            "supports": "秦慧珠為第4屆立法委員"
+          },
+          {
+            "tier": "official",
+            "name": "立法院第5屆秦慧珠委員",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1180",
+            "supports": "秦慧珠為第5屆立法委員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tpe-3-54-政治工作-1",
@@ -85164,10 +85304,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"高嘉瑜\" \"曾任國大代表\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "國民大會代表選舉當選人名單列有高嘉瑜",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會第346次會議紀錄",
+          "sourceUrl": "https://web.cec.gov.tw/api/file/9fa90602-f646-406f-b114-03ffb9a32784.pdf"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方經歷欄列有任務型國民大會代表",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "臺北市議會歷屆議員：高嘉瑜",
+          "sourceUrl": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=801017&n=13513&name=%E9%AB%98%E5%98%89%E7%91%9C&s=2347&termsn=20"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-2-35-政治工作-2",
+        "query": "高嘉瑜 任務型國民大會代表 中央選舉委員會",
+        "outcome": "source_found_manual_review",
+        "notes": "中選會國民大會代表選舉結果列有高嘉瑜，臺北市議會官方經歷亦明確列為任務型國民大會代表。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會第346次會議紀錄",
+            "url": "https://web.cec.gov.tw/api/file/9fa90602-f646-406f-b114-03ffb9a32784.pdf",
+            "supports": "國民大會代表選舉當選人名單列有高嘉瑜"
+          },
+          {
+            "tier": "official",
+            "name": "臺北市議會歷屆議員：高嘉瑜",
+            "url": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=801017&n=13513&name=%E9%AB%98%E5%98%89%E7%91%9C&s=2347&termsn=20",
+            "supports": "官方經歷欄列有任務型國民大會代表"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-11-政治工作-2",
@@ -125832,10 +126016,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"潘懷宗\" \"曾任國大代表\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方新聞將潘懷宗列於到訪的新黨國大代表名單",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "總統府：總統接見新黨國大代表",
+          "sourceUrl": "https://www.president.gov.tw/NEWS/3962"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-1-21-政治工作-2",
+        "query": "潘懷宗 國民大會代表 總統府",
+        "outcome": "source_found_manual_review",
+        "notes": "總統府官方新聞將潘懷宗列於新黨國大代表名單，支持此項經歷。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "總統府：總統接見新黨國大代表",
+            "url": "https://www.president.gov.tw/NEWS/3962",
+            "supports": "官方新聞將潘懷宗列於到訪的新黨國大代表名單"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tnn-1-4-政治工作-1",
@@ -135961,10 +136171,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"謝明源\" \"曾任2屆立委\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "謝明源為第5屆立法委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院第5屆謝明源委員",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1292"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "謝明源為第6屆立法委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院第6屆謝明源委員",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1530"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-8-72-政治工作-2",
+        "query": "謝明源 立法院 第5屆 第6屆 立法委員",
+        "outcome": "source_found_manual_review",
+        "notes": "立法院官方第5屆及第6屆委員頁均列有謝明源，支持曾任2屆立法委員。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "立法院第5屆謝明源委員",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1292",
+            "supports": "謝明源為第5屆立法委員"
+          },
+          {
+            "tier": "official",
+            "name": "立法院第6屆謝明源委員",
+            "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1530",
+            "supports": "謝明源為第6屆立法委員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-8-72-政治工作-1",

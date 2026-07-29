@@ -153,7 +153,7 @@ test('realtime broadcasts only the public message shape on a private channel', (
 });
 
 test('the global widget survives route changes and follows the agreed quiet UI', () => {
-  assert.match(app, /<AppRoutes[\s\S]+<GlobalChatWidget \/>/);
+  assert.ok(app.indexOf('GlobalChatWidget />') > app.indexOf('/Routes>'));
   assert.match(widget, /aria-label=\{text\.launcher\}/);
   assert.doesNotMatch(widget, /unread|badge|notification/i);
   assert.match(widget, /type="checkbox"/);
@@ -228,6 +228,6 @@ test('emergency shutdown and message removal are pushed to active private chat c
   assert.match(adminMigration, /'status_changed',\s*'global-chat',\s*TRUE/);
   assert.match(chatClient, /event: 'message_removed'/);
   assert.match(chatClient, /event: 'status_changed'/);
-  assert.match(widget, /setMessages\(\(current\) => current\s*\.filter/);
+  assert.match(widget, /setMessages\(\(current\) => current\s*\.map/);
   assert.match(widget, /const currentStatus = await loadChatStatus\(\)/);
 });

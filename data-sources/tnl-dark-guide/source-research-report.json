@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T20:29:23.457Z",
+  "generatedAt": "2026-07-29T20:36:11.751Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -23,9 +23,9 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 608,
-      "manual_review": 761,
-      "external_search_needed": 3335,
-      "not_found_after_stop_loss": 52
+      "manual_review": 783,
+      "external_search_needed": 3311,
+      "not_found_after_stop_loss": 54
     },
     "categoryCounts": {
       "政治工作": {
@@ -40,9 +40,9 @@
         "people": 263,
         "claims": 445,
         "autoReviewable": 0,
-        "manualReview": 222,
-        "externalSearchNeeded": 200,
-        "notFoundAfterStopLoss": 23
+        "manualReview": 244,
+        "externalSearchNeeded": 176,
+        "notFoundAfterStopLoss": 25
       },
       "涉案紀錄": {
         "people": 116,
@@ -24659,10 +24659,54 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳俞融\" \"曾祖母是前議員陳秋阿慎\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳俞融為陳端堂孫女",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Newtalk新聞",
+          "sourceUrl": "https://newtalk.tw/news/view/2018-04-15/121014"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳端堂母親為曾任臺中市議員的陳邱阿慎",
+          "matchScore": 1,
+          "tier": "secondary",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "陳端堂人物資料",
+          "sourceUrl": "https://zh.wikipedia.org/wiki/%E9%99%B3%E7%AB%AF%E5%A0%82"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-9-5-政治家族-5",
+        "query": "陳俞融 陳秋阿慎 曾祖母 前議員",
+        "outcome": "source_found_conflict_manual_review",
+        "notes": "可由家族鏈確認陳端堂母親曾任臺中市議員，但可靠資料多作「陳邱阿慎」，暗公報作「陳秋阿慎」，姓名明顯衝突；曾祖母關係亦是由兩段親屬關係推導，須人工確認。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "Newtalk新聞",
+            "url": "https://newtalk.tw/news/view/2018-04-15/121014",
+            "supports": "陳俞融為陳端堂孫女"
+          },
+          {
+            "tier": "secondary",
+            "name": "陳端堂人物資料",
+            "url": "https://zh.wikipedia.org/wiki/%E9%99%B3%E7%AB%AF%E5%A0%82",
+            "supports": "陳端堂母親為曾任臺中市議員的陳邱阿慎"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-13-6-政治家族-1",
@@ -24690,10 +24734,54 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳姿伶 Amuy．Muwakay\" \"丈夫是立委廖國棟\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "廖國棟與陳姿伶間的夫妻贈與紀錄",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "監察院廉政專刊",
+          "sourceUrl": "https://www.mashow.com.tw/document/assets/assets1430302433.pdf"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳姿伶為廖國棟夫人",
+          "matchScore": 1,
+          "tier": "secondary",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "VoteTW",
+          "sourceUrl": "https://votetw.com/wiki/%E5%BB%96%E5%9C%8B%E6%A3%9F"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-13-6-政治家族-1",
+        "query": "陳姿伶 Amuy Muwakay 廖國棟 丈夫",
+        "outcome": "source_found_manual_review",
+        "notes": "監察院廉政專刊的財產申報資料將陳姿伶與廖國棟記為夫妻間贈與；公開彙整資料亦稱陳姿伶為廖國棟夫人。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "監察院廉政專刊",
+            "url": "https://www.mashow.com.tw/document/assets/assets1430302433.pdf",
+            "supports": "廖國棟與陳姿伶間的夫妻贈與紀錄"
+          },
+          {
+            "tier": "secondary",
+            "name": "VoteTW",
+            "url": "https://votetw.com/wiki/%E5%BB%96%E5%9C%8B%E6%A3%9F",
+            "supports": "陳姿伶為廖國棟夫人"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tpe-1-15-政治家族-1",
@@ -24721,10 +24809,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳建銘\" \"女兒是台北市觀傳局局長陳思宇\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳建銘與女兒陳思宇及其觀傳局長職務",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央社",
+          "sourceUrl": "https://www.cna.com.tw/news/aloc/201801170257.aspx"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-1-15-政治家族-1",
+        "query": "陳建銘 陳思宇 女兒 台北市觀傳局局長",
+        "outcome": "source_found_manual_review",
+        "notes": "中央社直接確認陳思宇為陳建銘女兒及臺北市觀傳局局長。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中央社",
+            "url": "https://www.cna.com.tw/news/aloc/201801170257.aspx",
+            "supports": "陳建銘與女兒陳思宇及其觀傳局長職務"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tpe-1-15-政治家族-3",
@@ -24752,10 +24866,54 @@
           "candidateNumber": 15
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳思宇\" \"父親是陳建銘為現任無黨籍台北市議員\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳思宇與父親、市議員陳建銘的關係",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央社",
+          "sourceUrl": "https://www.cna.com.tw/news/aloc/201801170257.aspx"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳思宇父親為無黨籍臺北市議員陳建銘",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "信傳媒",
+          "sourceUrl": "https://www.cmmedia.com.tw/home/articles/13466"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tpe-1-15-政治家族-3",
+        "query": "陳思宇 陳建銘 父親 無黨籍 台北市議員",
+        "outcome": "source_found_manual_review",
+        "notes": "中央社及信傳媒均直接確認陳建銘為陳思宇父親及時任臺北市議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中央社",
+            "url": "https://www.cna.com.tw/news/aloc/201801170257.aspx",
+            "supports": "陳思宇與父親、市議員陳建銘的關係"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "信傳媒",
+            "url": "https://www.cmmedia.com.tw/home/articles/13466",
+            "supports": "陳思宇父親為無黨籍臺北市議員陳建銘"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tpe-1-15-政治家族-2",
@@ -24783,10 +24941,36 @@
           "candidateNumber": 15
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳思宇\" \"姑姑是民進黨前立委陳靜敏\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳靜敏為陳思宇姑姑及民進黨不分區立委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "信傳媒",
+          "sourceUrl": "https://www.cmmedia.com.tw/home/articles/13466"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tpe-1-15-政治家族-2",
+        "query": "陳思宇 陳靜敏 姑姑 民進黨 立委",
+        "outcome": "source_found_manual_review",
+        "notes": "信傳媒直接確認陳建銘胞妹、民進黨不分區立委陳靜敏為陳思宇姑姑。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "信傳媒",
+            "url": "https://www.cmmedia.com.tw/home/articles/13466",
+            "supports": "陳靜敏為陳思宇姑姑及民進黨不分區立委"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tpe-1-15-政治家族-1",
@@ -24814,10 +24998,36 @@
           "candidateNumber": 15
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳思宇\" \"祖父是國民黨第二屆國大代表陳安邦\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳安邦為陳思宇祖父及國大代表",
+          "matchScore": 1,
+          "tier": "secondary",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "VoteTW",
+          "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E6%80%9D%E5%AE%87"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tpe-1-15-政治家族-1",
+        "query": "陳思宇 陳安邦 祖父 第二屆 國大代表",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "公開彙整資料一致記載陳安邦為陳思宇祖父及第二屆國大代表，但本次停損範圍內未找到可直接核對兩項資訊的官方或主流媒體頁。",
+        "sources": [
+          {
+            "tier": "secondary",
+            "name": "VoteTW",
+            "url": "https://votetw.com/wiki/%E9%99%B3%E6%80%9D%E5%AE%87",
+            "supports": "陳安邦為陳思宇祖父及國大代表"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tpe-1-14-政治家族-1",
@@ -24853,10 +25063,54 @@
           "candidateNumber": 25
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳政忠\" \"女兒是2屆親民黨不分區立委陳怡潔\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳怡潔為臺北市議員陳政忠女兒",
+          "matchScore": 1,
+          "tier": "institutional",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "銘傳一週",
+          "sourceUrl": "https://www.week.mcu.edu.tw/10493/"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳怡潔遞補第8屆親民黨不分區立法委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "立法院",
+          "sourceUrl": "https://www.ly.gov.tw/EngPages/Detail.aspx?nodeid=5255&pid=41919"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-1-14-政治家族-1",
+        "query": "陳政忠 陳怡潔 女兒 親民黨 不分區立委 兩屆",
+        "outcome": "source_found_manual_review",
+        "notes": "銘傳大學校刊直接確認陳怡潔為陳政忠女兒；立法院可確認其親民黨不分區立委身分，任期數仍應依屆次資料呈現。",
+        "sources": [
+          {
+            "tier": "institutional",
+            "name": "銘傳一週",
+            "url": "https://www.week.mcu.edu.tw/10493/",
+            "supports": "陳怡潔為臺北市議員陳政忠女兒"
+          },
+          {
+            "tier": "official",
+            "name": "立法院",
+            "url": "https://www.ly.gov.tw/EngPages/Detail.aspx?nodeid=5255&pid=41919",
+            "supports": "陳怡潔遞補第8屆親民黨不分區立法委員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tpe-4-68-政治家族-2",
@@ -24892,10 +25146,36 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳炳甫\" \"姊姊是5屆議員陳玉梅\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳玉梅為陳炳甫姊姊及五屆臺北市議員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "金門日報",
+          "sourceUrl": "https://www.kmdn.gov.tw/1117/1271/4189/311792/"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-4-68-政治家族-2",
+        "query": "陳炳甫 陳玉梅 姊姊 五屆 台北市議員",
+        "outcome": "source_found_manual_review",
+        "notes": "金門日報直接確認陳玉梅為陳炳甫姊姊及曾連任五屆臺北市議員。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "金門日報",
+            "url": "https://www.kmdn.gov.tw/1117/1271/4189/311792/",
+            "supports": "陳玉梅為陳炳甫姊姊及五屆臺北市議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tpe-4-68-政治家族-1",
@@ -24923,10 +25203,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳炳甫\" \"爸爸是中華職棒前會長、台灣養樂食品公司董事長陳重光\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳重光為陳炳甫父親及曾任臺灣養樂多董事長",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "金門日報",
+          "sourceUrl": "https://www.kmdn.gov.tw/1117/1271/4189/311792/"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳重光曾任中華職棒會長",
+          "matchScore": 1,
+          "tier": "secondary",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "陳重光人物資料",
+          "sourceUrl": "https://zh.wikipedia.org/wiki/%E9%99%B3%E9%87%8D%E5%85%89_%281913%E5%B9%B4%29"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-4-68-政治家族-1",
+        "query": "陳炳甫 陳重光 父親 養樂多 董事長 中華職棒 會長",
+        "outcome": "source_found_manual_review",
+        "notes": "金門日報直接確認陳重光為陳炳甫父親及前臺灣養樂多董事長；其曾任中華職棒會長另有多份人物資料一致記載。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "金門日報",
+            "url": "https://www.kmdn.gov.tw/1117/1271/4189/311792/",
+            "supports": "陳重光為陳炳甫父親及曾任臺灣養樂多董事長"
+          },
+          {
+            "tier": "secondary",
+            "name": "陳重光人物資料",
+            "url": "https://zh.wikipedia.org/wiki/%E9%99%B3%E9%87%8D%E5%85%89_%281913%E5%B9%B4%29",
+            "supports": "陳重光曾任中華職棒會長"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tnn-3-1-政治家族-1",
@@ -24954,10 +25278,54 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳秋宏\" \"父親是4屆議員的陳文賢\" 台南市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳秋宏曾任陳文賢議員服務處主任",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "內政部地方公職人員資訊",
+          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112DA00010&_TYP=REP&n=573"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳秋宏與父親陳文賢的接棒關係",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20181118002670-260407"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tnn-3-1-政治家族-1",
+        "query": "陳秋宏 陳文賢 父親 四屆 議員 2022",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報直接確認陳秋宏為陳文賢之子並接棒參選；內政部資料記載陳秋宏曾任陳文賢服務處主任。確切屆數仍應按歷屆選舉資料核對。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20181118002670-260407",
+            "supports": "陳秋宏與父親陳文賢的接棒關係"
+          },
+          {
+            "tier": "official",
+            "name": "內政部地方公職人員資訊",
+            "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112DA00010&_TYP=REP&n=573",
+            "supports": "陳秋宏曾任陳文賢議員服務處主任"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tnn-3-23-政治家族-1",
@@ -24985,10 +25353,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳秋宏\" \"爸爸是4屆議員陳文賢\" 台南市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳秋宏曾任陳文賢議員服務處主任",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "內政部地方公職人員資訊",
+          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112DA00010&_TYP=REP&n=573"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳秋宏與父親陳文賢的接棒關係",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20181118002670-260407"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tnn-3-23-政治家族-1",
+        "query": "陳秋宏 陳文賢 父親 四屆 議員 2018",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報直接確認陳秋宏為陳文賢之子並接棒參選；內政部資料記載陳秋宏曾任陳文賢服務處主任。確切屆數仍應按歷屆選舉資料核對。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20181118002670-260407",
+            "supports": "陳秋宏與父親陳文賢的接棒關係"
+          },
+          {
+            "tier": "official",
+            "name": "內政部地方公職人員資訊",
+            "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112DA00010&_TYP=REP&n=573",
+            "supports": "陳秋宏曾任陳文賢議員服務處主任"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-3-13-政治家族-1",
@@ -25016,10 +25428,54 @@
           "candidateNumber": 13
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳科名\" \"父親是前縣議員陳茂正\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳科名父親為資深議員陳茂正",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20190315000694-260503"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "父子關係及陳茂正曾任臺北縣議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民視新聞網",
+          "sourceUrl": "https://www.ftvnews.com.tw/news/detail/2019314S09M1"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-3-13-政治家族-1",
+        "query": "陳科名 陳茂正 父親 前縣議員 2022",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報、民視及中選會公報均可確認陳茂正為陳科名父親或其曾任陳茂正特助，並確認陳茂正曾任臺北縣議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20190315000694-260503",
+            "supports": "陳科名父親為資深議員陳茂正"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "民視新聞網",
+            "url": "https://www.ftvnews.com.tw/news/detail/2019314S09M1",
+            "supports": "父子關係及陳茂正曾任臺北縣議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-2-71-政治家族-1",
@@ -25047,10 +25503,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳科名\" \"爸爸是前縣議員陳茂正\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳科名父親為資深議員陳茂正",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20190315000694-260503"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "父子關係及陳茂正曾任臺北縣議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民視新聞網",
+          "sourceUrl": "https://www.ftvnews.com.tw/news/detail/2019314S09M1"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-2-71-政治家族-1",
+        "query": "陳科名 陳茂正 父親 前縣議員 2018",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報、民視及中選會公報均可確認陳茂正為陳科名父親或其曾任陳茂正特助，並確認陳茂正曾任臺北縣議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20190315000694-260503",
+            "supports": "陳科名父親為資深議員陳茂正"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "民視新聞網",
+            "url": "https://www.ftvnews.com.tw/news/detail/2019314S09M1",
+            "supports": "父子關係及陳茂正曾任臺北縣議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-1-16-政治家族-1",
@@ -25078,10 +25578,16 @@
           "candidateNumber": 16
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"陳美梅\" \"伯伯是2屆議員陳炎坤\" 桃園市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-1-16-政治家族-1",
+        "query": "陳美梅 陳炎坤 伯伯 議員 2022",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "一次精確搜尋未找到可直接確認伯姪關係或陳炎坤任期的官方、可信媒體來源；搜尋結果亦未出現足以獨立佐證的候選人資料。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-1-69-政治家族-1",
@@ -25109,10 +25615,16 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"陳美梅\" \"伯伯是前議員陳炎坤\" 桃園市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-1-69-政治家族-1",
+        "query": "陳美梅 陳炎坤 伯伯 議員 2018",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "一次精確搜尋未找到可直接確認伯姪關係或陳炎坤任期的官方、可信媒體來源；搜尋結果亦未出現足以獨立佐證的候選人資料。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-6-2-政治家族-1",
@@ -25140,10 +25652,54 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳美雅\" \"父親是國民黨前議員陳明吉\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳明吉為陳美雅父親及前高雄市議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "聯合報",
+          "sourceUrl": "https://udn.com/news/story/7327/9446473"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳美雅由父親、前市議員陳明吉陪同登記",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自立晚報",
+          "sourceUrl": "https://www.idn.com.tw/news/news_content.aspx?artid=20060629abcd006&catdid=0"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-6-2-政治家族-1",
+        "query": "陳美雅 陳明吉 父親 國民黨 前議員",
+        "outcome": "source_found_manual_review",
+        "notes": "聯合報、自立晚報及自由時報均直接確認前高雄市議員陳明吉為陳美雅父親；政黨身分仍應由選舉公報補強。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "聯合報",
+            "url": "https://udn.com/news/story/7327/9446473",
+            "supports": "陳明吉為陳美雅父親及前高雄市議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "自立晚報",
+            "url": "https://www.idn.com.tw/news/news_content.aspx?artid=20060629abcd006&catdid=0",
+            "supports": "陳美雅由父親、前市議員陳明吉陪同登記"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-6-47-政治家族-1",
@@ -25171,10 +25727,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳美雅\" \"爸爸是4屆議員陳明吉\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳明吉為陳美雅父親及原高雄市議會第四屆議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "聯合報",
+          "sourceUrl": "https://udn.com/news/story/7327/9446473"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳美雅父親陳明吉曾任高雄市議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2018/news/KaohsiungOverview/breakingnews/2467915"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-6-47-政治家族-1",
+        "query": "陳美雅 陳明吉 父親 四屆 議員",
+        "outcome": "source_found_conflict_manual_review",
+        "notes": "親屬及前市議員身分可確認，但資料顯示陳明吉是原高雄市議會「第四屆議員」或曾任一屆；暗公報「4屆議員」可能被誤讀為連任四屆，須人工確認原意。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "聯合報",
+            "url": "https://udn.com/news/story/7327/9446473",
+            "supports": "陳明吉為陳美雅父親及原高雄市議會第四屆議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2018/news/KaohsiungOverview/breakingnews/2467915",
+            "supports": "陳美雅父親陳明吉曾任高雄市議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-10-5-政治家族-1",
@@ -25246,10 +25846,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳致中\" \"爸爸是前總統陳水扁\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "時任總統陳水扁以父親身分提及兒子陳致中",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中華民國總統府",
+          "sourceUrl": "https://www.president.gov.tw/NEWS/1998"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-10-14-政治家族-1",
+        "query": "陳致中 陳水扁 父親 前總統",
+        "outcome": "source_found_manual_review",
+        "notes": "總統府公開專訪由陳水扁以父親身分提及兒子陳致中，可直接確認父子關係及其總統身分。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中華民國總統府",
+            "url": "https://www.president.gov.tw/NEWS/1998",
+            "supports": "時任總統陳水扁以父親身分提及兒子陳致中"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-8-10-政治家族-2",
@@ -25277,10 +25903,54 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳韋曄\" \"父親是桃園市議員陳萬得\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳韋曄父親為桃園市議員陳萬得",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20220831005360-263101"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳萬得為陳韋曄父親及曾任議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "NOWnews今日新聞",
+          "sourceUrl": "https://www.nownews.com/news/6589220"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-8-10-政治家族-2",
+        "query": "陳韋曄 陳萬得 父親 桃園市議員",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報及NOWnews直接確認陳萬得為陳韋曄父親及前桃園市議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20220831005360-263101",
+            "supports": "陳韋曄父親為桃園市議員陳萬得"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "NOWnews今日新聞",
+            "url": "https://www.nownews.com/news/6589220",
+            "supports": "陳萬得為陳韋曄父親及曾任議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-8-10-政治家族-1",
@@ -25308,10 +25978,54 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳韋曄\" \"母親是國民黨立委呂玉玲\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳韋曄母親為立法委員呂玉玲",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20220831005360-263101"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "呂玉玲為陳韋曄母親",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "NOWnews今日新聞",
+          "sourceUrl": "https://www.nownews.com/news/6589220"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-8-10-政治家族-1",
+        "query": "陳韋曄 呂玉玲 母親 國民黨 立委",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報及NOWnews直接確認立委呂玉玲為陳韋曄母親。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20220831005360-263101",
+            "supports": "陳韋曄母親為立法委員呂玉玲"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "NOWnews今日新聞",
+            "url": "https://www.nownews.com/news/6589220",
+            "supports": "呂玉玲為陳韋曄母親"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-1-5-政治家族-1",
@@ -25339,10 +26053,36 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳家琪\" \"父親是國民黨前八里區黨部主委、八里區村長聯誼會長陳進祥\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "父女關係及陳進祥的兩項地方職務",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "鏡週刊",
+          "sourceUrl": "https://www.mirrormedia.mg/story/amp/20220831soc005"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-1-5-政治家族-1",
+        "query": "陳家琪 陳進祥 父親 八里 黨部主委 村長聯誼會長",
+        "outcome": "source_found_manual_review",
+        "notes": "鏡週刊直接確認陳進祥為陳家琪父親，並曾任國民黨八里區黨部主委及八里區村長聯誼會長。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "鏡週刊",
+            "url": "https://www.mirrormedia.mg/story/amp/20220831soc005",
+            "supports": "父女關係及陳進祥的兩項地方職務"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-1-5-政治家族-2",
@@ -25370,10 +26110,54 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳家琪\" \"婆家楊家在八里有地方勢力\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "公公楊秀雄職務及媒體對陳、楊兩家地方政治力的描述",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "鏡週刊",
+          "sourceUrl": "https://www.mirrormedia.mg/story/amp/20220831soc005"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳家琪娘家與夫家在八里的地方淵源",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "菱傳媒轉載",
+          "sourceUrl": "https://www.bigmedia.com.tw/article/b4549de4-8599-4d70-9646-263295e16546"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-1-5-政治家族-2",
+        "query": "陳家琪 婆家 楊家 八里 地方勢力",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "鏡週刊直接記載公公楊秀雄為八里前代表會主席及八仙樂園共同創辦人，並將陳、楊兩家描述為地方政治勢力；「地方勢力」是媒體評述，公開時只能做有來源的歸因敘述，不能當作無條件事實。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "鏡週刊",
+            "url": "https://www.mirrormedia.mg/story/amp/20220831soc005",
+            "supports": "公公楊秀雄職務及媒體對陳、楊兩家地方政治力的描述"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "菱傳媒轉載",
+            "url": "https://www.bigmedia.com.tw/article/b4549de4-8599-4d70-9646-263295e16546",
+            "supports": "陳家琪娘家與夫家在八里的地方淵源"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-txg-4-10-政治家族-1",
@@ -25401,10 +26185,54 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳清龍\" \"妻子是曾任豐原市民代表的連小華\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "連小華為陳清龍妻子",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "聯合報",
+          "sourceUrl": "https://udn.com/news/story/6656/9151364"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "連小華曾以豐原市民代表身分參與陳清龍服務處事件",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "台灣新聞網",
+          "sourceUrl": "https://www.5ch.com.tw/news.php?act=view&id=24894"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-4-10-政治家族-1",
+        "query": "陳清龍 連小華 妻子 豐原市民代表",
+        "outcome": "source_found_manual_review",
+        "notes": "聯合報及中國時報直接確認連小華為陳清龍妻子；早期地方新聞在陳清龍競選活動中稱連小華為豐原市民代表，可交叉支持職務。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "聯合報",
+            "url": "https://udn.com/news/story/6656/9151364",
+            "supports": "連小華為陳清龍妻子"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "台灣新聞網",
+            "url": "https://www.5ch.com.tw/news.php?act=view&id=24894",
+            "supports": "連小華曾以豐原市民代表身分參與陳清龍服務處事件"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-2-7-政治家族-1",
@@ -25432,10 +26260,54 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳雅倫\" \"父親是曾任3屆議員、龜山鄉長的陳志謀\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳志謀為陳雅倫父親及時任議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/newspapers/20180704000726-263209"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳志謀曾任桃園市議員及龜山鄉長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "台北郵報",
+          "sourceUrl": "https://taipeipost.org/123099/"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-2-7-政治家族-1",
+        "query": "陳雅倫 陳志謀 父親 三屆議員 龜山鄉長",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "中國時報直接確認陳志謀為陳雅倫父親及時任議員；可信媒體可確認陳志謀曾任龜山鄉長，但本次停損範圍內未由可靠來源完整核對「三屆議員」。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/newspapers/20180704000726-263209",
+            "supports": "陳志謀為陳雅倫父親及時任議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "台北郵報",
+            "url": "https://taipeipost.org/123099/",
+            "supports": "陳志謀曾任桃園市議員及龜山鄉長"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-2-76-政治家族-1",

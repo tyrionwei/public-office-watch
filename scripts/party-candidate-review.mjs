@@ -77,6 +77,10 @@ function buildStagingRows(snapshot, plan, observedAt = new Date().toISOString())
       nominationAnnouncedAt: record.nominationAnnouncedAt,
       profileUrl: record.profileUrl,
       photoUrl: record.photoUrl,
+      education: record.education,
+      experience: record.experience,
+      platform: record.platform,
+      socialLinks: record.socialLinks,
       targetRace: {
         id: race.id,
         title: race.title,

@@ -106,6 +106,30 @@ function optionalUrl(value, field, errors) {
   return normalized;
 }
 
+function optionalTextArray(value, field, errors) {
+  if (value == null) return [];
+  if (!Array.isArray(value)) {
+    errors.push(`${field} must be an array`);
+    return [];
+  }
+  if (value.length > 200) errors.push(`${field} must contain at most 200 items`);
+  return value.map((item, index) => {
+    const normalized = String(item ?? '').replace(/\s+/g, ' ').trim();
+    if (!normalized) errors.push(`${field}[${index}] must not be empty`);
+    if (normalized.length > 4000) errors.push(`${field}[${index}] is too long`);
+    return normalized;
+  }).filter(Boolean);
+}
+
+function optionalUrlArray(value, field, errors) {
+  if (value == null) return [];
+  if (!Array.isArray(value)) {
+    errors.push(`${field} must be an array`);
+    return [];
+  }
+  return value.map((item, index) => optionalUrl(item, `${field}[${index}]`, errors)).filter(Boolean);
+}
+
 function hostnameMatches(hostname, domain) {
   return hostname === domain || hostname.endsWith(`.${domain}`);
 }
@@ -196,6 +220,10 @@ function validateSnapshot(snapshot) {
       nominationAnnouncedAt: optionalDate(record?.nominationAnnouncedAt, `${prefix}.nominationAnnouncedAt`, errors),
       profileUrl: optionalUrl(record?.profileUrl, `${prefix}.profileUrl`, errors),
       photoUrl: optionalUrl(record?.photoUrl, `${prefix}.photoUrl`, errors),
+      education: optionalTextArray(record?.education, `${prefix}.education`, errors),
+      experience: optionalTextArray(record?.experience, `${prefix}.experience`, errors),
+      platform: optionalTextArray(record?.platform, `${prefix}.platform`, errors),
+      socialLinks: optionalUrlArray(record?.socialLinks, `${prefix}.socialLinks`, errors),
     };
   });
 

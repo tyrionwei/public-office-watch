@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T17:53:58.156Z",
+  "generatedAt": "2026-07-29T18:27:48.224Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "scope": {
     "historical": "2018 and 2022 six-municipality city councilor candidates",
@@ -22,7 +22,7 @@
         "2018": 748,
         "2022": 740
       },
-      "identityConflictGuideEntries": 2,
+      "identityConflictGuideEntries": 0,
       "missingGuideEntriesInDatabase": 0,
       "databaseCandidateContextsMissingInGuide": 0,
       "databaseMissingByYear": {
@@ -42,96 +42,7 @@
     }
   },
   "historical": {
-    "identityConflictGuideEntries": [
-      {
-        "guide": {
-          "id": "tnl-dark-guide-2022-khh-14-1",
-          "year": 2022,
-          "city": "高雄市",
-          "cityCode": "khh",
-          "area": 14,
-          "districtLabel": "第十四選區",
-          "name": "高忠德 Takiludun．Anu",
-          "party": "無黨籍",
-          "candidateNumber": 1,
-          "pageUrl": "https://www.thenewslens.com/election/2022/guide?city=khh&area=14"
-        },
-        "databaseCandidates": [
-          {
-            "candidateId": "d1973d4f-f9d9-446a-80a6-7a3246798d77",
-            "personId": "a15dc61a-d604-4aef-a5bb-5a6468ef1b76",
-            "canonicalPersonId": "b6cf0ca0-978c-43bf-ab4f-b0d87b61f6bd",
-            "name": "高忠德(Taki ludun‧Anu)",
-            "year": 2022,
-            "cityCode": "khh",
-            "area": 14,
-            "raceType": "councilor",
-            "party": "無黨籍",
-            "candidateNumber": "1",
-            "raceTitle": "高雄市第14選舉區山地原住民議員選舉",
-            "sourceName": "中央選舉委員會選舉資料庫：公開資料包"
-          },
-          {
-            "candidateId": "13a4cbd1-cf7a-4d8f-990a-a8615975125a",
-            "personId": "e0e84214-1295-4aca-866d-eef7598625cf",
-            "canonicalPersonId": "e0e84214-1295-4aca-866d-eef7598625cf",
-            "name": "高忠德 Takiludun．Anu",
-            "year": 2022,
-            "cityCode": "khh",
-            "area": 14,
-            "raceType": "councilor",
-            "party": "無黨籍",
-            "candidateNumber": "1",
-            "raceTitle": "第14選舉區（山地原住民）",
-            "sourceName": "VoteTW historical election results"
-          }
-        ]
-      },
-      {
-        "guide": {
-          "id": "tnl-dark-guide-2022-khh-15-1",
-          "year": 2022,
-          "city": "高雄市",
-          "cityCode": "khh",
-          "area": 15,
-          "districtLabel": "第十五選區",
-          "name": "范織欽 Pasulang．Tomatalate",
-          "party": "無黨籍",
-          "candidateNumber": 1,
-          "pageUrl": "https://www.thenewslens.com/election/2022/guide?city=khh&area=15"
-        },
-        "databaseCandidates": [
-          {
-            "candidateId": "9f676ab3-f602-4620-8847-18b9681d8318",
-            "personId": "77968eeb-995f-447f-85e3-d04a290f4e35",
-            "canonicalPersonId": "bdfc752d-470c-46d4-8b47-ad8aa9cb6651",
-            "name": "范織欽 Pasulang．Tomatalate",
-            "year": 2022,
-            "cityCode": "khh",
-            "area": 15,
-            "raceType": "councilor",
-            "party": "無黨籍",
-            "candidateNumber": "1",
-            "raceTitle": "第15選舉區（山地原住民）",
-            "sourceName": "VoteTW historical election results"
-          },
-          {
-            "candidateId": "dd57c5d8-b014-48c4-8f22-89e2ccb922c8",
-            "personId": "3eb41bc7-86c4-430c-820f-714425139951",
-            "canonicalPersonId": "3b29cc8e-b1eb-44f6-953f-9d2d690b83de",
-            "name": "范織欽(Pasulang‧Tomatalate)",
-            "year": 2022,
-            "cityCode": "khh",
-            "area": 15,
-            "raceType": "councilor",
-            "party": "無黨籍",
-            "candidateNumber": "1",
-            "raceTitle": "高雄市第15選舉區山地原住民議員選舉",
-            "sourceName": "中央選舉委員會選舉資料庫：公開資料包"
-          }
-        ]
-      }
-    ],
+    "identityConflictGuideEntries": [],
     "guideEntriesMissingInDatabase": [],
     "databaseCandidatesMissingInGuide": []
   },

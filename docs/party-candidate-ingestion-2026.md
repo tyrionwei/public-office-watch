@@ -186,6 +186,30 @@
 - 驗證人物頁、選舉頁、選區頁與搜尋。
 - 確認沒有同名錯接及重複 candidacy 後，才另行決定正式發布。
 
+### Phase 6：台灣前進四黨聯合網站（本機完成）
+
+- 官方候選人總覽：`https://taiwangogo.tw/candidates/`，網站由時代力量管理，
+  涵蓋時代力量、台灣基進、小民參政歐巴桑聯盟、台灣綠黨及部分無黨籍參選人。
+- `build-taiwan-forward-2026-candidate-snapshots.mjs` 低頻讀取公開總覽與個人頁，
+  使用個人頁 JSON-LD 的正式第幾選區，不依行政區名稱自行猜測選區。
+- 2026-07-29 保存 35 筆來源擷取於
+  `data-sources/taiwan-forward/2026-election/capture-2026-07-29.json`；四黨正規化快照保存在同一目錄。
+- 現有市長／縣市議員契約可接受 26 筆：時代力量 11、台灣基進 5、
+  小民參政歐巴桑聯盟 7、台灣綠黨 3；每筆均保存官網提供的學歷、經歷、政見及社群連結。
+- 另外 3 筆 `data-party="台灣前進"` 的無黨籍參選人未歸入任一政黨；
+  6 筆市民／鎮民／鄉民代表先保留於來源擷取，不擴張本階段候選人契約。
+- 26 筆均唯一匹配 2026 選區並寫入本機待審核層：9 筆高信心、6 筆可能配對、
+  11 筆新人物；共建立 15 筆非確認性的身分建議，正式 candidate 仍為 0。
+- `taiwangogo.tw` 只對上述四黨列入允許的官方聯合來源網域；其他政黨仍會被 validator 拒絕。
+
+執行方式：
+
+```bash
+node scripts/build-taiwan-forward-2026-candidate-snapshots.mjs \
+  --output-dir /tmp/taiwan-forward-2026 \
+  --capture-output /tmp/taiwan-forward-2026-capture.json
+```
+
 ## 本機執行
 
 ```bash

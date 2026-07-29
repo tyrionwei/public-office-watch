@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 1,
+  "electionYear": 2026,
+  "sourceType": "official_party_nomination",
+  "party": "時代力量",
+  "source": {
+    "name": "台灣前進 2026 聯合競選網站－時代力量候選人",
+    "url": "https://taiwangogo.tw/candidates/",
+    "publishedAt": null,
+    "retrievedAt": "2026-07-29T10:24:07.882Z"
+  },
+  "records": [
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-hsieh-min-hung",
+      "personName": "謝閔弘",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "臺北市",
+      "districtName": "第1選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/hsieh-min-hung/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/hsieh-min-hung.jpg",
+      "education": [
+        "石牌國小",
+        "明德國中",
+        "建國中學",
+        "國立臺灣師範大學東亞學系在學"
+      ],
+      "experience": [
+        "家教、補習班老師",
+        "社交俱樂部負責人",
+        "2022 臺北市北投區裕民里里長候選人"
+      ],
+      "platform": [
+        "社子留得住：社子島禁建超過半世紀，沒有人反對開發，我們反對的是全區剷平、把上萬名居民連根拔起的粗暴做法。 居民要的是增加公設、保留聚落 區段徵收尚未核准，現在改還來得及：要求市府重新檢討開發方式，盤點弱勢承租戶、無完整產權住戶與高齡家庭，先建立必要的法律協助與居住支持。",
+        "醫療走得順：榮總、振興周邊每天都有病患、家屬、醫護與居民進出，尖峰時段卻常堵塞在同一批路口 要求市府重整醫院接駁、計程車候車、臨停區與公車站位，補上社區內彈性接駁或小黃公車；在人流大的路口增設行人庇護島、調整行穿線與高齡友善號誌，讓看病、上班、回家的路都更安全。",
+        "北士住得好：北士科不能先讓企業進駐，再把塞車、停車與漲租丟給居民承擔 市府應在重大廠商進駐前，公開尖峰車流、捷運紅線與主要路口承載評估，提出接駁、YouBike及停車管理期程；企業也要提出通勤計畫，分擔接駁與大眾運輸誘因。 公共回饋空間應優先用於社宅、托嬰、日照與平價生活機能，讓居民住得下、生活得下去",
+        "都更推得動：老屋更新卡關，不只是住戶不懂，而是缺少誘因與市府介入 針對高齡老屋、危險建物與整合困難基地，要求市府列冊管理，主動提出補助、容積誘因、租屋安置與中繼住宅方案；住戶整合到一定門檻後，由市府成立專案窗口協調產權、估價與審查期程，讓都更不是等住戶自己談到放棄，而是由市府把案子真正推起來。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/profile.php?id=100080062544644",
+        "https://www.instagram.com/nice2miu/?__pwa=1",
+        "https://www.threads.com/@nice2miu?xmt=AQG0-jUsemzlLAQnlkurRlV5lGH8XjwNjHcotYjPjzRab9E"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-chen-chih-ying",
+      "personName": "陳峙穎",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "臺北市",
+      "districtName": "第6選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/chen-chih-ying/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/chen-chih-ying.jpg",
+      "education": [
+        "輔仁大學經濟系",
+        "臺北市立中崙高級中學",
+        "臺北市立實踐國民中學",
+        "臺北市永建國民小學"
+      ],
+      "experience": [
+        "2018-2026年 導護志工守護孩童",
+        "2022-2026年 連任里長(得票較上屆成長85%)",
+        "2018-2022年 文山區華興里長(擊敗深藍里長)",
+        "2018、2019、2021年 IDA 國際龍獎傑出業務"
+      ],
+      "platform": [
+        "人本交通：我已經做到：增加中港抽水站堤外人行道、試院路雙號口人行道拓寬3倍、試院路4巷拓寬救護消防車可進入、木柵辛亥路口障礙物移除及斜坡道增設、多條人行道拓寬輪椅推車可過、繁重路口增加義交維護安全！ 未來我還要做更多！",
+        "居住安全：我已經做到：永建市場海砂屋改建、辛亥路六段大排溝違建移除、影響公安老舊危建拆除、仙跡岩廢棄房舍封閉及街友安置、懷恩隧道漏水改善及增設行人燈箱、國防部廢棄房舍拆杜絕治安死角！ 未來我還要做更多！",
+        "幼老有托：我已經做到：永建市場改建成功爭取托嬰40名額及設立臨托、成功爭取實永非營利幼兒園分部、辦理親子活動、辦理長者共餐/樂齡活動、辦理長青旅遊活動、設立文山第二運動中心全齡活動！ 未來我還要做更多！",
+        "排水改善：我已經做到：辛亥路六段新設擋土牆及排水設施、華興公園全面整建掃除積水泥濘、木柵路調整人行道洩水坡度改善行人水灘、富山路口增設排水設施解決轉角積水、試院路增設側溝及修復排水涵管！ 未來我還要做更多！",
+        "為了你，我要成為一頭牛：合法合理讓家園走向幸福，峙穎定竭盡所能！ 我已經做到：廢除化糞池加速接衛工管、爭取停車空間及優惠、萬隆及文山運動中心電動機車電池交換站、增設YOUBIKE站點及車輛增購、增設路燈改善照明、更新擴大萬芳公車候車亭、光華社區自來水管線全面更新！ 未來我還要做更多！"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/profile.php?id=100063615855471&locale=zh_TW",
+        "https://www.instagram.com/iwillbeacow451780?igsh=Y2FkcTI4azlnZDk4",
+        "https://lin.ee/s6UiPhm"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-li-ya-fen",
+      "personName": "李雅芬",
+      "candidacyStatus": "party_nominee",
+      "raceType": "county_councilor",
+      "regionName": "新竹縣",
+      "districtName": "第1選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/li-ya-fen/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/li-ya-fen.jpg",
+      "education": [
+        "長庚科技大學 護理系",
+        "台南護理專科學校 護理系"
+      ],
+      "experience": [
+        "東元醫院資深麻醉護理師",
+        "新竹市議員蔡惠婷辦公室主任",
+        "國小營養午餐家長委員",
+        "華人泌乳顧問協會 CCLA 認證泌乳照服員",
+        "NAHA L2 美國芳療師、IFPA 英國芳療師"
+      ],
+      "platform": [
+        "每個校園，都有一個心理師：設置校園駐點心理師， 讓專業走進校園，穩定陪伴孩子，不讓任何孩子被遺落",
+        "每個孩子，都有平安的上學路：校園周邊設置實體通學步道，增設減速平台，學區降低車速，守護孩子安全",
+        "每個孩子，都有玩耍成長的地方：爭取西區親子館與挑戰型共融公園；建立行動育兒資源庫，提供專業諮詢與教具租借",
+        "每個長輩，都有走進家門的醫療服務：推動在宅醫療整合平台，讓醫療專業服務進家門，整合長照系統資源，減少長輩就醫奔波負擔。",
+        "每個市民，都有全齡運動的空間：打造老中青都能參與的運動環境，規劃多元運動資源與課程，鼓勵全民養成運動習慣，讓健康成為竹北人的日常生活。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/100yafen/",
+        "https://www.instagram.com/100yafen/",
+        "https://www.threads.com/@100yafen"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-chang-yuci",
+      "personName": "張育慈",
+      "candidacyStatus": "party_nominee",
+      "raceType": "county_councilor",
+      "regionName": "新竹縣",
+      "districtName": "第2選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/chang-yuci/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/chang-yuci.jpg",
+      "education": [
+        "台灣大學新聞研究所",
+        "中央大學客家社會文化碩士",
+        "元智大學社會暨政策科學學士",
+        "竹北高中（陽明交大附中）",
+        "仁愛國中",
+        "博愛國小"
+      ],
+      "experience": [
+        "時代力量新聞部主任",
+        "新竹縣議會議員助理",
+        "新竹縣政府民政處",
+        "壯闊台灣倡議專員"
+      ],
+      "platform": [
+        "竹縣有監督：竹縣是全台少數20幾年來沒有刪除預算的地方政府，縣民看不見納稅錢用在哪裡，建立新竹縣預算公開平台，讓縣民看得到、也問得到。",
+        "竹縣好就學：新竹縣人口持續成長，教育資源卻跟不上，學校不夠、班級超額，縣府有預算、有職責，卻看不到一套跟上發展速度的解方。",
+        "竹縣要暢行：竹北塞車與停車問題已是日常，交通預算年年編列，居民卻還在等一個看得見的改變，讓每一分交通經費，都能真正用在刀口上。",
+        "竹縣好生活：竹北人口密度年年攀升，公園綠地與遊憩空間嚴重不足，相關預算編了又編，居民卻還在等一塊能帶孩子、帶毛小孩走進去的空間。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/ytcc.2026/",
+        "https://www.instagram.com/ytcc.2026?igsh=amFvY2VhaTh1MnN6&utm_source=qr",
+        "https://www.threads.com/@ytcc.2026?igshid=NTc4MTIwNjQ2YQ==",
+        "https://youtube.com/channel/UCfPWB2ENkcLlPGTy5XeYlTA?si=68llxJJUZUW9lRrF"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-tsai-hui-ting",
+      "personName": "蔡惠婷",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "新竹市",
+      "districtName": "第1選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/tsai-hui-ting/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/tsai-hui-ting.jpg",
+      "education": [
+        "台東大學語文教育系"
+      ],
+      "experience": [
+        "2022-2026新竹市第11屆議員",
+        "2018-2022新竹市第10屆議員",
+        "2006-2016新竹市陽光國小教師",
+        "2013年教育部教學卓越獎得主"
+      ],
+      "platform": [
+        "交通與通勤安全：酒駕毒駕零容忍，行人安全不是口號 檢討易肇事路口與通學路，爭取行人庇護島、標線與號誌改善；監督縣市交通預算，讓每個人安全回家。",
+        "兒少與教育：把兒少安全與教育資源放回第一位 強化兒虐防治與性私密影像防制的地方防線，監督社工量能與校園資源，讓孩子被接住、家長被支持。",
+        "廉政監督與揭露真相：地方政治與金流，不該是黑箱 緊盯議會與地方政府的預算、採購與利益關係，把公開資料變成人人看得懂的監督工具。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/NPPSunnyBird/",
+        "https://www.threads.com/@nppsunnybird?igshid=NTc4MTIwNjQ2YQ==",
+        "https://youtube.com/@sunnybird2024"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-lin-yen-fu",
+      "personName": "林彥甫",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "新竹市",
+      "districtName": "第4選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/lin-yen-fu/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/lin-yen-fu.jpg",
+      "education": [
+        "美國紐約州立大學公共行政碩士",
+        "清華大學計量財務金融學士"
+      ],
+      "experience": [
+        "時代力量新竹市議會黨團 總召",
+        "國際扶輪新竹陽光扶輪社 服務計畫主委",
+        "荷蘭村C區第 24 屆管委會 主委"
+      ],
+      "platform": [
+        "監督重大施政，把關財政預算：預算公開審查： 推動重大建設預算與合約透明化，定期公布審查進度與工程查核結果 公設體檢： 針對剛完工或常出問題的公共設施（如路面、排水、場館）落實實地抽查，拒絕「為蓋而蓋」的蚊子館。 財政紀律把關： 嚴格控管債務與基金運用，優先撥款給攸關民生的基礎建設與教育社福",
+        "提升交通安全，推動人本環境：行人專門路網： 爭取全面盤點並打通學校、公共建設旁「斷頭人行道」，推動騎樓順平與通學步道改善。 路口工程優化： 推動「行人保護/專用時相」（人車分流）、縮小路口轉角、增設行穿線退縮與行人庇護島。 科技與標線整頓： 優化交通號誌連鎖，整頓混亂的車道標線，在易肇事路口實施科學化科技執法與與動線整頓。",
+        "營造友善育兒，實踐多元教育：多元托育支持： 爭取增設公托、非營利幼兒園，並彈性推動「定點臨托」與延長公幼課後留園服務。 校園安全與心理健康： 爭取提升校園專業輔導人力（心理諮商師、社工師）配置，並優化校園硬體安全。 做爸媽的後盾： 針對育兒除了加碼補助，應完善更多彈性托育、陪產員支持等政策",
+        "促進公地活化，活絡地方發展：閒置空間變身： 將閒置公有地或老舊建物轉型為「多功能活動中心」，整合托嬰中心、長照據點與青年創業基地。 立體複合運用： 推動公園或公有空地改建「地下/立體智慧停車場」，上方維持綠地，一次解決車位不足與休閒空間問題。 市集與文化活絡： 輔導傳統市場與周邊公有場域硬體升級，並引進文創、在地市集，活絡地方。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/0Yenfu",
+        "https://www.instagram.com/npplinyenfu/",
+        "https://www.threads.com/@npplinyenfu",
+        "https://www.youtube.com/@linyenfu"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-liao-tzu-chi",
+      "personName": "廖子齊",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "新竹市",
+      "districtName": "第5選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/liao-tzu-chi/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/liao-tzu-chi.jpg",
+      "education": [
+        "國立台灣大學法律系司法組學士",
+        "國立新竹女子高級中學",
+        "苗栗縣君毅國中",
+        "新竹市香山區南隘國小"
+      ],
+      "experience": [
+        "第10、11屆新竹市議員",
+        "竹塹文教基金會 理事",
+        "竹塹文化資產行動 前線成員",
+        "英國IFA國際芳香 療法治療師認證課 程講師",
+        "新竹雲林同鄉會第十六屆傑出鄉親"
+      ],
+      "platform": [
+        "人本交通：陸續上架中，請參考 https://siangshanliaozihci.com/ 。",
+        "教育兒少：陸續上架中，請參考 https://siangshanliaozihci.com/ 。",
+        "全齡共好：陸續上架中，請參考 https://siangshanliaozihci.com/ 。",
+        "觀光藝文：陸續上架中，請參考 https://siangshanliaozihci.com/ 。",
+        "環境生態：陸續上架中，請參考 https://siangshanliaozihci.com/ 。",
+        "安全韌性：陸續上架中，請參考 https://siangshanliaozihci.com/ 。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/SiangshanForward",
+        "https://www.instagram.com/liao_zihci/",
+        "https://www.youtube.com/@Liaozihci",
+        "https://line.me/ti/p/apgzn_8FGG",
+        "https://siangshanliaozihci.com/"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-wu-yi-li",
+      "personName": "吳翌立",
+      "candidacyStatus": "party_nominee",
+      "raceType": "county_councilor",
+      "regionName": "苗栗縣",
+      "districtName": "第4選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/wu-yi-li/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/wu-yi-li.jpg",
+      "education": [
+        "康寧醫護暨管理專科學校",
+        "麗山國中",
+        "麗山國小"
+      ],
+      "experience": [
+        "議員辦公室主任",
+        "新光醫院護理師",
+        "主人兒童托育中心護理師"
+      ],
+      "platform": [
+        "道路平權又安全：推動以人為本的平權交通 推廣學校共乘運輸 停車位盤點與優化",
+        "做妳最堅強的後盾：協助婦女二度就業、進修管道 建立婚前、產前教育講座",
+        "育兒有力，生活省力：爭取親子館設置 優化托育資訊網站 爭取托育人員、訪視員福利 保障代課教師權益",
+        "強化基層服務：持續精進選民服務品質 建立通報、追蹤與回饋制度 確保被聽見被解決"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/WuYiLiMiaoli"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-tsou-ming-yen",
+      "personName": "鄒明諺",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "臺中市",
+      "districtName": "第13選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/tsou-ming-yen/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/tsou-ming-yen.jpg",
+      "education": [
+        "國立中正大學政治學系",
+        "臺中一中",
+        "光榮國中",
+        "永隆國小"
+      ],
+      "experience": [
+        "時代力量台中黨部 執行長",
+        "終結大里醫療焚化爐污染 發起人",
+        "促使霧峰大型殯葬區撤案 發言人",
+        "國際青商會2024霧峰青商會 會長",
+        "內新庄社區發展協會 理事",
+        "拾光青創協會 理事長",
+        "北柳守望相助隊 隊員",
+        "十八庄迎媽祖文化協會 公關",
+        "中部學生棒球協會 籌備主委"
+      ],
+      "platform": [
+        "親子共好：打造安全快樂的成長環境，減輕家長負擔，陪伴家庭一起成長",
+        "毛孩友善：守護毛孩健康，爭取更多飼主支持措施，打造友善共融城市",
+        "環境守護：給孩子更乾淨的里霧，讓下一代自在呼吸、安心長大",
+        "交通改革：從通學到通勤，打造更安全的交通環境，讓每一次出門都能平安回家",
+        "市政監督：揭露真相監督，守護公益，為市民把關，讓市政更透明"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/MingYen.DaliWufeng",
+        "https://www.instagram.com/mymytsou/",
+        "https://www.threads.com/@mymytsou"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-liao-chang-chun",
+      "personName": "廖昶淳",
+      "candidacyStatus": "party_nominee",
+      "raceType": "county_councilor",
+      "regionName": "雲林縣",
+      "districtName": "第1選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/liao-chang-chun/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/liao-chang-chun.jpg",
+      "education": [
+        "國立斗六高級中學",
+        "國立臺灣師範大學地理學系學士",
+        "國立臺灣師範大學地理學系碩士班"
+      ],
+      "experience": [
+        "臺北市實驗教育機構科任教師",
+        "國立斗六高級中學教學工作者",
+        "國立臺灣師範大學地理學系教學助理",
+        "農業部林業及自然保育署計畫專案經理",
+        "教育部資訊及科技教育司計畫專案經理",
+        "臺師大高等教育深耕計畫專案經理"
+      ],
+      "platform": [
+        "環境治理 | 讓生活更好：環境不只是口號，是每天的「生活」！ ✅確保民生問題妥善回應(空污、交通等) ✅關注政策之公正性、回應性與適當性 👉 讓在地人一起參與、一起決定",
+        "地方創生 | 讓地方有機會：將資源變機會，把機會變「經濟」！ ✅文資與環境活化，培訓在地解說員 ✅整合農特產與活動，打造雲林品牌 👉 創造工作機會，讓人願意留下來",
+        "教育深化 | 讓青年願意留下：專業老師出身，培養「雲林素養人」！ ✅建立青年參與社群空間，形塑政策意見 ✅地方環境、歷史與文化納入學習資源 👉 以終為始，教育是為了雲林的未來"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/yunlin.npp.gary/",
+        "https://www.instagram.com/gary_npp/",
+        "https://www.threads.com/@gary_npp?hl=zh-tw"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-liu-chung-shu",
+      "personName": "劉仲書",
+      "candidacyStatus": "party_nominee",
+      "raceType": "county_councilor",
+      "regionName": "宜蘭縣",
+      "districtName": "第1選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/liu-chung-shu/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/liu-chung-shu.jpg",
+      "education": [
+        "亞洲大學財經法律系（肄業）",
+        "國立宜蘭高中",
+        "宜蘭縣復興國中",
+        "宜蘭縣力行國小",
+        "私立聖后幼稚園"
+      ],
+      "experience": [
+        "臺鐵列車長",
+        "高鐵延伸宜蘭監督聯盟發言人",
+        "臺鐵產業工會常務理事",
+        "天下雜誌獨立評論專欄作家",
+        "台灣立報記者",
+        "宜蘭深溝村倆佰甲友善耕作小農",
+        "宜蘭縣咖啡推廣協會成員",
+        "宜蘭拾光響響公平貿易咖啡主理人",
+        "烏鴉邦中學校園民主促進會創會成員"
+      ],
+      "platform": [
+        "高鐵計畫與特定區監督：擴大公民參與，進行實質溝通，把利害關係、效益、比較方案、宜蘭願景、產業發展談清楚，拒絕政府強硬闖關。 協助本開發案沿線居民與特定區居民安置計畫、環評承諾事項之監督，並針對相關都市計畫、交通設計、產業進駐等議題，做好政策風險控管。",
+        "人本交通全面盤點：通學路實體人行道、ubike目的點間實體單車安全路廊、商圈徒步區與人行道規劃提升商業效益、透過人本改善創造公共運輸效益、老年幼兒與輪椅族道路近用設計、人本交通公民教育、停車位總量管制、降低死傷目標至0死亡與0交通碳排、政策法制化，已簽署「2026 交通雙齊零城市」與「2026 交通改善承諾白皮書」。",
+        "優質民主：深度溝通與深化政策：議會透明化、議題轉譯向民眾解說、積極尋求公民對話、要求政府加強每項政策的公民參與機制、跟誰有關就拉誰進來討論。",
+        "議題型議員：所有議題都用公共視角處理，不做關係政治或差別待遇，以理服人、以理爭取",
+        "第三勢力是基本立場：議會職責就是監督，不論哪一黨執政，都用最嚴格的要求來檢視、求進步"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/profile.php?id=61588191812654",
+        "https://www.instagram.com/yilanwinwin",
+        "https://www.threads.com/@dust_1987",
+        "https://lin.ee/zTb70Ed"
+      ]
+    }
+  ]
+}

@@ -9,7 +9,7 @@
   "scripts": {
     "check": "npm run test:data-reports && npm --prefix apps/web run test:read-contracts && npm --prefix apps/web run lint && npm --prefix apps/web run build && npm --prefix apps/web run check:data-boundary && npm --prefix apps/web run check:published-exposure && npm --prefix apps/web run check:public-view-contracts",
     "test": "npm run check",
-    "test:data-reports": "node --test scripts/report-election-race-duplicates.test.mjs scripts/report-candidate-status-quality.test.mjs scripts/import-official-candidate-snapshot.test.mjs scripts/import-party-candidate-snapshot.test.mjs scripts/party-candidate-review.test.mjs scripts/build-dpp-2026-candidate-snapshot.test.mjs scripts/build-kmt-2026-candidate-snapshot.test.mjs scripts/build-tpp-2026-candidate-snapshot.test.mjs scripts/build-company-registry-enrichment.test.mjs scripts/chat-foundation-contract.test.mjs",
+    "test:data-reports": "node --test scripts/report-election-race-duplicates.test.mjs scripts/report-candidate-status-quality.test.mjs scripts/import-official-candidate-snapshot.test.mjs scripts/import-party-candidate-snapshot.test.mjs scripts/party-candidate-review.test.mjs scripts/build-dpp-2026-candidate-snapshot.test.mjs scripts/build-kmt-2026-candidate-snapshot.test.mjs scripts/build-tpp-2026-candidate-snapshot.test.mjs scripts/build-taiwan-forward-2026-candidate-snapshots.test.mjs scripts/build-company-registry-enrichment.test.mjs scripts/chat-foundation-contract.test.mjs",
     "build:company-registry-enrichment": "node scripts/build-company-registry-enrichment.mjs",
     "sync:real-data:dry-run": "node scripts/sync-real-public-data.mjs --weekly",
     "sync:real-data:historical-dry-run": "node scripts/sync-real-public-data.mjs --weekly --include-historical-cec",
@@ -142,7 +142,8 @@
     "import:party-candidates:apply-reviewed": "node scripts/import-party-candidate-snapshot.mjs",
     "build:dpp-2026-candidate-snapshot": "node scripts/build-dpp-2026-candidate-snapshot.mjs",
     "build:kmt-2026-candidate-snapshot": "node scripts/build-kmt-2026-candidate-snapshot.mjs",
-    "build:tpp-2026-candidate-snapshot": "node scripts/build-tpp-2026-candidate-snapshot.mjs"
+    "build:tpp-2026-candidate-snapshot": "node scripts/build-tpp-2026-candidate-snapshot.mjs",
+    "build:taiwan-forward-2026-candidate-snapshots": "node scripts/build-taiwan-forward-2026-candidate-snapshots.mjs"
   },
   "repository": {
     "type": "git",

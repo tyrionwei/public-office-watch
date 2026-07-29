@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "electionYear": 2026,
+  "sourceType": "official_party_nomination",
+  "party": "台灣基進",
+  "source": {
+    "name": "台灣前進 2026 聯合競選網站－台灣基進候選人",
+    "url": "https://taiwangogo.tw/candidates/",
+    "publishedAt": null,
+    "retrievedAt": "2026-07-29T10:24:07.882Z"
+  },
+  "records": [
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-wu-hsin-tai",
+      "personName": "吳欣岱",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "臺北市",
+      "districtName": "第2選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/wu-hsin-tai/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/wu-hsin-tai.jpg",
+      "education": [
+        "國立陽明大學醫學系"
+      ],
+      "experience": [
+        "屏東醫院主治醫師",
+        "衛生福利部台中醫院住院醫師",
+        "豐原醫院不分科住院醫師",
+        "台中醫院外科住院醫師",
+        "台中榮總代訓住院醫師總醫師",
+        "高雄醫學大學附設醫院代訓總醫師"
+      ],
+      "platform": [
+        "行人安心走：監督通學步道計劃確實達標，並實地進行品質檢驗，確保孩童上下學安全 盤點醫療院所周邊通道，清除障礙、拓寬人行道、改善路口視距",
+        "居民放心住：市府針對高風險建築建立「一條龍」協助窗口，主動介入進行結構鑑定與預防性補強",
+        "災時有依靠：盤點轄區內防空避難場所日常維護管理情況，確保極端狀況下避難設施之功能與運作效能",
+        "母語永傳承：推動台北市成立第一所台語實驗小學 創造本土語語言景觀，在地英譯名以本土語言優先、盤點文化景點製作本土語言導覽資訊"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/TSPDrShe",
+        "https://www.instagram.com/tspdrshe/",
+        "https://www.threads.com/@tspdrshe",
+        "https://www.youtube.com/@TSPDrShe",
+        "https://lin.ee/sqgz1zt"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-teng-le-chiang",
+      "personName": "鄧樂強",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "臺北市",
+      "districtName": "第3選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/teng-le-chiang/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/teng-le-chiang.jpg",
+      "education": [
+        "國立台灣大學法律系",
+        "國立銘傳大學企業管理研究所"
+      ],
+      "experience": [
+        "空軍上校",
+        "國安系統",
+        "中華動態競爭戰略發展學會財務長"
+      ],
+      "platform": [
+        "樂齡長青再升級：增設專職局處處理年長者事務、社會福利事項等",
+        "推動毛小孩友善都市：擴大健檢補助、推廣寵物醫療保險、增設寵物友善空間",
+        "打造綠色生態城市：綠化閒置土地，推行都市農耕，建置綠色廊道",
+        "補強都市安全網：增加鄰里長、警局合作，檢討員警業務範疇與量能，加強詐騙防治"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/profile.php?id=61582200186312"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-wu-cheng-tse",
+      "personName": "吳程澤",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "基隆市",
+      "districtName": "第5選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/wu-cheng-tse/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/wu-cheng-tse.jpg",
+      "education": [
+        "文藻外語大學 國際事務系 國際政治、文化組",
+        "基隆市天主教聖心高中"
+      ],
+      "experience": [
+        "奧特邦媒體集團/汽車鑑賞誌 文字/攝影編輯",
+        "大葉高島屋百貨公司 行銷企劃 一級專員",
+        "華山文創園區 營業部 招商主任",
+        "台灣基進 組織部 專員"
+      ],
+      "platform": [
+        "交通升級：針對「基捷安樂線」尚未具體落實前，持續推動務實交通改革，要求市府導入「大眾運輸準點率數位監控系統」，爭取提高國道客運與市區公車的量能配給，並透過改革結構性問題兼顧司機、乘客需求，有效消弭雙方對立提升運輸品質並有效舒緩安樂區通勤族每天的塞車與脫班惡夢。",
+        "文化主體，地方創生：深度挖掘安樂區（如外木山海岸、情人湖、大武崙砲台園區等）的生態與文化資產 推動結合在地青創團隊的「深度文化生態導覽」，將觀光收益真正留在安樂區的社區經濟循環中，並透過文化及觀光強化文化主體性及在地認同。 安樂區未來將不只是鄰近台北的「通勤城市」，而是擁有光榮感及豐富的文化內涵、生活品質優異的美麗家園。",
+        "生態永續，多元平權：要求市府在易淹水熱點擴建分散式滯洪設施、導入智慧水情預警系統；針對重大工程，監督執行水土保持檢核與生態衝擊評估。 推動建構「離線圖資」與「藍牙網狀網路」技術普及 確保大規模災害發生時，網路癱瘓時仍能有效與家人聯絡並配合大規模疏散需求",
+        "全齡安樂：推動銀髮族「數位韌性與防詐教育」 透過互動、創新的宣導方式，進入樂齡中心與社區長青學苑，強化長輩對 AI 深偽技術及科技詐騙的識讀能力，並強化長輩資訊科技之運用能力。 針對安樂區作為東北角醫療心臟的特性，推動建置智慧救護優先號誌系統 全面檢視安樂區學區、醫院周邊的實體人行道與無障礙設施",
+        "國安民防，韌性城市：主張應推動管委會、基層首長與市府合作的「防空避難所升級計畫」 將地下室或活動中心，升級為具備獨立發電、儲水及緊急醫療物資的「小型維生節點」，強化複合式災難與戰時的生存韌性。 面對威脅必須要將其轉化為日常準備，推動安樂區社區民防編組實體化 結合現代科技推廣家庭防災計畫，強化市民危機意識",
+        "轉型正義：基隆 3 月 8 日大屠殺紀念日，我將串聯各區進步議員，共同督促市府強化現行的追思儀式。 將308轉化為整合「教育、記憶、紀念、文化、轉型正義」的城市年度計畫 強力監督市府清除安樂區校園與公共空間的威權象徵 主張將具備歷史意義的空間，優先以基隆 228 受難者或在地文史人物重新命名"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/profile.php?id=61590415983221",
+        "https://www.instagram.com/ngooantonio/?__d=1*"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-wu-yi-chieh",
+      "personName": "吳依潔",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "臺南市",
+      "districtName": "第7選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/wu-yi-chieh/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/wu-yi-chieh.jpg",
+      "education": [
+        "高雄女中",
+        "台大心理系畢業",
+        "台大心理系碩士班"
+      ],
+      "experience": [
+        "台灣基進台南黨部主委",
+        "崑山國小家長會顧問",
+        "第52屆台大研究生協會會長"
+      ],
+      "platform": [
+        "落實人本交通規劃：以人本交通打造宜行宜居的生活環境，並藉此增強公共建設體質－－打造全齡友善的城市、減輕三明治家庭壓力、創造銀髮第二人生的長照政策。",
+        "市政監督透明化：要求市府設置資訊揭露平台，隨時更新重大建設進度，降低市民監督公共建設進度之門檻 例如：永康砲校、捷運藍線、鹽行市地重劃、鐵路地下化延伸等案",
+        "在都市發展過程打造永康的宜居條件：應盤點各里土地使用狀況，確保永康在都市發展中有妥善規劃、不要失速，例如：公園綠地及各里活動中心不足等問題應優先解決。",
+        "建構台南成為本土堡壘：秉持台灣基進堅守國家主體性的精神，以本土文化、本土語言為優先，並要求市府設立台語委員會專責相關事務。 落實轉型正義，去除台南市內各種形式的威權遺緒"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/NgooIkiat",
+        "https://www.instagram.com/tsp_ej?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+        "https://www.threads.com/@tsp_ej",
+        "https://line.me/R/ti/p/@135taspm#~"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-meng-fan-chia",
+      "personName": "孟繁嘉",
+      "candidacyStatus": "party_nominee",
+      "raceType": "county_councilor",
+      "regionName": "花蓮縣",
+      "districtName": "第3選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/meng-fan-chia/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/meng-fan-chia.jpg",
+      "education": [
+        "東海大學 社會工作學系 學士"
+      ],
+      "experience": [
+        "台灣露德協會 花東分辦／洄瀾居所負責人",
+        "花蓮禪光育幼院 前院長"
+      ],
+      "platform": [
+        "社會關懷｜落實全齡照顧網：✔ 社區化照顧： 完善兒少保護制度，強化脆弱家庭支持；推動社區化身心障礙照顧服務 ✔ 校園支持： 爭取將心理師、社工師納入校園正式編制，完善偏鄉教師的住宿、交通與專業支持。 ✔ 醫療平權： 提升花蓮中區（如鳳林、光復等）醫療量能；建立一站式整合照顧窗口；發展巡迴、居家及遠距醫療。",
+        "在地永續｜發展韌性經濟與守護自然資源：✔ 盤點活化：大型公共開發建設，優先活化既有公共設施 ✔ 科學治理：推動以科學監測、生態工法為基礎的環境規劃，發展低衝擊、生態友善的觀光模式。 ✔ 支持部落及社區發展自主合作社、社會企業及地方創新，並支持青年返鄉投入 ✔ 綠色經濟：結合農業、文化、生態及觀光，發展的永續綠色產業網絡",
+        "透明政治｜強化監督與公民參與：✔ 資訊與採購公開： 推動重大工程、公共採購及營養午餐制度的公開透明，確保人民監督。 ✔ 廉能治理機制： 落實利益迴避制度，並建立「吹哨者保護制度」以守護公共利益 ✔ 公民參與： 強化議會監督與政策問責，建立資訊公開及公民參與制度，深化地方治理的透明度。",
+        "民主韌性：✔ 社區韌性： 提升社區防災與民防能力，強化山區、海岸及偏鄉聚落應變能力 ✔ 文化與歷史記憶傳承：保存地方歷史記憶，傳承原住民、客家、新住民等多元文化 ✔ 多元共融：打造讓不同群體都能感到安全、受尊重的友善公共環境 ✔ 透明政治：資訊公開，並深化公民參與，讓地方運作透明化、民主化"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/profile.php?id=61566058147591",
+        "https://meng.oen.tw"
+      ]
+    }
+  ]
+}

@@ -21,10 +21,10 @@ const partySourceDomains = new Map([
   ['民主進步黨', ['dpp.org.tw']],
   ['中國國民黨', ['kmt.org.tw']],
   ['台灣民眾黨', ['tpp.org.tw']],
-  ['時代力量', ['newpowerparty.tw']],
-  ['台灣綠黨', ['greenparty.org.tw']],
-  ['台灣基進', ['statebuilding.tw']],
-  ['小民參政歐巴桑聯盟', ['obs.ppedu.org']],
+  ['時代力量', ['newpowerparty.tw', 'taiwangogo.tw']],
+  ['台灣綠黨', ['greenparty.org.tw', 'taiwangogo.tw']],
+  ['台灣基進', ['statebuilding.tw', 'taiwangogo.tw']],
+  ['小民參政歐巴桑聯盟', ['obs.ppedu.org', 'taiwangogo.tw']],
 ]);
 
 function readLocalEnv() {

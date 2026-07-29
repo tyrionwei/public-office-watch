@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "electionYear": 2026,
+  "sourceType": "official_party_nomination",
+  "party": "台灣綠黨",
+  "source": {
+    "name": "台灣前進 2026 聯合競選網站－台灣綠黨候選人",
+    "url": "https://taiwangogo.tw/candidates/",
+    "publishedAt": null,
+    "retrievedAt": "2026-07-29T10:24:07.882Z"
+  },
+  "records": [
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-wang-chen-ting",
+      "personName": "王振庭",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "臺北市",
+      "districtName": "第5選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/wang-chen-ting/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/wang-chen-ting.jpg",
+      "education": [
+        "東海大學社會工作學系"
+      ],
+      "experience": [
+        "8年補教老師",
+        "5年保險業務主管",
+        "3年民間清潔隊",
+        "古亭商圈發展協會常務監事"
+      ],
+      "platform": [
+        "長照社福庭好的：「互助、修繕、科技」三大長照政策 互助有銀行：推動「台北時間銀行」，以現在的服務換未來照顧時數 修繕有團隊：成立「居家無礙改裝」一站式服務，由市府協助老舊公寓評估與施工，移除門檻、加裝扶手。 安全有科技：補助獨居長輩安裝非接觸式監測設備，意外時即時通報鄰里，將社會安全網更緊密。",
+        "公共衛生庭好的：「桶位、智慧、高密度」三大環境衛生政策 設置有桶位：針對西門町、台北車站及龍山寺等觀光交通熱區，彈性且制度化重新設置公共垃圾桶。 清運有智慧：桶內加裝智慧感測器，滿溢度達 80% 即自動通報，達成「即滿即清」，避免滋生病媒蚊。 清掃有密度：針對假日與特定節慶增設「巡迴清運專班」，提升清理頻率",
+        "教育改革庭好的：「思辯、支持、後盾」校園環境 教案有小組：教育局提供現成教案模組與輔導系統，支援課外議題教學，減輕老師備課負擔 思辯有比賽：市府主辦市政盃辯論賽，將台北市政納入辯題，培養青年數據分析與公民素養 申訴有專線：建立校外性平保護專線，強制班舍張貼宣導，讓學生遇事能直通市府申訴、捍衛權益。",
+        "補教安全庭好的：「研習、安全」防護網 課後有去處：與鄰里社區據點建立合作課輔機制，提供安全課後陪伴空間，讓孩子放學後有安全去處。 師資有研習：補教從業人員每年須完成各 2 小時的性平與防災課程，強化前線師資的危機意識。 教室有安全：公布補習班安全等級表，並補助老舊社區班舍升級自動照明與防災警報，確保逃生無礙。",
+        "居住正義庭好的：「減稅、專案、保障」安居方案 租屋有保險：建立強制性租屋保險制度，遏止房東刁難或不平等條款，保障青年租客與房東雙方權益。 房源有減稅：包租代管長期簽約且不漲租者，減免地價與房屋稅；並將閒置公共空間轉型微型社宅。 弱勢有專案：推動政府直接包租，為弱勢提供穩定房源；育兒家庭享優先入住順位，落實居住正義。"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/GPTWangChenTing",
+        "https://www.instagram.com/chenting_notes/",
+        "https://www.threads.com/@chenting_notes"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-kan-chung-wei",
+      "personName": "甘崇緯",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "新北市",
+      "districtName": "第3選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/kan-chung-wei/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/kan-chung-wei.jpg",
+      "education": [
+        "國立交通大學多媒體工程所碩士",
+        "國立中央大學資訊工程學系學士"
+      ],
+      "experience": [
+        "台灣綠黨共同召集人",
+        "天下第一台YT/Podcast主持製作人",
+        "天域科技電玩程式設計師",
+        "鈊象電子高級軟體工程師"
+      ],
+      "platform": [
+        "全面升級通學區：安全，不該只停在大馬路：孩子們每天上下學的必經之路，不該充滿險阻 我們不僅需要大馬路上的寬敞步道，更呼籲將「完整人行道」深入每一條巷弄 透過劃設楔形減速標線、設置減速平台等交通寧靜化設計，用視覺設計引導駕駛人自然放慢車速。 守護孩子、輪椅族、每一位行人的用路權益 讓市民無懼地出門、平安地回家",
+        "AI 智慧號誌：車流順暢，行人安全：新莊交通能更聰明！導入「AI 智慧號誌」動態偵測車流，即時調整綠燈秒數，上下學時段優先保護學童過馬路。 借鏡荷蘭經驗，讓救護車與大眾運輸優先通行 我們用科技大數據解決塞車痛點，讓號誌變聰明，不僅為通勤族省下寶貴時間，更打造出高效率的新莊智慧城市！",
+        "孩子的安全不該靠運氣！推動「兒少工作證」：在新莊，家長送孩子上才藝班或營隊，要的是絕對心安 我們主張借鏡澳洲經驗，全面落實「兒少工作證」制度！ 無論員工或志工，只要會接觸孩子皆須取得認證 同時必須搭配「動態查詢系統」，開放家長與雇主即時查驗工作證效期，並預警是否涉入兒少案件。 用制度嚴格把關，讓家長真正放心！",
+        "落實 5% 社會住宅：讓年輕家庭留在新莊：廣達400公頃的塭仔圳，絕不能僅釋出0.45%土地！我強烈主張：必須拿出至少 5% 土地興建2萬戶社宅，並要離捷運或輕軌足夠接近。 新北社宅距 5%（約9萬戶）目標仍遙遠 我要求市府將其列為可追蹤指標，每年公開各區進度 拒絕高房價推離青年，讓市民安居新莊，孩子才有穩定長大的家！",
+        "落實 10% 綠地：給新莊一座森林公園：新北人均綠地僅 0.45 坪，六都墊底 翻轉新莊，必須把握塭仔圳重劃區的契機！ 我主張塭仔圳須落實法定 10%「真實綠地」，拒絕水泥廣場灌水 其中包括保留 26 公頃，打造同等大安森林公園規模的「新莊森林公園」！ 結合生態滯洪與毛孩友善空間，並廣設鄰里小公園，讓市民出門即享舒適綠意！"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/Pugubird/",
+        "https://www.instagram.com/pugubird",
+        "https://www.threads.com/@pugubird",
+        "https://www.youtube.com/@pugubird",
+        "https://line.me/R/ti/p/@akan"
+      ]
+    },
+    {
+      "sourceCandidateKey": "taiwan-forward-2026-chang-yu-fu",
+      "personName": "張佑輔",
+      "candidacyStatus": "party_nominee",
+      "raceType": "city_councilor",
+      "regionName": "新北市",
+      "districtName": "第9選區",
+      "nominationAnnouncedAt": null,
+      "profileUrl": "https://taiwangogo.tw/chang-yu-fu/",
+      "photoUrl": "https://taiwangogo.tw/assets/share/chang-yu-fu.jpg",
+      "education": [
+        "國立成功大學土木工程學系畢業"
+      ],
+      "experience": [
+        "公共服務類",
+        "勞動部諮詢委員",
+        "外籍工作者協會副秘書長",
+        "台灣二手循環促進協會理事長",
+        "台灣農業讚協會理事長",
+        "新店花園新城總幹事",
+        "台灣綠黨中央執行委員",
+        "社會創新類",
+        "蕙一社會企業共同創辦人",
+        "愛樂活社會企業共同創辦人",
+        "洋幫辦非營利社群創辦人",
+        "科技創業類",
+        "FitGlasses視鏡空間共同創辦人",
+        "教育機構天使投資人",
+        "小辣椒魷魚羹餐飲投資人",
+        "社企一起幫天使投資人",
+        "企業經歷",
+        "IBM業務代表",
+        "昇華娛樂董事長特助",
+        "房地產都更推廣師",
+        "演講與倡議",
+        "TED演講講者"
+      ],
+      "platform": [
+        "山坡地安全守護計畫：建立社區邊坡風險地圖，降低災害風險 新店、深坑、石碇、坪林及烏來多屬山坡地聚落，極端氣候下邊坡崩塌與土石災害風險增加 我將推動定期檢測與公開資訊平台，讓居民能即時掌握風險資訊，並爭取中央與地方資源加速危險區域改善工程。",
+        "AI智慧市政透明化：讓市民看得懂預算、監督得到政府 運用AI與數位工具，推動議會質詢、市政預算與工程進度公開化，建立市民容易理解的資訊平台。 讓政府施政不再只是文件與數字，而是人人都能參與監督的公共資訊",
+        "人本交通與通學安全：讓孩子平安上學、長輩安心回家 推動校園周邊交通改善、危險路口檢討及行人安全設施升級 透過在地會勘與居民參與，優先改善事故熱點，打造更安全的步行與通學環境",
+        "社區共好與高齡友善：打造在地照顧網絡，支持長者在地安老 推動社區關懷據點、健康促進課程及數位陪伴服務，協助長輩適應數位生活 結合里辦公處、社區組織及志工力量，建立互助照顧網絡，減輕家庭照顧負擔",
+        "AI教育與青年發展：縮短數位落差，培養未來競爭力 擴大社區AI課程與數位技能培訓，從學生到長輩都能受惠 協助青年接軌AI時代的新工作機會，讓新店成為新北市智慧學習與創新的示範區"
+      ],
+      "socialLinks": [
+        "https://www.facebook.com/twservant",
+        "https://www.instagram.com/baggio89chang",
+        "https://www.threads.com/@baggio89chang",
+        "https://www.youtube.com/@Greenparty89",
+        "https://line.me/R/ti/p/@baggio89"
+      ]
+    }
+  ]
+}

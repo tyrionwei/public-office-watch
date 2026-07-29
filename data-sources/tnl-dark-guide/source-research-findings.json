@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T00:00:00+08:00",
+  "generatedAt": "2026-07-29T20:51:59.077Z",
   "policy": {
     "maxQueriesPerClaim": 1,
     "maxResultsInspected": 2,
@@ -5850,6 +5850,371 @@
           "name": "中國時報",
           "url": "https://www.chinatimes.com/realtimenews/20140828000678-260503",
           "supports": "陳麗娜公公楊振添與丈夫楊敏郎"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-3-7-政治家族-1",
+      "query": "陸淑美 黃韻涵 女兒 國民黨 立委候選人",
+      "outcome": "source_found_manual_review",
+      "notes": "立法院典藏新聞直接確認黃韻涵為陸淑美女兒，並記載其代表國民黨參選立委。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "立法院全球資訊網",
+          "url": "https://www.ly.gov.tw/EngPages/Detail.aspx?nodeid=4989&pid=30798",
+          "supports": "黃韻涵為陸淑美女兒及國民黨立委候選人"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-2-104-政治家族-1",
+      "query": "陸錦生 葉香 母親 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認葉香為陸錦生母親及前議員；該來源未直接確認「2屆」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180710000807-260102",
+          "supports": "葉香為陸錦生母親及前議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-1-政治家族-1",
+      "query": "彭一書 彭成龍 父親 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認彭成龍為彭一書父親及資深議員；該來源未完整確認「5屆」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20180109000650-260107",
+          "supports": "彭成龍為彭一書父親及議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-3-38-政治家族-1",
+      "query": "彭佳芸 鄭金隆 公公 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "華視新聞直接稱鄭金隆為彭佳芸的議員公公；該來源未完整確認「5屆」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "華視新聞",
+          "url": "https://news.cts.com.tw/cts/politics/201807/201807311932668.html",
+          "supports": "鄭金隆為彭佳芸公公及議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-7-5-政治家族-1",
+      "query": "彭俊豪 彭添富 父親 立委 省議員 桃園果菜市場董事長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報確認父子關係；總統府褒揚令確認彭添富曾任縣議員、省議員、立委及桃園果菜市場董事長。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20180116000624-263201",
+          "supports": "彭添富為彭俊豪父親，並曾任省議員與立委"
+        },
+        {
+          "tier": "official",
+          "name": "總統府褒揚令",
+          "url": "https://www.president.gov.tw/File/Doc/7e940413-d367-49a8-a0fa-7bb28b1db839",
+          "supports": "彭添富曾任縣議員、省議員、立委及桃園果菜市場董事長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-7-77-政治家族-1",
+      "query": "彭俊豪 彭添富 父親 立委 省議員 桃園果菜市場董事長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報確認父子關係；總統府褒揚令確認彭添富曾任縣議員、省議員、立委及桃園果菜市場董事長。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20180116000624-263201",
+          "supports": "彭添富為彭俊豪父親，並曾任省議員與立委"
+        },
+        {
+          "tier": "official",
+          "name": "總統府褒揚令",
+          "url": "https://www.president.gov.tw/File/Doc/7e940413-d367-49a8-a0fa-7bb28b1db839",
+          "supports": "彭添富曾任縣議員、省議員、立委及桃園果菜市場董事長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-10-5-政治家族-1",
+      "query": "曾之婕 曾順良 父親 前副議長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認曾之婕為前台南市議會副議長曾順良之女。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20220221000696-260107",
+          "supports": "曾順良為曾之婕父親及前台南市議會副議長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-10-5-政治家族-2",
+      "query": "曾之婕 曾信凱 弟弟 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認曾信凱為曾之婕弟弟，並為台南市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20220221000696-260107",
+          "supports": "曾信凱為曾之婕弟弟及台南市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-7-7-政治家族-1",
+      "query": "曾俊傑 曾長發 父親 七連任 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會選舉公報由曾俊傑本人記載父親曾長發連任七屆、服務三十年。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中選會高雄市第7選舉區選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/05%E9%AB%98%E9%9B%84%E5%B8%82/%E9%AB%98%E9%9B%84%E5%B8%82%E7%AC%AC7%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "曾長發為曾俊傑父親且連任七屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-7-36-政治家族-1",
+      "query": "曾俊傑 曾長發 父親 七連任 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會選舉公報由曾俊傑本人記載父親曾長發連任七屆、服務三十年。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中選會高雄市第7選舉區選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/05%E9%AB%98%E9%9B%84%E5%B8%82/%E9%AB%98%E9%9B%84%E5%B8%82%E7%AC%AC7%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "曾長發為曾俊傑父親且連任七屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-10-93-政治家族-2",
+      "query": "曾信凱 曾培雅 姑姑 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "台南市議會觀測站直接記載曾培雅為曾信凱姑姑及第3屆議員；仍需人工核對暗公報「3屆議員」的計算口徑。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "台南市議會觀測站",
+          "url": "https://tcco.tnsprout.org/3rd/councilor/EBBF7A00/",
+          "supports": "曾培雅為曾信凱姑姑及第3屆台南市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-10-93-政治家族-1",
+      "query": "曾信凱 曾順良 父親 四屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "台南市議會觀測站直接記載曾順良為曾信凱父親及前台南市議員；未直接確認「4屆」任期數。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "台南市議會觀測站",
+          "url": "https://tcco.tnsprout.org/3rd/councilor/EBBF7A00/",
+          "supports": "曾順良為曾信凱父親及前台南市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-10-92-政治家族-1",
+      "query": "曾培雅 曾順良 兄長 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "曾信凱的議會資料同時記載曾順良為父親、曾培雅為姑姑，可確認兩人為手足；未直接確認「兄長」次序及「4屆」任期數。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "台南市議會觀測站",
+          "url": "https://tcco.tnsprout.org/3rd/councilor/EBBF7A00/",
+          "supports": "曾順良與曾培雅為手足，兩人均有議員身分"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-10-3-政治家族-1",
+      "query": "曾培雅 曾順良 兄長 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "曾信凱的議會資料同時記載曾順良為父親、曾培雅為姑姑，可確認兩人為手足；未直接確認「兄長」次序及「4屆」任期數。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "台南市議會觀測站",
+          "url": "https://tcco.tnsprout.org/3rd/councilor/EBBF7A00/",
+          "supports": "曾順良與曾培雅為手足，兩人均有議員身分"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-8-3-政治家族-1",
+      "query": "曾朝榮 莊競程 外甥 立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社直接引述莊競程確認台中市議員曾朝榮是其舅舅，並記載莊競程當選立委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央通訊社",
+          "url": "https://www.cna.com.tw/news/aipl/202001160235.aspx",
+          "supports": "莊競程為曾朝榮外甥及立法委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-8-3-政治家族-2",
+      "query": "曾朝榮 曾朝煌 哥哥 大坑里長",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "三次精確與變體搜尋只能確認曾朝煌曾任大坑里長及兩人曾同場出席，未找到可靠來源直接確認兄弟關係。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-5-3-政治家族-1",
+      "query": "曾煥嘉 曾文振 父親 縣議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "公視新聞直接確認曾文振為曾煥嘉父親及政治人物；中選會公報確認曾煥嘉曾任曾文振服務處主任，但「5屆縣議員」仍需另核任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/210926",
+          "supports": "曾文振為曾煥嘉父親"
+        },
+        {
+          "tier": "official",
+          "name": "中選會新北市第4選舉區選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC4%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "曾煥嘉曾任台北縣議員曾文振服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-4-65-政治家族-1",
+      "query": "曾煥嘉 曾文振 父親 縣議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "公視新聞直接確認曾文振為曾煥嘉父親及政治人物；中選會公報確認曾煥嘉曾任曾文振服務處主任，但「5屆縣議員」仍需另核任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/210926",
+          "supports": "曾文振為曾煥嘉父親"
+        },
+        {
+          "tier": "official",
+          "name": "中選會新北市第4選舉區選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC4%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "曾煥嘉曾任台北縣議員曾文振服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-38-政治家族-1",
+      "query": "曾麗燕 林宏宗 丈夫 前立委",
+      "outcome": "source_found_manual_review",
+      "notes": "年代新聞直接確認曾麗燕丈夫為前立委、宏總建設負責人林宏宗。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "年代新聞",
+          "url": "https://www.eracom.com.tw/EraNews/Home/political/2021-03-19/405201.html",
+          "supports": "林宏宗為曾麗燕丈夫及前立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-5-75-政治家族-1",
+      "query": "游輝宂 游輝廷 堂兄 議員 市民代表",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認游輝廷將議員席次交棒給堂弟游輝宂；仍需人工核對游輝廷「6屆議員、2屆市民代表」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20140918000519-260107",
+          "supports": "游輝廷與游輝宂為堂兄弟，並由游輝宂接棒參選議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-6-6-政治家族-1",
+      "query": "華珮君 張家豪 丈夫 台北市長候選人",
+      "outcome": "source_found_manual_review",
+      "notes": "鏡週刊直接確認張家豪參選2022台北市長，華珮君為其妻並參選市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "鏡週刊",
+          "url": "https://www.mirrormedia.mg/story/20220830edi063",
+          "supports": "張家豪為華珮君丈夫及2022台北市長候選人"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-4-16-政治家族-1",
+      "query": "黃文志 黃石龍 父親 前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄市議會公報直接記載黃文志是黃石龍議員之子；聯合報確認黃石龍為前副議長。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會公報",
+          "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/BulletinDraft/2031/e46cb81f-85ba-4a6f-a24d-5496139b0c55.pdf",
+          "supports": "黃文志為黃石龍議員之子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "聯合新聞網",
+          "url": "https://udn.com/news/story/7327/9033606",
+          "supports": "黃石龍為黃文志父親及前副議長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-4-103-政治家族-1",
+      "query": "黃文志 黃石龍 父親 五屆議員 副議長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "高雄市議會公報與聯合報確認父子關係及黃石龍前副議長身分；未直接確認「5屆議員」任期數。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會公報",
+          "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/BulletinDraft/2031/e46cb81f-85ba-4a6f-a24d-5496139b0c55.pdf",
+          "supports": "黃文志為黃石龍議員之子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "聯合新聞網",
+          "url": "https://udn.com/news/story/7327/9033606",
+          "supports": "黃石龍為黃文志父親及前副議長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-1-78-政治家族-1",
+      "query": "黃永鎮 黃宗源 父親 前立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認黃宗源為黃永鎮父親及前立委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180116000587-260102",
+          "supports": "黃宗源為黃永鎮父親及前立委"
         }
       ]
     }

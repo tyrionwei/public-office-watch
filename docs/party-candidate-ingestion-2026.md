@@ -161,6 +161,9 @@
 ### Phase 4：民眾黨 Chrome 輔助快照流程
 
 - 由使用者在一般 Chrome 正常通過 Cloudflare 檢查後，讀取 2026 選戰專區公開頁面。
+- 原始 105 筆瀏覽器快照永久保存於
+  `data-sources/tpp/2026-election/browser-capture-2026-07-29.json`；可匯入的 64 筆正規化快照保存於
+  `data-sources/tpp/2026-election/normalized-candidates-2026-07-29.json`。
 - 2026-07-29 已取得 105 個不重複候選人頁：64 筆縣市長／縣市議員可對應現有選區，
   40 筆鄉鎮市長、代表、區長或里長先保留於原始快照。
 - 另有 1 筆新竹市議員頁只標示「西區」、未提供第幾選區，先列人工確認，不猜測選區。

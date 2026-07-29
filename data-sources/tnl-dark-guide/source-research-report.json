@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T23:02:46.994Z",
+  "generatedAt": "2026-07-29T23:10:15.082Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -23,8 +23,8 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 704,
-      "manual_review": 1442,
-      "external_search_needed": 2542,
+      "manual_review": 1466,
+      "external_search_needed": 2518,
       "not_found_after_stop_loss": 68
     },
     "categoryCounts": {
@@ -32,8 +32,8 @@
         "people": 881,
         "claims": 2577,
         "autoReviewable": 543,
-        "manualReview": 805,
-        "externalSearchNeeded": 1229,
+        "manualReview": 829,
+        "externalSearchNeeded": 1205,
         "notFoundAfterStopLoss": 0
       },
       "政治家族": {
@@ -39784,10 +39784,36 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"尤榮智\" \"曾任國民黨黨代表\" 台南市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "尤榮智列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tnn-3-3-政治工作-5",
+        "query": "尤榮智 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "尤榮智列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tnn-3-3-政治工作-3",
@@ -41053,10 +41079,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"王正德\" \"國民黨黨代表\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "王正德列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-3-53-政治工作-2",
+        "query": "王正德 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "王正德列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tpe-3-53-政治工作-1",
@@ -45349,10 +45401,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"白珮茹\" \"曾任國民黨黨代表\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "白珮茹列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-10-94-政治工作-2",
+        "query": "白珮茹 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "白珮茹列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-11-4-政治工作-3",
@@ -45380,10 +45458,36 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"白珮茹\" \"曾任國民黨黨代表\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "白珮茹列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-11-4-政治工作-3",
+        "query": "白珮茹 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "白珮茹列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-4-3-政治工作-1",
@@ -46278,10 +46382,36 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"朱珍瑤\" \"國民黨黨代表\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "朱珍瑤列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-3-45-政治工作-3",
+        "query": "朱珍瑤 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "朱珍瑤列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-3-45-政治工作-2",
@@ -49377,10 +49507,36 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"何應明\" \"曾任國民黨黨代表\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "何應明列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-13-4-政治工作-3",
+        "query": "何應明 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "何應明列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-13-4-政治工作-2",
@@ -50676,10 +50832,36 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"吳志剛\" \"曾任國民黨中常委\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "吳志剛列於第十九屆第三任中常委當選名單",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨第十九屆第三任中央常務委員選舉當選名單",
+          "sourceUrl": "https://www.kmt.org.tw/2015/08/blog-post_889.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-5-89-政治工作-2",
+        "query": "吳志剛 國民黨 第19屆 第3任 中常委",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方中常委選舉當選名單直接列有吳志剛。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨第十九屆第三任中央常務委員選舉當選名單",
+            "url": "https://www.kmt.org.tw/2015/08/blog-post_889.html",
+            "supports": "吳志剛列於第十九屆第三任中常委當選名單"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tpe-5-4-政治工作-2",
@@ -55000,10 +55182,36 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"宋立彬\" \"曾任國民黨全國黨代表\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "宋立彬列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-3-4-政治工作-3",
+        "query": "宋立彬 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "宋立彬列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-3-88-政治工作-1",
@@ -55031,10 +55239,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"宋立彬\" \"曾任國民黨黨代表\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "宋立彬列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-3-88-政治工作-1",
+        "query": "宋立彬 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "宋立彬列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-2-6-政治工作-1",
@@ -62794,10 +63028,36 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李雅靜\" \"曾任國民黨中央委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "李雅靜列於第20屆中央委員名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨第20屆中央委員名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=23"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-9-3-政治工作-7",
+        "query": "李雅靜 國民黨 第20屆 中央委員",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方中央委員名冊列有此人，支持曾任中央委員；仍保留人工確認同名身分。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨第20屆中央委員名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=23",
+            "supports": "李雅靜列於第20屆中央委員名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-9-3-政治工作-6",
@@ -62825,10 +63085,36 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李雅靜\" \"曾任國民黨中常委\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方說明全國青工總會長為指定中常委，且李雅靜當選全國青工總會長",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "國民黨第19屆第3任中常委選舉結果",
+          "sourceUrl": "https://www.kmt.org.tw/2015/08/193.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-9-3-政治工作-6",
+        "query": "李雅靜 國民黨 第19屆 中常委 全國青工總會長",
+        "outcome": "source_found_manual_review",
+        "notes": "官方說明全國青工總會長屬指定中常委，並記載李雅靜當選該職；屬職務規則與當選紀錄的合併證據，保留人工確認。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "國民黨第19屆第3任中常委選舉結果",
+            "url": "https://www.kmt.org.tw/2015/08/193.html",
+            "supports": "官方說明全國青工總會長為指定中常委，且李雅靜當選全國青工總會長"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-9-3-政治工作-5",
@@ -62918,10 +63204,36 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李雅靜\" \"曾任國民黨黨代表\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "李雅靜列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-9-3-政治工作-3",
+        "query": "李雅靜 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "李雅靜列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-9-31-政治工作-2",
@@ -62949,10 +63261,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李雅靜\" \"曾任國民黨黨代表、中常委\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "李雅靜列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方說明全國青工總會長為指定中常委，並記載李雅靜當選該職",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "國民黨第19屆第3任中常委選舉結果",
+          "sourceUrl": "https://www.kmt.org.tw/2015/08/193.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-9-31-政治工作-2",
+        "query": "李雅靜 國民黨 黨代表 中常委",
+        "outcome": "source_found_manual_review",
+        "notes": "兩份國民黨官方資料分別支持黨代表與指定中常委身分，仍需人工確認其適用屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "李雅靜列於國民黨黨代表名冊"
+          },
+          {
+            "tier": "official",
+            "name": "國民黨第19屆第3任中常委選舉結果",
+            "url": "https://www.kmt.org.tw/2015/08/193.html",
+            "supports": "官方說明全國青工總會長為指定中常委，並記載李雅靜當選該職"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-2-97-政治工作-1",
@@ -75871,10 +76227,36 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"邱于軒\" \"曾任國民黨黨代表\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "邱于軒列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-11-89-政治工作-1",
+        "query": "邱于軒 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "邱于軒列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-7-12-政治工作-1",
@@ -78635,10 +79017,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"柯貞竹\" \"曾任國民黨中常委\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方人物頁將柯貞竹列為中常委",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨中常委－柯貞竹",
+          "sourceUrl": "https://www1.kmt.org.tw/people.aspx?mid=22&pid=1365"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-10-45-政治工作-1",
+        "query": "柯貞竹 國民黨 中常委",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方人物頁以「中常委」列示柯貞竹，支持曾任中常委，保留人工確認屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨中常委－柯貞竹",
+            "url": "https://www1.kmt.org.tw/people.aspx?mid=22&pid=1365",
+            "supports": "官方人物頁將柯貞竹列為中常委"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-13-21-政治工作-1",
@@ -81026,10 +81434,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"孫健萍\" \"曾任國民黨中央委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "孫健萍列於第20屆中央委員名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨第20屆中央委員名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=23"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-4-83-政治工作-1",
+        "query": "孫健萍 國民黨 第20屆 中央委員",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方中央委員名冊列有此人，支持曾任中央委員；仍保留人工確認同名身分。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨第20屆中央委員名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=23",
+            "supports": "孫健萍列於第20屆中央委員名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-2-6-政治工作-1",
@@ -81686,10 +82120,36 @@
           "candidateNumber": 17
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"徐弘庭\" \"曾任國民黨中央委員\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "徐弘庭列於第21屆中央委員當選名單",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨第21屆中央委員選舉當選名單",
+          "sourceUrl": "https://www.kmt.org.tw/2022/01/21.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tpe-6-17-政治工作-5",
+        "query": "徐弘庭 國民黨 第21屆 中央委員",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方2022年中央委員選舉當選名單列有徐弘庭，時間與身分均可對照。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨第21屆中央委員選舉當選名單",
+            "url": "https://www.kmt.org.tw/2022/01/21.html",
+            "supports": "徐弘庭列於第21屆中央委員當選名單"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tpe-6-114-政治工作-2",
@@ -101467,10 +101927,36 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳若翠\" \"曾任國民黨中央委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳若翠列於第20屆中央委員名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨第20屆中央委員名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=23"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-8-85-政治工作-1",
+        "query": "陳若翠 國民黨 第20屆 中央委員",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方中央委員名冊列有此人，支持曾任中央委員；仍保留人工確認同名身分。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨第20屆中央委員名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=23",
+            "supports": "陳若翠列於第20屆中央委員名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tpe-1-7-政治工作-2",
@@ -122718,10 +123204,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"劉茂羣\" \"曾任黃復興黨部委員、國民黨黨代表\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "名冊以「劉茂群」列於黃復興黨代表；不支持複合敘述中的黨部委員部分",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-3-51-政治工作-2",
+        "query": "劉茂羣 劉茂群 國民黨 黨代表 黃復興",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "官方名冊以異體字「劉茂群」列於黃復興黨代表，只支持黨代表部分；尚未支持「黃復興黨部委員」。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "名冊以「劉茂群」列於黃復興黨代表；不支持複合敘述中的黨部委員部分"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-9-6-政治工作-1",
@@ -128935,10 +129447,36 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"蔣根煌\" \"曾任國民黨中常委\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "蔣根煌列於第21屆第1任中央常務委員當選名單",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨第21屆第1任中常委選舉結果",
+          "sourceUrl": "https://www.kmt.org.tw/2022/03/211-29.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-3-12-政治工作-3",
+        "query": "蔣根煌 國民黨 第21屆 第1任 中常委",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方2022年中常委選舉結果直接列有蔣根煌。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨第21屆第1任中常委選舉結果",
+            "url": "https://www.kmt.org.tw/2022/03/211-29.html",
+            "supports": "蔣根煌列於第21屆第1任中央常務委員當選名單"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-3-12-政治工作-6",
@@ -129778,10 +130316,36 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"鄭安秝\" \"曾任國民黨中央委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "鄭安秝列於第20屆中央委員名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨第20屆中央委員名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=23"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-9-7-政治工作-3",
+        "query": "鄭安秝 國民黨 第20屆 中央委員",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方中央委員名冊列有此人，支持曾任中央委員；仍保留人工確認同名身分。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨第20屆中央委員名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=23",
+            "supports": "鄭安秝列於第20屆中央委員名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-9-84-政治工作-1",
@@ -129809,10 +130373,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"鄭安秝\" \"曾任國民黨中央委員、國民黨青年團高屏總召\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "鄭安秝列於第20屆中央委員名冊；不支持複合敘述中的青年團高屏總召部分",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨第20屆中央委員名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=23"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-9-84-政治工作-1",
+        "query": "鄭安秝 國民黨 中央委員 青年團 高屏總召",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "官方中央委員名冊只支持「中央委員」部分，尚未找到同頁可證實「青年團高屏總召」的官方資料。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨第20屆中央委員名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=23",
+            "supports": "鄭安秝列於第20屆中央委員名冊；不支持複合敘述中的青年團高屏總召部分"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-9-7-政治工作-5",
@@ -129840,10 +130430,36 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"鄭安秝\" \"曾任國民黨全國黨代表\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "鄭安秝列於國民黨黨代表名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨黨代表名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=153"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-9-7-政治工作-5",
+        "query": "鄭安秝 國民黨 黨代表 名冊",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方黨代表名冊列有此人，支持黨代表身分；仍保留人工確認同名與屆期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨黨代表名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=153",
+            "supports": "鄭安秝列於國民黨黨代表名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-9-7-政治工作-4",
@@ -136519,10 +137135,36 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"鍾易仲\" \"曾任國民黨中央委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "鍾易仲列於第20屆中央委員名冊",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨第20屆中央委員名冊",
+          "sourceUrl": "https://www1.kmt.org.tw/page.aspx?mid=23"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-9-4-政治工作-4",
+        "query": "鍾易仲 國民黨 第20屆 中央委員",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方中央委員名冊列有此人，支持曾任中央委員；仍保留人工確認同名身分。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨第20屆中央委員名冊",
+            "url": "https://www1.kmt.org.tw/page.aspx?mid=23",
+            "supports": "鍾易仲列於第20屆中央委員名冊"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-9-4-政治工作-6",

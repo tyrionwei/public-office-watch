@@ -14,6 +14,8 @@
 - `tnl-dark-guide-2018.json`：2018 六都 748 位議員候選人。
 - `tnl-dark-guide-2022.json`：2022 六都 740 位議員候選人。
 - `coverage-report.json`：兩屆資料與本機 Supabase 歷史候選人、2026 目前候選人的對照結果。
+- `family-people-report.json`：政治家族明確姓名與本機人物表的完整比對結果。
+- `family-people-review.csv`：方便人工篩選的政治家族姓名審核表。
 
 ## 重新產生對照報告
 
@@ -21,6 +23,7 @@
 
 ```bash
 node scripts/report-tnl-dark-guide-coverage.mjs
+node scripts/report-tnl-dark-guide-family-people.mjs
 ```
 
 資料與報告驗證：

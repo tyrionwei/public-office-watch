@@ -50,6 +50,18 @@ if (fs.existsSync(coveragePath)) {
   }
 }
 
+const familyReportPath = path.join(dataDir, 'family-people-report.json');
+if (fs.existsSync(familyReportPath)) {
+  const familyReport = JSON.parse(fs.readFileSync(familyReportPath, 'utf8'));
+  const summary = familyReport.summary;
+  if (summary?.familyClaimEntries !== 478 || summary?.claimsWithExplicitName !== 471) {
+    fail('Family people report has unexpected claim counts');
+  }
+  if ((summary.uniqueNamesFound + summary.uniqueNamesAmbiguous + summary.uniqueNamesNotFound) !== 312) {
+    fail('Family people report has unexpected unique-name counts');
+  }
+}
+
 console.log(JSON.stringify({
   datasets: {
     2018: guide2018.candidates.length,
@@ -57,4 +69,5 @@ console.log(JSON.stringify({
     total: guide2018.candidates.length + guide2022.candidates.length,
   },
   coverageReportValidated: fs.existsSync(coveragePath),
+  familyPeopleReportValidated: fs.existsSync(familyReportPath),
 }, null, 2));

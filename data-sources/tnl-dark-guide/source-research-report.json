@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T23:47:40.997Z",
+  "generatedAt": "2026-07-29T23:50:38.467Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -23,8 +23,8 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 704,
-      "manual_review": 1501,
-      "external_search_needed": 2483,
+      "manual_review": 1509,
+      "external_search_needed": 2475,
       "not_found_after_stop_loss": 68
     },
     "categoryCounts": {
@@ -32,8 +32,8 @@
         "people": 881,
         "claims": 2577,
         "autoReviewable": 543,
-        "manualReview": 864,
-        "externalSearchNeeded": 1170,
+        "manualReview": 872,
+        "externalSearchNeeded": 1162,
         "notFoundAfterStopLoss": 0
       },
       "政治家族": {
@@ -41587,10 +41587,54 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"王孝維\" \"曾任民進黨中執委\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第18屆中央執行委員當選名單列有王孝維",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十八屆中執評委暨中常委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/content_print/media/8336"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "新聞稿記載王孝維宣誓遞補中執委",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十七屆第五次中執會新聞稿",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/7736"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-2-30-政治工作-2",
+        "query": "王孝維 民進黨 中執委 當選名單",
+        "outcome": "source_found_manual_review",
+        "notes": "民進黨官方第18屆中執委選舉結果列有王孝維，且2017年中執會新聞記載其宣誓遞補中執委，支持曾任中執委。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民進黨第十八屆中執評委暨中常委選舉結果",
+            "url": "https://www.dpp.org.tw/content_print/media/8336",
+            "supports": "第18屆中央執行委員當選名單列有王孝維"
+          },
+          {
+            "tier": "official",
+            "name": "民進黨第十七屆第五次中執會新聞稿",
+            "url": "https://www.dpp.org.tw/media/contents/7736",
+            "supports": "新聞稿記載王孝維宣誓遞補中執委"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tnn-6-1-政治工作-1",
@@ -59390,10 +59434,36 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李建昌\" \"曾任民進黨中評委\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "中央評議委員當選名單列有李建昌",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十四屆中執評委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/content_print/media/3501"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-2-36-政治工作-2",
+        "query": "李建昌 民進黨 中評委 當選名單",
+        "outcome": "source_found_manual_review",
+        "notes": "民進黨官方第14屆中評委選舉結果列有李建昌，支持曾任中評委。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民進黨第十四屆中執評委選舉結果",
+            "url": "https://www.dpp.org.tw/content_print/media/3501",
+            "supports": "中央評議委員當選名單列有李建昌"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tpe-2-10-政治工作-4",
@@ -70473,10 +70543,54 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"林武忠\" \"曾任民進黨中央執行委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第15屆中央執行委員當選名單列有林武忠",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十五屆中執評委暨中常委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/5001"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第16屆中央執行委員當選名單列有林武忠",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十六屆第一次全代會新聞稿",
+          "sourceUrl": "https://www.dpp.org.tw/content_print/media/5961"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-7-9-政治工作-4",
+        "query": "林武忠 民進黨 中執委 當選名單",
+        "outcome": "source_found_manual_review",
+        "notes": "民進黨官方第15屆及第16屆中執委選舉結果均列有林武忠，支持曾任中央執行委員。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民進黨第十五屆中執評委暨中常委選舉結果",
+            "url": "https://www.dpp.org.tw/media/contents/5001",
+            "supports": "第15屆中央執行委員當選名單列有林武忠"
+          },
+          {
+            "tier": "official",
+            "name": "民進黨第十六屆第一次全代會新聞稿",
+            "url": "https://www.dpp.org.tw/content_print/media/5961",
+            "supports": "第16屆中央執行委員當選名單列有林武忠"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-9-政治工作-2",
@@ -88496,10 +88610,36 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張勝富\" \"曾任民進黨中央執行委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第17屆中央執行委員當選名單列有張勝富",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十七屆中執評委暨中常委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/7586"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-5-7-政治工作-5",
+        "query": "張勝富 民進黨 中執委 當選名單",
+        "outcome": "source_found_manual_review",
+        "notes": "民進黨官方第17屆中執委選舉結果列有張勝富，支持曾任中央執行委員。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民進黨第十七屆中執評委暨中常委選舉結果",
+            "url": "https://www.dpp.org.tw/media/contents/7586",
+            "supports": "第17屆中央執行委員當選名單列有張勝富"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-5-7-政治工作-6",
@@ -98458,10 +98598,54 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳明澤\" \"曾任2屆民進黨中評委\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第16屆中央評議委員當選名單列有陳明澤",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十六屆第一次全代會新聞稿",
+          "sourceUrl": "https://www.dpp.org.tw/content_print/media/5961"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第17屆中央評議委員當選名單列有陳明澤",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十七屆中執評委暨中常委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/7586"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-2-2-政治工作-3",
+        "query": "陳明澤 民進黨 2屆 中評委 當選名單",
+        "outcome": "source_found_manual_review",
+        "notes": "民進黨官方第16屆及第17屆中評委選舉結果均列有陳明澤，直接支持曾任2屆中評委。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民進黨第十六屆第一次全代會新聞稿",
+            "url": "https://www.dpp.org.tw/content_print/media/5961",
+            "supports": "第16屆中央評議委員當選名單列有陳明澤"
+          },
+          {
+            "tier": "official",
+            "name": "民進黨第十七屆中執評委暨中常委選舉結果",
+            "url": "https://www.dpp.org.tw/media/contents/7586",
+            "supports": "第17屆中央評議委員當選名單列有陳明澤"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-2-58-政治工作-1",
@@ -98533,10 +98717,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳明澤\" \"曾任民進黨中評委\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第16屆中央評議委員當選名單列有陳明澤",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十六屆第一次全代會新聞稿",
+          "sourceUrl": "https://www.dpp.org.tw/content_print/media/5961"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第17屆中央評議委員當選名單列有陳明澤",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十七屆中執評委暨中常委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/7586"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-2-58-政治工作-2",
+        "query": "陳明澤 民進黨 中評委 當選名單",
+        "outcome": "source_found_manual_review",
+        "notes": "民進黨官方第16屆及第17屆中評委選舉結果均列有陳明澤，支持曾任中評委。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民進黨第十六屆第一次全代會新聞稿",
+            "url": "https://www.dpp.org.tw/content_print/media/5961",
+            "supports": "第16屆中央評議委員當選名單列有陳明澤"
+          },
+          {
+            "tier": "official",
+            "name": "民進黨第十七屆中執評委暨中常委選舉結果",
+            "url": "https://www.dpp.org.tw/media/contents/7586",
+            "supports": "第17屆中央評議委員當選名單列有陳明澤"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-2-2-政治工作-4",
@@ -113755,10 +113983,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃俊哲\" \"曾任民進黨中執委、中評委\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第15屆中央評議委員當選名單列有黃俊哲",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十五屆中執評委暨中常委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/5001"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第17屆中央執行委員當選名單列有黃俊哲",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十七屆中執評委暨中常委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/7586"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-4-55-政治工作-2",
+        "query": "黃俊哲 民進黨 中執委 中評委 當選名單",
+        "outcome": "source_found_manual_review",
+        "notes": "民進黨官方第15屆中評委與第17屆中執委選舉結果均列有黃俊哲，支持曾任中評委及中執委。站內另有同名 canonical person，關係到人物合併時仍需身分審核。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民進黨第十五屆中執評委暨中常委選舉結果",
+            "url": "https://www.dpp.org.tw/media/contents/5001",
+            "supports": "第15屆中央評議委員當選名單列有黃俊哲"
+          },
+          {
+            "tier": "official",
+            "name": "民進黨第十七屆中執評委暨中常委選舉結果",
+            "url": "https://www.dpp.org.tw/media/contents/7586",
+            "supports": "第17屆中央執行委員當選名單列有黃俊哲"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-5-16-政治工作-3",
@@ -113786,10 +114058,54 @@
           "candidateNumber": 16
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃俊哲\" \"曾任民進黨中執委、中評委\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第15屆中央評議委員當選名單列有黃俊哲",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十五屆中執評委暨中常委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/5001"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "第17屆中央執行委員當選名單列有黃俊哲",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民進黨第十七屆中執評委暨中常委選舉結果",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/7586"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-5-16-政治工作-3",
+        "query": "黃俊哲 民進黨 中執委 中評委 當選名單",
+        "outcome": "source_found_manual_review",
+        "notes": "民進黨官方第15屆中評委與第17屆中執委選舉結果均列有黃俊哲，支持曾任中評委及中執委。此研究列目前連到另一筆同名 canonical person，需在人物合併階段確認。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民進黨第十五屆中執評委暨中常委選舉結果",
+            "url": "https://www.dpp.org.tw/media/contents/5001",
+            "supports": "第15屆中央評議委員當選名單列有黃俊哲"
+          },
+          {
+            "tier": "official",
+            "name": "民進黨第十七屆中執評委暨中常委選舉結果",
+            "url": "https://www.dpp.org.tw/media/contents/7586",
+            "supports": "第17屆中央執行委員當選名單列有黃俊哲"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tnn-5-38-政治工作-1",

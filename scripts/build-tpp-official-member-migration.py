@@ -29,7 +29,11 @@ MANUAL_MATCHES = {
     "繆宗翰": "b4595907-451e-46fb-8e78-7e50863dfbe9",
 }
 
-UNRESOLVED_NAMES = {"李偉華", "陳永祥"}
+REVIEWED_NEW_PERSON_IDS = {
+    "李偉華": "afd90c3a-4a5e-4eab-829b-63223445dbb3",
+}
+
+UNRESOLVED_NAMES = {"陳永祥"}
 
 NEW_PERSON_NAMES = {
     "余志修", "吳士廉", "吳皇昇", "李彥慶", "李頂立", "李嘉雯",
@@ -159,7 +163,12 @@ def build_seed() -> dict[str, object]:
     profiles: list[dict[str, object]] = []
     for item in report["matches"]:
         name = item["name"]
-        if name in NEW_PERSON_NAMES:
+        if name in REVIEWED_NEW_PERSON_IDS:
+            person_id = REVIEWED_NEW_PERSON_IDS[name]
+            match_method = "official_current_roster_reviewed_new_person"
+            score = 100
+            create_person = True
+        elif name in NEW_PERSON_NAMES:
             person_id = stable_uuid(name)
             match_method = "official_current_roster_new_person"
             score = 100

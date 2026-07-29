@@ -1,0 +1,26 @@
+{
+  "reviewedAt": "2026-07-30",
+  "sourcePersonKey": "official-site:tpp:current:16ecc7b88ee3a632",
+  "sourceName": "台灣民眾黨：現任黨公職",
+  "name": "李偉華",
+  "decision": "create_new_person",
+  "personId": "afd90c3a-4a5e-4eab-829b-63223445dbb3",
+  "party": "台灣民眾黨",
+  "position": "中央評議委員會主任委員",
+  "reason": "官方黨職經歷與宜蘭背景指向另一位政治人物，且與兩位基隆同名人物的選舉經歷及生日不同。",
+  "rejectedCanonicalPeople": [
+    {
+      "personId": "6ee090f6-a90f-4fce-92cc-103af1d1f894",
+      "context": "2018、2022 基隆市第5選舉區市議員候選人；生日 1959-09-08"
+    },
+    {
+      "personId": "adbe0bed-05a9-4aca-9ce5-8678aac3eacc",
+      "context": "2022 基隆市信義區東光里里長候選人；生日 1973-01-26"
+    }
+  ],
+  "supportingContext": [
+    "官方資料列為台灣民眾黨第三、四屆中央評議委員會主任委員",
+    "官方資料包含中國政法大學法學博士及多項宜蘭社團經歷",
+    "既有 VoteTW 原始資料記錄另一名宜蘭背景、生日 1960-07-18 的李偉華，與兩位基隆同名者不符"
+  ]
+}

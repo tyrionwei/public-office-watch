@@ -354,8 +354,8 @@
     },
     {
       "source_person_key": "official-site:tpp:current:16ecc7b88ee3a632",
-      "person_id": null,
-      "create_person": false,
+      "person_id": "afd90c3a-4a5e-4eab-829b-63223445dbb3",
+      "create_person": true,
       "name": "李偉華",
       "position": "中央評議委員會主任委員",
       "categories": [
@@ -386,8 +386,8 @@
         "https://www.tpp.org.tw/member/3"
       ],
       "source_url": "https://www.tpp.org.tw/member/3",
-      "match_method": "needs_manual_identity_review",
-      "match_score": 0
+      "match_method": "official_current_roster_reviewed_new_person",
+      "match_score": 100
     },
     {
       "source_person_key": "official-site:tpp:current:753089b29f6f022d",

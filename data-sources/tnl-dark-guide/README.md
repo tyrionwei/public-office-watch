@@ -16,6 +16,9 @@
 - `coverage-report.json`：兩屆資料與本機 Supabase 歷史候選人、2026 目前候選人的對照結果。
 - `family-people-report.json`：政治家族明確姓名與本機人物表的完整比對結果。
 - `family-people-review.csv`：方便人工篩選的政治家族姓名審核表。
+- `source-research-report.json`：逐項線索、既有證據、來源層級與查核狀態的完整研究報告。
+- `source-research-review.csv`：可依人物、類別與查核狀態篩選的人工審核表。
+- `source-research-summary.md`：查核佇列總量、分類統計與停損規則摘要。
 
 ## 重新產生對照報告
 
@@ -24,6 +27,7 @@
 ```bash
 node scripts/report-tnl-dark-guide-coverage.mjs
 node scripts/report-tnl-dark-guide-family-people.mjs
+node scripts/build-tnl-dark-guide-source-research.mjs
 ```
 
 資料與報告驗證：

@@ -1,0 +1,3685 @@
+{
+  "generatedAt": "2026-07-30T00:00:00+08:00",
+  "policy": {
+    "maxQueriesPerClaim": 1,
+    "maxResultsInspected": 2,
+    "legalClaimsAlwaysRequireManualReview": true
+  },
+  "findings": [
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-2-14-涉案紀錄-1",
+      "query": "方一峰 樁腳 買票 當選無效 判刑6個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果未找到可直接對應此人與此案的獨立可靠來源；同名的較新議長選舉案不是同一事件。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-4-38-涉案紀錄-1",
+      "query": "王朝坤 農會 選舉 賄選 法院",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社報導可確認曾因農會法交付財物罪影響候選資格；須人工核對暗公報所述的2018年案件階段。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/202210170291.aspx",
+          "supports": "曾違反農會法交付財物罪並影響候選資格"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-17-37-涉案紀錄-1",
+      "query": "朱元宏 詐欺 二審 3年10個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到維基百科等彙整頁，未找到官方或可信獨立報導。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-1-9-涉案紀錄-1",
+      "query": "朱信強 賄選 判刑9個月 當選無效",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體報導確認當選無效定讞及樁腳買票脈絡，但刑期仍需另找判決核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20120622001615-260107",
+          "supports": "朱信強因樁腳買票案遭判當選無效定讞"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-7-41-涉案紀錄-1",
+      "query": "何文海 樁腳 買票 二審 判刑 3個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果只有轉載暗公報內容的頁面，未形成獨立佐證。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-2-48-涉案紀錄-1",
+      "query": "何淑峯 詐領補助款 二審 判刑6年",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到維基百科等彙整頁；未找到可直接核對當時二審內容的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-8-53-涉案紀錄-1",
+      "query": "吳益政 詐領助理費 登載不實 4個月",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社報導確認使公務員登載不實罪及刑期，但也記載當事人對『詐領』用語的反駁，公開時不可直接沿用暗公報標籤。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/202008060398.aspx",
+          "supports": "法院認定使公務員登載不實罪，原判4月並減為2月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-3-21-涉案紀錄-1",
+      "query": "吳通龍 貪污 起訴 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "臺南地院新聞稿可確認案件與一審判決內容；暗公報的『法院審理中』是2018年的歷史狀態，公開前應更新案件進度。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺灣臺南地方法院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=542544",
+          "supports": "107年度訴字第667號案件、一審事實與判決"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-11-涉案紀錄-1",
+      "query": "朱挺玗 當選無效 定讞 高雄 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會會議紀錄與公視報導均可確認當選無效確定；公開前仍應分清民事當選無效與刑事責任。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會",
+          "url": "https://web.cec.gov.tw/api/file/cf582128-072d-4545-b6fc-cf52bd3ee4d7.pdf",
+          "supports": "高雄市議員朱挺玗當選無效確定"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/82609",
+          "supports": "高等法院二審判決當選無效的案件脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-5-36-涉案紀錄-1",
+      "query": "李文俊 農會賄選 判刑7個月 台南",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果被較新的臺南正副議長案干擾，未找到暗公報所指農會賄選案的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-5-34-涉案紀錄-1",
+      "query": "李偉智 賄選 法院 台南 議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "未找到可直接對應此人與暗公報敘述的可靠案件來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-6-100-涉案紀錄-1",
+      "query": "李喬如 使公務員登載不實 1年10個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "未找到官方或可信媒體可核對該刑期。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-1-61-涉案紀錄-1",
+      "query": "李曉鐘 議長賄選 判刑一年 定讞",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社可確認因桃園縣議長選舉接受招待出國而判刑一年、緩刑三年定讞。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aloc/202212250088.aspx",
+          "supports": "議長選舉案判刑一年、緩刑三年定讞"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-4-50-涉案紀錄-1",
+      "query": "周勝考 貪污 法院 審理 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "臺北地院2017年羈押新聞稿可確認當時案件進入司法程序；另有後續一審結果，公開時必須更新，不可只寫法院審理中。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺灣臺北地方法院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=272920",
+          "supports": "106年度聲羈字第171號貪污治罪條例等案件"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/202210280293.aspx",
+          "supports": "2022年一審涉貪部分判刑10年，尚非定讞"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-2-30-涉案紀錄-1",
+      "query": "林正峰 議長賄選 二審 判一年",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果多為同名林正二或林正峰其他案件，無法可靠對應暗公報所述議長賄選案。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-3-40-涉案紀錄-1",
+      "query": "林汝洲 樁腳買票 一審 1年10個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "未找到可獨立佐證的官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-55-涉案紀錄-1",
+      "query": "林宛蓉 使公務員登載不實 6個月 助理費",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "未找到可直接對應此人的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-46-涉案紀錄-1",
+      "query": "林明正 國家安全法 北檢 起訴 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社可確認2018年依國安法起訴；案件其後已有無罪判決，公開時需呈現最新階段。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/201812260135.aspx",
+          "supports": "2018年林明正與其他被告遭依國安法起訴"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-5-20-涉案紀錄-1",
+      "query": "林芳如 議長賄選 亮票 判5個月",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "可信媒體報導刑期為3個月、緩刑2年，與暗公報所列5個月不一致，不能自動採用。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20120224000464-260107",
+          "supports": "議長亮票案判刑3月、緩刑2年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-1-55-涉案紀錄-1",
+      "query": "林政賢 當選無效 定讞 桃園 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會會議紀錄明確記載高等法院民事判決當選無效確定。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會",
+          "url": "https://web.cec.gov.tw/api/file/3fd95b21-50bc-4013-b0c2-02bb615ac96e.pdf",
+          "supports": "林政賢違反選罷法案件，當選無效確定"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-12-涉案紀錄-1",
+      "query": "林瑞圖 銀行 違法超貸 偽造文書 判5個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到維基百科等彙整頁，未找到足以核對刑期的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-11-52-涉案紀錄-1",
+      "query": "邱佳亮 詐領助理費 12年6個月 定讞",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社可確認詐領助理補助費等案判刑12年6月定讞。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/202011110303.aspx",
+          "supports": "判刑12年6月、罰金與褫奪公權，最高法院駁回定讞"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-1-60-涉案紀錄-1",
+      "query": "邱德順 議長選舉 瀆職 判刑8個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "未找到可直接核對案件與刑期的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-8-46-涉案紀錄-1",
+      "query": "金中玉 收受賄賂 二審 判刑5年8月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "未找到可直接核對暗公報所述二審刑期的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-5-47-涉案紀錄-1",
+      "query": "金瑞龍 詐領活動費 更二審 6個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "未找到官方或可信媒體可直接核對更二審刑期。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-10-涉案紀錄-1",
+      "query": "侯漢廷 國家安全法 北檢 起訴 2018",
+      "outcome": "source_found_requires_update",
+      "notes": "中央社確認2018年起訴，但其後最高法院駁回檢方上訴、無罪確定；公開時不能停留在起訴狀態。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/201812260135.aspx",
+          "supports": "2018年依國家安全法起訴"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20220806000430-260106",
+          "supports": "2022年最高法院駁回上訴，侯漢廷等人無罪確定"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-12-46-涉案紀錄-1",
+      "query": "俄鄧 殷艾 貪污 3年8個月 經建考察費",
+      "outcome": "source_found_requires_update",
+      "notes": "可信媒體與最高法院新聞稿均確認一審3年8月；二審改判2年、緩刑5年並經最高法院駁回上訴定讞。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "最高法院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=494586",
+          "supports": "108年度台上字第2051號考察費案定讞事實"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20190410000694-263209",
+          "supports": "一審3年8月、二審改判2年緩刑5年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-3-5-涉案紀錄-2",
+      "query": "段樹文 傷害致死 殺人未遂 軍法搶劫 減刑18年",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到維基百科或轉載候選人前科專案內容，未找到可靠來源核對完整罪名與刑期。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-3-5-涉案紀錄-3",
+      "query": "段樹文 偽造文書 5月 藏匿人犯 3月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "未找到可靠來源核對兩項確定判決。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-3-5-涉案紀錄-1",
+      "query": "段樹文 十大槍擊要犯",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS與民視均報導段樹文曾列十大槍擊要犯，但未提供完整裁判資料。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS",
+          "url": "https://news.tvbs.com.tw/local/79766",
+          "supports": "曾被列為十大槍擊要犯"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-3-44-涉案紀錄-1",
+      "query": "段樹文 殺人 無期徒刑 行動自由 1年2個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "可靠媒體只概述曾涉重大刑案，未找到可核對兩段刑期的判決或官方資料。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-15-4-涉案紀錄-1",
+      "query": "唐惠美 貪污 一審 3年8個月 考察費",
+      "outcome": "source_found_requires_update",
+      "notes": "最高法院新聞稿與中央社確認一審3年8月，二審改判2年、緩刑5年並定讞。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "最高法院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=494586",
+          "supports": "108年度台上字第2051號考察費案定讞事實"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/201907310238.aspx",
+          "supports": "一審3年8月、二審2年緩刑5年且定讞"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-6-42-涉案紀錄-1",
+      "query": "唐儀靜 過失致死 8個月 緩刑4年",
+      "outcome": "source_found_manual_review",
+      "notes": "自由時報選舉專題可確認一審與二審緩刑內容，但仍應補判決或法院資料。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2018/news/TainanOverview/breakingnews/2492572",
+          "supports": "一審過失致死8月、二審緩刑4年及保護管束"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-7-49-涉案紀錄-1",
+      "query": "高敏慧 詐領補助款 二審 判刑6年",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "中央社記載補助款案最終判刑5年定讞，與暗公報的二審6年不一致，須以裁判階段重新整理。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/202401310312.aspx",
+          "supports": "補助款案判刑5年定讞，另案助理費貪污部分無罪"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-7-62-涉案紀錄-1",
+      "query": "康裕成 使公務員登載不實 4個月 助理費",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄高分院新聞稿可確認103年度上訴字第715號判刑4月。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺灣高等法院高雄分院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=180824",
+          "supports": "使公務員登載不實罪判刑4月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-2-51-涉案紀錄-1",
+      "query": "張志宏 槍砲彈藥刀械管制條例 已出獄 議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果有大量同名案件，無法以選區與人物脈絡可靠對應。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-2-56-涉案紀錄-1",
+      "query": "張晉婷 樁腳 買票 判刑4個月 當選無效",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "中央社確認當選無效確定與後續二審刑事判刑4年6月，和暗公報的4個月不一致。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/202001160124.aspx",
+          "supports": "當選無效確定；刑事二審判刑4年6月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-4-58-涉案紀錄-1",
+      "query": "張桂綿 樁腳 買票 1年6個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "未找到可直接對應此人的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-5-24-涉案紀錄-1",
+      "query": "張勝富 走路工 當選無效 定讞 高雄",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體可確認走路工爭議與民事當選無效定讞，刑事是否起訴應分開呈現。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞",
+          "url": "https://www.youtube.com/watch?v=2PkrU82O4pQ",
+          "supports": "走路工案判決當選無效定讞"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2012-08-13/28211",
+          "supports": "一審當選無效及案件脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-10-54-涉案紀錄-1",
+      "query": "張肇良 貪污 法院 審理 桃園 議員",
+      "outcome": "source_found_requires_update",
+      "notes": "2017年助理費案起訴可確認暗公報當時狀態；2020年二審認定不構成貪污罪，改以登載不實等罪判刑，須更新。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20170516000583-260107",
+          "supports": "2017年涉助理費案依貪污罪嫌起訴"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/202008050108.aspx",
+          "supports": "二審認定貪污罪不成立，另罪判刑2年10月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-8-66-涉案紀錄-1",
+      "query": "許崑源 使公務員登載不實 1年 助理費",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄高分院新聞稿可確認103年度上訴字第715號判刑1年。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺灣高等法院高雄分院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=180824",
+          "supports": "使公務員登載不實罪判刑1年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-5-49-涉案紀錄-1",
+      "query": "許慧玉 幽靈人口 妨害投票 5個月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "找到的彙整頁實際寫的是胞妹一審判刑5個月，無法據此認定許慧玉本人遭判刑。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-6-43-涉案紀錄-1",
+      "query": "郭清華 過失傷害 傷害 判刑4個月 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社確認起訴；後續媒體報導一審判刑4月，仍需人工核對判決與罪名。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aloc/201612230160.aspx",
+          "supports": "議會推擠傷人案依過失傷害罪起訴"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報（Yahoo轉載）",
+          "url": "https://tw.news.yahoo.com/%E6%AF%86%E5%82%B7%E6%B4%AA%E7%8E%89%E9%B3%B3-%E9%83%AD%E6%B8%85%E8%8F%AF%E5%88%A4%E5%88%91-%E6%9C%88-140000012.html",
+          "supports": "一審依過失傷害等罪判刑4月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-2-58-涉案紀錄-1",
+      "query": "陳明澤 開賭場 簡易判決4個月 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社可確認賭場案移送與交保，但搜尋未找到暗公報所列簡易判決4月；只能視為部分佐證。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/firstnews/201608310368.aspx",
+          "supports": "涉嫌提供場所聚賭，移送後10萬元交保"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-14-涉案紀錄-1",
+      "query": "陳政忠 證交法 更二審 5年",
+      "outcome": "source_found_requires_update",
+      "notes": "司法院資料可確認案件後續已於2024年定讞；暗公報記載的是2018年前的更二審狀態，公開前必須改寫為分審級時間線。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "司法院",
+          "url": "https://www.judicial.gov.tw/tw/cp-1888-1128011-3f274-1.html",
+          "supports": "最高法院2024年駁回上訴，相關證交法罪刑定讞"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/202408060018.aspx",
+          "supports": "案件最終審結果與刑度脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-6-47-涉案紀錄-1",
+      "query": "陳美雅 助理費 登載不實 1年",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄高分院新聞稿直接列出陳美雅刑度；法律類仍需人工確認敘述方式。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺灣高等法院高雄分院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=180824",
+          "supports": "使公務員登載不實罪判刑1年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-14-涉案紀錄-1",
+      "query": "陳致中 偽證 洗錢 定讞",
+      "outcome": "source_found_requires_update",
+      "notes": "暗公報所稱洗錢案審理中已過時；中央社報導2023年偽證與洗錢案均已定讞，應改為完整時間線。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/202306140055.aspx",
+          "supports": "偽證與洗錢案件均定讞，合併執行1年2月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-5-96-涉案紀錄-1",
+      "query": "陳清茂 恐嚇取財 7月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "一次精確搜尋與前兩個相關結果未找到可獨立核對此人、罪名及刑度的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-8-50-涉案紀錄-1",
+      "query": "陳萬得 恐嚇 建商 10個月",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體報導可確認一審10月，仍需人工核對後續審級與避免將指控寫成最終定讞。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20121025000875-260106",
+          "supports": "恐嚇建商案一審判刑10月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-5-54-涉案紀錄-1",
+      "query": "陳錦錠 樁腳 買票 有罪 定讞",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果僅能指向樁腳有罪，且彙整資料另稱陳錦錠本人因證據不足未起訴；不可把樁腳責任直接歸於候選人。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-56-涉案紀錄-1",
+      "query": "陳麗娜 議長 亮票 一審 5月",
+      "outcome": "source_found_manual_review",
+      "notes": "公視可確認早年亮票案與一審5月的歷史背景；此類案件後續法律見解有變化，需人工以審級時間線呈現。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/615604",
+          "supports": "2010年議長選舉亮票案一審判刑5月的案件背景"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-7-61-涉案紀錄-1",
+      "query": "童燕珍 助理費 登載不實 1年4月",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄高分院新聞稿直接列出童燕珍刑度；法律類仍需人工確認敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺灣高等法院高雄分院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=180824",
+          "supports": "使公務員登載不實罪判刑1年4月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-15-39-涉案紀錄-1",
+      "query": "黃仁 選罷法 判刑 1年",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會文件與媒體資料可交叉確認判刑1年及候選資格爭議，法律類仍需人工確認。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會",
+          "url": "https://web.cec.gov.tw/api/file/efa8c349-2409-4665-a0a8-9b82b640f7d7.pdf",
+          "supports": "候選資格審查所載選罷法判刑資料"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20140221005005-260402",
+          "supports": "違反選罷法判刑1年確定及相關資格脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-4-55-涉案紀錄-1",
+      "query": "黃俊哲 樁腳 買票 有罪 定讞",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體報導可確認樁腳買票與當選無效定讞；候選人與樁腳責任必須分開描述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20121004000401-260107",
+          "supports": "樁腳買票案件及黃俊哲當選無效定讞"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-7-48-涉案紀錄-1",
+      "query": "黃柏霖 助理費 登載不實 10月",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄高分院新聞稿直接列出黃柏霖刑度。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺灣高等法院高雄分院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=180824",
+          "supports": "使公務員登載不實罪判刑10月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-7-60-涉案紀錄-1",
+      "query": "黃淑美 助理費 登載不實 10月",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄高分院新聞稿直接列出黃淑美刑度。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺灣高等法院高雄分院",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=180824",
+          "supports": "使公務員登載不實罪判刑10月"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-8-35-涉案紀錄-1",
+      "query": "黃紹庭 雙重國籍 解職 2009 2015",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "可確認2009年因雙重國籍遭撤銷當選；本輪未找到足以獨立確認2015年已無雙重國籍的同等強度來源。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/128200",
+          "supports": "2009年因雙重國籍遭撤銷議員當選資格"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會",
+          "url": "https://web.cec.gov.tw/api/file/07d28a0f-5b1a-408a-b557-60576d63096e.pdf",
+          "supports": "撤銷當選相關會議紀錄"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-1-56-涉案紀錄-1",
+      "query": "黃景熙 當選無效 定讞",
+      "outcome": "source_found_manual_review",
+      "notes": "地方新聞可確認當選無效確定；來源層級較弱，仍需人工決定是否再補法院原始資料。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自立晚報",
+          "url": "https://www.idn.com.tw/news/news_content.aspx?artid=20071201ea001&catdid=0&catid=5&catsid=3",
+          "supports": "當選無效確定"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-9-33-涉案紀錄-1",
+      "query": "楊見福 樁腳 買票 當選無效 確定",
+      "outcome": "source_found_manual_review",
+      "notes": "司法院新聞稿與媒體可交叉確認樁腳買票及當選無效確定；候選人與樁腳責任須分述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "司法院法學資料檢索系統",
+          "url": "https://jirs.judicial.gov.tw/GNNWS/NNWSS002.asp?id=209432",
+          "supports": "當選無效訴訟確定"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20151208004994-260407",
+          "supports": "樁腳買票與當選無效案件脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-79-涉案紀錄-1",
+      "query": "葉海瑞 登載不實 二審 1年4月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "精確搜尋未找到可直接核對同一人、罪名、審級及刑度的官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-4-31-涉案紀錄-1",
+      "query": "廖裕德 樁腳 買票 當選無效 確定",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS報導可確認樁腳買票與當選無效確定；須避免將樁腳刑責直接寫成候選人刑責。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/local/660018",
+          "supports": "樁腳買票導致當選無效確定"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-8-59-涉案紀錄-1",
+      "query": "劉邦鉉 樁腳 買票 一審 6月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果只有暗公報內容的轉載或彙整，沒有獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-3-51-涉案紀錄-1",
+      "query": "劉茂群 投票行賄 助理 羈押 25萬交保",
+      "outcome": "source_found_requires_update",
+      "notes": "中央社可確認2018年助理羈押與候選人25萬元交保；後續刑事與當選效力結果應另按審級更新，不能停在偵查階段。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aloc/201811010253.aspx",
+          "supports": "助理遭羈押、劉茂群25萬元交保的偵查階段事實"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-4-41-涉案紀錄-1",
+      "query": "劉勝全 農會 賄選 3月 定讞",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體報導可確認判刑3月、緩刑5年；仍需人工確認暗公報的「定讞」用語。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20091129000284-260107",
+          "supports": "農會選舉案判刑3月、緩刑5年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-1-10-涉案紀錄-1",
+      "query": "劉馨正 貪污 一審 12年6月",
+      "outcome": "source_found_requires_update",
+      "notes": "暗公報記載的一審12年6月可由後續資料回溯確認，但案件後來改判12年並定讞，應以時間線更新。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "法務部行政執行署高雄分署",
+          "url": "https://www.iakhs.nat.gov.tw/open/Articles?a=15132",
+          "supports": "高院判刑12年，最高法院駁回上訴定讞；同時說明一審12年6月的前階段"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-7-57-涉案紀錄-1",
+      "query": "歐金獅 樁腳 買票 二審 9月",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報可確認該次九合一選舉案一審9月；暗公報寫二審，審級可能不一致，需人工核對判決。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20150613000613-260107",
+          "supports": "預備買票案判刑9月、褫奪公權1年"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/284653",
+          "supports": "案件偵查階段與樁腳脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-12-53-涉案紀錄-1",
+      "query": "歐炳辰 圖利 廠商 更一審 6年",
+      "outcome": "source_found_requires_update",
+      "notes": "媒體可確認更一審6年，且2019年最高法院駁回上訴定讞；公開時應補入最終結果。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20190822003305-263201",
+          "supports": "更一審依圖利罪判刑6年，最高法院駁回上訴定讞"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-3-53-涉案紀錄-1",
+      "query": "蔡明堂 樁腳 買票 一審 1年",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果只有議員好好看與暗公報衍生彙整，未找到獨立官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-1-52-涉案紀錄-1",
+      "query": "蔡錦賢 預備行賄 二審 7月",
+      "outcome": "source_found_manual_review",
+      "notes": "司法院資料直接確認預備行賄罪判刑7月及後續行刑權時效、候選資格爭議。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "司法院",
+          "url": "https://www.judicial.gov.tw/tw/dl-85182-9c8ab68d90ae4c88bf4568762d3008a3.html",
+          "supports": "預備行賄罪判刑7月及行刑權時效脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-5-12-涉案紀錄-1",
+      "query": "應曉薇 2014 政治獻金 裁罰 20萬",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社可確認違法收受22萬元、監察院裁罰20萬元並沒入；屬行政裁罰，不應描述成刑事有罪。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/asoc/201801240341.aspx",
+          "supports": "2014選舉期間違法收受政治獻金，遭裁罰20萬元並沒入22萬元"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-2-15-涉案紀錄-1",
+      "query": "謝財旺 樁腳 買票 一審 6月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "精確搜尋未找到可獨立核對樁腳身分、案件與刑度的官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-8-66-涉案紀錄-1",
+      "query": "謝龍介 幽靈人口 助理 二審 4月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "找到的是幽靈人口制度的一般司法資料，未找到可直接對應謝龍介助理與二審4月刑度的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-1-45-涉案紀錄-1",
+      "query": "鍾盛有 樁腳 買票 一審 1年8月 4月",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果僅有議員好好看與暗公報衍生彙整，未找到獨立官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-12-17-涉案紀錄-1",
+      "query": "寶杜巴燕 Bawtu Payen 樁腳 買票 一審 有罪",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "精確搜尋未找到能確認同一人、樁腳關係與一審結果的獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-1-57-涉案紀錄-1",
+      "query": "蘇家明 兼任 私人公司 董事 監察院 彈劾",
+      "outcome": "source_found_manual_review",
+      "notes": "監察院新聞稿直接確認桃園市長任內兼任多家私人公司董事及持股逾10%，並於2011年通過彈劾。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "監察院",
+          "url": "https://www.cy.gov.tw/News_Content.aspx?n=124&s=5607&sms=8912",
+          "supports": "違法兼任私人公司董事及持股，監察院通過彈劾"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-2-3-政治家族-1",
+      "query": "尤碧鈴 尤世景 父親 議員 228",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報與地方新聞可確認尤世景是尤碧鈴父親、曾任縣議員且為二二八受難者；本輪未獨立確認9屆縣議員及2屆鎮民代表的精確屆數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20200228001492-260407",
+          "supports": "尤世景為尤碧鈴父親及二二八受難者"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "台灣生活新聞",
+          "url": "https://news.st-media.com.tw/news/35532",
+          "supports": "尤世景為已故前台中縣議員及尤碧鈴父親"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-2-7-政治家族-1",
+      "query": "尤碧鈴 尤世景 父親 議員 228",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報與地方新聞可確認尤世景是尤碧鈴父親、曾任縣議員且為二二八受難者；本輪未獨立確認9屆縣議員及2屆鎮民代表的精確屆數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20200228001492-260407",
+          "supports": "尤世景為尤碧鈴父親及二二八受難者"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "台灣生活新聞",
+          "url": "https://news.st-media.com.tw/news/35532",
+          "supports": "尤世景為已故前台中縣議員及尤碧鈴父親"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-2-7-政治家族-1",
+      "query": "方一峰 方隆盛 父親 議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到方一峰本人議會頁面，未找到可獨立確認方隆盛為父親及5屆議員的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-2-14-政治家族-1",
+      "query": "方一峰 方隆盛 父親 議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到方一峰本人議會頁面，未找到可獨立確認方隆盛為父親及5屆議員的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-2-4-政治家族-1",
+      "query": "牛煦庭 牛廉 父親 桃園縣議會 秘書 新黨",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "Newtalk報導可確認牛廉是牛煦庭父親及新黨創黨元老；桃園縣議會秘書、呂玉玲服務處主任等完整職歷仍缺同等強度獨立來源。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk（Yahoo轉載）",
+          "url": "https://tw.news.yahoo.com/%E6%96%B0%E7%A7%91%E7%AB%8B%E5%A7%94%E5%A0%B1%E5%88%B0-%E6%B1%82%E5%AD%B8%E5%B0%B1%E6%BA%96%E5%82%99%E5%A5%BD%E5%BE%9E%E6%94%BF-%E7%89%9B%E7%85%A6%E5%BA%AD%E8%A6%81%E7%95%B6%E7%AC%AC-%E5%80%8B%E5%A4%A7%E7%9C%BE%E9%81%8B%E8%BC%B8%E6%B4%BE%E6%B0%91%E4%BB%A3-021503894.html",
+          "supports": "牛廉為牛煦庭父親及新黨創黨元老"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-2-31-政治家族-1",
+      "query": "牛煦庭 牛廉 父親 桃園縣議會 秘書 新黨",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "Newtalk報導可確認牛廉是牛煦庭父親及新黨創黨元老；桃園縣議會秘書、呂玉玲服務處主任等完整職歷仍缺同等強度獨立來源。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk（Yahoo轉載）",
+          "url": "https://tw.news.yahoo.com/%E6%96%B0%E7%A7%91%E7%AB%8B%E5%A7%94%E5%A0%B1%E5%88%B0-%E6%B1%82%E5%AD%B8%E5%B0%B1%E6%BA%96%E5%82%99%E5%A5%BD%E5%BE%9E%E6%94%BF-%E7%89%9B%E7%85%A6%E5%BA%AD%E8%A6%81%E7%95%B6%E7%AC%AC-%E5%80%8B%E5%A4%A7%E7%9C%BE%E9%81%8B%E8%BC%B8%E6%B4%BE%E6%B0%91%E4%BB%A3-021503894.html",
+          "supports": "牛廉為牛煦庭父親及新黨創黨元老"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-13-5-政治家族-1",
+      "query": "王仙蓮 蘇志強 丈夫 蘇偉恩 兒子",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "本輪未找到能獨立確認王仙蓮與蘇志強夫妻關係、或蘇偉恩母子關係的官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-13-68-政治家族-1",
+      "query": "王仙蓮 蘇志強 丈夫 蘇偉恩 兒子",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "本輪未找到能獨立確認王仙蓮與蘇志強夫妻關係、或蘇偉恩母子關係的官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-13-5-政治家族-2",
+      "query": "王仙蓮 蘇志強 丈夫 蘇偉恩 兒子",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "本輪未找到能獨立確認王仙蓮與蘇志強夫妻關係、或蘇偉恩母子關係的官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-2-政治家族-1",
+      "query": "王威元 王銓榮 父親 前縣議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報可確認王銓榮是王威元父親；該篇未確認王銓榮的前縣議員身分，因此職務部分仍待補證。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20221122005091-263101",
+          "supports": "王銓榮為王威元父親"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-3-70-政治家族-1",
+      "query": "王威元 王銓榮 父親 前縣議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報可確認王銓榮是王威元父親；該篇未確認王銓榮的前縣議員身分，因此職務部分仍待補證。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20221122005091-263101",
+          "supports": "王銓榮為王威元父親"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-8-12-政治家族-1",
+      "query": "王珮毓 溫秀英 母親 廣興里長",
+      "outcome": "source_found_manual_review",
+      "notes": "聯合報舊聞的UDN部落格存檔可確認溫秀英為廣興里長及王珮毓母親；來源為舊聞存檔，仍需人工審核。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "聯合報舊聞（UDN部落格存檔）",
+          "url": "https://blog.udn.com/tpa285/6600401",
+          "supports": "溫秀英為廣興里長，王珮毓為其女兒"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-4-26-政治家族-1",
+      "query": "王開玹 王峻潭 父親 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報可確認王峻潭為王開玹父親並曾任議員；未確認暗公報所寫4屆的精確屆數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180213000531-263201",
+          "supports": "王峻潭為王開玹父親及議員身分"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-26-政治家族-2",
+      "query": "王耀裕 王國發 王南榮 王主安 王方員 家族",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到王耀裕曾任王方員特助的政黨頁面，無法據此證明父親或叔侄關係；其餘王國發、王南榮、王主安關係也沒有獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-26-政治家族-3",
+      "query": "王耀裕 王國發 王南榮 王主安 王方員 家族",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到王耀裕曾任王方員特助的政黨頁面，無法據此證明父親或叔侄關係；其餘王國發、王南榮、王主安關係也沒有獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-11-7-政治家族-1",
+      "query": "王耀裕 王國發 王南榮 王主安 王方員 家族",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到王耀裕曾任王方員特助的政黨頁面，無法據此證明父親或叔侄關係；其餘王國發、王南榮、王主安關係也沒有獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-26-政治家族-4",
+      "query": "王耀裕 王國發 王南榮 王主安 王方員 家族",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到王耀裕曾任王方員特助的政黨頁面，無法據此證明父親或叔侄關係；其餘王國發、王南榮、王主安關係也沒有獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-26-政治家族-1",
+      "query": "王耀裕 王國發 王南榮 王主安 王方員 家族",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到王耀裕曾任王方員特助的政黨頁面，無法據此證明父親或叔侄關係；其餘王國發、王南榮、王主安關係也沒有獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-10-2-政治家族-2",
+      "query": "朱挺玗 朱安雄 吳德美 父親 母親",
+      "outcome": "source_found_manual_review",
+      "notes": "公視與中國時報可確認朱挺玗為朱安雄、吳德美之女，並確認雙親相關公職身分；政治家族關係仍保留人工審核。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/82609",
+          "supports": "朱挺玗為前高雄市議長朱安雄之女，並交代朱安雄與吳德美夫妻關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20121023000717-260107",
+          "supports": "朱安雄、吳德美夫婦及其女兒朱挺玗的家庭脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-10-2-政治家族-1",
+      "query": "朱挺玗 朱安雄 吳德美 父親 母親",
+      "outcome": "source_found_manual_review",
+      "notes": "公視與中國時報可確認朱挺玗為朱安雄、吳德美之女，並確認雙親相關公職身分；政治家族關係仍保留人工審核。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/82609",
+          "supports": "朱挺玗為前高雄市議長朱安雄之女，並交代朱安雄與吳德美夫妻關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20121023000717-260107",
+          "supports": "朱安雄、吳德美夫婦及其女兒朱挺玗的家庭脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-11-政治家族-2",
+      "query": "朱挺玗 朱安雄 吳德美 父親 母親",
+      "outcome": "source_found_manual_review",
+      "notes": "公視與中國時報可確認朱挺玗為朱安雄、吳德美之女，並確認雙親相關公職身分；政治家族關係仍保留人工審核。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/82609",
+          "supports": "朱挺玗為前高雄市議長朱安雄之女，並交代朱安雄與吳德美夫妻關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20121023000717-260107",
+          "supports": "朱安雄、吳德美夫婦及其女兒朱挺玗的家庭脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-11-政治家族-1",
+      "query": "朱挺玗 朱安雄 吳德美 父親 母親",
+      "outcome": "source_found_manual_review",
+      "notes": "公視與中國時報可確認朱挺玗為朱安雄、吳德美之女，並確認雙親相關公職身分；政治家族關係仍保留人工審核。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/82609",
+          "supports": "朱挺玗為前高雄市議長朱安雄之女，並交代朱安雄與吳德美夫妻關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20121023000717-260107",
+          "supports": "朱安雄、吳德美夫婦及其女兒朱挺玗的家庭脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-7-43-政治家族-1",
+      "query": "朱暖英 王秋冬 丈夫 台中 民政局 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "台中市政府與中國時報可交叉確認夫妻關係，以及王秋冬曾任3屆議員、民政處長等職務。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺中市政府",
+          "url": "https://www.taichung.gov.tw/903633/post",
+          "supports": "民政處長王秋冬之夫人為朱暖英"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20100824000562-260107",
+          "supports": "王秋冬為朱暖英丈夫，曾任3屆市議員及民政處長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-7-59-政治家族-1",
+      "query": "江怡臻 江惠貞 姑姑 前立委 板橋市長",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社直接確認江惠貞是江怡臻姑姑及板橋選區前立委；其板橋市長、區長職歷可另由官方人物資料補強。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aloc/201711210171.aspx",
+          "supports": "江惠貞為江怡臻姑姑及板橋選區前立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-2-政治家族-1",
+      "query": "江怡臻 江惠貞 姑姑 前立委 板橋市長",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社直接確認江惠貞是江怡臻姑姑及板橋選區前立委；板橋市長與區長職歷仍可另由官方資料補強。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aloc/201711210171.aspx",
+          "supports": "江惠貞為江怡臻姑姑及板橋選區前立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-10-4-政治家族-1",
+      "query": "江肇國 江正吉 父親 前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS與民視報導均直接確認前台中市議員江正吉為江肇國父親。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/local/564191",
+          "supports": "江正吉為江肇國父親及前議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞（Yahoo轉載）",
+          "url": "https://tw.news.yahoo.com/%E6%B1%9F%E8%82%87%E5%9C%8B%E5%A8%B6%E5%B0%8F%E8%8B%B1%E9%9A%A8%E6%89%88-%E7%88%B6%E6%9B%BE%E4%BB%BB%E5%B8%82%E8%AD%B0%E5%93%A1-060041385.html",
+          "supports": "江正吉為江肇國父親及前台中市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-10-58-政治家族-1",
+      "query": "江肇國 江正吉 父親 前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS與民視報導均直接確認前台中市議員江正吉為江肇國父親。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/local/564191",
+          "supports": "江正吉為江肇國父親及前議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞（Yahoo轉載）",
+          "url": "https://tw.news.yahoo.com/%E6%B1%9F%E8%82%87%E5%9C%8B%E5%A8%B6%E5%B0%8F%E8%8B%B1%E9%9A%A8%E6%89%88-%E7%88%B6%E6%9B%BE%E4%BB%BB%E5%B8%82%E8%AD%B0%E5%93%A1-060041385.html",
+          "supports": "江正吉為江肇國父親及前台中市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-10-58-政治家族-2",
+      "query": "江肇國 媽媽 蔡英文 隨扈",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "可靠媒體一致顯示蔡英文隨扈張皪勻是江肇國妻子，不是母親；暗公報這筆關係類型有明顯錯誤，應退回更正而非公開。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/local/564191",
+          "supports": "張皪勻為蔡英文隨扈及江肇國妻子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞（Yahoo轉載）",
+          "url": "https://tw.news.yahoo.com/%E6%B1%9F%E8%82%87%E5%9C%8B%E5%A8%B6%E5%B0%8F%E8%8B%B1%E9%9A%A8%E6%89%88-%E7%88%B6%E6%9B%BE%E4%BB%BB%E5%B8%82%E8%AD%B0%E5%93%A1-060041385.html",
+          "supports": "江肇國娶蔡英文隨扈為妻"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-11-1-政治家族-1",
+      "query": "何昆霖 何敏誠 何敏豪 何春木 父親 叔叔 祖父",
+      "outcome": "source_found_manual_review",
+      "notes": "Newtalk報導可串起何昆霖、父親何敏誠、叔叔何敏豪與祖父何春木的關係；精確公職屆數仍由各人物官方資料另行確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2021-10-04/645914",
+          "supports": "何昆霖為何春木之孫、何敏誠之子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2023-04-01/864624",
+          "supports": "何昆霖稱何敏豪為叔叔，並確認父親何敏誠、祖父何春木"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-11-1-政治家族-2",
+      "query": "何昆霖 何敏誠 何敏豪 何春木 父親 叔叔 祖父",
+      "outcome": "source_found_manual_review",
+      "notes": "Newtalk報導可串起何昆霖、父親何敏誠、叔叔何敏豪與祖父何春木的關係；精確公職屆數仍由各人物官方資料另行確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2021-10-04/645914",
+          "supports": "何昆霖為何春木之孫、何敏誠之子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2023-04-01/864624",
+          "supports": "何昆霖稱何敏豪為叔叔，並確認父親何敏誠、祖父何春木"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-11-1-政治家族-3",
+      "query": "何昆霖 何敏誠 何敏豪 何春木 父親 叔叔 祖父",
+      "outcome": "source_found_manual_review",
+      "notes": "Newtalk報導可串起何昆霖、父親何敏誠、叔叔何敏豪與祖父何春木的關係；精確公職屆數仍由各人物官方資料另行確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2021-10-04/645914",
+          "supports": "何昆霖為何春木之孫、何敏誠之子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2023-04-01/864624",
+          "supports": "何昆霖稱何敏豪為叔叔，並確認父親何敏誠、祖父何春木"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-5-18-政治家族-1",
+      "query": "何堅心 何勝雄 哥哥 鳥松 議員 鄉民代表",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "精確搜尋未找到可獨立確認何勝雄為何堅心哥哥及其完整公職屆數的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-11-55-政治家族-2",
+      "query": "何敏誠 何敏豪 何春木 父親 弟弟",
+      "outcome": "source_found_manual_review",
+      "notes": "民視與中央社可確認何春木是何敏誠父親、何敏豪是其弟，並支持相關黨外與公職背景。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://sport.ftvnews.com.tw/news/detail/2018A11C05M1",
+          "supports": "何春木為何敏誠父親、何敏豪為何敏誠弟弟"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/202109230352.aspx",
+          "supports": "何敏誠回憶父親何春木及政治運動背景"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-11-55-政治家族-1",
+      "query": "何敏誠 何敏豪 何春木 父親 弟弟",
+      "outcome": "source_found_manual_review",
+      "notes": "民視與中央社可確認何春木是何敏誠父親、何敏豪是其弟，並支持相關黨外與公職背景。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://sport.ftvnews.com.tw/news/detail/2018A11C05M1",
+          "supports": "何春木為何敏誠父親、何敏豪為何敏誠弟弟"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/202109230352.aspx",
+          "supports": "何敏誠回憶父親何春木及政治運動背景"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-5-7-政治家族-1",
+      "query": "余柷青 林志聰 丈夫 議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "台南市議會頁面只確認余柷青曾任林志聰服務處執行長，不能證明夫妻關係；未找到其他可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-5-11-政治家族-1",
+      "query": "吳呈賢 吳顯森 父親 議員 大雅鄉長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "台中市議會資料確認吳顯森為吳呈賢父親；中選會公報確認吳顯森曾任兩屆市議員與一屆大雅鄉長，但暗公報所列3屆議員、2屆鄉民代表尚未完整確認。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺中市議會",
+          "url": "https://www.tccc.gov.tw/pic/DocSimple/17195656450147%282%29.pdf",
+          "supports": "吳顯森為吳呈賢父親，吳建德為養子"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會選舉公報",
+          "url": "https://web.cec.gov.tw/api/file/476ea2d6-8614-4357-9cdb-f98cfa6fff03.pdf",
+          "supports": "吳顯森曾任臺中市議會第1、2屆議員及大雅鄉第15屆鄉長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-5-6-政治家族-1",
+      "query": "吳志剛 吳伯雄 父親 吳志揚 哥哥",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報在同一篇報導直接稱吳伯雄為吳志剛父親、吳志揚為哥哥；公視另確認吳伯雄的國民黨榮譽主席身分。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20181123000664-260509",
+          "supports": "吳伯雄為吳志剛父親，吳志揚為哥哥"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/225821",
+          "supports": "吳志剛為國民黨榮譽主席吳伯雄之子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-89-政治家族-1",
+      "query": "吳志剛 吳伯雄 父親 吳志揚 哥哥",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報在同一篇報導直接稱吳伯雄為吳志剛父親、吳志揚為哥哥；公視另確認吳伯雄的國民黨榮譽主席身分。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20181123000664-260509",
+          "supports": "吳伯雄為吳志剛父親，吳志揚為哥哥"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/225821",
+          "supports": "吳志剛為國民黨榮譽主席吳伯雄之子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-89-政治家族-2",
+      "query": "吳志剛 吳伯雄 父親 吳志揚 哥哥",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報在同一篇報導直接稱吳伯雄為吳志剛父親、吳志揚為哥哥；公視另確認吳伯雄的國民黨榮譽主席身分。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20181123000664-260509",
+          "supports": "吳伯雄為吳志剛父親，吳志揚為哥哥"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/225821",
+          "supports": "吳志剛為國民黨榮譽主席吳伯雄之子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-2-46-政治家族-1",
+      "query": "吳宜昌 王秝毅 妻子 梧棲農會 總幹事",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報確認王秝毅為前梧棲區農會總幹事；另一地方報導同時稱吳柏慧父親為吳宜昌、母親為王秝毅，可間接支持夫妻關係，仍需人工審核。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20250515003064-260407",
+          "supports": "王秝毅為前梧棲區農會總幹事"
+        },
+        {
+          "tier": "secondary",
+          "name": "政風新聞網",
+          "url": "https://www.genews.tw/2960/",
+          "supports": "同一名女兒吳柏慧之父為吳宜昌、母為王秝毅"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-15-5-政治家族-1",
+      "query": "吳建德 吳顯森 養父 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "臺中市議會文件直接稱吳建德為吳顯森養子，並確認吳顯森議員身分。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺中市議會",
+          "url": "https://www.tccc.gov.tw/pic/DocSimple/17195656450147%282%29.pdf",
+          "supports": "吳顯森為吳建德養父"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-11-6-政治家族-1",
+      "query": "吳禹寰 吳健保 父親 前台南縣議長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "法務部與媒體可確認前台南縣議長吳健保為吳禹寰父親；本輪未完整核對5屆議員、3屆議長的精確屆數。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "法務部行政執行署臺中分署",
+          "url": "https://www.ulp.moj.gov.tw/media/20406355/%E5%90%B3%E5%81%A5%E4%BF%9D%E6%B6%89%E5%AB%8C%E8%B2%B7%E9%80%9A%E5%8F%B0%E4%B8%AD%E7%9B%A3%E7%8D%84%E6%95%99%E5%8D%80%E7%A7%91%E5%93%A1-%E9%81%AD%E6%AA%A2%E5%BB%89%E6%8B%98%E6%8F%90%E6%90%9C%E7%B4%A2-pdf%E6%AA%94.pdf?mediaDL=true",
+          "supports": "前台南縣議長吳健保之現任市議員兒子為吳禹寰"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社（NOWnews轉載）",
+          "url": "https://www.nownews.com/news/3181347",
+          "supports": "吳健保之子為台南市議員吳禹寰"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-11-101-政治家族-1",
+      "query": "吳禹寰 吳健保 父親 前台南縣議長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "法務部與媒體可確認前台南縣議長吳健保為吳禹寰父親；本輪未完整核對5屆議員、3屆議長的精確屆數。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "法務部行政執行署臺中分署",
+          "url": "https://www.ulp.moj.gov.tw/media/20406355/%E5%90%B3%E5%81%A5%E4%BF%9D%E6%B6%89%E5%AB%8C%E8%B2%B7%E9%80%9A%E5%8F%B0%E4%B8%AD%E7%9B%A3%E7%8D%84%E6%95%99%E5%8D%80%E7%A7%91%E5%93%A1-%E9%81%AD%E6%AA%A2%E5%BB%89%E6%8B%98%E6%8F%90%E6%90%9C%E7%B4%A2-pdf%E6%AA%94.pdf?mediaDL=true",
+          "supports": "前台南縣議長吳健保之現任市議員兒子為吳禹寰"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社（NOWnews轉載）",
+          "url": "https://www.nownews.com/news/3181347",
+          "supports": "吳健保之子為台南市議員吳禹寰"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-13-政治家族-1",
+      "query": "吳訓孝 吳勝文 沈美英 父親 母親",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認吳勝文、沈美英分別為吳訓孝父母，並列出四屆里長與婦女會理事長身分。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20220101002033-260509",
+          "supports": "吳勝文為父親且連任4屆里長，沈美英為母親及婦女會理事長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-13-政治家族-2",
+      "query": "吳訓孝 吳勝文 沈美英 父親 母親",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認吳勝文、沈美英分別為吳訓孝父母，並列出四屆里長與婦女會理事長身分。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20220101002033-260509",
+          "supports": "吳勝文為父親且連任4屆里長，沈美英為母親及婦女會理事長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-3-44-政治家族-1",
+      "query": "吳瓊華 陳健楷 丈夫 陳忠順 公公",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果主要為維基彙整，未找到可同時確認夫妻／姻親關係與完整公職履歷的獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-3-44-政治家族-2",
+      "query": "吳瓊華 陳健楷 丈夫 陳忠順 公公",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果主要為維基彙整，未找到可同時確認夫妻／姻親關係與完整公職履歷的獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-3-82-政治家族-1",
+      "query": "呂林小鳳 呂邱葉 婆婆 議員 八德",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "桃園市政府可確認呂邱葉為呂林小鳳婆婆；暗公報稱4屆縣議員，較新中國時報報導稱3屆，屆數有衝突，需人工核對官方歷屆名錄。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "桃園市政府新聞處",
+          "url": "https://news.tycg.gov.tw/News_Content.aspx?n=5016&s=633289",
+          "supports": "呂邱葉為呂林小鳳婆婆"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20240724003443-263101",
+          "supports": "呂邱葉為婆婆，報導稱曾任3屆縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-1-66-政治家族-1",
+      "query": "呂孫福 呂子昌 呂孫綾 父親 姊姊",
+      "outcome": "source_found_manual_review",
+      "notes": "民視直接確認呂子昌為呂孫福父親、呂孫綾為妹妹；NOWnews可交叉核對呂子昌的議員屆數，合計8屆。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://www.ftvnews.com.tw/news/detail/2018B21P26M1",
+          "supports": "呂子昌為父親、呂孫綾為妹妹"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews",
+          "url": "https://www.nownews.com/news/2032593",
+          "supports": "呂子昌曾任7屆臺北縣議員及第1屆新北市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-3-17-政治家族-1",
+      "query": "呂淑真 張春松 丈夫 八德市長 農會總幹事",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "馬祖日報直接稱張春松為呂淑真丈夫，並確認其前八德市長及農會總幹事經歷；本輪未找到可靠來源核實代表會主席經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "連江縣政府馬祖日報",
+          "url": "https://www.matsu-news.gov.tw/news/article/37273",
+          "supports": "張春松為丈夫，曾任八德市長及農會總幹事"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-1-13-政治家族-1",
+      "query": "呂儀恬 拔耐 茹妮老王 母親 基隆 原住民 議員候選人",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "在設定的搜尋範圍內未找到可直接確認母女關係及2022參選身分的可靠獨立來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-3-4-政治家族-1",
+      "query": "宋立彬 宋萬春 父親 高雄市議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到宋立彬現任議員資料，未找到可靠來源直接確認宋萬春為父親及其公職經歷。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-3-88-政治家族-1",
+      "query": "宋立彬 宋萬春 父親 高雄市議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到宋立彬現任議員資料，未找到可靠來源直接確認宋萬春為父親及其公職經歷。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-11-32-政治家族-1",
+      "query": "宋雨蓁 宋進財 父親 六屆 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認宋進財為宋雨蓁父親，且為六屆新北市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20150715001066-260407",
+          "supports": "宋進財為父親且曾任六屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-6-10-政治家族-1",
+      "query": "李中岑 李慶信 父親 台南市議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認前台南市議員李慶信為李中岑父親；本輪未完整核對暗公報所述兩屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20201215000572-260503",
+          "supports": "李慶信為父親及前台南市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-6-45-政治家族-1",
+      "query": "李中岑 李慶信 父親 台南市議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認前台南市議員李慶信為李中岑父親；本輪未完整核對暗公報所述兩屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20201215000572-260503",
+          "supports": "李慶信為父親及前台南市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-1-1-政治家族-1",
+      "query": "李文傑 李榮鴻 父親 台中市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "地方新聞直接描述李文傑接棒父親李榮鴻；中選會公報可核對李榮鴻的歷屆議員經歷。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "台灣生活新聞",
+          "url": "https://news.st-media.com.tw/news/21427",
+          "supports": "李文傑為李榮鴻之子並接棒參選"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會選舉公報",
+          "url": "https://eebulletin.cec.gov.tw/103/%E8%87%BA%E4%B8%AD%E5%B8%82/2-%E5%B8%82%E8%AD%B0%E5%93%A1/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "李榮鴻歷屆議員經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-2-1-政治家族-1",
+      "query": "李亞築 李長生 父親 高雄市議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到李亞築現任議員資料，未找到可靠來源直接確認李長生為父親及其公職經歷。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-2-101-政治家族-1",
+      "query": "李亞築 李長生 父親 高雄市議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "只找到李亞築現任議員資料，未找到可靠來源直接確認李長生為父親及其公職經歷。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-2-3-政治家族-1",
+      "query": "李宗豪 李鎮楠 林俐玲 父親 母親",
+      "outcome": "source_found_manual_review",
+      "notes": "地方新聞及參選聲明報導均直接確認李鎮楠、林俐玲為李宗豪父母，並可核對父親曾任立委、母親曾任多屆議員。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "桃園電子報地方新聞",
+          "url": "https://tnews.cc/03/News/View/18433",
+          "supports": "李鎮楠為父親且曾任立委，林俐玲為母親且曾任多屆議員"
+        },
+        {
+          "tier": "secondary",
+          "name": "蕃新聞",
+          "url": "https://n.yam.com/Article/20220308720567",
+          "supports": "李宗豪稱李鎮楠、林俐玲為父母並接棒參選"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-2-3-政治家族-2",
+      "query": "李宗豪 李鎮楠 林俐玲 父親 母親",
+      "outcome": "source_found_manual_review",
+      "notes": "地方新聞及參選聲明報導均直接確認李鎮楠、林俐玲為李宗豪父母，並可核對父親曾任立委、母親曾任多屆議員。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "桃園電子報地方新聞",
+          "url": "https://tnews.cc/03/News/View/18433",
+          "supports": "李鎮楠為父親且曾任立委，林俐玲為母親且曾任多屆議員"
+        },
+        {
+          "tier": "secondary",
+          "name": "蕃新聞",
+          "url": "https://n.yam.com/Article/20220308720567",
+          "supports": "李宗豪稱李鎮楠、林俐玲為父母並接棒參選"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-1-9-政治家族-2",
+      "query": "李宗翰 李本源 父親 後壁鄉長",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社確認賴美惠夫婿李本源為前後壁區長，台南市議會及中國時報均確認李宗翰為兩人之子。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市議會",
+          "url": "https://www.tncc.gov.tw/2019/page.asp?mainid=%7B89EBF4BF-B3AC-47A6-82F4-FB22BF0190FA%7D",
+          "supports": "賴美惠宣布由兒子李宗翰參選"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aloc/201708050204.aspx",
+          "supports": "李本源為賴美惠夫婿及前後壁區長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180203002630-263101",
+          "supports": "李本源為李宗翰父親"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-1-9-政治家族-1",
+      "query": "李宗翰 賴美惠 母親 台南市議長 六屆議員",
+      "outcome": "source_found_manual_review",
+      "notes": "臺南市議會直接記載賴美惠由兒子李宗翰接棒參選；媒體可交叉確認母子關係及六屆議員經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市議會",
+          "url": "https://www.tncc.gov.tw/2019/page.asp?mainid=%7B89EBF4BF-B3AC-47A6-82F4-FB22BF0190FA%7D",
+          "supports": "賴美惠為李宗翰母親並交棒參選"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞轉載地方報導",
+          "url": "https://tw.news.yahoo.com/%E7%94%B1%E5%85%92%E5%AD%90%E6%9D%8E%E5%AE%97%E7%BF%B0%E6%8E%A5%E6%A3%92-%E5%8F%B0%E5%8D%97%E5%B8%82%E8%AD%B0%E9%95%B7%E8%B3%B4%E7%BE%8E%E6%83%A0%E5%B0%8A%E9%87%8D%E5%85%92%E5%AD%90%E6%8A%89%E6%93%87-132847635.html",
+          "supports": "賴美惠為母親且連任六屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-1-3-政治家族-2",
+      "query": "李宗翰 李本源 父親 後壁鄉長",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社確認賴美惠夫婿李本源為前後壁區長，台南市議會及中國時報均確認李宗翰為兩人之子。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市議會",
+          "url": "https://www.tncc.gov.tw/2019/page.asp?mainid=%7B89EBF4BF-B3AC-47A6-82F4-FB22BF0190FA%7D",
+          "supports": "賴美惠宣布由兒子李宗翰參選"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aloc/201708050204.aspx",
+          "supports": "李本源為賴美惠夫婿及前後壁區長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180203002630-263101",
+          "supports": "李本源為李宗翰父親"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-1-3-政治家族-1",
+      "query": "李宗翰 賴美惠 母親 台南市議長 六屆議員",
+      "outcome": "source_found_manual_review",
+      "notes": "臺南市議會直接記載賴美惠由兒子李宗翰接棒參選；媒體可交叉確認母子關係及六屆議員經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市議會",
+          "url": "https://www.tncc.gov.tw/2019/page.asp?mainid=%7B89EBF4BF-B3AC-47A6-82F4-FB22BF0190FA%7D",
+          "supports": "賴美惠為李宗翰母親並交棒參選"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞轉載地方報導",
+          "url": "https://tw.news.yahoo.com/%E7%94%B1%E5%85%92%E5%AD%90%E6%9D%8E%E5%AE%97%E7%BF%B0%E6%8E%A5%E6%A3%92-%E5%8F%B0%E5%8D%97%E5%B8%82%E8%AD%B0%E9%95%B7%E8%B3%B4%E7%BE%8E%E6%83%A0%E5%B0%8A%E9%87%8D%E5%85%92%E5%AD%90%E6%8A%89%E6%93%87-132847635.html",
+          "supports": "賴美惠為母親且連任六屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-7-2-政治家族-1",
+      "query": "李芳儒 李銀來 父親 四屆 台北市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "淡江時報直接稱李銀來為李芳儒父親並記載連任四屆；臺北市議會現任頁可核對李芳儒曾任李銀來議員辦公室主任。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "淡江時報",
+          "url": "https://tkutimes.tku.edu.tw/dtl.aspx?no=35093",
+          "supports": "李銀來為父親且曾連任四屆臺北市議員"
+        },
+        {
+          "tier": "official",
+          "name": "臺北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content.aspx?n=13898&s=2614",
+          "supports": "李芳儒曾任李銀來議員辦公室主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-7-122-政治家族-1",
+      "query": "李芳儒 李銀來 父親 四屆 台北市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "淡江時報直接稱李銀來為李芳儒父親並記載連任四屆；臺北市議會現任頁可核對李芳儒曾任李銀來議員辦公室主任。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "淡江時報",
+          "url": "https://tkutimes.tku.edu.tw/dtl.aspx?no=35093",
+          "supports": "李銀來為父親且曾連任四屆臺北市議員"
+        },
+        {
+          "tier": "official",
+          "name": "臺北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content.aspx?n=13898&s=2614",
+          "supports": "李芳儒曾任李銀來議員辦公室主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-3-政治家族-4",
+      "query": "李雨庭 吳政勳 丈夫 高雄縣議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認吳政勳為李雨庭丈夫，且曾任高雄縣議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20101005000629-260102",
+          "supports": "吳政勳為丈夫及當時高雄縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-3-政治家族-3",
+      "query": "李雨庭 吳鴻鳴 吳鳳鳴 公公 高雄縣副議長",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "不同來源均確認李雨庭公公曾任高雄縣副議長，但姓名分別寫作吳鴻鳴與吳鳳鳴，與暗公報欄位存在異名衝突，必須人工核對官方歷屆名錄。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20101005000629-260102",
+          "supports": "稱吳政勳父親、李雨庭公公為吳鳳鳴，曾任副議長"
+        },
+        {
+          "tier": "secondary",
+          "name": "非常新聞",
+          "url": "https://www.unntv.tw/main.php?PP%5Bcanews_id%5D=24&PP%5Bid%5D=19684&op=newsonly&po=news1",
+          "supports": "稱吳政勳父親為吳鴻鳴，曾任高雄縣副議長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-11-2-政治家族-1",
+      "query": "李雨庭 李真和 父親 屏東縣議員",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS直接確認李真和為李雨庭父親，並描述其曾任屏東縣議員及政治家族背景。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/politics/2688605",
+          "supports": "李真和為李雨庭父親及前屏東縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-3-政治家族-2",
+      "query": "李雨庭 李香蘭 姊妹 屏東縣議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報與TVBS均直接確認李香蘭、李雨庭為姊妹，並可核對李香蘭的屏東縣議員身分。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20141201000476-260503",
+          "supports": "李香蘭與李雨庭為姊妹，李香蘭時任屏東縣議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/politics/2688605",
+          "supports": "李香蘭為長女、李雨庭為二女，兩人均承接父親政治工作"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-3-政治家族-1",
+      "query": "李雨庭 李真和 父親 屏東縣議員",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS直接確認李真和為李雨庭父親，並描述其曾任屏東縣議員及政治家族背景。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/politics/2688605",
+          "supports": "李真和為李雨庭父親及前屏東縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-2-13-政治家族-3",
+      "query": "李彥秀 侯冠群 丈夫 台北市議員 兩屆",
+      "outcome": "source_found_manual_review",
+      "notes": "自由時報直接確認侯冠群為李彥秀丈夫及前臺北市議員；政府與公共事務研究資料列出侯冠群第9、10屆兩任議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報選舉專區",
+          "url": "https://election.ltn.com.tw/2020/news/Sum/paper/1335678",
+          "supports": "侯冠群為丈夫及前臺北市議員"
+        },
+        {
+          "tier": "institutional",
+          "name": "政府與公共事務研究資料",
+          "url": "https://en.tcforum.org.tw/hd/Lin_Stuff/Lin_Article_Sustainable_Development.pdf",
+          "supports": "侯冠群曾任臺北市議會第9、10屆議員並與李彥秀結婚"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-2-13-政治家族-2",
+      "query": "李彥秀 李金璋 父親 兩屆 台北市議員 交棒",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "歷史新聞剪報與自由時報可確認李金璋為李彥秀父親、曾任兩屆臺北市議員並由女兒接棒；本輪未找到可靠來源直接確認「因罹癌交棒」細節。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "歷史新聞電子剪報",
+          "url": "https://a2016.pori.hk/english/tw04/private/newsclips/20040324_341_TW.htm",
+          "supports": "李金璋為父親及兩屆臺北市議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "自由時報選舉專區",
+          "url": "https://election.ltn.com.tw/2020/news/Sum/paper/1335678",
+          "supports": "李彥秀父親為前臺北市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-2-13-政治家族-1",
+      "query": "李彥秀 李福人 祖父 南港鎮民代表 台北縣議員",
+      "outcome": "source_found_manual_review",
+      "notes": "歷史新聞剪報直接確認李福人為李彥秀祖父、連任五屆南港鎮民代表及一屆臺北縣議員；自由時報亦確認其祖父公職背景。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "歷史新聞電子剪報",
+          "url": "https://a2016.pori.hk/english/tw04/private/newsclips/20040324_341_TW.htm",
+          "supports": "李福人為祖父、五屆南港鎮民代表及一屆臺北縣議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "自由時報選舉專區",
+          "url": "https://election.ltn.com.tw/2020/news/Sum/paper/1335678",
+          "supports": "祖父曾任臺北縣議員及南港鎮民代表會主席"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-1-62-政治家族-1",
+      "query": "李柏瑟 廖輝星 丈夫 桃園縣議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "聯合報直接稱李柏瑟為前桃園縣議員廖輝星之妻；中選會公報可核對她曾任廖輝星服務處主任，本輪未完整核對兩屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "聯合新聞網",
+          "url": "https://udn.com/news/story/124652/9620488",
+          "supports": "李柏瑟為前桃園縣議員廖輝星妻子"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會選舉公報",
+          "url": "https://eebulletin.cec.gov.tw/111/04%E6%A1%83%E5%9C%92%E5%B8%82/02%E5%B8%82%E8%AD%B0%E5%93%A1/%E6%A1%83%E5%9C%92%E5%B8%82%E8%AD%B0%E6%9C%83%E7%AC%AC3%E5%B1%86%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E7%AC%AC1%E9%81%B8%E8%88%89%E5%8D%80%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "李柏瑟曾任廖輝星服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-6-10-政治家族-1",
+      "query": "李柏毅 李新 父親 台北市議員 新黨",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "民視直接確認李新為李柏毅父親並有接棒規劃；臺北市議會頁可核對李柏毅曾任李新辦公室主任。本輪未由單一可靠來源完整核實五屆及新黨發起人兩項細節。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://www.ftvnews.com.tw/news/detail/2017929L06M1",
+          "supports": "李新為李柏毅父親並培養其接棒"
+        },
+        {
+          "tier": "official",
+          "name": "臺北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content.aspx?n=13898&s=2600",
+          "supports": "李柏毅曾任李新議員辦公室主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-6-112-政治家族-1",
+      "query": "李柏毅 李新 父親 台北市議員 新黨",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "民視直接確認李新為李柏毅父親並有接棒規劃；臺北市議會頁可核對李柏毅曾任李新辦公室主任。本輪未由單一可靠來源完整核實五屆及新黨發起人兩項細節。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://www.ftvnews.com.tw/news/detail/2017929L06M1",
+          "supports": "李新為李柏毅父親並培養其接棒"
+        },
+        {
+          "tier": "official",
+          "name": "臺北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content.aspx?n=13898&s=2600",
+          "supports": "李柏毅曾任李新議員辦公室主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-4-6-政治家族-1",
+      "query": "李眉蓁 李榮宗 父親 親民黨 前高雄市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中山大學新聞平台轉載臺灣時報報導，直接確認李榮宗為李眉蓁父親、曾以親民黨籍擔任兩屆高雄市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "國立中山大學新聞平台轉載臺灣時報",
+          "url": "https://news.nsysu.edu.tw/p/404-1120-132022.php?Lang=zh-tw",
+          "supports": "李榮宗為父親、親民黨籍前高雄市議員及兩屆任期"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-4-30-政治家族-1",
+      "query": "李眉蓁 李榮宗 父親 前高雄市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中山大學新聞平台轉載臺灣時報報導，直接確認李榮宗為李眉蓁父親、曾以親民黨籍擔任兩屆高雄市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "國立中山大學新聞平台轉載臺灣時報",
+          "url": "https://news.nsysu.edu.tw/p/404-1120-132022.php?Lang=zh-tw",
+          "supports": "李榮宗為父親及前高雄市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-9-政治家族-1",
+      "query": "李倩萍 李茂雄 父親 蘆洲九芎里里長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "新北市蘆洲區公所可確認九芎里長為李茂雄，且同頁列其為李倩萍服務處主任；本輪未找到可靠獨立來源直接寫明父女關係，須人工審核。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "新北市蘆洲區公所",
+          "url": "https://www.luzhou.ntpc.gov.tw/home.jsp?id=4bb46f3916aa92d4",
+          "supports": "李茂雄為九芎里里長及李倩萍服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-3-74-政治家族-1",
+      "query": "李倩萍 李茂雄 父親 蘆洲九芎里里長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "新北市蘆洲區公所可確認九芎里長為李茂雄，且同頁列其為李倩萍服務處主任；本輪未找到可靠獨立來源直接寫明父女關係，須人工審核。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "新北市蘆洲區公所",
+          "url": "https://www.luzhou.ntpc.gov.tw/home.jsp?id=4bb46f3916aa92d4",
+          "supports": "李茂雄為九芎里里長及李倩萍服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-5-3-政治家族-1",
+      "query": "李偉智 姚溪海 父親 新化鎮長 區長 縣議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認姚溪海為李偉智父親、前新化鎮長及改制後首任區長；本輪未核實縣議員經歷。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20181122004174-260407",
+          "supports": "姚溪海為父親、前新化鎮長及首任新化區長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-5-34-政治家族-1",
+      "query": "李偉智 姚溪海 父親 新化鎮長 區長 縣議員 從母姓",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認姚溪海為李偉智父親、前新化鎮長及改制後首任區長；本輪未核實縣議員經歷與從母姓細節。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20181122004174-260407",
+          "supports": "姚溪海為父親、前新化鎮長及首任新化區長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-9-8-政治家族-1",
+      "query": "李啓維 李文正 父親 五屆 台南市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞轉載報導直接確認李文正為李啓維父親及五屆資深臺南市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E6%94%BF%E4%BA%8C%E4%BB%A3%E5%87%BA%E5%BE%81-%E8%AD%B0%E9%95%B7%E5%85%92-%E8%AD%B0%E5%93%A1%E5%AD%90%E5%A5%B3%E6%90%B6%E9%81%B8%E7%A5%A8-075008237.html",
+          "supports": "李文正為父親及五屆臺南市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-9-80-政治家族-1",
+      "query": "李啓維 李文正 父親 五屆 台南市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞轉載報導直接確認李文正為李啓維父親及五屆資深臺南市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E6%94%BF%E4%BA%8C%E4%BB%A3%E5%87%BA%E5%BE%81-%E8%AD%B0%E9%95%B7%E5%85%92-%E8%AD%B0%E5%93%A1%E5%AD%90%E5%A5%B3%E6%90%B6%E9%81%B8%E7%A5%A8-075008237.html",
+          "supports": "李文正為父親及五屆臺南市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-5-11-政治家族-1",
+      "query": "李婉鈺 朱立倫 表姐夫 姻親",
+      "outcome": "source_found_manual_review",
+      "notes": "中國新聞網報導直接稱朱立倫為李婉鈺表姐夫，TVBS另確認兩人為姻親。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國新聞網",
+          "url": "https://www.chinanews.com.cn/tw/2010/12-17/2730105.shtml",
+          "supports": "朱立倫為李婉鈺表姐夫"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/politics/115434",
+          "supports": "李婉鈺與朱立倫為姻親"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-4-72-政治家族-1",
+      "query": "李雅芬 李水樹 外公 中和里里長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認李水樹為李雅芬外公，曾任楠梓區中和里里長及第二屆里長主席。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180118000679-263201",
+          "supports": "李水樹為外公及前中和里里長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-4-10-政治家族-1",
+      "query": "李雅芬 李水樹 祖父 外公 中和里里長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認李水樹為李雅芬外公，曾任楠梓區中和里里長；暗公報2022使用較泛稱的「祖父」，公開前宜保留精確親屬稱謂。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180118000679-263201",
+          "supports": "李水樹為外公及前中和里里長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-1-61-政治家族-1",
+      "query": "李曉鐘 陳根德 親家 立法委員 桃園縣議長",
+      "outcome": "source_found_manual_review",
+      "notes": "自立晚報直接確認兩家結為親家；桃園市政府地方志列出陳根德五次立委當選紀錄及桃園縣議長經歷。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自立晚報",
+          "url": "https://www.idn.com.tw/news/news_content.aspx?artid=20130705ea002",
+          "supports": "陳根德長子與李曉鐘女兒訂婚，兩家結為親家"
+        },
+        {
+          "tier": "official",
+          "name": "桃園市政府地方志",
+          "url": "https://ws.tycg.gov.tw/Download.ashx?n=Q2gwOC01NDAtNTc3Uy5wZGY%3D&u=LzAwMS9VcGxvYWQvODgvUmVsRmlsZS8xMTQ5MS82NjI1NDAvQ2gwOC01NDAtNTc3Uy5wZGY%3D",
+          "supports": "陳根德五次立委當選及桃園縣議長經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-1-21-政治家族-1",
+      "query": "李曉鐘 陳根德 親家 立法委員 桃園縣議長",
+      "outcome": "source_found_manual_review",
+      "notes": "自立晚報直接確認兩家結為親家；桃園市政府地方志列出陳根德五次立委當選紀錄及桃園縣議長經歷。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自立晚報",
+          "url": "https://www.idn.com.tw/news/news_content.aspx?artid=20130705ea002",
+          "supports": "陳根德長子與李曉鐘女兒訂婚，兩家結為親家"
+        },
+        {
+          "tier": "official",
+          "name": "桃園市政府地方志",
+          "url": "https://ws.tycg.gov.tw/Download.ashx?n=Q2gwOC01NDAtNTc3Uy5wZGY%3D&u=LzAwMS9VcGxvYWQvODgvUmVsRmlsZS8xMTQ5MS82NjI1NDAvQ2gwOC01NDAtNTc3Uy5wZGY%3D",
+          "supports": "陳根德五次立委當選及桃園縣議長經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-8-31-政治家族-1",
+      "query": "沈佑蓮 沈智慧 姊姊 六屆立委",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社轉載與Yahoo新聞均直接確認沈智慧為沈佑蓮姊姊及前立委；本輪未由可靠來源完整核對六屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社（NOWnews轉載）",
+          "url": "https://www.nownews.com/news/3124410",
+          "supports": "沈智慧為姊姊及前立委"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E8%B5%B0%E9%81%8D%E4%B8%AD%E5%B8%82%E5%8C%97%E5%B1%AF%E5%8D%80%E7%82%BA%E5%A6%B9%E5%A6%B9%E6%B2%88%E4%BD%91%E8%93%AE%E5%82%AC%E7%A5%A8-%E6%B2%88%E6%99%BA%E6%85%A7-%E8%BE%9B%E8%8B%A6%E4%BD%86%E5%BF%AB%E6%A8%82-023839312.html",
+          "supports": "沈智慧為沈佑蓮姊姊及前立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-8-7-政治家族-1",
+      "query": "沈震東 沈廉哲 父親 水仙里里長 五屆",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認沈廉哲為沈震東父親，且擔任水仙里里長20年，與五屆任期相符。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180211002301-260509",
+          "supports": "沈廉哲為父親及擔任水仙里里長20年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-8-65-政治家族-1",
+      "query": "沈震東 沈廉哲 父親 水仙里里長 五屆",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認沈廉哲為沈震東父親，且擔任水仙里里長20年，與五屆任期相符。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180211002301-260509",
+          "supports": "沈廉哲為父親及擔任水仙里里長20年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-17-政治家族-1",
+      "query": "卓冠廷 卓建國 卓建鴻 父親 鶯歌鎮民代表會副主席",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報與NOWnews均確認卓建國為卓冠廷父親及前鶯歌鎮民代表會副主席；本輪未找到可靠來源確認「改名前叫卓建國／現名卓建鴻」的改名資訊。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20141209000582-260503",
+          "supports": "卓建國為父親及曾任鶯歌鎮民代表會副主席"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews",
+          "url": "https://www.nownews.com/news/5352651",
+          "supports": "卓建國為父親及前鶯歌鎮民代表會副主席"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-17-政治家族-2",
+      "query": "卓冠廷 洪慈庸 妻子 前時代力量立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社直接報導卓冠廷與時任立委洪慈庸登記結婚；華視後續報導亦稱洪慈庸為其妻。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aloc/201704240403.aspx",
+          "supports": "卓冠廷與時任立委洪慈庸登記結婚"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "華視新聞網",
+          "url": "https://news.cts.com.tw/cts/politics/201911/201911111980690.html",
+          "supports": "洪慈庸為卓冠廷妻子及立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-6-119-政治家族-1",
+      "query": "周佳錚 周金福 父親 龍水里 里長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認周金福為周佳錚父親及高雄市鼓山區龍水里里長。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180717000661-263209",
+          "supports": "周金福為父親及龍水里里長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-4-1-政治家族-1",
+      "query": "周奕齊 周五六 父親 台南縣議長 立法委員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社與自由時報直接確認周五六為周奕齊父親，並曾任臺南縣議長及立法委員；本輪未由可靠來源完整核對「四屆議員」。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/firstnews/202012130115.aspx",
+          "supports": "周五六為父親及曾任臺南縣議長、立法委員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2022/news/breakingnews/4129399",
+          "supports": "周五六為父親及前臺南縣議長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-4-1-政治家族-2",
+      "query": "周奕齊 周陳秀霞 母親 親民黨 不分區立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社直接確認周陳秀霞為周奕齊母親及前親民黨不分區立委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/firstnews/202012130115.aspx",
+          "supports": "周陳秀霞為母親及前親民黨不分區立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-4-25-政治家族-1",
+      "query": "周奕齊 周五六 父親 台南縣議長 立法委員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社與自由時報直接確認周五六為周奕齊父親，並曾任臺南縣議長及立法委員；本輪未由可靠來源完整核對「四屆議員」。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/firstnews/202012130115.aspx",
+          "supports": "周五六為父親及曾任臺南縣議長、立法委員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2022/news/breakingnews/4129399",
+          "supports": "周五六為父親及前臺南縣議長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-4-25-政治家族-2",
+      "query": "周奕齊 周陳秀霞 母親 親民黨 不分區立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社直接確認周陳秀霞為周奕齊母親及前親民黨不分區立委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/firstnews/202012130115.aspx",
+          "supports": "周陳秀霞為母親及前親民黨不分區立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-8-54-政治家族-1",
+      "query": "周玲妏 周平德 父親 美麗島 民進黨高雄市黨部 主委 國大代表",
+      "outcome": "source_found_manual_review",
+      "notes": "文化部典藏資料直接記載周平德為周玲妏父親，並列出美麗島事件入獄、民進黨高雄市黨部主委及國大代表等經歷；公視亦確認父女關係與美麗島前輩身分。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "文化部典藏網",
+          "url": "https://collections.culture.tw/Object?RNO=MjAwNi4wMDIuMTMyOA%3D%3D&SYSUID=11",
+          "supports": "父女關係及周平德政治經歷"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞網",
+          "url": "https://news.pts.org.tw/article/57924",
+          "supports": "周平德為父親及美麗島事件前輩"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-9-3-政治家族-1",
+      "query": "周麗津 周明德 父親 三屆 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "內政部與臺南市議會資料均可確認周麗津曾任周明德服務處助理，但未直接證明父女關係，也未完整核對三屆議員；需人工補證。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "內政部地方公職人員資訊",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112DA00045&_TYP=REP&n=573",
+          "supports": "周麗津曾任周明德服務處助理"
+        },
+        {
+          "tier": "official",
+          "name": "臺南市議會",
+          "url": "https://www.tncc.gov.tw/councilorpage.asp?mainid=C74D9364-882E-4430-A50E-439825B1EBB5topage%3D1orcaid2%3D",
+          "supports": "周麗津曾任周明德服務處助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-9-79-政治家族-1",
+      "query": "周麗津 周明德 父親 三屆 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中選會公報與臺南市議會資料均可確認周麗津曾任周明德服務處助理，但未直接證明父女關係，也未完整核對三屆議員；需人工補證。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中選會選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/05%E8%87%BA%E5%8D%97%E5%B8%82/%E7%AC%AC3%E5%B1%86%E5%B8%82%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89-%E7%AC%AC09%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "周麗津曾任周明德服務處助理"
+        },
+        {
+          "tier": "official",
+          "name": "臺南市議會",
+          "url": "https://www.tncc.gov.tw/councilorpage.asp?mainid=C74D9364-882E-4430-A50E-439825B1EBB5topage%3D1orcaid2%3D",
+          "supports": "周麗津曾任周明德服務處助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-3-61-政治家族-1",
+      "query": "林永鴻 林國雄 父親 兩屆 台北縣議員",
+      "outcome": "source_found_manual_review",
+      "notes": "自由時報直接確認林國雄為林永鴻父親，並曾任兩屆臺北縣議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2018/print/NewTaipeiParliamentary/breakingnews/2532148",
+          "supports": "林國雄為父親及曾任兩屆臺北縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-10-2-政治家族-1",
+      "query": "林京玲 柯貞竹 母親 國民黨 中常委",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認柯貞竹為林京玲母親及前國民黨中常委；國民黨官方資料亦列柯貞竹為中央常務委員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180915000594-263201",
+          "supports": "柯貞竹為母親及前國民黨中常委"
+        },
+        {
+          "tier": "official",
+          "name": "中國國民黨",
+          "url": "https://www1.kmt.org.tw/people.aspx?mid=22&pid=1365",
+          "supports": "柯貞竹擔任中央常務委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-3-3-政治家族-1",
+      "query": "林孟令 林士昌 父親 議長 副議長 鄉長 代表會主席",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認父子關係，並逐項記載林士昌曾任代表會主席、鄉長、副議長與市議長的年資；臺中市議會資料亦確認政治交棒。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180802000636-260107",
+          "supports": "父子關係及林士昌主要政治經歷"
+        },
+        {
+          "tier": "official",
+          "name": "臺中市議會",
+          "url": "https://www.tccc.gov.tw/ebook/no03/files/basic-html/page54.html",
+          "supports": "林士昌為父親及交棒林孟令參選"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-3-49-政治家族-1",
+      "query": "林孟令 林士昌 父親 議長 副議長 鄉長 代表會主席",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認父子關係，並逐項記載林士昌曾任代表會主席、鄉長、副議長與市議長的年資；臺中市議會資料亦確認政治交棒。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180802000636-260107",
+          "supports": "父子關係及林士昌主要政治經歷"
+        },
+        {
+          "tier": "official",
+          "name": "臺中市議會",
+          "url": "https://www.tccc.gov.tw/ebook/no03/files/basic-html/page54.html",
+          "supports": "林士昌為父親及交棒林孟令參選"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-55-政治家族-1",
+      "query": "林宛蓉 郭玟成 丈夫 三屆立委 三屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "高雄市議會資料及民視報導可確認郭玟成為林宛蓉丈夫，立法院資料可核對其曾任高雄市議員；本輪未完整核對「三屆立委」的精確任期數。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會",
+          "url": "https://ws.kcc.gov.tw/Download.ashx?icon=.pdf&n=56ysNzTmnJ%2Fpq5jluILorbDlo4fpm7vlrZDmnJ%2FliIoucGRm&u=LzAwMS9VcGxvYWQvMS9yZWxmaWxlLzkwNDAvMTQzMDkvZDEwOThhNjctZDk0YS00MzJjLTgzMTUtZTE2Njg3ZDE0YjNlLnBkZg%3D%3D",
+          "supports": "林宛蓉與郭玟成的配偶關係"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1442",
+          "supports": "郭玟成曾任高雄市議員等經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-3-1-政治家族-1",
+      "query": "林昊佑 林汝洲 父親 議員 鄉長 代表",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認林汝洲為林昊佑父親及時任臺中市議員；本輪未完整核對暗公報列出的鄉長與代表任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20221126003498-263101",
+          "supports": "林汝洲為父親及時任臺中市議員"
+        },
+        {
+          "tier": "official",
+          "name": "臺中市議會",
+          "url": "https://www.tccc.gov.tw/pic/DocSimple/16720638450102%282%29.pdf",
+          "supports": "林汝洲交棒林昊佑參選"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-2-8-政治家族-1",
+      "query": "林明義 林茂源 父親 龜山 代表會 副主席",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞與蕃新聞直接確認林茂源為林明義父親，並曾任龜山鄉民代表會副主席。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E5%9C%8B%E6%B0%91%E9%BB%A8%E6%A1%83%E5%9C%92%E9%BE%9C%E5%B1%B1%E8%AD%B0%E5%93%A1%E5%88%9D%E9%81%B8%E5%87%BA%E7%88%90-%E6%9E%97%E6%98%8E%E7%BE%A9-%E5%AD%AB%E9%9F%BB%E7%92%87%E5%87%BA%E7%B7%9A-062313225.html",
+          "supports": "林茂源為父親及龜山鄉民代表會副主席"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "蕃新聞",
+          "url": "https://n.yam.com/Article/20220930720538",
+          "supports": "父子關係及林茂源地方經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-5-20-政治家族-1",
+      "query": "林芳如 黃登丕 丈夫 前高雄縣議員",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄市議會公報直接記載黃登丕為林芳如丈夫；自立晚報亦稱林芳如為前議員黃登丕之妻。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會",
+          "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/9%E5%8D%B7/1%E6%9C%9F/9%E5%8D%B71%E6%9C%9F00832%E8%B5%B7%E9%A0%8100870%E8%BF%84%E9%A0%81.pdf",
+          "supports": "黃登丕為林芳如丈夫"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "自立晚報",
+          "url": "https://www.idn.com.tw/news/news_content.aspx?artid=20090430abcd001&catdid=0&catid=1&catsid=2",
+          "supports": "林芳如為前議員黃登丕之妻"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-5-20-政治家族-2",
+      "query": "林芳如 黃登勇 大伯 前大樹鄉長",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄市議會公報直接記載林芳如是黃登勇的弟媳，另份議會資料記載黃登勇為前大樹鄉長。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會",
+          "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/23%E5%8D%B7/1%E6%9C%9F/23%E5%8D%B71%E6%9C%9F04717%E8%B5%B7%E9%A0%8104778%E8%BF%84%E9%A0%81.pdf",
+          "supports": "林芳如為黃登勇弟媳"
+        },
+        {
+          "tier": "official",
+          "name": "高雄市議會",
+          "url": "https://cissearch.kcc.gov.tw/System/Bulletin/Pdfview.aspx?file=~%2FUpload%2FAttachment%2F%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99%2F%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83%2F26%E5%8D%B7%2F3%E6%9C%9F%2F26%E5%8D%B73%E6%9C%9F05773%E8%B5%B7%E9%A0%8105837%E8%BF%84%E9%A0%81.pdf&page=1",
+          "supports": "黃登勇為前大樹鄉長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-4-67-政治家族-1",
+      "query": "林亭君 林晉章 叔叔 堂姪女 六屆議員",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "中國時報稱林亭君為林晉章的「堂姪女」，與暗公報較簡化的「叔叔」稱謂不完全一致；臺北市議會資料可核對林晉章歷屆議員經歷，公開前須人工決定精確關係。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20141031000454-260107",
+          "supports": "林亭君為林晉章堂姪女"
+        },
+        {
+          "tier": "official",
+          "name": "臺北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=491101&n=13513&name=%E6%9E%97%E6%99%89%E7%AB%A0&s=1926&termsn=17",
+          "supports": "林晉章歷屆臺北市議員資料"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-4-4-政治家族-1",
+      "query": "林亮君 苗博雅 遠房 表姊妹",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞與臺視新聞均直接確認林亮君與苗博雅為遠房表姊妹。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E9%81%8E%E5%B9%B4%E8%AA%8D%E8%A6%AA-%E8%8B%97%E5%8D%9A%E9%9B%85-%E6%9E%97%E4%BA%AE%E5%90%9B%E7%AB%9F%E6%98%AF%E8%A1%A8%E5%A7%90%E5%A6%B9-130514886.html",
+          "supports": "兩人為遠房表姊妹"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "臺視新聞",
+          "url": "https://news.ttv.com.tw/news/11302130000300W/amp",
+          "supports": "兩人為表姊妹"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-2-64-政治家族-1",
+      "query": "林俐玲 李鎮楠 丈夫 立委 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "地方新聞直接記載李宗豪的父母為李鎮楠與林俐玲，可間接支持兩人的配偶／共同親職關係；本輪未找到同等可靠來源直接使用「丈夫」稱謂，也未完整核對精確任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "台灣新聞網",
+          "url": "https://tnews.cc/03/News/View/18433",
+          "supports": "李宗豪之父母為李鎮楠與林俐玲"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "蕃新聞",
+          "url": "https://n.yam.com/Article/20220308720567",
+          "supports": "李宗豪之父母為李鎮楠與林俐玲"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-7-12-政治家族-1",
+      "query": "林冠維 林阳乙 父親 前台南市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "臺南市議會與自由時報均直接確認林阳乙為林冠維父親及前臺南市議員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市議會",
+          "url": "https://www.tncc.gov.tw/page.asp?mainid=6A91963F-B454-4BB3-9427-AAB4B9C705B5",
+          "supports": "林阳乙為父親及前臺南市議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2022/news/breakingnews/4136811",
+          "supports": "林冠維為前議員林阳乙之子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-10-2-政治家族-1",
+      "query": "林昭賢 林忠正 父親 龍潭鄉長 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認林忠正為林昭賢父親及前龍潭鄉長；本輪未完整核對「三屆議員、兩屆鄉長」的精確任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180426000710-260102",
+          "supports": "林忠正為父親及前龍潭鄉長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-10-40-政治家族-1",
+      "query": "林昭賢 林忠正 父親 龍潭鄉長 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認林忠正為林昭賢父親及前龍潭鄉長；本輪未完整核對「三屆議員、兩屆鄉長」的精確任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180426000710-260102",
+          "supports": "林忠正為父親及前龍潭鄉長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-4-13-政治家族-1",
+      "query": "林珍羽 林國成 父親 四屆 台北市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "NOWnews與信傳媒均直接確認林國成為林珍羽父親；NOWnews並記載林國成連任四屆臺北市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews",
+          "url": "https://www.nownews.com/amp/news/6246969",
+          "supports": "林國成為父親及連任四屆臺北市議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "信傳媒",
+          "url": "https://www.cmmedia.com.tw/home/articles/17364",
+          "supports": "林國成為林珍羽父親及臺北市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-12-政治家族-1",
+      "query": "林瑞圖 林文郎 叔叔 前立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接稱林文郎為林瑞圖叔叔；立法院官方資料確認林文郎曾任立法委員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20161007000006-261901",
+          "supports": "林文郎為林瑞圖叔叔"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=902",
+          "supports": "林文郎曾任立法委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-9-58-政治家族-1",
+      "query": "林裔綺 顏世雄 丈夫 瑞芳鎮長 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "自由時報與蕃新聞直接確認顏世雄為林裔綺丈夫，並曾任瑞芳鎮長及縣議員；蕃新聞可核對兩屆鎮長，但本輪未完整核對兩屆議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2018/news/NewTaipeiOverview/paper/1244672",
+          "supports": "顏世雄為丈夫及前瑞芳鎮長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "蕃新聞",
+          "url": "https://n.yam.com/Article/20140915551192",
+          "supports": "顏世雄為丈夫、曾任縣議員及兩屆瑞芳鎮長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-10-2-政治家族-1",
+      "query": "林裔綺 顏世雄 丈夫 瑞芳鎮長 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "自由時報與蕃新聞直接確認顏世雄為林裔綺丈夫，並曾任瑞芳鎮長及縣議員；蕃新聞可核對兩屆鎮長，但本輪未完整核對兩屆議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2018/news/NewTaipeiOverview/paper/1244672",
+          "supports": "顏世雄為丈夫及前瑞芳鎮長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "蕃新聞",
+          "url": "https://n.yam.com/Article/20140915551192",
+          "supports": "顏世雄為丈夫、曾任縣議員及兩屆瑞芳鎮長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-15-政治家族-1",
+      "query": "林銘仁 林阿坤 父親 前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認林阿坤為林銘仁父親及前臺北縣議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20101026000609-260102",
+          "supports": "林阿坤為父親及前臺北縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-7-72-政治家族-1",
+      "query": "林銘仁 林阿坤 父親 前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認林阿坤為林銘仁父親及前臺北縣議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20101026000609-260102",
+          "supports": "林阿坤為父親及前臺北縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-1-3-政治家族-1",
+      "query": "林慧欣 盧天麟 舅舅 民進黨 不分區立委",
+      "outcome": "source_found_manual_review",
+      "notes": "NOWnews直接引述林慧欣稱盧天麟為母舅，並確認其曾任民進黨不分區立委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews",
+          "url": "https://www.nownews.com/news/5754512",
+          "supports": "盧天麟為母舅及前民進黨不分區立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-11-10-政治家族-1",
+      "query": "林霈涵 林張久美 母親 三屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "TVBS與Yahoo新聞直接確認林張久美為林霈涵母親及前臺中市議員；本輪未由可靠來源完整核對三屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS",
+          "url": "https://news.tvbs.com.tw/politics/2848919",
+          "supports": "林張久美為林霈涵母親及前臺中市議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E5%89%8D%E5%8F%B0%E4%B8%AD%E8%AD%B0%E5%93%A1%E6%9E%97%E5%BC%B5%E4%B9%85%E7%BE%8E%E9%9B%A2%E4%B8%96-%E4%BA%AB%E5%A3%BD83%E6%AD%B2-%E5%A5%B3%E5%85%92%E6%9E%97%E9%9C%88%E6%B6%B5%E7%82%BA%E7%8F%BE%E4%BB%BB%E8%97%8D%E8%AD%B0%E5%93%A1-024039778.html",
+          "supports": "林張久美為母親及前臺中市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-11-10-政治家族-2",
+      "query": "林霈涵 林佩樂 妹妹 兩屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "Newtalk與Yahoo新聞直接確認林佩樂為林霈涵妹妹，且兩人皆曾任議員；本輪未由可靠來源完整核對林佩樂兩屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2022-09-04/811896",
+          "supports": "林佩樂為林霈涵妹妹及曾任議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E5%89%8D%E5%8F%B0%E4%B8%AD%E8%AD%B0%E5%93%A1%E6%9E%97%E5%BC%B5%E4%B9%85%E7%BE%8E%E9%9B%A2%E4%B8%96-%E4%BA%AB%E5%A3%BD83%E6%AD%B2-%E5%A5%B3%E5%85%92%E6%9E%97%E9%9C%88%E6%B6%B5%E7%82%BA%E7%8F%BE%E4%BB%BB%E8%97%8D%E8%AD%B0%E5%93%A1-024039778.html",
+          "supports": "林佩樂與林霈涵均為林張久美女兒且曾任議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-11-62-政治家族-2",
+      "query": "林學冠 林珮涵 林佩樂 姊姊 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "NOWnews直接記載林學冠與母親林張久美、姐姐林珮涵及林佩樂共同活動，可支持手足關係；本輪未完整核對兩位姊姊各自兩屆議員的精確任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews",
+          "url": "https://www.nownews.com/news/3083066",
+          "supports": "林珮涵與林佩樂為林學冠姐姐"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-11-62-政治家族-1",
+      "query": "林學冠 林張久美 母親 三屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "NOWnews直接確認林張久美為林學冠母親及前議員；本輪未由可靠來源完整核對三屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews",
+          "url": "https://www.nownews.com/news/3083066",
+          "supports": "林張久美為林學冠母親及前議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-11-4-政治家族-2",
+      "query": "邱于軒 邱大展 父親 國民黨 行管會 主委",
+      "outcome": "source_found_manual_review",
+      "notes": "中評社直接確認邱大展為邱于軒父親及時任國民黨行管會主委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/1_0_104797428_1_0901001840.html",
+          "supports": "邱大展為父親及國民黨行管會主委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-89-政治家族-2",
+      "query": "邱于軒 邱大展 父親 國民黨 行管會 主委",
+      "outcome": "source_found_manual_review",
+      "notes": "中評社直接確認邱大展為邱于軒父親及時任國民黨行管會主委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/1_0_104797428_1_0901001840.html",
+          "supports": "邱大展為父親及國民黨行管會主委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-89-政治家族-1",
+      "query": "邱于軒 黃碧霞 婆婆 前高雄縣議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中評社直接確認黃碧霞為邱于軒婆婆及前國民黨高雄縣議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/1_0_104797428_1_0901001840.html",
+          "supports": "黃碧霞為婆婆及前高雄縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-7-12-政治家族-1",
+      "query": "邱仁德 王浩宇 表親 表叔",
+      "outcome": "source_found_manual_review",
+      "notes": "信傳媒與鏡週刊均直接確認邱仁德是王浩宇表叔；較暗公報的泛稱「表親」更精確。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "信傳媒",
+          "url": "https://www.cmmedia.com.tw/home/articles/23857",
+          "supports": "邱仁德為王浩宇親表叔"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "鏡週刊",
+          "url": "https://www.mirrormedia.mg/story/20200706edi027",
+          "supports": "邱仁德為王浩宇表叔"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-11-1-政治家族-1",
+      "query": "邱文威 邱佳亮 父親 前桃園縣議員",
+      "outcome": "source_found_manual_review",
+      "notes": "Newtalk直接確認邱文威為前民進黨議員邱佳亮之子。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2022-05-18/756500",
+          "supports": "邱佳亮為父親及前議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-6-3-政治家族-1",
+      "query": "邱烽堯 邱垂益 父親 四屆議員 中和市長 區長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認邱垂益為邱烽堯父親及中和市長；中選會公報亦以「邱垂益父子」表述。本輪未完整核對四屆議員及中和區長的所有精確任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20100810000535-260107",
+          "supports": "邱垂益為父親及中和市長"
+        },
+        {
+          "tier": "official",
+          "name": "中選會選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC5%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "邱垂益與邱烽堯為父子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-5-63-政治家族-1",
+      "query": "邱烽堯 邱垂益 父親 四屆議員 中和市長 區長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認邱垂益為邱烽堯父親及中和市長；中選會公報亦以「邱垂益父子」表述。本輪未完整核對四屆議員及中和區長的所有精確任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20100810000535-260107",
+          "supports": "邱垂益為父親及中和市長"
+        },
+        {
+          "tier": "official",
+          "name": "中選會選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC5%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "邱垂益與邱烽堯為父子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-7-政治家族-1",
+      "query": "邱婷蔚 邱西成 邱西城 父親 三重市民代表",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "內政部與中選會官方資料均將父親姓名記為「邱西城」，暗公報寫成「邱西成」；官方資料可確認父女關係及其曾任三重市民代表，公開前應更正姓名。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "內政部地方公職人員資訊",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112FA00055&_TYP=REP&n=573",
+          "supports": "邱西城為邱婷蔚父親"
+        },
+        {
+          "tier": "official",
+          "name": "中選會選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC3%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "邱婷蔚曾任三重市民代表邱西城競選總幹事及聯合服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-4-7-政治家族-1",
+      "query": "邱愛珊 魏隆琪 丈夫 豐原市民代表會 副主席",
+      "outcome": "source_found_manual_review",
+      "notes": "邱愛珊官方網站直接確認丈夫魏隆琪曾任豐原市民代表會副主席。",
+      "sources": [
+        {
+          "tier": "candidate_official",
+          "name": "邱愛珊官方網站",
+          "url": "https://5423chiu.tw/",
+          "supports": "魏隆琪為丈夫及前豐原市民代表會副主席"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-5-47-政治家族-1",
+      "query": "金瑞龍 陳美華 妻子 瑞穗里長 市民代表",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "立法院轉載報導與中國時報直接確認陳美華為金瑞龍妻子及瑞穗里長；內政部可核對里長任職，但本輪未找到可靠來源確認她曾任市民代表。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/EngPages/Detail.aspx?nodeid=12350&pid=157995",
+          "supports": "陳美華為妻子及瑞穗里長候選人"
+        },
+        {
+          "tier": "official",
+          "name": "內政部地方公職人員資訊",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0007&_PARENT_ID=MYR11112FG0544&_TYP=MYR&n=577",
+          "supports": "陳美華歷屆瑞穗里里長經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-6-4-政治家族-1",
+      "query": "金瑞龍 陳美華 妻子 瑞穗里長 市民代表",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "立法院轉載報導與中國時報直接確認陳美華為金瑞龍妻子及瑞穗里長；內政部可核對里長任職，但本輪未找到可靠來源確認她曾任市民代表。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/EngPages/Detail.aspx?nodeid=12350&pid=157995",
+          "supports": "陳美華為妻子及瑞穗里長候選人"
+        },
+        {
+          "tier": "official",
+          "name": "內政部地方公職人員資訊",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0007&_PARENT_ID=MYR11112FG0544&_TYP=MYR&n=577",
+          "supports": "陳美華歷屆瑞穗里里長經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-2-35-政治家族-1",
+      "query": "施嘉榮 施明進 父親 後港里 里長 聯誼會長",
+      "outcome": "source_found_manual_review",
+      "notes": "自由時報直接確認施明進為施嘉榮父親及後港里里長；中選會公報可核對施明進曾任新莊市里長聯誼會主席。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2018/news/New/paper/1244205",
+          "supports": "施明進為父親及後港里里長"
+        },
+        {
+          "tier": "official",
+          "name": "中選會選舉公報",
+          "url": "https://web.cec.gov.tw/api/file/c17db79a-e772-42d2-8ddb-f1c91b32f6a3.pdf",
+          "supports": "施明進為後港里里長及新莊市里長聯誼會主席"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-10-45-政治家族-1",
+      "query": "柯貞竹 林京玲 女兒 公民里里長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認林京玲為柯貞竹女兒及時任臺中市西區公民里里長。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180914003987-260509",
+          "supports": "林京玲為女兒及公民里里長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-13-5-政治家族-1",
+      "query": "段中仁 段緯宇 父親 五屆議員",
+      "outcome": "source_found_manual_review",
+      "notes": "自由時報直接確認段緯宇交棒兒子段中仁，並記載段緯宇連任五屆議員；臺中市議會資料亦記載父子交棒及五屆議員經歷。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2022/news/breakingnews/4136760",
+          "supports": "段緯宇為父親及五屆議員"
+        },
+        {
+          "tier": "official",
+          "name": "臺中市議會",
+          "url": "https://www.tccc.gov.tw/pic/DocSimple/16615308430089%282%29.pdf",
+          "supports": "交棒兒子段中仁及五屆縣市議員經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-3-44-政治家族-1",
+      "query": "段樹文 陳松福 陳松銀 哥哥 同母異父",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "除暗公報外只找到缺乏編採與可追溯證據的個人部落格，未找到可獨立確認兄弟關係及同母異父的官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-3-5-政治家族-1",
+      "query": "段樹文 陳松福 哥哥 八德市民代表會主席",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "除暗公報外只找到缺乏編採與可追溯證據的個人部落格，未找到可獨立確認兄弟關係的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-3-5-政治家族-2",
+      "query": "段樹文 陳松銀 哥哥 八德霄裡里里長",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "除暗公報外只找到缺乏編採與可追溯證據的個人部落格，未找到可獨立確認兄弟關係的可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-15-3-政治家族-1",
+      "query": "洪志明 洪金福 父親 議員 台中",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認前臺中市議員洪金福交棒兒子洪志明參選；臺中市政府可核對洪金福議員身分。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20220504000510-260118",
+          "supports": "洪金福為洪志明父親及前臺中市議員"
+        },
+        {
+          "tier": "official",
+          "name": "臺中市政府",
+          "url": "https://www.taichung.gov.tw/950001/post",
+          "supports": "洪金福遞補當選臺中市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-7-2-政治家族-1",
+      "query": "洪佳君 黃志雄 丈夫 三屆立委",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "TVBS與中國時報直接確認黃志雄為洪佳君丈夫及曾任立委；本輪未由官方資料完整核對三屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS",
+          "url": "https://news.tvbs.com.tw/life/453136",
+          "supports": "黃志雄與洪佳君結婚及黃志雄立委身分"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20101125000467-260102",
+          "supports": "黃志雄為夫婿及立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-6-政治家族-1",
+      "query": "洪佳君 黃志雄 丈夫 三屆立委",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "TVBS與中國時報直接確認黃志雄為洪佳君丈夫及曾任立委；本輪未由官方資料完整核對三屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS",
+          "url": "https://news.tvbs.com.tw/life/453136",
+          "supports": "黃志雄與洪佳君結婚及黃志雄立委身分"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20101125000467-260102",
+          "supports": "黃志雄為夫婿及立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-6-政治家族-2",
+      "query": "洪佳君 洪辰祐 洪辰佑 父親 東昇里長 五屆",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認洪佳君父親為樹林東昇里長，來源使用「洪辰佑」，暗公報使用「洪辰祐」；可確認父女與里長身分，但姓名字形及五屆任期仍需人工核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20101125000467-260102",
+          "supports": "洪佳君父親為連任多屆的樹林東昇里長洪辰佑"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-7-2-政治家族-2",
+      "query": "洪佳君 洪辰祐 洪辰佑 父親 東昇里長 五屆",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認洪佳君父親為樹林東昇里長，來源使用「洪辰佑」，暗公報使用「洪辰祐」；可確認父女與里長身分，但姓名字形及五屆任期仍需人工核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20101125000467-260102",
+          "supports": "洪佳君父親為連任多屆的樹林東昇里長洪辰佑"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-13-22-政治家族-1",
+      "query": "洪國彰 洪國治 弟弟 四屆議員 桃園",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "獨家日報直接確認洪國治是洪國彰胞弟，並記載洪國治已任議員16年9個月；可支持兄弟與長期議員經歷，但四屆任期仍需人工換算核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "獨家日報",
+          "url": "https://www.scooptwnews.com/uncategorized/664/",
+          "supports": "洪國治為洪國彰胞弟及長期擔任桃園縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-6-19-政治家族-1",
+      "query": "苗博雅 林亮君 遠房表妹 台北市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞與臺視新聞直接確認苗博雅與林亮君為遠房表姊妹；公開時宜使用較精確的表姊妹稱謂。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E9%81%8E%E5%B9%B4%E8%AA%8D%E8%A6%AA-%E8%8B%97%E5%8D%9A%E9%9B%85-%E6%9E%97%E4%BA%AE%E5%90%9B%E7%AB%9F%E6%98%AF%E8%A1%A8%E5%A7%90%E5%A6%B9-130514886.html",
+          "supports": "兩人為遠房表姊妹"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "臺視新聞",
+          "url": "https://news.ttv.com.tw/news/11302130000300W",
+          "supports": "兩人為遠房親戚／表姊妹"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-8-68-政治家族-1",
+      "query": "唐碧娥 唐儀靜 姪女 兩屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報照片說明直接確認唐儀靜與姑姑唐碧娥的關係；本輪未由可靠來源完整核對唐儀靜兩屆議員任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20190509003823-260402",
+          "supports": "唐碧娥為唐儀靜姑姑"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-6-42-政治家族-2",
+      "query": "唐儀靜 唐碧娥 姑姑 兩屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報照片說明直接確認唐碧娥為唐儀靜姑姑；本輪未由可靠來源完整核對唐碧娥兩屆議員任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20190509003823-260402",
+          "supports": "唐碧娥為唐儀靜姑姑"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-6-42-政治家族-1",
+      "query": "唐儀靜 唐瑞明 父親 四屆議員 民進黨元老",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報照片說明直接確認唐瑞明為唐儀靜父親；本輪未完整核對四屆議員與「民進黨元老」描述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20190509003823-260402",
+          "supports": "唐瑞明為唐儀靜父親"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-2-6-政治家族-1",
+      "query": "孫韻璇 李雲強 丈夫 兩屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "台北郵報直接確認李雲強為孫韻璇丈夫及前桃園市議員；文中可核對2014至2018任期，但未完整確認兩屆議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "台北郵報",
+          "url": "https://taipeipost.org/205450/",
+          "supports": "李雲強為丈夫及前桃園市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-49-政治家族-2",
+      "query": "徐世勲 徐欣瑩 姐姐 民國黨主席",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞直接稱徐世勳為徐欣瑩弟弟，並報導徐欣瑩籌組民國黨及黨主席安排；臺北市客家文化主題公園亦記載徐世勲有兩位姐姐。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/-053021260.html",
+          "supports": "徐欣瑩與弟弟徐世勳及民國黨黨主席脈絡"
+        },
+        {
+          "tier": "official",
+          "name": "臺北市客家文化主題公園",
+          "url": "https://ssl.thcp.org.tw/news/1161",
+          "supports": "徐世勲有兩位姐姐"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-49-政治家族-1",
+      "query": "徐世勲 徐鏡蘭 父親 新豐鄉長",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞可同時確認徐欣瑩之父徐鏡蘭與弟弟徐世勳，徐欣瑩官方網站及今周刊可核對徐鏡蘭曾任新豐鄉長。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/-053021260.html",
+          "supports": "徐鏡蘭為徐欣瑩父親及徐世勳為其弟弟"
+        },
+        {
+          "tier": "candidate_official",
+          "name": "徐欣瑩官方網站",
+          "url": "https://www.shesinging.tw/",
+          "supports": "徐鏡蘭曾任新豐鄉長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-70-政治家族-1",
+      "query": "徐佳瑩 徐志明 父親 前立委 大寮鄉長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報與東森新聞均直接確認徐志明為徐佳瑩父親；華視與TVBS可核對其前立委及大寮鄉長經歷。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20200714003219-260407",
+          "supports": "徐志明為徐佳瑩父親及前立委"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "華視新聞網",
+          "url": "https://news.cts.com.tw/cts/politics/200510/200510070184809.html",
+          "supports": "徐志明曾任大寮鄉長及立法委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-70-政治家族-2",
+      "query": "徐佳瑩 徐張貴華 母親 前大寮鄉長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "Newtalk直接記載徐張貴華為徐佳瑩兄長徐慶煌之母、徐佳瑩為其妹妹，並確認徐張貴華曾任大寮鄉長；屬可推導的家庭關係，仍需人工確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2019-09-14/298659",
+          "supports": "徐張貴華為徐慶煌母親、徐佳瑩為其妹妹及曾任大寮鄉長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-11-102-政治家族-1",
+      "query": "翁語含 李俊毅 姨丈 五屆立委 民進黨副秘書長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "自由時報直接確認李俊毅為翁語含姨丈及前立委；民進黨官方資料確認副秘書長職務。本輪未由官方資料完整核對五屆立委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2018/news/New/breakingnews/2571693",
+          "supports": "李俊毅為翁語含姨丈及前立委"
+        },
+        {
+          "tier": "official",
+          "name": "民主進步黨",
+          "url": "https://www.dpp.org.tw/media/contents/7599",
+          "supports": "李俊毅曾任民進黨副秘書長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-11-5-政治家族-1",
+      "query": "翁語含 李俊毅 姨丈 五屆立委 民進黨副秘書長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "自由時報直接確認李俊毅為翁語含姨丈及前立委；民進黨官方資料確認副秘書長職務。本輪未由官方資料完整核對五屆立委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2018/news/New/breakingnews/2571693",
+          "supports": "李俊毅為翁語含姨丈及前立委"
+        },
+        {
+          "tier": "official",
+          "name": "民主進步黨",
+          "url": "https://www.dpp.org.tw/media/contents/7599",
+          "supports": "李俊毅曾任民進黨副秘書長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-6-25-政治家族-2",
+      "query": "耿葳 耿繼文 伯父 退休警察人員協會 理事長",
+      "outcome": "source_found_manual_review",
+      "notes": "閱政治直接確認耿繼文為耿葳伯父及時任中華民國退休警察人員協會總會理事長；此為單一媒體來源，需人工確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "閱政治",
+          "url": "https://www.readgov.com/11128/",
+          "supports": "耿繼文為伯父及退休警察人員協會總會理事長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-6-111-政治家族-1",
+      "query": "耿葳 厲耿桂芳 姑姑 五屆議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認厲耿桂芳為耿葳姑姑；臺北市議會歷屆資料可核對其議員任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180126000625-263101",
+          "supports": "厲耿桂芳為耿葳姑姑及政治交棒"
+        },
+        {
+          "tier": "official",
+          "name": "臺北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=901031&n=13513&name=%E8%80%BF%E8%91%B3&s=2493&termsn=21",
+          "supports": "耿葳曾任厲耿桂芳特助"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-10-政治家族-1",
+      "query": "高乃芸 高敏慧 姑姑 六屆議員 貪污 褫奪公權",
+      "outcome": "source_found_manual_review",
+      "notes": "聯合報直接確認高敏慧為高乃芸姑姑；中央社確認高敏慧收賄案判刑定讞並褫奪公權。六屆任期應按2022當時狀態人工核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "聯合報",
+          "url": "https://pets.udn.com/pets/story/122674/6289345",
+          "supports": "高敏慧為高乃芸姑姑"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/202210270262.aspx",
+          "supports": "高敏慧收賄案判刑定讞並褫奪公權"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-3-2-政治家族-1",
+      "query": "張文潔 張茂楠 父親 民進黨 台北市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "民視與聯合報直接確認張茂楠為張文潔父親及前臺北市議員；臺北市議會可核對張茂楠歷屆議員資料。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://finance.ftvnews.com.tw/news/detail/2022B24L06M1",
+          "supports": "張茂楠為父親及16年臺北市議員"
+        },
+        {
+          "tier": "official",
+          "name": "臺北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content.aspx?n=13898&s=2454",
+          "supports": "張茂楠歷屆臺北市議員經歷"
+        }
+      ]
+    }
+  ]
+}

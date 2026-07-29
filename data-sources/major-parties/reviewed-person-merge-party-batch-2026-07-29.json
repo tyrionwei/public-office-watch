@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "evidence-reviewed:2026-07-29-party-candidate-batch",
+  "groups": [
+    {
+      "name": "王美惠",
+      "canonicalPersonId": "4f7db982-15de-44ee-8db1-6989bc8b6e77",
+      "duplicatePersonIds": [
+        "8c99234d-6a1e-4995-b288-ecffb9e6ce43",
+        "b59ae631-a9d2-4fbc-9f4b-6e1070b6a20c"
+      ],
+      "evidence": {
+        "basis": "VoteTW 歷史參選紀錄以相同生日連結 2018 嘉義市議員及 2020、2024 嘉義市立法委員，與 2026 民進黨嘉義市長提名者的地區、黨籍與公職經歷一致",
+        "candidateYears": [2018, 2020, 2024, 2026],
+        "canonicalSource": "立法院第 11 屆立法委員資料"
+      }
+    },
+    {
+      "name": "賴瑞隆",
+      "canonicalPersonId": "1c0a3096-71d6-4584-81ef-19ce06c0b3ac",
+      "duplicatePersonIds": ["c90aa20c-076c-4906-89dd-be36c56ee43b"],
+      "evidence": {
+        "basis": "VoteTW 歷史參選紀錄顯示相同生日，選區由 2016 高雄市第九選區調整為 2020、2024 第八選區，均為同一位民進黨立法委員",
+        "candidateYears": [2016, 2020, 2024, 2026],
+        "canonicalSource": "立法院第 11 屆立法委員資料"
+      }
+    },
+    {
+      "name": "鄭朝方",
+      "canonicalPersonId": "e816434d-e5d3-496c-bfd7-7c1b1f5374a6",
+      "duplicatePersonIds": [
+        "1a51944d-1ad3-4231-976d-7960e368ecad",
+        "9a397842-d6cb-46ec-bcff-409cfa9e80f8"
+      ],
+      "evidence": {
+        "basis": "VoteTW 以相同生日連結 2018 新竹縣長、2020 新竹縣立法委員及 2022 竹北市長參選紀錄，並與 2026 民進黨新竹縣長提名者一致",
+        "candidateYears": [2018, 2020, 2022, 2026],
+        "canonicalSource": "2018 中選會新竹縣長候選人資料"
+      }
+    },
+    {
+      "name": "陳振中",
+      "canonicalPersonId": "aed4c48f-b895-4344-9fa8-45d66b54241e",
+      "duplicatePersonIds": ["d1dec764-6cb4-4a09-85de-d35937a7928b"],
+      "evidence": {
+        "basis": "VoteTW 以相同生日及澎湖地區政治經歷連結 2018 澎湖縣議員與 2022 湖西鄉長參選紀錄，與 2026 國民黨澎湖縣長提名者一致",
+        "candidateYears": [2018, 2022, 2026],
+        "canonicalSource": "2018 中選會澎湖縣議員候選人資料"
+      }
+    },
+    {
+      "name": "陳玉珍",
+      "canonicalPersonId": "a6981b25-a402-4b05-95cf-00717f1d984d",
+      "duplicatePersonIds": ["5b21fa2c-a224-492b-8798-51f828785b6e"],
+      "evidence": {
+        "basis": "VoteTW 歷史參選紀錄以相同生日連結 2020、2024 金門縣立法委員，與 2026 國民黨金門縣長提名者的地區、黨籍及現職一致",
+        "candidateYears": [2020, 2024, 2026],
+        "canonicalSource": "立法院第 11 屆立法委員資料"
+      }
+    },
+    {
+      "name": "陳瑩",
+      "canonicalPersonId": "52fe5599-4ed3-4292-a2a9-8702c171bc95",
+      "duplicatePersonIds": ["9125ef0e-5aab-40db-a643-78ad0b89cb55"],
+      "evidence": {
+        "basis": "VoteTW 歷史參選紀錄以相同生日連結 2016、2020、2024 平地原住民立法委員，與 2026 民進黨台東縣長提名者的黨籍及現職一致",
+        "candidateYears": [2016, 2020, 2024, 2026],
+        "canonicalSource": "立法院第 11 屆立法委員資料"
+      }
+    },
+    {
+      "name": "蘇錦雄",
+      "canonicalPersonId": "147c1321-53d1-4dd3-89de-7823697c7098",
+      "duplicatePersonIds": ["aedfeced-3f6f-4c68-875e-f97614980e71"],
+      "evidence": {
+        "basis": "2018、2022 中選會新北市平地原住民議員候選紀錄及現任議員資料的姓名、族名、選區與黨籍一致；另一筆 2022 VoteTW 紀錄已歸入同一 canonical person",
+        "candidateYears": [2018, 2022, 2026],
+        "canonicalSource": "2022 中選會新北市議員候選人資料"
+      }
+    }
+  ]
+}

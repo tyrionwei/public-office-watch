@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "party": "中國國民黨",
+  "reviewedBy": "evidence-reviewed:2026-07-29-party-candidate-batch",
+  "decisions": [
+    {"sourceCandidateKey":"kmt-2026-mayor-10016-a1a4677d57dc","personName":"陳振中","decision":"use_existing","personId":"aed4c48f-b895-4344-9fa8-45d66b54241e","reason":"2018 澎湖縣議員及 2022 湖西鄉長紀錄的生日、地區與黨籍一致","reviewedAt":"2026-07-29T23:30:00+08:00"},
+    {"sourceCandidateKey":"kmt-2026-mayor-09020-eba888de8928","personName":"陳玉珍","decision":"use_existing","personId":"a6981b25-a402-4b05-95cf-00717f1d984d","reason":"2020、2024 金門縣立法委員紀錄的生日、地區、黨籍及現職一致","reviewedAt":"2026-07-29T23:30:00+08:00"}
+  ]
+}

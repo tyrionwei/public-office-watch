@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "party": "民主進步黨",
+  "reviewedBy": "evidence-reviewed:2026-07-29-party-candidate-batch",
+  "decisions": [
+    {"sourceCandidateKey":"dpp-2026-mayor-10020","personName":"王美惠","decision":"use_existing","personId":"4f7db982-15de-44ee-8db1-6989bc8b6e77","reason":"歷屆嘉義市議員及立法委員紀錄的生日、地區、黨籍與現職一致","reviewedAt":"2026-07-29T23:30:00+08:00"},
+    {"sourceCandidateKey":"dpp-2026-mayor-64000","personName":"賴瑞隆","decision":"use_existing","personId":"1c0a3096-71d6-4584-81ef-19ce06c0b3ac","reason":"歷屆高雄市立法委員紀錄的生日、黨籍與選區調整脈絡一致","reviewedAt":"2026-07-29T23:30:00+08:00"},
+    {"sourceCandidateKey":"dpp-2026-mayor-10004","personName":"鄭朝方","decision":"use_existing","personId":"e816434d-e5d3-496c-bfd7-7c1b1f5374a6","reason":"2018 縣長、2020 立委及 2022 竹北市長紀錄的生日、地區與黨籍一致","reviewedAt":"2026-07-29T23:30:00+08:00"},
+    {"sourceCandidateKey":"dpp-2026-mayor-10014","personName":"陳瑩","decision":"use_existing","personId":"52fe5599-4ed3-4292-a2a9-8702c171bc95","reason":"歷屆平地原住民立法委員紀錄的生日、黨籍與現職一致","reviewedAt":"2026-07-29T23:30:00+08:00"},
+    {"sourceCandidateKey":"dpp-2026-councilor-66000-9-ddab23417824","personName":"簡嘉佑","decision":"use_existing","personId":"e521cdd4-41bc-4810-97e7-4201e8dd0fe9","reason":"2026 候選人曾任 2018 時代力量台中市議員候選人；地區及公開經歷一致，排除不同生日的桃園同名里長","reviewedAt":"2026-07-29T23:30:00+08:00"},
+    {"sourceCandidateKey":"dpp-2026-councilor-65000-13-60703151b4b1","personName":"布落．馬信","decision":"use_existing","personId":"c1a80678-c645-4bfb-8d93-73423c5f7aaa","reason":"2022 烏來區民代表與 2026 新北市山地原住民議員候選人的姓名、地區及現職經歷一致","reviewedAt":"2026-07-29T23:30:00+08:00"},
+    {"sourceCandidateKey":"dpp-2026-councilor-65000-12-f6418980ccd9","personName":"蘇錦雄 Paylang．Caya","decision":"use_existing","personId":"147c1321-53d1-4dd3-89de-7823697c7098","reason":"2018、2022 新北市平地原住民議員紀錄的姓名、族名、選區與黨籍一致","reviewedAt":"2026-07-29T23:30:00+08:00"},
+    {"sourceCandidateKey":"dpp-2026-councilor-67000-7-db456bf09985","personName":"黃肇輝","decision":"use_existing","personId":"61fe3f12-eacc-4645-9e6e-39a38bd8452c","reason":"繁簡異體字差異；2022 中選會台南市議員紀錄與 2026 候選人的選區、黨籍及現職一致","reviewedAt":"2026-07-29T23:30:00+08:00"}
+  ]
+}

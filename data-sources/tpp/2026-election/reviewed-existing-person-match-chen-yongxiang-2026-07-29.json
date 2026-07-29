@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "party": "台灣民眾黨",
+  "reviewedBy": "evidence-reviewed:2026-07-29-party-candidate-batch",
+  "decisions": [
+    {"sourceCandidateKey":"tpp-2026-city_councilor-166","personName":"陳永祥","decision":"use_existing","personId":"6cada0bd-a898-43cb-bc20-1aabc7f70126","reason":"官方候選人經歷明載現任台中市沙鹿區六路里里長，與 2018、2022 同地區里長紀錄一致，排除彰化、台南及雲林同名者","reviewedAt":"2026-07-29T23:30:00+08:00"}
+  ]
+}

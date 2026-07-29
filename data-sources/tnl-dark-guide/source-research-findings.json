@@ -4129,6 +4129,498 @@
           "supports": "莊玉珠公開聲明提及蔡啟新相關司法程序"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-9-9-政治家族-1",
+      "query": "莊玉珠 蔡介雄 公公 七屆省議員 民進黨創黨元老",
+      "outcome": "source_found_manual_review",
+      "notes": "臺南市議會直接記載蔡介雄為莊玉珠公公及民進黨創黨黨員；國立臺灣歷史博物館確認其曾任第4至第10屆省議員，共七屆。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市議會",
+          "url": "https://www.tncc.gov.tw/2019/page.asp?mainid=%7BA0481488-45BD-43E5-9748-36036BCA2F3C%7D",
+          "supports": "公媳關係及蔡介雄為民進黨創黨黨員之一"
+        },
+        {
+          "tier": "institutional",
+          "name": "國立臺灣歷史博物館",
+          "url": "https://collections.nmth.gov.tw/CollectionContent.aspx?RNO=2006.002.1478&a=132",
+          "supports": "蔡介雄曾任第4至第10屆臺灣省議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-9-78-政治家族-1",
+      "query": "莊玉珠 蔡介雄 公公 七屆省議員 民進黨創黨元老",
+      "outcome": "source_found_manual_review",
+      "notes": "臺南市議會直接記載蔡介雄為莊玉珠公公及民進黨創黨黨員；國立臺灣歷史博物館確認其曾任第4至第10屆省議員，共七屆。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市議會",
+          "url": "https://www.tncc.gov.tw/2019/page.asp?mainid=%7BA0481488-45BD-43E5-9748-36036BCA2F3C%7D",
+          "supports": "公媳關係及蔡介雄為民進黨創黨黨員之一"
+        },
+        {
+          "tier": "institutional",
+          "name": "國立臺灣歷史博物館",
+          "url": "https://collections.nmth.gov.tw/CollectionContent.aspx?RNO=2006.002.1478&a=132",
+          "supports": "蔡介雄曾任第4至第10屆臺灣省議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-95-政治家族-1",
+      "query": "許乃文 許文欽 父親 陳菊後援會長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "地方新聞直接確認許文欽為許乃文父親；中國時報確認許文欽多年替政治人物助選，地方報紙資料稱其曾任陳菊競選後援會幹部。後援會「長」的精確職稱仍需人工核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "好報新聞網",
+          "url": "https://www.hbnews.com.tw/Report/News/f0702500d2ap",
+          "supports": "許文欽為許乃文父親"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180318000533-260118",
+          "supports": "許文欽多年替黨內政治人物助選"
+        },
+        {
+          "tier": "secondary",
+          "name": "臺灣時報地方版存檔",
+          "url": "https://scdnews.com/images/paper/180116/180116A.pdf",
+          "supports": "許文欽曾任陳菊競選後援會幹部"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-8-3-政治家族-1",
+      "query": "許采蓁 許崑源 女兒 高雄市議長 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "自由時報直接確認許采蓁為前高雄市議長許崑源女兒；高雄市議會公報可核對許崑源議長身分。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2022/news/breakingnews/4063291",
+          "supports": "許采蓁為前議長許崑源女兒"
+        },
+        {
+          "tier": "official",
+          "name": "高雄市議會",
+          "url": "https://cissearch.kcc.gov.tw/System/Bulletin/Pdfview.aspx?file=~%2FUpload%2FAttachment%2F%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99%2F%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83%2F41%E5%8D%B7%2F6%E6%9C%9F%2F41%E5%8D%B76%E6%9C%9F14225%E8%B5%B7%E9%A0%8114289%E8%BF%84%E9%A0%81.pdf&page=1",
+          "supports": "許采蓁現任議員及曾任許崑源愛心慈善會秘書長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-3-3-政治家族-1",
+      "query": "許家蓓 許富男 父親 兩屆台北市議員 民進黨創黨元老",
+      "outcome": "source_found_manual_review",
+      "notes": "臺北市議會資料記載許家蓓曾任第9屆議員許富男研究室主任；立法院公報直接稱許富男為其父親，歷屆議員資料可核定兩屆任期。創黨元老稱謂仍保留人工檢視。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=770415&n=13513&name=%E8%A8%B1%E5%AE%B6%E8%93%93&s=2361&termsn=20",
+          "supports": "許家蓓曾任許富男研究室主任及許富男歷屆議員資料"
+        },
+        {
+          "tier": "official",
+          "name": "立法院公報",
+          "url": "https://ppg.ly.gov.tw/ppg/SittingCommitteesInfo/download/communique1/final/pdf/102/49/LCIDC01_1024901_00009.pdf",
+          "supports": "許富男為許家蓓父親及前臺北市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-47-政治家族-1",
+      "query": "許家蓓 許富男 父親 兩屆台北市議員 民進黨創黨元老",
+      "outcome": "source_found_manual_review",
+      "notes": "臺北市議會資料記載許家蓓曾任第9屆議員許富男研究室主任；立法院公報直接稱許富男為其父親，歷屆議員資料可核定兩屆任期。創黨元老稱謂仍保留人工檢視。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=770415&n=13513&name=%E8%A8%B1%E5%AE%B6%E8%93%93&s=2361&termsn=20",
+          "supports": "許家蓓曾任許富男研究室主任及許富男歷屆議員資料"
+        },
+        {
+          "tier": "official",
+          "name": "立法院公報",
+          "url": "https://ppg.ly.gov.tw/ppg/SittingCommitteesInfo/download/communique1/final/pdf/102/49/LCIDC01_1024901_00009.pdf",
+          "supports": "許富男為許家蓓父親及前臺北市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-5-49-政治家族-1",
+      "query": "許慧玉 許正雄 父親 兩屆縣議員 大社鄉長",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄市議會公報與中國時報直接確認許正雄為許慧玉父親、曾任議員及大社鄉長；媒體資料記載兩屆縣議員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會公報",
+          "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/10%E5%8D%B7/4%E6%9C%9F/10%E5%8D%B74%E6%9C%9F04545%E8%B5%B7%E9%A0%8104577%E8%BF%84%E9%A0%81.pdf",
+          "supports": "許正雄為許慧玉父親及前議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180516002997-260407",
+          "supports": "父女政治交棒及許正雄曾任大社鄉長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-3-22-政治家族-1",
+      "query": "郭秀珠 陳彰茂 丈夫 麻豆鎮長 鎮代會主席",
+      "outcome": "source_found_manual_review",
+      "notes": "華視與中國時報直接確認陳彰茂為郭秀珠丈夫；中國時報並記載其曾任麻豆鎮長、鎮民代表及代表會主席。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "華視新聞網",
+          "url": "https://news.cts.com.tw/cts/politics/200512/200512020188224.html",
+          "supports": "陳彰茂為郭秀珠丈夫及時任麻豆鎮長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20181109004001-260509",
+          "supports": "婚姻關係及陳彰茂曾任麻豆鎮長、鎮代與鎮代會主席"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-3-5-政治家族-1",
+      "query": "郭秀珠 陳彰茂 丈夫 麻豆鎮長 鎮代會主席",
+      "outcome": "source_found_manual_review",
+      "notes": "華視與中國時報直接確認陳彰茂為郭秀珠丈夫；中國時報並記載其曾任麻豆鎮長、鎮民代表及代表會主席。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "華視新聞網",
+          "url": "https://news.cts.com.tw/cts/politics/200512/200512020188224.html",
+          "supports": "陳彰茂為郭秀珠丈夫及時任麻豆鎮長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20181109004001-260509",
+          "supports": "婚姻關係及陳彰茂曾任麻豆鎮長、鎮代與鎮代會主席"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-5-16-政治家族-2",
+      "query": "郭昭巖 郭瑞華 父親 台北市自來水處處長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認郭瑞華為郭昭巖父親，並稱其曾任翡管局局長；聯合報舊報導摘要稱其為臺北市自來水處前處長，精確職稱需人工核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20141226000433-260107",
+          "supports": "郭瑞華為郭昭巖父親及曾任翡管局局長"
+        },
+        {
+          "tier": "secondary",
+          "name": "聯合報舊報導存檔",
+          "url": "https://blog.udn.com/yoyoman/5386088",
+          "supports": "郭瑞華為父親及臺北市自來水處前處長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-90-政治家族-2",
+      "query": "郭昭巖 郭瑞華 父親 台北市自來水處處長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認郭瑞華為郭昭巖父親，並稱其曾任翡管局局長；聯合報舊報導摘要稱其為臺北市自來水處前處長，精確職稱需人工核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20141226000433-260107",
+          "supports": "郭瑞華為郭昭巖父親及曾任翡管局局長"
+        },
+        {
+          "tier": "secondary",
+          "name": "聯合報舊報導存檔",
+          "url": "https://blog.udn.com/yoyoman/5386088",
+          "supports": "郭瑞華為父親及臺北市自來水處前處長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-5-16-政治家族-1",
+      "query": "郭昭巖 李仁人 母親 五屆台北市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會公報由郭昭巖自述家母李仁人；中國時報記載李仁人為其母親及五屆臺北市議員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/01%E8%87%BA%E5%8C%97%E5%B8%82/%E8%87%BA%E5%8C%97%E5%B8%82%E7%AC%AC5%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "郭昭巖自述家母李仁人"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20141226000433-260107",
+          "supports": "李仁人為郭昭巖母親及五屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-90-政治家族-1",
+      "query": "郭昭巖 李仁人 母親 五屆台北市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會公報由郭昭巖自述家母李仁人；中國時報記載李仁人為其母親及五屆臺北市議員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/01%E8%87%BA%E5%8C%97%E5%B8%82/%E8%87%BA%E5%8C%97%E5%B8%82%E7%AC%AC5%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "郭昭巖自述家母李仁人"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20141226000433-260107",
+          "supports": "李仁人為郭昭巖母親及五屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-90-政治家族-3",
+      "query": "郭昭巖 外公李務 外婆李黃恆貞 議員 省議員 國大代表",
+      "outcome": "source_found_manual_review",
+      "notes": "臺北市政府續修臺北市志記載李仁人承襲父母政治服務，外孫女郭昭巖再接棒；中國時報直接稱李務、李黃恆貞為郭昭巖外公外婆。各自任期數仍由人工核對。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺北市政府《續修臺北市志》",
+          "url": "https://www-ws.gov.taipei/001/Upload/430/relfile/41653/7561488/61bfc2a0-380b-4e4d-8dc2-fc7129bd5a8f.pdf",
+          "supports": "李仁人父母與外孫女郭昭巖的三代關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20141226000433-260107",
+          "supports": "李務與李黃恆貞為郭昭巖外公、外婆及曾任民意代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-90-政治家族-4",
+      "query": "郭昭巖 外公李務 外婆李黃恆貞 議員 省議員 國大代表",
+      "outcome": "source_found_manual_review",
+      "notes": "臺北市政府續修臺北市志記載李仁人承襲父母政治服務，外孫女郭昭巖再接棒；中國時報直接稱李務、李黃恆貞為郭昭巖外公外婆。各自任期數仍由人工核對。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺北市政府《續修臺北市志》",
+          "url": "https://www-ws.gov.taipei/001/Upload/430/relfile/41653/7561488/61bfc2a0-380b-4e4d-8dc2-fc7129bd5a8f.pdf",
+          "supports": "李仁人父母與外孫女郭昭巖的三代關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20141226000433-260107",
+          "supports": "李務與李黃恆貞為郭昭巖外公、外婆及曾任民意代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-5-16-政治家族-3",
+      "query": "郭昭巖 祖父祖母 李務 李黃恆貞 外祖父母",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "臺北市政府市志及中國時報均顯示李務、李黃恆貞是母親李仁人的父母，即郭昭巖外祖父母；暗公報2022使用「祖父／祖母」，與2018版及可靠來源稱謂不一致。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺北市政府《續修臺北市志》",
+          "url": "https://www-ws.gov.taipei/001/Upload/430/relfile/41653/7561488/61bfc2a0-380b-4e4d-8dc2-fc7129bd5a8f.pdf",
+          "supports": "李仁人父母與外孫女郭昭巖的母系關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20141226000433-260107",
+          "supports": "李務、李黃恆貞為郭昭巖外公、外婆"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-5-16-政治家族-4",
+      "query": "郭昭巖 祖父祖母 李務 李黃恆貞 外祖父母",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "臺北市政府市志及中國時報均顯示李務、李黃恆貞是母親李仁人的父母，即郭昭巖外祖父母；暗公報2022使用「祖父／祖母」，與2018版及可靠來源稱謂不一致。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺北市政府《續修臺北市志》",
+          "url": "https://www-ws.gov.taipei/001/Upload/430/relfile/41653/7561488/61bfc2a0-380b-4e4d-8dc2-fc7129bd5a8f.pdf",
+          "supports": "李仁人父母與外孫女郭昭巖的母系關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20141226000433-260107",
+          "supports": "李務、李黃恆貞為郭昭巖外公、外婆"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-12-63-政治家族-1",
+      "query": "郭蔡美英 郭榮宗 丈夫 立委 觀音鄉長",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "民視直接確認郭榮宗為郭蔡美英丈夫及前立委、前觀音鄉長；其他報導記載三屆立委但兩屆鄉長，與暗公報「三屆鄉長」不一致。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://www.ftvnews.com.tw/news/detail/2018A20N02M1",
+          "supports": "婚姻關係及郭榮宗曾任立委、觀音鄉長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "蕃新聞轉載選情分析",
+          "url": "https://n.yam.com/Article/20140926578224",
+          "supports": "郭榮宗為兩屆觀音鄉長、三屆立委"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/EngPages/List.aspx?nodeid=1445",
+          "supports": "郭榮宗立法委員資料"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-12-5-政治家族-1",
+      "query": "郭蔡美英 郭榮宗 丈夫 立委 觀音鄉長",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "民視直接確認郭榮宗為郭蔡美英丈夫及前立委、前觀音鄉長；其他報導記載三屆立委但兩屆鄉長，與暗公報「三屆鄉長」不一致。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://www.ftvnews.com.tw/news/detail/2018A20N02M1",
+          "supports": "婚姻關係及郭榮宗曾任立委、觀音鄉長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "蕃新聞轉載選情分析",
+          "url": "https://n.yam.com/Article/20140926578224",
+          "supports": "郭榮宗為兩屆觀音鄉長、三屆立委"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/EngPages/List.aspx?nodeid=1445",
+          "supports": "郭榮宗立法委員資料"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-12-5-政治家族-2",
+      "query": "郭蔡美英 郭裕信 兒子 桃園市經濟發展局局長",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞直接確認郭裕信為郭蔡美英兒子及時任桃園市政府經濟發展局長。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E9%83%AD%E8%94%A1%E7%BE%8E%E8%8B%B1%E9%81%9E%E8%A3%9C%E5%B8%82%E8%AD%B0%E5%93%A1-%E6%A1%83%E5%9C%92%E5%BA%9C%E6%9C%83%E5%87%BA%E7%8F%BE%E9%9B%A3%E5%BE%97%E6%AF%8D%E5%AD%90%E6%AA%94-075451303.html",
+          "supports": "郭蔡美英與郭裕信母子關係及經發局長職務"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-12-5-政治家族-3",
+      "query": "郭麗華 郭榮宗 叔姪 桃園市議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "郭麗華人物專訪自述曾任叔叔郭榮宗立委助理，可支持叔姪關係，但來源非官方或主流媒體，僅供人工確認。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "郭麗華人物專訪",
+          "url": "https://yuchieh16145.pixnet.net/blog/posts/9460131875",
+          "supports": "郭麗華自述叔叔郭榮宗及曾任其立委助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-4-71-政治家族-1",
+      "query": "郭麗華 郭榮宗 叔姪 桃園市議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "郭麗華人物專訪自述曾任叔叔郭榮宗立委助理，可支持叔姪關係，但來源非官方或主流媒體，僅供人工確認。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "郭麗華人物專訪",
+          "url": "https://yuchieh16145.pixnet.net/blog/posts/9460131875",
+          "supports": "郭麗華自述叔叔郭榮宗及曾任其立委助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-4-2-政治家族-3",
+      "query": "郭麗華 郭裕信 堂兄弟 郭蔡美英 嬸嬸",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "郭麗華與郭榮宗叔姪關係僅有人物專訪佐證；郭裕信為郭榮宗、郭蔡美英之子的資料較完整，因此堂親與嬸姪稱謂屬關係鏈推導，必須人工確認。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "郭麗華人物專訪",
+          "url": "https://yuchieh16145.pixnet.net/blog/posts/9460131875",
+          "supports": "郭麗華自述郭榮宗為叔叔"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "亞太新聞網",
+          "url": "https://www.atanews.net/?taiwan-taoyuan=13075",
+          "supports": "郭裕信為郭榮宗與郭蔡美英之子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://www.ftvnews.com.tw/news/detail/2018A20N02M1",
+          "supports": "郭蔡美英為郭榮宗妻子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-4-2-政治家族-2",
+      "query": "郭麗華 郭裕信 堂兄弟 郭蔡美英 嬸嬸",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "郭麗華與郭榮宗叔姪關係僅有人物專訪佐證；郭裕信為郭榮宗、郭蔡美英之子的資料較完整，因此堂親與嬸姪稱謂屬關係鏈推導，必須人工確認。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "郭麗華人物專訪",
+          "url": "https://yuchieh16145.pixnet.net/blog/posts/9460131875",
+          "supports": "郭麗華自述郭榮宗為叔叔"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "亞太新聞網",
+          "url": "https://www.atanews.net/?taiwan-taoyuan=13075",
+          "supports": "郭裕信為郭榮宗與郭蔡美英之子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞網",
+          "url": "https://www.ftvnews.com.tw/news/detail/2018A20N02M1",
+          "supports": "郭蔡美英為郭榮宗妻子"
+        }
+      ]
     }
   ]
 }

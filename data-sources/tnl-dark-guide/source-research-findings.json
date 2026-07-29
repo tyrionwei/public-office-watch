@@ -4621,6 +4621,438 @@
           "supports": "郭蔡美英為郭榮宗妻子"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-9-47-政治家族-1",
+      "query": "陳文政 陳天汶 岳父 台中市副議長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接稱陳文政為前臺中市副議長陳天汶女婿；內政部資料亦記載陳文政曾任陳天汶副議長辦公室秘書。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180916000494-260107",
+          "supports": "陳文政為陳天汶女婿"
+        },
+        {
+          "tier": "official",
+          "name": "內政部地方公職人員資訊",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112BA00032&_TYP=REP&n=573",
+          "supports": "陳文政曾任陳天汶副議長辦公室秘書"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-11-100-政治家族-1",
+      "query": "陳文清 陳進財 父親 將軍 鄉長",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "自立晚報直接確認陳進財為陳文清父親及前縣議員，但報導稱其為關廟籍；暗公報另列將軍鄉民代表會副主席及鄉長等履歷，地區脈絡不一致，須人工核對是否混入同名人物資料。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自立晚報",
+          "url": "https://www.idn.com.tw/news/news_content.aspx?artid=20101028abcd013&catdid=0&catid=5&catsid=5",
+          "supports": "父子關係及陳進財曾任臺南縣議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-3-8-政治家族-1",
+      "query": "陳世軒 陳明義 父親 國民黨 中常委 發言人 新北市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "多家媒體直接確認陳世軒為陳明義之子；中選會公報及中國時報可分別確認陳明義曾任國民黨發言人與中常委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/politics/2026058",
+          "supports": "陳世軒與陳明義父子關係及兩人分屬不同政黨"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會選舉公報",
+          "url": "https://web.cec.gov.tw/old_upload/2/1002/img/87/002.pdf",
+          "supports": "陳明義履歷列中國國民黨發言人"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20111130000423-260107",
+          "supports": "陳明義時任國民黨中常委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-48-政治家族-1",
+      "query": "陳永德 陳俊雄 父親 台北市議員 任期",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "中國時報直接確認陳永德為前議員陳俊雄之子，但其他資料記載陳俊雄連任六屆，與暗公報所稱三屆不一致。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180126000625-263101",
+          "supports": "陳永德為前議員陳俊雄之子"
+        },
+        {
+          "tier": "institutional",
+          "name": "臺北市議會研究資料",
+          "url": "https://en.tcforum.org.tw/hd/Lin_Stuff/Lin_Article_Sustainable_Development.pdf",
+          "supports": "陳俊雄曾任臺北市議員第一至第六屆"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-48-政治家族-2",
+      "query": "陳永德 陳曾悅子 母親 光信里長",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "目前資料將陳曾悅子記為陳錦祥之母、陳俊雄家族成員，未找到可靠來源確認她是陳永德母親；暗公報親屬對象可能有誤，須人工核對。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "公民記者整理",
+          "url": "https://hanreporter.blogspot.com/2014/11/blog-post_33.html",
+          "supports": "記載陳錦祥為陳曾悅子之子，並列陳永德為陳俊雄之子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-3-6-政治家族-1",
+      "query": "陳玄曄 陳柏惟 堂哥 堂弟",
+      "outcome": "source_found_manual_review",
+      "notes": "NOWnews稱陳玄曄為陳柏惟堂哥，因此從陳玄曄角度稱陳柏惟為堂弟，與暗公報關係一致。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews今日新聞",
+          "url": "https://www.nownews.com/news/5829667",
+          "supports": "陳玄曄為陳柏惟堂哥"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-9-67-政治家族-1",
+      "query": "陳秀玲 鍾源清 鍾清源 丈夫 楊梅市民代表會主席",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "親民黨資料直接稱陳秀玲丈夫為前楊梅市民代表會主席「鍾清源」，中選會公報則作「鍾源清」；關係及職務一致但姓名字序衝突。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "親民黨",
+          "url": "https://www.pfp.org.tw/TW/News/ugC_News_Detail.asp?hidNewsCatID=4&hidNewsID=1751",
+          "supports": "陳秀玲丈夫為前楊梅市民代表會主席鍾清源"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC09%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "履歷列鍾源清主席服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-4-1-政治家族-1",
+      "query": "陳怡君 張賦脈 母親 保安里里長 2022",
+      "outcome": "source_found_manual_review",
+      "notes": "鏡週刊及東森新聞均直接確認張賦脈為陳怡君母親，並曾任臺北市大同區保安里里長。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "鏡週刊",
+          "url": "https://www.mirrormedia.mg/story/20181107soc004",
+          "supports": "陳怡君與母親張賦脈及里長職務"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "東森新聞",
+          "url": "https://news.ebc.net.tw/news/society/470916",
+          "supports": "陳怡君母親張賦脈曾任保安里里長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-4-69-政治家族-1",
+      "query": "陳怡君 張賦脈 母親 保安里里長 2018",
+      "outcome": "source_found_manual_review",
+      "notes": "鏡週刊及東森新聞均直接確認張賦脈為陳怡君母親，並曾任臺北市大同區保安里里長。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "鏡週刊",
+          "url": "https://www.mirrormedia.mg/story/20181107soc004",
+          "supports": "陳怡君與母親張賦脈及里長職務"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "東森新聞",
+          "url": "https://news.ebc.net.tw/news/society/470916",
+          "supports": "陳怡君母親張賦脈曾任保安里里長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-8-3-政治家族-1",
+      "query": "陳怡珍 陳佳照 父親 台南市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "立法院與國家文化記憶庫均直接確認陳佳照為陳怡珍父親及前臺南市議員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/EngPages/Detail.aspx?nodeid=4940&pid=17108",
+          "supports": "陳怡珍稱父親為陳佳照"
+        },
+        {
+          "tier": "official",
+          "name": "國家文化記憶庫",
+          "url": "https://tcmb.culture.tw/zh-tw/detail?id=11000092511&indexCode=MOCCOLLECTIONS",
+          "supports": "陳佳照曾任臺南市議員，陳怡珍為其女"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-8-3-政治家族-2",
+      "query": "陳怡珍 陳亭妃 姐姐 市議員 立法委員",
+      "outcome": "source_found_manual_review",
+      "notes": "立法院資料確認陳怡珍為陳亭妃胞妹；任期屬歷史時間點，公開前仍須按年份呈現。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/EngPages/Detail.aspx?nodeid=4940&pid=17074",
+          "supports": "陳亭妃與胞妹陳怡珍關係"
+        },
+        {
+          "tier": "official",
+          "name": "國家文化記憶庫",
+          "url": "https://tcmb.culture.tw/zh-tw/detail?id=11000092511&indexCode=MOCCOLLECTIONS",
+          "supports": "陳亭妃曾任市議員及第7至10屆立法委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-8-67-政治家族-1",
+      "query": "陳怡珍 陳佳照 陳亭妃 父親 姐姐 任期",
+      "outcome": "source_found_manual_review",
+      "notes": "官方資料可確認父親陳佳照曾任市議員、姐姐陳亭妃曾任市議員與立法委員；暗公報任期數是2018年時點，公開時須保存歷史語境。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "國家文化記憶庫",
+          "url": "https://tcmb.culture.tw/zh-tw/detail?id=11000092511&indexCode=MOCCOLLECTIONS",
+          "supports": "陳佳照、陳亭妃與陳怡珍的家庭及公職關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20120106000650-260102",
+          "supports": "陳佳照為陳亭妃、陳怡珍之父"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-2-5-政治家族-1",
+      "query": "陳明義 陳世軒 兒子 民眾黨 新莊 市議員候選人",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS與年代新聞均確認陳世軒為陳明義之子，並代表民眾黨參選新莊區市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/politics/2026058",
+          "supports": "陳明義與陳世軒父子關係"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "年代新聞",
+          "url": "https://www.eracom.com.tw/EraNews/Home/political/2021-11-15/638885.html",
+          "supports": "陳世軒代表民眾黨參選新莊區市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-6-66-政治家族-1",
+      "query": "陳治文 邱顯二 丈夫 桃園縣議員 2018",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認前桃園縣議員邱顯二為陳治文丈夫。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20091113000420-260107",
+          "supports": "陳治文與前桃園縣議員邱顯二夫妻關係"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-6-1-政治家族-1",
+      "query": "陳治文 邱顯二 丈夫 桃園縣議員 2022",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認前桃園縣議員邱顯二為陳治文丈夫。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20091113000420-260107",
+          "supports": "陳治文與前桃園縣議員邱顯二夫妻關係"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-2-9-政治家族-1",
+      "query": "陳泓維 陳秋喜 父親 鄉民代表 鄭文燦 特助",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報可確認陳泓維父親為深綠背景、叔叔為國民黨青工會背景；VoteTW彙整頁直接列父親陳秋喜及相關職務，但仍缺獨立可靠來源完整核對姓名與職稱。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20191026002830-263101",
+          "supports": "陳泓維父親與叔叔分屬不同政黨背景"
+        },
+        {
+          "tier": "secondary",
+          "name": "VoteTW",
+          "url": "https://www.votetw.com/wiki/%E9%99%B3%E6%B3%93%E7%B6%AD",
+          "supports": "父親陳秋喜曾任鄉民代表及鄭文燦特助"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-2-9-政治家族-2",
+      "query": "陳泓維 叔叔 國民黨 青工會 會長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報及VoteTW均提到叔叔為國民黨青工會背景，但未提供姓名，且職稱寫法略有差異，須人工確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20191026002830-263101",
+          "supports": "叔叔為國民黨青工會背景"
+        },
+        {
+          "tier": "secondary",
+          "name": "VoteTW",
+          "url": "https://www.votetw.com/wiki/%E9%99%B3%E6%B3%93%E7%B6%AD",
+          "supports": "叔叔為國民黨前青工會會長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-4-19-政治家族-1",
+      "query": "陳玫娟 陳清玉 父親 國民黨 高雄市黨部 副主委",
+      "outcome": "source_found_manual_review",
+      "notes": "國立中山大學保存的聯合報資料直接確認陳清玉為陳玫娟父親及前國民黨高雄市黨部副主委。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "國立中山大學校史檔案（聯合報）",
+          "url": "https://www.nsysu.edu.tw/p/404-1000-60769.php?Lang=zh-tw",
+          "supports": "父女關係及陳清玉曾任國民黨高雄市黨部副主委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-4-44-政治家族-1",
+      "query": "陳玫娟 陳清玉 父親 高雄市議會 副議長",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄市議會刊物直接記載陳玫娟父親陳清玉為前高雄市議會副議長。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會",
+          "url": "https://ws.kcc.gov.tw/Download.ashx?icon=.pdf&n=MTAzMTAucGRm&u=LzAwMS9VcGxvYWQvMS9SZWxGaWxlLzg5ODAvNjc0Ni8xMDMxMC5wZGY%3D",
+          "supports": "父女關係及陳清玉曾任副議長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-3-政治家族-1",
+      "query": "陳俊霖 陳文禮 父親 七屆 長泰里長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "內政部可核對陳文禮的里長任期；公開彙整資料直接稱陳俊霖為其子，但尚缺可正常存取的原民眾黨候選人頁或主流媒體直接佐證。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "內政部地方公職人員資訊",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0007&_PARENT_ID=MYR11112FG0262&_TYP=MYR&n=577",
+          "supports": "陳文禮歷屆長泰里里長任期"
+        },
+        {
+          "tier": "secondary",
+          "name": "民眾黨參政選舉彙整",
+          "url": "https://driver.idataiwan.com/info/69409",
+          "supports": "陳俊霖為長泰里長陳文禮之子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-9-5-政治家族-2",
+      "query": "陳俞融 陳文憲 父親 民進黨 台中市黨部 主委",
+      "outcome": "source_found_manual_review",
+      "notes": "中評社專訪直接確認陳文憲為陳俞融父親及民進黨臺中市黨部前主委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/1050/3/4/8/105034867.html?coluid=7&docid=105034867&kindid=0",
+          "supports": "父女關係及陳文憲曾任民進黨臺中市黨部主委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-9-5-政治家族-1",
+      "query": "陳俞融 張溫鷹 母親 台中市長 美麗島事件 受難者",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體專訪確認張溫鷹為陳俞融母親；國家人權記憶庫確認張溫鷹因美麗島事件相關案件受判決及服刑。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/1048/2/5/9/104825973.html?coluid=93&docid=104825973&kindid=4030",
+          "supports": "陳俞融為前臺中市長張溫鷹之女"
+        },
+        {
+          "tier": "official",
+          "name": "國家人權記憶庫",
+          "url": "https://memory.nhrm.gov.tw/TopicExploration/Person/Detail/2761",
+          "supports": "張溫鷹的美麗島事件相關判決及受難紀錄"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-9-5-政治家族-3",
+      "query": "陳俞融 陳端堂 祖父 台中市長",
+      "outcome": "source_found_manual_review",
+      "notes": "中評社直接確認陳端堂為陳俞融祖父及前臺中市長。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/1048/2/5/9/104825973.html?coluid=93&docid=104825973&kindid=4030",
+          "supports": "陳端堂為陳俞融祖父及前臺中市長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-9-5-政治家族-4",
+      "query": "陳俞融 陳彩龍 曾祖父 省議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "可由陳俞融—陳端堂的祖孫關係及陳端堂—陳彩龍的父子關係推導陳彩龍為曾祖父；目前未找到單一可靠來源直接寫出整條關係，須人工確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/1048/2/5/9/104825973.html?coluid=93&docid=104825973&kindid=4030",
+          "supports": "陳端堂為陳俞融祖父"
+        },
+        {
+          "tier": "secondary",
+          "name": "求真百科",
+          "url": "https://factpedia.org/wiki/%E9%99%B3%E7%AB%AF%E5%A0%82",
+          "supports": "陳彩龍為陳端堂父親及前臺灣省議員"
+        }
+      ]
     }
   ]
 }

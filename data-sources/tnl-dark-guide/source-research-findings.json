@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T21:41:30.961Z",
+  "generatedAt": "2026-07-29T21:49:35.063Z",
   "policy": {
     "maxQueriesPerClaim": 1,
     "maxResultsInspected": 2,
@@ -8213,6 +8213,608 @@
       "outcome": "not_found_after_stop_loss",
       "notes": "兩輪查詢只有維基百科與維基語錄直接記載姊弟關係；未找到官方或可信媒體可獨立確認，依停損規則列為未找到。",
       "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-13-56-政治家族-1",
+      "query": "謝賢 謝錦川 父親 立委",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "兩輪查詢只有維基百科直接記載父子關係；立法院可確認謝錦川曾任立委，但未找到官方或可信媒體可直接確認謝賢為其子，依停損規則列為未找到。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-13-56-政治家族-3",
+      "query": "謝賢 謝水藍 爺爺 省參議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "兩輪查詢只有維基百科直接記載祖孫關係；未找到官方或可信媒體可獨立確認，依停損規則列為未找到。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-6-15-政治家族-1",
+      "query": "鍾沛君 鍾則良 父親 民政局局長 國民黨台北市黨部主委",
+      "outcome": "source_found_manual_review",
+      "notes": "NOWnews與中國時報均直接確認鍾沛君父親為鍾則良，並記載其曾任台北市民政局局長及國民黨台北市黨部主委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews今日新聞",
+          "url": "https://www.nownews.com/news/6236242",
+          "supports": "鍾沛君父親鍾則良曾任台北市民政局局長及國民黨台北市黨部主委"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20170301005801-260509",
+          "supports": "鍾沛君父親鍾則良曾任民政局長及國民黨台北市黨部主委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-6-106-政治家族-1",
+      "query": "鍾沛君 鍾則良 父親 民政局局長 國民黨台北市黨部主委",
+      "outcome": "source_found_manual_review",
+      "notes": "NOWnews與中國時報均直接確認鍾沛君父親為鍾則良，並記載其曾任台北市民政局局長及國民黨台北市黨部主委。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews今日新聞",
+          "url": "https://www.nownews.com/news/6236242",
+          "supports": "鍾沛君父親鍾則良曾任台北市民政局局長及國民黨台北市黨部主委"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20170301005801-260509",
+          "supports": "鍾沛君父親鍾則良曾任民政局長及國民黨台北市黨部主委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-13-政治家族-2",
+      "query": "鍾佩玲 何利偉 丈夫 薛凌 長子",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社婚宴報導確認鍾佩玲嫁給何利偉，Yahoo新聞明載何利偉為前立委薛凌長子；本批未以立法院資料完整核對「3屆」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社（中國時報轉載）",
+          "url": "https://www.chinatimes.com/realtimenews/20131124002322-260509",
+          "supports": "何利偉與鍾佩玲結婚，何利偉為薛凌之子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E5%A3%B9%E9%9B%BB%E8%A6%96%E5%A5%B3%E4%B8%BB%E6%92%AD%E9%8D%BE%E4%BD%A9%E7%8E%B2%E5%BE%9E%E6%94%BF-%E5%82%B3%E5%B0%8F%E5%8F%94%E4%BD%95%E5%BF%97%E5%81%89%E6%93%AC%E7%A6%AE%E8%AE%93-084133327.html",
+          "supports": "鍾佩玲嫁給薛凌長子何利偉"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-1-10-政治家族-3",
+      "query": "鍾佩玲 何志偉 小叔 2屆議員 立委",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞直接確認鍾佩玲為何志偉嫂子；台北市議會官方歷屆資料確認何志偉曾任第11、12屆議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E5%A3%B9%E9%9B%BB%E8%A6%96%E5%A5%B3%E4%B8%BB%E6%92%AD%E9%8D%BE%E4%BD%A9%E7%8E%B2%E5%BE%9E%E6%94%BF-%E5%82%B3%E5%B0%8F%E5%8F%94%E4%BD%95%E5%BF%97%E5%81%89%E6%93%AC%E7%A6%AE%E8%AE%93-084133327.html",
+          "supports": "鍾佩玲為何志偉嫂子"
+        },
+        {
+          "tier": "official",
+          "name": "台北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=820514&n=13513&name=%E4%BD%95%E5%BF%97%E5%81%89&s=1035&termsn=19",
+          "supports": "何志偉曾任第11、12屆台北市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-13-政治家族-3",
+      "query": "鍾佩玲 何志偉 小叔 2屆議員 立委",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞直接確認鍾佩玲為何志偉嫂子；台北市議會官方歷屆資料確認何志偉曾任第11、12屆議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E5%A3%B9%E9%9B%BB%E8%A6%96%E5%A5%B3%E4%B8%BB%E6%92%AD%E9%8D%BE%E4%BD%A9%E7%8E%B2%E5%BE%9E%E6%94%BF-%E5%82%B3%E5%B0%8F%E5%8F%94%E4%BD%95%E5%BF%97%E5%81%89%E6%93%AC%E7%A6%AE%E8%AE%93-084133327.html",
+          "supports": "鍾佩玲為何志偉嫂子"
+        },
+        {
+          "tier": "official",
+          "name": "台北市議會",
+          "url": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=820514&n=13513&name=%E4%BD%95%E5%BF%97%E5%81%89&s=1035&termsn=19",
+          "supports": "何志偉曾任第11、12屆台北市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-13-政治家族-1",
+      "query": "鍾佩玲 陳勝宏 公公 何利偉",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞明載鍾佩玲嫁給薛凌與陳勝宏長子何利偉；何利偉與陳勝宏為繼父子關係，公開時宜保留此家庭關係細節。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/%E5%A3%B9%E9%9B%BB%E8%A6%96%E5%A5%B3%E4%B8%BB%E6%92%AD%E9%8D%BE%E4%BD%A9%E7%8E%B2%E5%BE%9E%E6%94%BF-%E5%82%B3%E5%B0%8F%E5%8F%94%E4%BD%95%E5%BF%97%E5%81%89%E6%93%AC%E7%A6%AE%E8%AE%93-084133327.html",
+          "supports": "鍾佩玲丈夫何利偉為薛凌與陳勝宏家庭的長子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-1-10-政治家族-2",
+      "query": "鍾佩玲 薛凌 婆婆 3屆立委",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社與Yahoo新聞確認鍾佩玲丈夫何利偉為薛凌之子；立法院可確認薛凌立委經歷，但本批未完整核對「3屆」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社（中國時報轉載）",
+          "url": "https://www.chinatimes.com/realtimenews/20131124002322-260509",
+          "supports": "鍾佩玲丈夫何利偉為立委薛凌之子"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/EngPages/List.aspx?nodeid=1662",
+          "supports": "薛凌曾任第7屆立法委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-9-4-政治家族-1",
+      "query": "鍾易仲 鍾紹和 父親 前立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社與公視均直接稱鍾紹和為鍾易仲父親，立法院官方頁面確認鍾紹和曾任立法委員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/201601080329.aspx",
+          "supports": "前立委鍾紹和為鍾易仲父親"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1295",
+          "supports": "鍾紹和曾任立法委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-9-75-政治家族-1",
+      "query": "鍾易仲 鍾紹和 父親 前立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社與公視均直接稱鍾紹和為鍾易仲父親，立法院官方頁面確認鍾紹和曾任立法委員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/201601080329.aspx",
+          "supports": "前立委鍾紹和為鍾易仲父親"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1295",
+          "supports": "鍾紹和曾任立法委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-14-5-政治家族-1",
+      "query": "簡志偉 簡東明 父親 3屆立委",
+      "outcome": "source_found_manual_review",
+      "notes": "原視報導直接引述簡志偉稱簡東明為父親並記載簡東明為三屆原民立委；立法院官方資料可核對其第7、8屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "原視新聞",
+          "url": "https://news.ipcf.org.tw/118461",
+          "supports": "簡志偉為簡東明之子，簡東明曾任三屆原民立委"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1791",
+          "supports": "簡東明第8屆立委資料並列出曾任第7屆立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-14-75-政治家族-1",
+      "query": "簡志偉 簡東明 父親 3屆立委",
+      "outcome": "source_found_manual_review",
+      "notes": "原視報導直接引述簡志偉稱簡東明為父親並記載簡東明為三屆原民立委；立法院官方資料可核對其第7、8屆任期。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "原視新聞",
+          "url": "https://news.ipcf.org.tw/118461",
+          "supports": "簡志偉為簡東明之子，簡東明曾任三屆原民立委"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1791",
+          "supports": "簡東明第8屆立委資料並列出曾任第7屆立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-6-22-政治家族-1",
+      "query": "簡舒培 吳峻鋕 丈夫 民進黨中國事務部主任",
+      "outcome": "source_found_manual_review",
+      "notes": "中評社直接稱簡舒培為吳峻鋕之妻；民進黨官方新聞稿確認吳峻鋕擔任中國事務部主任。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/1068/8/9/3/106889377.html?coluid=93&docid=106889377&kindid=20162",
+          "supports": "吳峻鋕之妻為台北市議員簡舒培"
+        },
+        {
+          "tier": "official",
+          "name": "民主進步黨",
+          "url": "https://www.dpp.org.tw/content_print/media/10302",
+          "supports": "吳峻鋕擔任民進黨中國事務部主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-2-11-政治家族-1",
+      "query": "闕枚莎 謝英美 母親 5屆議員",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS與中評社均直接確認謝英美為闕枚莎母親，並記載謝英美曾任20年、五屆台北市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS",
+          "url": "https://news.tvbs.com.tw/politics/341699",
+          "supports": "闕枚莎母親謝英美曾任20年台北市議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/crn-webapp/touch/detail.jsp?coluid=192&docid=106554445&kindid=0",
+          "supports": "闕枚莎母親謝英美曾五連霸議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-2-33-政治家族-1",
+      "query": "闕枚莎 謝英美 母親 5屆議員",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS與中評社均直接確認謝英美為闕枚莎母親，並記載謝英美曾任20年、五屆台北市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS",
+          "url": "https://news.tvbs.com.tw/politics/341699",
+          "supports": "闕枚莎母親謝英美曾任20年台北市議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/crn-webapp/touch/detail.jsp?coluid=192&docid=106554445&kindid=0",
+          "supports": "闕枚莎母親謝英美曾五連霸議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-2-8-政治家族-1",
+      "query": "顏莉敏 顏清標 父親 鎮瀾宮董事長 前立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社明載顏莉敏為顏清標獨生女；鎮瀾宮官方董事會頁面確認顏清標為董事長，公開報導亦確認其前立委身分。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/202005130365.aspx",
+          "supports": "顏莉敏為顏清標獨生女"
+        },
+        {
+          "tier": "official",
+          "name": "大甲鎮瀾宮",
+          "url": "https://www.dajiamazu.org.tw/board",
+          "supports": "顏清標為大甲鎮瀾宮董事長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-2-8-政治家族-3",
+      "query": "顏莉敏 顏清通 叔叔 三鹿里里長",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體報導確認顏清通為顏清標胞弟，台中市沙鹿區公所與內政部資料確認顏清通為三鹿里里長；由此可確認其為顏莉敏叔叔。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "MoneyDJ（新聞轉載）",
+          "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=2d232b45-e3f3-4b08-b619-7ab731cb5fb0",
+          "supports": "顏清通為顏清標胞弟並擔任里長"
+        },
+        {
+          "tier": "official",
+          "name": "台中市沙鹿區公所",
+          "url": "https://www.shalu.taichung.gov.tw/981075/981104/981106/1032761",
+          "supports": "顏清通為三鹿里里長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-2-54-政治家族-2",
+      "query": "顏莉敏 顏寬恒 哥哥 立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社直接記載顏清標長子為顏寬恒、獨生女為顏莉敏，可確認兄妹關係；Newtalk亦以顏家兄妹稱之並記載兩人政治職務。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/202005130365.aspx",
+          "supports": "顏寬恒與顏莉敏為兄妹"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2017-06-01/88092",
+          "supports": "顏寬恒、顏莉敏為顏清標子女並從政"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-2-8-政治家族-2",
+      "query": "顏莉敏 顏寬恒 哥哥 立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社直接記載顏清標長子為顏寬恒、獨生女為顏莉敏，可確認兄妹關係；Newtalk亦以顏家兄妹稱之並記載兩人政治職務。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/202005130365.aspx",
+          "supports": "顏寬恒與顏莉敏為兄妹"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2017-06-01/88092",
+          "supports": "顏寬恒、顏莉敏為顏清標子女並從政"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-88-政治家族-1",
+      "query": "顏聖冠 顏錦福 父親 4屆立委 2屆議員 民進黨發起人",
+      "outcome": "source_found_manual_review",
+      "notes": "國立台灣歷史博物館典藏說明直接確認顏錦福為顏聖冠父親及前立委；立法院官方資料列出顏錦福曾任台北市第5、6屆議員，公開資料並可核對其四屆立委及民進黨創黨參與經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "國立台灣歷史博物館",
+          "url": "https://collections.nmth.gov.tw/CollectionContent.aspx?a=132&rno=2012.007.0109",
+          "supports": "顏聖冠父親為前立委顏錦福"
+        },
+        {
+          "tier": "official",
+          "name": "立法院",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1076",
+          "supports": "顏錦福曾任台北市第5、6屆議員並具立委經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-7-17-政治家族-1",
+      "query": "魏筠 魏廷朝 父親 政治受難者",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社與中國時報均直接確認魏筠為魏廷朝女兒，並記載魏廷朝的政治受難經歷。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/201812090188.aspx",
+          "supports": "魏筠為魏廷朝女兒，魏廷朝政治案件有罪判決獲撤銷"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180116000600-260102",
+          "supports": "魏筠父親為政治受難者魏廷朝"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-10-79-政治家族-1",
+      "query": "魏筠 魏廷朝 父親 政治受難者",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社與中國時報均直接確認魏筠為魏廷朝女兒，並記載魏廷朝的政治受難經歷。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/aipl/201812090188.aspx",
+          "supports": "魏筠為魏廷朝女兒，魏廷朝政治案件有罪判決獲撤銷"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180116000600-260102",
+          "supports": "魏筠父親為政治受難者魏廷朝"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-7-17-政治家族-2",
+      "query": "魏筠 張慶惠 母親 立委 國大代表",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報與民視均直接確認張慶惠為魏筠母親，並記載張慶惠曾任國大代表及立法委員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180116000600-260102",
+          "supports": "魏筠母親張慶惠曾任國大代表與民進黨不分區立委"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞",
+          "url": "https://www.ftvnews.com.tw/news/detail/2022221P14M1",
+          "supports": "魏筠母親張慶惠為前國大代表與前立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-10-79-政治家族-2",
+      "query": "魏筠 張慶惠 母親 立委 國大代表",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報與民視均直接確認張慶惠為魏筠母親，並記載張慶惠曾任國大代表及立法委員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20180116000600-260102",
+          "supports": "魏筠母親張慶惠曾任國大代表與民進黨不分區立委"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞",
+          "url": "https://www.ftvnews.com.tw/news/detail/2022221P14M1",
+          "supports": "魏筠母親張慶惠為前國大代表與前立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-12-4-政治家族-1",
+      "query": "藞妏 尼卡兒 忠仁 達祿斯 丈夫 前新北市議員",
+      "outcome": "source_found_manual_review",
+      "notes": "原視與媒體報導均直接確認藞妏．尼卡兒為忠仁．達祿斯妻子，原視並記載忠仁曾任台北縣及新北市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "原視新聞",
+          "url": "https://news.ipcf.org.tw/106867",
+          "supports": "忠仁．達祿斯妻子為藞妏．尼卡兒，忠仁曾任台北縣及新北市議員"
+        },
+        {
+          "tier": "secondary",
+          "name": "ENN台灣電報",
+          "url": "https://enn.tw/134569/",
+          "supports": "藞妏．尼卡兒長期為忠仁．達祿斯伴侶並代夫參選"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-12-17-政治家族-1",
+      "query": "寶杜巴燕 Bawtu Payen 巴燕達魯 父親 2屆立委",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認寶杜．巴燕父親為前立委巴燕．達魯；另有本人公開說法確認父子姓名關係，但本批未以立法院官方資料完整核對「2屆」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20140920000398-260503",
+          "supports": "寶杜．巴燕父親為民進黨前不分區立委巴燕．達魯"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-7-政治家族-1",
+      "query": "蘇泓欽 蘇有仁 父親 5屆議員 2屆鶯歌鎮長 鎮民代表",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報與中央社訊息平台直接確認蘇有仁為蘇泓欽父親，並記載其曾任鎮民代表、議員及鶯歌鎮長；兩屆鎮長可由報導與區公所資料交叉核對，本批未完整核對「5屆議員」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20181123000712-260107",
+          "supports": "蘇泓欽傳承父親蘇有仁，蘇有仁曾任鎮民代表、縣市議員及鶯歌鎮長"
+        },
+        {
+          "tier": "official",
+          "name": "新北市鶯歌區公所",
+          "url": "https://www.yingge.ntpc.gov.tw/home.jsp?id=c20ffc1064376a3a",
+          "supports": "蘇有仁曾任鶯歌鎮長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-7-42-政治家族-1",
+      "query": "蘇泓欽 蘇有仁 父親 5屆議員 2屆鶯歌鎮長 鎮民代表",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報與中央社訊息平台直接確認蘇有仁為蘇泓欽父親，並記載其曾任鎮民代表、議員及鶯歌鎮長；兩屆鎮長可由報導與區公所資料交叉核對，本批未完整核對「5屆議員」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/newspapers/20181123000712-260107",
+          "supports": "蘇泓欽傳承父親蘇有仁，蘇有仁曾任鎮民代表、縣市議員及鶯歌鎮長"
+        },
+        {
+          "tier": "official",
+          "name": "新北市鶯歌區公所",
+          "url": "https://www.yingge.ntpc.gov.tw/home.jsp?id=c20ffc1064376a3a",
+          "supports": "蘇有仁曾任鶯歌鎮長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-13-9-政治家族-1",
+      "query": "蘇柏興 蘇文哲 父親 大里市代會主席",
+      "outcome": "source_found_manual_review",
+      "notes": "地方新聞直接記載蘇柏興父親蘇文哲曾任大里市民代表會主席，另一篇市代會歷史報導亦交叉確認。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "生活情報網",
+          "url": "https://life.tw/?app=view&no=292077",
+          "supports": "蘇柏興父親蘇文哲為前大里市代會主席"
+        },
+        {
+          "tier": "secondary",
+          "name": "台灣新聞網",
+          "url": "https://www.5ch.com.tw/news.php?act=view&id=25491",
+          "supports": "蘇柏興父親蘇文哲曾任大里市民代表會主席"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-14-3-政治家族-1",
+      "query": "蘇偉恩 蘇志強 父親 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認蘇偉恩父親為前桃園市山地原住民議員蘇志強；內政部議員資料亦列出蘇偉恩曾任蘇志強服務處秘書。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20221226000388-260107",
+          "supports": "蘇偉恩父親為前桃園市山地原住民市議員蘇志強"
+        },
+        {
+          "tier": "official",
+          "name": "內政部",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112HA00063&_TYP=REP&n=573",
+          "supports": "蘇偉恩曾任蘇志強議員服務處秘書"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-14-3-政治家族-2",
+      "query": "蘇偉恩 王仙蓮 母親 議員 第13選區參選人",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認王仙蓮為蘇偉恩母親及市議員；中選會官方公告確認王仙蓮於2022年第13選區當選。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20221226000388-260107",
+          "supports": "王仙蓮為蘇偉恩母親，兩人為桃園市議會母子檔"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會",
+          "url": "https://web.cec.gov.tw/api/file/65fca3ad-64ce-41b8-9aac-26fd731e6943.pdf",
+          "supports": "王仙蓮為2022桃園市議員第13選區當選人"
+        }
+      ]
     }
   ]
 }

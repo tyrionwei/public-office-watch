@@ -197,7 +197,7 @@ function originalSourceEvidence(researchClaim) {
 function derivedElectionEvidence(researchClaim, historyRows) {
   if (researchClaim.category !== '政治工作') return [];
   const electedCouncilorRows = historyRows.filter((row) => row.raceType === 'councilor' && row.is_elected === true);
-  const yearMatch = researchClaim.text.match(/(\d{4})年當選議員/);
+  const yearMatch = researchClaim.text.match(/(\d{4})年當選(?:議員)?/);
   if (yearMatch) {
     const year = Number(yearMatch[1]);
     const matches = electedCouncilorRows.filter((row) => row.election_year === year);
@@ -218,10 +218,17 @@ function derivedElectionEvidence(researchClaim, historyRows) {
     }];
   }
 
-  const termMatch = researchClaim.text.match(/(1998年後)?曾任(\d+)屆議員/);
+  const termMatch = researchClaim.text.match(/(1998年後)?曾任(\d+)屆(?:縣|市)?議員/);
   if (!termMatch) return [];
   const expectedTerms = Number(termMatch[2]);
-  const relevantRows = electedCouncilorRows.filter((row) => !termMatch[1] || row.election_year >= 1998);
+  const referenceYears = (researchClaim.occurrences ?? [])
+    .map((occurrence) => occurrence.year)
+    .filter(Number.isFinite);
+  const referenceYear = referenceYears.length > 0 ? Math.min(...referenceYears) : null;
+  const relevantRows = electedCouncilorRows.filter((row) => (
+    (!termMatch[1] || row.election_year >= 1998)
+    && (referenceYear === null || row.election_year < referenceYear)
+  ));
   const electedYears = [...new Set(relevantRows.map((row) => row.election_year))].sort();
   if (electedYears.length !== expectedTerms) return [];
   const allYearsOfficial = electedYears.every((year) => relevantRows.some((row) => (

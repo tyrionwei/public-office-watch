@@ -54,9 +54,22 @@ assert.equal(electedYearEvidence[0].tier, 'official');
 assert.equal(electedYearEvidence[0].reviewStatus, 'verified');
 assert.equal(researchStatus('政治工作', electedYearEvidence), 'auto_reviewable');
 
+const electedYearWithoutOfficeEvidence = derivedElectionEvidence({
+  category: '政治工作',
+  text: '2018年當選',
+}, [{
+  raceType: 'councilor',
+  is_elected: true,
+  election_year: 2018,
+  source_name: '中央選舉委員會選舉資料庫：公開資料包',
+  source_url: 'https://db.cec.gov.tw/',
+}]);
+assert.equal(electedYearWithoutOfficeEvidence[0].tier, 'official');
+
 const derivedTerms = derivedElectionEvidence({
   category: '政治工作',
   text: '1998年後曾任2屆議員',
+  occurrences: [{ year: 2022 }],
 }, [{
   raceType: 'councilor',
   is_elected: true,
@@ -69,10 +82,35 @@ const derivedTerms = derivedElectionEvidence({
   election_year: 2018,
   source_name: 'VoteTW',
   source_url: 'https://votetw.com/',
+}, {
+  raceType: 'councilor',
+  is_elected: true,
+  election_year: 2022,
+  source_name: '中央選舉委員會選舉資料庫：公開資料包',
+  source_url: 'https://db.cec.gov.tw/',
 }]);
 assert.equal(derivedTerms[0].tier, 'secondary');
 assert.equal(derivedTerms[0].reviewStatus, 'derived_secondary');
 assert.equal(researchStatus('政治工作', derivedTerms), 'manual_review');
+
+const countyCouncilTerms = derivedElectionEvidence({
+  category: '政治工作',
+  text: '曾任2屆縣議員',
+  occurrences: [{ year: 2018 }],
+}, [{
+  raceType: 'councilor',
+  is_elected: true,
+  election_year: 2009,
+  source_name: '中央選舉委員會選舉資料庫：公開資料包',
+  source_url: 'https://db.cec.gov.tw/',
+}, {
+  raceType: 'councilor',
+  is_elected: true,
+  election_year: 2014,
+  source_name: '中央選舉委員會選舉資料庫：公開資料包',
+  source_url: 'https://db.cec.gov.tw/',
+}]);
+assert.equal(countyCouncilTerms[0].tier, 'official');
 
 const externalEvidence = externalFindingEvidence({
   outcome: 'source_found_manual_review',

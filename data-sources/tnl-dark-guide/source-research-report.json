@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T21:50:16.391Z",
+  "generatedAt": "2026-07-29T21:57:05.167Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -22,18 +22,18 @@
     "rawClaims": 5161,
     "deduplicatedClaims": 4756,
     "statusCounts": {
-      "auto_reviewable": 608,
-      "manual_review": 945,
-      "external_search_needed": 3135,
+      "auto_reviewable": 705,
+      "manual_review": 860,
+      "external_search_needed": 3123,
       "not_found_after_stop_loss": 68
     },
     "categoryCounts": {
       "政治工作": {
         "people": 881,
         "claims": 2577,
-        "autoReviewable": 447,
-        "manualReview": 317,
-        "externalSearchNeeded": 1813,
+        "autoReviewable": 544,
+        "manualReview": 232,
+        "externalSearchNeeded": 1801,
         "notFoundAfterStopLoss": 0
       },
       "政治家族": {
@@ -39577,9 +39577,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"尤榮智\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -40022,22 +40035,9 @@
           "candidateNumber": 7
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"方一峰\" \"1998年後曾任2屆議員\" 台南市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -40371,9 +40371,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"牛煦庭\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -40703,9 +40716,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"王仙蓮\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -40972,22 +40998,9 @@
           "candidateNumber": 4
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"王立任\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -41016,22 +41029,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"王立任\" \"曾任1屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -41839,22 +41839,9 @@
           "candidateNumber": 2
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"王威元\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -42498,22 +42485,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"王浩宇\" \"曾任1屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -43356,22 +43330,9 @@
           "candidateNumber": 5
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"王閔生\" \"1998年後曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -43789,9 +43750,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"王義雄\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -43820,9 +43794,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"王義雄\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T2/53c908d0b8c39a46823606c95bdd1d1f/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -44372,9 +44359,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"王耀裕\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -44403,22 +44403,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"王耀裕\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -44654,22 +44641,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"冉齡軒\" \"曾任1屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -45184,9 +45158,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"朱元宏\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -45399,22 +45386,9 @@
           "candidateNumber": 1
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"朱信強\" \"1998年後曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -45624,9 +45598,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"朱珍瑤\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -46237,22 +46224,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"朱暖英\" \"曾任2屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -46737,22 +46711,9 @@
           "candidateNumber": 2
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"江怡臻\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -47394,9 +47355,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"江瑞鴻\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -47562,22 +47536,9 @@
           "candidateNumber": 4
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"江肇國\" \"1998年後曾任2屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -48475,22 +48436,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"何博文\" \"曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -48687,22 +48635,9 @@
           "candidateNumber": 3
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"何權峰\" \"1998年後曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -48731,9 +48666,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"何權峰\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -48948,9 +48896,22 @@
           "candidateNumber": 14
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"余信憲\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -49838,9 +49799,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"吳沛憶\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -51035,9 +51009,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"吳禹寰\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -51475,9 +51462,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"吳益政\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -52290,9 +52290,22 @@
           "candidateNumber": 15
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"吳嘉和\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -52497,9 +52510,22 @@
           "candidateNumber": 11
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"吳銘賜\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -52528,22 +52554,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"吳銘賜\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -53563,22 +53576,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"呂維胤\" \"曾任1屆議員\" 台南市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -53731,9 +53731,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"宋立彬\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -53943,22 +53956,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"宋明宗\" \"曾任2屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -54132,22 +54132,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"宋雨蓁Nikar．Falong\" \"曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -54313,22 +54300,9 @@
           "candidateNumber": 10
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"李中岑\" \"1998年後曾任2屆議員\" 台南市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -54686,22 +54660,9 @@
           "candidateNumber": 2
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"李文俊\" \"1998年後曾任2屆議員\" 台南市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -55069,22 +55030,9 @@
           "candidateNumber": 17
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"李光達\" \"1998年後曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -55907,9 +55855,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李亞築\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -56220,9 +56181,22 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李宗翰\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -56546,9 +56520,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李明賢\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -56783,18 +56770,6 @@
       "searchQuery": "\"李芳儒\" \"曾任2屆議員\" 台北市",
       "localEvidence": [
         {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        },
-        {
           "claimId": "37c4ac52-76ce-4c08-a59e-0b0db7a3b071",
           "claimType": "experience",
           "claimValue": "• 臺北市議會第十一、十二、十三、十四屆議員\n• 淡江大學公共行政學系學友會第三屆理事長\n• 臺北市議會李銀來議員辦公室主任\n• 力持工程有限公司室內設計師\n• 卓銀永建築師事務所設計師",
@@ -56962,22 +56937,9 @@
           "candidateNumber": 2
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"李雨庭\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -57006,22 +56968,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"李雨庭\" \"曾任1屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -58124,9 +58073,22 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李柏毅\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -58155,22 +58117,9 @@
           "candidateNumber": 2
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"李柏毅\" \"1998年後曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -58736,22 +58685,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"李眉蓁\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -59709,9 +59645,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李偉智\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -59784,9 +59733,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李啓維\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -60175,18 +60137,6 @@
       "status": "manual_review",
       "searchQuery": "\"李傅中武\" \"曾任2屆議員\" 台北市",
       "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        },
         {
           "claimId": "bea6cc54-427d-474d-ab84-44041c94b67e",
           "claimType": "experience",
@@ -60586,9 +60536,22 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李雅芬\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -60744,9 +60707,22 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李雅慧\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -60920,9 +60896,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李雅靜\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -60951,22 +60940,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"李雅靜\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -61274,9 +61250,22 @@
           "candidateNumber": 16
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李順進\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -61928,9 +61917,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"李鎮國\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -62552,9 +62554,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"沈家鳳\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -62785,9 +62800,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"沈震東\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -63121,9 +63149,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"周永鴻\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -63530,9 +63571,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"周奕齊\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -64450,9 +64504,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"周麗津\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -64789,9 +64856,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"林于凱\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -65225,18 +65305,6 @@
       "searchQuery": "\"林世宗\" \"曾任2屆議員\" 台北市",
       "localEvidence": [
         {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        },
-        {
           "claimId": "512abea9-0e3a-49c0-a0e3-a6ec12b6e453",
           "claimType": "experience",
           "claimValue": "• 臺北市議會第11、12、13屆議員\n• 民主進步黨中央評議委員\n• 臺灣環保教育協會發起人\n• 紙風車兒童藝術工程社會志工\n• 台北海洋科技大學董事長",
@@ -65556,22 +65624,9 @@
           "candidateNumber": 9
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"林志展\" \"1998年後曾任2屆議員\" 台南市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -65732,22 +65787,9 @@
           "candidateNumber": 1
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"林志強\" \"1998年後曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -66493,22 +66535,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"林阳乙\" \"曾任1屆議員、4屆永康市民代表\" 台南市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -66643,9 +66672,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"林孟令\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -67732,22 +67774,9 @@
           "candidateNumber": 14
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"林金結\" \"1998年後曾任2屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -68074,9 +68103,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"林亮君\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -68978,9 +69020,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"林祈烽\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -70206,9 +70261,22 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"林智鴻\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -70237,9 +70305,22 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"林智鴻\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -70677,9 +70758,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"林義迪\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -71055,22 +71149,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"林裔綺\" \"曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -71924,9 +72005,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"林德宇\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -72478,22 +72572,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"林燕祝\" \"曾任2屆議員\" 台南市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -72939,9 +73020,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"邱于軒\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -72970,9 +73064,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"邱于軒\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -73366,22 +73473,9 @@
           "candidateNumber": 10
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"邱俊憲\" \"1998年後曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -74134,22 +74228,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"邱烽堯\" \"曾任2屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -74959,22 +75040,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"金瑞龍\" \"曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -75171,9 +75239,22 @@
           "candidateNumber": 11
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"侯漢廷\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -75409,9 +75490,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"施志昌\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -77064,9 +77158,22 @@
           "candidateNumber": 19
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"苗博雅\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -77290,22 +77397,9 @@
           "candidateNumber": 1
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"范織欽 Pasulang．Tomatalate\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -77603,22 +77697,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"唐惠美\" \"曾任1屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -77920,9 +78001,22 @@
           "candidateNumber": 11
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"徐巧芯\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -78266,22 +78360,9 @@
           "candidateNumber": 17
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"徐弘庭\" \"1998年後曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -78662,22 +78743,9 @@
           "candidateNumber": 4
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"徐玉樹\" \"1998年後曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -78789,22 +78857,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"徐玉樹\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -78872,9 +78927,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"徐立信\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -79123,22 +79191,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"徐其萬\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -79343,9 +79398,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"徐瑄灃\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -79594,9 +79662,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"涂權吉\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -80240,9 +80321,22 @@
           "candidateNumber": 25
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"耿葳\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -80876,22 +80970,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"高閔琳\" \"曾任1屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -81075,9 +81156,22 @@
           "candidateNumber": 11
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"康裕成\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -81574,22 +81668,9 @@
           "candidateNumber": 1
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"張玉嬿\" \"1998年後曾任2屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -82562,22 +82643,9 @@
           "candidateNumber": 2
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"張芬郁\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -82606,22 +82674,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"張芬郁\" \"曾任1屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -82754,9 +82809,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"張彥彤\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -83026,9 +83094,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"張家銨\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -83319,9 +83400,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"張桂綿\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -83557,22 +83651,9 @@
           "candidateNumber": 5
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"張清照\" \"1998年後曾任2屆議員、副議長\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -83821,22 +83902,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"張勝富\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -84126,9 +84194,22 @@
           "candidateNumber": 20
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"張斯綱\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -85110,9 +85191,22 @@
           "candidateNumber": 15
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"張漢忠\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -85798,22 +85892,9 @@
           "candidateNumber": 6
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"張錦豪\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -86152,22 +86233,9 @@
           "candidateNumber": 3
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"張瀞分\" \"1998年後曾任2屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -86709,22 +86777,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"梁為超\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -87457,22 +87512,9 @@
           "candidateNumber": 3
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"許家蓓\" \"1998年後曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -88857,9 +88899,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"郭建盟\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -88888,22 +88943,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"郭建盟\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -89046,22 +89088,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"郭昭巖\" \"曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -89417,9 +89446,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"郭鴻儀\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -89655,22 +89697,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"郭麗華\" \"曾任1屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -90100,9 +90129,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳文政\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -91378,9 +91420,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳廷秀\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -91722,9 +91777,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳幸富\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -91753,9 +91821,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳幸富\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T3/0d1b4e88e63a9ea60fbf1b0611476a97/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -91784,9 +91865,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳怡君\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -92135,18 +92229,6 @@
       "searchQuery": "\"陳怡珍\" \"曾任2屆議員\" 台南市",
       "localEvidence": [
         {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        },
-        {
           "claimId": "e573a943-ecce-420f-bfb8-788dec825cfc",
           "claimType": "experience",
           "claimValue": "台南市議會第1、2、3屆議員\n勞工局就業服務員\n立法委員陳亭妃國會助理\n民進黨全國黨代表\n民進黨中央評議委員\n台南市議會民進黨團幹事長、書記長\n台南市議會教育、工務、民政委員會召集人\n台南市桌球委員會常務委員\n台南市傳統音樂協會理事長\n台南女中校友會理事",
@@ -92407,9 +92489,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳昆和\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -93123,22 +93218,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"陳治文\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -95001,22 +95083,9 @@
           "candidateNumber": 1
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"陳政顯\" \"1998年後曾任2屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -95203,22 +95272,9 @@
           "candidateNumber": 5
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"陳炳甫\" \"1998年後曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -95317,9 +95373,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳秋宏\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -95899,22 +95968,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"陳美梅\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -96181,22 +96237,9 @@
           "candidateNumber": 5
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"陳致中\" \"1998年後曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -96225,9 +96268,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳致中\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -96455,9 +96511,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳若翠\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -96564,22 +96633,9 @@
           "candidateNumber": 7
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"陳重文\" \"1998年後曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -96828,9 +96884,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳偉杰\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -97794,9 +97863,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳善慧\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -98001,9 +98083,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳雅倫\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -98363,22 +98458,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"陳瑛\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -98459,22 +98541,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"陳萬得\" \"曾任1屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -98808,22 +98877,9 @@
           "candidateNumber": 9
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"陳慈慧\" \"1998年後曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -99088,9 +99144,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳碧玉\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -99595,9 +99664,22 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳慧文\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -100842,9 +100924,22 @@
           "candidateNumber": 14
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳麗娜\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -101352,9 +101447,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"彭佳芸\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -101557,22 +101665,9 @@
           "candidateNumber": 5
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"彭俊豪\" \"1998年後曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -102113,9 +102208,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"曾俊傑\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -103243,9 +103351,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"曾麗燕\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -103455,22 +103576,9 @@
           "candidateNumber": 3
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"游吾和\" \"1998年後曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -103701,9 +103809,22 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"游淑慧\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -103942,22 +104063,9 @@
           "candidateNumber": 6
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"游輝宂\" \"1998年後曾任2屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -104330,9 +104438,22 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"童燕珍\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -104767,22 +104888,9 @@
           "candidateNumber": 4
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"黃仁\" \"1998年後曾任2屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -104894,22 +105002,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"黃仁\" \"曾任2屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -104969,9 +105064,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃天煌\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -105305,9 +105413,22 @@
           "candidateNumber": 16
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃文志\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -105458,9 +105579,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃文益\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -105489,9 +105623,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃文益\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -105952,9 +106099,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃守達\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -106333,9 +106493,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃明太\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -106966,9 +107139,22 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃柏霖\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -107129,9 +107315,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃秋媖\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -107510,22 +107709,9 @@
           "candidateNumber": 13
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"黃香菽\" \"1998年後曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -107554,9 +107740,22 @@
           "candidateNumber": 13
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃香菽\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -107678,9 +107877,22 @@
           "candidateNumber": 19
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃家齊\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -108131,9 +108343,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃健豪\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -108782,9 +109007,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃捷\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -108813,9 +109051,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃捷\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -109094,9 +109345,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"黃紹庭\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -109187,22 +109451,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"黃紹庭\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -109611,22 +109862,9 @@
           "candidateNumber": 3
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"黃敬平\" \"1998年後曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -110062,22 +110300,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"黃麗招\" \"曾任2屆議員\" 台南市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -110444,18 +110669,6 @@
       "searchQuery": "\"楊中成\" \"曾任2屆議員、永康市市民代表\" 台南市",
       "localEvidence": [
         {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        },
-        {
           "claimId": "091d9398-6f62-423b-9b61-220bf3646faf",
           "claimType": "experience",
           "claimValue": "台南縣第十六屆議會議員\n永康市第三屆市民代表\n永康市農會第十四屆農會代表\n大灣廣護宮第十七、二十一屆董監事會董事長\n大灣國民小學家長會八十一年會長（三屆）\n永康國際青年商會１９９２年會長\n台南市網球協會副主任委員\n大灣消防隊義消顧問\n台南市議會第二、三屆市議員",
@@ -110805,18 +111018,6 @@
       "searchQuery": "\"楊典忠\" \"曾任2屆議員\" 台中市",
       "localEvidence": [
         {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        },
-        {
           "claimId": "96e800a3-896b-4ebe-89b1-690a28dac49f",
           "claimType": "experience",
           "claimValue": "台中市議會第一、第二、第三屆議員\n教育部授證助理教授\n逢甲大學兼任助理教授\n建國、南開科大兼任講師\n西寧國小志工、家長會長\n清水橋頭里守望相助隊分隊長\n民進黨全國黨代表",
@@ -111041,22 +111242,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"楊春妹\" \"曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -111390,22 +111578,9 @@
           "candidateNumber": 7
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"楊家俍\" \"1998年後曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -112046,22 +112221,9 @@
           "candidateNumber": 2
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"楊進福\" \"1998年後曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -112173,22 +112335,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"楊進福\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -112473,22 +112622,9 @@
           "candidateNumber": 14
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"葉元之\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -112886,22 +113022,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"葉林傳\" \"曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -113789,22 +113912,9 @@
           "candidateNumber": 3
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"廖先翔\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -113957,22 +114067,9 @@
           "candidateNumber": 11
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"廖宜琨\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -114373,22 +114470,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"褚春來\" \"曾任1屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -114978,22 +115062,9 @@
           "candidateNumber": 9
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"劉仁照\" \"1998年後曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -115923,22 +115994,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"劉美芳\" \"曾任2屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -116514,22 +116572,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"劉勝全\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -116756,18 +116801,6 @@
           "sourceType": null,
           "sourceName": "桃園市議會：現任議員",
           "sourceUrl": "https://www.tycc.gov.tw/TC/councilor-detail.aspx?mid=39&num=1006"
-        },
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
         }
       ],
       "externalResearch": null
@@ -116829,9 +116862,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"劉熒隆\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -116974,9 +117020,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"劉德林\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -118067,22 +118126,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"蔡永芳\" \"曾任1屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -119073,9 +119119,22 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"蔡武宏\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -119104,9 +119163,22 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"蔡武宏\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -119453,22 +119525,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"蔡金晏\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -119841,22 +119900,9 @@
           "candidateNumber": 9
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"蔡健棠\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -120568,9 +120614,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"蔡筱薇\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -120837,22 +120896,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"蔡錦賢\" \"曾任2屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -121052,9 +121098,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"蔡耀頡\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -121541,22 +121600,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"蔣根煌\" \"曾任2屆議員、議長\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -122030,9 +122076,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鄭光峰\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -122162,22 +122221,9 @@
           "candidateNumber": 1
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"鄭宇恩\" \"1998年後曾任2屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -122312,9 +122358,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鄭安秝\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -122343,9 +122402,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鄭安秝\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -122715,9 +122787,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鄭佳欣\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -122860,9 +122945,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鄭孟洳\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -122891,9 +122989,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鄭孟洳\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -123129,9 +123240,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鄭淑方\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -123709,9 +123833,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"穎艾達利 Ingay Tali\" \"1998年後曾任1屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -124286,9 +124423,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"賴文德\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T3/0d1b4e88e63a9ea60fbf1b0611476a97/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -125847,22 +125997,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"應曉薇\" \"曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -126134,22 +126271,9 @@
           "candidateNumber": 6
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"戴瑋姗\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -127021,9 +127145,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"謝美英\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -127767,22 +127904,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"鍾宏仁\" \"曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -128018,9 +128142,22 @@
           "candidateNumber": 15
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鍾沛君\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -128207,9 +128344,22 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鍾佩玲\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -128326,9 +128476,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鍾易仲\" \"1998年後曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -128357,9 +128520,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"鍾易仲\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -128644,9 +128820,22 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"韓賜村\" \"2018年當選\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/64_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -128675,22 +128864,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"韓賜村\" \"曾任1屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -128820,9 +128996,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"簡志偉\" \"1998年後曾任1屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -129123,22 +129312,9 @@
           "candidateNumber": 22
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"簡舒培\" \"1998年後曾任2屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -129565,22 +129741,9 @@
           "candidateNumber": 3
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"簡煥宗\" \"1998年後曾任2屆議員\" 高雄市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -130225,22 +130388,9 @@
           "candidateNumber": 10
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"顏若芳\" \"1998年後曾任1屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -130313,22 +130463,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"顏若芳\" \"曾任1屆議員\" 台北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -130535,22 +130672,9 @@
           "candidateNumber": 8
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"顏莉敏\" \"1998年後曾任2屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -131016,22 +131140,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"羅文崇\" \"曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -131373,9 +131484,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "auto_reviewable",
       "searchQuery": "\"羅廷瑋\" \"1998年後曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "verified",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -131904,22 +132028,9 @@
           "candidateNumber": 7
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"蘇泓欽\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -132103,22 +132214,9 @@
           "candidateNumber": 9
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"蘇柏興\" \"1998年後曾任2屆議員\" 台中市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共2屆（2018、2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -132336,22 +132434,9 @@
           "candidateNumber": null
         }
       ],
-      "status": "auto_reviewable",
+      "status": "external_search_needed",
       "searchQuery": "\"蘇家明\" \"曾任1屆議員\" 桃園市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "當選議員共1屆（2018）",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "verified",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {
@@ -132442,22 +132527,9 @@
           "candidateNumber": 6
         }
       ],
-      "status": "manual_review",
+      "status": "external_search_needed",
       "searchQuery": "\"蘇錦雄Paylang．Caya\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2022）",
-          "matchScore": 1,
-          "tier": "secondary",
-          "reviewStatus": "derived_secondary",
-          "visibility": "review_only",
-          "sourceType": "election_history",
-          "sourceName": "本機歷史選舉資料彙整",
-          "sourceUrl": null
-        }
-      ],
+      "localEvidence": [],
       "externalResearch": null
     },
     {

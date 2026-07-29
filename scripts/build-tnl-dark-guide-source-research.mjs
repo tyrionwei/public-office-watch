@@ -36,6 +36,20 @@ const supabaseUrl = process.env.SUPABASE_URL?.trim()
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()
   || localEnv.SUPABASE_SERVICE_ROLE_KEY;
 
+function stableOrderForTable(tableName) {
+  return {
+    elections: 'id.asc',
+    races: 'id.asc',
+    candidates: 'id.asc',
+    people: 'id.asc',
+    regions: 'id.asc',
+    person_canonical_map: 'person_id.asc',
+    person_identity_matches: 'source_person_id.asc,person_id.asc',
+    person_claims: 'id.asc',
+    source_people: 'id.asc',
+  }[tableName] ?? null;
+}
+
 function restUrl(tableName) {
   return new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/${tableName}`);
 }
@@ -48,6 +62,8 @@ async function fetchRows(tableName, select, filters = {}) {
     url.searchParams.set('select', select);
     url.searchParams.set('offset', String(offset));
     url.searchParams.set('limit', String(pageSize));
+    const stableOrder = stableOrderForTable(tableName);
+    if (stableOrder) url.searchParams.set('order', stableOrder);
     for (const [key, value] of Object.entries(filters)) url.searchParams.set(key, value);
     const response = await fetch(url, {
       headers: {
@@ -114,6 +130,33 @@ function candidateIdentityKey(name, party, cityCode) {
   const normalizedCityCode = String(cityCode ?? '').trim().toLowerCase();
   if (!normalizedName || !normalizedParty || !normalizedCityCode) return null;
   return [normalizedName, normalizedParty, normalizedCityCode].join('|');
+}
+
+function historicalSourceHistoryRow(sourcePerson, identityMatch) {
+  if (sourcePerson?.source_type !== 'official_election') return null;
+  const position = String(sourcePerson.position ?? '');
+  const electionYear = Number(sourcePerson.election_year);
+  if (!position.includes('議員') || !Number.isInteger(electionYear)) return null;
+  const cityCode = cityCodeForText(`${sourcePerson.district ?? ''} ${position}`);
+  if (!cityCode) return null;
+  return {
+    person_id: identityMatch.person_id,
+    person_name: sourcePerson.raw_name ?? '',
+    party: sourcePerson.party ?? '',
+    candidate_no: null,
+    race_title: sourcePerson.district ?? null,
+    election_name: null,
+    election_year: electionYear,
+    cityCode,
+    area: districtNumber(sourcePerson.district),
+    raceType: 'councilor',
+    source_name: sourcePerson.source_name,
+    source_url: sourcePerson.source_url,
+    is_elected: !position.includes('候選人'),
+    identityInferred: true,
+    identityMatchStatus: identityMatch.match_status,
+    identityMatchScore: identityMatch.score,
+  };
 }
 
 function cityCodeForText(value) {
@@ -212,9 +255,11 @@ function derivedElectionEvidence(researchClaim, historyRows) {
     const year = Number(yearMatch[1]);
     const matches = electedCouncilorRows.filter((row) => row.election_year === year);
     if (matches.length === 0) return [];
-    const official = matches.find((row) => /中央選舉委員會/.test(row.source_name ?? ''));
-    const source = official ?? matches[0];
-    const identityInferred = matches.some((row) => row.identityInferred === true);
+    const directMatches = matches.filter((row) => row.identityInferred !== true);
+    const evidenceMatches = directMatches.length > 0 ? directMatches : matches;
+    const official = evidenceMatches.find((row) => /中央選舉委員會/.test(row.source_name ?? ''));
+    const source = official ?? evidenceMatches[0];
+    const identityInferred = evidenceMatches.some((row) => row.identityInferred === true);
     return [{
       claimId: null,
       claimType: 'derived_election_result',
@@ -241,12 +286,42 @@ function derivedElectionEvidence(researchClaim, historyRows) {
     && (referenceYear === null || row.election_year < referenceYear)
   ));
   const electedYears = [...new Set(relevantRows.map((row) => row.election_year))].sort();
-  if (electedYears.length !== expectedTerms) return [];
   const allYearsOfficial = electedYears.every((year) => relevantRows.some((row) => (
     row.election_year === year && /中央選舉委員會/.test(row.source_name ?? '')
   )));
-  const identityInferred = relevantRows.some((row) => row.identityInferred === true);
+  const identityInferred = electedYears.some((year) => !relevantRows.some((row) => (
+    row.election_year === year && row.identityInferred !== true
+  )));
   const sourceName = allYearsOfficial ? '中央選舉委員會選舉資料庫：公開資料包' : '本機歷史選舉資料彙整';
+  if (electedYears.length > expectedTerms) {
+    return [{
+      claimId: null,
+      claimType: 'derived_election_history_conflict',
+      claimValue: `暗公報敘述${expectedTerms}屆，但官方歷史來源對應到${electedYears.length}個當選年份（${electedYears.join('、')}）`,
+      matchScore: 1,
+      tier: allYearsOfficial ? 'official' : 'secondary',
+      reviewStatus: identityInferred ? 'identity_conflict' : 'source_conflict',
+      visibility: 'review_only',
+      sourceType: 'election_history',
+      sourceName: `${sourceName}（任期數衝突）`,
+      sourceUrl: null,
+    }];
+  }
+  if (electedYears.length > 0 && electedYears.length < expectedTerms) {
+    return [{
+      claimId: null,
+      claimType: 'derived_election_history_partial',
+      claimValue: `暗公報聲稱${expectedTerms}屆，目前找到${electedYears.length}個當選年份（${electedYears.join('、')}）`,
+      matchScore: 1,
+      tier: allYearsOfficial ? 'official' : 'secondary',
+      reviewStatus: identityInferred ? 'identity_partial' : 'source_partial',
+      visibility: 'review_only',
+      sourceType: 'election_history',
+      sourceName: `${sourceName}（任期資料未完整）`,
+      sourceUrl: null,
+    }];
+  }
+  if (electedYears.length !== expectedTerms) return [];
   return [{
     claimId: null,
     claimType: 'derived_election_history',
@@ -363,13 +438,23 @@ async function main() {
     ? JSON.parse(fs.readFileSync(findingsPath, 'utf8')).findings ?? []
     : [];
   const externalFindingByResearchId = new Map(externalFindings.map((finding) => [finding.researchId, finding]));
-  const [elections, races, candidates, people, regions, canonicalMap] = await Promise.all([
+  const [elections, races, candidates, people, regions, canonicalMap, identityMatches, officialElectionSourcePeople] = await Promise.all([
     fetchRows('elections', 'id,external_id,name,year,election_type,source_name'),
     fetchRows('races', 'id,external_id,election_id,region_id,race_type,title,source_name'),
     fetchRows('candidates', 'id,external_id,person_id,race_id,party,candidate_no,source_name,source_url,is_public,is_elected'),
     fetchRows('people', 'id,external_id,name,party,is_public'),
     fetchRows('regions', 'id,external_id,name,region_type,parent_region_id'),
     fetchRows('person_canonical_map', 'person_id,canonical_person_id'),
+    fetchRows(
+      'person_identity_matches',
+      'source_person_id,person_id,match_status,score',
+      { match_status: 'in.(auto_matched,probable_match)' },
+    ),
+    fetchRows(
+      'source_people',
+      'id,source_type,source_name,source_url,raw_name,party,position,district,election_year',
+      { source_type: 'eq.official_election' },
+    ),
   ]);
   const electionById = new Map(elections.map((row) => [row.id, row]));
   const raceById = new Map(races.map((row) => [row.id, row]));
@@ -494,24 +579,58 @@ async function main() {
     candidateHistoryByIdentity.set(identityKey, identityRows);
   }
 
+  for (const sourcePerson of officialElectionSourcePeople) {
+    const historyRow = historicalSourceHistoryRow(sourcePerson, {
+      person_id: null,
+      match_status: 'identity_fallback',
+      score: null,
+    });
+    if (!historyRow) continue;
+    const identityKey = candidateIdentityKey(sourcePerson.raw_name, sourcePerson.party, historyRow.cityCode);
+    if (!identityKey) continue;
+    const identityRows = candidateHistoryByIdentity.get(identityKey) ?? [];
+    identityRows.push(historyRow);
+    candidateHistoryByIdentity.set(identityKey, identityRows);
+  }
+
   const canonicalIds = [...new Set(researchClaims.map((claim) => claim.canonicalPersonId))];
 
   const memberIds = canonicalMap
     .filter((row) => canonicalIds.includes(row.canonical_person_id))
     .map((row) => row.person_id);
+  const relevantIdentityMatches = identityMatches
+    .map((match) => ({
+      ...match,
+      canonicalPersonId: canonicalByPersonId.get(match.person_id) ?? match.person_id,
+    }))
+    .filter((match) => canonicalIds.includes(match.canonicalPersonId));
   const localClaims = await fetchRowsByIds(
     'person_claims',
     'id,person_id,source_person_id,claim_type,claim_value,claim_json,confidence_level,review_status,visibility,source_name,source_url,observed_at,is_public',
     'person_id',
     memberIds,
   );
-  const sourcePeople = await fetchRowsByIds(
+  const additionalSourcePeople = await fetchRowsByIds(
     'source_people',
-    'id,source_type,source_name,source_url,raw_name,position,district,election_year',
+    'id,source_type,source_name,source_url,raw_name,party,position,district,election_year',
     'id',
-    localClaims.map((claim) => claim.source_person_id),
+    [
+      ...localClaims.map((claim) => claim.source_person_id),
+      ...relevantIdentityMatches.map((match) => match.source_person_id),
+    ],
+  );
+  const sourcePeople = uniqueBy(
+    [...officialElectionSourcePeople, ...additionalSourcePeople],
+    (row) => row.id,
   );
   const sourcePersonById = new Map(sourcePeople.map((row) => [row.id, row]));
+  for (const match of relevantIdentityMatches) {
+    const historyRow = historicalSourceHistoryRow(sourcePersonById.get(match.source_person_id), match);
+    if (!historyRow) continue;
+    const historyRows = candidateHistoryByCanonical.get(match.canonicalPersonId) ?? [];
+    historyRows.push({ ...historyRow, person_id: match.canonicalPersonId });
+    candidateHistoryByCanonical.set(match.canonicalPersonId, historyRows);
+  }
   const localClaimsByCanonical = new Map();
   for (const claim of localClaims) {
     const canonicalPersonId = canonicalByPersonId.get(claim.person_id) ?? claim.person_id;
@@ -712,7 +831,9 @@ export {
   derivedElectionEvidence,
   evidenceTier,
   externalFindingEvidence,
+  historicalSourceHistoryRow,
   normalizeText,
   originalSourceEvidence,
   researchStatus,
+  stableOrderForTable,
 };

@@ -988,6 +988,35 @@ function classifyHistoricalCecCandidateEntry(entryName) {
     return null;
   }
 
+  const legacyLocalCouncilorParent = /(?:直轄市|縣市)議員/.test(entryName);
+  if (
+    /(?:直轄市|縣市)區域議員|區域議員|(?:直轄市|縣市)議員\(區域\)/.test(entryName)
+    || (legacyLocalCouncilorParent && entryName.includes('/區域/'))
+  ) {
+    return { year, kind: 'local-councilor-regional', roleLabel: '議員' };
+  }
+
+  if (
+    /(?:直轄市|縣市)山原議員|山地議員/.test(entryName)
+    || (legacyLocalCouncilorParent && entryName.includes('/山原/'))
+  ) {
+    return { year, kind: 'local-councilor-mountain-indigenous', districtLabel: '山地原住民', roleLabel: '議員' };
+  }
+
+  if (
+    /(?:直轄市|縣市)平原議員|平地議員/.test(entryName)
+    || (legacyLocalCouncilorParent && entryName.includes('/平原/'))
+  ) {
+    return { year, kind: 'local-councilor-plain-indigenous', districtLabel: '平地原住民', roleLabel: '議員' };
+  }
+
+  if (
+    /(?:直轄市|縣市)議員\(原住民\)/.test(entryName)
+    || (legacyLocalCouncilorParent && entryName.includes('/原住民/'))
+  ) {
+    return { year, kind: 'local-councilor-indigenous', districtLabel: '原住民', roleLabel: '議員' };
+  }
+
   if (entryName.includes('/總統/')) {
     return { year, kind: 'president', districtLabel: '全國', roleLabel: '總統' };
   }
@@ -4170,8 +4199,14 @@ async function main() {
   console.log(JSON.stringify(report, null, 2));
 }
 
-main().catch((error) => {
-  const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`real public data sync failed: ${message}`);
-  process.exit(1);
-});
+if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
+  main().catch((error) => {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`real public data sync failed: ${message}`);
+    process.exit(1);
+  });
+}
+
+export {
+  classifyHistoricalCecCandidateEntry,
+};

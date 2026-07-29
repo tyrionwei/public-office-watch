@@ -3,6 +3,10 @@ import path from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { sites } from './build/sites-vite-plugin';
+import {
+  buildPartyCandidateReviewWrite,
+  parsePartyCandidateReviewSource,
+} from './build/internalPartyCandidateReview';
 
 type EnvMap = Record<string, string>;
 type JsonObject = Record<string, unknown>;
@@ -521,7 +525,7 @@ function internalReviewApiPlugin(): Plugin {
           }
 
           const sourcePeople = await supabaseRest(
-            'source_people?select=id,source_person_key,raw_name,alias,gender,party,position,district,election_year,source_name,source_url&id=eq.' + encodeURIComponent(sourcePersonId) + '&limit=1',
+            'source_people?select=id,source_person_key,raw_name,alias,gender,party,position,district,election_year,source_name,source_url,source_payload&id=eq.' + encodeURIComponent(sourcePersonId) + '&limit=1',
           ) as {
             id: string;
             source_person_key: string;
@@ -534,6 +538,7 @@ function internalReviewApiPlugin(): Plugin {
             election_year: number | null;
             source_name: string;
             source_url: string | null;
+            source_payload: JsonObject | null;
           }[];
           const sourcePerson = sourcePeople[0];
           if (!sourcePerson) {
@@ -542,6 +547,7 @@ function internalReviewApiPlugin(): Plugin {
           }
 
           const now = new Date().toISOString();
+          const partyCandidateSource = parsePartyCandidateReviewSource(sourcePerson);
           let candidatePerson: { id: string; name: string; party: string | null; position: string | null; district: string | null };
 
           if (action === 'create') {
@@ -558,7 +564,7 @@ function internalReviewApiPlugin(): Plugin {
                 election_year: sourcePerson.election_year,
                 district: sourcePerson.district,
                 source_url: sourcePerson.source_url,
-                is_public: true,
+                is_public: partyCandidateSource === null,
                 updated_at: now,
               }),
             }) as { id: string; name: string; party: string | null; position: string | null; district: string | null }[];
@@ -616,16 +622,35 @@ function internalReviewApiPlugin(): Plugin {
           });
 
           if (approved) {
-            await supabaseRest('source_people?id=eq.' + encodeURIComponent(sourcePersonId), {
-              method: 'PATCH',
-              headers: { prefer: 'return=minimal' },
-              body: JSON.stringify({ is_public: true, updated_at: now }),
-            });
-            await supabaseRest('person_claims?source_person_id=eq.' + encodeURIComponent(sourcePersonId), {
-              method: 'PATCH',
-              headers: { prefer: 'return=minimal' },
-              body: JSON.stringify({ person_id: candidatePerson.id, review_status: 'verified', visibility: 'public', is_public: true, updated_at: now }),
-            });
+            const partyCandidateWrite = buildPartyCandidateReviewWrite(sourcePerson, candidatePerson.id, now);
+            if (partyCandidateWrite) {
+              await supabaseRest('candidates?on_conflict=external_id', {
+                method: 'POST',
+                headers: { prefer: 'resolution=merge-duplicates,return=minimal' },
+                body: JSON.stringify(partyCandidateWrite.candidate),
+              });
+              await supabaseRest('source_people?id=eq.' + encodeURIComponent(sourcePersonId), {
+                method: 'PATCH',
+                headers: { prefer: 'return=minimal' },
+                body: JSON.stringify(partyCandidateWrite.sourcePatch),
+              });
+              await supabaseRest('person_claims?source_person_id=eq.' + encodeURIComponent(sourcePersonId), {
+                method: 'PATCH',
+                headers: { prefer: 'return=minimal' },
+                body: JSON.stringify(partyCandidateWrite.claimPatch),
+              });
+            } else {
+              await supabaseRest('source_people?id=eq.' + encodeURIComponent(sourcePersonId), {
+                method: 'PATCH',
+                headers: { prefer: 'return=minimal' },
+                body: JSON.stringify({ is_public: true, updated_at: now }),
+              });
+              await supabaseRest('person_claims?source_person_id=eq.' + encodeURIComponent(sourcePersonId), {
+                method: 'PATCH',
+                headers: { prefer: 'return=minimal' },
+                body: JSON.stringify({ person_id: candidatePerson.id, review_status: 'verified', visibility: 'public', is_public: true, updated_at: now }),
+              });
+            }
           }
 
           jsonResponse(response, 200, { status: 'ok', action });

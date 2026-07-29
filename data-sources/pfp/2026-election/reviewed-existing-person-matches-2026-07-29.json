@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "party": "親民黨",
+  "reviewedBy": "codex-assisted-high-confidence-review",
+  "decisions": [
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-001",
+      "personName": "楊秀玉",
+      "decision": "use_existing",
+      "personId": "362fd43a-5384-432f-9f88-1f45c15e9848",
+      "reason": "姓名、親民黨黨籍與基隆市第 7 選區皆一致，且 canonical 人物唯一",
+      "reviewedAt": "2026-07-29T21:05:13.6176782+08:00"
+    },
+    {
+      "sourceCandidateKey": "pfp-2026-pfp2026-005",
+      "personName": "陳傑麟",
+      "decision": "use_existing",
+      "personId": "573a2b68-987e-40f4-aa19-9dfd2ff210bf",
+      "reason": "姓名、親民黨黨籍與宜蘭縣第 12 選區山地原住民皆一致，且 canonical 人物唯一",
+      "reviewedAt": "2026-07-29T21:05:13.6176782+08:00"
+    }
+  ]
+}

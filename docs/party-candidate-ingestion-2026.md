@@ -2,7 +2,7 @@
 
 檢查日期：2026-07-29
 
-本階段只確認來源與匯入邊界，不新增候選人、不寫入正式 Supabase。
+本階段允許寫入本機待審核層；未經人工決定不建立候選關係，也不寫入正式 Supabase。
 
 ## 現有基礎
 
@@ -115,7 +115,8 @@
 - 縣市名稱先正規化，例如 `台`／`臺`，再比對既有 region 與 race。
 - 不從政黨網站寫入候選人號次；號次只能來自中選會正式資料。
 - 政黨頁面的自傳、口號與社群連結不是建立候選關係的必要條件，可分開審核。
-- 原始快照先進 `raw_source_records`，解析結果必須先 dry-run。
+- 解析結果必須先 dry-run；通過後才以 `source_people.source_payload` 保存官方來源快照，
+  並建立私有、待審核的 `person_claims`。
 
 ## 身分與選區比對
 
@@ -131,10 +132,13 @@
 ### Phase 1：政黨候選來源 importer（本機完成）
 
 - 已補齊並驗證嘉義市市長選區，確認全國共有 22 個縣市長選區。
-- 已建立正規化 JSON validator 與 dry-run report。
+- 已建立正規化 JSON validator、dry-run report 與本機限定的 `--stage`。
 - 已驗證來源網域、狀態值、選舉年份及 source key 唯一性。
 - 已列出人物待確認、新人物待確認、既有候選關係及選區未匹配等結果。
-- 工具僅支援 dry-run，沒有寫入模式。
+- `--stage` 只建立來源、待審核參選聲明與非確認性的身分建議。
+- `--apply-reviewed` 只接受具審核人、審核時間及逐筆決定的 JSON；
+  通過後才建立私有候選關係，新人物也只在 `create_new` 決定後建立。
+- 兩種寫入模式都會拒絕非 localhost 的 Supabase URL。
 
 ### Phase 2：民進黨 adapter（本機完成）
 
@@ -143,14 +147,16 @@
 - dry-run 先依 `person_canonical_map` 合併歷史重複列，再比對政黨與歷史參選地區。
 - 縣市長分為 9 筆高信心建議、3 筆可能配對、4 筆人工辨識及 3 筆新人物。
 - 六都議員分為 139 筆高信心建議、9 筆可能配對、3 筆人工辨識及 37 筆新人物。
-- 高信心仍只是 dry-run 建議，不會直接建立身分配對。
-- 尚未建立、合併或發布任何候選人資料。
+- 207 筆均已寫入本機待審核層；其中 160 筆有非確認性的身分建議。
+- 重跑後筆數不增加；目前已確認身分、正式候選及公開候選均為 0。
 
-### Phase 3：國民黨公告 adapter
+### Phase 3：國民黨公告 adapter（本機完成）
 
-- 以官方公告 URL 清單作為輸入。
-- 僅解析已核定的提名／徵召資訊。
-- 將初選中、待審議與正式提名分開。
+- 以 5 篇官方中常會公告作為輸入，解析出 14 位正式縣市長提名人。
+- 僅解析同一句同時包含「通過」、「徵召／提名／核定」與「參選」的明確決定。
+- 初選中、現任優先、待審議或只描述合作機制的內容不會進入快照。
+- 14 筆均成功匹配選區並寫入本機待審核層：7 筆高信心、3 筆可能配對、
+  3 筆人工辨識、1 筆新人物；正式候選仍為 0。
 
 ### Phase 4：民眾黨人工快照流程
 
@@ -158,11 +164,30 @@
 - 離線 parser 產生相同正規化快照。
 - 不自動操作 Cloudflare challenge。
 
-### Phase 5：審核後寫入本機
+### Phase 5：審核後寫入本機（流程完成，尚待逐筆審核）
 
-- 寫入來源、candidate、狀態歷程與必要的來源限定人物。
+- 審核檔可逐筆選擇 `use_existing`、`create_new` 或 `reject`。
+- `use_existing` 只能選同名 canonical 候選；`create_new` 才建立私有人物。
+- 通過的資料寫入私有 candidate，狀態為 `party_nominee`，並由 trigger 保存狀態歷程。
+- 來源聲明維持 `review_only`，不會因完成身分審核而自動公開。
 - 驗證人物頁、選舉頁、選區頁與搜尋。
 - 確認沒有同名錯接及重複 candidacy 後，才另行決定正式發布。
+
+## 本機執行
+
+```bash
+node scripts/import-party-candidate-snapshot.mjs \
+  --input /tmp/party-candidates.json \
+  --stage
+```
+
+逐筆完成 `docs/party-candidate-review.example.json` 格式的審核檔後：
+
+```bash
+node scripts/import-party-candidate-snapshot.mjs \
+  --input /tmp/party-candidates.json \
+  --apply-reviewed /tmp/party-candidate-review.json
+```
 
 ## 暫不執行
 

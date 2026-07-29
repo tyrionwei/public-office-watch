@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "party": "民主進步黨",
+  "reviewedBy": "reviewer-name",
+  "decisions": [
+    {
+      "sourceCandidateKey": "dpp-2026-mayor-63000",
+      "personName": "沈伯洋",
+      "decision": "use_existing",
+      "personId": "replace-with-canonical-person-uuid",
+      "reason": "姓名、政黨與選舉地區皆一致",
+      "reviewedAt": "2026-07-29T12:00:00+08:00"
+    }
+  ]
+}

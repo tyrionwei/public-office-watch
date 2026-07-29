@@ -1,6 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import {
+  applyReviewedPartyCandidates,
+  stagePartyCandidateReview,
+  validateReviewFile,
+} from './party-candidate-review.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const targetElectionExternalId = 'planned-2026-local-public-officials';
@@ -44,6 +49,8 @@ function readLocalEnv() {
 
 function parseArgs(argv) {
   let inputPath = null;
+  let mode = 'dry-run';
+  let reviewPath = null;
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === '--input') {
@@ -51,10 +58,21 @@ function parseArgs(argv) {
       index += 1;
       continue;
     }
+    if (arg === '--stage') {
+      mode = 'stage';
+      continue;
+    }
+    if (arg === '--apply-reviewed') {
+      mode = 'apply-reviewed';
+      reviewPath = argv[index + 1] ?? null;
+      index += 1;
+      continue;
+    }
     throw new Error(`Unsupported argument: ${arg}`);
   }
   if (!inputPath) throw new Error('--input is required');
-  return { inputPath };
+  if (mode === 'apply-reviewed' && !reviewPath) throw new Error('--apply-reviewed requires a review file');
+  return { inputPath, mode, reviewPath };
 }
 
 function requireText(value, field, errors) {
@@ -466,9 +484,26 @@ async function main() {
   const plan = planPartyCandidateImport(snapshot, {
     elections, races, regions, people, candidates, canonicalMap, historyRaces,
   });
+  let writeResult = null;
+  if (plan.blocking.length === 0 && options.mode === 'stage') {
+    writeResult = await stagePartyCandidateReview(config, snapshot, plan);
+  }
+  if (plan.blocking.length === 0 && options.mode === 'apply-reviewed') {
+    const reviewFile = path.resolve(options.reviewPath);
+    if (!fs.existsSync(reviewFile)) throw new Error(`Review file not found: ${reviewFile}`);
+    const review = validateReviewFile(
+      JSON.parse(fs.readFileSync(reviewFile, 'utf8')),
+      snapshot,
+      plan,
+    );
+    const staged = await stagePartyCandidateReview(config, snapshot, plan);
+    const applied = await applyReviewedPartyCandidates(config, snapshot, plan, review);
+    writeResult = { ...staged, ...applied, reviewFile };
+  }
   const result = {
     status: plan.blocking.length > 0 ? 'blocked' : 'ok',
-    dryRun: true,
+    mode: options.mode,
+    dryRun: options.mode === 'dry-run',
     inputPath: resolvedPath,
     party: snapshot.party,
     recordCount: snapshot.records.length,
@@ -490,6 +525,7 @@ async function main() {
       identityResolution: item.identityResolution,
       selectedCanonicalPersonId: item.selectedGroup?.canonicalPersonId ?? null,
     })),
+    writeResult,
   };
   console.log(JSON.stringify(result, null, 2));
   if (plan.blocking.length > 0) process.exitCode = 1;

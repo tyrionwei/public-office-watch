@@ -101,9 +101,19 @@ function normalizeHanName(value) {
 
 function normalizeParty(value) {
   return normalizeText(value)
+    .replace(/中國國民黨/g, '國民黨')
+    .replace(/民主進步黨/g, '民進黨')
     .replace(/台灣民眾黨/g, '民眾黨')
     .replace(/台灣基進/g, '基進黨')
     .replace(/無黨籍及未經政黨推薦/g, '無黨籍');
+}
+
+function candidateIdentityKey(name, party, cityCode) {
+  const normalizedName = normalizeName(name);
+  const normalizedParty = normalizeParty(party);
+  const normalizedCityCode = String(cityCode ?? '').trim().toLowerCase();
+  if (!normalizedName || !normalizedParty || !normalizedCityCode) return null;
+  return [normalizedName, normalizedParty, normalizedCityCode].join('|');
 }
 
 function cityCodeForText(value) {
@@ -204,16 +214,17 @@ function derivedElectionEvidence(researchClaim, historyRows) {
     if (matches.length === 0) return [];
     const official = matches.find((row) => /中央選舉委員會/.test(row.source_name ?? ''));
     const source = official ?? matches[0];
+    const identityInferred = matches.some((row) => row.identityInferred === true);
     return [{
       claimId: null,
       claimType: 'derived_election_result',
-      claimValue: `${year}年議員選舉當選`,
+      claimValue: `${year}年議員選舉當選${identityInferred ? '（同名、同黨、同縣市身分推定）' : ''}`,
       matchScore: 1,
       tier: official ? 'official' : 'secondary',
-      reviewStatus: official ? 'verified' : 'derived_secondary',
+      reviewStatus: identityInferred ? 'identity_inferred' : official ? 'verified' : 'derived_secondary',
       visibility: 'review_only',
       sourceType: 'election_result',
-      sourceName: source.source_name,
+      sourceName: identityInferred ? `${source.source_name}（身分待確認）` : source.source_name,
       sourceUrl: source.source_url,
     }];
   }
@@ -234,16 +245,18 @@ function derivedElectionEvidence(researchClaim, historyRows) {
   const allYearsOfficial = electedYears.every((year) => relevantRows.some((row) => (
     row.election_year === year && /中央選舉委員會/.test(row.source_name ?? '')
   )));
+  const identityInferred = relevantRows.some((row) => row.identityInferred === true);
+  const sourceName = allYearsOfficial ? '中央選舉委員會選舉資料庫：公開資料包' : '本機歷史選舉資料彙整';
   return [{
     claimId: null,
     claimType: 'derived_election_history',
-    claimValue: `${termMatch[1] ?? ''}當選議員共${expectedTerms}屆（${electedYears.join('、')}）`,
+    claimValue: `${termMatch[1] ?? ''}當選議員共${expectedTerms}屆（${electedYears.join('、')}）${identityInferred ? '（同名、同黨、同縣市身分推定）' : ''}`,
     matchScore: 1,
     tier: allYearsOfficial ? 'official' : 'secondary',
-    reviewStatus: allYearsOfficial ? 'verified' : 'derived_secondary',
+    reviewStatus: identityInferred ? 'identity_inferred' : allYearsOfficial ? 'verified' : 'derived_secondary',
     visibility: 'review_only',
     sourceType: 'election_history',
-    sourceName: allYearsOfficial ? '中央選舉委員會選舉資料庫：公開資料包' : '本機歷史選舉資料彙整',
+    sourceName: identityInferred ? `${sourceName}（身分待確認）` : sourceName,
     sourceUrl: null,
   }];
 }
@@ -468,10 +481,17 @@ async function main() {
   }
   const researchClaims = [...groupedClaims.values()];
   const candidateHistoryByCanonical = new Map();
+  const candidateHistoryByIdentity = new Map();
   for (const candidate of allCandidateRows) {
     const rows = candidateHistoryByCanonical.get(candidate.person_id) ?? [];
     rows.push(candidate);
     candidateHistoryByCanonical.set(candidate.person_id, rows);
+
+    const identityKey = candidateIdentityKey(candidate.person_name, candidate.party, candidate.cityCode);
+    if (!identityKey) continue;
+    const identityRows = candidateHistoryByIdentity.get(identityKey) ?? [];
+    identityRows.push(candidate);
+    candidateHistoryByIdentity.set(identityKey, identityRows);
   }
 
   const canonicalIds = [...new Set(researchClaims.map((claim) => claim.canonicalPersonId))];
@@ -521,14 +541,31 @@ async function main() {
         };
       })
       .filter((item) => item.matchScore >= 0.45);
+    const directElectionEvidence = derivedElectionEvidence(
+      researchClaim,
+      candidateHistoryByCanonical.get(researchClaim.canonicalPersonId) ?? [],
+    );
+    const occurrence = researchClaim.occurrences[0] ?? researchClaim.occurrence;
+    const identityKey = candidateIdentityKey(
+      researchClaim.personName,
+      occurrence?.party,
+      cityCodeForText(occurrence?.city),
+    );
+    const inferredElectionEvidence = directElectionEvidence.length === 0 && identityKey
+      ? derivedElectionEvidence(
+        researchClaim,
+        (candidateHistoryByIdentity.get(identityKey) ?? []).map((row) => ({
+          ...row,
+          identityInferred: true,
+        })),
+      )
+      : [];
     const evidence = uniqueBy([
       ...localEvidence,
       ...originalSourceEvidence(researchClaim),
       ...externalFindingEvidence(externalFinding, researchClaim),
-      ...derivedElectionEvidence(
-        researchClaim,
-        candidateHistoryByCanonical.get(researchClaim.canonicalPersonId) ?? [],
-      ),
+      ...directElectionEvidence,
+      ...inferredElectionEvidence,
     ], (item) => [item.claimType, item.claimValue, item.sourceUrl].join('|'))
       .sort((left, right) => (
         right.matchScore - left.matchScore
@@ -579,7 +616,7 @@ async function main() {
         unknown: 'Source type could not be established automatically.',
       },
       stopLoss: 'For unresolved claims, use one exact search query and inspect at most the two strongest relevant results. Do not retry protected sites, bypass access controls, or auto-approve same-name evidence without matching context.',
-      autoReviewRule: 'Exact normalized containment match against a verified official local claim. External findings and sensitive family/legal claims remain separately auditable.',
+      autoReviewRule: 'Exact normalized containment match against a verified official local claim. Cross-ID election evidence inferred from exact name, party, and city remains manual review only. External findings and sensitive family/legal claims remain separately auditable.',
     },
     summary: {
       guideCandidateRows: guideRows.length,
@@ -655,7 +692,7 @@ ${categories.map((category) => {
 1. 官方選舉公報、政府、立法院、地方議會與政黨官方人物頁列為第一級來源。
 2. 政治家族與涉案紀錄即使找到媒體報導，也必須保留人物身分與案件階段，不把「涉案」寫成「有罪」。
 3. 外部搜尋每條使用一組精確查詢，最多檢查最相關的兩個結果；仍無可靠佐證即列為未找到，不反覆改寫查詢。
-4. 同名、選區或年份對不上時不得自動審核。
+4. 同名、選區或年份對不上時不得自動審核；姓名、政黨與縣市完全一致的跨 ID 選舉紀錄僅列為身分推定，仍需人工審核。
 5. 暗公報目前只作研究線索，不直接公開或寫入已驗證 claims。
 `;
   fs.writeFileSync(summaryOutputPath, summary);
@@ -670,6 +707,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 }
 
 export {
+  candidateIdentityKey,
   compareClaimToEvidence,
   derivedElectionEvidence,
   evidenceTier,

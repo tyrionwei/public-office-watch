@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T21:57:05.167Z",
+  "generatedAt": "2026-07-29T22:11:20.316Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -11,7 +11,7 @@
       "unknown": "Source type could not be established automatically."
     },
     "stopLoss": "For unresolved claims, use one exact search query and inspect at most the two strongest relevant results. Do not retry protected sites, bypass access controls, or auto-approve same-name evidence without matching context.",
-    "autoReviewRule": "Exact normalized containment match against a verified official local claim. External findings and sensitive family/legal claims remain separately auditable."
+    "autoReviewRule": "Exact normalized containment match against a verified official local claim. Cross-ID election evidence inferred from exact name, party, and city remains manual review only. External findings and sensitive family/legal claims remain separately auditable."
   },
   "summary": {
     "guideCandidateRows": 1488,
@@ -23,8 +23,8 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 705,
-      "manual_review": 860,
-      "external_search_needed": 3123,
+      "manual_review": 904,
+      "external_search_needed": 3079,
       "not_found_after_stop_loss": 68
     },
     "categoryCounts": {
@@ -32,8 +32,8 @@
         "people": 881,
         "claims": 2577,
         "autoReviewable": 544,
-        "manualReview": 232,
-        "externalSearchNeeded": 1801,
+        "manualReview": 276,
+        "externalSearchNeeded": 1757,
         "notFoundAfterStopLoss": 0
       },
       "政治家族": {
@@ -41839,9 +41839,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"王威元\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -41870,9 +41883,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"王威元\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -44742,9 +44768,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"白珮茹\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -46711,9 +46750,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"江怡臻\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -46742,9 +46794,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"江怡臻\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -55625,9 +55690,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李余典\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -59019,9 +59097,22 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李倩萍\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -59433,9 +59524,22 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李翁月娥\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -64248,9 +64352,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"周雅玲\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -69899,9 +70016,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"林國春\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -71118,9 +71248,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"林裔綺\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -71700,9 +71843,22 @@
           "candidateNumber": 15
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"林銘仁\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -74965,9 +75121,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"金瑞龍\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -76351,9 +76520,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"洪佳君\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -80567,9 +80749,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"馬見Lahuy．Ipin\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T3/0d1b4e88e63a9ea60fbf1b0611476a97/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -82054,9 +82249,22 @@
           "candidateNumber": 14
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張志豪\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -82085,9 +82293,22 @@
           "candidateNumber": 14
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張志豪\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -85452,9 +85673,22 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張維倩\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -85892,9 +86126,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張錦豪\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -85923,9 +86170,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張錦豪\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -88400,9 +88660,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"連斐璠\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -90613,9 +90886,22 @@
           "candidateNumber": 13
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳世榮\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -91120,9 +91406,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳永福\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -97399,9 +97698,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳啟能\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -99385,9 +99697,22 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳儀君\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -100531,9 +100856,22 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳鴻源\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -102927,9 +103265,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"曾煥嘉\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -105768,9 +106119,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃永昌\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -106674,9 +107038,22 @@
           "candidateNumber": 16
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃俊哲\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -108162,9 +108539,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃桂蘭\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -111211,9 +111601,22 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"楊春妹\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T2/53c908d0b8c39a46823606c95bdd1d1f/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -112622,9 +113025,22 @@
           "candidateNumber": 14
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"葉元之\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -112653,9 +113069,22 @@
           "candidateNumber": 14
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"葉元之\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -113912,9 +114341,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"廖先翔\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -113943,9 +114385,22 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"廖先翔\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -114067,9 +114522,22 @@
           "candidateNumber": 11
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"廖宜琨\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -114098,9 +114566,22 @@
           "candidateNumber": 11
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"廖宜琨\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -116118,9 +116599,22 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"劉哲彰\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -119900,9 +120394,22 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"蔡健棠\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -119931,9 +120438,22 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"蔡健棠\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -127873,9 +128393,22 @@
           "candidateNumber": 15
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"鍾宏仁\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -131109,9 +131642,22 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"羅文崇\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -132028,9 +132574,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"蘇泓欽\" \"1998年後曾任1屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -132059,9 +132618,22 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"蘇泓欽\" \"2018年當選議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_result",
+          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_result",
+          "sourceName": "中央選舉委員會選舉資料庫（身分待確認）",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
+        }
+      ],
       "externalResearch": null
     },
     {

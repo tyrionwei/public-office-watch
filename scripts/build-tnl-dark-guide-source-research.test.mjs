@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  candidateIdentityKey,
   compareClaimToEvidence,
   derivedElectionEvidence,
   evidenceTier,
@@ -8,6 +9,20 @@ import {
   originalSourceEvidence,
   researchStatus,
 } from './build-tnl-dark-guide-source-research.mjs';
+
+assert.equal(
+  candidateIdentityKey('王威元', '中國國民黨', 'nwt'),
+  candidateIdentityKey(' 王威元 ', '中國國民黨', 'nwt'),
+);
+
+assert.equal(
+  candidateIdentityKey('王威元', '中國國民黨', 'nwt'),
+  candidateIdentityKey('王威元', '國民黨', 'nwt'),
+);
+assert.equal(
+  candidateIdentityKey('張志豪', '民主進步黨', 'nwt'),
+  candidateIdentityKey('張志豪', '民進黨', 'nwt'),
+);
 
 assert.equal(normalizeText('曾任 臺北市議員（第 12 屆）'), '曾任台北市議員第12屆');
 assert.equal(compareClaimToEvidence('曾任謝長廷辦公室幕僚', '謝長廷辦公室幕僚；立委服務處主任'), 1);
@@ -53,6 +68,22 @@ const electedYearEvidence = derivedElectionEvidence({
 assert.equal(electedYearEvidence[0].tier, 'official');
 assert.equal(electedYearEvidence[0].reviewStatus, 'verified');
 assert.equal(researchStatus('政治工作', electedYearEvidence), 'auto_reviewable');
+
+const identityInferredElectionEvidence = derivedElectionEvidence({
+  category: '政治工作',
+  text: '2018年當選議員',
+}, [{
+  raceType: 'councilor',
+  is_elected: true,
+  election_year: 2018,
+  source_name: '中央選舉委員會選舉資料庫：公開資料包',
+  source_url: 'https://db.cec.gov.tw/',
+  identityInferred: true,
+}]);
+assert.equal(identityInferredElectionEvidence[0].tier, 'official');
+assert.equal(identityInferredElectionEvidence[0].reviewStatus, 'identity_inferred');
+assert.match(identityInferredElectionEvidence[0].claimValue, /身分推定/);
+assert.equal(researchStatus('政治工作', identityInferredElectionEvidence), 'manual_review');
 
 const electedYearWithoutOfficeEvidence = derivedElectionEvidence({
   category: '政治工作',

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T23:37:17.656Z",
+  "generatedAt": "2026-07-29T23:44:14.781Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -23,8 +23,8 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 704,
-      "manual_review": 1489,
-      "external_search_needed": 2495,
+      "manual_review": 1494,
+      "external_search_needed": 2490,
       "not_found_after_stop_loss": 68
     },
     "categoryCounts": {
@@ -32,8 +32,8 @@
         "people": 881,
         "claims": 2577,
         "autoReviewable": 543,
-        "manualReview": 852,
-        "externalSearchNeeded": 1182,
+        "manualReview": 857,
+        "externalSearchNeeded": 1177,
         "notFoundAfterStopLoss": 0
       },
       "政治家族": {
@@ -40457,10 +40457,36 @@
           "candidateNumber": 20
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"毛嘉慶\" \"曾任國民黨文傳會副主委\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方新聞明確記載「中國國民黨文傳會副主委毛嘉慶」",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨：文傳會主管談話",
+          "sourceUrl": "https://www.kmt.org.tw/2016/06/blog-post_21.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-7-20-政治工作-1",
+        "query": "毛嘉慶 國民黨 文傳會 副主委",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方新聞明確稱毛嘉慶為文傳會副主委。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨：文傳會主管談話",
+            "url": "https://www.kmt.org.tw/2016/06/blog-post_21.html",
+            "supports": "官方新聞明確記載「中國國民黨文傳會副主委毛嘉慶」"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-2-4-政治工作-1",
@@ -44790,10 +44816,36 @@
           "candidateNumber": 14
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"王鴻薇\" \"曾任國民黨文傳會副主委\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方新聞明確記載「文傳會副主委王鴻薇」",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨：文傳會副主委王鴻薇談話",
+          "sourceUrl": "https://www.kmt.org.tw/2016/11/blog-post_88.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-3-44-政治工作-2",
+        "query": "王鴻薇 國民黨 文傳會 副主委",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方新聞明確稱王鴻薇為文傳會副主委，支持此項經歷。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨：文傳會副主委王鴻薇談話",
+            "url": "https://www.kmt.org.tw/2016/11/blog-post_88.html",
+            "supports": "官方新聞明確記載「文傳會副主委王鴻薇」"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-11-7-政治工作-2",
@@ -46796,10 +46848,36 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"朱挺玗\" \"曾任國民黨中央委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方新聞明確記載「中央委員青工副總會長朱挺玗」",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨：高雄市青工會舉辦「創新、科技、青年夢」論壇",
+          "sourceUrl": "https://www.kmt.org.tw/2015/05/blog-post_386.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-10-2-政治工作-2",
+        "query": "朱挺玗 國民黨 中央委員",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方新聞明確稱朱挺玗為「中央委員青工副總會長」，支持曾任中央委員。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨：高雄市青工會舉辦「創新、科技、青年夢」論壇",
+            "url": "https://www.kmt.org.tw/2015/05/blog-post_386.html",
+            "supports": "官方新聞明確記載「中央委員青工副總會長朱挺玗」"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-10-11-政治工作-2",
@@ -60424,10 +60502,36 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李柏融\" \"曾任國民黨中央委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方新聞記載「黨員李柏融（候補中央委員）」；不直接支持中央委員身分",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨：高市三民區黨員暨眷屬聯誼活動",
+          "sourceUrl": "https://www.kmt.org.tw/2015/07/blog-post_88.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-2-86-政治工作-1",
+        "query": "李柏融 國民黨 中央委員 候補中央委員",
+        "outcome": "source_found_conflict_manual_review",
+        "notes": "國民黨官方新聞只稱李柏融為「候補中央委員」，不足以證明其實際擔任中央委員；需人工判斷暗公報敘述是否把候補身分簡化。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨：高市三民區黨員暨眷屬聯誼活動",
+            "url": "https://www.kmt.org.tw/2015/07/blog-post_88.html",
+            "supports": "官方新聞記載「黨員李柏融（候補中央委員）」；不直接支持中央委員身分"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-4-6-政治工作-2",
@@ -102759,10 +102863,36 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳偉杰\" \"曾任國民黨文傳會副主委\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "官方新聞明確記載「中國國民黨文傳會副主委陳偉杰」",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨：鄭文燦批「角色錯亂」國民黨回應",
+          "sourceUrl": "https://www.kmt.org.tw/2021/11/blog-post_83.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-1-2-政治工作-7",
+        "query": "陳偉杰 國民黨 文傳會 副主委",
+        "outcome": "source_found_manual_review",
+        "notes": "國民黨官方新聞明確稱陳偉杰為文傳會副主委，支持此項經歷。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨：鄭文燦批「角色錯亂」國民黨回應",
+            "url": "https://www.kmt.org.tw/2021/11/blog-post_83.html",
+            "supports": "官方新聞明確記載「中國國民黨文傳會副主委陳偉杰」"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-1-2-政治工作-10",

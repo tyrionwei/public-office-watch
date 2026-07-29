@@ -9647,6 +9647,76 @@
           "supports": "台中市黨部當選名單列有廖芝晏"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-10-2-政治工作-2",
+      "query": "朱挺玗 國民黨 中央委員",
+      "outcome": "source_found_manual_review",
+      "notes": "國民黨官方新聞明確稱朱挺玗為「中央委員青工副總會長」，支持曾任中央委員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中國國民黨：高雄市青工會舉辦「創新、科技、青年夢」論壇",
+          "url": "https://www.kmt.org.tw/2015/05/blog-post_386.html",
+          "supports": "官方新聞明確記載「中央委員青工副總會長朱挺玗」"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-2-86-政治工作-1",
+      "query": "李柏融 國民黨 中央委員 候補中央委員",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "國民黨官方新聞只稱李柏融為「候補中央委員」，不足以證明其實際擔任中央委員；需人工判斷暗公報敘述是否把候補身分簡化。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中國國民黨：高市三民區黨員暨眷屬聯誼活動",
+          "url": "https://www.kmt.org.tw/2015/07/blog-post_88.html",
+          "supports": "官方新聞記載「黨員李柏融（候補中央委員）」；不直接支持中央委員身分"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-7-20-政治工作-1",
+      "query": "毛嘉慶 國民黨 文傳會 副主委",
+      "outcome": "source_found_manual_review",
+      "notes": "國民黨官方新聞明確稱毛嘉慶為文傳會副主委。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中國國民黨：文傳會主管談話",
+          "url": "https://www.kmt.org.tw/2016/06/blog-post_21.html",
+          "supports": "官方新聞明確記載「中國國民黨文傳會副主委毛嘉慶」"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-44-政治工作-2",
+      "query": "王鴻薇 國民黨 文傳會 副主委",
+      "outcome": "source_found_manual_review",
+      "notes": "國民黨官方新聞明確稱王鴻薇為文傳會副主委，支持此項經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中國國民黨：文傳會副主委王鴻薇談話",
+          "url": "https://www.kmt.org.tw/2016/11/blog-post_88.html",
+          "supports": "官方新聞明確記載「文傳會副主委王鴻薇」"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-1-2-政治工作-7",
+      "query": "陳偉杰 國民黨 文傳會 副主委",
+      "outcome": "source_found_manual_review",
+      "notes": "國民黨官方新聞明確稱陳偉杰為文傳會副主委，支持此項經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中國國民黨：鄭文燦批「角色錯亂」國民黨回應",
+          "url": "https://www.kmt.org.tw/2021/11/blog-post_83.html",
+          "supports": "官方新聞明確記載「中國國民黨文傳會副主委陳偉杰」"
+        }
+      ]
     }
   ]
 }

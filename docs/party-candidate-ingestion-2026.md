@@ -1,8 +1,8 @@
 # 2026 政黨候選人資料匯入準備
 
-檢查日期：2026-07-29
+檢查日期：2026-07-30
 
-本階段允許寫入本機待審核層；未經人工決定不建立候選關係，也不寫入正式 Supabase。
+本階段允許寫入本機待審核及預覽發布層；未經人工決定不建立候選關係，也不寫入正式 Supabase。
 
 ## 現有基礎
 
@@ -268,11 +268,14 @@ node scripts/build-pfp-2026-candidate-snapshot.mjs \
   已依人工決定建立來源限定的新人物及私有候選關係。
 - 新人物建立後重新比對本機 65,480 筆人物：未發現未排除的同名或正規化異體字重複；
   8 位同名者均已有「不同人」決定。另複核 3 組同黨／同地區的一字差異姓名，均保留為不同人。
-- 目前本機共確認 318 / 318 筆：民主進步黨 207、中國國民黨 14、台灣民眾黨 64、
+- 發布前稽核發現兩個跨來源問題：台北民眾黨與新北民進黨的同名張志豪曾被錯誤合併，
+  已拆分並修正歷史 canonical 關係；另一筆高雄市第 11 選舉區張耀中已不在目前民進黨官方頁面，
+  因此保留來源稽核列、拒絕匹配與聲明，並移除該筆候選關係。
+- 修正後共有 317 筆有效資料：民主進步黨 206、中國國民黨 14、台灣民眾黨 64、
   時代力量 11、台灣基進 5、小民參政歐巴桑聯盟 7、親民黨 7、台灣綠黨 3。
-- 2026 政黨候選人的本機身分審核佇列已清空；共有 318 筆私有 `party_nominee` 候選關係及 318 筆
-  `review_only` 聲明，所有這批新人物也維持私有；
-  公開候選與公開聲明均為 0。
+- 2026 政黨候選人的本機身分審核佇列已清空；317 筆候選關係及聲明已進入本機公開預覽，
+  狀態均維持 `party_nominee`、`registration_status = unknown` 與 `election_result = pending`。
+  另有 1 筆來源、聲明及 rejected identity match 保留為非公開稽核紀錄。
 - 另有一筆不屬於候選人的民眾黨現任黨職資料：李偉華。2026-07-30 人工確認其與
   兩位基隆同名候選人皆為不同人，已建立獨立人物並補入中央評議委員會主任委員、
   學歷與經歷；全站人物身分審核佇列至此清空。
@@ -282,6 +285,21 @@ node scripts/apply-high-confidence-party-candidate-matches.mjs
 node scripts/apply-high-confidence-party-candidate-matches.mjs --write
 node scripts/apply-high-confidence-party-candidate-matches.mjs --include-probable-context
 node scripts/apply-high-confidence-party-candidate-matches.mjs --include-probable-context --write
+```
+
+### Phase 9：本機公開預覽（完成）
+
+- `preview-publish-reviewed-party-candidates.mjs` 只允許 localhost Supabase，正式 Supabase URL 會直接拒絕。
+- 發布前固定驗證 317 筆有效候選、1 筆已拒絕來源、人物／選區／聲明一致，
+  並阻擋同一 canonical person 被連到多筆 2026 候選關係。
+- 寫入後先刷新 `public_people_list_cached`，再執行 `published.promote`，避免新人物出現在候選清單卻無法開啟人物頁。
+- 已驗證新北市與臺北市同名張志豪分別連到正確人物，失效的高雄張耀中未出現在選區頁，
+  新建立的候選人人物頁、搜尋及政黨提名標示均可正常顯示。
+- 這一步只變更本機資料庫；正式站尚未發布。
+
+```bash
+node scripts/preview-publish-reviewed-party-candidates.mjs
+node scripts/preview-publish-reviewed-party-candidates.mjs --write
 ```
 
 ## 本機執行

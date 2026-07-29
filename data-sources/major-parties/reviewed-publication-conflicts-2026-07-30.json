@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "publication-audit:2026-party-candidates",
+  "reviewedAt": "2026-07-30",
+  "candidateCountBeforeCorrection": 318,
+  "validCandidateCountAfterCorrection": 317,
+  "corrections": [
+    {
+      "type": "same_name_identity_split",
+      "name": "張志豪",
+      "incorrectCanonicalPersonId": "6cdf9eab-203b-47f9-9d30-6629a112cdd4",
+      "correctCanonicalPersonId": "bb3640fb-7124-4a57-b781-84c824a5ad64",
+      "sourceCandidateKey": "dpp-2026-councilor-65000-6-2cf1965d079d",
+      "basis": "台北市第6選舉區台灣民眾黨現任議員與新北市第6選舉區民主進步黨候選人為不同人物；兩者各有不同的中選會、政黨、地區與 Wikidata 身分證據。",
+      "actions": [
+        "拆分錯誤 canonical group",
+        "將 2022 VoteTW 新北市第6選舉區紀錄合併至正確民進黨人物",
+        "封存互相誤掛的 Wikidata claims",
+        "將 2026 民進黨提名紀錄改綁正確人物"
+      ]
+    },
+    {
+      "type": "official_source_absent",
+      "name": "張耀中",
+      "sourceCandidateKey": "dpp-2026-councilor-64000-11-243d4911c7bf",
+      "officialSourceUrl": "https://teamtaiwan.dpp.org.tw/councilor?city=64000&district=%E7%AC%AC11%E9%81%B8%E5%8D%80",
+      "basis": "2026-07-30 重新檢查民進黨官方高雄市第11選舉區頁面時已無候選人名單，原紀錄不可作為目前提名依據。",
+      "actions": [
+        "保留來源列作稽核紀錄",
+        "拒絕人物匹配與候選主張",
+        "移除錯誤的 2026 candidacy relation"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T20:01:31.499Z",
+  "generatedAt": "2026-07-29T20:11:53.134Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -23,9 +23,9 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 608,
-      "manual_review": 690,
-      "external_search_needed": 3407,
-      "not_found_after_stop_loss": 51
+      "manual_review": 713,
+      "external_search_needed": 3383,
+      "not_found_after_stop_loss": 52
     },
     "categoryCounts": {
       "政治工作": {
@@ -40,9 +40,9 @@
         "people": 263,
         "claims": 445,
         "autoReviewable": 0,
-        "manualReview": 151,
-        "externalSearchNeeded": 272,
-        "notFoundAfterStopLoss": 22
+        "manualReview": 174,
+        "externalSearchNeeded": 248,
+        "notFoundAfterStopLoss": 23
       },
       "涉案紀錄": {
         "people": 116,
@@ -19427,10 +19427,54 @@
           "candidateNumber": 1
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張志宏\" \"父親是前縣議員、新莊鎮民代表、新莊市代會主席張喜財\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張喜財為張志宏父親及前臺北縣議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2022/news/breakingnews/4130006"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "父子關係與張喜財歷任新莊鎮民代表、市民代表會主席及臺北縣議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20180829002103-260407"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-3-1-政治家族-1",
+        "query": "張志宏 張喜財 父親 新莊 市民代表會 主席 台北縣議員",
+        "outcome": "source_found_manual_review",
+        "notes": "自由時報與中國時報直接確認父子關係；中國時報並列出張喜財曾任新莊鎮民代表、新莊市民代表會主席及臺北縣議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2022/news/breakingnews/4130006",
+            "supports": "張喜財為張志宏父親及前臺北縣議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20180829002103-260407",
+            "supports": "父子關係與張喜財歷任新莊鎮民代表、市民代表會主席及臺北縣議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-2-51-政治家族-1",
@@ -19458,10 +19502,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張志宏\" \"爸爸是前縣議員、新莊鎮民代表、新莊市代會主席張喜財\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張喜財為張志宏父親及前臺北縣議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報",
+          "sourceUrl": "https://election.ltn.com.tw/2022/news/breakingnews/4130006"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "父子關係與張喜財歷任新莊鎮民代表、市民代表會主席及臺北縣議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20180829002103-260407"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-2-51-政治家族-1",
+        "query": "張志宏 張喜財 父親 新莊 市民代表會 主席 台北縣議員",
+        "outcome": "source_found_manual_review",
+        "notes": "自由時報與中國時報直接確認父子關係；中國時報並列出張喜財曾任新莊鎮民代表、新莊市民代表會主席及臺北縣議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報",
+            "url": "https://election.ltn.com.tw/2022/news/breakingnews/4130006",
+            "supports": "張喜財為張志宏父親及前臺北縣議員"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20180829002103-260407",
+            "supports": "父子關係與張喜財歷任新莊鎮民代表、市民代表會主席及臺北縣議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-13-42-政治家族-1",
@@ -19497,10 +19585,54 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張芬郁\" \"丈夫是2屆立委簡肇棟\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "簡肇棟資料提及愛妻張芬郁",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "大臺中醫師公會",
+          "sourceUrl": "https://www.gtma.org.tw/upload/club_down/17332958920.pdf"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "簡肇棟為張芬郁丈夫及前立委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民視新聞網",
+          "sourceUrl": "https://sport.ftvnews.com.tw/news/detail/2018B18C01M1"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-13-42-政治家族-1",
+        "query": "張芬郁 簡肇棟 丈夫 立委",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "民視直接確認簡肇棟為張芬郁丈夫及前立委，但本次搜尋未以可靠來源核定「兩屆」任期數。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "民視新聞網",
+            "url": "https://sport.ftvnews.com.tw/news/detail/2018B18C01M1",
+            "supports": "簡肇棟為張芬郁丈夫及前立委"
+          },
+          {
+            "tier": "official",
+            "name": "大臺中醫師公會",
+            "url": "https://www.gtma.org.tw/upload/club_down/17332958920.pdf",
+            "supports": "簡肇棟資料提及愛妻張芬郁"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-txg-10-6-政治家族-1",
@@ -19528,10 +19660,54 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張彥彤\" \"父親是7屆議員\u001d、副議長、議長張宏年\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張宏年為父親及張彥彤接棒參選",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/newspapers/20180803000754-260102"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張宏年與兒子張彥彤的父子關係",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20200731004016-260503"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-10-6-政治家族-1",
+        "query": "張彥彤 張宏年 父親 七屆 議長 副議長",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "中國時報直接確認張宏年為張彥彤父親及政治交棒；本批資料未完整核定七屆、議長與副議長全部任期。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/newspapers/20180803000754-260102",
+            "supports": "張宏年為父親及張彥彤接棒參選"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20200731004016-260503",
+            "supports": "張宏年與兒子張彥彤的父子關係"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-10-53-政治家族-1",
@@ -19559,10 +19735,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張彥彤\" \"爸爸是7屆議員、副議長/議長張宏年\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張宏年為父親及張彥彤接棒參選",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/newspapers/20180803000754-260102"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張宏年與兒子張彥彤的父子關係",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20200731004016-260503"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-10-53-政治家族-1",
+        "query": "張彥彤 張宏年 父親 七屆 議長 副議長",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "中國時報直接確認張宏年為張彥彤父親及政治交棒；本批資料未完整核定七屆、議長與副議長全部任期。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/newspapers/20180803000754-260102",
+            "supports": "張宏年為父親及張彥彤接棒參選"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20200731004016-260503",
+            "supports": "張宏年與兒子張彥彤的父子關係"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-txg-10-6-政治家族-2",
@@ -19590,10 +19810,54 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張彥彤\" \"祖父是前副議長、台中市張派代表人物張光儀，同一輩的還有前台中市長張啟仲、新光醫院前副院長黃芳彥的母親張愛信\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張光儀為張宏年父親及前副議長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/newspapers/20120303000479-260102"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張光儀為張宏年父親、前副議長及張派代表，並提及張啟仲",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Yahoo新聞",
+          "sourceUrl": "https://tw.news.yahoo.com/%E5%89%8D%E5%8F%B0%E4%B8%AD%E5%B8%82%E8%AD%B0%E9%95%B7%E5%BC%B5%E5%AE%8F%E5%B9%B4%E4%BB%8A%E6%99%A8%E7%97%85%E9%80%9D-%E4%BA%AB%E5%A3%BD73%E6%AD%B2-071504811.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-10-6-政治家族-2",
+        "query": "張彥彤 張光儀 祖父 張派 張啟仲 張愛信",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "中國時報與Yahoo新聞可確認張光儀是張宏年父親、曾任副議長及張派代表人物，也提及張啟仲；尚未完整核定張愛信與「同一輩」敘述。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/newspapers/20120303000479-260102",
+            "supports": "張光儀為張宏年父親及前副議長"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "Yahoo新聞",
+            "url": "https://tw.news.yahoo.com/%E5%89%8D%E5%8F%B0%E4%B8%AD%E5%B8%82%E8%AD%B0%E9%95%B7%E5%BC%B5%E5%AE%8F%E5%B9%B4%E4%BB%8A%E6%99%A8%E7%97%85%E9%80%9D-%E4%BA%AB%E5%A3%BD73%E6%AD%B2-071504811.html",
+            "supports": "張光儀為張宏年父親、前副議長及張派代表，並提及張啟仲"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-10-53-政治家族-2",
@@ -19621,10 +19885,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張彥彤\" \"爺爺是前副議長、台中市張派代表人物張光儀，同一輩的還有前台中市長張啟仲、新光醫院前副院長黃芳彥的母親張愛信\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張光儀為張宏年父親及前副議長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/newspapers/20120303000479-260102"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張光儀為張宏年父親、前副議長及張派代表，並提及張啟仲",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Yahoo新聞",
+          "sourceUrl": "https://tw.news.yahoo.com/%E5%89%8D%E5%8F%B0%E4%B8%AD%E5%B8%82%E8%AD%B0%E9%95%B7%E5%BC%B5%E5%AE%8F%E5%B9%B4%E4%BB%8A%E6%99%A8%E7%97%85%E9%80%9D-%E4%BA%AB%E5%A3%BD73%E6%AD%B2-071504811.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-10-53-政治家族-2",
+        "query": "張彥彤 張光儀 祖父 張派 張啟仲 張愛信",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "中國時報與Yahoo新聞可確認張光儀是張宏年父親、曾任副議長及張派代表人物，也提及張啟仲；尚未完整核定張愛信與「同一輩」敘述。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/newspapers/20120303000479-260102",
+            "supports": "張光儀為張宏年父親及前副議長"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "Yahoo新聞",
+            "url": "https://tw.news.yahoo.com/%E5%89%8D%E5%8F%B0%E4%B8%AD%E5%B8%82%E8%AD%B0%E9%95%B7%E5%BC%B5%E5%AE%8F%E5%B9%B4%E4%BB%8A%E6%99%A8%E7%97%85%E9%80%9D-%E4%BA%AB%E5%A3%BD73%E6%AD%B2-071504811.html",
+            "supports": "張光儀為張宏年父親、前副議長及張派代表，並提及張啟仲"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-3-61-政治家族-1",
@@ -19652,10 +19960,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張家銨\" \"乾媽是3屆議員、龍井鄉民代表劉淑蘭\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張家銨曾任劉淑蘭服務處執行長",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "內政部地方公職人員資訊",
+          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112BA00009&_TYP=REP&n=573"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "報導直接稱劉淑蘭為張家銨乾媽",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "臺灣導報地方新聞",
+          "sourceUrl": "https://tc-news.shop2000.com.tw/news/303662"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-3-61-政治家族-1",
+        "query": "張家銨 劉淑蘭 乾媽 龍井 鄉民代表 議員",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "地方新聞直接稱劉淑蘭為張家銨乾媽；內政部資料確認張家銨曾任劉淑蘭服務處執行長。本次未完整核定劉淑蘭三屆議員及龍井鄉民代表任期。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "內政部地方公職人員資訊",
+            "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112BA00009&_TYP=REP&n=573",
+            "supports": "張家銨曾任劉淑蘭服務處執行長"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "臺灣導報地方新聞",
+            "url": "https://tc-news.shop2000.com.tw/news/303662",
+            "supports": "報導直接稱劉淑蘭為張家銨乾媽"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-2-56-政治家族-1",
@@ -19683,10 +20035,16 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"張晉婷\" \"公公是4屆縣議員、3屆五股鄉興珍村村長林義一\" 新北市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-2-56-政治家族-1",
+        "query": "張晉婷 林義一 公公 五股 鄉民代表 縣議員",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "僅找到張晉婷曾任林義一議員辦公室執行秘書等間接資料，未找到可靠來源直接確認公媳關係及完整任期，達本批停損條件。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-4-3-政治家族-1",
@@ -19714,10 +20072,54 @@
           "candidateNumber": 3
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張桂綿\" \"丈夫是八德區長邱瑞朝\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "邱瑞朝接任八德區長",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "桃園市政府",
+          "sourceUrl": "https://www.tycg.gov.tw/NewsPage_Content.aspx?n=10&s=640904"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張桂綿與邱瑞朝婚姻關係及邱瑞朝調任八德區長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/realtimenews/20190926001436-263101"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-4-3-政治家族-1",
+        "query": "張桂綿 邱瑞朝 丈夫 八德區長",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報直接報導張桂綿與邱瑞朝結婚；桃園市政府資料確認邱瑞朝接任八德區長。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/realtimenews/20190926001436-263101",
+            "supports": "張桂綿與邱瑞朝婚姻關係及邱瑞朝調任八德區長"
+          },
+          {
+            "tier": "official",
+            "name": "桃園市政府",
+            "url": "https://www.tycg.gov.tw/NewsPage_Content.aspx?n=10&s=640904",
+            "supports": "邱瑞朝接任八德區長"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-2-59-政治家族-1",
@@ -19753,10 +20155,54 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張清照\" \"哥哥是6屆議員、3屆議長張清堂\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張清堂為張清照兄長、前議長及政治交棒",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "NOWnews",
+          "sourceUrl": "https://www.nownews.com/news/3074212"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "兄弟關係及張清堂前議長身分",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20181125001768-260407"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-2-59-政治家族-1",
+        "query": "張清照 張清堂 哥哥 六屆議員 三屆議長",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "NOWnews與中國時報直接確認張清堂是張清照兄長及前議長；本次未完整核定六屆議員與三屆議長任期數。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "NOWnews",
+            "url": "https://www.nownews.com/news/3074212",
+            "supports": "張清堂為張清照兄長、前議長及政治交棒"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20181125001768-260407",
+            "supports": "兄弟關係及張清堂前議長身分"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-5-63-政治家族-1",
@@ -19784,10 +20230,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張雅旻\" \"媽媽是潭子鄉民代表會主席林秀梅\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張雅旻曾任林秀梅特助；林秀梅曾任潭子鄉民代表會主席",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會選舉公報",
+          "sourceUrl": "https://web.cec.gov.tw/api/file/476ea2d6-8614-4357-9cdb-f98cfa6fff03.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-5-63-政治家族-1",
+        "query": "張雅旻 林秀梅 母親 潭子鄉民代表會主席",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "中選會公報可確認張雅旻曾任林秀梅特助，以及林秀梅曾任潭子鄉民代表會主席；未找到可靠來源直接確認母女關係。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會選舉公報",
+            "url": "https://web.cec.gov.tw/api/file/476ea2d6-8614-4357-9cdb-f98cfa6fff03.pdf",
+            "supports": "張雅旻曾任林秀梅特助；林秀梅曾任潭子鄉民代表會主席"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-txg-6-5-政治家族-1",
@@ -19815,10 +20287,54 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張廖乃綸\" \"父親是前議長、副議長、台中市魚市場及果菜市場董事長張廖貴專\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "父女關係與張廖貴專第13屆副議長、第14屆議長經歷",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "臺中市議會回顧專輯",
+          "sourceUrl": "https://www.tccc.gov.tw/ebook/ftcv02/files/basic-html/page499.html"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張廖貴專直接稱張廖乃綸為女兒",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "臺中市政府",
+          "sourceUrl": "https://www.taichung.gov.tw/8868/8872/9962/913333"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-6-5-政治家族-1",
+        "query": "張廖乃綸 張廖貴專 父女 議長 副議長",
+        "outcome": "source_found_manual_review",
+        "notes": "臺中市議會回顧專輯直接列為父女，並記載張廖貴專為第13屆副議長、第14屆議長；臺中市政府亦直接稱張廖乃綸為其女兒。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "臺中市議會回顧專輯",
+            "url": "https://www.tccc.gov.tw/ebook/ftcv02/files/basic-html/page499.html",
+            "supports": "父女關係與張廖貴專第13屆副議長、第14屆議長經歷"
+          },
+          {
+            "tier": "official",
+            "name": "臺中市政府",
+            "url": "https://www.taichung.gov.tw/8868/8872/9962/913333",
+            "supports": "張廖貴專直接稱張廖乃綸為女兒"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-6-57-政治家族-1",
@@ -19846,10 +20362,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張廖乃綸\" \"爸爸是前議長、副議長、台中市魚市場及果菜市場董事長張廖貴專\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "父女關係與張廖貴專第13屆副議長、第14屆議長經歷",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "臺中市議會回顧專輯",
+          "sourceUrl": "https://www.tccc.gov.tw/ebook/ftcv02/files/basic-html/page499.html"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張廖貴專直接稱張廖乃綸為女兒",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "臺中市政府",
+          "sourceUrl": "https://www.taichung.gov.tw/8868/8872/9962/913333"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-6-57-政治家族-1",
+        "query": "張廖乃綸 張廖貴專 父女 議長 副議長",
+        "outcome": "source_found_manual_review",
+        "notes": "臺中市議會回顧專輯直接列為父女，並記載張廖貴專為第13屆副議長、第14屆議長；臺中市政府亦直接稱張廖乃綸為其女兒。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "臺中市議會回顧專輯",
+            "url": "https://www.tccc.gov.tw/ebook/ftcv02/files/basic-html/page499.html",
+            "supports": "父女關係與張廖貴專第13屆副議長、第14屆議長經歷"
+          },
+          {
+            "tier": "official",
+            "name": "臺中市政府",
+            "url": "https://www.taichung.gov.tw/8868/8872/9962/913333",
+            "supports": "張廖貴專直接稱張廖乃綸為女兒"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-3-9-政治家族-1",
@@ -19877,10 +20437,36 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張碩芬\" \"母親是7屆議員劉茂群\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "劉茂群為張碩芬母親及七屆議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "聯合報",
+          "sourceUrl": "https://udn.com/news/story/7324/9253036"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-3-9-政治家族-1",
+        "query": "張碩芬 劉茂群 母親 七屆議員",
+        "outcome": "source_found_manual_review",
+        "notes": "聯合報直接確認劉茂群為七屆議員、張碩芬與張碩芳均為其女兒，並確認姊妹排行。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "聯合報",
+            "url": "https://udn.com/news/story/7324/9253036",
+            "supports": "劉茂群為張碩芬母親及七屆議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-3-9-政治家族-2",
@@ -19908,10 +20494,36 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張碩芬\" \"妹妹是桃園市第一選區參選人張碩芳\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張碩芬為姊、張碩芳為妹及兩人參選結果",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "聯合報",
+          "sourceUrl": "https://udn.com/news/story/7324/9253036"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-3-9-政治家族-2",
+        "query": "張碩芬 張碩芳 姊妹 桃園議員",
+        "outcome": "source_found_manual_review",
+        "notes": "聯合報直接確認劉茂群為七屆議員、張碩芬與張碩芳均為其女兒，並確認姊妹排行。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "聯合報",
+            "url": "https://udn.com/news/story/7324/9253036",
+            "supports": "張碩芬為姊、張碩芳為妹及兩人參選結果"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-1-27-政治家族-1",
@@ -19939,10 +20551,36 @@
           "candidateNumber": 27
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張碩芳\" \"母親是7屆議員劉茂群\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "劉茂群為張碩芳母親及七屆議員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "聯合報",
+          "sourceUrl": "https://udn.com/news/story/7324/9253036"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-1-27-政治家族-1",
+        "query": "張碩芳 劉茂群 母親 七屆議員",
+        "outcome": "source_found_manual_review",
+        "notes": "聯合報直接確認劉茂群為七屆議員、張碩芬與張碩芳均為其女兒，並確認姊妹排行。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "聯合報",
+            "url": "https://udn.com/news/story/7324/9253036",
+            "supports": "劉茂群為張碩芳母親及七屆議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-1-27-政治家族-2",
@@ -19970,10 +20608,36 @@
           "candidateNumber": 27
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張碩芳\" \"姊姊是桃園市第三選區參選人張碩芬\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張碩芬為姊、張碩芳為妹及兩人參選結果",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "聯合報",
+          "sourceUrl": "https://udn.com/news/story/7324/9253036"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-1-27-政治家族-2",
+        "query": "張碩芳 張碩芬 姊妹 桃園議員",
+        "outcome": "source_found_manual_review",
+        "notes": "聯合報直接確認劉茂群為七屆議員、張碩芬與張碩芳均為其女兒，並確認姊妹排行。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "聯合報",
+            "url": "https://udn.com/news/story/7324/9253036",
+            "supports": "張碩芬為姊、張碩芳為妹及兩人參選結果"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-6-8-政治家族-1",
@@ -20001,10 +20665,54 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張維倩\" \"父親是4屆議員、4屆中和市市民代表張瑞山\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張瑞山為張維倩父親",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央社",
+          "sourceUrl": "https://www.cna.com.tw/news/aipl/201804060058.aspx"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "父女關係與四屆市民代表、四屆縣市議員經歷",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Yahoo新聞",
+          "sourceUrl": "https://tw.news.yahoo.com/%E6%96%B0%E5%8C%97%E5%B8%82%E5%89%8D%E8%AD%B0%E5%93%A1%E5%BC%B5%E7%91%9E%E5%B1%B1%E9%80%9D%E4%B8%96-%E4%BA%AB%E5%A3%BD71%E6%AD%B2-154243927.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-6-8-政治家族-1",
+        "query": "張維倩 張瑞山 父親 四屆議員 四屆中和市民代表",
+        "outcome": "source_found_manual_review",
+        "notes": "中央社與中國時報直接確認父女關係；Yahoo新聞記載張瑞山歷任四屆中和市民代表、兩屆臺北縣議員及兩屆新北市議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中央社",
+            "url": "https://www.cna.com.tw/news/aipl/201804060058.aspx",
+            "supports": "張瑞山為張維倩父親"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "Yahoo新聞",
+            "url": "https://tw.news.yahoo.com/%E6%96%B0%E5%8C%97%E5%B8%82%E5%89%8D%E8%AD%B0%E5%93%A1%E5%BC%B5%E7%91%9E%E5%B1%B1%E9%80%9D%E4%B8%96-%E4%BA%AB%E5%A3%BD71%E6%AD%B2-154243927.html",
+            "supports": "父女關係與四屆市民代表、四屆縣市議員經歷"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-5-10-政治家族-1",
@@ -20032,10 +20740,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張維倩\" \"爸爸是4屆議員、4屆中和市市民代表張瑞山\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張瑞山為張維倩父親",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央社",
+          "sourceUrl": "https://www.cna.com.tw/news/aipl/201804060058.aspx"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "父女關係與四屆市民代表、四屆縣市議員經歷",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "Yahoo新聞",
+          "sourceUrl": "https://tw.news.yahoo.com/%E6%96%B0%E5%8C%97%E5%B8%82%E5%89%8D%E8%AD%B0%E5%93%A1%E5%BC%B5%E7%91%9E%E5%B1%B1%E9%80%9D%E4%B8%96-%E4%BA%AB%E5%A3%BD71%E6%AD%B2-154243927.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-5-10-政治家族-1",
+        "query": "張維倩 張瑞山 父親 四屆議員 四屆中和市民代表",
+        "outcome": "source_found_manual_review",
+        "notes": "中央社與中國時報直接確認父女關係；Yahoo新聞記載張瑞山歷任四屆中和市民代表、兩屆臺北縣議員及兩屆新北市議員。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中央社",
+            "url": "https://www.cna.com.tw/news/aipl/201804060058.aspx",
+            "supports": "張瑞山為張維倩父親"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "Yahoo新聞",
+            "url": "https://tw.news.yahoo.com/%E6%96%B0%E5%8C%97%E5%B8%82%E5%89%8D%E8%AD%B0%E5%93%A1%E5%BC%B5%E7%91%9E%E5%B1%B1%E9%80%9D%E4%B8%96-%E4%BA%AB%E5%A3%BD71%E6%AD%B2-154243927.html",
+            "supports": "父女關係與四屆市民代表、四屆縣市議員經歷"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-10-5-政治家族-1",
@@ -20063,10 +20815,72 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張肇良\" \"父親是曾任省議員、民進黨桃園縣黨部主委的張貴木\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張貴木曾任省議員及民進黨桃園縣黨部主委",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "國立臺北教育大學校友中心",
+          "sourceUrl": "https://alumnusntue.ntue.edu.tw/p/405-1020-21350%2Cc1881.php?Lang=zh-tw"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張貴木為張肇良父親",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20160812003289-260503"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張貴木曾任省議員、桃園縣黨部主委及民進黨中評委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國評論新聞",
+          "sourceUrl": "https://hk.crntt.com/doc/9_8710_102270747_1_1018013904.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tao-10-5-政治家族-1",
+        "query": "張肇良 張貴木 父親 省議員 民進黨桃園縣黨部主委 中評委",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報直接確認張貴木為張肇良父親；國立臺北教育大學校友資料確認張貴木曾任省議員及民進黨桃園縣黨部主委，中評委則由中國評論新聞記載，公開前仍應人工確認整組敘述。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20160812003289-260503",
+            "supports": "張貴木為張肇良父親"
+          },
+          {
+            "tier": "official",
+            "name": "國立臺北教育大學校友中心",
+            "url": "https://alumnusntue.ntue.edu.tw/p/405-1020-21350%2Cc1881.php?Lang=zh-tw",
+            "supports": "張貴木曾任省議員及民進黨桃園縣黨部主委"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中國評論新聞",
+            "url": "https://hk.crntt.com/doc/9_8710_102270747_1_1018013904.html",
+            "supports": "張貴木曾任省議員、桃園縣黨部主委及民進黨中評委"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-10-54-政治家族-1",
@@ -20094,10 +20908,72 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張肇良\" \"爸爸是省議員、民進黨桃園縣黨部主委、中評委張貴木\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張貴木曾任省議員及民進黨桃園縣黨部主委",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "國立臺北教育大學校友中心",
+          "sourceUrl": "https://alumnusntue.ntue.edu.tw/p/405-1020-21350%2Cc1881.php?Lang=zh-tw"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張貴木為張肇良父親",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20160812003289-260503"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "張貴木曾任省議員、桃園縣黨部主委及民進黨中評委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國評論新聞",
+          "sourceUrl": "https://hk.crntt.com/doc/9_8710_102270747_1_1018013904.html"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-10-54-政治家族-1",
+        "query": "張肇良 張貴木 父親 省議員 民進黨桃園縣黨部主委 中評委",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報直接確認張貴木為張肇良父親；國立臺北教育大學校友資料確認張貴木曾任省議員及民進黨桃園縣黨部主委，中評委則由中國評論新聞記載，公開前仍應人工確認整組敘述。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20160812003289-260503",
+            "supports": "張貴木為張肇良父親"
+          },
+          {
+            "tier": "official",
+            "name": "國立臺北教育大學校友中心",
+            "url": "https://alumnusntue.ntue.edu.tw/p/405-1020-21350%2Cc1881.php?Lang=zh-tw",
+            "supports": "張貴木曾任省議員及民進黨桃園縣黨部主委"
+          },
+          {
+            "tier": "trusted_media",
+            "name": "中國評論新聞",
+            "url": "https://hk.crntt.com/doc/9_8710_102270747_1_1018013904.html",
+            "supports": "張貴木曾任省議員、桃園縣黨部主委及民進黨中評委"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tnn-9-78-政治家族-2",
@@ -20125,10 +21001,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"莊玉珠\" \"丈夫是民進黨台南市黨部評委蔡啟新\" 台南市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "莊玉珠公開聲明提及蔡啟新相關司法程序",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "臺南市議會",
+          "sourceUrl": "https://www.tncc.gov.tw/2019/tnccp/ccp_02a.asp?CName=%EF%BF%BD%EF%BF%BD%EF%BF%BD%C9%AF%5D&mainid=%7B9B4859FB-C58B-43E6-9821-1D6115039BD8%7D"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "蔡啟新為莊玉珠丈夫及民進黨臺南市黨部評召",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "公視新聞網",
+          "sourceUrl": "https://news.pts.org.tw/article/290285"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tnn-9-78-政治家族-2",
+        "query": "莊玉珠 蔡啟新 丈夫 民進黨台南市黨部 評召",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "公視新聞直接確認蔡啟新為莊玉珠丈夫，並稱其為民進黨臺南市黨部評召；暗公報使用「評委」文字，職稱差異需人工核對。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "公視新聞網",
+            "url": "https://news.pts.org.tw/article/290285",
+            "supports": "蔡啟新為莊玉珠丈夫及民進黨臺南市黨部評召"
+          },
+          {
+            "tier": "official",
+            "name": "臺南市議會",
+            "url": "https://www.tncc.gov.tw/2019/tnccp/ccp_02a.asp?CName=%EF%BF%BD%EF%BF%BD%EF%BF%BD%C9%AF%5D&mainid=%7B9B4859FB-C58B-43E6-9821-1D6115039BD8%7D",
+            "supports": "莊玉珠公開聲明提及蔡啟新相關司法程序"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tnn-9-9-政治家族-2",
@@ -20156,10 +21076,54 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"莊玉珠\" \"丈夫是曾任民進黨台南市黨部評委的蔡啟新\" 台南市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "莊玉珠公開聲明提及蔡啟新相關司法程序",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "臺南市議會",
+          "sourceUrl": "https://www.tncc.gov.tw/2019/tnccp/ccp_02a.asp?CName=%EF%BF%BD%EF%BF%BD%EF%BF%BD%C9%AF%5D&mainid=%7B9B4859FB-C58B-43E6-9821-1D6115039BD8%7D"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "蔡啟新為莊玉珠丈夫及民進黨臺南市黨部評召",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "公視新聞網",
+          "sourceUrl": "https://news.pts.org.tw/article/290285"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tnn-9-9-政治家族-2",
+        "query": "莊玉珠 蔡啟新 丈夫 民進黨台南市黨部 評召",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "公視新聞直接確認蔡啟新為莊玉珠丈夫，並稱其為民進黨臺南市黨部評召；暗公報使用「評委」文字，職稱差異需人工核對。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "公視新聞網",
+            "url": "https://news.pts.org.tw/article/290285",
+            "supports": "蔡啟新為莊玉珠丈夫及民進黨臺南市黨部評召"
+          },
+          {
+            "tier": "official",
+            "name": "臺南市議會",
+            "url": "https://www.tncc.gov.tw/2019/tnccp/ccp_02a.asp?CName=%EF%BF%BD%EF%BF%BD%EF%BF%BD%C9%AF%5D&mainid=%7B9B4859FB-C58B-43E6-9821-1D6115039BD8%7D",
+            "supports": "莊玉珠公開聲明提及蔡啟新相關司法程序"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tnn-9-9-政治家族-1",

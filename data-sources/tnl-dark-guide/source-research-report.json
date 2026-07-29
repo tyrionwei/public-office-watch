@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T23:16:53.627Z",
+  "generatedAt": "2026-07-29T23:29:57.276Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -11,7 +11,7 @@
       "unknown": "Source type could not be established automatically."
     },
     "stopLoss": "For unresolved claims, use one exact search query and inspect at most the two strongest relevant results. Do not retry protected sites, bypass access controls, or auto-approve same-name evidence without matching context.",
-    "autoReviewRule": "Exact normalized containment match against a verified official local claim. Cross-ID election evidence inferred from exact name, party, and city remains manual review only. External findings and sensitive family/legal claims remain separately auditable."
+    "autoReviewRule": "Exact normalized containment match against a verified official local claim. Cross-ID election evidence inferred from exact name, party, and city, or from a unique same-name person in the same city across party changes, remains manual review only. External findings and sensitive family/legal claims remain separately auditable."
   },
   "summary": {
     "guideCandidateRows": 1488,
@@ -23,8 +23,8 @@
     "deduplicatedClaims": 4756,
     "statusCounts": {
       "auto_reviewable": 704,
-      "manual_review": 1472,
-      "external_search_needed": 2512,
+      "manual_review": 1488,
+      "external_search_needed": 2496,
       "not_found_after_stop_loss": 68
     },
     "categoryCounts": {
@@ -32,8 +32,8 @@
         "people": 881,
         "claims": 2577,
         "autoReviewable": 543,
-        "manualReview": 835,
-        "externalSearchNeeded": 1199,
+        "manualReview": 851,
+        "externalSearchNeeded": 1183,
         "notFoundAfterStopLoss": 0
       },
       "政治家族": {
@@ -63388,9 +63388,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"李雲強\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共2屆（2009、2014）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -78078,9 +78091,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"邱德順\" \"曾任3屆縣議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history_partial",
+          "claimValue": "暗公報聲稱3屆，目前找到1個當選年份（1998）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_partial",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（任期資料未完整）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -79731,9 +79757,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"洪秀錦\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history_partial",
+          "claimValue": "暗公報聲稱2屆，目前找到1個當選年份（2005）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_partial",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（任期資料未完整）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -81599,9 +81638,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"徐世勲\" \"曾任1屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共1屆（2014）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -85303,9 +85355,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張文瑜\" \"曾任2屆縣議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共2屆（2005、2009）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -85572,9 +85637,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張正興\" \"曾任1屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共1屆（2005）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -87408,9 +87486,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"張晉婷\" \"曾任2屆議員\" 新北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共2屆（2010、2014）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -99536,9 +99627,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳建銘\" \"曾任3屆議員\" 台北市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共3屆（2006、2010、2014）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -103637,9 +103741,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳朝來\" \"曾任4屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共4屆（2002、2005、2010、2014）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -103668,9 +103785,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"陳進益\" \"曾任3屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共3屆（1998、2005、2010）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -108106,9 +108236,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"彭聖富\" \"曾任2屆議員\" 桃園市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共2屆（1998、2002）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -108168,9 +108311,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"曾王雅雲\" \"曾任4屆議員\" 台南市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共4屆（2002、2005、2010、2014）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -115807,9 +115963,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃淑芬\" \"曾任4屆議員\" 台中市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history_partial",
+          "claimValue": "暗公報聲稱4屆，目前找到3個當選年份（1998、2002、2005）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_partial",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（任期資料未完整）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -117631,9 +117800,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"楊見福\" \"曾任2屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共2屆（2010、2014）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -124871,9 +125053,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"劉馨正\" \"曾任1屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history",
+          "claimValue": "當選議員共1屆（2014）（同名、同縣市且本機僅對應一人身分推定）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_inferred",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {
@@ -141072,9 +141267,22 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"蘇炎城\" \"曾任6屆議員\" 高雄市",
-      "localEvidence": [],
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "derived_election_history_partial",
+          "claimValue": "暗公報聲稱6屆，目前找到4個當選年份（1998、2002、2005、2010）",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "identity_partial",
+          "visibility": "review_only",
+          "sourceType": "election_history",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（任期資料未完整）",
+          "sourceUrl": null
+        }
+      ],
       "externalResearch": null
     },
     {

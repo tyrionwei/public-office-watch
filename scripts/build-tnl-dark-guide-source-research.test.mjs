@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
 import {
   candidateIdentityKey,
+  candidateNameCityKey,
   combinedCandidateHistory,
   compareClaimToEvidence,
   derivedElectionEvidence,
   evidenceTier,
+  eligibleNameCityHistory,
   externalFindingEvidence,
   historicalSourceHistoryRow,
   normalizeText,
@@ -25,6 +27,26 @@ assert.equal(
 assert.equal(
   candidateIdentityKey('張志豪', '民主進步黨', 'nwt'),
   candidateIdentityKey('張志豪', '民進黨', 'nwt'),
+);
+
+assert.equal(candidateNameCityKey(' 李婉鈺 ', 'NWT'), '李婉鈺|nwt');
+assert.equal(candidateNameCityKey('', 'nwt'), null);
+
+const nameCityHistory = [{ election_year: 2014 }, { election_year: 2018 }];
+const eligibleCrossPartyHistory = eligibleNameCityHistory(
+  'person-li',
+  nameCityHistory,
+  new Set(['person-li']),
+);
+assert.equal(eligibleCrossPartyHistory.length, 2);
+assert.ok(eligibleCrossPartyHistory.every((row) => row.identityInferred === true));
+assert.deepEqual(
+  eligibleNameCityHistory('person-li', nameCityHistory, new Set(['person-li', 'person-other'])),
+  [],
+);
+assert.deepEqual(
+  eligibleNameCityHistory('person-li', nameCityHistory, new Set(['person-other'])),
+  [],
 );
 
 assert.equal(stableOrderForTable('candidates'), 'id.asc');

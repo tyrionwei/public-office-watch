@@ -132,6 +132,27 @@ function candidateIdentityKey(name, party, cityCode) {
   return [normalizedName, normalizedParty, normalizedCityCode].join('|');
 }
 
+function candidateNameCityKey(name, cityCode) {
+  const normalizedName = normalizeName(name);
+  const normalizedCityCode = String(cityCode ?? '').trim().toLowerCase();
+  if (!normalizedName || !normalizedCityCode) return null;
+  return [normalizedName, normalizedCityCode].join('|');
+}
+
+function eligibleNameCityHistory(canonicalPersonId, historyRows, canonicalIds) {
+  if (
+    !canonicalPersonId
+    || historyRows.length === 0
+    || canonicalIds.size !== 1
+    || !canonicalIds.has(canonicalPersonId)
+  ) return [];
+  return historyRows.map((row) => ({
+    ...row,
+    identityInferred: true,
+    identityInferenceBasis: 'same_name_city_unique',
+  }));
+}
+
 function combinedCandidateHistory(directRows, identityRows) {
   return uniqueBy([
     ...directRows,
@@ -261,6 +282,12 @@ function originalSourceEvidence(researchClaim) {
   }];
 }
 
+function identityInferenceDescription(rows) {
+  return rows.some((row) => row.identityInferenceBasis === 'same_name_city_unique')
+    ? '同名、同縣市且本機僅對應一人'
+    : '同名、同黨、同縣市';
+}
+
 function derivedElectionEvidence(researchClaim, historyRows) {
   if (researchClaim.category !== '政治工作') return [];
   const electedCouncilorRows = historyRows.filter((row) => row.raceType === 'councilor' && row.is_elected === true);
@@ -274,10 +301,11 @@ function derivedElectionEvidence(researchClaim, historyRows) {
     const official = evidenceMatches.find((row) => /中央選舉委員會/.test(row.source_name ?? ''));
     const source = official ?? evidenceMatches[0];
     const identityInferred = evidenceMatches.some((row) => row.identityInferred === true);
+    const identityDescription = identityInferenceDescription(evidenceMatches);
     return [{
       claimId: null,
       claimType: 'derived_election_result',
-      claimValue: `${year}年議員選舉當選${identityInferred ? '（同名、同黨、同縣市身分推定）' : ''}`,
+      claimValue: `${year}年議員選舉當選${identityInferred ? `（${identityDescription}身分推定）` : ''}`,
       matchScore: 1,
       tier: official ? 'official' : 'secondary',
       reviewStatus: identityInferred ? 'identity_inferred' : official ? 'verified' : 'derived_secondary',
@@ -307,6 +335,7 @@ function derivedElectionEvidence(researchClaim, historyRows) {
     row.election_year === year && row.identityInferred !== true
   )));
   const sourceName = allYearsOfficial ? '中央選舉委員會選舉資料庫：公開資料包' : '本機歷史選舉資料彙整';
+  const identityDescription = identityInferenceDescription(relevantRows);
   if (electedYears.length > expectedTerms) {
     return [{
       claimId: null,
@@ -339,7 +368,7 @@ function derivedElectionEvidence(researchClaim, historyRows) {
   return [{
     claimId: null,
     claimType: 'derived_election_history',
-    claimValue: `${termMatch[1] ?? ''}當選議員共${expectedTerms}屆（${electedYears.join('、')}）${identityInferred ? '（同名、同黨、同縣市身分推定）' : ''}`,
+    claimValue: `${termMatch[1] ?? ''}當選議員共${expectedTerms}屆（${electedYears.join('、')}）${identityInferred ? `（${identityDescription}身分推定）` : ''}`,
     matchScore: 1,
     tier: allYearsOfficial ? 'official' : 'secondary',
     reviewStatus: identityInferred ? 'identity_inferred' : allYearsOfficial ? 'verified' : 'derived_secondary',
@@ -581,10 +610,22 @@ async function main() {
   const researchClaims = [...groupedClaims.values()];
   const candidateHistoryByCanonical = new Map();
   const candidateHistoryByIdentity = new Map();
+  const candidateHistoryByNameCity = new Map();
+  const candidateCanonicalIdsByNameCity = new Map();
   for (const candidate of allCandidateRows) {
     const rows = candidateHistoryByCanonical.get(candidate.person_id) ?? [];
     rows.push(candidate);
     candidateHistoryByCanonical.set(candidate.person_id, rows);
+
+    const nameCityKey = candidateNameCityKey(candidate.person_name, candidate.cityCode);
+    if (nameCityKey) {
+      const nameCityRows = candidateHistoryByNameCity.get(nameCityKey) ?? [];
+      nameCityRows.push(candidate);
+      candidateHistoryByNameCity.set(nameCityKey, nameCityRows);
+      const nameCityCanonicalIds = candidateCanonicalIdsByNameCity.get(nameCityKey) ?? new Set();
+      nameCityCanonicalIds.add(candidate.person_id);
+      candidateCanonicalIdsByNameCity.set(nameCityKey, nameCityCanonicalIds);
+    }
 
     const identityKey = candidateIdentityKey(candidate.person_name, candidate.party, candidate.cityCode);
     if (!identityKey) continue;
@@ -600,6 +641,13 @@ async function main() {
       score: null,
     });
     if (!historyRow) continue;
+    const nameCityKey = candidateNameCityKey(sourcePerson.raw_name, historyRow.cityCode);
+    if (nameCityKey) {
+      const nameCityRows = candidateHistoryByNameCity.get(nameCityKey) ?? [];
+      nameCityRows.push(historyRow);
+      candidateHistoryByNameCity.set(nameCityKey, nameCityRows);
+    }
+
     const identityKey = candidateIdentityKey(sourcePerson.raw_name, sourcePerson.party, historyRow.cityCode);
     if (!identityKey) continue;
     const identityRows = candidateHistoryByIdentity.get(identityKey) ?? [];
@@ -682,6 +730,10 @@ async function main() {
       occurrence?.party,
       cityCodeForText(occurrence?.city),
     );
+    const nameCityKey = candidateNameCityKey(
+      researchClaim.personName,
+      cityCodeForText(occurrence?.city),
+    );
     const directEvidenceIsVerified = directElectionEvidence.some((item) => item.reviewStatus === 'verified');
     const inferredElectionEvidence = !directEvidenceIsVerified && identityKey
       ? derivedElectionEvidence(
@@ -692,12 +744,28 @@ async function main() {
         ),
       )
       : [];
+    const nameCityElectionEvidence = !directEvidenceIsVerified
+      && inferredElectionEvidence.length === 0
+      && nameCityKey
+      ? derivedElectionEvidence(
+        researchClaim,
+        combinedCandidateHistory(
+          directHistoryRows,
+          eligibleNameCityHistory(
+            researchClaim.canonicalPersonId,
+            candidateHistoryByNameCity.get(nameCityKey) ?? [],
+            candidateCanonicalIdsByNameCity.get(nameCityKey) ?? new Set(),
+          ),
+        ),
+      )
+      : [];
     const evidence = uniqueBy([
       ...localEvidence,
       ...originalSourceEvidence(researchClaim),
       ...externalFindingEvidence(externalFinding, researchClaim),
       ...directElectionEvidence,
       ...inferredElectionEvidence,
+      ...nameCityElectionEvidence,
     ], (item) => [item.claimType, item.claimValue, item.sourceUrl].join('|'))
       .sort((left, right) => (
         right.matchScore - left.matchScore
@@ -748,7 +816,7 @@ async function main() {
         unknown: 'Source type could not be established automatically.',
       },
       stopLoss: 'For unresolved claims, use one exact search query and inspect at most the two strongest relevant results. Do not retry protected sites, bypass access controls, or auto-approve same-name evidence without matching context.',
-      autoReviewRule: 'Exact normalized containment match against a verified official local claim. Cross-ID election evidence inferred from exact name, party, and city remains manual review only. External findings and sensitive family/legal claims remain separately auditable.',
+      autoReviewRule: 'Exact normalized containment match against a verified official local claim. Cross-ID election evidence inferred from exact name, party, and city, or from a unique same-name person in the same city across party changes, remains manual review only. External findings and sensitive family/legal claims remain separately auditable.',
     },
     summary: {
       guideCandidateRows: guideRows.length,
@@ -824,7 +892,7 @@ ${categories.map((category) => {
 1. 官方選舉公報、政府、立法院、地方議會與政黨官方人物頁列為第一級來源。
 2. 政治家族與涉案紀錄即使找到媒體報導，也必須保留人物身分與案件階段，不把「涉案」寫成「有罪」。
 3. 外部搜尋每條使用一組精確查詢，最多檢查最相關的兩個結果；仍無可靠佐證即列為未找到，不反覆改寫查詢。
-4. 同名、選區或年份對不上時不得自動審核；姓名、政黨與縣市完全一致的跨 ID 選舉紀錄僅列為身分推定，仍需人工審核。
+4. 同名、選區或年份對不上時不得自動審核；姓名、政黨與縣市完全一致，或跨黨籍但姓名與縣市在本機僅對應一人的選舉紀錄，只列為身分推定並交由人工審核。
 5. 暗公報目前只作研究線索，不直接公開或寫入已驗證 claims。
 `;
   fs.writeFileSync(summaryOutputPath, summary);
@@ -840,10 +908,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
 export {
   candidateIdentityKey,
+  candidateNameCityKey,
   combinedCandidateHistory,
   compareClaimToEvidence,
   derivedElectionEvidence,
   evidenceTier,
+  eligibleNameCityHistory,
   externalFindingEvidence,
   historicalSourceHistoryRow,
   normalizeText,

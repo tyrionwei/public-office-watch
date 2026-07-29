@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  candidateForAutoMatch,
   highConfidenceCandidate,
   planHighConfidenceMatches,
 } from './apply-high-confidence-party-candidate-matches.mjs';
@@ -36,6 +37,8 @@ test('accepts only a unique high-confidence party and geography match', () => {
     sourceCandidateKey: 'party-2026-001',
     personId: 'person-1',
     raceId: 'race-1',
+    resolution: 'high_confidence_match',
+    evidence: ['party', 'geography'],
   });
   assert.equal(highConfidenceCandidate(source({
     source_payload: {
@@ -51,6 +54,26 @@ test('blocks a high-confidence label without both required evidence signals', ()
   const result = highConfidenceCandidate(invalid);
   assert.equal(result.status, 'blocked');
   assert.match(result.errors.join(' '), /party and geography/);
+});
+
+test('accepts probable matches with party or geography context but skips name-only matches', () => {
+  const probable = source();
+  probable.source_payload.identitySuggestion.resolution = 'probable_match';
+  probable.source_payload.identitySuggestion.canonicalCandidates[0].evidence = ['party'];
+  assert.equal(candidateForAutoMatch(probable, true).status, 'eligible');
+
+  probable.source_payload.identitySuggestion.canonicalCandidates[0].evidence = ['geography'];
+  assert.equal(candidateForAutoMatch(probable, true).status, 'eligible');
+
+  probable.source_payload.identitySuggestion.canonicalCandidates[0].evidence = [];
+  assert.equal(candidateForAutoMatch(probable, true).status, 'skip');
+});
+
+test('keeps probable matches out of the default high-confidence scope', () => {
+  const probable = source();
+  probable.source_payload.identitySuggestion.resolution = 'probable_match';
+  probable.source_payload.identitySuggestion.canonicalCandidates[0].evidence = ['party'];
+  assert.equal(candidateForAutoMatch(probable).status, 'skip');
 });
 
 test('plans unmatched A-grade sources and preserves already confirmed identities', () => {

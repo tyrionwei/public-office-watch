@@ -21,20 +21,29 @@ function readLocalEnv() {
 }
 
 function parseArgs(argv) {
-  if (argv.length === 0) return { write: false };
-  if (argv.length === 1 && argv[0] === '--write') return { write: true };
-  throw new Error('Usage: node scripts/apply-high-confidence-party-candidate-matches.mjs [--write]');
+  const supported = new Set(['--write', '--include-probable-context']);
+  for (const arg of argv) {
+    if (!supported.has(arg)) {
+      throw new Error('Usage: node scripts/apply-high-confidence-party-candidate-matches.mjs [--include-probable-context] [--write]');
+    }
+  }
+  return {
+    write: argv.includes('--write'),
+    includeProbableContext: argv.includes('--include-probable-context'),
+  };
 }
 
 function objectValue(value) {
   return value && typeof value === 'object' && !Array.isArray(value) ? value : null;
 }
 
-function highConfidenceCandidate(source) {
+function candidateForAutoMatch(source, includeProbableContext = false) {
   if (!source.source_person_key.startsWith('party-candidate:')) return { status: 'skip' };
   const payload = objectValue(source.source_payload);
   const identity = objectValue(payload?.identitySuggestion);
-  if (identity?.resolution !== 'high_confidence_match') return { status: 'skip' };
+  const resolution = identity?.resolution;
+  if (resolution !== 'high_confidence_match' && resolution !== 'probable_match') return { status: 'skip' };
+  if (resolution === 'probable_match' && !includeProbableContext) return { status: 'skip' };
 
   const selectedPersonId = String(identity.selectedCanonicalPersonId ?? '').trim();
   const sourceCandidateKey = String(payload?.sourceCandidateKey ?? '').trim();
@@ -56,8 +65,11 @@ function highConfidenceCandidate(source) {
   if (candidacyStatus !== 'party_nominee') errors.push('candidacy status is not party_nominee');
   if (!source.party) errors.push('party is missing');
   if (!selectedGroup) errors.push('selected canonical person is not in identity candidates');
-  if (!evidence.includes('party') || !evidence.includes('geography')) {
+  if (resolution === 'high_confidence_match' && (!evidence.includes('party') || !evidence.includes('geography'))) {
     errors.push('party and geography evidence are both required');
+  }
+  if (resolution === 'probable_match' && !evidence.includes('party') && !evidence.includes('geography')) {
+    return { status: 'skip' };
   }
 
   if (errors.length > 0) return { status: 'blocked', errors };
@@ -66,10 +78,16 @@ function highConfidenceCandidate(source) {
     sourceCandidateKey,
     personId: selectedPersonId,
     raceId,
+    resolution,
+    evidence,
   };
 }
 
-function planHighConfidenceMatches({ sources, matches, claims, candidates }) {
+function highConfidenceCandidate(source) {
+  return candidateForAutoMatch(source, false);
+}
+
+function planHighConfidenceMatches({ sources, matches, claims, candidates }, options = {}) {
   const matchesBySource = new Map();
   for (const match of matches) {
     matchesBySource.set(match.source_person_id, [...(matchesBySource.get(match.source_person_id) ?? []), match]);
@@ -84,7 +102,7 @@ function planHighConfidenceMatches({ sources, matches, claims, candidates }) {
   const blocking = [];
 
   for (const source of sources) {
-    const parsed = highConfidenceCandidate(source);
+    const parsed = candidateForAutoMatch(source, options.includeProbableContext === true);
     if (parsed.status === 'skip') continue;
     if (parsed.status === 'blocked') {
       blocking.push({ sourcePersonKey: source.source_person_key, personName: source.raw_name, errors: parsed.errors });
@@ -221,6 +239,34 @@ function countByParty(items) {
   );
 }
 
+function countByEvidence(items) {
+  return Object.fromEntries(
+    Array.from(items.reduce((counts, item) => {
+      const key = item.evidence.includes('party') && item.evidence.includes('geography')
+        ? 'party_and_geography'
+        : item.evidence.includes('party')
+          ? 'party_only'
+          : 'geography_only';
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+      return counts;
+    }, new Map()).entries()).sort(([left], [right]) => left.localeCompare(right)),
+  );
+}
+
+function reviewMetadata(item) {
+  if (item.resolution === 'high_confidence_match') {
+    return {
+      version: 'party-candidate-high-confidence-v1',
+      reason: 'Exact name with matching party and geography; unique canonical person',
+    };
+  }
+  const context = item.evidence.includes('party') ? 'party' : 'geography';
+  return {
+    version: 'party-candidate-probable-context-v1',
+    reason: `Exact name with matching ${context}; unique canonical person`,
+  };
+}
+
 async function applyPlan(config, plan, reviewedAt) {
   await upsertRows(config, 'candidates', plan.eligible.map((item) => ({
     external_id: item.externalId,
@@ -237,22 +283,25 @@ async function applyPlan(config, plan, reviewedAt) {
     updated_at: reviewedAt,
   })), 'external_id');
 
-  await upsertRows(config, 'person_identity_matches', plan.eligible.map((item) => ({
-    source_person_id: item.source.id,
-    person_id: item.personId,
-    match_status: 'auto_matched',
-    score: 100,
-    match_method: 'party_candidate_high_confidence_v1',
-    match_reason: 'Exact name with matching party and geography; unique canonical person',
-    evidence_json: {
-      version: 'party-candidate-high-confidence-v1',
-      sourceCandidateKey: item.sourceCandidateKey,
-      evidence: ['party', 'geography'],
-    },
-    reviewed_by: 'party-candidate-high-confidence-v1',
-    reviewed_at: reviewedAt,
-    updated_at: reviewedAt,
-  })), 'source_person_id,person_id');
+  await upsertRows(config, 'person_identity_matches', plan.eligible.map((item) => {
+    const metadata = reviewMetadata(item);
+    return {
+      source_person_id: item.source.id,
+      person_id: item.personId,
+      match_status: 'auto_matched',
+      score: 100,
+      match_method: metadata.version.replaceAll('-', '_'),
+      match_reason: metadata.reason,
+      evidence_json: {
+        version: metadata.version,
+        sourceCandidateKey: item.sourceCandidateKey,
+        evidence: item.evidence,
+      },
+      reviewed_by: metadata.version,
+      reviewed_at: reviewedAt,
+      updated_at: reviewedAt,
+    };
+  }), 'source_person_id,person_id');
 
   for (let index = 0; index < plan.eligible.length; index += 20) {
     await Promise.all(plan.eligible.slice(index, index + 20).flatMap((item) => [
@@ -265,9 +314,9 @@ async function applyPlan(config, plan, reviewedAt) {
         review_status: 'verified',
         visibility: 'review_only',
         is_public: false,
-        scoring_version: 'party-candidate-high-confidence-v1',
+        scoring_version: reviewMetadata(item).version,
         scoring_reasons: [{
-          reason: 'Exact name with matching party and geography; unique canonical person',
+          reason: reviewMetadata(item).reason,
           reviewedAt,
         }],
         updated_at: reviewedAt,
@@ -296,7 +345,10 @@ async function main() {
     fetchRowsByValues(config, 'person_claims', 'id,source_person_id,review_status,visibility,is_public', 'source_person_id', sources.map((row) => row.id)),
     fetchRows(config, 'candidates', 'external_id,person_id,race_id,is_public', { external_id: 'like.party-candidate:*' }),
   ]);
-  const plan = planHighConfidenceMatches({ sources, matches, claims, candidates });
+  const plan = planHighConfidenceMatches(
+    { sources, matches, claims, candidates },
+    { includeProbableContext: options.includeProbableContext },
+  );
   if (plan.blocking.length > 0) {
     console.log(JSON.stringify({ status: 'blocked', blocking: plan.blocking }, null, 2));
     process.exitCode = 1;
@@ -308,10 +360,12 @@ async function main() {
   console.log(JSON.stringify({
     status: 'ok',
     mode: options.write ? 'write' : 'dry-run',
+    includeProbableContext: options.includeProbableContext,
     sourceCount: sources.length,
     eligibleCount: plan.eligible.length,
     alreadyConfirmedCount: plan.alreadyConfirmed.length,
     eligibleByParty: countByParty(plan.eligible),
+    eligibleByEvidence: countByEvidence(plan.eligible),
     alreadyConfirmedByParty: countByParty(plan.alreadyConfirmed),
     reviewedAt: options.write ? reviewedAt : null,
   }, null, 2));
@@ -324,4 +378,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { highConfidenceCandidate, planHighConfidenceMatches };
+export { candidateForAutoMatch, highConfidenceCandidate, planHighConfidenceMatches };

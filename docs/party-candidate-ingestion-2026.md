@@ -249,16 +249,23 @@ node scripts/build-pfp-2026-candidate-snapshot.mjs \
 - `apply-high-confidence-party-candidate-matches.mjs` 只接受已 stage 且同時具備精確姓名、
   同黨、同選區及唯一 canonical 人物的 `high_confidence_match`；預設為 dry-run，
   `--write` 僅允許 localhost Supabase。
-- 不接受 B 級、同名衝突或新人物，不建立新人物，也不公開人物、候選關係或參選聲明。
+- 預設只接受 A 級；需明確加上 `--include-probable-context` 才會納入具有黨籍或選區脈絡的 B 級。
+  同名衝突、只有姓名符合或新人物一律不自動套用，也不建立新人物或公開任何關聯。
 - 2026-07-29 共確認 184 / 318 筆：民主進步黨 148、中國國民黨 7、台灣民眾黨 18、
   時代力量 4、台灣基進 2、小民參政歐巴桑聯盟 3、親民黨 2；台灣綠黨 0。
-- 其餘 134 筆保留本機審核工作台：B 級 40、需辨識同名人物 13、新人物 81。
-- 本機驗證共有 184 筆私有 `party_nominee` 候選關係及 184 筆 `review_only` 聲明；
-  公開候選與公開聲明均為 0。重跑 dry-run 顯示待套用 0、已確認 184。
+- 依人工決定，另套用 27 筆 canonical 人物唯一且具有部分脈絡的 B 級配對：
+  姓名加黨籍 17 筆、姓名加選區 10 筆；只有姓名符合的 B 級不自動套用。
+- 目前共確認 211 / 318 筆：民主進步黨 158、中國國民黨 9、台灣民眾黨 29、
+  時代力量 5、台灣基進 2、小民參政歐巴桑聯盟 4、親民黨 4；台灣綠黨 0。
+- 其餘 107 筆保留本機審核工作台：只有姓名符合 13、需辨識同名人物 13、新人物 81。
+- 本機驗證共有 211 筆私有 `party_nominee` 候選關係及 211 筆 `review_only` 聲明；
+  公開候選與公開聲明均為 0。重跑含部分脈絡的 dry-run 顯示待套用 0、已確認 211。
 
 ```bash
 node scripts/apply-high-confidence-party-candidate-matches.mjs
 node scripts/apply-high-confidence-party-candidate-matches.mjs --write
+node scripts/apply-high-confidence-party-candidate-matches.mjs --include-probable-context
+node scripts/apply-high-confidence-party-candidate-matches.mjs --include-probable-context --write
 ```
 
 ## 本機執行

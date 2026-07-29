@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "user-confirmed:2026-07-29-all-remaining-unmatched",
+  "reviewedAt": "2026-07-29T23:45:00+08:00",
+  "scope": "All 86 remaining party-candidate identity review sources after existing-person review was completed",
+  "decision": "create_new",
+  "preconditions": {
+    "sourcePersonKeyPrefix": "party-candidate:",
+    "remainingSourceCount": 86,
+    "sourcesWithAvailableIdentityCandidates": 0,
+    "localSupabaseOnly": true
+  },
+  "partyCounts": {
+    "民主進步黨": 39,
+    "台灣民眾黨": 30,
+    "時代力量": 4,
+    "台灣基進": 3,
+    "台灣綠黨": 3,
+    "小民參政歐巴桑聯盟": 3,
+    "中國國民黨": 2,
+    "親民黨": 2
+  },
+  "result": {
+    "createdPeople": 86,
+    "writtenPrivateCandidates": 86,
+    "verifiedReviewOnlyClaims": 86,
+    "publicPeopleCreated": 0,
+    "publicCandidatesCreated": 0,
+    "publicClaimsCreated": 0
+  },
+  "duplicateScan": {
+    "createdPeopleScanned": 86,
+    "allPeopleScanned": 65480,
+    "unrejectedExactOrNormalizedVariantMatches": 0,
+    "explicitlyRejectedSameNameCanonicalGroups": 9,
+    "explicitlyRejectedSameNameSourcePeople": 8,
+    "contextualOneCharacterPairsReviewed": 3,
+    "mergeDecisionsAdded": 0,
+    "keptSeparate": [
+      {
+        "names": ["陳俊維", "陳俊諺"],
+        "reason": "Distinct official candidate names in New Taipei City districts 4 and 5"
+      },
+      {
+        "names": ["沈震南", "沈震東"],
+        "reason": "The 2026 official party candidate source names 沈震南; CEC and current council records name 沈震東"
+      },
+      {
+        "names": ["蔡美華", "蔡美雲"],
+        "reason": "Distinct names and political records; 2026 New Taipei district 11 candidate versus 2022 village chief"
+      }
+    ]
+  }
+}

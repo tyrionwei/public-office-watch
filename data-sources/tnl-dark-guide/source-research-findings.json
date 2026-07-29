@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T21:35:20.990Z",
+  "generatedAt": "2026-07-29T21:41:30.961Z",
   "policy": {
     "maxQueriesPerClaim": 1,
     "maxResultsInspected": 2,
@@ -7742,6 +7742,477 @@
           "supports": "鄭宇恩父親鄭振豐為民進黨創黨黨員"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-1-67-政治家族-2",
+      "query": "鄭宇恩 母親 淡水區代表 2屆",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞人物專訪直接稱鄭宇恩母親曾任淡水區二屆市代表；聯合報舊聞另指出母親吳經真曾任淡水鎮民代表。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/-123459270.html",
+          "supports": "鄭宇恩母親曾任淡水區二屆市代表"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "聯合報舊聞轉載",
+          "url": "https://www.ptt.cc/man/TamShui/D6FD/D77C/D5DB/M.1434471548.A.CB5.html",
+          "supports": "鄭宇恩母親吳經真曾任淡水鎮民代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-1-67-政治家族-1",
+      "query": "鄭宇恩 鄭振豐 父親 民進黨創黨黨員",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞人物專訪直接確認鄭宇恩父親鄭振豐為民進黨創黨黨員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/-123459270.html",
+          "supports": "鄭宇恩父親鄭振豐為民進黨創黨黨員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-1-67-政治家族-3",
+      "query": "鄭宇恩 嬸嬸 淡水區代表 4屆",
+      "outcome": "source_found_manual_review",
+      "notes": "Yahoo新聞人物專訪直接稱鄭宇恩嬸嬸為淡水區四屆資深市代表；聯合報舊聞另稱嬸嬸鄭楊淑玲為代表會副主席。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Yahoo新聞",
+          "url": "https://tw.news.yahoo.com/-123459270.html",
+          "supports": "鄭宇恩嬸嬸為淡水區四屆資深市代表"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "聯合報舊聞轉載",
+          "url": "https://www.ptt.cc/man/TamShui/D6FD/D77C/D5DB/M.1434471548.A.CB5.html",
+          "supports": "鄭宇恩嬸嬸鄭楊淑玲為代表會副主席"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-9-7-政治家族-1",
+      "query": "鄭安秝 陳粹鑾 母親 國民黨議員",
+      "outcome": "source_found_manual_review",
+      "notes": "民視、東森與司法資料可確認前國民黨籍高雄市議員陳粹鑾為鄭安秝母親。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞",
+          "url": "https://www.ftvnews.com.tw/news/detail/2022716W0096",
+          "supports": "鄭安秝代替入獄的前高雄市議員母親陳粹鑾參選"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "東森新聞",
+          "url": "https://news.ebc.net.tw/news/politics/304961",
+          "supports": "鄭安秝為陳粹鑾女兒並接棒參選議員"
+        },
+        {
+          "tier": "official",
+          "name": "司法院",
+          "url": "https://www.judicial.gov.tw/tw/dl-205348-ffbc76259b614b90b439c625eb99b9a3.html",
+          "supports": "判決資料記載陳粹鑾與鄭安秝先後擔任高雄市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-9-84-政治家族-1",
+      "query": "鄭安秝 陳粹鑾 母親 國民黨議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "民視、東森與司法資料可確認前高雄市議員陳粹鑾為鄭安秝母親；本批未完整核對暗公報所述「4屆」任期數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞",
+          "url": "https://www.ftvnews.com.tw/news/detail/2022716W0096",
+          "supports": "鄭安秝代替入獄的前高雄市議員母親陳粹鑾參選"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "東森新聞",
+          "url": "https://news.ebc.net.tw/news/politics/304961",
+          "supports": "鄭安秝為陳粹鑾女兒並接棒參選議員"
+        },
+        {
+          "tier": "official",
+          "name": "司法院",
+          "url": "https://www.judicial.gov.tw/tw/dl-205348-ffbc76259b614b90b439c625eb99b9a3.html",
+          "supports": "判決資料記載陳粹鑾與鄭安秝先後擔任高雄市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-7-8-政治家族-1",
+      "query": "鄭孟洳 鄭新助 祖父 前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "民視與Newtalk均直接確認前高雄市議員鄭新助為鄭孟洳祖父。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞",
+          "url": "https://www.ftvnews.com.tw/news/detail/2022A23W0069",
+          "supports": "前高雄市議員鄭新助以祖父身分替鄭孟洳披彩帶"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2022-05-18/756501",
+          "supports": "鄭孟洳為前市議員鄭新助孫女"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-7-71-政治家族-1",
+      "query": "鄭孟洳 鄭新助 爺爺 4屆現任議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "民視可直接確認鄭新助為鄭孟洳祖父及前高雄市議員；本批未以官方歷屆資料完整核對2018年當時「4屆現任」的精確描述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞",
+          "url": "https://www.ftvnews.com.tw/news/detail/2019403U09M1",
+          "supports": "鄭孟洳祖父為前高雄市議員鄭新助"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "民視新聞",
+          "url": "https://www.ftvnews.com.tw/news/detail/2022A23W0069",
+          "supports": "前高雄市議員鄭新助以祖父身分替鄭孟洳披彩帶"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-2-3-政治家族-2",
+      "query": "鄭東元 王志雄 王世雄 表弟 前立委",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "兩輪查詢未找到官方或可信媒體直接確認鄭東元與王志雄、王世雄的表兄弟關係。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-2-3-政治家族-1",
+      "query": "鄭東元 王玉雲 舅舅 前高雄市長",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "兩輪查詢未找到官方或可信媒體直接確認前高雄市長王玉雲為鄭東元舅舅。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-9-81-政治家族-1",
+      "query": "鄭淑方 張火爐 姨丈 3屆議員 2屆鎮民代表",
+      "outcome": "source_conflict_manual_review",
+      "notes": "聯合報與中國時報均將張火爐稱為鄭淑方的姊夫，並稱鄭淑方是張火爐的小姨子，與暗公報「姨丈」關係衝突；任期數亦未完成官方核對，公開前必須人工更正。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "聯合報",
+          "url": "https://udn.com/news/story/124652/9328406",
+          "supports": "鄭淑方姊夫為前議員張火爐"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20180626000800-263201",
+          "supports": "張火爐交棒給小姨子鄭淑方"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-9-5-政治家族-1",
+      "query": "鄭淑方 張火爐 姨丈 3屆議員 2屆鎮民代表",
+      "outcome": "source_conflict_manual_review",
+      "notes": "聯合報與中國時報均將張火爐稱為鄭淑方的姊夫，並稱鄭淑方是張火爐的小姨子，與暗公報「姨丈」關係衝突；任期數亦未完成官方核對，公開前必須人工更正。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "聯合報",
+          "url": "https://udn.com/news/story/124652/9328406",
+          "supports": "鄭淑方姊夫為前議員張火爐"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20180626000800-263201",
+          "supports": "張火爐交棒給小姨子鄭淑方"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-12-2-政治家族-1",
+      "query": "穎艾達利 蔡玉枝 母親 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "地方議會觀測站、新聞及台南市議會資料可確認蔡玉枝為穎艾達利母親與前台南市議員。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "台南市議會觀測站",
+          "url": "https://tcco.tnsprout.org/3rd/councilor/7928278A/",
+          "supports": "穎艾達利母親為前台南市議員蔡玉枝"
+        },
+        {
+          "tier": "secondary",
+          "name": "亞太新聞網",
+          "url": "https://www.atanews.net/?news=76138",
+          "supports": "穎艾達利稱蔡玉枝議員為母親"
+        },
+        {
+          "tier": "official",
+          "name": "台南市議會",
+          "url": "https://www.tncc.gov.tw/warehouse/DCF819D7-D2F8-449B-AD87-59005E51F6A6/0720%E7%B8%BD%E8%B3%AA%E8%A9%A2-%E6%9D%8E%E5%81%89%E6%99%BA%2CIngay%20Tali%2C%E5%BC%B5%E4%B8%96%E8%B3%A2%281%29.pdf",
+          "supports": "穎艾達利議會發言提及曾代替蔡玉枝議員參與事務"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-12-108-政治家族-1",
+      "query": "穎艾達利 蔡玉枝 母親 議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "地方議會觀測站、新聞及台南市議會紀錄可確認前議員蔡玉枝為穎艾達利母親；本批未完成「2屆」精確任期計數。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "台南市議會觀測站",
+          "url": "https://tcco.tnsprout.org/3rd/councilor/7928278A/",
+          "supports": "穎艾達利母親為前台南市議員蔡玉枝"
+        },
+        {
+          "tier": "secondary",
+          "name": "亞太新聞網",
+          "url": "https://www.atanews.net/?news=76138",
+          "supports": "穎艾達利稱蔡玉枝議員為母親"
+        },
+        {
+          "tier": "official",
+          "name": "台南市議會",
+          "url": "https://www.tncc.gov.tw/warehouse/DCF819D7-D2F8-449B-AD87-59005E51F6A6/0720%E7%B8%BD%E8%B3%AA%E8%A9%A2-%E6%9D%8E%E5%81%89%E6%99%BA%2CIngay%20Tali%2C%E5%BC%B5%E4%B8%96%E8%B3%A2%281%29.pdf",
+          "supports": "穎艾達利議會發言提及曾代替蔡玉枝議員參與事務"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-9-2-政治家族-1",
+      "query": "賴佳微 賴穎鋌 父親 2屆議員 民進黨台中市黨部執行長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報與台中市議會資料可確認賴穎鋌為賴佳微父親及前議員；本批未找到可信來源完整確認「前民進黨台中市黨部執行長」職務。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20110308000611-260102",
+          "supports": "賴佳微曾任父親賴穎鋌服務處主任"
+        },
+        {
+          "tier": "official",
+          "name": "台中市議會回顧專輯",
+          "url": "https://www.tccc.gov.tw/ebook/no02/files/basic-html/page194.html",
+          "supports": "賴佳微經歷包含台中市議員賴穎鋌服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-9-50-政治家族-1",
+      "query": "賴佳微 賴穎鋌 父親 2屆議員 民進黨台中市黨部執行長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報與台中市議會資料可確認賴穎鋌為賴佳微父親及前議員；本批未找到可信來源完整確認「前民進黨台中市黨部執行長」職務。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20110308000611-260102",
+          "supports": "賴佳微曾任父親賴穎鋌服務處主任"
+        },
+        {
+          "tier": "official",
+          "name": "台中市議會回顧專輯",
+          "url": "https://www.tccc.gov.tw/ebook/no02/files/basic-html/page194.html",
+          "supports": "賴佳微經歷包含台中市議員賴穎鋌服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-8-9-政治家族-1",
+      "query": "賴順仁 賴誠吉 父親 省議員 賴清海 祖父 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "台中市議會官方回顧專輯標示賴清海、賴誠吉、賴順仁為三代父子；大紀元報導並明載賴誠吉曾任省議員、賴清海曾任台中市議員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "台中市議會回顧專輯",
+          "url": "https://www.tccc.gov.tw/ebook/ftcv02/files/basic-html/page497.html",
+          "supports": "賴清海、賴誠吉、賴順仁為三代父子政治家族"
+        },
+        {
+          "tier": "secondary",
+          "name": "大紀元",
+          "url": "https://www.epochtimes.com/b5/6/4/18/n1291308.htm",
+          "supports": "父親是前省議員賴誠吉"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-8-9-政治家族-2",
+      "query": "賴順仁 賴誠吉 父親 省議員 賴清海 祖父 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "台中市議會官方回顧專輯標示賴清海、賴誠吉、賴順仁為三代父子；大紀元報導並明載賴誠吉曾任省議員、賴清海曾任台中市議員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "台中市議會回顧專輯",
+          "url": "https://www.tccc.gov.tw/ebook/ftcv02/files/basic-html/page497.html",
+          "supports": "賴清海、賴誠吉、賴順仁為三代父子政治家族"
+        },
+        {
+          "tier": "secondary",
+          "name": "大紀元",
+          "url": "https://www.epochtimes.com/b5/6/4/18/n1291308.htm",
+          "supports": "祖父是前議員賴清海"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-11-51-政治家族-1",
+      "query": "賴曉亭 賴頤年 父親 2屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認老議員賴頤年為賴曉亭父親；本批未以官方資料完成「2屆」任期計數。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20181021001271-260407",
+          "supports": "賴曉亭父親為老議員賴頤年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-7-3-政治家族-1",
+      "query": "謝克洋 謝岩介 父親 金華里里長 謝龍介 伯父",
+      "outcome": "source_found_manual_review",
+      "notes": "Newtalk、自由時報與中評社均直接確認謝克洋父親為金華里長謝岩介，伯父為謝龍介。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2022-05-18/756500",
+          "supports": "謝克洋父親為現任中壢區金華里里長謝岩介"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2022/news/breakingnews/4114561",
+          "supports": "謝克洋為謝龍介姪子，謝岩介為謝克洋父親及金華里長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/93_8110_106497967_1.html",
+          "supports": "謝克洋父親謝岩介為謝龍介胞弟並參選金華里長連任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-7-3-政治家族-2",
+      "query": "謝克洋 謝岩介 父親 金華里里長 謝龍介 伯父",
+      "outcome": "source_found_manual_review",
+      "notes": "Newtalk、自由時報與中評社均直接確認謝克洋父親為金華里長謝岩介，伯父為謝龍介。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk",
+          "url": "https://newtalk.tw/news/view/2022-05-18/756500",
+          "supports": "謝克洋伯父為台南市議員謝龍介"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2022/news/breakingnews/4114561",
+          "supports": "謝克洋為謝龍介姪子，謝岩介為謝克洋父親及金華里長"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中評社",
+          "url": "https://hk.crntt.com/doc/93_8110_106497967_1.html",
+          "supports": "謝克洋父親謝岩介為謝龍介胞弟並參選金華里長連任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-8-6-政治家族-1",
+      "query": "謝家宜 謝明源 父親 2屆立委 4屆議員",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接引述謝家宜稱謝明源為父親，並記載其先三度當選市議員、再當選兩屆立委；台中市議會資料另確認謝明源其後再任議員並交棒女兒謝家宜。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20111203000462-260102",
+          "supports": "謝家宜父親謝明源曾三度當選市議員及兩屆立委"
+        },
+        {
+          "tier": "official",
+          "name": "台中市議會",
+          "url": "https://www.tccc.gov.tw/pic/DocSimple/16668837340094%282%29.pdf",
+          "supports": "卸任議員謝明源交棒女兒謝家宜參選"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-2-3-政治家族-1",
+      "query": "謝舒凡 謝財旺 父親 2屆議員 學甲鎮長 代表會主席 漁會監事",
+      "outcome": "source_found_manual_review",
+      "notes": "公視與中時確認謝舒凡為謝財旺女兒；中選會選舉公報完整列出謝財旺兩屆議員、學甲鎮長、代表會主席及南縣區漁會監事經歷。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "公視新聞",
+          "url": "https://news.pts.org.tw/article/608779",
+          "supports": "謝舒凡為議員謝財旺女兒"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20260124000527-260107",
+          "supports": "謝財旺交棒女兒謝舒凡選上市議員"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會選舉公報",
+          "url": "https://eebulletin.cec.gov.tw/107/06%E8%87%BA%E5%8D%97%E5%B8%82/02%E5%B8%82%E8%AD%B0%E5%93%A1/%E7%AC%AC3%E5%B1%86%E5%B8%82%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89-%E7%AC%AC02%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "謝財旺曾任台南市第1、2屆議員、學甲鎮長、代表會主席及南縣區漁會監事"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-17-政治家族-1",
+      "query": "謝維洲 謝長廷 父親 駐日代表",
+      "outcome": "source_found_manual_review",
+      "notes": "2017年中時報導直接稱駐日代表謝長廷之子為謝維洲，符合2018年暗公報時點；兩人於2018年後終止收養，公開資料必須保留時點，避免描述成現況。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20170107000360-260106",
+          "supports": "2017年報導稱謝維洲為駐日代表謝長廷之子"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中央社",
+          "url": "https://www.cna.com.tw/news/firstnews/201908070369.aspx",
+          "supports": "謝長廷其後與前台北市議員謝維洲終止收養關係"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-13-56-政治家族-2",
+      "query": "謝賢 謝欣霓 姊姊 立委",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "兩輪查詢只有維基百科與維基語錄直接記載姊弟關係；未找到官方或可信媒體可獨立確認，依停損規則列為未找到。",
+      "sources": []
     }
   ]
 }

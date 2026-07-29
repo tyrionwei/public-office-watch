@@ -5471,6 +5471,387 @@
           "supports": "陳志謀曾任桃園市議員及龜山鄉長"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-2-76-政治家族-1",
+      "query": "陳雅倫 陳志謀 父親 三屆議員 龜山鄉長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報確認父女關係及議員身分，另有可信媒體確認陳志謀曾任龜山鄉長；三屆任期仍缺可靠來源完整核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20180704000726-263209",
+          "supports": "陳志謀為陳雅倫父親及時任議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "台北郵報",
+          "url": "https://taipeipost.org/123099/",
+          "supports": "陳志謀曾任議員及龜山鄉長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-11-8-政治家族-2",
+      "query": "陳雅惠 陳仁榮 父親 國光里長",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會公報由候選人自填陳雅惠為前里長陳仁榮女兒；Newtalk亦直接記載父女關係。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC11%E9%81%B8%E5%8D%80.pdf",
+          "supports": "候選人經歷列前里長陳仁榮之女"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk新聞",
+          "url": "https://newtalk.tw/news/view/2019-02-24/211585",
+          "supports": "陳雅惠為陳仁榮與邱素貞女兒"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-11-8-政治家族-1",
+      "query": "陳雅惠 邱素貞 母親 議員",
+      "outcome": "source_found_manual_review",
+      "notes": "Newtalk直接確認邱素貞為陳雅惠母親；任期數須依2022歷史時點呈現。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk新聞",
+          "url": "https://newtalk.tw/news/view/2019-02-24/211585",
+          "supports": "陳雅惠與母親、市議員邱素貞的關係"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-8-50-政治家族-1",
+      "query": "陳萬得 呂玉玲 妻子 兩屆立委",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認呂玉玲為陳萬得妻子及立法委員；兩屆為2018年的歷史時點。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20220629004023-263101",
+          "supports": "陳萬得與立委呂玉玲夫妻關係"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-2-32-政治家族-1",
+      "query": "陳義洲 陳健治 哥哥 議長 立委",
+      "outcome": "source_found_manual_review",
+      "notes": "臺北市議會研究資料確認陳健治、陳義洲兄弟關係與政治接棒；陳健治歷任七屆議員、三屆議長及立委。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "臺北市議會研究資料",
+          "url": "https://en.tcforum.org.tw/hd/Lin_Stuff/Lin_Article_Sustainable_Development.pdf",
+          "supports": "兄弟關係及陳健治、陳義洲歷屆議員脈絡"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-6-6-政治家族-1",
+      "query": "陳詩薇 陳進義 父親 四屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "自由時報與早期報導直接確認陳進義為陳詩薇父親及前議員，但四屆任期尚未由本次來源完整核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://election.ltn.com.tw/2022/news/breakingnews/4103763",
+          "supports": "陳詩薇為前市議員陳進義女兒"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "蕃新聞",
+          "url": "https://n.yam.com/Article/20141120697566",
+          "supports": "陳詩薇為陳進義女兒"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-16-政治家族-1",
+      "query": "陳慈慧 陳碧峰 父親 前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "Taipei Times直接確認陳慈慧為前臺北市議員陳碧峰女兒。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Taipei Times",
+          "url": "https://www.taipeitimes.com/News/taiwan/archives/2014/05/01/2003589313",
+          "supports": "陳慈慧為前臺北市議員陳碧峰女兒"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-11-2-政治家族-1",
+      "query": "陳睿生 陳江順 父親 前新屋鄉長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接稱陳睿生為前新屋鄉長陳江順之子。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20201201001783-263101",
+          "supports": "陳睿生為前新屋鄉長陳江順之子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-11-27-政治家族-1",
+      "query": "陳睿生 陳江順 父親 前新屋鄉長",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接稱陳睿生為前新屋鄉長陳江順之子。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20201201001783-263101",
+          "supports": "陳睿生為前新屋鄉長陳江順之子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-5-35-政治家族-1",
+      "query": "陳碧玉 林慶鎮 丈夫 四屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中國時報直接確認林慶鎮為陳碧玉丈夫及前一屆議員，但四屆任期未由本次來源完整核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20190322001817-260402",
+          "supports": "陳碧玉與前議員林慶鎮夫妻關係"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-9-2-政治家族-1",
+      "query": "陳儀君 陳一郎 父親 前縣議員 五峰里長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "華視、NOWnews與匯流新聞均確認陳一郎為陳儀君父親及前臺北縣議員；本次未找到可靠來源核對五峰里長職務。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "華視新聞",
+          "url": "https://news.cts.com.tw/cts/politics/201807/201807311932668.html",
+          "supports": "陳儀君父親陳一郎為前臺北縣議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews今日新聞",
+          "url": "https://www.nownews.com/news/2045007",
+          "supports": "父女關係及前縣議員身分"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-8-69-政治家族-1",
+      "query": "陳儀君 陳一郎 父親 前縣議員 五峰里長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "華視、NOWnews與匯流新聞均確認陳一郎為陳儀君父親及前臺北縣議員；本次未找到可靠來源核對五峰里長職務。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "華視新聞",
+          "url": "https://news.cts.com.tw/cts/politics/201807/201807311932668.html",
+          "supports": "陳儀君父親陳一郎為前臺北縣議員"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "NOWnews今日新聞",
+          "url": "https://www.nownews.com/news/2045007",
+          "supports": "父女關係及前縣議員身分"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-9-80-政治家族-1",
+      "query": "陳儀桓 陳賴素美 阿姨 立委 議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "一次精確搜尋未找到可直接確認親屬關係與職務的官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-9-80-政治家族-2",
+      "query": "陳儀桓 陳奕宣 姨丈 民進黨中評委",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "一次精確搜尋未找到可直接確認親屬關係與職務的官方或可信媒體來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-6-20-政治家族-2",
+      "query": "陳錦祥 陳俊雄 伯父 六屆議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "臺北市議會研究資料與家族整理可支持陳俊雄六屆議員及陳錦祥為其姪子，但缺單一官方頁直接記載伯姪關係。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "臺北市議會研究資料",
+          "url": "https://en.tcforum.org.tw/hd/Lin_Stuff/Lin_Article_Sustainable_Development.pdf",
+          "supports": "陳俊雄歷任六屆議員及家族接棒脈絡"
+        },
+        {
+          "tier": "secondary",
+          "name": "公民記者整理",
+          "url": "https://hanreporter.blogspot.com/2014/11/blog-post_33.html",
+          "supports": "陳錦祥為陳俊雄姪子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tpe-6-20-政治家族-1",
+      "query": "陳錦祥 陳永德 堂哥 台北市議員",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "可由陳俊雄是陳錦祥伯父、陳永德是陳俊雄之子推導堂兄弟關係，但缺單一可靠來源直接記載，須人工確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180126000625-263101",
+          "supports": "陳永德為陳俊雄之子"
+        },
+        {
+          "tier": "secondary",
+          "name": "公民記者整理",
+          "url": "https://hanreporter.blogspot.com/2014/11/blog-post_33.html",
+          "supports": "陳錦祥為陳俊雄姪子"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-5-54-政治家族-1",
+      "query": "陳錦錠 張慶忠 丈夫 三屆立委",
+      "outcome": "source_found_manual_review",
+      "notes": "自由時報直接確認張慶忠擔任三屆立委、妻子為陳錦錠。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "自由時報",
+          "url": "https://features.ltn.com.tw/japanese/article/paper/947908",
+          "supports": "張慶忠三屆立委及陳錦錠為其妻"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-7-1-政治家族-1",
+      "query": "陳鴻源 陳明雄 父親 四屆議員 國大代表",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認陳明雄為陳鴻源父親，並曾任四屆議員與一任國大代表。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20101127000342-260107",
+          "supports": "父子關係及陳明雄四屆議員、一任國代經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-6-64-政治家族-1",
+      "query": "陳鴻源 陳明雄 父親 四屆議員 國大代表",
+      "outcome": "source_found_manual_review",
+      "notes": "中國時報直接確認陳明雄為陳鴻源父親，並曾任四屆議員與一任國大代表。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/newspapers/20101127000342-260107",
+          "supports": "父子關係及陳明雄四屆議員、一任國代經歷"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-4-42-政治家族-1",
+      "query": "陳麗珍 陳文慶 父親 新下里長",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "一次精確搜尋未找到可直接確認父女關係與新下里長職務的獨立可靠來源。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-10-14-政治家族-1",
+      "query": "陳麗娜 楊敏郎 丈夫 國民黨前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "TVBS、Taipei Times及高雄市議會名冊均確認楊敏郎為陳麗娜丈夫及前高雄市議員。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/life/484506",
+          "supports": "陳麗娜丈夫為楊敏郎"
+        },
+        {
+          "tier": "official",
+          "name": "高雄市議會歷屆議員",
+          "url": "https://www.kcc.gov.tw/Member_HistoryList.aspx?n=122&s=34&sms=0",
+          "supports": "楊敏郎曾任高雄市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-56-政治家族-1",
+      "query": "陳麗娜 楊敏朗 丈夫 議員",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "多個可靠來源均作「楊敏郎」，暗公報作「楊敏朗」應為姓名錯字；夫妻與前議員身分可確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS新聞網",
+          "url": "https://news.tvbs.com.tw/life/484506",
+          "supports": "陳麗娜丈夫姓名為楊敏郎"
+        },
+        {
+          "tier": "official",
+          "name": "高雄市議會歷屆議員",
+          "url": "https://www.kcc.gov.tw/Member_HistoryList.aspx?n=122&s=34&sms=0",
+          "supports": "歷屆議員名冊作楊敏郎"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-56-政治家族-2",
+      "query": "陳麗娜 楊振添 公公 前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄市議會議事錄由陳麗娜本人稱楊振添為公公；中國時報亦直接記載公媳關係與地方服務背景。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會議事錄",
+          "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/18%E5%8D%B7/1%E6%9C%9F/18%E5%8D%B71%E6%9C%9F03633%E8%B5%B7%E9%A0%8103708%E8%BF%84%E9%A0%81.pdf",
+          "supports": "陳麗娜稱楊振添為公公"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20140828000678-260503",
+          "supports": "陳麗娜公公楊振添與丈夫楊敏郎"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-10-14-政治家族-2",
+      "query": "陳麗娜 楊振添 公公 前議員",
+      "outcome": "source_found_manual_review",
+      "notes": "高雄市議會議事錄由陳麗娜本人稱楊振添為公公；中國時報亦直接記載公媳關係與地方服務背景。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會議事錄",
+          "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/18%E5%8D%B7/1%E6%9C%9F/18%E5%8D%B71%E6%9C%9F03633%E8%B5%B7%E9%A0%8103708%E8%BF%84%E9%A0%81.pdf",
+          "supports": "陳麗娜稱楊振添為公公"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報",
+          "url": "https://www.chinatimes.com/realtimenews/20140828000678-260503",
+          "supports": "陳麗娜公公楊振添與丈夫楊敏郎"
+        }
+      ]
     }
   ]
 }

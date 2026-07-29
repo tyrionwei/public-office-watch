@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   candidateIdentityKey,
+  combinedCandidateHistory,
   compareClaimToEvidence,
   derivedElectionEvidence,
   evidenceTier,
@@ -29,6 +30,32 @@ assert.equal(
 assert.equal(stableOrderForTable('candidates'), 'id.asc');
 assert.equal(stableOrderForTable('person_canonical_map'), 'person_id.asc');
 assert.equal(stableOrderForTable('person_identity_matches'), 'source_person_id.asc,person_id.asc');
+
+const combinedHistory = combinedCandidateHistory([{
+  election_year: 2018,
+  raceType: 'councilor',
+  is_elected: true,
+  party: '民主進步黨',
+  cityCode: 'nwt',
+  area: 4,
+}], [{
+  election_year: 2014,
+  raceType: 'councilor',
+  is_elected: true,
+  party: '民進黨',
+  cityCode: 'nwt',
+  area: 4,
+}, {
+  election_year: 2018,
+  raceType: 'councilor',
+  is_elected: true,
+  party: '民進黨',
+  cityCode: 'nwt',
+  area: 4,
+}]);
+assert.deepEqual(combinedHistory.map((row) => row.election_year), [2018, 2014]);
+assert.equal(combinedHistory[0].identityInferred, undefined);
+assert.equal(combinedHistory[1].identityInferred, true);
 
 assert.equal(normalizeText('曾任 臺北市議員（第 12 屆）'), '曾任台北市議員第12屆');
 assert.equal(compareClaimToEvidence('曾任謝長廷辦公室幕僚', '謝長廷辦公室幕僚；立委服務處主任'), 1);

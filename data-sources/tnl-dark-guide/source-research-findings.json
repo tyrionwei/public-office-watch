@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T21:49:35.063Z",
+  "generatedAt": "2026-07-29T23:02:11.822Z",
   "policy": {
     "maxQueriesPerClaim": 1,
     "maxResultsInspected": 2,
@@ -8813,6 +8813,398 @@
           "name": "中央選舉委員會",
           "url": "https://web.cec.gov.tw/api/file/65fca3ad-64ce-41b8-9aac-26fd731e6943.pdf",
           "supports": "王仙蓮為2022桃園市議員第13選區當選人"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-7-41-政治工作-1",
+      "query": "何文海 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "官方2024年簡歷列出直轄市第1至4屆議員，但未列合併前議員任期；只能部分佐證暗公報的5屆說法。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "台中市第一、二、三、四屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-3-82-政治工作-2",
+      "query": "呂林小鳳 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷明列二屆市民代表；仍需人工確認即暗公報所指八德市任期。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "二屆市民代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-1-9-政治工作-3",
+      "query": "李宗翰 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "立法院副院長蔡其昌國會辦公室助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-1-3-政治工作-1",
+      "query": "李宗翰 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷同時列出兩段助理經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "立法院副院長蔡其昌國會辦公室助理；臺南市議長賴美惠服務處特別助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-1-9-政治工作-4",
+      "query": "李宗翰 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "臺南市議長賴美惠服務處特別助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-6-9-政治工作-1",
+      "query": "張嘉玲 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "總統府秘書長／立法院長蘇嘉全辦公室主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-6-9-政治工作-2",
+      "query": "張嘉玲 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此黨職。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "民主進步黨婦女部主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-6-94-政治工作-1",
+      "query": "陳淑華 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "官方2024年簡歷列出直轄市第1至4屆；需依2018時間點人工核對暗公報任期計算是否包含合併前議員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "台中市第1、2、3、4屆議員（直轄市）"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-6-94-政治工作-2",
+      "query": "陳淑華 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此黨職。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "民進黨中央執行委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-8-95-政治工作-1",
+      "query": "曾朝榮 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方簡歷列出合併前後任期；暗公報2018年4屆說法需按當時截止年度人工核對。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "臺中市議會第15、16屆議員；第1、2、3屆直轄市臺中市議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-8-95-政治工作-2",
+      "query": "曾朝榮 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持曾任台中市黨部主委。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "民進黨直轄市台中市黨部第1、2屆主任委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-10-109-政治工作-3",
+      "query": "黃守達 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此黨職。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "民主進步黨青年發展部主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-43-政治工作-2",
+      "query": "鄭光峰 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此黨職。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "高雄市黨部主委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-7-8-政治工作-3",
+      "query": "鄭孟洳 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "立法委員陳其邁國會助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-7-8-政治工作-4",
+      "query": "鄭孟洳 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "高雄市議員鄭新助服務處特別助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-7-8-政治工作-5",
+      "query": "鄭孟洳 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此黨職。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "民主進步黨高雄市黨部第4屆評議委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-2-87-政治工作-1",
+      "query": "賴秋媚 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方2024年簡歷列出第1至3屆；可回溯支持2018年時已任第1、2屆，仍保留人工審核。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "新北市議會第一、二、三屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-2-7-政治工作-7",
+      "query": "賴秋媚 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持曾任全國黨員代表。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "民主進步黨全國黨員代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-12-政治工作-1",
+      "query": "顏蔚慈 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "桃園市青年事務局局長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-17-其他-1",
+      "query": "卓冠廷 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方2024年簡歷支持曾任此職；暗公報使用「現任」須依2022時間點人工判讀。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "台灣智庫民調中心主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-11-27-其他-2",
+      "query": "陳睿生 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "桃園市客家青年會第一屆理事長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-8-5-其他-2",
+      "query": "湯詠瑜 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方簡歷列為該事務所合夥律師，足以支持曾任律師。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "國際通商法律事務所合夥律師"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-10-3-其他-2",
+      "query": "鄭光峰 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "南高雄家扶中心委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-10-3-其他-3",
+      "query": "鄭光峰 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "教育部部定講師"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-10-3-其他-5",
+      "query": "鄭光峰 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "嘉義同鄉會顧問"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-2-7-其他-1",
+      "query": "賴秋媚 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "新北市彰化同鄉會榮譽會長、常務理事"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-2-7-其他-2",
+      "query": "賴秋媚 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "新北市屏東同鄉會顧問"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-12-其他-1",
+      "query": "顏蔚慈 民進黨 第21屆 中執評委 選舉公報",
+      "outcome": "source_found_manual_review",
+      "notes": "官方黨務選舉公報簡歷直接支持此經歷。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "民主進步黨第21屆中央執行委員暨中央評議委員選舉公報",
+          "url": "https://www.dpp.org.tw/upload/news/2024%E5%B9%B4%E7%AC%AC21%E5%B1%86%E4%B8%AD%E5%9F%B7%E8%A9%95%E5%A7%94%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "2016台灣燈會專案負責人"
         }
       ]
     }

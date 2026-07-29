@@ -132,6 +132,20 @@ function candidateIdentityKey(name, party, cityCode) {
   return [normalizedName, normalizedParty, normalizedCityCode].join('|');
 }
 
+function combinedCandidateHistory(directRows, identityRows) {
+  return uniqueBy([
+    ...directRows,
+    ...identityRows.map((row) => ({ ...row, identityInferred: true })),
+  ], (row) => [
+    row.election_year,
+    row.raceType,
+    row.is_elected,
+    normalizeParty(row.party),
+    row.cityCode,
+    row.area,
+  ].join('|'));
+}
+
 function historicalSourceHistoryRow(sourcePerson, identityMatch) {
   if (sourcePerson?.source_type !== 'official_election') return null;
   const position = String(sourcePerson.position ?? '');
@@ -660,23 +674,22 @@ async function main() {
         };
       })
       .filter((item) => item.matchScore >= 0.45);
-    const directElectionEvidence = derivedElectionEvidence(
-      researchClaim,
-      candidateHistoryByCanonical.get(researchClaim.canonicalPersonId) ?? [],
-    );
+    const directHistoryRows = candidateHistoryByCanonical.get(researchClaim.canonicalPersonId) ?? [];
+    const directElectionEvidence = derivedElectionEvidence(researchClaim, directHistoryRows);
     const occurrence = researchClaim.occurrences[0] ?? researchClaim.occurrence;
     const identityKey = candidateIdentityKey(
       researchClaim.personName,
       occurrence?.party,
       cityCodeForText(occurrence?.city),
     );
-    const inferredElectionEvidence = directElectionEvidence.length === 0 && identityKey
+    const directEvidenceIsVerified = directElectionEvidence.some((item) => item.reviewStatus === 'verified');
+    const inferredElectionEvidence = !directEvidenceIsVerified && identityKey
       ? derivedElectionEvidence(
         researchClaim,
-        (candidateHistoryByIdentity.get(identityKey) ?? []).map((row) => ({
-          ...row,
-          identityInferred: true,
-        })),
+        combinedCandidateHistory(
+          directHistoryRows,
+          candidateHistoryByIdentity.get(identityKey) ?? [],
+        ),
       )
       : [];
     const evidence = uniqueBy([
@@ -827,6 +840,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
 export {
   candidateIdentityKey,
+  combinedCandidateHistory,
   compareClaimToEvidence,
   derivedElectionEvidence,
   evidenceTier,

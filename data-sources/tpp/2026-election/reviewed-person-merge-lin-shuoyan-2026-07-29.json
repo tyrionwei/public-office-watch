@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "user-confirmed:2026-07-29-lin-shuoyan",
+  "groups": [
+    {
+      "name": "林碩彥",
+      "canonicalPersonId": "c2513cc0-a97f-4d04-8a32-01c4fcdfe300",
+      "duplicatePersonIds": [
+        "d244ff7e-6768-4dc3-a74a-cc9513746d6f",
+        "99f8a666-71a5-46e2-851d-a57775419f0f"
+      ],
+      "evidence": {
+        "basis": "使用者確認為同一人；2018 年以無黨籍參選竹北市民代表，2020 年起以台灣民眾黨參選新竹縣公職，三段歷史共用同一 VoteTW 人物頁，2022 年官方中選會人物亦由新竹縣議會及民眾黨現任公職名冊交叉確認",
+        "candidateYears": [2018, 2020, 2022, 2026],
+        "candidateOffices": ["鄉鎮市民代表", "立法委員", "縣市議員"],
+        "historicalParties": ["無黨籍", "台灣民眾黨"],
+        "canonicalSource": "中央選舉委員會 2022 年新竹縣議員候選人資料"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "party": "台灣民眾黨",
+  "reviewedBy": "user-confirmed:2026-07-29-lin-shuoyan",
+  "decisions": [
+    {
+      "sourceCandidateKey": "tpp-2026-county_councilor-204",
+      "personName": "林碩彥",
+      "decision": "use_existing",
+      "personId": "c2513cc0-a97f-4d04-8a32-01c4fcdfe300",
+      "reason": "確認 2018 無黨籍竹北市民代表、2020 民眾黨新竹縣立委候選人、2022 民眾黨新竹縣議員及 2026 民眾黨候選人皆為同一人",
+      "reviewedAt": "2026-07-29T21:51:17.1948316+08:00"
+    }
+  ]
+}

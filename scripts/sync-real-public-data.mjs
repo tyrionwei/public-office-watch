@@ -3934,6 +3934,30 @@ async function writeSeed(seed, hash, args) {
         rows: {},
       },
     );
+    args.highConfidenceIdentityResult = await supabaseRequest(
+      env,
+      'rpc/process_high_confidence_identity_reviews',
+      {
+        method: 'POST',
+        rows: {},
+      },
+    );
+    args.contextDisambiguatedIdentityResult = await supabaseRequest(
+      env,
+      'rpc/process_context_disambiguated_identities',
+      {
+        method: 'POST',
+        rows: {},
+      },
+    );
+    args.careerProgressionIdentityResult = await supabaseRequest(
+      env,
+      'rpc/process_unique_career_progression_identities',
+      {
+        method: 'POST',
+        rows: {},
+      },
+    );
   }
 
   args.reconciledHistoricalCecPersonMerges = await reconcileHistoricalCecImportedPeople(

@@ -98,7 +98,7 @@ test('previews only single-source new people and holds context-only cross-year i
 test('standardizes national, indigenous and numbered election contexts', () => {
   assert.equal(canonicalElectionType('president'), 'presidential');
   assert.equal(canonicalElectionName(2012, 'president'), '2012年總統副總統選舉');
-  assert.equal(canonicalElectionName(1998, 'councilor', '臺北縣'), '1998年臺北縣議員選舉');
+  assert.equal(canonicalElectionName(1998, 'councilor'), '1998年直轄市及縣市議員選舉');
   assert.equal(classifySeatType('平地原住民', '第8屆立法委員候選人'), 'plain_indigenous');
   assert.equal(canonicalRaceType('legislator', 'plain_indigenous'), 'indigenous');
   assert.equal(canonicalRaceTitle({
@@ -166,4 +166,46 @@ test('compares canonical contexts with legacy election and race aliases', () => 
 
   assert.equal(plan.eventPlans[0].action, 'reuse_existing');
   assert.equal(plan.racePlans[0].action, 'reuse_existing');
+});
+
+
+test('preserves a broader canonical local election instead of renaming it as councilor-only', () => {
+  const plan = buildCoreComparisonPlan([
+    {
+      key: '2018|councilor|national',
+      electionYear: 2018,
+      role: 'councilor',
+      electionType: 'councilor',
+      electionName: '2018年直轄市及縣市議員選舉',
+      unmatchedSourceRowCount: 1,
+    },
+  ], [], {
+    elections: [
+      {
+        id: 'aggregate',
+        external_id: 'cec-2018-local-public-officials',
+        name: '2018年地方公職人員選舉',
+        year: 2018,
+        election_type: 'local',
+      },
+      {
+        id: 'councilor-source',
+        external_id: 'votetw-2018-taipei-councilor',
+        name: '2018年臺北市議員選舉',
+        year: 2018,
+        election_type: 'councilor',
+      },
+    ],
+    races: [],
+    regions: [],
+    electionCanonicalMap: [
+      { election_id: 'aggregate', canonical_election_id: 'aggregate' },
+      { election_id: 'councilor-source', canonical_election_id: 'aggregate' },
+    ],
+    raceCanonicalMap: [],
+  });
+
+  assert.equal(plan.eventPlans[0].action, 'reuse_existing');
+  assert.equal(plan.eventPlans[0].existingScope, 'aggregate');
+  assert.equal(plan.eventPlans[0].existingCandidates[0].name, '2018年地方公職人員選舉');
 });

@@ -95,10 +95,10 @@ export function canonicalElectionType(role) {
   return 'other';
 }
 
-export function canonicalElectionName(year, role, historicalGeography = null) {
+export function canonicalElectionName(year, role) {
   if (role === 'president') return `${year}年總統副總統選舉`;
   if (role === 'legislator') return `${year}年立法委員選舉`;
-  if (role === 'councilor' && historicalGeography) return `${year}年${historicalGeography}議員選舉`;
+  if (role === 'councilor') return `${year}年直轄市及縣市議員選舉`;
   return `${year}年其他選舉`;
 }
 
@@ -152,9 +152,8 @@ function sourceContext(source) {
   const seatType = classifySeatType(source.district, source.position);
   const districtNumber = normalizedDistrictNumber(source);
   const districtKey = districtNumber == null ? seatType : `district-${districtNumber}`;
-  const eventGeography = role === 'councilor' ? historicalGeography : null;
   const electionType = canonicalElectionType(role);
-  const electionName = canonicalElectionName(source.election_year, role, eventGeography);
+  const electionName = canonicalElectionName(source.election_year, role);
   const raceType = canonicalRaceType(role, seatType, historicalGeography);
   const raceTitle = canonicalRaceTitle({ role, seatType, historicalGeography, districtNumber });
 
@@ -170,7 +169,7 @@ function sourceContext(source) {
     raceType,
     raceTitle,
     regionScope: role === 'president' || (role === 'legislator' && seatType !== 'regional') ? 'national' : 'local',
-    eventContextKey: [source.election_year, role, eventGeography ?? 'national'].join('|'),
+    eventContextKey: [source.election_year, role, 'national'].join('|'),
     raceContextKey: [source.election_year, role, historicalGeography ?? 'national', districtKey, seatType].join('|'),
   };
 }
@@ -230,7 +229,7 @@ function buildContextRows(sources, unmatchedSourceIds) {
     key,
     electionYear: rows[0].electionYear,
     role: rows[0].role,
-    historicalGeography: rows[0].role === 'councilor' ? rows[0].historicalGeography : null,
+    historicalGeography: null,
     electionType: rows[0].electionType,
     electionName: rows[0].electionName,
     sourceRowCount: rows.length,
@@ -314,12 +313,17 @@ function dedupeByCanonicalId(rows, idFor) {
 
 export function buildCoreComparisonPlan(eventContexts, raceContexts, dataset) {
   const supportedRoles = new Set(['president', 'legislator', 'councilor']);
-  const supportedEventContexts = eventContexts.filter((context) => supportedRoles.has(context.role));
-  const supportedRaceContexts = raceContexts.filter((context) => supportedRoles.has(context.role));
+  const supportedEventContexts = eventContexts.filter(
+    (context) => supportedRoles.has(context.role) && context.unmatchedSourceRowCount !== 0,
+  );
+  const supportedRaceContexts = raceContexts.filter(
+    (context) => supportedRoles.has(context.role) && context.unmatchedSourceRowCount !== 0,
+  );
   const elections = dataset.elections ?? [];
   const races = dataset.races ?? [];
   const regionsById = new Map((dataset.regions ?? []).map((region) => [region.id, region.name]));
   const electionsById = new Map(elections.map((election) => [election.id, election]));
+  const racesById = new Map(races.map((race) => [race.id, race]));
   const electionCanonicalIds = canonicalIdMap(
     dataset.electionCanonicalMap,
     'election_id',
@@ -330,20 +334,25 @@ export function buildCoreComparisonPlan(eventContexts, raceContexts, dataset) {
   const eventPlans = supportedEventContexts.map((context) => {
     const candidates = dedupeByCanonicalId(
       elections.filter((election) => {
-        if (election.year !== context.electionYear || semanticElectionRole(election) !== context.role) return false;
-        if (context.role !== 'councilor') return true;
-        return normalizeHistoricalGeography(election.name, '') === context.historicalGeography;
+        return election.year === context.electionYear && semanticElectionRole(election) === context.role;
       }),
       (election) => electionCanonicalIds.get(election.id) ?? election.id,
     );
     const action = candidates.length === 0 ? 'create_new' : candidates.length === 1 ? 'reuse_existing' : 'manual_review';
+    const existingCandidates = candidates.map((election) => {
+      const canonicalId = electionCanonicalIds.get(election.id) ?? election.id;
+      const canonicalElection = electionsById.get(canonicalId) ?? election;
+      return {
+        ...compactExistingElection(canonicalElection),
+        canonicalId,
+        scope: semanticElectionRole(canonicalElection) === context.role ? 'same_scope' : 'aggregate',
+      };
+    });
     return {
       ...context,
       action,
-      existingCandidates: candidates.map((election) => ({
-        ...compactExistingElection(election),
-        canonicalId: electionCanonicalIds.get(election.id) ?? election.id,
-      })),
+      existingScope: action === 'reuse_existing' ? existingCandidates[0].scope : null,
+      existingCandidates,
     };
   });
   const eventPlansByKey = new Map(eventPlans.map((plan) => [plan.key, plan]));
@@ -381,10 +390,14 @@ export function buildCoreComparisonPlan(eventContexts, raceContexts, dataset) {
     return {
       ...context,
       action,
-      existingCandidates: candidates.map((race) => ({
-        ...compactExistingRace(race, regionsById.get(race.region_id)),
-        canonicalId: raceCanonicalIds.get(race.id) ?? race.id,
-      })),
+      existingCandidates: candidates.map((race) => {
+        const canonicalId = raceCanonicalIds.get(race.id) ?? race.id;
+        const canonicalRace = racesById.get(canonicalId) ?? race;
+        return {
+          ...compactExistingRace(canonicalRace, regionsById.get(canonicalRace.region_id)),
+          canonicalId,
+        };
+      }),
     };
   });
 
@@ -482,6 +495,7 @@ export function buildHistoricalCecCorePreview(dataset, options = {}) {
       electionNaming: 'Use one canonical name per year, office family and historical jurisdiction.',
       raceNaming: 'Remove leading zeroes and use explicit national, district and indigenous labels.',
       seatClassification: 'Keep plain, mountain and generic indigenous seat types distinct from the database race_type.',
+      comparisonScope: 'Only plan event and race contexts that contain at least one unmatched source person.',
     },
     summary: {
       totalSourceRows: dataset.sources.length,

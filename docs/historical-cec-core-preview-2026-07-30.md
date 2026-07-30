@@ -4,12 +4,14 @@
 
 - 資料來源：`cec-2024-votedata`
 - 來源類型：`official_election`
-- 僅讀取本機 Supabase。
-- 本階段不建立人物、選舉、選區或候選紀錄，也不更新 `published`。
+- 所有檢查與寫入只針對本機 Supabase。
+- 人物、選舉、選區與候選紀錄已分階段建立為非公開資料，並驗證不會進入 `published`。
 - 核心預覽：`local-data/historical-cec-core-preview.json`
 - 建置計畫：`local-data/historical-cec-election-race-plan.json`
 - 回滾 SQL：`local-data/historical-cec-election-race-dry-run.sql`
-- 三個輸出均位於本機忽略目錄，不會隨部署自動執行。
+- 候選計畫：`local-data/historical-cec-candidate-plan.json`
+- 候選回滾 SQL：`local-data/historical-cec-candidate-dry-run.sql`
+- `local-data` 下的輸出均位於本機忽略目錄，不會隨部署自動執行。
 
 ## 資料概況
 
@@ -157,9 +159,20 @@ historical races = 0
 - `published.people` 對這批 external ID 的筆數為 0。
 - 中選會來源仍有 164 筆、57 組跨年份人物留在審核區，未自動合併或建立。
 
+## 候選 Local migration 套用結果
+
+- migration：`202607300026_build_private_historical_cec_candidates.sql`
+- 只替上一階段新建的 2,278 位來源限定人物建立候選關係，沒有改寫先前已配對的 8,622 筆來源。
+- 2,278 筆候選關係全部為一位人物對一個標準選區，且 `is_public = false`。
+- 中選會來源提供的 871 筆票數與 871 筆得票率已寫入；其餘缺值維持 `NULL`。
+- 當選 10 筆、未當選 2,268 筆；候選資格設為 `qualified`，結果分別設為 `elected`／`not_elected`。
+- migration 以單一交易重跑成功，候選總數、人物數與人物／選區組合皆維持 2,278，沒有重複資料。
+- `published.candidates` 對這批 external ID 的筆數為 0。
+- 正式 Supabase 未連線、未寫入。
+
 ## 下一階段
 
-1. 以已確認的人物、選舉與選區建立候選關係。
-2. 對來源有提供的資料寫入號次、票數、得票率與當選狀態；缺值不猜測。
-3. 驗證同一來源只連到一位人物及一個標準選區。
+1. 盤點先前已配對的 8,622 筆歷史中選會來源是否已有完整候選關係，避免直接全量改寫既有候選資料。
+2. 逐組處理目前保留的 164 筆、57 組跨年份身分，補充足夠證據後才合併或建立人物。
+3. 對所有歷史候選執行重複人物、重複選區與狀態一致性稽核。
 4. 最後獨立決定哪些歷史資料進入 `published`。

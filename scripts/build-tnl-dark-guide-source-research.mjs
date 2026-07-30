@@ -8,6 +8,7 @@ const outputPath = path.join(dataDir, 'source-research-report.json');
 const csvOutputPath = path.join(dataDir, 'source-research-review.csv');
 const summaryOutputPath = path.join(dataDir, 'source-research-summary.md');
 const findingsPath = path.join(dataDir, 'source-research-findings.json');
+const cecBulletinProfilesPath = path.join(dataDir, 'cec-councilor-bulletin-profiles.json');
 const categories = ['政治工作', '政治家族', '涉案紀錄', '其他'];
 
 function readLocalEnv() {
@@ -414,6 +415,98 @@ function compareClaimToEvidence(researchText, evidenceValue) {
   return best;
 }
 
+function bestEvidenceExcerpt(researchText, evidenceValue) {
+  const parts = String(evidenceValue ?? '')
+    .split(/[\n；;。]+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const candidates = [];
+  for (let start = 0; start < parts.length; start += 1) {
+    for (let length = 1; length <= 4 && start + length <= parts.length; length += 1) {
+      candidates.push(parts.slice(start, start + length).join('；'));
+    }
+  }
+  if (parts.length > 0) candidates.push(parts.join('；'));
+  const ranked = uniqueBy(candidates, normalizeText)
+    .map((text) => ({
+      text,
+      score: Number(compareClaimToEvidence(researchText, text).toFixed(3)),
+    }))
+    .sort((left, right) => (
+      right.score - left.score
+      || normalizeText(left.text).length - normalizeText(right.text).length
+    ));
+  return ranked[0] ?? { text: '', score: 0 };
+}
+
+function cecBulletinEvidence(researchClaim, profileByGuideId) {
+  if (!['政治工作', '其他'].includes(researchClaim.category)) return [];
+  const profiles = uniqueBy(
+    (researchClaim.occurrences ?? [])
+      .map((occurrence) => profileByGuideId.get(occurrence.guideId))
+      .filter(Boolean),
+    (profile) => profile.guideId,
+  );
+  const parsedProfiles = profiles.filter((profile) => (
+    profile.mappingMode === 'parsed_exact'
+    || profile.mappingMode === 'parsed_exact_equivalent_sources'
+  ));
+  const fields = researchClaim.category === '政治工作'
+    ? [['experience', 'candidate_reported_experience']]
+    : [
+      ['education', 'candidate_reported_education'],
+      ['experience', 'candidate_reported_experience'],
+    ];
+  const matched = [];
+  for (const profile of parsedProfiles) {
+    for (const [field, claimType] of fields) {
+      const excerpt = bestEvidenceExcerpt(researchClaim.text, profile[field]);
+      if (excerpt.score < 0.45) continue;
+      const directClaim = normalizeText(
+        String(researchClaim.text ?? '').replace(/^(曾任|現任|曾擔任|擔任|曾為|現為|為)/, ''),
+      );
+      const directTextMatch = directClaim.length >= 4
+        && normalizeText(profile[field]).includes(directClaim);
+      matched.push({
+        claimId: null,
+        claimType: directTextMatch ? claimType : `${claimType}_possible_match`,
+        claimValue: excerpt.text,
+        matchScore: excerpt.score,
+        tier: 'official',
+        reviewStatus: directTextMatch
+          ? 'candidate_self_reported_text_match'
+          : 'candidate_self_reported_possible_match',
+        visibility: 'review_only',
+        sourceType: 'official_election_bulletin',
+        sourceName: `中央選舉委員會 ${profile.year} ${profile.city}議員選舉公報（候選人申報${directTextMatch ? '文字相符' : '可能相關'}）`,
+        sourceUrl: profile.sourceUrl,
+        sourcePage: profile.sourcePage,
+      });
+    }
+  }
+  if (matched.length > 0 || parsedProfiles.length > 0) {
+    return uniqueBy(
+      matched,
+      (item) => [item.claimType, item.claimValue, item.sourceUrl, item.sourcePage].join('|'),
+    );
+  }
+  const locator = profiles.find((profile) => profile.mappingMode === 'source_locator_only');
+  if (!locator) return [];
+  return [{
+    claimId: null,
+    claimType: 'candidate_bulletin_manual_locator',
+    claimValue: '候選人所在選舉公報（尚未自動判定此敘述是否出現在公報內）',
+    matchScore: 0,
+    tier: 'official',
+    reviewStatus: 'candidate_self_reported_unparsed',
+    visibility: 'review_only',
+    sourceType: 'official_election_bulletin',
+    sourceName: `中央選舉委員會 ${locator.year} ${locator.city}議員選舉公報（人工核對入口）`,
+    sourceUrl: locator.sourceUrl,
+    sourcePage: locator.sourcePage,
+  }];
+}
+
 function csvCell(value) {
   return `"${String(value ?? '').replaceAll('"', '""')}"`;
 }
@@ -480,6 +573,10 @@ async function main() {
   const externalFindings = fs.existsSync(findingsPath)
     ? JSON.parse(fs.readFileSync(findingsPath, 'utf8')).findings ?? []
     : [];
+  const cecBulletinReport = JSON.parse(fs.readFileSync(cecBulletinProfilesPath, 'utf8'));
+  const cecBulletinProfileByGuideId = new Map(
+    cecBulletinReport.profiles.map((profile) => [profile.guideId, profile]),
+  );
   const externalFindingByResearchId = new Map(externalFindings.map((finding) => [finding.researchId, finding]));
   const [elections, races, candidates, people, regions, canonicalMap, identityMatches, officialElectionSourcePeople] = await Promise.all([
     fetchRows('elections', 'id,external_id,name,year,election_type,source_name'),
@@ -763,6 +860,7 @@ async function main() {
       ...localEvidence,
       ...originalSourceEvidence(researchClaim),
       ...externalFindingEvidence(externalFinding, researchClaim),
+      ...cecBulletinEvidence(researchClaim, cecBulletinProfileByGuideId),
       ...directElectionEvidence,
       ...inferredElectionEvidence,
       ...nameCityElectionEvidence,
@@ -815,13 +913,18 @@ async function main() {
         secondary: 'Public reference source such as VoteTW or Wikidata; requires review for sensitive claims.',
         unknown: 'Source type could not be established automatically.',
       },
+      candidateBulletins: 'CEC election bulletins provide an exact candidate-level source locator. Education and experience are candidate-declared, so even full-claim text matches remain manual review. Fuzzy matches are labeled possible_match and are only review pointers, not supporting evidence.',
       stopLoss: 'For unresolved claims, use one exact search query and inspect at most the two strongest relevant results. Do not retry protected sites, bypass access controls, or auto-approve same-name evidence without matching context.',
-      autoReviewRule: 'Exact normalized containment match against a verified official local claim. Cross-ID election evidence inferred from exact name, party, and city, or from a unique same-name person in the same city across party changes, remains manual review only. External findings and sensitive family/legal claims remain separately auditable.',
+      autoReviewRule: 'Exact normalized containment match against a verified official local claim. Candidate-declared bulletin education/experience, cross-ID election evidence inferred from identity context, external findings, and sensitive family/legal claims remain manual review only.',
     },
     summary: {
       guideCandidateRows: guideRows.length,
       mappedGuideCandidateRows: guideMatches.size,
       mappingIssues: mappingIssues.length,
+      cecBulletinCandidateRows: cecBulletinReport.profiles.length,
+      cecBulletinParsedRows: cecBulletinReport.profiles.filter((profile) => profile.mappingMode.startsWith('parsed_exact')).length,
+      cecBulletinManualLocatorRows: cecBulletinReport.profiles.filter((profile) => profile.mappingMode === 'source_locator_only').length,
+      cecBulletinMappingIssues: cecBulletinReport.summary.mappingIssues,
       candidateYearRowsWithData: guideRows.filter((guide) => categories.some((category) => (guide.sections?.[category] ?? []).length > 0)).length,
       uniqueCanonicalPeopleWithData: new Set(rows.map((row) => row.canonicalPersonId)).size,
       rawClaims: rawResearchClaims.length,
@@ -872,11 +975,12 @@ async function main() {
 - 對應 canonical person：${report.summary.uniqueCanonicalPeopleWithData} 人。
 - 原始敘述：${report.summary.rawClaims} 條；跨年份去重後：${report.summary.deduplicatedClaims} 條。
 - 身分對應疑義：${report.summary.mappingIssues} 筆。
+- 中選會公報候選人對應：${report.summary.cecBulletinCandidateRows} 筆；精確解析 ${report.summary.cecBulletinParsedRows} 筆，人工 PDF 定位 ${report.summary.cecBulletinManualLocatorRows} 筆，對應疑義 ${report.summary.cecBulletinMappingIssues} 筆。
 
 ## 本機既有來源初篩
 
 - 可自動審核候選：${statusCounts.auto_reviewable} 條。
-- 已有相關證據、仍需人工審核：${statusCounts.manual_review} 條。
+- 已有證據或官方候選人定位、仍需人工審核：${statusCounts.manual_review} 條。
 - 尚需外部搜尋：${statusCounts.external_search_needed} 條。
 - 已依停損規則搜尋但未找到可靠來源：${statusCounts.not_found_after_stop_loss} 條。
 
@@ -889,7 +993,7 @@ ${categories.map((category) => {
 
 ## 查核與停損規則
 
-1. 官方選舉公報、政府、立法院、地方議會與政黨官方人物頁列為第一級來源。
+1. 官方選舉公報、政府、立法院、地方議會與政黨官方人物頁列為第一級來源；但選舉公報中的學歷與經歷屬候選人申報，只提供候選人層級的可靠來源定位，仍須人工審核。
 2. 政治家族與涉案紀錄即使找到媒體報導，也必須保留人物身分與案件階段，不把「涉案」寫成「有罪」。
 3. 外部搜尋每條使用一組精確查詢，最多檢查最相關的兩個結果；仍無可靠佐證即列為未找到，不反覆改寫查詢。
 4. 同名、選區或年份對不上時不得自動審核；姓名、政黨與縣市完全一致，或跨黨籍但姓名與縣市在本機僅對應一人的選舉紀錄，只列為身分推定並交由人工審核。
@@ -909,8 +1013,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 export {
   candidateIdentityKey,
   candidateNameCityKey,
+  cecBulletinEvidence,
   combinedCandidateHistory,
   compareClaimToEvidence,
+  bestEvidenceExcerpt,
   derivedElectionEvidence,
   evidenceTier,
   eligibleNameCityHistory,

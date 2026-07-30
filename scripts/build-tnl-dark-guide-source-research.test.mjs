@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import {
+  bestEvidenceExcerpt,
   candidateIdentityKey,
   candidateNameCityKey,
+  cecBulletinEvidence,
   combinedCandidateHistory,
   compareClaimToEvidence,
   derivedElectionEvidence,
@@ -82,6 +84,86 @@ assert.equal(combinedHistory[1].identityInferred, true);
 assert.equal(normalizeText('曾任 臺北市議員（第 12 屆）'), '曾任台北市議員第12屆');
 assert.equal(compareClaimToEvidence('曾任謝長廷辦公室幕僚', '謝長廷辦公室幕僚；立委服務處主任'), 1);
 assert.ok(compareClaimToEvidence('曾任立委服務處主任', '立法委員地方服務處主任') >= 0.45);
+assert.equal(
+  bestEvidenceExcerpt('曾任謝長廷辦公室幕僚', '外交部科長\n謝長廷辦公室幕僚\n立委服務處主任').text,
+  '謝長廷辦公室幕僚',
+);
+
+const parsedCecProfiles = new Map([['guide-1', {
+  guideId: 'guide-1',
+  year: 2022,
+  city: '台北市',
+  mappingMode: 'parsed_exact',
+  education: '國立政治大學公共行政學系畢業',
+  experience: '立法委員服務處主任\n台北市政府顧問',
+  sourceUrl: 'https://bulletin.cec.gov.tw/example.pdf',
+  sourcePage: 2,
+}]]);
+const cecExperience = cecBulletinEvidence({
+  category: '政治工作',
+  text: '曾任台北市政府顧問',
+  occurrences: [{ guideId: 'guide-1' }],
+}, parsedCecProfiles);
+assert.equal(cecExperience.length, 1);
+assert.equal(cecExperience[0].claimType, 'candidate_reported_experience');
+assert.equal(cecExperience[0].matchScore, 1);
+assert.equal(cecExperience[0].reviewStatus, 'candidate_self_reported_text_match');
+assert.equal(researchStatus('政治工作', cecExperience), 'manual_review');
+
+const cecEducation = cecBulletinEvidence({
+  category: '其他',
+  text: '國立政治大學公共行政學系畢業',
+  occurrences: [{ guideId: 'guide-1' }],
+}, parsedCecProfiles);
+assert.equal(cecEducation.length, 1);
+assert.equal(cecEducation[0].claimType, 'candidate_reported_education');
+assert.equal(researchStatus('其他', cecEducation), 'manual_review');
+
+assert.deepEqual(cecBulletinEvidence({
+  category: '政治家族',
+  text: '父親曾任議員',
+  occurrences: [{ guideId: 'guide-1' }],
+}, parsedCecProfiles), []);
+assert.deepEqual(cecBulletinEvidence({
+  category: '涉案紀錄',
+  text: '法院審理中',
+  occurrences: [{ guideId: 'guide-1' }],
+}, parsedCecProfiles), []);
+assert.deepEqual(cecBulletinEvidence({
+  category: '政治工作',
+  text: '未出現在公報的經歷',
+  occurrences: [{ guideId: 'guide-1' }],
+}, parsedCecProfiles), []);
+const cecPossibleRoleMatch = cecBulletinEvidence({
+  category: '政治工作',
+  text: '曾任台北市政府副顧問',
+  occurrences: [{ guideId: 'guide-1' }],
+}, parsedCecProfiles);
+assert.equal(cecPossibleRoleMatch.length, 1);
+assert.equal(cecPossibleRoleMatch[0].claimType, 'candidate_reported_experience_possible_match');
+assert.equal(cecPossibleRoleMatch[0].reviewStatus, 'candidate_self_reported_possible_match');
+assert.equal(researchStatus('政治工作', cecPossibleRoleMatch), 'manual_review');
+
+const locatorOnlyCecProfiles = new Map([['guide-2', {
+  guideId: 'guide-2',
+  year: 2022,
+  city: '台北市',
+  mappingMode: 'source_locator_only',
+  education: '',
+  experience: '',
+  sourceUrl: 'https://bulletin.cec.gov.tw/locator.pdf',
+  sourcePage: null,
+}]]);
+const cecLocator = cecBulletinEvidence({
+  category: '其他',
+  text: '某項學歷',
+  occurrences: [{ guideId: 'guide-2' }],
+}, locatorOnlyCecProfiles);
+assert.equal(cecLocator.length, 1);
+assert.equal(cecLocator[0].claimType, 'candidate_bulletin_manual_locator');
+assert.equal(cecLocator[0].matchScore, 0);
+assert.equal(cecLocator[0].reviewStatus, 'candidate_self_reported_unparsed');
+assert.equal(researchStatus('其他', cecLocator), 'manual_review');
 
 const officialClaim = {
   source_name: '中央選舉委員會選舉資料庫：公開資料包',

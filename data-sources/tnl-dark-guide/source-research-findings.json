@@ -10049,6 +10049,118 @@
           "supports": "第11選舉區蘇錦雄Paylang．Caya是否當選欄為否"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-1-15-政治工作-4",
+      "query": "\"于北辰\" \"戰規司\" 參謀",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "依既定停損規則執行一次精準搜尋，未找到可直接確認「國防部戰規司參謀」的官方或高可信來源；內政部公開議員履歷也未列此項，暫不採認。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-1-15-政治工作-3",
+      "query": "\"于北辰\" \"黃國園\" 主委",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社報導將于北辰稱為前中國國民黨桃園市黃國園黨部主任委員，可支持其曾任黃國園黨部主委；暗公報使用「黃復興黨部黃國園支黨部」的完整組織名稱，仍保留人工確認用語。",
+      "sources": [
+        {
+          "tier": "reliable_secondary",
+          "name": "中央社：于北辰遭解職 黃國園黨部稱還有7人要離開",
+          "url": "https://www.cna.com.tw/news/aipl/202009100128.aspx",
+          "supports": "報導明載前中國國民黨桃園市黃國園黨部主任委員于北辰"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-1-15-其他-3",
+      "query": "于北辰 2021年12月31日 退出 國民黨 中央社 公視",
+      "outcome": "source_found_manual_review",
+      "notes": "公視新聞於2021年12月31日報導于北辰當日透過個人臉書宣布退出國民黨，日期與敘述一致。",
+      "sources": [
+        {
+          "tier": "reliable_secondary",
+          "name": "公視新聞網：退役少將于北辰宣布退出國民黨",
+          "url": "https://news.pts.org.tw/article/561215",
+          "supports": "2021年12月31日報導明載于北辰今（31）日宣布退出國民黨"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-5-15-政治工作-3",
+      "query": "\"山田摩衣\" \"2014\" \"游錫堃\" 競選團隊",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "依既定停損規則執行一次精準搜尋，未找到可直接確認她於2014年加入游錫堃新北市競選團隊的官方或高可信來源；內政部履歷僅記載後來擔任游錫堃國會辦公室秘書，不能推定為同一經歷。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-5-15-政治工作-2",
+      "query": "\"山田摩衣\" \"高志鵬\" 副主任",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社報導山田摩衣在高志鵬國會辦公室由實習生做到副主任，可確認曾任高志鵬辦公室副主任；但未確認暗公報所稱「競選總部副主任」，組織性質有差異，僅列部分佐證。",
+      "sources": [
+        {
+          "tier": "reliable_secondary",
+          "name": "中央社：台灣地方選舉亮點 日裔山田摩衣當選新北市議員",
+          "url": "https://www.cna.com.tw/news/aipl/202211260267.aspx",
+          "supports": "報導明載她在高志鵬國會辦公室由實習生做到副主任，但未稱競選總部副主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-5-15-政治工作-4",
+      "query": "site:moi.gov.tw 山田摩衣 民進黨 新北市黨部 宣傳組",
+      "outcome": "source_found_manual_review",
+      "notes": "內政部直轄市議員履歷明載山田摩衣曾任民主進步黨新北市黨部宣傳組組長，可支持她曾在該黨部工作。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "內政部：直轄市議員山田摩衣",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112FA00065&_TYP=REP&n=573",
+          "supports": "經歷欄列民主進步黨新北市黨部宣傳組組長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-5-15-其他-2",
+      "query": "山田摩衣 童星 7歲 連續劇 中央社",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "依既定停損規則執行一次精準搜尋，未找到能同時確認「7歲出道」及「多個連續劇演出」的官方或高可信來源；搜尋結果僅有未達門檻的整理頁，暫不採認。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-5-15-其他-1",
+      "query": "山田摩衣 越川隆文 支持 魚津市議員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "依既定停損規則執行一次精準搜尋，只能由魚津市官方資料確認越川隆文的議員身分，未找到可直接確認其支持山田摩衣的可靠來源，暫不採認。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-13-5-政治工作-4",
+      "query": "site:moi.gov.tw 王仙蓮 桃園縣政府 原住民行政局",
+      "outcome": "source_found_manual_review",
+      "notes": "內政部直轄市議員履歷明載王仙蓮曾任桃園縣政府原住民行政局行政人員，可完整支持暗公報敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "內政部：直轄市議員王仙蓮",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0001&_PARENT_ID=ER11112HA00041&_TYP=REP&n=573",
+          "supports": "經歷欄列桃園縣政府原住民行政局行政人員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-7-106-政治工作-2",
+      "query": "site:cec.gov.tw 王明麗 三峽鎮代表",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會99年新北市第7選舉區議員選舉公報的王明麗經歷欄列「11、12、13屆三峽鎮代表」，可確認共3屆。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：99年新北市第7選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC7%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "王明麗經歷欄列11、12、13屆三峽鎮代表"
+        }
+      ]
     }
   ]
 }

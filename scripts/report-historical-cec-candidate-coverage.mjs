@@ -83,17 +83,25 @@ function sameValue(left, right) {
 }
 
 function expectedCandidate(source) {
-  const elected = source.source_payload?.elected === true;
-  return {
-    party: normalizeParty(source.party),
-    candidate_no: String(source.source_payload?.candidateNo ?? '').trim() || null,
-    vote_count: nullableNumber(source.source_payload?.voteCount ?? source.source_payload?.votes),
-    vote_rate: nullableNumber(source.source_payload?.voteRate),
-    is_elected: elected,
-    candidacy_status: 'qualified',
-    election_result: elected ? 'elected' : 'not_elected',
-    registration_status: elected ? 'elected' : 'not_elected',
-  };
+  const payload = source.source_payload ?? {};
+  const expected = { party: normalizeParty(source.party) };
+  const candidateNo = String(payload.candidateNo ?? '').trim();
+  if (candidateNo) expected.candidate_no = candidateNo;
+  if (payload.voteCount != null && payload.voteCount !== '') {
+    expected.vote_count = nullableNumber(payload.voteCount);
+  } else if (payload.votes != null && payload.votes !== '') {
+    expected.vote_count = nullableNumber(payload.votes);
+  }
+  if (payload.voteRate != null && payload.voteRate !== '') {
+    expected.vote_rate = nullableNumber(payload.voteRate);
+  }
+  if (typeof payload.elected === 'boolean') {
+    expected.is_elected = payload.elected;
+    expected.candidacy_status = 'qualified';
+    expected.election_result = payload.elected ? 'elected' : 'not_elected';
+    expected.registration_status = payload.elected ? 'elected' : 'not_elected';
+  }
+  return expected;
 }
 
 function candidateMismatches(candidate, expected) {
@@ -318,6 +326,7 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
         category: mismatchFields.length === 0 ? 'exact_candidate' : 'safe_update_candidate',
         candidateId: candidate.id,
         candidateExternalId: candidate.external_id,
+        candidateIsPublic: candidate.is_public,
         mismatchFields,
       };
     }

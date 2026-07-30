@@ -84,6 +84,7 @@ test('separates exact, safely creatable and safely updatable candidate coverage'
   });
   assert.equal(report.summary.actionableRows, 2);
   assert.deepEqual(report.safeUpdates[0].mismatchFields, ['vote_count']);
+  assert.equal(report.safeUpdates[0].candidateIsPublic, false);
 });
 
 test('holds multiple identities and duplicate source assignments for manual review', () => {
@@ -131,4 +132,20 @@ test('reports each missing race context with one reusable election and canonical
   assert.equal(context.regionScope, 'local');
   assert.equal(context.raceType, 'city_councilor');
   assert.equal(context.sourceRowCount, 1);
+});
+
+test('does not erase candidate fields that are absent from an official source snapshot', () => {
+  const data = fixture();
+  data.sources = [{ ...source('source-partial'), source_payload: {} }];
+  data.matches = [{
+    source_person_id: 'source-partial',
+    person_id: 'person-partial',
+    match_status: 'auto_matched',
+    match_method: 'external_id',
+  }];
+  data.candidates = [exactCandidate('partial', 'person-partial')];
+
+  const report = auditHistoricalCecCandidateCoverage(data);
+  assert.equal(report.categoryCounts.exact_candidate, 1);
+  assert.equal(report.safeUpdates.length, 0);
 });

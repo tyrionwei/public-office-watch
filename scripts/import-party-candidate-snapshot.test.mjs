@@ -7,6 +7,7 @@ import {
   planPartyCandidateImport,
   validateSnapshot,
 } from './import-party-candidate-snapshot.mjs';
+import { normalizeElectionDistrict } from './normalize-election-district.mjs';
 
 function snapshot(overrides = {}) {
   return validateSnapshot({
@@ -70,6 +71,27 @@ test('normalizes Chinese district numbers and indigenous district types', () => 
     number: 12,
     subtype: 'plain_indigenous',
   });
+});
+
+test('normalizes leading-zero districts before validation and matching', () => {
+  const input = snapshot({
+    records: [{
+      sourceCandidateKey: 'dpp-2026-taipei-councilor-example',
+      personName: '測試人物',
+      candidacyStatus: 'party_nominee',
+      raceType: 'city_councilor',
+      regionName: '台北市',
+      districtName: '第01選區',
+    }],
+  });
+
+  assert.equal(input.records[0].districtName, '第1選區');
+  assert.equal(districtDescriptor('第01選區').number, 1);
+  assert.equal(normalizeElectionDistrict('01'), '1');
+  assert.equal(normalizeElectionDistrict('臺北市第 02 選舉區'), '臺北市第2選舉區');
+  assert.equal(normalizeElectionDistrict('2026年地方公職人員選舉'), '2026年地方公職人員選舉');
+  assert.equal(normalizeElectionDistrict('第10選舉區'), '第10選舉區');
+  assert.equal(normalizeElectionDistrict('平地原住民選舉區'), '平地原住民選舉區');
 });
 
 test('matches a mayor race while keeping same-name people for identity review', () => {

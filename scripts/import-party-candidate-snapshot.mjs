@@ -6,6 +6,7 @@ import {
   stagePartyCandidateReview,
   validateReviewFile,
 } from './party-candidate-review.mjs';
+import { normalizeElectionDistrict } from './normalize-election-district.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const targetElectionExternalId = 'planned-2026-local-public-officials';
@@ -200,7 +201,7 @@ function validateSnapshot(snapshot) {
     }
 
     const regionName = requireText(record?.regionName, `${prefix}.regionName`, errors);
-    const districtName = record?.districtName == null ? null : String(record.districtName).trim() || null;
+    const districtName = normalizeElectionDistrict(record?.districtName) || null;
     if (raceType && !mayorRaceTypes.has(raceType) && !districtName) {
       errors.push(`${prefix}.districtName is required for councilor races`);
     }
@@ -233,7 +234,7 @@ function validateSnapshot(snapshot) {
 }
 
 function normalizeText(value) {
-  return String(value ?? '')
+  return String(normalizeElectionDistrict(value) ?? '')
     .normalize('NFKC')
     .replaceAll('臺', '台')
     .replace(/[\s()（）．。·、,，-]/g, '')

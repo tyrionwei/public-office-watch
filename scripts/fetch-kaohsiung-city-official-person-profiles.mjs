@@ -686,7 +686,7 @@ async function fetchCouncilProfiles() {
   let districtMatch;
 
   while ((districtMatch = districtPattern.exec(indexHtml))) {
-    const districtNo = districtMatch[2].padStart(2, '0');
+    const districtNo = String(Number.parseInt(districtMatch[2], 10));
     const areas = cleanInlineText(districtMatch[3]);
     const districtTitle = `第${districtNo}選區(${areas})`;
     const listHtml = districtMatch[4];

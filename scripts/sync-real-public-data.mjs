@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import zlib from 'node:zlib';
+import { normalizeElectionDistrict } from './normalize-election-district.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultSeedPath = path.join(repoRoot, 'data-sources', 'real-public-data.seed.json');
@@ -523,7 +524,7 @@ function normalizeGender(value) {
 }
 
 function normalizeIdentityText(value) {
-  return String(value ?? '')
+  return String(normalizeElectionDistrict(value) ?? '')
     .trim()
     .replace(/[臺]/g, '台')
     .replace(/[‧·．・･•]/g, '')
@@ -2777,7 +2778,7 @@ function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
       normalized_party: person.party ? normalizeIdentityText(normalizePartyName(person.party)) : null,
       position: person.position ?? null,
       normalized_role: normalizedRoleForPosition(person.position),
-      district: person.district ?? null,
+      district: normalizeElectionDistrict(person.district),
       normalized_region: person.district ? normalizeIdentityText(person.district) : null,
       election_year: person.electionYear ?? null,
       birth_date: person.birthDate ?? null,
@@ -2814,7 +2815,7 @@ function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
       normalized_party: person.party ? normalizeIdentityText(normalizePartyName(person.party)) : null,
       position: person.position ?? null,
       normalized_role: person.normalizedRole ?? normalizedRoleForPosition(person.position),
-      district: person.district ?? null,
+      district: normalizeElectionDistrict(person.district),
       normalized_region: person.district ? normalizeIdentityText(person.district) : null,
       election_year: person.electionYear ?? null,
       birth_date: person.birthDate ?? null,
@@ -3364,7 +3365,7 @@ function buildPersonPartyAffiliationRows(seed, sourcePersonByKey, personByExtern
         sourceType,
         electionYear: person.electionYear ?? null,
         position: person.position ?? null,
-        district: person.district ?? null,
+        district: normalizeElectionDistrict(person.district),
         precedence: 'official-source-year-first',
       },
       is_public: publicState.isPublic,
@@ -3415,7 +3416,7 @@ function buildPersonPartyAffiliationRows(seed, sourcePersonByKey, personByExtern
         sourceType,
         electionYear: person.electionYear ?? null,
         position: person.position ?? null,
-        district: person.district ?? null,
+        district: normalizeElectionDistrict(person.district),
         precedence: 'official-source-year-first',
       },
       is_public: publicState.isPublic,
@@ -3802,7 +3803,7 @@ async function writeSeed(seed, hash, args) {
       election_id: electionByExternalId.get(race.electionExternalId)?.id,
       region_id: race.regionExternalId ? regionByExternalId.get(race.regionExternalId)?.id ?? null : null,
       race_type: race.raceType,
-      title: race.title,
+      title: normalizeElectionDistrict(race.title),
       voting_date: race.votingDate,
       status: race.status,
       source_name: source.name,
@@ -3826,7 +3827,7 @@ async function writeSeed(seed, hash, args) {
       party: person.party ?? null,
       position: person.position ?? null,
       election_year: person.electionYear ?? null,
-      district: person.district ?? null,
+      district: normalizeElectionDistrict(person.district),
       gender: person.gender ?? 'unknown',
       education: person.education ?? null,
       experience: person.experience ?? null,

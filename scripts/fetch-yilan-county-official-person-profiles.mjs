@@ -612,12 +612,13 @@ function parseCouncilRows(html, listRow) {
 
   for (const match of html.matchAll(linkPattern)) {
     const href = decodeHtml(match[1]);
-    const [rawName, districtNumber, rawPartyCode, rawExternalId] = decodeHtml(match[2]).split(',');
+    const [rawName, rawDistrictNumber, rawPartyCode, rawExternalId] = decodeHtml(match[2]).split(',');
+    const districtNumber = String(Number.parseInt(rawDistrictNumber, 10));
     const name = cleanInlineText(match[3] || rawName).replace(/\s+/g, '');
     const districtName = correctedCouncilDistrictNames.get(districtNumber) ?? districtNames.get(districtNumber) ?? '';
     const externalCode = cleanInlineText(rawExternalId);
 
-    if (!name || !districtNumber || !externalCode) continue;
+    if (!name || districtNumber === 'NaN' || !externalCode) continue;
     if (seen.has(externalCode)) continue;
     seen.add(externalCode);
 

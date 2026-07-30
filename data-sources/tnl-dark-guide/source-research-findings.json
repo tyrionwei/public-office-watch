@@ -12131,6 +12131,561 @@
           "supports": "報導稱翁俊楠為林佳龍前特助"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-3-14-政治工作-1",
+      "query": "\"翁震州\" \"吳秉叡\" 辦公室主任",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會公報與內政部地方公職人員資料均明列翁震州曾任吳秉叡立委服務處主任，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2022年新北市第3選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/03-%E6%96%B0%E5%8C%97%E5%B8%82%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1-%E7%AC%AC%E4%B8%89%E9%81%B8%E5%8D%80.pdf",
+          "supports": "翁震州簡歷列吳秉叡立委服務處主任"
+        },
+        {
+          "tier": "official",
+          "name": "內政部：翁震州地方公職人員資料",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112FA00053&_TYP=REP&TYP=KND0001",
+          "supports": "經歷列吳秉叡立委服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-12-34-政治工作-1",
+      "query": "\"馬見\" 國民黨 中央委員 全國黨代表",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "2022年中選會公報明列馬見曾任國民黨中央委員及全國黨代表，可支持職務內容；但暗公報敘述來自2018年，現有官方來源存在年份落差，需人工確認任職時序。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2022年新北市第12、13選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/12-%E6%96%B0%E5%8C%97%E5%B8%82%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1-%E7%AC%AC%E5%8D%81%E4%BA%8C%E3%80%81%E5%8D%81%E4%B8%89%E9%81%B8%E5%8D%80.pdf",
+          "supports": "馬見簡歷列中國國民黨中央委員及全國黨代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-12-34-政治工作-2",
+      "query": "\"馬見\" 國民黨 原住民族工作委員會 委員",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查國民黨官方頁面、中選會公報與一般網路結果，未找到可可靠確認馬見曾任國民黨原住民族工作委員會委員的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-5-30-政治工作-1",
+      "query": "\"高忠義\" \"葉菊蘭\" 助理",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "2018年中選會公報及人物介紹可確認高忠義曾任國會助理，但未找到可靠來源指明服務對象為葉菊蘭，需人工確認。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2018年臺南市第5選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/05%E8%87%BA%E5%8D%97%E5%B8%82/%E7%AC%AC3%E5%B1%86%E5%B8%82%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89-%E7%AC%AC05%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "高忠義簡歷列國會助理"
+        },
+        {
+          "tier": "other",
+          "name": "城邦讀書花園：高忠義人物介紹",
+          "url": "https://www.cite.com.tw/publisher/translators/94",
+          "supports": "人物介紹稱曾任國會助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-3-5-政治工作-2",
+      "query": "\"高閔琳\" \"陳菊\" 競選辦公室 秘書",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會公報列高閔琳曾任陳菊市長秘書，媒體報導則明確記載其在陳菊競選總部擔任秘書，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2018年高雄市第3選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/06%E9%AB%98%E9%9B%84%E5%B8%82/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E5%93%A1%E7%AC%AC03%E9%81%B8%E5%8D%80.pdf",
+          "supports": "高閔琳簡歷列陳菊市長秘書"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報：高閔琳人物報導",
+          "url": "https://www.chinatimes.com/amp/newspapers/20101006000336-260107",
+          "supports": "報導記載高閔琳任陳菊競選總部秘書"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-7-62-政治工作-2",
+      "query": "\"康裕成\" 民進黨 中執委 發言人",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "高雄市議會官方資料與中選會公報可確認康裕成曾任民進黨發言人，但未找到可靠來源確認同一敘述中的中執委經歷，需人工確認。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "高雄市議會：康裕成議員資料",
+          "url": "https://www.kcc.gov.tw/MemberInfo_New.aspx?msn=2201&n=39&sms=9028",
+          "supports": "經歷列民主進步黨發言人"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2018年高雄市第7選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/06%E9%AB%98%E9%9B%84%E5%B8%82/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E5%93%A1%E7%AC%AC07%E9%81%B8%E5%8D%80.pdf",
+          "supports": "康裕成簡歷列民主進步黨發言人"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-3-91-政治工作-2",
+      "query": "\"張文瑜\" 八德市 市民代表",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查中選會公報、地方公職人員資料及一般網路結果，未找到可可靠確認張文瑜曾任一屆八德市市民代表的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-4-92-政治工作-1",
+      "query": "\"張永奇\" 蘆竹鄉 鄉民代表",
+      "outcome": "source_found_manual_review",
+      "notes": "2018年中選會公報明列張永奇曾任第16、17屆蘆竹鄉民代表，可支持兩屆鄉民代表敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2018年桃園市第4選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC04%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "張永奇簡歷列第16、17屆蘆竹鄉民代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-5-13-政治工作-2",
+      "query": "\"張立傑\" 神岡鄉 鄉長",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社報導明確記載張立傑曾任臺中縣神岡鄉長，可支持敘述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社：張立傑涉案報導",
+          "url": "https://www.cna.com.tw/news/aloc/202106160033.aspx",
+          "supports": "報導記載張立傑曾任臺中縣神岡鄉長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-6-8-政治工作-1",
+      "query": "\"張仲翹\" 民眾黨 台中市黨部 代理主委 西屯區主任",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "媒體報導可確認張仲翹曾任民眾黨台中市黨部代理主委，但未找到可靠來源確認西屯區主任職務，需人工確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk：民眾黨台中市黨部人事報導",
+          "url": "https://newtalk.tw/news/view/2021-03-24/553765",
+          "supports": "報導記載張仲翹代理民眾黨台中市黨部主委"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "Newtalk：張仲翹人物報導",
+          "url": "https://newtalk.tw/news/view/2022-03-06/719598",
+          "supports": "報導稱張仲翹為民眾黨台中市黨部前代理主委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-94-政治工作-1",
+      "query": "\"張秀葉\" 中國民主進步黨 秘書長 張安樂 榮譽總監",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社可確認張秀葉曾代表中國民主進步黨並處理該黨事務，國家文化記憶庫可確認張安樂曾任該黨榮譽總監；但未找到可靠來源明列張秀葉為該黨秘書長，需人工確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社：張秀葉案件報導",
+          "url": "https://www.cna.com.tw/news/asoc/202109220068.aspx",
+          "supports": "報導記載張秀葉代表中國民主進步黨並處理該黨及愛國同心會財務"
+        },
+        {
+          "tier": "official",
+          "name": "國家文化記憶庫：張安樂人物資料",
+          "url": "https://tcmb.culture.tw/zh-tw/detail?id=300604&indexCode=Culture_People",
+          "supports": "資料記載張安樂曾任中國民主進步黨榮譽總監"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-7-70-政治工作-3",
+      "query": "\"張昌章\" 桃園市政府 顧問",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查桃園市政府相關資料、中選會公報及一般網路結果，未找到可可靠確認張昌章曾任桃園市政府顧問的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-51-政治工作-2",
+      "query": "\"張茂楠\" \"高建智\" \"卓榮泰\" 主任 副總幹事",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查中選會公報、議會資料及一般網路結果，未找到可可靠確認張茂楠曾任高建智服務處主任及卓榮泰競選執行副總幹事的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-5-4-政治工作-1",
+      "query": "\"張惟晴\" 國民黨 全國黨代表",
+      "outcome": "source_found_manual_review",
+      "notes": "2022年中選會公報明列張惟晴為中國國民黨第21屆全國黨代表，可支持敘述；資料屬候選人申報，保留人工審核。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2022年高雄市第5選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/06%E9%AB%98%E9%9B%84%E5%B8%82/%E9%AB%98%E9%9B%84%E5%B8%82%E7%AC%AC5%E9%81%B8%E5%8D%80.pdf",
+          "supports": "張惟晴簡歷列中國國民黨第21屆全國黨代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-23-政治工作-1",
+      "query": "\"張斯綱\" \"蕭萬長\" 幕僚",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體人物報導記載張斯綱於2008年進入馬蕭競選總部，並在選後擔任蕭萬長幕僚，可支持敘述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國評論新聞網：張斯綱人物專訪",
+          "url": "https://hk.crntt.com/doc/93_9970_105711407_1.html",
+          "supports": "報導記載張斯綱進入馬蕭競選總部並擔任蕭萬長幕僚"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-6-57-政治工作-3",
+      "query": "\"張廖乃綸\" \"張廖貴專\" 特助",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查中選會公報、議會資料及一般網路結果，未找到可可靠確認張廖乃綸曾任張廖貴專特助的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-5-12-政治工作-4",
+      "query": "\"張睿倉\" 民眾黨 台中市 立委 候選人",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體選舉報導明確記載張睿倉代表台灣民眾黨參選2020年臺中市第3選舉區立委，可支持敘述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報：2020年臺中市第3選舉區立委選舉報導",
+          "url": "https://www.chinatimes.com/realtimenews/20200112001871-260407",
+          "supports": "報導記載張睿倉代表台灣民眾黨參選臺中市第3選舉區立委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-5-12-政治工作-2",
+      "query": "\"張睿倉\" \"吳顯森\" 服務處 祕書",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "媒體報導把張睿倉列在吳顯森服務處主任、秘書出身者之中，可支持任職脈絡，但未明確區分張睿倉的實際職稱，需人工確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報／Yahoo新聞：民代服務處人員參選報導",
+          "url": "https://tw.news.yahoo.com/%E8%AD%B0%E5%93%A1%E6%8B%9A%E9%80%A3%E4%BB%BB-6%E5%AD%90%E5%BC%9F%E5%85%B5%E9%81%B8%E9%87%8C%E9%95%B7-215011658.html",
+          "supports": "報導把張睿倉列為吳顯森服務處主任、秘書出身的參選人之一"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-5-12-政治工作-1",
+      "query": "\"張睿倉\" \"陳清龍\" 助理",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "2022年中選會公報可確認張睿倉曾任民意代表助理六年，但未指明服務對象為陳清龍，需人工確認。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2022年臺中市第5選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC05%E9%81%B8%E5%8D%80.pdf",
+          "supports": "張睿倉簡歷列民意代表助理六年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-1-27-政治工作-1",
+      "query": "\"張碩芳\" \"劉茂群\" 辦公室 秘書",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查中選會公報、地方公職資料及一般網路結果，未找到可可靠確認張碩芳曾任劉茂群辦公室秘書的獨立來源；同名與家族關係資訊亦容易混淆，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-10-54-政治工作-2",
+      "query": "\"張肇良\" 民進黨 黨代表",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會2016及2018年選舉公報均明列張肇良曾任民主進步黨全國黨代表，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2016年桃園市第5選舉區立法委員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/02%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1/105%E5%B9%B4%E7%AC%AC9%E5%B1%86/01%E5%8D%80%E5%9F%9F/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AB%8B%E5%A7%94%E9%81%B8%E8%88%89%E7%AC%AC5%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "張肇良簡歷列民主進步黨全國黨代表"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2018年桃園市第10選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC10%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "張肇良簡歷列民主進步黨全國黨代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-10-5-政治工作-3",
+      "query": "\"張肇良\" 桃園市政府 顧問",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社及華視報導均記載張肇良曾任桃園市政府顧問，可支持敘述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社：張肇良案件報導",
+          "url": "https://www.cna.com.tw/news/asoc/202411130053.aspx",
+          "supports": "報導記載張肇良曾任桃園市政府顧問"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "華視新聞：張肇良人物報導",
+          "url": "https://news.cts.com.tw/cts/politics/202407/202407182352185.html",
+          "supports": "報導記載張肇良曾任桃園市政府顧問"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-7-123-政治工作-2",
+      "query": "\"張曉昀\" \"袁明星\" 服務處 助理",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "2018年中選會公報可確認張曉昀曾任桃園市議員助理，但未指明服務對象為袁明星，需人工確認。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2018年桃園市第7選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC07%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "張曉昀簡歷列桃園市議員助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-7-99-政治工作-2",
+      "query": "\"梁為超\" \"吳志揚\" 助理",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會公報與內政部地方公職人員資料均明列梁為超曾任吳志揚立法委員助理，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2018年桃園市第7選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%B8%82%E7%AC%AC07%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "梁為超簡歷列立法委員吳志揚助理"
+        },
+        {
+          "tier": "official",
+          "name": "內政部：梁為超地方公職人員資料",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112HA00022&_TYP=REP&TYP=KND0001",
+          "supports": "經歷列立法委員吳志揚助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-4-15-政治工作-2",
+      "query": "\"莊貽量\" \"林岱樺\" 組織部 主任",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體人物報導明確記載莊貽量曾任林岱樺組織部主任，可支持敘述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國評論新聞網：莊貽量人物專訪",
+          "url": "https://hk.crntt.com/crn-webapp/touch/detail.jsp?coluid=153&docid=106661384&kindid=0",
+          "supports": "報導記載莊貽量曾任林岱樺組織部主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-4-15-政治工作-3",
+      "query": "\"莊貽量\" \"陳其邁\" 組織部 副主任",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體人物報導明確記載莊貽量曾任陳其邁組織部副主任，可支持敘述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國評論新聞網：莊貽量人物專訪",
+          "url": "https://hk.crntt.com/crn-webapp/touch/detail.jsp?coluid=153&docid=106661384&kindid=0",
+          "supports": "報導記載莊貽量曾任陳其邁組織部副主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-10-95-政治工作-1",
+      "query": "\"許乃文\" \"陳菊\" 機要秘書",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會公報與媒體報導均明列許乃文曾任陳菊市長機要秘書，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2018年高雄市第10選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/06%E9%AB%98%E9%9B%84%E5%B8%82/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E5%93%A1%E7%AC%AC10%E9%81%B8%E5%8D%80.pdf",
+          "supports": "許乃文簡歷列陳菊市長機要秘書"
+        },
+        {
+          "tier": "trusted_media",
+          "name": "中國時報：許乃文人物報導",
+          "url": "https://www.chinatimes.com/amp/realtimenews/20180316003274-263101",
+          "supports": "報導記載許乃文曾任陳菊機要秘書"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-47-政治工作-3",
+      "query": "\"許家蓓\" \"許富男\" 研究室主任",
+      "outcome": "source_found_manual_review",
+      "notes": "臺北市議會官方議員資料明列許家蓓曾任第9屆市議員許富男研究室主任，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺北市議會：許家蓓議員資料",
+          "url": "https://www.tcc.gov.tw/Councilor_Content_All.aspx?d=770415&n=13513&name=%E8%A8%B1%E5%AE%B6%E8%93%93&s=2361&termsn=20",
+          "supports": "經歷列第9屆市議員許富男研究室主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-8-66-政治工作-2",
+      "query": "\"許崑源\" \"馬英九\" 競選總部 無黨聯盟 總會長",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社人物報導記載許崑源曾任馬英九競選總部全國無黨聯盟總會長，可支持敘述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社：許崑源人物報導",
+          "url": "https://www.cna.com.tw/news/firstnews/202006060247.aspx",
+          "supports": "報導記載許崑源曾任馬英九競選總部全國無黨聯盟總會長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-52-政治工作-3",
+      "query": "\"許淑華\" \"段宜康\" 辦公室主任",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查議會資料、中選會公報及一般網路結果，未找到可可靠確認許淑華曾任段宜康辦公室主任的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-52-政治工作-2",
+      "query": "\"許淑華\" \"蕭美琴\" 服務處主任",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查議會資料、中選會公報及一般網路結果，未找到可可靠確認許淑華曾任蕭美琴服務處主任的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-3-5-政治工作-2",
+      "query": "\"郭秀珠\" 台南縣 副議長",
+      "outcome": "source_found_manual_review",
+      "notes": "臺南市議會官方資料明列郭秀珠曾任臺南縣議會副議長，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市議會：郭秀珠議員資料",
+          "url": "https://www.tncc.gov.tw/2019/page.asp?mainid=%7B916048C4-1F65-4A31-BCBB-D91F47E446AB%7D",
+          "supports": "經歷列臺南縣議會副議長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-3-7-政治工作-1",
+      "query": "\"郭岱軒\" 台北市議會 議員 法案幕僚",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查中選會公報、議會資料及一般網路結果，未找到可可靠確認郭岱軒曾任臺北市議員法案幕僚的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-6-4-政治工作-3",
+      "query": "\"郭信良\" 三屆 副議長",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會公報與內政部地方公職人員資料均列郭信良曾任大臺南第1、2屆及改制前第16屆副議長，可支持三屆副議長敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2022年臺南市第6選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/05%E8%87%BA%E5%8D%97%E5%B8%82/%E7%AC%AC%E5%85%AD%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "郭信良簡歷列大臺南第1、2屆及第16屆副議長"
+        },
+        {
+          "tier": "official",
+          "name": "內政部：郭信良地方公職人員資料",
+          "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112DA00021&_TYP=REP&TYP=KND0001",
+          "supports": "經歷列大臺南第1、2屆及改制前第16屆副議長"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-90-政治工作-2",
+      "query": "\"郭昭巖\" \"林郁方\" 特別助理",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查臺北市議會資料、中選會公報及一般網路結果，未找到可可靠確認郭昭巖曾任林郁方特別助理的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-5-90-政治工作-3",
+      "query": "\"郭昭巖\" \"李仁人\" 服務處 執行長",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "臺北市議會官方資料可確認郭昭巖曾任李仁人議員特助，但與暗公報所稱服務處執行長職稱不同，需人工確認。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺北市議會：郭昭巖議員資料",
+          "url": "https://www.tcc.gov.tw/Councilor_Content.aspx?n=13898&s=2593",
+          "supports": "經歷列李仁人議員特助"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-4-71-政治工作-3",
+      "query": "\"郭麗華\" \"郭榮宗\" 助理",
+      "outcome": "source_found_manual_review",
+      "notes": "地方人物訪談記載郭麗華曾擔任其叔叔郭榮宗的立委助理六年，可支持敘述；來源並非官方，保留人工審核。",
+      "sources": [
+        {
+          "tier": "other",
+          "name": "地方人物訪談：郭麗華經歷",
+          "url": "https://yuchieh16145.pixnet.net/blog/posts/9460131875",
+          "supports": "訪談記載郭麗華曾任郭榮宗立委助理六年"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tao-4-2-政治工作-5",
+      "query": "\"郭麗華\" 桃園市政府 機要秘書",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "已查桃園市政府相關資料、中選會公報、內政部資料及一般網路結果，未找到可可靠確認郭麗華曾任桃園市政府機要秘書的獨立來源，依停損規則保留人工審核。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-2-104-政治工作-2",
+      "query": "\"陳文治\" \"盧修一\" \"林錫耀\" 助理",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "2018年中選會公報明列陳文治曾任盧修一、林錫耀聯合服務處主任，可確認任職關係，但與暗公報所稱助理職稱不同，需人工確認。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2018年新北市第2選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E8%AD%B0%E6%9C%83%E7%AC%AC3%E5%B1%86%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E7%AC%AC2%E9%81%B8%E8%88%89%E5%8D%80%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+          "supports": "陳文治簡歷列盧修一、林錫耀聯合服務處主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-13-政治工作-3",
+      "query": "\"陳世榮\" 樹林市 市長",
+      "outcome": "source_found_manual_review",
+      "notes": "新北市樹林區公所官方歷史資料與中選會公報均可確認陳世榮曾任樹林市長，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "新北市樹林區公所：歷任首長",
+          "url": "https://www.shulin.ntpc.gov.tw/home.jsp?id=ca11f6fbd52e6cd5",
+          "supports": "歷任首長資料列陳世榮曾任樹林市長"
+        },
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：2022年新北市第8選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/08-%E6%96%B0%E5%8C%97%E5%B8%82%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1-%E7%AC%AC%E5%85%AB%E9%81%B8%E5%8D%80.pdf",
+          "supports": "陳世榮簡歷列樹林市長"
+        }
+      ]
     }
   ]
 }

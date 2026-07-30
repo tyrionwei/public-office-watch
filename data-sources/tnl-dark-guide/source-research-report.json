@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T03:09:32.000Z",
+  "generatedAt": "2026-07-30T03:22:59.948Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -26,29 +26,29 @@
     "moiLocalOfficialProfiles": 355,
     "moiLocalOfficialCoveredGuideRows": 631,
     "candidateYearRowsWithData": 1447,
-    "uniqueCanonicalPeopleWithData": 1103,
+    "uniqueCanonicalPeopleWithData": 1102,
     "rawClaims": 5161,
-    "deduplicatedClaims": 4752,
+    "deduplicatedClaims": 4749,
     "statusCounts": {
-      "auto_reviewable": 705,
-      "manual_review": 3410,
-      "external_search_needed": 520,
-      "not_found_after_stop_loss": 117
+      "auto_reviewable": 707,
+      "manual_review": 3436,
+      "external_search_needed": 480,
+      "not_found_after_stop_loss": 126
     },
     "categoryCounts": {
       "政治工作": {
-        "people": 879,
-        "claims": 2573,
-        "autoReviewable": 544,
-        "manualReview": 1864,
-        "externalSearchNeeded": 118,
-        "notFoundAfterStopLoss": 47
+        "people": 878,
+        "claims": 2571,
+        "autoReviewable": 546,
+        "manualReview": 1891,
+        "externalSearchNeeded": 78,
+        "notFoundAfterStopLoss": 56
       },
       "政治家族": {
-        "people": 262,
-        "claims": 445,
+        "people": 261,
+        "claims": 444,
         "autoReviewable": 0,
-        "manualReview": 406,
+        "manualReview": 405,
         "externalSearchNeeded": 0,
         "notFoundAfterStopLoss": 39
       },
@@ -32369,7 +32369,7 @@
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-4-60-政治家族-1",
-      "canonicalPersonId": "dc74d6b7-020f-4e06-9d93-d7ee632bdf9c",
+      "canonicalPersonId": "c97b365d-6112-4bd6-8038-bfc9dc5c0304",
       "personName": "葉元之",
       "category": "政治家族",
       "text": "岳父是前桃園縣縣議員陳炎坤",
@@ -32391,74 +32391,7 @@
           "area": 4,
           "party": "國民黨",
           "candidateNumber": null
-        }
-      ],
-      "status": "manual_review",
-      "searchQuery": "\"葉元之\" \"岳父是前桃園縣縣議員陳炎坤\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "external_research_source",
-          "claimValue": "2017年報導稱前桃園縣議員陳炎坤為葉元之岳父",
-          "matchScore": 1,
-          "tier": "trusted_media",
-          "reviewStatus": "external_manual_review",
-          "visibility": "review_only",
-          "sourceType": "external_research",
-          "sourceName": "風傳媒",
-          "sourceUrl": "https://www.storm.mg/article/354494"
         },
-        {
-          "claimId": null,
-          "claimType": "external_research_source",
-          "claimValue": "2017年報導稱陳炎坤為葉元之岳父並曾任桃園縣議員",
-          "matchScore": 1,
-          "tier": "trusted_media",
-          "reviewStatus": "external_manual_review",
-          "visibility": "review_only",
-          "sourceType": "external_research",
-          "sourceName": "NOWnews今日新聞",
-          "sourceUrl": "https://www.nownews.com/news/2644229"
-        }
-      ],
-      "externalResearch": {
-        "researchId": "tnl-dark-guide-2018-nwt-4-60-政治家族-1",
-        "query": "葉元之 陳炎坤 岳父 桃園縣議員",
-        "outcome": "source_found_manual_review",
-        "notes": "2017至2018年媒體報導直接稱前桃園縣議員陳炎坤為葉元之岳父；較新非正式資料稱「前岳父」，顯示關係具有時點性，公開前應保留發生年份並人工確認現況措辭。",
-        "sources": [
-          {
-            "tier": "trusted_media",
-            "name": "風傳媒",
-            "url": "https://www.storm.mg/article/354494",
-            "supports": "2017年報導稱前桃園縣議員陳炎坤為葉元之岳父"
-          },
-          {
-            "tier": "trusted_media",
-            "name": "NOWnews今日新聞",
-            "url": "https://www.nownews.com/news/2644229",
-            "supports": "2017年報導稱陳炎坤為葉元之岳父並曾任桃園縣議員"
-          }
-        ]
-      }
-    },
-    {
-      "researchId": "tnl-dark-guide-2022-nwt-5-14-政治家族-1",
-      "canonicalPersonId": "c97b365d-6112-4bd6-8038-bfc9dc5c0304",
-      "personName": "葉元之",
-      "category": "政治家族",
-      "text": "岳父是前桃園縣縣議員陳炎坤",
-      "originalSourceUrl": null,
-      "guidePageUrl": "https://www.thenewslens.com/election/2022/guide?city=nwt&area=5",
-      "occurrence": {
-        "guideId": "tnl-dark-guide-2022-nwt-5-14",
-        "year": 2022,
-        "city": "新北市",
-        "area": 5,
-        "party": "國民黨",
-        "candidateNumber": 14
-      },
-      "occurrences": [
         {
           "guideId": "tnl-dark-guide-2022-nwt-5-14",
           "year": 2022,
@@ -32497,10 +32430,10 @@
         }
       ],
       "externalResearch": {
-        "researchId": "tnl-dark-guide-2022-nwt-5-14-政治家族-1",
+        "researchId": "tnl-dark-guide-2018-nwt-4-60-政治家族-1",
         "query": "葉元之 陳炎坤 岳父 桃園縣議員",
-        "outcome": "source_found_partial_manual_review",
-        "notes": "2017至2018年媒體可確認當時岳父關係與陳炎坤前桃園縣議員身分；未找到2022年同期可靠來源確認關係仍持續，較新非正式資料並稱「前岳父」，需人工核對。",
+        "outcome": "source_found_manual_review",
+        "notes": "2017至2018年媒體報導直接稱前桃園縣議員陳炎坤為葉元之岳父；較新非正式資料稱「前岳父」，顯示關係具有時點性，公開前應保留發生年份並人工確認現況措辭。",
         "sources": [
           {
             "tier": "trusted_media",
@@ -133670,10 +133603,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"曾進益\" \"曾任立委吳琪銘服務處主任\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "曾進益簡歷列2011至2017年吳琪銘議員、立委辦公室主任",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2018年新北市第7選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E8%AD%B0%E6%9C%83%E7%AC%AC3%E5%B1%86%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E7%AC%AC7%E9%81%B8%E8%88%89%E5%8D%80%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-7-113-政治工作-1",
+        "query": "\"曾進益\" \"吳琪銘\" 服務處主任",
+        "outcome": "source_found_manual_review",
+        "notes": "2018年中選會公報明列曾進益於2011至2017年擔任吳琪銘議員、立委辦公室主任，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2018年新北市第7選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E8%AD%B0%E6%9C%83%E7%AC%AC3%E5%B1%86%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E7%AC%AC7%E9%81%B8%E8%88%89%E5%8D%80%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+            "supports": "曾進益簡歷列2011至2017年吳琪銘議員、立委辦公室主任"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-5-3-政治工作-2",
@@ -134128,10 +134087,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"曾煥嘉\" \"曾任議員曾文振服務處主任\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "曾煥嘉簡歷列臺北縣議員曾文振服務處主任",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2022年新北市第5選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/05-%E6%96%B0%E5%8C%97%E5%B8%82%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1-%E7%AC%AC%E4%BA%94%E9%81%B8%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-4-65-政治工作-3",
+        "query": "\"曾煥嘉\" \"曾文振\" 服務處主任",
+        "outcome": "source_found_manual_review",
+        "notes": "2014及2022年中選會公報均明列曾煥嘉曾任臺北縣議員曾文振服務處主任，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2022年新北市第5選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/05-%E6%96%B0%E5%8C%97%E5%B8%82%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1-%E7%AC%AC%E4%BA%94%E9%81%B8%E5%8D%80.pdf",
+            "supports": "曾煥嘉簡歷列臺北縣議員曾文振服務處主任"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-5-3-政治工作-8",
@@ -134626,10 +134611,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"温建華\" \"曾任2屆議員\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "温建華簡歷列第15、16屆臺中市議員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2018年臺中市第15選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC15%E9%81%B8%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-15-12-政治工作-1",
+        "query": "\"温建華\" 兩屆 議員",
+        "outcome": "source_found_manual_review",
+        "notes": "2018年中選會公報明列温建華曾任臺中市第15、16屆議員，可支持兩屆議員敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2018年臺中市第15選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC15%E9%81%B8%E5%8D%80.pdf",
+            "supports": "温建華簡歷列第15、16屆臺中市議員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-5-3-政治工作-1",
@@ -135753,10 +135764,36 @@
           "candidateNumber": 13
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"童小芸\" \"振興里里長\" 台南市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "童小芸簡歷列振興里第三屆里長",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2022年臺南市第6選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/05%E8%87%BA%E5%8D%97%E5%B8%82/%E7%AC%AC%E5%85%AD%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tnn-6-13-政治工作-1",
+        "query": "\"童小芸\" 振興里 里長",
+        "outcome": "source_found_manual_review",
+        "notes": "2022年中選會公報明列童小芸為臺南市北區振興里第三屆里長，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2022年臺南市第6選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/05%E8%87%BA%E5%8D%97%E5%B8%82/%E7%AC%AC%E5%85%AD%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+            "supports": "童小芸簡歷列振興里第三屆里長"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-6-10-政治工作-1",
@@ -135784,10 +135821,16 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"童葦翎\" \"曾任里長辦公室助理\" 台中市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-6-10-政治工作-1",
+        "query": "\"童葦翎\" 里長辦公室 助理",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "已查中選會公報、人物報導與一般網路結果；公報未列里長辦公室助理，媒體僅找到洪慈庸競選總部辦公室主任等不同職務，未找到可靠獨立來源，依停損規則保留人工審核。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-10-政治工作-2",
@@ -135973,10 +136016,16 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"童燕珍\" \"曾任高雄市議會國民黨團書記長\" 高雄市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-7-61-政治工作-2",
+        "query": "\"童燕珍\" 國民黨團 書記長 高雄市議會",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "已查高雄市議會歷年黨團名冊及媒體報導，可確認童燕珍曾任黨團總召，但本次未找到其曾任書記長的可靠來源，依停損規則保留人工審核。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-10-政治工作-4",
@@ -136631,10 +136680,16 @@
           "candidateNumber": 4
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"黃仁\" \"國民黨台中市黨部原住民族工作委員會會長\" 台中市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-15-39-政治工作-2",
+        "query": "\"黃仁\" 國民黨台中市黨部 原住民族工作委員會 會長",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "已查國民黨官網、中選會公報與媒體報導；可見黃仁的原住民族政治活動，但未找到其擔任國民黨臺中市黨部原住民族工作委員會會長的可靠直接記載，依停損規則保留人工審核。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-15-39-政治工作-1",
@@ -136978,10 +137033,16 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"黃心華\" \"曾任郝龍斌競選基隆立委的政見規劃主任\" 新北市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-9-5-政治工作-4",
+        "query": "\"黃心華\" 郝龍斌 基隆 政見規劃主任",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "已查官方履歷、選舉公報與媒體人物報導，未找到可直接確認此競選職務的可靠來源，依停損規則保留人工審核。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-9-5-政治工作-1",
@@ -137078,10 +137139,36 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃心華\" \"曾任國民黨新北市黨部義務副主委\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "報導明列黃心華兼任國民黨新北市黨部義務副主委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報：黃心華爭取新北市議員提名報導",
+          "sourceUrl": "https://www.chinatimes.com/amp/realtimenews/20220115001337-260509"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-9-5-政治工作-5",
+        "query": "\"黃心華\" 新北市黨部 義務副主委",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報人物報導明列黃心華兼任國民黨新北市黨部義務副主委，可支持敘述。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報：黃心華爭取新北市議員提名報導",
+            "url": "https://www.chinatimes.com/amp/realtimenews/20220115001337-260509",
+            "supports": "報導明列黃心華兼任國民黨新北市黨部義務副主委"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-9-5-政治工作-3",
@@ -137109,10 +137196,16 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"黃心華\" \"曾任連勝文競選台北市長的政策組副組長\" 新北市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-nwt-9-5-政治工作-3",
+        "query": "\"黃心華\" 連勝文 政策組 副組長",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "已查官方履歷、選舉公報及媒體人物報導，未找到可直接確認此競選職務的可靠來源，依停損規則保留人工審核。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-9-5-政治工作-2",
@@ -137638,10 +137731,16 @@
           "candidateNumber": 8
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"黃文益\" \"曾任高雄市政府市政顧問\" 高雄市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-8-8-政治工作-4",
+        "query": "\"黃文益\" 高雄市政府 市政顧問",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "已查高雄市議會議員頁、內政部履歷及中選會公報，均未列市政顧問；本次未找到可靠獨立來源，依停損規則保留人工審核。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-8-3-政治工作-1",
@@ -137813,10 +137912,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃永昌\" \"曾任土城區國民黨黨部主委\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "活動紀錄稱黃永昌為土城區黨部主委",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國國民黨全球資訊網：土城區黨部活動",
+          "sourceUrl": "https://www.kmt.org.tw/2015/04/13_7.html"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃永昌簡歷列土城區黨部主委",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2014年新北市第7選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC7%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-7-95-政治工作-3",
+        "query": "\"黃永昌\" 土城區黨部 主委",
+        "outcome": "source_found_manual_review",
+        "notes": "2014年中選會公報與國民黨官方活動紀錄均明列黃永昌為土城區黨部主委，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中國國民黨全球資訊網：土城區黨部活動",
+            "url": "https://www.kmt.org.tw/2015/04/13_7.html",
+            "supports": "活動紀錄稱黃永昌為土城區黨部主委"
+          },
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2014年新北市第7選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC7%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+            "supports": "黃永昌簡歷列土城區黨部主委"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-8-3-政治工作-5",
@@ -140566,10 +140709,36 @@
           "candidateNumber": 22
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃郁芬\" \"曾任立委林昶佐助理\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃郁芬簡歷列林昶佐國會辦公室特助",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2018年臺北市第1選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/01%E8%87%BA%E5%8C%97%E5%B8%82/%E8%87%BA%E5%8C%97%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-1-4-政治工作-3",
+        "query": "\"黃郁芬\" 林昶佐 助理",
+        "outcome": "source_found_manual_review",
+        "notes": "2018年中選會公報明列黃郁芬曾任立法委員林昶佐國會辦公室特助，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2018年臺北市第1選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/01%E8%87%BA%E5%8C%97%E5%B8%82/%E8%87%BA%E5%8C%97%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+            "supports": "黃郁芬簡歷列林昶佐國會辦公室特助"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tpe-1-4-政治工作-2",
@@ -140605,10 +140774,36 @@
           "candidateNumber": 22
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃郁芬\" \"曾任立委顧立雄助理\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃郁芬簡歷列顧立雄國會辦公室特助",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2018年臺北市第1選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/01%E8%87%BA%E5%8C%97%E5%B8%82/%E8%87%BA%E5%8C%97%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-1-4-政治工作-2",
+        "query": "\"黃郁芬\" 顧立雄 助理",
+        "outcome": "source_found_manual_review",
+        "notes": "2018年中選會公報明列黃郁芬曾任立法委員顧立雄國會辦公室特助，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2018年臺北市第1選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/01%E8%87%BA%E5%8C%97%E5%B8%82/%E8%87%BA%E5%8C%97%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+            "supports": "黃郁芬簡歷列顧立雄國會辦公室特助"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-7-13-政治工作-2",
@@ -140825,10 +141020,36 @@
           "candidateNumber": 13
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃香菽\" \"曾任國民黨高雄市青工總會長\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "履歷列KMT高雄市104至106年青工總會長",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "內政部：現任直轄市議員黃香菽",
+          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112EA00019&_TYP=REP&TYP=KND0001"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-7-13-政治工作-4",
+        "query": "\"黃香菽\" 高雄市 青工總會長",
+        "outcome": "source_found_manual_review",
+        "notes": "內政部現任地方公職人員履歷明列黃香菽曾任KMT高雄市104至106年青工總會長，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "內政部：現任直轄市議員黃香菽",
+            "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112EA00019&_TYP=REP&TYP=KND0001",
+            "supports": "履歷列KMT高雄市104至106年青工總會長"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-1-19-政治工作-1",
@@ -141949,10 +142170,36 @@
           "candidateNumber": 17
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃偵琳\" \"曾任立委黃昭輝服務處助理\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃偵琳簡歷列高雄市議員黃昭星服務處秘書，與暗公報內容衝突",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2022年高雄市第4選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/06%E9%AB%98%E9%9B%84%E5%B8%82/%E9%AB%98%E9%9B%84%E5%B8%82%E7%AC%AC4%E9%81%B8%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-4-17-政治工作-4",
+        "query": "\"黃偵琳\" 黃昭輝 服務處助理",
+        "outcome": "source_found_conflict_manual_review",
+        "notes": "2022年中選會公報明列的是『高雄市議員黃昭星服務處秘書』，與暗公報所寫『立委黃昭輝服務處助理』在人名、職稱與公職類別皆衝突，不應自動通過。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2022年高雄市第4選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/06%E9%AB%98%E9%9B%84%E5%B8%82/%E9%AB%98%E9%9B%84%E5%B8%82%E7%AC%AC4%E9%81%B8%E5%8D%80.pdf",
+            "supports": "黃偵琳簡歷列高雄市議員黃昭星服務處秘書，與暗公報內容衝突"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-4-17-政治工作-1",
@@ -142313,10 +142560,36 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃婉如\" \"曾任2屆市民代表\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "履歷列桃園市第三、四屆市民代表",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "內政部：現任直轄市議員黃婉如",
+          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112HA00005&_TYP=REP&TYP=KND0001"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-1-117-政治工作-2",
+        "query": "\"黃婉如\" 兩屆 市民代表",
+        "outcome": "source_found_manual_review",
+        "notes": "內政部履歷明列黃婉如曾任桃園市第三、四屆市民代表，可支持兩屆敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "內政部：現任直轄市議員黃婉如",
+            "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112HA00005&_TYP=REP&TYP=KND0001",
+            "supports": "履歷列桃園市第三、四屆市民代表"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-1-117-政治工作-1",
@@ -142668,10 +142941,54 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃淑芬\" \"曾任台中市議會無黨聯盟執行長\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "出席名單列臺中無黨聯盟黨團執行長黃淑芬",
+          "matchScore": 1,
+          "tier": "institutional",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "台灣之心愛護動物協會：臺中市動保會議紀錄",
+          "sourceUrl": "https://www.hotac.org.tw/blog/745"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "報導稱黃淑芬在兩次選舉失利後擔任無黨聯盟執行長",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民視新聞：黃淑芬投入民進黨初選報導",
+          "sourceUrl": "https://www.ftvnews.com.tw/news/detail/2018309C12M1"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-6-93-政治工作-2",
+        "query": "\"黃淑芬\" 台中市議會 無黨聯盟 執行長",
+        "outcome": "source_found_manual_review",
+        "notes": "民視與台灣之心活動紀錄均明列黃淑芬曾任臺中市議會無黨聯盟執行長，可支持敘述。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "民視新聞：黃淑芬投入民進黨初選報導",
+            "url": "https://www.ftvnews.com.tw/news/detail/2018309C12M1",
+            "supports": "報導稱黃淑芬在兩次選舉失利後擔任無黨聯盟執行長"
+          },
+          {
+            "tier": "institutional",
+            "name": "台灣之心愛護動物協會：臺中市動保會議紀錄",
+            "url": "https://www.hotac.org.tw/blog/745",
+            "supports": "出席名單列臺中無黨聯盟黨團執行長黃淑芬"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-7-60-政治工作-1",
@@ -142743,10 +143060,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃淑美\" \"曾任高雄市選舉委員會委員\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃淑美經歷列高雄市選舉委員會委員",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會公報：第2屆議員學經歷及政見一覽表",
+          "sourceUrl": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/21%E5%8D%B7/1%E6%9C%9F/21%E5%8D%B71%E6%9C%9F10693%E8%B5%B7%E9%A0%8110800%E8%BF%84%E9%A0%81.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-7-60-政治工作-2",
+        "query": "\"黃淑美\" 高雄市選舉委員會 委員",
+        "outcome": "source_found_manual_review",
+        "notes": "高雄市議會官方公報所載議員學經歷明列黃淑美曾任高雄市選舉委員會委員，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "高雄市議會公報：第2屆議員學經歷及政見一覽表",
+            "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/21%E5%8D%B7/1%E6%9C%9F/21%E5%8D%B71%E6%9C%9F10693%E8%B5%B7%E9%A0%8110800%E8%BF%84%E9%A0%81.pdf",
+            "supports": "黃淑美經歷列高雄市選舉委員會委員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-8-7-政治工作-2",
@@ -142862,10 +143205,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃紹庭\" \"高雄市議會建設小組召集人\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃紹庭經歷列高雄市議會建設小組召集人",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會公報：第2屆議員學經歷及政見一覽表",
+          "sourceUrl": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/21%E5%8D%B7/1%E6%9C%9F/21%E5%8D%B71%E6%9C%9F10693%E8%B5%B7%E9%A0%8110800%E8%BF%84%E9%A0%81.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-8-35-政治工作-3",
+        "query": "\"黃紹庭\" 高雄市議會 建設小組 召集人",
+        "outcome": "source_found_manual_review",
+        "notes": "高雄市議會官方公報所載黃紹庭學經歷明列高雄市議會建設小組召集人，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "高雄市議會公報：第2屆議員學經歷及政見一覽表",
+            "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/21%E5%8D%B7/1%E6%9C%9F/21%E5%8D%B71%E6%9C%9F10693%E8%B5%B7%E9%A0%8110800%E8%BF%84%E9%A0%81.pdf",
+            "supports": "黃紹庭經歷列高雄市議會建設小組召集人"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-khh-8-7-政治工作-3",
@@ -142893,10 +143262,36 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃紹庭\" \"高雄市議會國民黨團書記長\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "國民黨團名冊列書記長黃紹庭",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會：110年度黨政團成員一覽表",
+          "sourceUrl": "https://cissearch.kcc.gov.tw/Upload/Attachment/MeetingRecord/2568/007da970-ede4-4c86-be6c-7049289b4775.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-8-7-政治工作-3",
+        "query": "\"黃紹庭\" 高雄市議會 國民黨團 書記長",
+        "outcome": "source_found_manual_review",
+        "notes": "高雄市議會110年度黨團名冊明列黃紹庭為國民黨團書記長，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "高雄市議會：110年度黨政團成員一覽表",
+            "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/MeetingRecord/2568/007da970-ede4-4c86-be6c-7049289b4775.pdf",
+            "supports": "國民黨團名冊列書記長黃紹庭"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-8-35-政治工作-1",
@@ -142968,10 +143363,36 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃紹庭\" \"曾任高雄市議會建設小組召集人\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃紹庭經歷列高雄市議會建設小組召集人",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會公報：第2屆議員學經歷及政見一覽表",
+          "sourceUrl": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/21%E5%8D%B7/1%E6%9C%9F/21%E5%8D%B71%E6%9C%9F10693%E8%B5%B7%E9%A0%8110800%E8%BF%84%E9%A0%81.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-khh-8-7-政治工作-5",
+        "query": "\"黃紹庭\" 高雄市議會 建設小組 召集人",
+        "outcome": "source_found_manual_review",
+        "notes": "高雄市議會官方公報所載黃紹庭學經歷明列高雄市議會建設小組召集人，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "高雄市議會公報：第2屆議員學經歷及政見一覽表",
+            "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/21%E5%8D%B7/1%E6%9C%9F/21%E5%8D%B71%E6%9C%9F10693%E8%B5%B7%E9%A0%8110800%E8%BF%84%E9%A0%81.pdf",
+            "supports": "黃紹庭經歷列高雄市議會建設小組召集人"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-khh-8-35-政治工作-2",
@@ -143007,10 +143428,36 @@
           "candidateNumber": 7
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃紹庭\" \"曾任議員黃芳仁服務處主任\" 高雄市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃紹庭經歷列黃芳仁議員服務處主任",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "高雄市議會公報：第2屆議員學經歷及政見一覽表",
+          "sourceUrl": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/21%E5%8D%B7/1%E6%9C%9F/21%E5%8D%B71%E6%9C%9F10693%E8%B5%B7%E9%A0%8110800%E8%BF%84%E9%A0%81.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-khh-8-35-政治工作-2",
+        "query": "\"黃紹庭\" 黃芳仁 服務處主任",
+        "outcome": "source_found_manual_review",
+        "notes": "高雄市議會官方公報所載黃紹庭學經歷明列高雄市議員黃芳仁服務處主任，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "高雄市議會公報：第2屆議員學經歷及政見一覽表",
+            "url": "https://cissearch.kcc.gov.tw/Upload/Attachment/%E5%85%AC%E5%A0%B1%E8%B3%87%E6%96%99/%E9%AB%98%E9%9B%84%E5%B8%82%E8%AD%B0%E6%9C%83/21%E5%8D%B7/1%E6%9C%9F/21%E5%8D%B71%E6%9C%9F10693%E8%B5%B7%E9%A0%8110800%E8%BF%84%E9%A0%81.pdf",
+            "supports": "黃紹庭經歷列黃芳仁議員服務處主任"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-7-65-政治工作-1",
@@ -143261,10 +143708,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃景熙\" \"曾任前立委邱垂貞辦公室主任\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "黃景熙簡歷列立法委員邱垂貞國會辦公室主任",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2014年桃園市第1選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC1%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-1-56-政治工作-3",
+        "query": "\"黃景熙\" 邱垂貞 國會辦公室主任",
+        "outcome": "source_found_manual_review",
+        "notes": "2014年中選會公報明列黃景熙曾任立法委員邱垂貞國會辦公室主任，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2014年桃園市第1選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC1%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+            "supports": "黃景熙簡歷列立法委員邱垂貞國會辦公室主任"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-1-56-政治工作-2",
@@ -143292,10 +143765,16 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"黃景熙\" \"曾任陳水扁、呂秀蓮桃園總部辦公室主任\" 桃園市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-1-56-政治工作-2",
+        "query": "\"黃景熙\" 陳水扁 呂秀蓮 桃園總部 辦公室主任",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "已查中選會公報、人物資料及媒體報導，僅見二級整理直接記載，官方公報未列此職務；依可靠來源停損規則保留人工審核。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-10-115-政治工作-1",
@@ -143368,10 +143847,36 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃朝淵\" \"曾代表親民黨參選台中市立委\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "臺中市第1選舉區列黃朝淵、親民黨",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會選舉資料庫：2020年第10屆立法委員選舉",
+          "sourceUrl": "https://db.cec.gov.tw/ElecTable/Election/ElecTickets?areaCode=00&cityCode=000&dataLevel=A&dataType=tickets&deptCode=000&legisId=L1&liCode=0000&prvCode=66&subjectId=L0&themeId=be404784efb488c1004009663c892e18&typeId=ELC"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-4-9-政治工作-1",
+        "query": "\"黃朝淵\" 親民黨 臺中市 立法委員 選舉",
+        "outcome": "source_found_manual_review",
+        "notes": "中選會第10屆立委選舉資料明列黃朝淵於臺中市第1選舉區由親民黨推薦參選，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會選舉資料庫：2020年第10屆立法委員選舉",
+            "url": "https://db.cec.gov.tw/ElecTable/Election/ElecTickets?areaCode=00&cityCode=000&dataLevel=A&dataType=tickets&deptCode=000&legisId=L1&liCode=0000&prvCode=66&subjectId=L0&themeId=be404784efb488c1004009663c892e18&typeId=ELC",
+            "supports": "臺中市第1選舉區列黃朝淵、親民黨"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-1-12-政治工作-1",
@@ -144121,10 +144626,36 @@
           "candidateNumber": 9
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃麗招\" \"曾任立委王昱婷秘書\" 台南市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "履歷列王昱婷立法委員秘書",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "內政部：現任直轄市議員黃麗招",
+          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112DA00026&_TYP=REP&TYP=KND0001"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tnn-6-9-政治工作-3",
+        "query": "\"黃麗招\" 王昱婷 立法委員秘書",
+        "outcome": "source_found_manual_review",
+        "notes": "內政部現任地方公職人員履歷明列黃麗招曾任王昱婷立法委員秘書，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "內政部：現任直轄市議員黃麗招",
+            "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112DA00026&_TYP=REP&TYP=KND0001",
+            "supports": "履歷列王昱婷立法委員秘書"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-txg-6-2-政治工作-2",
@@ -144248,10 +144779,36 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃馨慧\" \"國民黨中央委員\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "報導稱黃馨慧為國民黨中央委員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國評論新聞：黃馨慧談國民黨主席選舉",
+          "sourceUrl": "https://hk.crntt.com/doc/1045/9/5/7/104595723.html?coluid=93&docid=104595723&kindid=13691"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-6-102-政治工作-2",
+        "query": "\"黃馨慧\" 國民黨 中央委員",
+        "outcome": "source_found_manual_review",
+        "notes": "中評社2017年人物報導明確稱黃馨慧為國民黨中央委員，可支持敘述；因不是政黨名冊原件，仍保留人工審核。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國評論新聞：黃馨慧談國民黨主席選舉",
+            "url": "https://hk.crntt.com/doc/1045/9/5/7/104595723.html?coluid=93&docid=104595723&kindid=13691",
+            "supports": "報導稱黃馨慧為國民黨中央委員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-6-102-政治工作-3",
@@ -144287,10 +144844,36 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"黃馨慧\" \"國民黨台中市黨部副主委\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "報導稱黃馨慧曾任國民黨臺中市黨部副主委",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中國時報：臺中市議會正副議長補選報導",
+          "sourceUrl": "https://www.chinatimes.com/amp/newspapers/20121201000395-260102"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-6-102-政治工作-3",
+        "query": "\"黃馨慧\" 國民黨 台中市黨部 副主委",
+        "outcome": "source_found_manual_review",
+        "notes": "中國時報2012年報導明列黃馨慧曾任國民黨臺中市黨部副主委，可支持敘述。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "中國時報：臺中市議會正副議長補選報導",
+            "url": "https://www.chinatimes.com/amp/newspapers/20121201000395-260102",
+            "supports": "報導稱黃馨慧曾任國民黨臺中市黨部副主委"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-txg-6-102-政治工作-1",
@@ -144601,10 +145184,36 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"楊中成\" \"曾任\b3屆議員\" 台南市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "履歷列臺南縣一屆、臺南市二屆議員經歷",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "內政部：現任直轄市議員楊中成",
+          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112DA00033&_TYP=REP&TYP=KND0001"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-tnn-7-5-政治工作-2",
+        "query": "\"楊中成\" 三屆 議員",
+        "outcome": "source_found_manual_review",
+        "notes": "內政部履歷列楊中成曾任臺南縣第16屆議員及臺南市議會第2、3屆議員，合計三屆，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "內政部：現任直轄市議員楊中成",
+            "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112DA00033&_TYP=REP&TYP=KND0001",
+            "supports": "履歷列臺南縣一屆、臺南市二屆議員經歷"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tnn-7-5-政治工作-3",
@@ -145178,10 +145787,16 @@
           "candidateNumber": 6
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"楊典忠\" \"曾任立委林豐喜助理\" 台中市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-txg-2-75-政治工作-3",
+        "query": "\"楊典忠\" 林豐喜 助理",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "已查民進黨官方頁、臺中市議會資料、中選會公報及一般網路結果；僅二級人物資料直接記載曾任林豐喜助理，未找到可靠一手或主流媒體來源，依停損規則保留人工審核。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-txg-8-12-政治工作-1",
@@ -145209,10 +145824,36 @@
           "candidateNumber": 12
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"楊欣怡\" \"曾代表歐巴桑聯盟參選市議員\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "楊欣怡簡歷列歐巴桑聯盟推薦候選人",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2018年臺中市第8選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC08%E9%81%B8%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-8-12-政治工作-1",
+        "query": "\"楊欣怡\" 歐巴桑聯盟 參選 市議員",
+        "outcome": "source_found_manual_review",
+        "notes": "2018年中選會公報明列楊欣怡為歐巴桑聯盟推薦候選人並參選臺中市議員，可支持敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2018年臺中市第8選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC08%E9%81%B8%E5%8D%80.pdf",
+            "supports": "楊欣怡簡歷列歐巴桑聯盟推薦候選人"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-12-5-政治工作-1",
@@ -147046,10 +147687,36 @@
           "candidateNumber": 2
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"楊進福\" \"曾任2屆龜山鄉鄉民代表\" 桃園市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "履歷列龜山鄉第16、18屆鄉民代表",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "內政部：現任直轄市議員楊進福",
+          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112HA00039&_TYP=REP&TYP=KND0001"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tao-13-95-政治工作-2",
+        "query": "\"楊進福\" 龜山鄉 鄉民代表 兩屆",
+        "outcome": "source_found_manual_review",
+        "notes": "內政部履歷明列楊進福曾任桃園縣龜山鄉第16、18屆鄉民代表，可支持兩屆敘述。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "內政部：現任直轄市議員楊進福",
+            "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112HA00039&_TYP=REP&TYP=KND0001",
+            "supports": "履歷列龜山鄉第16、18屆鄉民代表"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2018-tao-13-95-政治工作-1",
@@ -147166,10 +147833,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"楊隆郡\" \"曾任國民黨西區、北區民眾服務社主任\" 台南市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "楊隆郡簡歷列民眾服務社西區、南區、北區主任",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2018年臺南市第8選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/05%E8%87%BA%E5%8D%97%E5%B8%82/%E7%AC%AC3%E5%B1%86%E5%B8%82%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89-%E7%AC%AC08%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tnn-8-74-政治工作-2",
+        "query": "\"楊隆郡\" 國民黨 西區 北區 民眾服務社 主任",
+        "outcome": "source_found_manual_review",
+        "notes": "2018年中選會公報明列楊隆郡曾任臺南市民眾服務社西區、南區、北區主任，可支持暗公報所列西區與北區。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2018年臺南市第8選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/05%E8%87%BA%E5%8D%97%E5%B8%82/%E7%AC%AC3%E5%B1%86%E5%B8%82%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89-%E7%AC%AC08%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+            "supports": "楊隆郡簡歷列民眾服務社西區、南區、北區主任"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tpe-1-23-政治工作-2",
@@ -147457,19 +148150,19 @@
           "candidateNumber": 14
         }
       ],
-      "status": "manual_review",
+      "status": "auto_reviewable",
       "searchQuery": "\"葉元之\" \"1998年後曾任1屆議員\" 新北市",
       "localEvidence": [
         {
           "claimId": null,
           "claimType": "derived_election_history",
-          "claimValue": "1998年後當選議員共1屆（2018）（同名、同黨、同縣市身分推定）",
+          "claimValue": "1998年後當選議員共1屆（2018）",
           "matchScore": 1,
           "tier": "official",
-          "reviewStatus": "identity_inferred",
+          "reviewStatus": "verified",
           "visibility": "review_only",
           "sourceType": "election_history",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
           "sourceUrl": null
         }
       ],
@@ -147501,27 +148194,27 @@
           "candidateNumber": 14
         }
       ],
-      "status": "manual_review",
+      "status": "auto_reviewable",
       "searchQuery": "\"葉元之\" \"2018年當選議員\" 新北市",
       "localEvidence": [
         {
           "claimId": null,
           "claimType": "derived_election_result",
-          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "claimValue": "2018年議員選舉當選",
           "matchScore": 1,
           "tier": "official",
-          "reviewStatus": "identity_inferred",
+          "reviewStatus": "verified",
           "visibility": "review_only",
           "sourceType": "election_result",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
-          "sourceUrl": "https://data.gov.tw/dataset/13119"
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
         }
       ],
       "externalResearch": null
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-4-60-政治工作-1",
-      "canonicalPersonId": "dc74d6b7-020f-4e06-9d93-d7ee632bdf9c",
+      "canonicalPersonId": "c97b365d-6112-4bd6-8038-bfc9dc5c0304",
       "personName": "葉元之",
       "category": "政治工作",
       "text": "曾任新北市府副發言人兼新聞局主任秘書",
@@ -147543,44 +148236,7 @@
           "area": 4,
           "party": "國民黨",
           "candidateNumber": null
-        }
-      ],
-      "status": "manual_review",
-      "searchQuery": "\"葉元之\" \"曾任新北市府副發言人兼新聞局主任秘書\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "candidate_reported_experience_possible_match",
-          "claimValue": "新北市政府副發言人；新北市政府新聞局主任秘書",
-          "matchScore": 0.774,
-          "tier": "official",
-          "reviewStatus": "candidate_self_reported_possible_match",
-          "visibility": "review_only",
-          "sourceType": "official_election_bulletin",
-          "sourceName": "中央選舉委員會 2018 新北市議員選舉公報（候選人申報可能相關）",
-          "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/107年/02新北市/新北市議會第3屆議員選舉第4選舉區選舉公報.pdf",
-          "sourcePage": 1
-        }
-      ],
-      "externalResearch": null
-    },
-    {
-      "researchId": "tnl-dark-guide-2022-nwt-5-14-政治工作-1",
-      "canonicalPersonId": "c97b365d-6112-4bd6-8038-bfc9dc5c0304",
-      "personName": "葉元之",
-      "category": "政治工作",
-      "text": "曾任新北市府副發言人兼新聞局主任秘書",
-      "originalSourceUrl": null,
-      "guidePageUrl": "https://www.thenewslens.com/election/2022/guide?city=nwt&area=5",
-      "occurrence": {
-        "guideId": "tnl-dark-guide-2022-nwt-5-14",
-        "year": 2022,
-        "city": "新北市",
-        "area": 5,
-        "party": "國民黨",
-        "candidateNumber": 14
-      },
-      "occurrences": [
+        },
         {
           "guideId": "tnl-dark-guide-2022-nwt-5-14",
           "year": 2022,
@@ -147605,6 +148261,19 @@
           "sourceName": "中央選舉委員會 2022 新北市議員選舉公報（候選人申報可能相關）",
           "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/02新北市/05-新北市選舉公報-第五選區.pdf",
           "sourcePage": 2
+        },
+        {
+          "claimId": null,
+          "claimType": "candidate_reported_experience_possible_match",
+          "claimValue": "新北市政府副發言人；新北市政府新聞局主任秘書",
+          "matchScore": 0.774,
+          "tier": "official",
+          "reviewStatus": "candidate_self_reported_possible_match",
+          "visibility": "review_only",
+          "sourceType": "official_election_bulletin",
+          "sourceName": "中央選舉委員會 2018 新北市議員選舉公報（候選人申報可能相關）",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/107年/02新北市/新北市議會第3屆議員選舉第4選舉區選舉公報.pdf",
+          "sourcePage": 1
         },
         {
           "claimId": "0394ca27-91a3-4c7a-96d6-df8cccb54613",
@@ -147635,7 +148304,7 @@
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-4-60-政治工作-2",
-      "canonicalPersonId": "dc74d6b7-020f-4e06-9d93-d7ee632bdf9c",
+      "canonicalPersonId": "c97b365d-6112-4bd6-8038-bfc9dc5c0304",
       "personName": "葉元之",
       "category": "政治工作",
       "text": "曾任新北市經發局和民政局專員",
@@ -147657,30 +148326,7 @@
           "area": 4,
           "party": "國民黨",
           "candidateNumber": null
-        }
-      ],
-      "status": "external_search_needed",
-      "searchQuery": "\"葉元之\" \"曾任新北市經發局和民政局專員\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
-    },
-    {
-      "researchId": "tnl-dark-guide-2022-nwt-5-14-政治工作-2",
-      "canonicalPersonId": "c97b365d-6112-4bd6-8038-bfc9dc5c0304",
-      "personName": "葉元之",
-      "category": "政治工作",
-      "text": "曾任新北市經發局和民政局專員",
-      "originalSourceUrl": null,
-      "guidePageUrl": "https://www.thenewslens.com/election/2022/guide?city=nwt&area=5",
-      "occurrence": {
-        "guideId": "tnl-dark-guide-2022-nwt-5-14",
-        "year": 2022,
-        "city": "新北市",
-        "area": 5,
-        "party": "國民黨",
-        "candidateNumber": 14
-      },
-      "occurrences": [
+        },
         {
           "guideId": "tnl-dark-guide-2022-nwt-5-14",
           "year": 2022,
@@ -147690,10 +148336,36 @@
           "candidateNumber": 14
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"葉元之\" \"曾任新北市經發局和民政局專員\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "報導稱葉元之曾任經發局專員、民政局專門委員",
+          "matchScore": 1,
+          "tier": "trusted_media",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "自由時報：葉元之辭職投入議員選舉",
+          "sourceUrl": "https://election.ltn.com.tw/2018/news/New/breakingnews/2535007"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-4-60-政治工作-2",
+        "query": "\"葉元之\" 新北市 經發局 民政局 專員",
+        "outcome": "source_found_manual_review",
+        "notes": "自由時報2018年人物報導明列葉元之一路擔任新北市經發局專員、民政局專門委員，可支持敘述。",
+        "sources": [
+          {
+            "tier": "trusted_media",
+            "name": "自由時報：葉元之辭職投入議員選舉",
+            "url": "https://election.ltn.com.tw/2018/news/New/breakingnews/2535007",
+            "supports": "報導稱葉元之曾任經發局專員、民政局專門委員"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-tao-7-13-政治工作-1",
@@ -148370,10 +149042,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"葉智遠\" \"曾任民進黨黨代表、市黨部組織部組長/主秘\" 台北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "新聞稿記載葉智遠以黨代表身分提案",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "民主進步黨：第13屆第2次全國黨員代表大會新聞稿",
+          "sourceUrl": "https://www.dpp.org.tw/media/contents/3140"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-tpe-3-43-政治工作-2",
+        "query": "\"葉智遠\" 民進黨 黨代表 市黨部 組織部 主秘",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "民進黨官方2009年全代會新聞稿可直接確認葉智遠為黨代表；本次未找到可靠來源同時確認臺北市黨部組織部組長與主秘職務，故僅部分支持。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "民主進步黨：第13屆第2次全國黨員代表大會新聞稿",
+            "url": "https://www.dpp.org.tw/media/contents/3140",
+            "supports": "新聞稿記載葉智遠以黨代表身分提案"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-txg-12-5-政治工作-1",
@@ -148401,10 +149099,54 @@
           "candidateNumber": 5
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"葉諾凡\" \"曾為議員林碧秀助理\" 台中市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "自述有近三年議員秘書經歷，未載明議員姓名",
+          "matchScore": 1,
+          "tier": "first_party",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "葉諾凡競選網站",
+          "sourceUrl": "https://novaya517.oen.tw/"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "葉諾凡簡歷列臺中市議員隨行秘書，未載明姓名",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2022年臺中市第12選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC12%E9%81%B8%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-12-5-政治工作-1",
+        "query": "\"葉諾凡\" 林碧秀 助理",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "2022年中選會公報明列葉諾凡曾任臺中市議員隨行秘書，其個人競選頁亦稱有近三年議員秘書經歷；但兩者均未載明議員姓名，無法直接確認為林碧秀，故僅部分支持。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2022年臺中市第12選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC12%E9%81%B8%E5%8D%80.pdf",
+            "supports": "葉諾凡簡歷列臺中市議員隨行秘書，未載明姓名"
+          },
+          {
+            "tier": "first_party",
+            "name": "葉諾凡競選網站",
+            "url": "https://novaya517.oen.tw/",
+            "supports": "自述有近三年議員秘書經歷，未載明議員姓名"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-2-4-政治工作-1",
@@ -149133,10 +149875,36 @@
           "candidateNumber": null
         }
       ],
-      "status": "external_search_needed",
+      "status": "manual_review",
       "searchQuery": "\"賈伯楷\" \"曾任綠黨中執委、綠黨北北基支黨部主委\" 新北市",
-      "localEvidence": [],
-      "externalResearch": null
+      "localEvidence": [
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "賈伯楷簡歷列綠黨北北基支黨部主委",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2016年新北市第4選舉區立法委員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/02%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1/105%E5%B9%B4%E7%AC%AC9%E5%B1%86/01%E5%8D%80%E5%9F%9F/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AB%8B%E5%A7%94%E9%81%B8%E8%88%894.5.10%E9%81%B8%E5%8D%80.pdf"
+        }
+      ],
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2018-nwt-2-20-政治工作-1",
+        "query": "\"賈伯楷\" 綠黨 中執委 北北基支黨部 主委",
+        "outcome": "source_found_partial_manual_review",
+        "notes": "2016年中選會立委選舉公報明列賈伯楷曾任綠黨北北基支黨部主委，可支持該部分；本次未找到可靠官方資料確認中執委職務，故僅部分支持。",
+        "sources": [
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2016年新北市第4選舉區立法委員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/02%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1/105%E5%B9%B4%E7%AC%AC9%E5%B1%86/01%E5%8D%80%E5%9F%9F/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AB%8B%E5%A7%94%E9%81%B8%E8%88%894.5.10%E9%81%B8%E5%8D%80.pdf",
+            "supports": "賈伯楷簡歷列綠黨北北基支黨部主委"
+          }
+        ]
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-txg-13-10-政治工作-1",
@@ -149221,10 +149989,16 @@
           "candidateNumber": 10
         }
       ],
-      "status": "external_search_needed",
+      "status": "not_found_after_stop_loss",
       "searchQuery": "\"鄒明諺\" \"曾任議員李中助理\" 台中市",
       "localEvidence": [],
-      "externalResearch": null
+      "externalResearch": {
+        "researchId": "tnl-dark-guide-2022-txg-13-10-政治工作-2",
+        "query": "\"鄒明諺\" 議員李中 助理",
+        "outcome": "not_found_after_stop_loss",
+        "notes": "已查中選會公報、臺中市議會資料、候選人資料與媒體報導，未找到可直接確認鄒明諺曾任李中助理的可靠來源，依停損規則保留人工審核。",
+        "sources": []
+      }
     },
     {
       "researchId": "tnl-dark-guide-2022-nwt-11-3-政治工作-2",

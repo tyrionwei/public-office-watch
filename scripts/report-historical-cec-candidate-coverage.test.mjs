@@ -72,6 +72,7 @@ function fixture() {
     regions: [{ id: 'region-taipei', name: '臺北市', region_type: 'city' }],
     electionCanonicalMap: [],
     raceCanonicalMap: [],
+    personCanonicalMap: [],
   };
 }
 
@@ -102,6 +103,28 @@ test('holds multiple identities and duplicate source assignments for manual revi
   assert.equal(report.categoryCounts.identity_conflict, 1);
   assert.equal(report.categoryCounts.duplicate_source_assignment, 2);
   assert.equal(report.summary.manualReviewRows, 3);
+});
+
+test('treats direct matches that share one canonical person as one resolved identity', () => {
+  const data = fixture();
+  data.sources = [source('source-canonical')];
+  data.matches = [
+    { source_person_id: 'source-canonical', person_id: 'person-duplicate', match_status: 'auto_matched', match_method: 'method-a' },
+    { source_person_id: 'source-canonical', person_id: 'person-canonical', match_status: 'auto_matched', match_method: 'method-b' },
+  ];
+  data.personCanonicalMap = [
+    { person_id: 'person-duplicate', canonical_person_id: 'person-canonical' },
+    { person_id: 'person-canonical', canonical_person_id: 'person-canonical' },
+  ];
+  data.candidates = [
+    exactCandidate('canonical-duplicate', 'person-duplicate'),
+    { ...exactCandidate('canonical-primary', 'person-canonical'), vote_count: null },
+  ];
+
+  const report = auditHistoricalCecCandidateCoverage(data);
+  assert.equal(report.categoryCounts.exact_candidate, 1);
+  assert.equal(report.categoryCounts.identity_conflict, undefined);
+  assert.equal(report.summary.manualReviewRows, 0);
 });
 
 test('reports each missing race context with one reusable election and canonical region', () => {
@@ -148,4 +171,29 @@ test('does not erase candidate fields that are absent from an official source sn
   const report = auditHistoricalCecCandidateCoverage(data);
   assert.equal(report.categoryCounts.exact_candidate, 1);
   assert.equal(report.safeUpdates.length, 0);
+});
+
+test('treats one known candidate number and an otherwise matching missing number as one candidate', () => {
+  const data = fixture();
+  data.sources = [{ ...source('source-missing-number'), source_payload: {
+    voteCount: '100',
+    voteRate: '10.5',
+    elected: false,
+    districtCode: '01',
+  } }];
+  data.matches = [{
+    source_person_id: 'source-missing-number',
+    person_id: 'person-missing-number',
+    match_status: 'auto_matched',
+    match_method: 'external_id',
+  }];
+  data.candidates = [
+    exactCandidate('known-number', 'person-missing-number'),
+    { ...exactCandidate('missing-number', 'person-missing-number'), candidate_no: null },
+  ];
+
+  const report = auditHistoricalCecCandidateCoverage(data);
+  assert.equal(report.categoryCounts.exact_candidate, 1);
+  assert.equal(report.categoryCounts.multiple_candidates, undefined);
+  assert.equal(report.summary.manualReviewRows, 0);
 });

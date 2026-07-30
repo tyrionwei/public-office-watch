@@ -1,212 +1,81 @@
-# 歷史中選會核心資料建立預覽（2026-07-30）
+# 歷史中選會核心資料建立紀錄（2026-07-30）
 
 ## 範圍
 
-- 資料來源：`cec-2024-votedata`
-- 來源類型：`official_election`
-- 所有檢查與寫入只針對本機 Supabase。
-- 人物、選舉、選區與候選紀錄已分階段建立為非公開資料，並驗證不會進入 `published`。
-- 核心預覽：`local-data/historical-cec-core-preview.json`
-- 建置計畫：`local-data/historical-cec-election-race-plan.json`
-- 回滾 SQL：`local-data/historical-cec-election-race-dry-run.sql`
-- 候選計畫：`local-data/historical-cec-candidate-plan.json`
-- 候選回滾 SQL：`local-data/historical-cec-candidate-dry-run.sql`
-- 缺少選區計畫：`local-data/historical-cec-missing-race-plan.json`
-- 缺少選區回滾 SQL：`local-data/historical-cec-missing-race-dry-run.sql`
-- `local-data` 下的輸出均位於本機忽略目錄，不會隨部署自動執行。
-
-## 資料概況
-
-| 項目 | 數量 |
-|---|---:|
-| 中選會來源紀錄 | 14,354 |
-| 已配對人物來源 | 8,622 |
-| 尚未配對人物來源 | 5,732 |
-| 來源中的選舉事件情境 | 17 |
-| 含未配對人物的事件 | 13 |
-| 來源中的選區情境 | 1,746 |
-| 含未配對人物的選區 | 1,268 |
-
-建置計畫只處理至少含一筆尚未配對人物的事件與選區。2022 年既有議員資料沒有未配對人物，因此不混入本次 migration；其 22 個縣市事件是否合併，日後另以 election merge 流程處理。
-
-## 既有資料對照
-
-| 處理方式 | 選舉事件 | 選區 |
-|---|---:|---:|
-| 沿用既有 canonical 紀錄 | 5 | 286 |
-| 建立新紀錄 | 8 | 982 |
-| 仍需人工確認 | 0 | 0 |
-
-既有 canonical 選舉若涵蓋範圍較廣，例如 `2018年地方公職人員選舉`，保留原名稱與類型，不縮窄成議員選舉。選區仍沿用該 aggregate 事件，不另建重複事件。
+- 資料來源：`cec-2024-votedata`，類型為 `official_election`。
+- 來源總數：14,354 筆。
+- 所有檢查與寫入只針對 Local Supabase。
+- `local-data` 下的預覽、計畫、dry-run 與覆蓋率報告皆位於忽略目錄，不會部署或公開。
+- 人物、選舉、選區與候選均先建立為非公開核心資料，再以 canonical 決策整理重複身分。
 
 ## 名稱與分類標準
 
-### 選舉事件
-
-- 總統：`2012年總統副總統選舉`
-- 立法委員：`2012年立法委員選舉`
-- 新建的歷史議員事件：`1998年直轄市及縣市議員選舉`
-- 議員事件以年份為單位；縣市與席次留在選區層。
-- 既有較廣的地方公職人員選舉事件不改名。
-
-### 選區
-
 - `第01選舉區`、`第02選舉區`統一為`第1選舉區`、`第2選舉區`。
-- 總統副總統：`全國總統副總統選舉`
-- 不分區立委：`全國不分區立法委員選舉`
-- 平地原住民立委：`全國平地原住民立法委員選舉`
-- 山地原住民立委：`全國山地原住民立法委員選舉`
-- 地方原住民議員保留歷史縣市、選區編號及平地／山地分類，例如：
-  `花蓮縣第5選舉區平地原住民議員選舉`。
+- 總統副總統：`全國總統副總統選舉`。
+- 不分區立委：`全國不分區立法委員選舉`。
+- 平地原住民立委：`全國平地原住民立法委員選舉`。
+- 山地原住民立委：`全國山地原住民立法委員選舉`。
+- 選舉類型使用 `presidential`、`legislative`、`councilor`。
+- 立委選區使用 `legislative_district`、`party_list_legislator`、`indigenous`。
+- 原住民席次另保存 `plain_indigenous`、`mountain_indigenous`、`indigenous`。
+- 地方議員使用 `city_councilor`／`county_councilor`，完整名稱保留歷史縣市與平地／山地分類。
+- 臺北縣、臺中縣、臺南縣、高雄縣保留為歷史 county，不改寫成現代行政區。
 
-### 資料分類
+## 建立結果
 
-- 選舉類型統一使用現行標準值：`presidential`、`legislative`、`councilor`。
-- 立委選區使用：`legislative_district`、`party_list_legislator`、`indigenous`。
-- 平地、山地與未細分原住民另以 `seatType` 保留：
-  `plain_indigenous`、`mountain_indigenous`、`indigenous`。
-- 地方議員沿用 `city_councilor`／`county_councilor`，平地／山地由 `seatType` 與完整選區名稱區分。
-- 不新增與既有約束重疊的 `race_type`。
-
-## 歷史地區
-
-目前需要補建且不能改成現代行政區的歷史 county：
-
-- 臺北縣
-- 臺中縣
-- 臺南縣
-- 高雄縣
-
-四筆皆使用固定 external ID、`region_type = county`、`is_public = false`。其他縣市優先沿用 `tw-county-*` 官方地區紀錄，不使用 VoteTW 的職務型 region。
-
-## Migration dry-run
-
-| 動作 | 數量 |
+| 項目 | 數量／狀態 |
 |---|---:|
-| 建立歷史地區 | 4 |
-| 建立選舉事件 | 8 |
-| 標準化既有選舉 | 4 |
-| 建立選區 | 982 |
-| 標準化既有選區 | 286 |
+| 歷史地區 | 4 |
+| 新建歷史選舉 | 8 |
+| 新建歷史選區 | 1,068 |
+| 第一批來源限定人物 | 2,278 |
+| 第二批來源限定人物 | 3,454 |
+| 歷史候選 | 11,796 |
+| 尚未匹配來源 | 0 |
+| 待執行候選建立／更新 | 0 |
+| 待人工身分審核 | 0 |
 
-政策：
+候選建立分三批完成：2,278、6,063、3,455 筆。來源沒有提供的候選號次、票數、得票率或當選狀態均維持缺值，不猜測、不清空既有資料。
 
-- 新紀錄預設 `is_public = false`。
-- 來源為中央選舉委員會開放資料。
-- 來源紀錄沒有可靠投票日欄位，因此 `voting_date = NULL`，不自行猜日期。
-- 歷史結果狀態設為 `completed`。
-- external ID 由標準 context key 穩定產生，可重跑。
-- 產生器拒絕重複 external ID、重複 context key、重複 canonical 更新目標及未知歷史地區。
-- dry-run SQL 固定以 `BEGIN` 開始、`ROLLBACK` 結束；正式 migration 則沿用相同 upsert 與筆數斷言。
+## 身分整理
 
-## 回滾驗證
+最初來源分成：
 
-本機 Supabase 實際執行結果：
+- 8,622 筆已有有效人物配對。
+- 2,278 筆可安全建立單一來源限定人物。
+- 3,454 筆缺乏足夠證據，先建立私有、來源限定人物，避免以姓名直接推定為同一人。
 
-```text
-INSERT regions   4
-INSERT elections 8
-UPDATE elections 4
-INSERT races     982
-UPDATE races     286
-ROLLBACK
-```
+完成所有候選後，再以同屆候選號次與票數、完整選區、黨籍、職位、性別／生日相容性及跨屆參選脈絡進行合併：
 
-回滾後再次查詢：
+- 第一輪：1,696 筆 verified canonical 決策。
+- 第二輪：727 筆連鎖收斂決策。
+- 最後人工確認：4 組、7 筆決策。
+- 最終重新掃描：可合併 0、衝突 0、重複 canonical 目標 0。
 
-```text
-historical regions = 0
-historical elections = 0
-historical races = 0
-```
+原始人物、候選與來源紀錄均未刪除；前端與發布層透過 canonical 關係取得統一人物。
 
-表示外鍵、check constraints、唯一索引與計畫筆數皆通過，而且本機資料庫未留下變更。
+## Migration 清單
 
-## 新人物預覽
+- `202607300024_build_historical_cec_elections_and_races.sql`
+- `202607300025_build_private_historical_cec_people.sql`
+- `202607300026_build_private_historical_cec_candidates.sql`
+- `202607300027_build_missing_historical_cec_races.sql`
+- `202607300028_build_existing_historical_cec_candidates.sql`
+- `202607300029_build_remaining_private_historical_cec_people.sql`
+- `202607300030_build_remaining_private_historical_cec_candidates.sql`
+- `202607300031_merge_verified_historical_cec_people.sql`
+- `202607300032_merge_verified_historical_cec_people_second_pass.sql`
+- `202607300033_merge_final_verified_historical_cec_people.sql`
 
-| 分類 | 數量 |
-|---|---:|
-| 沒有既有同名人物的來源 | 2,442 |
-| 可建立非公開、來源限定人物 | 2,278 |
-| 暫緩的跨年份來源 | 164 |
-| 暫緩的跨年份人物群組 | 57 |
+每個寫入階段皆先做真實交易 dry-run 並 `ROLLBACK`，再套用 Local。migration 包含預期筆數、外鍵、衝突與可重跑斷言。
 
-安全建立條件：
+## 發布隔離
 
-1. 只有一筆中選會官方來源。
-2. 公開人物表沒有同名人物。
-3. 性別、縣市與職位皆可辨識。
-4. 新人物預設 `is_public = false`。
-5. 不以黨籍、選區或姓名相同推定跨年份為同一人。
+- 新建核心資料均 `is_public = false`。
+- `published.people` 中上述歷史來源限定人物為 0 筆。
+- `published.candidates` 中 `cec-historical-candidate-*` 為 0 筆。
+- `published.races` 中 `cec-historical-race-*` 為 0 筆。
+- `published.promote(NULL)` 已在每批 dry-run 與 Local migration 中通過。
+- 正式 Supabase 未連線、未寫入、未部署。
 
-57 組跨年份紀錄只有姓名、性別、縣市與職位等情境證據，缺少生日或穩定人物外部 ID，因此保留人工確認。
-
-## 選舉與選區 Local migration 套用結果
-
-- migration：`202607300024_build_historical_cec_elections_and_races.sql`
-- `202607300023` 的既有人物合併紀錄已存在；本次只補登 migration 歷史，沒有重複建立。
-- 正式 migration 已套用至 Local Supabase，沒有連線或寫入正式 Supabase。
-- 套用後核心資料數量：歷史地區 4、歷史選舉 8、歷史選區 982。
-- 4 個地區、8 場選舉與 982 個選區皆維持 `is_public = false`。
-- 同一 migration 以單一交易重跑成功，數量仍為 4／8／982，證明 upsert 可重跑。
-- `published.regions`、`published.elections`、`published.races` 對這批 external ID 的筆數皆為 0。
-
-## 人物 Local migration 套用結果
-
-- migration：`202607300025_build_private_historical_cec_people.sql`
-- 建立 2,278 位來源限定人物，全部 `is_public = false`。
-- 建立 2,278 筆 `auto_matched` 官方來源配對，分數為 100。
-- `無`已在人物欄位正規化為`無黨籍`，不改動原始來源內容。
-- migration 以單一交易直接重跑成功，人物與配對數量均未增加。
-- `published.people` 對這批 external ID 的筆數為 0。
-- 中選會來源仍有 164 筆、57 組跨年份人物留在審核區，未自動合併或建立。
-
-## 候選 Local migration 套用結果
-
-- migration：`202607300026_build_private_historical_cec_candidates.sql`
-- 只替上一階段新建的 2,278 位來源限定人物建立候選關係，沒有改寫先前已配對的 8,622 筆來源。
-- 2,278 筆候選關係全部為一位人物對一個標準選區，且 `is_public = false`。
-- 中選會來源提供的 871 筆票數與 871 筆得票率已寫入；其餘缺值維持 `NULL`。
-- 當選 10 筆、未當選 2,268 筆；候選資格設為 `qualified`，結果分別設為 `elected`／`not_elected`。
-- migration 以單一交易重跑成功，候選總數、人物數與人物／選區組合皆維持 2,278，沒有重複資料。
-- `published.candidates` 對這批 external ID 的筆數為 0。
-- 正式 Supabase 未連線、未寫入。
-
-## 補齊既有人物所需選區
-
-- migration：`202607300027_build_missing_historical_cec_races.sql`
-- 覆蓋率稽核原先找到 202 筆已配對來源，分布在 86 個尚未建立的歷史選區。
-- 86 個情境皆能唯一沿用既有選舉與官方／歷史地區，不需新增選舉事件或地區。
-- dry-run 在 Local 實際插入 86 筆後完整回滾，歷史選區基準維持 982。
-- 正式 Local migration 後歷史選區為 1,068，全部 `is_public = false`。
-- migration 以單一交易重跑後數量仍為 1,068，證明 upsert 可重跑。
-- `published.races` 對全部歷史選區的筆數為 0。
-- 正式 Supabase 未連線、未寫入。
-
-## 既有人物候選 Local migration
-
-- migration：`202607300028_build_existing_historical_cec_candidates.sql`
-- 中選會來源缺少欄位時不再視為 `NULL`、零票或未當選，避免清除既有正確資料。
-- 原先 2,512 筆「安全更新」經修正後全部判定為不應更新；migration 的更新數為 0。
-- 建立 6,063 筆候選，包含 3,809 筆票數、3,809 筆得票率與 4,247 筆當選資料。
-- 2012 年 26 筆來源沒有候選號次，保留 `candidate_no = NULL`，不猜測號碼。
-- dry-run 實際建立 6,063 筆後完整回滾，候選總數與歷史候選基準均未改變。
-- 正式 Local migration 後，歷史候選由 2,278 增至 8,341，全部 `is_public = false`。
-- migration 以單一交易重跑後仍為 8,341，沒有重複資料。
-- `published.candidates` 對這批歷史候選的筆數為 0。
-- 正式 Supabase 未連線、未寫入。
-
-## 既有候選涵蓋稽核
-
-詳見 `docs/historical-cec-candidate-coverage-2026-07-30.md`。
-
-- 8,622 筆既有人物配對中，8,599 筆只有一位有效人物，23 筆為多重人物配對。
-- migration 028 後，8,599 筆唯一人物來源全部為 `exact_candidate`。
-- 可安全建立、可安全更新與缺少選區均為 0。
-- 目前人工待查只剩 23 筆多重人物配對。
-
-## 下一階段
-
-1. 逐筆處理 23 筆多重人物配對。
-2. 另行處理目前保留的 164 筆、57 組跨年份身分。
-3. 最後獨立決定哪些歷史資料進入 `published`。
+完整候選覆蓋結果見 `docs/historical-cec-candidate-coverage-2026-07-30.md`。

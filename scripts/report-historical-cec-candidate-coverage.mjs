@@ -110,6 +110,29 @@ function candidateMismatches(candidate, expected) {
     .map(([field]) => field);
 }
 
+function logicalCandidates(candidates, expected) {
+  const numbered = candidates.filter((candidate) => String(candidate.candidate_no ?? '').trim());
+  const unnumbered = candidates.filter((candidate) => !String(candidate.candidate_no ?? '').trim());
+  const groups = groupBy(numbered, (candidate) => String(candidate.candidate_no).trim());
+
+  if (groups.size === 1) {
+    const [onlyGroup] = groups.values();
+    onlyGroup.push(...unnumbered);
+  } else if (unnumbered.length > 0) {
+    groups.set('', unnumbered);
+  }
+
+  return [...groups.values()].map((group) => group
+    .slice()
+    .sort((left, right) => (
+      candidateMismatches(left, expected).length - candidateMismatches(right, expected).length
+      || Number(right.vote_count != null) - Number(left.vote_count != null)
+      || Number(right.vote_rate != null) - Number(left.vote_rate != null)
+      || Number(right.is_elected != null) - Number(left.is_elected != null)
+      || String(left.id).localeCompare(String(right.id))
+    ))[0]);
+}
+
 function buildContexts(sources) {
   const events = new Map();
   const races = new Map();
@@ -213,11 +236,18 @@ function compactSource(source, context) {
 
 export function auditHistoricalCecCandidateCoverage(dataset) {
   const sources = dataset.sources ?? [];
+  const personCanonicalIds = new Map(
+    (dataset.personCanonicalMap ?? []).map((row) => [row.person_id, row.canonical_person_id]),
+  );
+  const canonicalPersonId = (personId) => personCanonicalIds.get(personId) ?? personId;
   const matchesBySource = groupBy(
     (dataset.matches ?? []).filter((match) => match.match_status === 'auto_matched'),
     (match) => match.source_person_id,
   );
-  const candidatesByPerson = groupBy(dataset.candidates ?? [], (candidate) => candidate.person_id);
+  const candidatesByPerson = groupBy(
+    dataset.candidates ?? [],
+    (candidate) => canonicalPersonId(candidate.person_id),
+  );
   const racesById = new Map((dataset.races ?? []).map((race) => [race.id, race]));
   const raceCanonicalIds = new Map(
     (dataset.raceCanonicalMap ?? []).map((row) => [row.race_id, row.canonical_race_id]),
@@ -242,7 +272,7 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
     const context = buildHistoricalSourceContext(source);
     const sourceSummary = compactSource(source, context);
     const matches = matchesBySource.get(source.id) ?? [];
-    const distinctPersonIds = [...new Set(matches.map((match) => match.person_id))];
+    const distinctPersonIds = [...new Set(matches.map((match) => canonicalPersonId(match.person_id)))];
 
     if (distinctPersonIds.length === 0) {
       return { ...sourceSummary, category: 'unmatched_identity' };
@@ -308,9 +338,9 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
     }
 
     const personCandidates = candidatesByPerson.get(row.personId) ?? [];
-    const matchingCandidates = personCandidates.filter(
+    const matchingCandidates = logicalCandidates(personCandidates.filter(
       (candidate) => canonicalRaceId(candidate.race_id) === row.expectedRaceId,
-    );
+    ), row.expected);
     if (matchingCandidates.length > 1) {
       return {
         ...row,
@@ -448,7 +478,7 @@ async function fetchRows(config, tableName, select, filters = {}) {
 }
 
 async function loadDataset(config) {
-  const [sources, matches, candidates, elections, races, regions, electionCanonicalMap, raceCanonicalMap] = await Promise.all([
+  const [sources, matches, candidates, elections, races, regions, electionCanonicalMap, raceCanonicalMap, personCanonicalMap] = await Promise.all([
     fetchRows(config, 'source_people', 'id,source_person_key,raw_name,normalized_name,gender,party,position,district,election_year,source_payload', {
       source_type: `eq.${sourceType}`,
       source_id: `eq.${sourceId}`,
@@ -466,8 +496,19 @@ async function loadDataset(config) {
     fetchRows(config, 'regions', 'id,external_id,name,region_type', { order: 'id.asc' }),
     fetchRows(config, 'election_canonical_map', 'election_id,canonical_election_id', { order: 'election_id.asc' }),
     fetchRows(config, 'race_canonical_map', 'race_id,canonical_race_id', { order: 'race_id.asc' }),
+    fetchRows(config, 'person_canonical_map', 'person_id,canonical_person_id', { order: 'person_id.asc' }),
   ]);
-  return { sources, matches, candidates, elections, races, regions, electionCanonicalMap, raceCanonicalMap };
+  return {
+    sources,
+    matches,
+    candidates,
+    elections,
+    races,
+    regions,
+    electionCanonicalMap,
+    raceCanonicalMap,
+    personCanonicalMap,
+  };
 }
 
 async function main() {

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -26,11 +26,18 @@ function readLocalEnv() {
 }
 
 function parseArgs(argv) {
-  const options = { write: false };
+  const options = { write: false, migrationPath: null };
 
-  for (const arg of argv) {
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
     if (arg === '--write') {
       options.write = true;
+      continue;
+    }
+
+    if (arg === '--migration') {
+      options.migrationPath = path.resolve(argv[index + 1] ?? '');
+      index += 1;
       continue;
     }
 
@@ -113,6 +120,109 @@ function chunk(rows, size) {
     chunks.push(rows.slice(index, index + size));
   }
   return chunks;
+}
+
+function sqlValue(value) {
+  if (value == null) return 'NULL';
+  return `'${String(value).replaceAll("'", "''")}'`;
+}
+
+export function renderMergeDecisionSql(rows) {
+  if (rows.length === 0) throw new Error('No cross-year person merge decisions to render.');
+  const values = rows.map((row) => `    (${[
+    row.duplicate_person_id,
+    row.canonical_person_id,
+    row.confidence_level,
+    row.reason,
+    JSON.stringify(row.evidence_json),
+    row.reviewed_by,
+  ].map(sqlValue).join(', ')})`).join(',\n');
+
+  return `-- Generated verified historical CEC person merge decisions.
+
+CREATE TEMP TABLE _historical_cec_person_merges_20260730 (
+    duplicate_person_id UUID PRIMARY KEY,
+    canonical_person_id UUID NOT NULL,
+    confidence_level TEXT NOT NULL,
+    reason TEXT NOT NULL,
+    evidence_json JSONB NOT NULL,
+    reviewed_by TEXT NOT NULL
+) ON COMMIT DROP;
+
+INSERT INTO _historical_cec_person_merges_20260730 (
+    duplicate_person_id, canonical_person_id, confidence_level,
+    reason, evidence_json, reviewed_by
+) VALUES
+${values};
+
+DO \$verify\$
+BEGIN
+    IF (SELECT COUNT(*) FROM _historical_cec_person_merges_20260730) <> ${rows.length} THEN
+        RAISE EXCEPTION 'Historical CEC person merge input count mismatch';
+    END IF;
+    IF EXISTS (
+        SELECT 1
+        FROM _historical_cec_person_merges_20260730 input
+        LEFT JOIN people duplicate ON duplicate.id = input.duplicate_person_id
+        LEFT JOIN people canonical ON canonical.id = input.canonical_person_id
+        WHERE duplicate.id IS NULL
+           OR canonical.id IS NULL
+           OR input.duplicate_person_id = input.canonical_person_id
+    ) THEN
+        RAISE EXCEPTION 'Historical CEC person merge input identity mismatch';
+    END IF;
+    IF EXISTS (
+        SELECT 1
+        FROM _historical_cec_person_merges_20260730 input
+        JOIN person_merge_decisions existing
+          ON existing.duplicate_person_id = input.duplicate_person_id
+         AND existing.status IN ('suggested', 'verified')
+        WHERE existing.canonical_person_id <> input.canonical_person_id
+    ) THEN
+        RAISE EXCEPTION 'Historical CEC person merge gained a conflicting active decision';
+    END IF;
+END
+\$verify\$;
+
+INSERT INTO person_merge_decisions (
+    duplicate_person_id, canonical_person_id, status, confidence_level,
+    reason, evidence_json, reviewed_by, reviewed_at, updated_at
+)
+SELECT
+    input.duplicate_person_id,
+    input.canonical_person_id,
+    'verified',
+    input.confidence_level,
+    input.reason,
+    input.evidence_json,
+    input.reviewed_by,
+    NOW(),
+    NOW()
+FROM _historical_cec_person_merges_20260730 input
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM person_merge_decisions existing
+    WHERE existing.duplicate_person_id = input.duplicate_person_id
+      AND existing.status IN ('suggested', 'verified')
+);
+
+DO \$verify\$
+BEGIN
+    IF (
+        SELECT COUNT(*)
+        FROM _historical_cec_person_merges_20260730 input
+        JOIN person_merge_decisions decision
+          ON decision.duplicate_person_id = input.duplicate_person_id
+         AND decision.canonical_person_id = input.canonical_person_id
+         AND decision.status = 'verified'
+    ) <> ${rows.length} THEN
+        RAISE EXCEPTION 'Historical CEC person merge result mismatch';
+    END IF;
+END
+\$verify\$;
+
+SELECT published.promote(NULL);
+`;
 }
 
 function normalizeText(value) {
@@ -325,6 +435,8 @@ function decisionPairKey(leftPersonId, rightPersonId) {
 
 function compactCandidate(candidate) {
   return {
+    candidateId: candidate.candidate_id,
+    candidateExternalId: candidate.candidate_external_id,
     personId: candidate.person_id,
     personName: candidate.person_name,
     electionName: candidate.election_name,
@@ -337,9 +449,58 @@ function compactCandidate(candidate) {
   };
 }
 
+export function buildCoreCandidateRows(dataset) {
+  const peopleById = new Map(dataset.people.map((person) => [person.id, person]));
+  const racesById = new Map(dataset.races.map((race) => [race.id, race]));
+  const electionsById = new Map(dataset.elections.map((election) => [election.id, election]));
+  const regionsById = new Map(dataset.regions.map((region) => [region.id, region]));
+  const personCanonicalIds = new Map(
+    dataset.personCanonicalMap.map((row) => [row.person_id, row.canonical_person_id]),
+  );
+  const raceCanonicalIds = new Map(
+    dataset.raceCanonicalMap.map((row) => [row.race_id, row.canonical_race_id]),
+  );
+  const electionCanonicalIds = new Map(
+    dataset.electionCanonicalMap.map((row) => [row.election_id, row.canonical_election_id]),
+  );
+
+  return dataset.candidates.map((candidate) => {
+    const personId = personCanonicalIds.get(candidate.person_id) ?? candidate.person_id;
+    const person = peopleById.get(personId) ?? peopleById.get(candidate.person_id);
+    const raceId = raceCanonicalIds.get(candidate.race_id) ?? candidate.race_id;
+    const race = racesById.get(raceId) ?? racesById.get(candidate.race_id);
+    const electionId = race
+      ? electionCanonicalIds.get(race.election_id) ?? race.election_id
+      : null;
+    const election = electionId ? electionsById.get(electionId) : null;
+    const region = race?.region_id ? regionsById.get(race.region_id) : null;
+
+    if (!person || !race || !election) return null;
+    return {
+      candidate_id: candidate.id,
+      candidate_external_id: candidate.external_id,
+      person_id: personId,
+      person_name: person.name,
+      person_party: person.party,
+      election_name: election.name,
+      race_title: race.title,
+      region_name: region?.name ?? null,
+      party: candidate.party,
+      candidate_no: candidate.candidate_no,
+      is_elected: candidate.is_elected,
+      vote_count: candidate.vote_count,
+      is_historical_cec: String(candidate.external_id ?? '').startsWith('cec-historical-candidate-'),
+    };
+  }).filter(Boolean);
+}
+
 function personCompleteness(person) {
   if (!person) return 0;
-  let score = person.external_id?.startsWith('cec-') ? 20 : 0;
+  const externalId = String(person.external_id ?? '');
+  const isSourceScopedHistorical = externalId.startsWith('cec-historical-person-')
+    || externalId.startsWith('cec-historical-unresolved-person-');
+  let score = person.is_public ? 100 : 0;
+  if (externalId.startsWith('cec-') && !isSourceScopedHistorical) score += 20;
   if (person.gender && person.gender !== 'unknown') score += 5;
   if (person.position) score += 5;
   if (person.district) score += 3;
@@ -381,7 +542,7 @@ function birthDatesConflict(personIds, birthDatesByPersonId) {
   return false;
 }
 
-function buildRows(candidateGroups, personById, canonicalPersonByPersonId, birthDatesByPersonId, existingDecisions) {
+export function buildRows(candidateGroups, personById, canonicalPersonByPersonId, birthDatesByPersonId, existingDecisions) {
   const activeDuplicatePersonIds = new Set(
     existingDecisions
       .filter((decision) => ['suggested', 'verified'].includes(decision.status))
@@ -397,6 +558,9 @@ function buildRows(candidateGroups, personById, canonicalPersonByPersonId, birth
   const duplicatePersonConflicts = [];
 
   for (const [key, candidates] of candidateGroups) {
+    if (!candidates.some((candidate) => candidate.is_historical_cec)) {
+      continue;
+    }
     const sameElectionMatch = key.startsWith('same-election|');
     const years = new Set(candidates.map(electionYear).filter(Boolean));
     const personIds = [...new Set(candidates.map((candidate) => candidate.person_id).filter(Boolean))];
@@ -537,20 +701,31 @@ async function main() {
   }
 
   const options = parseArgs(process.argv.slice(2));
-  const [candidates, people, birthDateClaims, canonicalMapRows, existingDecisions] = await Promise.all([
-    fetchRows(
-      'public_candidates',
-      'candidate_id,person_id,person_name,person_party,election_name,race_title,region_name,party,candidate_no,is_elected,vote_count',
-      { order: 'candidate_id.asc' },
-    ),
+  const [coreCandidates, people, races, elections, regions, birthDateClaims, canonicalMapRows, raceCanonicalMap, electionCanonicalMap, existingDecisions] = await Promise.all([
+    fetchRows('candidates', 'id,external_id,person_id,race_id,party,candidate_no,is_elected,vote_count', { order: 'id.asc' }),
     fetchRows('people', 'id,name,gender,party,position,district,external_id,is_public', { order: 'id.asc' }),
+    fetchRows('races', 'id,election_id,region_id,title', { order: 'id.asc' }),
+    fetchRows('elections', 'id,name', { order: 'id.asc' }),
+    fetchRows('regions', 'id,name', { order: 'id.asc' }),
     fetchRows('public_person_claims', 'claim_id,person_id,claim_value,claim_json', {
       claim_type: 'eq.birth_date',
       order: 'claim_id.asc',
     }),
     fetchRows('person_canonical_map', 'person_id,canonical_person_id', { order: 'person_id.asc' }),
+    fetchRows('race_canonical_map', 'race_id,canonical_race_id', { order: 'race_id.asc' }),
+    fetchRows('election_canonical_map', 'election_id,canonical_election_id', { order: 'election_id.asc' }),
     fetchRows('person_merge_decisions', 'id,duplicate_person_id,canonical_person_id,status', { order: 'id.asc' }),
   ]);
+  const candidates = buildCoreCandidateRows({
+    candidates: coreCandidates,
+    people,
+    races,
+    elections,
+    regions,
+    personCanonicalMap: canonicalMapRows,
+    raceCanonicalMap,
+    electionCanonicalMap,
+  });
   const personById = new Map(people.map((person) => [person.id, person]));
   const birthDatesByPersonId = new Map();
   for (const claim of birthDateClaims) {
@@ -591,6 +766,11 @@ async function main() {
   );
   let inserted = [];
 
+  if (options.migrationPath) {
+    fs.mkdirSync(path.dirname(options.migrationPath), { recursive: true });
+    fs.writeFileSync(options.migrationPath, renderMergeDecisionSql(rows));
+  }
+
   if (options.write) {
     for (const rowsChunk of chunk(rows, 500)) {
       inserted = [...inserted, ...await insertRows('person_merge_decisions', rowsChunk)];
@@ -612,6 +792,7 @@ async function main() {
     skippedCount: skipped.length,
     duplicatePersonConflictCount: duplicatePersonConflicts.length,
     insertedCount: inserted.length,
+    outputMigration: options.migrationPath ? path.relative(repoRoot, options.migrationPath) : null,
     rowsByOfficeKind,
     houRows: rows.filter((row) => row.evidence_json.key.startsWith('侯友宜|')),
     sampleRows: rows.slice(0, 10),
@@ -620,7 +801,9 @@ async function main() {
   }, null, 2));
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

@@ -47,8 +47,11 @@ function review(sourcePersonId, reviewStatus) {
 test('keeps historical jurisdictions separate from modern identity geography', () => {
   assert.equal(normalizeHistoricalGeography('臺北縣第01選舉區議員', '臺北縣議員候選人'), '臺北縣');
   assert.equal(normalizeHistoricalGeography('', '2018年臺北市議員選舉'), '臺北市');
+  assert.equal(normalizeHistoricalGeography('臺北市市長選舉', '臺北市'), '臺北市');
+  assert.equal(normalizeHistoricalGeography('宜蘭縣縣長選舉', '宜蘭縣'), '宜蘭縣');
   assert.equal(modernizeIdentityGeography('臺北縣'), '新北市');
   assert.equal(classifyHistoricalRole('第8屆立法委員候選人'), 'legislator');
+  assert.equal(classifyHistoricalRole('臺北市市長候選人'), 'county_city_mayor');
 });
 
 test('previews only single-source new people and holds context-only cross-year identities', () => {
@@ -99,6 +102,9 @@ test('standardizes national, indigenous and numbered election contexts', () => {
   assert.equal(canonicalElectionType('president'), 'presidential');
   assert.equal(canonicalElectionName(2012, 'president'), '2012年總統副總統選舉');
   assert.equal(canonicalElectionName(1998, 'councilor'), '1998年直轄市及縣市議員選舉');
+  assert.equal(canonicalElectionName(2022, 'county_city_mayor'), '2022年直轄市長及縣市長選舉');
+  assert.equal(canonicalRaceType('county_city_mayor', 'regional', '宜蘭縣'), 'county_mayor');
+  assert.equal(canonicalRaceType('county_city_mayor', 'regional', '臺北市'), 'municipality_mayor');
   assert.equal(classifySeatType('平地原住民', '第8屆立法委員候選人'), 'plain_indigenous');
   assert.equal(canonicalRaceType('legislator', 'plain_indigenous'), 'indigenous');
   assert.equal(canonicalRaceTitle({
@@ -107,6 +113,12 @@ test('standardizes national, indigenous and numbered election contexts', () => {
     historicalGeography: null,
     districtNumber: null,
   }), '全國平地原住民立法委員選舉');
+  assert.equal(canonicalRaceTitle({
+    role: 'county_city_mayor',
+    seatType: 'regional',
+    historicalGeography: '宜蘭縣',
+    districtNumber: null,
+  }), '宜蘭縣縣長選舉');
   assert.equal(canonicalRaceTitle({
     role: 'councilor',
     seatType: 'regional',

@@ -63,7 +63,8 @@ function normalizeTaiwanText(value) {
 
 export function normalizeHistoricalGeography(district, position) {
   const context = `${normalizeTaiwanText(district)} ${normalizeTaiwanText(position)}`
-    .replace(/\d{4}年?/gu, ' ');
+    .replace(/\d{4}年?/gu, ' ')
+    .replace(/([縣市])[縣市]長/gu, '$1 ');
   return context.match(/(?:^|[^\p{Script=Han}])([\p{Script=Han}]{1,4}[縣市])/u)?.[1] ?? null;
 }
 
@@ -76,6 +77,7 @@ export function classifyHistoricalRole(position) {
   if (value.includes('總統')) return 'president';
   if (value.includes('立法委員')) return 'legislator';
   if (value.includes('議員')) return 'councilor';
+  if (value.includes('縣長') || value.includes('市長')) return 'county_city_mayor';
   return 'other';
 }
 
@@ -92,6 +94,7 @@ export function canonicalElectionType(role) {
   if (role === 'president') return 'presidential';
   if (role === 'legislator') return 'legislative';
   if (role === 'councilor') return 'councilor';
+  if (role === 'county_city_mayor') return 'mayor';
   return 'other';
 }
 
@@ -99,6 +102,7 @@ export function canonicalElectionName(year, role) {
   if (role === 'president') return `${year}年總統副總統選舉`;
   if (role === 'legislator') return `${year}年立法委員選舉`;
   if (role === 'councilor') return `${year}年直轄市及縣市議員選舉`;
+  if (role === 'county_city_mayor') return `${year}年直轄市長及縣市長選舉`;
   return `${year}年其他選舉`;
 }
 
@@ -110,6 +114,7 @@ export function canonicalRaceType(role, seatType, historicalGeography = null) {
     return 'legislative_district';
   }
   if (role === 'councilor') return historicalGeography?.endsWith('縣') ? 'county_councilor' : 'city_councilor';
+  if (role === 'county_city_mayor') return historicalGeography?.endsWith('縣') ? 'county_mayor' : 'municipality_mayor';
   return 'other';
 }
 
@@ -131,6 +136,7 @@ export function canonicalRaceTitle({ role, seatType, historicalGeography, distri
   const seat = seatLabel(seatType) ?? '';
   if (role === 'legislator') return `${geography}${district}立法委員選舉`;
   if (role === 'councilor') return `${geography}${district}${seat}議員選舉`;
+  if (role === 'county_city_mayor') return `${geography}${geography.endsWith('縣') ? '縣長' : '市長'}選舉`;
   return `${geography}${district}${seat}其他選舉`;
 }
 
@@ -145,7 +151,7 @@ function normalizedDistrictNumber(source) {
   return match ? Number.parseInt(match[1], 10) : null;
 }
 
-function sourceContext(source) {
+export function buildHistoricalSourceContext(source) {
   const historicalGeography = normalizeHistoricalGeography(source.district, source.position);
   const identityGeography = modernizeIdentityGeography(historicalGeography);
   const role = classifyHistoricalRole(source.position);
@@ -219,7 +225,7 @@ function compactSource(source, context) {
 
 function buildContextRows(sources, unmatchedSourceIds) {
   const compactRows = sources.map((source) => ({
-    ...compactSource(source, sourceContext(source)),
+    ...compactSource(source, buildHistoricalSourceContext(source)),
     isUnmatched: unmatchedSourceIds.has(source.id),
   }));
   const eventGroups = groupBy(compactRows, (row) => row.eventContextKey);
@@ -312,7 +318,7 @@ function dedupeByCanonicalId(rows, idFor) {
 }
 
 export function buildCoreComparisonPlan(eventContexts, raceContexts, dataset) {
-  const supportedRoles = new Set(['president', 'legislator', 'councilor']);
+  const supportedRoles = new Set(['president', 'legislator', 'councilor', 'county_city_mayor']);
   const supportedEventContexts = eventContexts.filter(
     (context) => supportedRoles.has(context.role) && context.unmatchedSourceRowCount !== 0,
   );
@@ -414,14 +420,14 @@ function buildNewPersonPreview(unmatchedSources, reviewsBySourceId) {
     (source) => reviewsBySourceId.get(source.id)?.review_status === 'needs_new_person_review',
   );
   const grouped = groupBy(sourcesNeedingNewPerson, (source) => {
-    const context = sourceContext(source);
+    const context = buildHistoricalSourceContext(source);
     return [source.normalized_name, source.gender, context.identityGeography, context.role].join('|');
   });
   const safeNewPeople = [];
   const heldForReview = [];
 
   for (const [identityContextKey, sources] of grouped.entries()) {
-    const contexts = sources.map((source) => sourceContext(source));
+    const contexts = sources.map((source) => buildHistoricalSourceContext(source));
     const first = sources[0];
     const firstContext = contexts[0];
     const years = sources.map((source) => source.election_year);

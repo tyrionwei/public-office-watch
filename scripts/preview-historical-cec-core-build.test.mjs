@@ -1,0 +1,89 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+
+import {
+  buildHistoricalCecCorePreview,
+  classifyHistoricalRole,
+  modernizeIdentityGeography,
+  normalizeHistoricalGeography,
+} from './preview-historical-cec-core-build.mjs';
+
+function source(overrides) {
+  return {
+    id: overrides.id,
+    source_person_key: `cec-historical:${overrides.id}`,
+    raw_name: overrides.name,
+    normalized_name: overrides.normalizedName ?? overrides.name,
+    gender: overrides.gender ?? 'male',
+    party: overrides.party ?? '無黨籍',
+    position: overrides.position ?? '臺北縣議員候選人',
+    district: overrides.district ?? '臺北縣第01選舉區議員',
+    election_year: overrides.year ?? 2002,
+    source_payload: {
+      candidateNo: overrides.candidateNo ?? '01',
+      districtCode: overrides.districtCode ?? '01',
+      elected: overrides.elected ?? false,
+      voteCount: overrides.voteCount ?? '1000',
+      voteRate: overrides.voteRate ?? '10.5',
+    },
+  };
+}
+
+function review(sourcePersonId, reviewStatus) {
+  return {
+    source_person_id: sourcePersonId,
+    review_status: reviewStatus,
+    candidate_count: reviewStatus === 'needs_new_person_review' ? 0 : 1,
+    best_match_score: reviewStatus === 'needs_new_person_review' ? 0 : 70,
+  };
+}
+
+test('keeps historical jurisdictions separate from modern identity geography', () => {
+  assert.equal(normalizeHistoricalGeography('臺北縣第01選舉區議員', '臺北縣議員候選人'), '臺北縣');
+  assert.equal(modernizeIdentityGeography('臺北縣'), '新北市');
+  assert.equal(classifyHistoricalRole('第8屆立法委員候選人'), 'legislator');
+});
+
+test('previews only single-source new people and holds context-only cross-year identities', () => {
+  const sources = [
+    source({ id: 'safe', name: '王安全' }),
+    source({ id: 'cross-1998', name: '李跨年', year: 1998 }),
+    source({ id: 'cross-2002', name: '李跨年', year: 2002 }),
+    source({ id: 'collision-a', name: '陳同屆', districtCode: '01' }),
+    source({ id: 'collision-b', name: '陳同屆', district: '臺北縣第02選舉區議員', districtCode: '02' }),
+    source({ id: 'missing-region', name: '林無區', position: '總統候選人', district: '' }),
+    source({ id: 'existing-review', name: '張待配' }),
+    source({ id: 'linked-claim', name: '周已有聲明' }),
+    source({ id: 'matched', name: '吳已配對' }),
+  ];
+  const reviews = [
+    review('safe', 'needs_new_person_review'),
+    review('cross-1998', 'needs_new_person_review'),
+    review('cross-2002', 'needs_new_person_review'),
+    review('collision-a', 'needs_new_person_review'),
+    review('collision-b', 'needs_new_person_review'),
+    review('missing-region', 'needs_new_person_review'),
+    review('existing-review', 'needs_identity_review'),
+  ];
+  const report = buildHistoricalCecCorePreview({
+    sources,
+    reviews,
+    matches: [{ source_person_id: 'matched', match_status: 'auto_matched' }],
+  }, { generatedAt: '2026-07-30T00:00:00.000Z' });
+
+  assert.equal(report.summary.unmatchedSourceRows, 8);
+  assert.equal(report.summary.safeNewPersonCount, 1);
+  assert.equal(report.safeNewPeople[0].proposedPerson.name, '王安全');
+  assert.equal(report.safeNewPeople[0].proposedPerson.isPublic, false);
+  assert.equal(report.safeNewPeople[0].source.districtLabel, '臺北縣第1選舉區議員');
+  assert.deepEqual(
+    Object.fromEntries(report.heldNewPeople.map((group) => [group.reason, group.sourceRowCount])),
+    {
+      cross_year_context_only: 2,
+      same_year_collision: 2,
+      missing_geography: 1,
+    },
+  );
+  assert.equal(report.reviewStatusCounts.needs_identity_review, 1);
+  assert.equal(report.reviewStatusCounts.linked_claim_or_excluded_from_queue, 1);
+});

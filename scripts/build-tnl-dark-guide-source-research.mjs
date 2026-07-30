@@ -596,6 +596,38 @@ function externalFindingEvidence(finding, researchClaim) {
     sourceUrl: source.url ?? null,
   }));
 }
+function combinedExternalFinding(researchClaim, externalFindingByResearchId) {
+  const findings = researchClaim.researchIds
+    .map((researchId) => externalFindingByResearchId.get(researchId))
+    .filter(Boolean);
+  if (findings.length === 0) return null;
+  if (findings.length === 1 && findings[0].researchId === researchClaim.researchId) {
+    return findings[0];
+  }
+
+  const outcomePriority = [
+    'not_found_after_stop_loss',
+    'source_found_partial_manual_review',
+    'source_found_manual_review',
+    'source_found_requires_update',
+    'source_conflict_manual_review',
+    'source_found_conflict_manual_review',
+  ];
+  const outcome = [...findings]
+    .sort((left, right) => (
+      outcomePriority.indexOf(right.outcome) - outcomePriority.indexOf(left.outcome)
+    ))[0].outcome;
+  return {
+    researchId: researchClaim.researchId,
+    sourceResearchIds: findings.map((finding) => finding.researchId),
+    query: [...new Set(findings.map((finding) => finding.query).filter(Boolean))].join(' OR '),
+    outcome,
+    notes: [...new Set(findings.map((finding) => finding.notes).filter(Boolean))].join(' '),
+    sources: uniqueBy(findings.flatMap((finding) => finding.sources ?? []), (source) => (
+      [source.tier, source.name, source.url, source.supports].join('|')
+    )),
+  };
+}
 
 function researchStatus(category, evidence, externalFinding = null) {
   if (['政治家族', '涉案紀錄'].includes(category) && evidence.length > 0) return 'manual_review';
@@ -752,9 +784,10 @@ async function main() {
     const existing = groupedClaims.get(key);
     if (existing) {
       existing.occurrences.push(claim.occurrence);
+      existing.researchIds.push(claim.researchId);
       if (!existing.originalSourceUrl && claim.originalSourceUrl) existing.originalSourceUrl = claim.originalSourceUrl;
     } else {
-      groupedClaims.set(key, { ...claim, occurrences: [claim.occurrence] });
+      groupedClaims.set(key, { ...claim, researchIds: [claim.researchId], occurrences: [claim.occurrence] });
     }
   }
   const researchClaims = [...groupedClaims.values()];
@@ -853,7 +886,7 @@ async function main() {
 
   const rows = researchClaims.map((researchClaim) => {
     const acceptedTypes = claimTypesFor(researchClaim.category);
-    const externalFinding = externalFindingByResearchId.get(researchClaim.researchId) ?? null;
+    const externalFinding = combinedExternalFinding(researchClaim, externalFindingByResearchId);
     const localEvidence = (localClaimsByCanonical.get(researchClaim.canonicalPersonId) ?? [])
       .filter((claim) => acceptedTypes.has(claim.claim_type))
       .map((claim) => {
@@ -927,8 +960,10 @@ async function main() {
       .slice(0, 5);
     const status = researchStatus(researchClaim.category, evidence, externalFinding);
     const city = researchClaim.occurrences[0]?.city ?? '';
+    const { researchIds, ...reportClaim } = researchClaim;
     return {
-      ...researchClaim,
+      ...reportClaim,
+      ...(researchIds.length > 1 ? { sourceResearchIds: researchIds } : {}),
       status,
       searchQuery: `"${researchClaim.personName}" "${researchClaim.text}" ${city}`.trim(),
       localEvidence: evidence,
@@ -955,6 +990,12 @@ async function main() {
     externalSearchNeeded: rows.filter((row) => row.category === category && row.status === 'external_search_needed').length,
     notFoundAfterStopLoss: rows.filter((row) => row.category === category && row.status === 'not_found_after_stop_loss').length,
   }]));
+  const externalFindingsWithSources = rows.filter((row) => (
+    (row.externalResearch?.sources?.length ?? 0) > 0
+  )).length;
+  const externalFindingsStopLoss = rows.filter((row) => (
+    row.externalResearch?.outcome === 'not_found_after_stop_loss'
+  )).length;
   const report = {
     generatedAt: new Date().toISOString(),
     databaseUrl: supabaseUrl,
@@ -966,6 +1007,13 @@ async function main() {
         trusted_media: 'Established news organization; always requires manual review for sensitive claims.',
         secondary: 'Public reference source such as VoteTW or Wikidata; requires review for sensitive claims.',
         unknown: 'Source type could not be established automatically.',
+      },
+      externalSourceLabels: {
+        candidate_official: 'Candidate or campaign page; first-party and manual review only.',
+        first_party: 'Party, candidate, or involved organization; manual review only.',
+        institutional: 'Institutional source that still needs claim-level context review.',
+        reliable_secondary: 'Reliable secondary source; manual review only.',
+        other: 'Search lead that cannot support publication without stronger evidence.',
       },
       candidateBulletins: 'CEC election bulletins provide an exact candidate-level source locator. Education and experience are candidate-declared, so even full-claim text matches remain manual review. Fuzzy matches are labeled possible_match and are only review pointers, not supporting evidence.',
       localOfficialProfiles: 'MOI local-official profiles are matched only by exact normalized name and city. Education and experience text remains manual-review evidence; fuzzy matches are review pointers only.',
@@ -986,6 +1034,8 @@ async function main() {
       uniqueCanonicalPeopleWithData: new Set(rows.map((row) => row.canonicalPersonId)).size,
       rawClaims: rawResearchClaims.length,
       deduplicatedClaims: rows.length,
+      externalFindingsWithSources,
+      externalFindingsStopLoss,
       statusCounts,
       categoryCounts,
     },
@@ -1023,7 +1073,7 @@ async function main() {
   });
   fs.writeFileSync(csvOutputPath, `${[csvHeaders.map(csvCell).join(','), ...csvRows].join('\n')}\n`);
 
-  const summary = `# 暗公報獨立來源查核進度（${new Date().toLocaleDateString('zh-TW', { timeZone: 'Asia/Taipei' })}）
+  const summary = `# 暗公報獨立來源查核完成報告（${new Date().toLocaleDateString('zh-TW', { timeZone: 'Asia/Taipei' })}）
 
 ## 範圍
 
@@ -1035,12 +1085,14 @@ async function main() {
 - 中選會公報候選人對應：${report.summary.cecBulletinCandidateRows} 筆；精確解析 ${report.summary.cecBulletinParsedRows} 筆，人工 PDF 定位 ${report.summary.cecBulletinManualLocatorRows} 筆，對應疑義 ${report.summary.cecBulletinMappingIssues} 筆。
 - 內政部地方公職人員官方履歷：${report.summary.moiLocalOfficialProfiles} 人，涵蓋暗公報候選人年度紀錄 ${report.summary.moiLocalOfficialCoveredGuideRows} 筆。
 
-## 本機既有來源初篩
+## 查核結果
 
 - 可自動審核候選：${statusCounts.auto_reviewable} 條。
 - 已有證據或官方候選人定位、仍需人工審核：${statusCounts.manual_review} 條。
 - 尚需外部搜尋：${statusCounts.external_search_needed} 條。
 - 已依停損規則搜尋但未找到可靠來源：${statusCounts.not_found_after_stop_loss} 條。
+- 外部搜尋找到候選來源頁面：${externalFindingsWithSources} 條；這些頁面只作人工核對入口，不直接視為敘述成立。
+- 外部搜尋依停損規則結束：${externalFindingsStopLoss} 條。
 
 | 類別 | 人數 | 敘述 | 可自動審核 | 需人工審核 | 需外部搜尋 | 停損未找到 |
 |---|---:|---:|---:|---:|---:|---:|
@@ -1056,6 +1108,14 @@ ${categories.map((category) => {
 3. 外部搜尋每條使用一組精確查詢，最多檢查最相關的兩個結果；仍無可靠佐證即列為未找到，不反覆改寫查詢。
 4. 同名、選區或年份對不上時不得自動審核；姓名、政黨與縣市完全一致，或跨黨籍但姓名與縣市在本機僅對應一人的選舉紀錄，只列為身分推定並交由人工審核。
 5. 暗公報目前只作研究線索，不直接公開或寫入已驗證 claims。
+
+## 審核與公開建議
+
+1. \`auto_reviewable\`：具有官方、已驗證且完整符合的本機證據，可進自動審核候選佇列；仍不代表已直接公開。
+2. \`manual_review\`：必須人工核對人物、敘述範圍與時間／案件階段。選舉公報的候選人自述與外部搜尋找到的候選頁面都屬此類。
+3. \`not_found_after_stop_loss\`：只保留為研究線索，不應公開為人物事實。
+4. \`external_search_needed\`：目前為 ${statusCounts.external_search_needed}；所有敘述均已有處置狀態。
+5. 政治家族人名對應另見 \`family-people-report.json\` 與 \`family-people-review.csv\`；名稱找到不等於關係成立，不自動建立人物關係。
 `;
   fs.writeFileSync(summaryOutputPath, summary);
   console.log(JSON.stringify(report.summary, null, 2));

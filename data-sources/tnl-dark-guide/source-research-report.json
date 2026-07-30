@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T04:09:16.155Z",
+  "generatedAt": "2026-07-30T04:37:14.654Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -9,6 +9,13 @@
       "trusted_media": "Established news organization; always requires manual review for sensitive claims.",
       "secondary": "Public reference source such as VoteTW or Wikidata; requires review for sensitive claims.",
       "unknown": "Source type could not be established automatically."
+    },
+    "externalSourceLabels": {
+      "candidate_official": "Candidate or campaign page; first-party and manual review only.",
+      "first_party": "Party, candidate, or involved organization; manual review only.",
+      "institutional": "Institutional source that still needs claim-level context review.",
+      "reliable_secondary": "Reliable secondary source; manual review only.",
+      "other": "Search lead that cannot support publication without stronger evidence."
     },
     "candidateBulletins": "CEC election bulletins provide an exact candidate-level source locator. Education and experience are candidate-declared, so even full-claim text matches remain manual review. Fuzzy matches are labeled possible_match and are only review pointers, not supporting evidence.",
     "localOfficialProfiles": "MOI local-official profiles are matched only by exact normalized name and city. Education and experience text remains manual-review evidence; fuzzy matches are review pointers only.",
@@ -29,6 +36,8 @@
     "uniqueCanonicalPeopleWithData": 1101,
     "rawClaims": 5161,
     "deduplicatedClaims": 4748,
+    "externalFindingsWithSources": 1041,
+    "externalFindingsStopLoss": 307,
     "statusCounts": {
       "auto_reviewable": 709,
       "manual_review": 3732,
@@ -9200,6 +9209,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-26-政治家族-2",
+        "tnl-dark-guide-2022-khh-11-7-政治家族-2"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"王耀裕\" \"二叔是2屆林園鄉民代表王南榮\" 高雄市",
       "localEvidence": [],
@@ -9244,6 +9257,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-26-政治家族-3",
+        "tnl-dark-guide-2022-khh-11-7-政治家族-3"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"王耀裕\" \"三叔王主安曾任高雄縣瓦斯公會理事長\" 高雄市",
@@ -9326,6 +9343,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-26-政治家族-4",
+        "tnl-dark-guide-2022-khh-11-7-政治家族-4"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"王耀裕\" \"四叔是縣議員及2屆林園鄉長王方員\" 高雄市",
@@ -9708,6 +9729,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-43-政治家族-1",
+        "tnl-dark-guide-2022-txg-7-7-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"朱暖英\" \"丈夫是台中市民政局局長、民政處處長、3屆議員王秋冬\" 台中市",
@@ -10805,6 +10830,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-89-政治家族-2",
+        "tnl-dark-guide-2022-tpe-5-6-政治家族-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"吳志剛\" \"哥哥是前桃園縣長吳志揚\" 台北市",
       "localEvidence": [
@@ -11284,6 +11313,10 @@
           "candidateNumber": 9
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-3-44-政治家族-1",
+        "tnl-dark-guide-2022-txg-3-9-政治家族-1"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"吳瓊華\" \"丈夫是台中市議會秘書長、2屆議員陳健楷\" 台中市",
       "localEvidence": [],
@@ -11329,6 +11362,10 @@
           "candidateNumber": 9
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-3-44-政治家族-2",
+        "tnl-dark-guide-2022-txg-3-9-政治家族-2"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"吳瓊華\" \"公公是2屆議員、前議長張清堂機要秘書陳忠順\" 台中市",
       "localEvidence": [],
@@ -11373,6 +11410,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-3-82-政治家族-1",
+        "tnl-dark-guide-2022-tao-3-6-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"呂林小鳳\" \"婆婆是4屆縣議員、八德鄉民代表呂邱葉\" 桃園市",
@@ -12656,6 +12697,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-3-政治家族-4",
+        "tnl-dark-guide-2022-khh-11-2-政治家族-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李雨庭\" \"丈夫是前議員吳政勳\" 高雄市",
       "localEvidence": [
@@ -12720,6 +12765,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-3-政治家族-3",
+        "tnl-dark-guide-2022-khh-11-2-政治家族-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"李雨庭\" \"公公是前高雄縣副議長吳鴻鳴\" 高雄市",
@@ -12860,6 +12909,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-3-政治家族-2",
+        "tnl-dark-guide-2022-khh-11-2-政治家族-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"李雨庭\" \"姊姊是屏縣議員李香蘭\" 高雄市",
@@ -13225,6 +13278,10 @@
           "party": "民進黨",
           "candidateNumber": 22
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-1-62-政治家族-1",
+        "tnl-dark-guide-2022-tao-1-22-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"李柏瑟\" \"丈夫是2屆縣議員廖輝星\" 桃園市",
@@ -14253,6 +14310,10 @@
           "party": "國民黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-31-政治家族-1",
+        "tnl-dark-guide-2022-txg-8-1-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"沈佑蓮\" \"姊姊是6屆立委沈智慧\" 台中市",
@@ -16293,6 +16354,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-12-政治家族-1",
+        "tnl-dark-guide-2022-tpe-1-14-政治家族-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林瑞圖\" \"叔叔是前立委林文郎\" 台北市",
       "localEvidence": [
@@ -17074,6 +17139,10 @@
           "party": "國民黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-89-政治家族-1",
+        "tnl-dark-guide-2022-khh-11-4-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"邱于軒\" \"婆婆是前議員黃碧霞\" 高雄市",
@@ -19210,6 +19279,10 @@
           "candidateNumber": 25
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-111-政治家族-1",
+        "tnl-dark-guide-2022-tpe-6-25-政治家族-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"耿葳\" \"姑姑是5屆議員厲耿桂芳\" 台北市",
       "localEvidence": [
@@ -19592,6 +19665,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-42-政治家族-1",
+        "tnl-dark-guide-2022-txg-13-2-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"張芬郁\" \"丈夫是2屆立委簡肇棟\" 台中市",
@@ -20162,6 +20239,10 @@
           "party": "國民黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-59-政治家族-1",
+        "tnl-dark-guide-2022-txg-2-5-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"張清照\" \"哥哥是6屆議員、3屆議長張清堂\" 台中市",
@@ -22760,6 +22841,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-4-71-政治家族-1",
+        "tnl-dark-guide-2022-tao-4-2-政治家族-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"郭麗華\" \"叔叔是3屆立委、議員、觀音鄉鄉長郭榮宗\" 桃園市",
       "localEvidence": [
@@ -23010,6 +23095,10 @@
           "party": "國民黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-9-47-政治家族-1",
+        "tnl-dark-guide-2022-txg-9-3-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳文政\" \"岳父是前台中市議會副議長陳天汶\" 台中市",
@@ -25071,6 +25160,10 @@
           "candidateNumber": 25
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-14-政治家族-1",
+        "tnl-dark-guide-2022-tpe-1-25-政治家族-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳政忠\" \"女兒是2屆親民黨不分區立委陳怡潔\" 台北市",
       "localEvidence": [
@@ -25153,6 +25246,10 @@
           "party": "國民黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-68-政治家族-2",
+        "tnl-dark-guide-2022-tpe-4-5-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳炳甫\" \"姊姊是5屆議員陳玉梅\" 台北市",
@@ -26962,6 +27059,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-5-35-政治家族-1",
+        "tnl-dark-guide-2022-tnn-5-5-政治家族-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳碧玉\" \"丈夫是4屆議員林慶鎮\" 台南市",
       "localEvidence": [
@@ -27400,6 +27501,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-5-54-政治家族-1",
+        "tnl-dark-guide-2022-nwt-6-7-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳錦錠\" \"丈夫是3屆立委張慶忠\" 新北市",
@@ -28087,6 +28192,10 @@
           "party": "民進黨",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-3-38-政治家族-1",
+        "tnl-dark-guide-2022-nwt-4-8-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"彭佳芸\" \"公公是5屆議員鄭金隆\" 新北市",
@@ -29003,6 +29112,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-10-38-政治家族-1",
+        "tnl-dark-guide-2022-khh-10-7-政治家族-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"曾麗燕\" \"丈夫是3屆立委林宏宗\" 高雄市",
       "localEvidence": [
@@ -29067,6 +29180,10 @@
           "party": "國民黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-5-75-政治家族-1",
+        "tnl-dark-guide-2022-nwt-6-6-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"游輝宂\" \"堂兄是6屆議員、2屆中和市市民代表游輝廷\" 新北市",
@@ -30987,6 +31104,10 @@
           "candidateNumber": 13
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-7-1-政治家族-3",
+        "tnl-dark-guide-2022-khh-7-13-政治家族-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃香菽\" \"堂哥是現任議員黃柏霖\" 高雄市",
       "localEvidence": [
@@ -32401,6 +32522,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-4-60-政治家族-1",
+        "tnl-dark-guide-2022-nwt-5-14-政治家族-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"葉元之\" \"岳父是前桃園縣縣議員陳炎坤\" 新北市",
       "localEvidence": [
@@ -33291,6 +33416,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-4-68-政治家族-2",
+        "tnl-dark-guide-2022-nwt-5-2-政治家族-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"劉美芳\" \"祖父是板橋市首任市長劉順天\" 新北市",
@@ -34250,6 +34379,10 @@
           "candidateNumber": 12
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-10-2-政治家族-2",
+        "tnl-dark-guide-2022-khh-10-12-政治家族-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"蔡武宏\" \"哥哥是接替選上議員的蔡武男\" 高雄市",
       "localEvidence": [
@@ -35102,6 +35235,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-1-67-政治家族-2",
+        "tnl-dark-guide-2022-nwt-1-1-政治家族-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"鄭宇恩\" \"母親是2屆淡水區代表\" 新北市",
       "localEvidence": [
@@ -35241,6 +35378,10 @@
           "party": "民進黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-1-67-政治家族-3",
+        "tnl-dark-guide-2022-nwt-1-1-政治家族-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"鄭宇恩\" \"嬸嬸是4屆淡水區代表\" 新北市",
@@ -37342,6 +37483,10 @@
           "party": "民進黨",
           "candidateNumber": 10
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-13-政治家族-1",
+        "tnl-dark-guide-2022-tpe-1-10-政治家族-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"鍾佩玲\" \"公公是民進黨中評會主委陳勝宏\" 台北市",
@@ -40228,6 +40373,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-7-政治工作-2",
+        "tnl-dark-guide-2022-txg-2-3-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"尤碧鈴\" \"曾任2屆梧棲鎮鎮長\" 台中市",
       "localEvidence": [
@@ -41114,6 +41263,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-73-政治工作-2",
+        "tnl-dark-guide-2022-tpe-4-6-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"王世堅\" \"曾任1屆立委\" 台北市",
       "localEvidence": [
@@ -41367,6 +41520,10 @@
           "party": "國民黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-13-68-政治工作-1",
+        "tnl-dark-guide-2022-tao-13-5-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"王仙蓮\" \"曾任中壢市市民代表\" 桃園市",
@@ -41819,6 +41976,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-66-政治工作-3",
+        "tnl-dark-guide-2022-txg-2-4-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"王立任\" \"曾任民進黨台中市黨部執委\" 台中市",
       "localEvidence": [
@@ -41908,6 +42069,10 @@
           "party": "民進黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-66-政治工作-2",
+        "tnl-dark-guide-2022-txg-2-4-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"王立任\" \"曾任立委蔡其昌辦公室主任\" 台中市",
@@ -42234,6 +42399,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-30-政治工作-2",
+        "tnl-dark-guide-2022-tpe-2-6-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"王孝維\" \"曾任民進黨中執委\" 台北市",
@@ -42748,6 +42917,10 @@
           "party": "國民黨",
           "candidateNumber": 18
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-105-政治工作-2",
+        "tnl-dark-guide-2022-tpe-6-18-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"王欣儀\" \"曾任國民黨台北市黨部副主委\" 台北市",
@@ -45562,6 +45735,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-113-政治工作-3",
+        "tnl-dark-guide-2022-tpe-6-5-政治工作-6"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"王閔生\" \"曾任台北縣長蘇貞昌秘書\" 台北市",
       "localEvidence": [
@@ -46105,6 +46282,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-12-68-政治工作-1",
+        "tnl-dark-guide-2022-khh-12-1-政治工作-3"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"王義雄\" \"曾任中央原民會委員\" 高雄市",
       "localEvidence": [],
@@ -46149,6 +46330,10 @@
           "party": "國民黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-12-68-政治工作-2",
+        "tnl-dark-guide-2022-khh-12-1-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"王義雄\" \"曾任高雄市原住民工作會委員副會長\" 高雄市",
@@ -46746,6 +46931,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-44-政治工作-2",
+        "tnl-dark-guide-2022-tpe-3-14-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"王鴻薇\" \"曾任國民黨文傳會副主委\" 台北市",
       "localEvidence": [
@@ -46968,6 +47157,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-26-政治工作-2",
+        "tnl-dark-guide-2022-khh-11-7-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"王耀裕\" \"曾任林園鄉民代表會副主席\" 高雄市",
@@ -47311,6 +47504,10 @@
           "party": "無黨籍",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-14-67-政治工作-2",
+        "tnl-dark-guide-2022-txg-14-5-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"冉齡軒\" \"曾任國民黨中評委\" 台中市",
@@ -48276,6 +48473,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-17-37-政治工作-1",
+        "tnl-dark-guide-2022-txg-17-2-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"朱元宏\" \"曾任曾任澎湖、雲林、嘉義、台中地方法院法官\" 台中市",
       "localEvidence": [
@@ -48869,6 +49070,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-3-45-政治工作-3",
+        "tnl-dark-guide-2022-tao-3-7-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"朱珍瑤\" \"國民黨黨代表\" 桃園市",
       "localEvidence": [
@@ -48990,6 +49195,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-3-45-政治工作-1",
+        "tnl-dark-guide-2022-tao-3-7-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"朱珍瑤\" \"曾任國民黨桃園市黨部發言人\" 桃園市",
@@ -49743,6 +49952,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-43-政治工作-2",
+        "tnl-dark-guide-2022-txg-7-7-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"朱暖英\" \"曾任國民黨全國黨代表\" 台中市",
       "localEvidence": [
@@ -49807,6 +50020,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-43-政治工作-3",
+        "tnl-dark-guide-2022-txg-7-7-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"朱暖英\" \"曾任議員王秋冬服務處執行長\" 台中市",
@@ -50102,6 +50319,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-34-政治工作-2",
+        "tnl-dark-guide-2022-tpe-2-3-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"江志銘\" \"陳水扁總統辦公室秘書\" 台北市",
       "localEvidence": [
@@ -50211,6 +50432,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-34-政治工作-3",
+        "tnl-dark-guide-2022-tpe-2-3-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"江志銘\" \"曾任台日經濟文化協會理事\" 台北市",
@@ -50878,6 +51103,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-12-83-政治工作-1",
+        "tnl-dark-guide-2022-tao-12-2-政治工作-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"江承洲\" \"立委吳志揚服務處秘書\" 桃園市",
       "localEvidence": [
@@ -50942,6 +51171,10 @@
           "party": "無黨籍",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-12-83-政治工作-2",
+        "tnl-dark-guide-2022-tao-12-2-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"江承洲\" \"曾任國民黨觀音區黨部青年委員\" 桃園市",
@@ -51728,6 +51961,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-10-58-政治工作-4",
+        "tnl-dark-guide-2022-txg-10-4-政治工作-5"
+      ],
       "status": "manual_review",
       "searchQuery": "\"江肇國\" \"民進黨立法院黨團法案助理\" 台中市",
       "localEvidence": [
@@ -51837,6 +52074,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-10-58-政治工作-3",
+        "tnl-dark-guide-2022-txg-10-4-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"江肇國\" \"曾任立委林佳龍辦公室文宣部副主任\" 台中市",
       "localEvidence": [
@@ -51901,6 +52142,10 @@
           "party": "民進黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-10-58-政治工作-2",
+        "tnl-dark-guide-2022-txg-10-4-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"江肇國\" \"曾任立委陳其邁辦公室主任\" 台中市",
@@ -52239,6 +52484,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-41-政治工作-2",
+        "tnl-dark-guide-2022-txg-7-4-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"何文海\" \"曾任民進黨中執委\" 台中市",
       "localEvidence": [
@@ -52303,6 +52552,10 @@
           "party": "民進黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-41-政治工作-3",
+        "tnl-dark-guide-2022-txg-7-4-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"何文海\" \"曾任民進黨全國黨代表\" 台中市",
@@ -53748,6 +54001,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-1-16-政治工作-1",
+        "tnl-dark-guide-2022-tao-1-14-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"余信憲\" \"曾任立委鄭寶清政策顧問\" 桃園市",
       "localEvidence": [
@@ -54790,6 +55047,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-89-政治工作-3",
+        "tnl-dark-guide-2022-tpe-5-6-政治工作-4"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"吳志剛\" \"曾任北市府客委會委員\" 台北市",
       "localEvidence": [],
@@ -54834,6 +55095,10 @@
           "party": "國民黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-89-政治工作-2",
+        "tnl-dark-guide-2022-tpe-5-6-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"吳志剛\" \"曾任國民黨中常委\" 台北市",
@@ -55014,6 +55279,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-86-政治工作-1",
+        "tnl-dark-guide-2022-tpe-5-4-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"吳沛憶\" \"曾任民進黨民主學院主任\" 台北市",
       "localEvidence": [
@@ -55066,6 +55335,10 @@
           "party": "民進黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-86-政治工作-2",
+        "tnl-dark-guide-2022-tpe-5-4-政治工作-4"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"吳沛憶\" \"曾任民進黨發言人\" 台北市",
@@ -55200,6 +55473,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-30-政治工作-2",
+        "tnl-dark-guide-2022-txg-7-1-政治工作-2"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"吳佩芸\" \"曾任時代力量台中黨部副執行長\" 台中市",
       "localEvidence": [
@@ -55301,6 +55578,10 @@
           "party": "時代力量",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-30-政治工作-1",
+        "tnl-dark-guide-2022-txg-7-1-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"吳佩芸\" \"曾任時代力量南屯區主任\" 台中市",
@@ -55882,6 +56163,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-12-109-政治工作-2",
+        "tnl-dark-guide-2022-tao-12-3-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"吳宗憲\" \"曾任觀音鄉鄉民代表\" 桃園市",
@@ -56680,6 +56965,10 @@
           "party": "無黨籍",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-11-101-政治工作-1",
+        "tnl-dark-guide-2022-tnn-11-6-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"吳禹寰\" \"曾任議長吳健保辦公室主任\" 台南市",
@@ -57642,6 +57931,10 @@
           "candidateNumber": 15
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-57-政治工作-1",
+        "tnl-dark-guide-2022-tpe-3-15-政治工作-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"吳崢\" \"曾任立委林昶佐助理\" 台北市",
       "localEvidence": [
@@ -57694,6 +57987,10 @@
           "party": "無黨籍",
           "candidateNumber": 15
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-57-政治工作-2",
+        "tnl-dark-guide-2022-tpe-3-15-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"吳崢\" \"曾任時代力量發言人\" 台北市",
@@ -57926,6 +58223,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-1-73-政治工作-2",
+        "tnl-dark-guide-2022-txg-1-4-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"吳敏濟\" \"曾任2屆鎮民代表\" 台中市",
       "localEvidence": [
@@ -58035,6 +58336,10 @@
           "party": "民進黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-1-73-政治工作-3",
+        "tnl-dark-guide-2022-txg-1-4-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"吳敏濟\" \"曾任立法院國會助理\" 台中市",
@@ -58530,6 +58835,10 @@
           "candidateNumber": 15
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-106-政治工作-1",
+        "tnl-dark-guide-2022-tao-7-15-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"吳嘉和\" \"曾任4屆市民代表、3屆代表會主席\" 桃園市",
       "localEvidence": [
@@ -58865,6 +59174,10 @@
           "candidateNumber": 11
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-10-27-政治工作-3",
+        "tnl-dark-guide-2022-khh-10-11-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"吳銘賜\" \"曾任民進黨市黨部執行委員\" 高雄市",
       "localEvidence": [
@@ -58929,6 +59242,10 @@
           "party": "台灣團結聯盟",
           "candidateNumber": 11
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-10-27-政治工作-2",
+        "tnl-dark-guide-2022-khh-10-11-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"吳銘賜\" \"曾任前鎮區振興里3屆里長\" 高雄市",
@@ -59306,6 +59623,10 @@
           "party": "國民黨",
           "candidateNumber": 9
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-3-44-政治工作-2",
+        "tnl-dark-guide-2022-txg-3-9-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"吳瓊華\" \"曾任烏日鄉鄉民代表\" 台中市",
@@ -59736,6 +60057,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-3-82-政治工作-2",
+        "tnl-dark-guide-2022-tao-3-6-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"呂林小鳳\" \"曾任2屆八德市市民代表\" 桃園市",
@@ -60921,6 +61246,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-2-88-政治工作-2",
+        "tnl-dark-guide-2022-nwt-2-6-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"宋明宗\" \"曾任泰山鄉鄉長、泰山鄉代會主席\" 新北市",
       "localEvidence": [
@@ -61545,6 +61874,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-6-45-政治工作-2",
+        "tnl-dark-guide-2022-tnn-6-10-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李中岑\" \"曾任國民黨黨代表\" 台南市",
       "localEvidence": [
@@ -61848,6 +62181,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-83-政治工作-2",
+        "tnl-dark-guide-2022-txg-13-14-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李天生\" \"曾任台中政府服務中心主任\" 台中市",
       "localEvidence": [
@@ -62068,6 +62405,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-5-36-政治工作-2",
+        "tnl-dark-guide-2022-tnn-5-2-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"李文俊\" \"曾任2屆小新里里長\" 台南市",
@@ -63833,6 +64174,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-2-101-政治工作-1",
+        "tnl-dark-guide-2022-khh-2-1-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李亞築\" \"曾任議員李長生特助\" 高雄市",
       "localEvidence": [
@@ -64864,6 +65209,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-31-政治工作-1",
+        "tnl-dark-guide-2022-tpe-2-4-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"李明賢\" \"曾任國民黨文傳會主委、中央黨部發言人\" 台北市",
       "localEvidence": [
@@ -65213,6 +65562,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-7-122-政治工作-2",
+        "tnl-dark-guide-2022-tpe-7-2-政治工作-5"
       ],
       "status": "manual_review",
       "searchQuery": "\"李芳儒\" \"曾任議員李銀來辦公室主任\" 台北市",
@@ -66060,6 +66413,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-36-政治工作-2",
+        "tnl-dark-guide-2022-tpe-2-10-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李建昌\" \"曾任民進黨中評委\" 台北市",
       "localEvidence": [
@@ -66785,6 +67142,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-6-102-政治工作-3",
+        "tnl-dark-guide-2022-tao-6-2-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李柏坊\" \"曾任國民黨大溪區黨部主委\" 桃園市",
       "localEvidence": [
@@ -66851,6 +67212,10 @@
           "candidateNumber": 22
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-1-62-政治工作-1",
+        "tnl-dark-guide-2022-tao-1-22-政治工作-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李柏瑟\" \"曾任桃園市民代表\" 桃園市",
       "localEvidence": [
@@ -66903,6 +67268,10 @@
           "party": "民進黨",
           "candidateNumber": 22
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-1-62-政治工作-2",
+        "tnl-dark-guide-2022-tao-1-22-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"李柏瑟\" \"曾任議員廖輝星服務處主任\" 桃園市",
@@ -67375,6 +67744,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-4-12-政治工作-2",
+        "tnl-dark-guide-2022-khh-4-2-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"李柏毅\" \"曾任陳菊市長辦公室主任、機要幕僚\" 高雄市",
       "localEvidence": [
@@ -67465,6 +67838,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-112-政治工作-1",
+        "tnl-dark-guide-2022-tpe-6-10-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李柏毅\" \"曾任議員李新辦公室主任\" 台北市",
       "localEvidence": [
@@ -67529,6 +67906,10 @@
           "party": "無黨籍",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-2-86-政治工作-2",
+        "tnl-dark-guide-2022-khh-2-4-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"李柏融\" \"曾任茄萣鄉鄉民代表\" 高雄市",
@@ -67595,6 +67976,10 @@
           "party": "無黨籍",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-2-86-政治工作-1",
+        "tnl-dark-guide-2022-khh-2-4-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"李柏融\" \"曾任國民黨中央委員\" 高雄市",
@@ -67964,6 +68349,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-4-30-政治工作-2",
+        "tnl-dark-guide-2022-khh-4-6-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李眉蓁\" \"曾任國民黨高雄市黨部副主委\" 高雄市",
       "localEvidence": [
@@ -68087,6 +68476,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-12-110-政治工作-2",
+        "tnl-dark-guide-2022-tnn-12-1-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李美素\" \"曾任台南市民族事務委員會委員\" 台南市",
       "localEvidence": [
@@ -68139,6 +68532,10 @@
           "party": "無黨籍",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-12-110-政治工作-1",
+        "tnl-dark-guide-2022-tnn-12-1-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"李美素\" \"曾任立委陳瑩辦公室台南特助\" 台南市",
@@ -68698,6 +69095,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-9-111-政治工作-3",
+        "tnl-dark-guide-2022-tao-9-6-政治工作-4"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"李家興\" \"桃園縣勞資調解委員\" 桃園市",
       "localEvidence": [],
@@ -68742,6 +69143,10 @@
           "party": "無黨籍",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-9-111-政治工作-2",
+        "tnl-dark-guide-2022-tao-9-6-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"李家興\" \"曾任2屆楊梅鎮鎮民代表\" 桃園市",
@@ -69577,6 +69982,10 @@
           "candidateNumber": 8
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-9-80-政治工作-1",
+        "tnl-dark-guide-2022-tnn-9-8-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李啓維\" \"曾任議員李文正助理\" 台南市",
       "localEvidence": [
@@ -70091,6 +70500,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-8-123-政治工作-2",
+        "tnl-dark-guide-2022-tpe-8-1-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"李傅中武\" \"曾任國民黨中常委\" 台北市",
       "localEvidence": [
@@ -70255,6 +70668,10 @@
           "party": "民進黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-6-100-政治工作-2",
+        "tnl-dark-guide-2022-khh-6-4-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"李喬如\" \"曾任民進黨團總召集人\" 高雄市",
@@ -70788,6 +71205,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-4-72-政治工作-1",
+        "tnl-dark-guide-2022-khh-4-10-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李雅芬\" \"曾任立委黃昭順助理\" 高雄市",
       "localEvidence": [
@@ -71015,6 +71436,10 @@
           "party": "民進黨",
           "candidateNumber": 9
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-4-74-政治工作-1",
+        "tnl-dark-guide-2022-khh-4-9-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"李雅慧\" \"曾任立委趙天麟辦公室藝文部執行長\" 高雄市",
@@ -71876,6 +72301,10 @@
           "party": "無黨團結聯盟",
           "candidateNumber": 16
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-10-50-政治工作-2",
+        "tnl-dark-guide-2022-khh-10-16-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"李順進\" \"曾任濟南里里長\" 高雄市",
@@ -72825,6 +73254,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-7-58-政治工作-1",
+        "tnl-dark-guide-2022-tnn-7-7-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李鎮國\" \"曾任4屆復興里里長\" 台南市",
       "localEvidence": [
@@ -73147,6 +73580,10 @@
           "candidateNumber": 8
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-11-105-政治工作-2",
+        "tnl-dark-guide-2022-tnn-11-8-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"杜素吟\" \"曾任仁德鄉鄉民代表\" 台南市",
       "localEvidence": [
@@ -73394,6 +73831,10 @@
           "party": "國民黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-5-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-5-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"汪志冰\" \"曾任國大代表\" 台北市",
@@ -73822,6 +74263,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-1-10-政治工作-2",
+        "tnl-dark-guide-2022-tnn-1-2-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"沈家鳳\" \"曾任新營市市民代表\" 台南市",
@@ -74526,6 +74971,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-108-政治工作-1",
+        "tnl-dark-guide-2022-txg-5-3-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"周永鴻\" \"曾任台中民政局局長\" 台中市",
       "localEvidence": [
@@ -74615,6 +75064,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-108-政治工作-3",
+        "tnl-dark-guide-2022-txg-5-3-政治工作-5"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"周永鴻\" \"曾任台灣智庫民調中心主任\" 台中市",
@@ -75101,6 +75554,10 @@
           "party": "無黨籍",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-4-25-政治工作-1",
+        "tnl-dark-guide-2022-tnn-4-1-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"周奕齊\" \"曾任台南市議會機要秘書\" 台南市",
@@ -75697,6 +76154,10 @@
           "candidateNumber": 8
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-4-50-政治工作-2",
+        "tnl-dark-guide-2022-nwt-5-8-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"周勝考\" \"曾任板橋市市民代表\" 新北市",
       "localEvidence": [
@@ -75761,6 +76222,10 @@
           "party": "國民黨",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-4-50-政治工作-3",
+        "tnl-dark-guide-2022-nwt-5-8-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"周勝考\" \"曾任國民黨板橋黨部主委\" 新北市",
@@ -76503,6 +76968,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-9-79-政治工作-1",
+        "tnl-dark-guide-2022-tnn-9-3-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"周麗津\" \"曾任周明德服務處助理\" 台南市",
@@ -77392,6 +77861,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-20-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-6-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"林世宗\" \"民進黨中央評委\" 台北市",
@@ -78347,6 +78820,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-13-24-政治工作-2",
+        "tnl-dark-guide-2022-tao-13-1-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林志強\" \"曾任3屆大溪鎮鎮民代表\" 桃園市",
       "localEvidence": [
@@ -78436,6 +78913,10 @@
           "party": "民進黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-13-24-政治工作-3",
+        "tnl-dark-guide-2022-tao-13-1-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"林志強\" \"曾任立委陳瑩國會辦公室總督導\" 桃園市",
@@ -79060,6 +79541,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-22-政治工作-1",
+        "tnl-dark-guide-2022-tpe-1-4-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林杏兒\" \"曾任國民黨台北市青工會總會長\" 台北市",
       "localEvidence": [
@@ -79112,6 +79597,10 @@
           "party": "國民黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-22-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-4-政治工作-5"
       ],
       "status": "manual_review",
       "searchQuery": "\"林杏兒\" \"曾任國民黨台北市黨部副主委\" 台北市",
@@ -79716,6 +80205,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-3-49-政治工作-1",
+        "tnl-dark-guide-2022-txg-3-3-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林孟令\" \"曾任龍井鄉鄉民代表\" 台中市",
       "localEvidence": [
@@ -79805,6 +80298,10 @@
           "party": "無黨籍",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-3-49-政治工作-2",
+        "tnl-dark-guide-2022-txg-3-3-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"林孟令\" \"曾任議員林士昌服務處特助\" 台中市",
@@ -81398,6 +81895,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-7-77-政治工作-2",
+        "tnl-dark-guide-2022-nwt-8-14-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林金結\" \"曾任立委盧嘉辰辦公室主任\" 新北市",
       "localEvidence": [
@@ -81488,6 +81989,11 @@
           "party": "國民黨",
           "candidateNumber": 14
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-7-77-政治工作-3",
+        "tnl-dark-guide-2022-nwt-8-14-政治工作-4",
+        "tnl-dark-guide-2022-nwt-8-14-政治工作-7"
       ],
       "status": "manual_review",
       "searchQuery": "\"林金結\" \"曾任國民黨土城區黨部主委\" 新北市",
@@ -81870,6 +82376,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-64-政治工作-1",
+        "tnl-dark-guide-2022-tpe-4-4-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林亮君\" \"曾任立委林昶佐國會辦公室特助\" 台北市",
       "localEvidence": [
@@ -81934,6 +82444,10 @@
           "party": "無黨籍",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-64-政治工作-2",
+        "tnl-dark-guide-2022-tpe-4-4-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"林亮君\" \"曾任議員簡余晏辦公室助理\" 台北市",
@@ -82677,6 +83191,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-10-40-政治工作-2",
+        "tnl-dark-guide-2022-tao-10-2-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林昭賢\" \"曾任龍潭區後備軍人輔導中心副主任、秘書\" 桃園市",
       "localEvidence": [
@@ -82742,6 +83260,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-10-40-政治工作-1",
+        "tnl-dark-guide-2022-tao-10-2-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"林昭賢\" \"曾任議員閻中傑秘書\" 桃園市",
@@ -83262,6 +83784,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-6-113-政治工作-1",
+        "tnl-dark-guide-2022-txg-6-3-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"林祈烽\" \"曾任立委張廖萬堅服務處主任\" 台中市",
@@ -84460,6 +84986,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-77-政治工作-1",
+        "tnl-dark-guide-2022-tpe-4-3-政治工作-1"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"林婕麗\" \"曾任議員陳政忠助理\" 台北市",
       "localEvidence": [],
@@ -85028,6 +85558,10 @@
           "candidateNumber": 12
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-9-99-政治工作-2",
+        "tnl-dark-guide-2022-khh-9-12-政治工作-5"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林智鴻\" \"曾任高雄市政府新聞局主秘\" 高雄市",
       "localEvidence": [
@@ -85538,6 +86072,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-12-政治工作-3",
+        "tnl-dark-guide-2022-tpe-1-14-政治工作-4"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"林瑞圖\" \"人民最大黨創黨黨員兼副主席\" 台北市",
       "localEvidence": [],
@@ -85626,6 +86164,10 @@
           "party": "無黨籍",
           "candidateNumber": 14
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-12-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-14-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"林瑞圖\" \"曾任立法委員\" 台北市",
@@ -86001,6 +86543,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-116-政治工作-3",
+        "tnl-dark-guide-2022-txg-5-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林義偉\" \"曾任台灣新社會智庫主任\" 台中市",
       "localEvidence": [
@@ -86067,6 +86613,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-116-政治工作-2",
+        "tnl-dark-guide-2022-txg-5-5-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林義偉\" \"曾任立委蔡其昌．何欣純／議員謝志忠聯合服務處主任\" 台中市",
       "localEvidence": [
@@ -86132,6 +86682,10 @@
           "party": "民進黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-116-政治工作-1",
+        "tnl-dark-guide-2022-txg-5-5-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"林義偉\" \"曾任立法院副院長蔡其昌特助\" 台中市",
@@ -86824,6 +87378,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-16-87-政治工作-2",
+        "tnl-dark-guide-2022-txg-16-3-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林榮進\" \"曾任和平鄉鄉長\" 台中市",
       "localEvidence": [
@@ -87008,6 +87566,10 @@
           "party": "國民黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-92-政治工作-2",
+        "tnl-dark-guide-2022-txg-13-1-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"林碧秀\" \"曾任大里鄉民代表、市民代表\" 台中市",
@@ -87745,6 +88307,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-114-政治工作-3",
+        "tnl-dark-guide-2022-txg-13-6-政治工作-5"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"林德宇\" \"曾任民進黨台中市黨部執行長\" 台中市",
       "localEvidence": [
@@ -87822,6 +88388,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-114-政治工作-1",
+        "tnl-dark-guide-2022-txg-13-6-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林德宇\" \"曾任立法院副院長蔡其昌助理\" 台中市",
       "localEvidence": [
@@ -87898,6 +88468,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-114-政治工作-2",
+        "tnl-dark-guide-2022-txg-13-6-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"林德宇\" \"曾任彰化縣政府新聞處長\" 台中市",
@@ -88856,6 +89430,10 @@
           "candidateNumber": 21
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-119-政治工作-1",
+        "tnl-dark-guide-2022-tpe-6-21-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林穎孟\" \"曾任立委林昶佐辦公室法案助理\" 台北市",
       "localEvidence": [
@@ -88938,6 +89516,10 @@
           "party": "無黨籍",
           "candidateNumber": 21
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-119-政治工作-2",
+        "tnl-dark-guide-2022-tpe-6-21-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"林穎孟\" \"曾任時代力量發言人\" 台北市",
@@ -89157,6 +89739,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-15-政治工作-1",
+        "tnl-dark-guide-2022-txg-8-5-政治工作-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"邱于珊\" \"曾任親民黨台中市服務處副處長\" 台中市",
       "localEvidence": [
@@ -89297,6 +89883,10 @@
           "party": "國民黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-89-政治工作-1",
+        "tnl-dark-guide-2022-khh-11-4-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"邱于軒\" \"曾任國民黨黨代表\" 高雄市",
@@ -89523,6 +90113,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-14-127-政治工作-2",
+        "tnl-dark-guide-2022-tao-14-4-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"邱志成\" \"曾任原住民族委員會就業服務督導\" 桃園市",
       "localEvidence": [
@@ -89588,6 +90182,10 @@
           "party": "民進黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-14-127-政治工作-1",
+        "tnl-dark-guide-2022-tao-14-4-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"邱志成\" \"曾任桃園縣政府原住民行政局就服員\" 桃園市",
@@ -90536,6 +91134,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-110-政治工作-2",
+        "tnl-dark-guide-2022-tao-7-14-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"邱奕勝\" \"曾任中壢市民代表會主席\" 桃園市",
       "localEvidence": [
@@ -91128,6 +91730,10 @@
           "party": "國民黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-5-63-政治工作-2",
+        "tnl-dark-guide-2022-nwt-6-3-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"邱烽堯\" \"曾任國民黨新北市黨部副主委\" 新北市",
@@ -92777,6 +93383,10 @@
           "candidateNumber": 11
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-10-政治工作-1",
+        "tnl-dark-guide-2022-tpe-1-11-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"侯漢廷\" \"曾任新黨新思維中心主任\" 台北市",
       "localEvidence": [
@@ -93178,6 +93788,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-1-115-政治工作-1",
+        "tnl-dark-guide-2022-txg-1-2-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"施志昌\" \"曾任立法院副院長蔡其昌特助\" 台中市",
@@ -93606,6 +94220,10 @@
           "party": "無黨籍",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-41-政治工作-1",
+        "tnl-dark-guide-2022-tpe-3-7-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"洪士奇\" \"曾任新竹市衛生局局長\" 台北市",
@@ -94443,6 +95061,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2022-nwt-8-6-政治工作-3",
+        "tnl-dark-guide-2022-nwt-8-6-政治工作-5"
+      ],
       "status": "manual_review",
       "searchQuery": "\"洪佳君\" \"曾任國民黨中央委員\" 新北市",
       "localEvidence": [
@@ -94925,6 +95547,10 @@
           "party": "民進黨",
           "candidateNumber": 16
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-50-政治工作-2",
+        "tnl-dark-guide-2022-tpe-3-16-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"洪健益\" \"前立委徐國勇、卓榮泰辦公室主任\" 台北市",
@@ -95617,6 +96243,10 @@
           "party": "社會民主黨",
           "candidateNumber": 19
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-102-政治工作-1",
+        "tnl-dark-guide-2022-tpe-6-19-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"苗博雅\" \"曾任社會民主黨全國委員\" 台北市",
@@ -97149,6 +97779,10 @@
           "candidateNumber": 11
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-58-政治工作-1",
+        "tnl-dark-guide-2022-tpe-3-11-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"徐巧芯\" \"曾任馬英九辦公室發言人\" 台北市",
       "localEvidence": [
@@ -97225,6 +97859,10 @@
           "party": "國民黨",
           "candidateNumber": 11
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-58-政治工作-2",
+        "tnl-dark-guide-2022-tpe-3-11-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"徐巧芯\" \"曾任國民黨青年團總團長、草協聯盟發起人\" 台北市",
@@ -97449,6 +98087,10 @@
           "candidateNumber": 17
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-114-政治工作-3",
+        "tnl-dark-guide-2022-tpe-6-17-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"徐弘庭\" \"曾任立委周守訓助理\" 台北市",
       "localEvidence": [
@@ -97583,6 +98225,10 @@
           "party": "國民黨",
           "candidateNumber": 17
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-114-政治工作-2",
+        "tnl-dark-guide-2022-tpe-6-17-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"徐弘庭\" \"曾任連勝文辦公室助理及發言人\" 台北市",
@@ -97980,6 +98626,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-10-94-政治工作-2",
+        "tnl-dark-guide-2022-tao-10-4-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"徐玉樹\" \"曾任2屆龍潭鄉鄉民代表副主席\" 桃園市",
       "localEvidence": [
@@ -98101,6 +98751,10 @@
           "party": "國民黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-10-94-政治工作-3",
+        "tnl-dark-guide-2022-tao-10-4-政治工作-4"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"徐玉樹\" \"曾任國民黨黨部副主委\" 桃園市",
@@ -98260,6 +98914,10 @@
           "party": "無黨籍",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-85-政治工作-1",
+        "tnl-dark-guide-2022-tpe-5-5-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"徐立信\" \"曾任立委陳根德助理\" 台北市",
@@ -98565,6 +99223,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-5-98-政治工作-2",
+        "tnl-dark-guide-2022-tao-5-2-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"徐其萬\" \"曾任4屆大園鄉鄉民代表、副主席\" 桃園市",
@@ -98934,6 +99596,10 @@
           "party": "無黨籍",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-4-政治工作-1",
+        "tnl-dark-guide-2022-txg-5-4-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"徐瑄灃\" \"曾任黃復興黨部黃國安支黨部委員兼法律顧問\" 台中市",
@@ -99675,6 +100341,10 @@
           "candidateNumber": 8
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-54-政治工作-2",
+        "tnl-dark-guide-2022-tpe-3-8-政治工作-5"
+      ],
       "status": "manual_review",
       "searchQuery": "\"秦慧珠\" \"曾任2屆立委\" 台北市",
       "localEvidence": [
@@ -99801,6 +100471,10 @@
           "party": "國民黨",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-54-政治工作-3",
+        "tnl-dark-guide-2022-tpe-3-8-政治工作-6"
       ],
       "status": "manual_review",
       "searchQuery": "\"秦慧珠\" \"曾任台北縣政府觀光旅遊局局長\" 台北市",
@@ -100144,6 +100818,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-4-85-政治工作-2",
+        "tnl-dark-guide-2022-txg-4-5-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"翁美春\" \"曾任民進黨全國黨代表\" 台中市",
       "localEvidence": [
@@ -100454,6 +101132,10 @@
           "party": "國民黨",
           "candidateNumber": 25
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-111-政治工作-1",
+        "tnl-dark-guide-2022-tpe-6-25-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"耿葳\" \"曾任議員陳孋輝助理、議員厲耿桂芳特助\" 台北市",
@@ -101667,6 +102349,10 @@
           "candidateNumber": 11
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-7-62-政治工作-2",
+        "tnl-dark-guide-2022-khh-7-11-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"康裕成\" \"曾任民進黨中執委、發言人\" 高雄市",
       "localEvidence": [
@@ -102446,6 +103132,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-12-70-政治工作-3",
+        "tnl-dark-guide-2022-txg-12-1-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"張玉嬿\" \"曾任民進黨台中市黨部執委\" 台中市",
       "localEvidence": [
@@ -102535,6 +103225,10 @@
           "party": "民進黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-12-70-政治工作-4",
+        "tnl-dark-guide-2022-txg-12-1-政治工作-5"
       ],
       "status": "manual_review",
       "searchQuery": "\"張玉嬿\" \"曾任立委蔡其昌市政辦公室秘書\" 台中市",
@@ -102694,6 +103388,10 @@
           "party": "民進黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-12-70-政治工作-2",
+        "tnl-dark-guide-2022-txg-12-1-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"張玉嬿\" \"曾任議員黃秀珠服務處主任\" 台中市",
@@ -103926,6 +104624,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-42-政治工作-3",
+        "tnl-dark-guide-2022-txg-13-2-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"張芬郁\" \"曾任民進黨全國黨代表\" 台中市",
       "localEvidence": [
@@ -104015,6 +104717,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-42-政治工作-2",
+        "tnl-dark-guide-2022-txg-13-2-政治工作-2"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"張芬郁\" \"曾任立委簡肇棟服務處助理\" 台中市",
@@ -104194,6 +104900,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-10-53-政治工作-2",
+        "tnl-dark-guide-2022-txg-10-6-政治工作-4"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"張彥彤\" \"曾任國民黨青年團分團長\" 台中市",
       "localEvidence": [
@@ -104283,6 +104993,10 @@
           "party": "國民黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-10-53-政治工作-1",
+        "tnl-dark-guide-2022-txg-10-6-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"張彥彤\" \"曾任議員張宏年服務處執行長\" 台中市",
@@ -104588,6 +105302,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-3-61-政治工作-2",
+        "tnl-dark-guide-2022-txg-3-5-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"張家銨\" \"曾任台中市長室秘書\" 台中市",
       "localEvidence": [
@@ -104678,6 +105396,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-3-61-政治工作-3",
+        "tnl-dark-guide-2022-txg-3-5-政治工作-5"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"張家銨\" \"曾任民進黨台中市黨部副執行長\" 台中市",
       "localEvidence": [
@@ -104767,6 +105489,10 @@
           "party": "民進黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-3-61-政治工作-1",
+        "tnl-dark-guide-2022-txg-3-5-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"張家銨\" \"曾任議員劉淑蘭服務團隊執行長\" 台中市",
@@ -105047,6 +105773,10 @@
           "party": "國民黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-4-58-政治工作-1",
+        "tnl-dark-guide-2022-tao-4-3-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"張桂綿\" \"曾任蘆竹鄉鄉民代表\" 桃園市",
@@ -105449,6 +106179,10 @@
           "party": "國民黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-59-政治工作-2",
+        "tnl-dark-guide-2022-txg-2-5-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"張清照\" \"曾任張清堂議長特助\" 台中市",
@@ -106215,6 +106949,10 @@
           "candidateNumber": 20
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-23-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-20-政治工作-5"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"張斯綱\" \"曾任國民黨中央委員、文傳會副主委\" 台北市",
       "localEvidence": [
@@ -106361,6 +107099,10 @@
           "candidateNumber": 20
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-23-政治工作-3",
+        "tnl-dark-guide-2022-tpe-1-20-政治工作-6"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"張斯綱\" \"曾任衛生署簡任秘書、海基會資深高級專員\" 台北市",
       "localEvidence": [
@@ -106437,6 +107179,10 @@
           "party": "國民黨",
           "candidateNumber": 20
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-23-政治工作-1",
+        "tnl-dark-guide-2022-tpe-1-20-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"張斯綱\" \"曾任蕭萬長幕僚\" 台北市",
@@ -106858,6 +107604,10 @@
           "party": "無黨籍",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-103-政治工作-2",
+        "tnl-dark-guide-2022-txg-13-8-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"張滄沂\" \"曾任大里市民代表\" 台中市",
@@ -107284,6 +108034,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-6-57-政治工作-2",
+        "tnl-dark-guide-2022-txg-6-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"張廖乃綸\" \"曾任台中市政府婦女權益促進會委員\" 台中市",
       "localEvidence": [
@@ -107374,6 +108128,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-6-57-政治工作-3",
+        "tnl-dark-guide-2022-txg-6-5-政治工作-4"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"張廖乃綸\" \"曾任議長張廖貴專特助\" 台中市",
       "localEvidence": [],
@@ -107463,6 +108221,10 @@
           "party": "新黨",
           "candidateNumber": 11
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-95-政治工作-1",
+        "tnl-dark-guide-2022-tpe-5-11-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"張榮法\" \"曾任新黨組織委員會副主委\" 台北市",
@@ -108306,6 +109068,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-10-54-政治工作-2",
+        "tnl-dark-guide-2022-tao-10-5-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"張肇良\" \"曾任民進黨黨代表\" 桃園市",
       "localEvidence": [
@@ -108463,6 +109229,10 @@
           "party": "民進黨",
           "candidateNumber": 9
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-123-政治工作-1",
+        "tnl-dark-guide-2022-tao-7-9-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"張曉昀\" \"曾任民進黨桃園市黨部南區副主任\" 桃園市",
@@ -108630,6 +109400,10 @@
           "party": "民進黨",
           "candidateNumber": 9
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-123-政治工作-2",
+        "tnl-dark-guide-2022-tao-7-9-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"張曉昀\" \"曾任議員袁明星服務處助理\" 桃園市",
@@ -109352,6 +110126,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-4-68-政治工作-3",
+        "tnl-dark-guide-2022-txg-4-3-政治工作-4"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"張瀞分\" \"曾任國民黨台中市黨部副主委\" 台中市",
       "localEvidence": [
@@ -109441,6 +110219,10 @@
           "party": "國民黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-4-68-政治工作-2",
+        "tnl-dark-guide-2022-txg-4-3-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"張瀞分\" \"曾任豐原市市長、區長\" 台中市",
@@ -109721,6 +110503,10 @@
           "candidateNumber": 12
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2022-tpe-4-12-政治工作-1",
+        "tnl-dark-guide-2022-tpe-4-12-政治工作-2"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"梁文傑\" \"2018年當選議員\" 台北市",
       "localEvidence": [
@@ -109829,6 +110615,10 @@
           "party": "民進黨",
           "candidateNumber": 12
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-71-政治工作-2",
+        "tnl-dark-guide-2022-tpe-4-12-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"梁文傑\" \"曾任民進黨中國事務部副主任、策會首席副執行長\" 台北市",
@@ -110041,6 +110831,10 @@
           "candidateNumber": 23
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-99-政治工作-2",
+        "tnl-dark-guide-2022-tao-7-23-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"梁為超\" \"曾任立委吳志揚助理\" 桃園市",
       "localEvidence": [
@@ -110123,6 +110917,10 @@
           "party": "國民黨",
           "candidateNumber": 23
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-99-政治工作-3",
+        "tnl-dark-guide-2022-tao-7-23-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"梁為超\" \"曾任國民黨桃園縣黨部副主委\" 桃園市",
@@ -111044,6 +111842,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-6-84-政治工作-2",
+        "tnl-dark-guide-2022-nwt-7-5-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"許昭興\" \"曾任3屆永和市市民代表\" 新北市",
       "localEvidence": [
@@ -111336,6 +112138,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-47-政治工作-4",
+        "tnl-dark-guide-2022-tpe-3-3-政治工作-5"
+      ],
       "status": "manual_review",
       "searchQuery": "\"許家蓓\" \"曾任民進黨台北市黨部執委、黨代表\" 台北市",
       "localEvidence": [
@@ -111389,6 +112195,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-47-政治工作-2",
+        "tnl-dark-guide-2022-tpe-3-3-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"許家蓓\" \"曾任立委高志鵬辦公室副主任\" 台北市",
       "localEvidence": [
@@ -111441,6 +112251,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-47-政治工作-3",
+        "tnl-dark-guide-2022-tpe-3-3-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"許家蓓\" \"曾任議員許富男研究室主任\" 台北市",
@@ -111811,6 +112625,10 @@
           "candidateNumber": 13
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-52-政治工作-3",
+        "tnl-dark-guide-2022-tpe-3-13-政治工作-4"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"許淑華\" \"曾任立委段宜康辦公室主任\" 台北市",
       "localEvidence": [],
@@ -111855,6 +112673,10 @@
           "party": "民進黨",
           "candidateNumber": 13
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-52-政治工作-2",
+        "tnl-dark-guide-2022-tpe-3-13-政治工作-3"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"許淑華\" \"曾任立委蕭美琴服務處主任\" 台北市",
@@ -111944,6 +112766,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-4-96-政治工作-2",
+        "tnl-dark-guide-2022-tao-4-6-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"許清順\" \"曾任2屆蘆竹鄉代表\" 桃園市",
@@ -112066,6 +112892,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-4-96-政治工作-3",
+        "tnl-dark-guide-2022-tao-4-6-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"許清順\" \"曾任民進黨蘆竹鄉黨部主委\" 桃園市",
@@ -112918,6 +113748,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-3-22-政治工作-2",
+        "tnl-dark-guide-2022-tnn-3-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"郭秀珠\" \"曾任麻豆鎮油車里里長\" 台南市",
       "localEvidence": [
@@ -113360,6 +114194,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-8-32-政治工作-2",
+        "tnl-dark-guide-2022-khh-8-1-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"郭建盟\" \"曾任陳菊市長辦公室副主任、民政局主秘\" 高雄市",
       "localEvidence": [
@@ -113596,6 +114434,10 @@
           "candidateNumber": 16
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-90-政治工作-2",
+        "tnl-dark-guide-2022-tpe-5-16-政治工作-3"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"郭昭巖\" \"曾任立委林郁方特別助理\" 台北市",
       "localEvidence": [],
@@ -113640,6 +114482,10 @@
           "party": "國民黨",
           "candidateNumber": 16
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-90-政治工作-3",
+        "tnl-dark-guide-2022-tpe-5-16-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"郭昭巖\" \"曾任議員李仁人服務處執行長\" 台北市",
@@ -113850,6 +114696,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-12-63-政治工作-3",
+        "tnl-dark-guide-2022-tao-12-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"郭蔡美英\" \"民主進步黨觀音區黨部主委\" 桃園市",
       "localEvidence": [
@@ -113928,6 +114778,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-12-63-政治工作-1",
+        "tnl-dark-guide-2022-tao-12-5-政治工作-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"郭蔡美英\" \"曾任1屆縣議員\" 桃園市",
       "localEvidence": [
@@ -113979,6 +114833,10 @@
           "party": "民進黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-12-63-政治工作-2",
+        "tnl-dark-guide-2022-tao-12-5-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"郭蔡美英\" \"曾任桃園市政府機要秘書\" 桃園市",
@@ -114404,6 +115262,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-4-71-政治工作-3",
+        "tnl-dark-guide-2022-tao-4-2-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"郭麗華\" \"曾任立委郭榮宗助理\" 桃園市",
       "localEvidence": [
@@ -114505,6 +115367,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-4-71-政治工作-2",
+        "tnl-dark-guide-2022-tao-4-2-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"郭麗華\" \"曾任蘆竹鄉鄉民代表\" 桃園市",
@@ -115062,6 +115928,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-9-47-政治工作-2",
+        "tnl-dark-guide-2022-txg-9-3-政治工作-4"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"陳文政\" \"曾任台中市黃國柱黨部委員\" 台中市",
       "localEvidence": [
@@ -115151,6 +116021,10 @@
           "party": "國民黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-9-47-政治工作-1",
+        "tnl-dark-guide-2022-txg-9-3-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳文政\" \"曾任副議長陳天汶辦公室秘書\" 台中市",
@@ -115968,6 +116842,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-7-49-政治工作-2",
+        "tnl-dark-guide-2022-tnn-7-6-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳世霖\" \"曾任2屆永康市市民代表\" 台南市",
       "localEvidence": [
@@ -116311,6 +117189,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-4-97-政治工作-2",
+        "tnl-dark-guide-2022-txg-4-2-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳本添\" \"曾任立委徐中雄服務處主任\" 台中市",
@@ -116767,6 +117649,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-81-政治工作-2",
+        "tnl-dark-guide-2022-txg-8-2-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳成添\" \"曾任3屆后庄里里長\" 台中市",
       "localEvidence": [
@@ -116994,6 +117880,10 @@
           "party": "無黨籍",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-127-政治工作-1",
+        "tnl-dark-guide-2022-txg-2-1-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳廷秀\" \"曾任梧棲區區長、梧棲鎮鎮長\" 台中市",
@@ -117613,6 +118503,10 @@
           "party": "民進黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-69-政治工作-1",
+        "tnl-dark-guide-2022-tpe-4-1-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"陳怡君\" \"曾任民進黨台北市黨部執行長\" 台北市",
@@ -120764,6 +121658,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-13-49-政治工作-1",
+        "tnl-dark-guide-2022-tao-13-6-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳姿伶 Amuy．Muwakay\" \"曾任立委廖國棟辦公室主任\" 桃園市",
       "localEvidence": [
@@ -121978,6 +122876,10 @@
           "candidateNumber": 25
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-14-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-25-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳政忠\" \"曾任國民黨中央委員\" 台北市",
       "localEvidence": [
@@ -122309,6 +123211,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-9-69-政治工作-2",
+        "tnl-dark-guide-2022-txg-9-1-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳政顯\" \"曾任議員陳有江服務處主任\" 台中市",
       "localEvidence": [
@@ -122537,6 +123443,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-68-政治工作-2",
+        "tnl-dark-guide-2022-tpe-4-5-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳炳甫\" \"曾任議員陳玉梅服務處執行長\" 台北市",
       "localEvidence": [
@@ -122764,6 +123674,10 @@
           "party": "民進黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-3-23-政治工作-1",
+        "tnl-dark-guide-2022-tnn-3-1-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"陳秋宏\" \"曾任議員陳文賢服務處主任\" 台南市",
@@ -123547,6 +124461,10 @@
           "party": "國民黨",
           "candidateNumber": 16
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-1-69-政治工作-2",
+        "tnl-dark-guide-2022-tao-1-16-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳美梅\" \"曾任國民黨全國黨代表、市民代表\" 桃園市",
@@ -124340,6 +125258,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-8-85-政治工作-2",
+        "tnl-dark-guide-2022-khh-8-2-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳若翠\" \"曾任前鎮區西山里里長\" 高雄市",
       "localEvidence": [
@@ -124404,6 +125326,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-8-85-政治工作-1",
+        "tnl-dark-guide-2022-khh-8-2-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳若翠\" \"曾任國民黨中央委員\" 高雄市",
@@ -124684,6 +125610,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-11-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-7-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳重文\" \"曾任立委蔡正元助理\" 台北市",
@@ -124996,6 +125926,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-1-117-政治工作-3",
+        "tnl-dark-guide-2022-nwt-1-2-政治工作-5"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳偉杰\" \"曾任立委林德福、江啟臣助理\" 新北市",
@@ -125447,6 +126381,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-1-117-政治工作-1",
+        "tnl-dark-guide-2022-nwt-1-2-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳偉杰\" \"曾任新北市青工會總會長\" 新北市",
       "localEvidence": [
@@ -125894,6 +126832,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-6-94-政治工作-2",
+        "tnl-dark-guide-2022-txg-6-4-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳淑華\" \"曾任民進黨中執委\" 台中市",
       "localEvidence": [
@@ -125958,6 +126900,10 @@
           "party": "無黨籍",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-5-96-政治工作-1",
+        "tnl-dark-guide-2022-khh-5-8-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳清茂\" \"曾任鳥松區鳥松里里長\" 高雄市",
@@ -126407,6 +127353,10 @@
           "party": "無黨團結聯盟",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-4-97-政治工作-1",
+        "tnl-dark-guide-2022-khh-4-4-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳善慧\" \"曾任楠梓區興昌里里長\" 高雄市",
@@ -127160,6 +128110,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-14-100-政治工作-2",
+        "tnl-dark-guide-2022-tao-14-7-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"陳瑛\" \"曾任復興鄉鄉民代表。\" 桃園市",
@@ -127949,6 +128903,10 @@
           "candidateNumber": 9
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-16-政治工作-3",
+        "tnl-dark-guide-2022-tpe-1-9-政治工作-5"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳慈慧\" \"曾任立委姚文智服務處主任\" 台北市",
       "localEvidence": [
@@ -128013,6 +128971,10 @@
           "party": "民進黨",
           "candidateNumber": 9
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-16-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-9-政治工作-4"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"陳慈慧\" \"曾任議員陳碧峰辦公室主任\" 台北市",
@@ -128167,6 +129129,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-5-35-政治工作-1",
+        "tnl-dark-guide-2022-tnn-5-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳碧玉\" \"曾任議員林慶鎮服務處秘書\" 台南市",
       "localEvidence": [
@@ -128256,6 +129222,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-4-27-政治工作-1",
+        "tnl-dark-guide-2022-tnn-4-2-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳福慶\" \"曾任南化鄉代表會主席\" 台南市",
@@ -128455,6 +129425,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-8-69-政治工作-2",
+        "tnl-dark-guide-2022-nwt-9-2-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳儀君\" \"曾任2屆新店市市民代表\" 新北市",
       "localEvidence": [
@@ -128469,19 +129443,41 @@
           "sourceType": "external_research",
           "sourceName": "中央選舉委員會：2010年新北市第8選舉區議員選舉公報",
           "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC8%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "陳儀君簡歷列第6、7屆新店市民代表",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "中央選舉委員會：2014年新北市第8選舉區議員選舉公報",
+          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC8%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf"
         }
       ],
       "externalResearch": {
         "researchId": "tnl-dark-guide-2018-nwt-8-69-政治工作-2",
+        "sourceResearchIds": [
+          "tnl-dark-guide-2018-nwt-8-69-政治工作-2",
+          "tnl-dark-guide-2022-nwt-9-2-政治工作-3"
+        ],
         "query": "\"陳儀君\" 新店市 市民代表 第六屆 第七屆",
         "outcome": "source_found_manual_review",
-        "notes": "2010及2014年中選會公報均列陳儀君曾任兩屆新店市民代表，可支持敘述。",
+        "notes": "2010及2014年中選會公報均列陳儀君曾任兩屆新店市民代表，可支持敘述。 2014年中選會公報明列陳儀君曾任第6、7屆新店市民代表，可支持兩屆市民代表敘述。",
         "sources": [
           {
             "tier": "official",
             "name": "中央選舉委員會：2010年新北市第8選舉區議員選舉公報",
             "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/099%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC8%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
             "supports": "陳儀君簡歷列第7、8屆新店市民代表"
+          },
+          {
+            "tier": "official",
+            "name": "中央選舉委員會：2014年新北市第8選舉區議員選舉公報",
+            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC8%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+            "supports": "陳儀君簡歷列第6、7屆新店市民代表"
           }
         ]
       }
@@ -128563,6 +129559,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-8-69-政治工作-3",
+        "tnl-dark-guide-2022-nwt-9-2-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳儀君\" \"曾任國民黨中央黨部婦女部主任\" 新北市",
@@ -129049,6 +130049,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-18-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-2-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳賢蔚\" \"台北市民進黨黨部執委\" 台北市",
       "localEvidence": [
@@ -129113,6 +130117,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-18-政治工作-1",
+        "tnl-dark-guide-2022-tpe-1-2-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳賢蔚\" \"立委吳思瑤辦公室主任\" 台北市",
@@ -129618,6 +130626,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-5-54-政治工作-2",
+        "tnl-dark-guide-2022-nwt-6-7-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"陳錦錠\" \"曾任國民黨黃國定黨部副主委\" 新北市",
       "localEvidence": [
@@ -129707,6 +130719,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-5-54-政治工作-3",
+        "tnl-dark-guide-2022-nwt-6-7-政治工作-4"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"陳錦錠\" \"曾任張慶忠立委辦公室執行長\" 新北市",
@@ -130555,6 +131571,10 @@
           "party": "國民黨",
           "candidateNumber": 13
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-4-42-政治工作-2",
+        "tnl-dark-guide-2022-khh-4-13-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳麗珍\" \"曾任左營區新下里里長\" 高雄市",
@@ -131924,6 +132944,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-77-政治工作-2",
+        "tnl-dark-guide-2022-tao-7-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"彭俊豪\" \"曾任民進黨桃園市黨部執委、評委\" 桃園市",
       "localEvidence": [
@@ -132046,6 +133070,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-4-116-政治工作-3",
+        "tnl-dark-guide-2022-nwt-5-7-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"彭盛韶\" \"曾任柯文哲競選團隊政策部研究員\" 新北市",
       "localEvidence": [
@@ -132076,6 +133104,10 @@
       ],
       "externalResearch": {
         "researchId": "tnl-dark-guide-2018-nwt-4-116-政治工作-3",
+        "sourceResearchIds": [
+          "tnl-dark-guide-2018-nwt-4-116-政治工作-3",
+          "tnl-dark-guide-2022-nwt-5-7-政治工作-4"
+        ],
         "query": "\"彭盛韶\" \"柯文哲\" 政策部 研究員",
         "outcome": "source_found_manual_review",
         "notes": "公視報導明列彭盛韶為柯文哲競選辦公室政策部助理，人物專訪亦記載其隸屬政策部，可支持敘述。",
@@ -132242,6 +133274,10 @@
           "party": "時代力量",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-4-116-政治工作-2",
+        "tnl-dark-guide-2022-nwt-5-7-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"彭盛韶\" \"曾任經濟部部長機要、台北市政府資訊局專門委員\" 新北市",
@@ -133381,6 +134417,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-95-政治工作-2",
+        "tnl-dark-guide-2022-txg-8-3-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"曾朝榮\" \"曾任民進黨台中市黨部主委\" 台中市",
@@ -134865,6 +135905,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-5-85-政治工作-2",
+        "tnl-dark-guide-2022-tao-5-3-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"游吾和\" \"曾任2屆大園鄉鄉民代表\" 桃園市",
       "localEvidence": [
@@ -135114,6 +136158,10 @@
           "candidateNumber": 12
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-37-政治工作-1",
+        "tnl-dark-guide-2022-tpe-2-12-政治工作-5"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"游淑慧\" \"曾任郝龍斌市長室專門委員/發言人、國會辦公室助理、環保署署長秘書\" 台北市",
       "localEvidence": [
@@ -135190,6 +136238,10 @@
           "party": "國民黨",
           "candidateNumber": 12
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-37-政治工作-2",
+        "tnl-dark-guide-2022-tpe-2-12-政治工作-6"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"游淑慧\" \"曾任國民黨智庫策略研究組顧問\" 台北市",
@@ -135514,6 +136566,10 @@
           "party": "國民黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-5-75-政治工作-2",
+        "tnl-dark-guide-2022-nwt-6-6-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"游輝宂\" \"曾任議員游輝廷服務處特助\" 新北市",
@@ -136309,6 +137365,10 @@
           "candidateNumber": 8
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-8-113-政治工作-2",
+        "tnl-dark-guide-2022-tao-8-8-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"舒翠玲\" \"曾任平鎮市市民代表\" 桃園市",
       "localEvidence": [
@@ -136679,6 +137739,10 @@
           "party": "國民黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-15-39-政治工作-2",
+        "tnl-dark-guide-2022-txg-15-4-政治工作-3"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"黃仁\" \"國民黨台中市黨部原住民族工作委員會會長\" 台中市",
@@ -137443,6 +138507,10 @@
           "candidateNumber": 16
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-4-103-政治工作-2",
+        "tnl-dark-guide-2022-khh-4-16-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃文志\" \"曾任立委劉世芳特助\" 高雄市",
       "localEvidence": [
@@ -137507,6 +138575,10 @@
           "party": "民進黨",
           "candidateNumber": 16
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-4-103-政治工作-1",
+        "tnl-dark-guide-2022-khh-4-16-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃文志\" \"曾任議員黃石龍特助\" 高雄市",
@@ -137660,6 +138732,10 @@
           "party": "民進黨",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-8-73-政治工作-1",
+        "tnl-dark-guide-2022-khh-8-8-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃文益\" \"曾任立委趙天麟服務處執行長\" 高雄市",
@@ -138461,6 +139537,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-10-109-政治工作-1",
+        "tnl-dark-guide-2022-txg-10-3-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃守達\" \"曾任台北市議長吳思瑤助理\" 台中市",
       "localEvidence": [
@@ -138513,6 +139593,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-10-109-政治工作-3",
+        "tnl-dark-guide-2022-txg-10-3-政治工作-5"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃守達\" \"曾任民進黨青年發展部主任\" 台中市",
@@ -138591,6 +139675,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-10-109-政治工作-2",
+        "tnl-dark-guide-2022-txg-10-3-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃守達\" \"曾任立委黃國書服務處執行長\" 台中市",
@@ -138726,6 +139814,10 @@
           "party": "民眾黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-1-72-政治工作-1",
+        "tnl-dark-guide-2022-tao-1-2-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃成峻\" \"曾任縣議員黃哲鍾服務處主任\" 桃園市",
@@ -140127,6 +141219,10 @@
           "candidateNumber": 12
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-7-48-政治工作-2",
+        "tnl-dark-guide-2022-khh-7-12-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃柏霖\" \"曾任國民黨高雄市黨部主委\" 高雄市",
       "localEvidence": [
@@ -140477,6 +141573,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-3-102-政治工作-1",
+        "tnl-dark-guide-2022-khh-3-6-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃秋媖\" \"曾任議員翁瑞珠服務處助理\" 高雄市",
       "localEvidence": [
@@ -140656,6 +141756,10 @@
           "candidateNumber": 22
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-4-政治工作-1",
+        "tnl-dark-guide-2022-tpe-1-22-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃郁芬\" \"曾任不當黨產處理委員會助理研究員\" 台北市",
       "localEvidence": [
@@ -140708,6 +141812,10 @@
           "party": "無黨籍",
           "candidateNumber": 22
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-4-政治工作-3",
+        "tnl-dark-guide-2022-tpe-1-22-政治工作-5"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃郁芬\" \"曾任立委林昶佐助理\" 台北市",
@@ -140773,6 +141881,10 @@
           "party": "無黨籍",
           "candidateNumber": 22
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-4-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-22-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃郁芬\" \"曾任立委顧立雄助理\" 台北市",
@@ -141173,6 +142285,10 @@
           "candidateNumber": 19
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-1-73-政治工作-3",
+        "tnl-dark-guide-2022-tao-1-19-政治工作-5"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃家齊\" \"民主進步黨桃園區主任\" 桃園市",
       "localEvidence": [
@@ -141331,6 +142447,10 @@
           "party": "民進黨",
           "candidateNumber": 19
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-1-73-政治工作-2",
+        "tnl-dark-guide-2022-tao-1-19-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃家齊\" \"曾任立委鄭寶清國會助理\" 桃園市",
@@ -142088,6 +143208,10 @@
           "candidateNumber": 8
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-124-政治工作-3",
+        "tnl-dark-guide-2022-txg-8-8-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃健豪\" \"曾任經濟部秘書室專員\" 台中市",
       "localEvidence": [
@@ -142560,6 +143684,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-1-117-政治工作-2",
+        "tnl-dark-guide-2022-tao-1-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃婉如\" \"曾任2屆市民代表\" 桃園市",
       "localEvidence": [
@@ -142782,6 +143910,10 @@
           "party": "無黨籍",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-9-79-政治工作-1",
+        "tnl-dark-guide-2022-khh-9-8-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃捷\" \"曾任時代力量立法院黨團助理\" 高雄市",
@@ -143427,6 +144559,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-8-35-政治工作-2",
+        "tnl-dark-guide-2022-khh-8-7-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃紹庭\" \"曾任議員黃芳仁服務處主任\" 高雄市",
@@ -144115,6 +145251,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-8-48-政治工作-2",
+        "tnl-dark-guide-2022-tao-8-3-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"黃敬平\" \"曾任立委吳志揚、陳學聖秘書\" 桃園市",
       "localEvidence": [
@@ -144779,6 +145919,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-6-102-政治工作-2",
+        "tnl-dark-guide-2022-txg-6-2-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃馨慧\" \"國民黨中央委員\" 台中市",
       "localEvidence": [
@@ -144843,6 +145987,10 @@
           "party": "國民黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-6-102-政治工作-3",
+        "tnl-dark-guide-2022-txg-6-2-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"黃馨慧\" \"國民黨台中市黨部副主委\" 台中市",
@@ -145697,6 +146845,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-75-政治工作-2",
+        "tnl-dark-guide-2022-txg-2-6-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"楊典忠\" \"曾任民進黨全國黨代表\" 台中市",
       "localEvidence": [
@@ -145786,6 +146938,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-75-政治工作-3",
+        "tnl-dark-guide-2022-txg-2-6-政治工作-4"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"楊典忠\" \"曾任立委林豐喜助理\" 台中市",
@@ -146753,6 +147909,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-8-37-政治工作-2",
+        "tnl-dark-guide-2022-tao-8-7-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"楊家俍\" \"曾任民進黨中央黨部發言人\" 桃園市",
       "localEvidence": [
@@ -146830,6 +147990,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-8-37-政治工作-3",
+        "tnl-dark-guide-2022-tao-8-7-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"楊家俍\" \"曾任行政院長蘇貞昌機要秘書\" 桃園市",
       "localEvidence": [
@@ -146894,6 +148058,10 @@
           "party": "無黨籍",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-21-政治工作-1",
+        "tnl-dark-guide-2022-txg-13-4-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"楊偉浚\" \"曾任霧峰區中正里里長\" 台中市",
@@ -146960,6 +148128,10 @@
           "party": "國民黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-1-52-政治工作-1",
+        "tnl-dark-guide-2022-txg-1-3-政治工作-1"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"楊啓邦\" \"曾任議員楊永昌特助\" 台中市",
@@ -147687,6 +148859,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-13-95-政治工作-2",
+        "tnl-dark-guide-2022-tao-13-2-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"楊進福\" \"曾任2屆龜山鄉鄉民代表\" 桃園市",
       "localEvidence": [
@@ -148246,6 +149422,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-4-60-政治工作-1",
+        "tnl-dark-guide-2022-nwt-5-14-政治工作-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"葉元之\" \"曾任新北市府副發言人兼新聞局主任秘書\" 新北市",
       "localEvidence": [
@@ -148336,6 +149516,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-4-60-政治工作-2",
+        "tnl-dark-guide-2022-nwt-5-14-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"葉元之\" \"曾任新北市經發局和民政局專員\" 新北市",
       "localEvidence": [
@@ -148354,6 +149538,10 @@
       ],
       "externalResearch": {
         "researchId": "tnl-dark-guide-2018-nwt-4-60-政治工作-2",
+        "sourceResearchIds": [
+          "tnl-dark-guide-2018-nwt-4-60-政治工作-2",
+          "tnl-dark-guide-2022-nwt-5-14-政治工作-2"
+        ],
         "query": "\"葉元之\" 新北市 經發局 民政局 專員",
         "outcome": "source_found_manual_review",
         "notes": "自由時報2018年人物報導明列葉元之一路擔任新北市經發局專員、民政局專門委員，可支持敘述。",
@@ -148501,6 +149689,10 @@
           "party": "國民黨",
           "candidateNumber": 13
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-19-政治工作-2",
+        "tnl-dark-guide-2022-tao-7-13-政治工作-2"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"葉明月\" \"曾任市民代表\" 桃園市",
@@ -148806,6 +149998,10 @@
           "candidateNumber": 9
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-72-政治工作-3",
+        "tnl-dark-guide-2022-tpe-4-9-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"葉林傳\" \"曾任國民黨市黨部副主委\" 台北市",
       "localEvidence": [
@@ -148882,6 +150078,10 @@
           "party": "國民黨",
           "candidateNumber": 9
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-72-政治工作-2",
+        "tnl-dark-guide-2022-tpe-4-9-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"葉林傳\" \"曾任圓山里里長、中山區里長聯誼會會長\" 台北市",
@@ -151734,6 +152934,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-96-政治工作-2",
+        "tnl-dark-guide-2022-txg-7-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"劉士州\" \"曾任立委、議員秘書\" 台中市",
       "localEvidence": [
@@ -151945,6 +153149,10 @@
           "candidateNumber": 9
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-8-74-政治工作-2",
+        "tnl-dark-guide-2022-tao-8-9-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"劉仁照\" \"曾任民進黨桃園市黨部評委召集人\" 桃園市",
       "localEvidence": [
@@ -152067,6 +153275,10 @@
           "candidateNumber": 8
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-1-政治工作-1",
+        "tnl-dark-guide-2022-tpe-1-8-政治工作-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"劉仕傑\" \"曾任外交部歐洲司科長\" 台北市",
       "localEvidence": [
@@ -152119,6 +153331,10 @@
           "party": "時代力量",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-1-政治工作-2",
+        "tnl-dark-guide-2022-tpe-1-8-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"劉仕傑\" \"曾被派到外交部北美司、駐洛杉磯辦事處、駐帛琉大使館\" 台北市",
@@ -152376,6 +153592,10 @@
           "candidateNumber": 21
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-36-政治工作-1",
+        "tnl-dark-guide-2022-tao-7-21-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"劉安祺\" \"曾任2屆中壢市市民代表\" 桃園市",
       "localEvidence": [
@@ -152574,6 +153794,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-1-9-政治工作-1",
+        "tnl-dark-guide-2022-tnn-1-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"劉米山\" \"曾任白河區區長、白河鎮鎮長\" 台南市",
       "localEvidence": [
@@ -152671,6 +153895,10 @@
           "party": "無黨籍",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-8-59-政治工作-1",
+        "tnl-dark-guide-2022-tao-8-1-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"劉邦鉉\" \"曾任3屆縣議員\" 桃園市",
@@ -154094,6 +155322,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-4-41-政治工作-2",
+        "tnl-dark-guide-2022-tao-4-10-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"劉勝全\" \"曾任蘆竹鄉代會主席\" 桃園市",
       "localEvidence": [
@@ -154329,6 +155561,10 @@
           "party": "無黨籍",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-93-政治工作-2",
+        "tnl-dark-guide-2022-tao-7-4-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"劉曾玉春\" \"曾任2屆市民代表\" 桃園市",
@@ -154583,6 +155819,10 @@
           "party": "國民黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-10-124-政治工作-1",
+        "tnl-dark-guide-2022-tao-10-1-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"劉熒隆\" \"曾任立委呂玉玲國會助理\" 桃園市",
@@ -156482,6 +157722,10 @@
           "candidateNumber": 8
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-3-86-政治工作-2",
+        "tnl-dark-guide-2022-tao-3-8-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"蔡永芳\" \"曾任八德市市民代表\" 桃園市",
       "localEvidence": [
@@ -157222,6 +158466,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-10-94-政治工作-2",
+        "tnl-dark-guide-2022-tnn-10-7-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"蔡旺詮\" \"曾任立委盧修一、蘇煥智辦公室助理\" 台南市",
       "localEvidence": [
@@ -157286,6 +158534,10 @@
           "party": "民進黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-10-94-政治工作-3",
+        "tnl-dark-guide-2022-tnn-10-7-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"蔡旺詮\" \"曾任許添財市長秘書\" 台南市",
@@ -158625,6 +159877,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-6-29-政治工作-2",
+        "tnl-dark-guide-2022-khh-6-1-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"蔡金晏\" \"曾任國民黨中央委員\" 高雄市",
       "localEvidence": [
@@ -159228,6 +160484,10 @@
           "candidateNumber": 9
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-2-97-政治工作-1",
+        "tnl-dark-guide-2022-nwt-3-9-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"蔡健棠\" \"曾任4屆新莊市市民代表\" 新北市",
       "localEvidence": [
@@ -159242,19 +160502,41 @@
           "sourceType": "external_research",
           "sourceName": "中央選舉委員會：2018年新北市第2選舉區議員選舉公報",
           "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC2%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf"
+        },
+        {
+          "claimId": null,
+          "claimType": "external_research_source",
+          "claimValue": "經歷列新莊市第五、六、七、八屆市民代表",
+          "matchScore": 1,
+          "tier": "official",
+          "reviewStatus": "external_manual_review",
+          "visibility": "review_only",
+          "sourceType": "external_research",
+          "sourceName": "內政部：蔡健棠地方公職人員資料",
+          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112FA00007&_TYP=REP&TYP=KND0001"
         }
       ],
       "externalResearch": {
         "researchId": "tnl-dark-guide-2018-nwt-2-97-政治工作-1",
+        "sourceResearchIds": [
+          "tnl-dark-guide-2018-nwt-2-97-政治工作-1",
+          "tnl-dark-guide-2022-nwt-3-9-政治工作-3"
+        ],
         "query": "\"蔡健棠\" 新莊市 市民代表 四屆",
         "outcome": "source_found_manual_review",
-        "notes": "2018年中選會公報明列蔡健棠曾任新莊市第5、6、7、8屆市民代表，共四屆，可支持敘述。",
+        "notes": "2018年中選會公報明列蔡健棠曾任新莊市第5、6、7、8屆市民代表，共四屆，可支持敘述。 內政部地方公職人員履歷明列蔡健棠曾任新莊市第5、6、7、8屆市民代表，共四屆，可支持敘述。",
         "sources": [
           {
             "tier": "official",
             "name": "中央選舉委員會：2018年新北市第2選舉區議員選舉公報",
             "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC2%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
             "supports": "蔡健棠簡歷列新莊市第5至8屆市民代表"
+          },
+          {
+            "tier": "official",
+            "name": "內政部：蔡健棠地方公職人員資料",
+            "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112FA00007&_TYP=REP&TYP=KND0001",
+            "supports": "經歷列新莊市第五、六、七、八屆市民代表"
           }
         ]
       }
@@ -159380,6 +160662,10 @@
           "party": "國民黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-2-91-政治工作-2",
+        "tnl-dark-guide-2022-nwt-2-3-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"蔡淑君\" \"曾任2屆林口鄉代表\" 新北市",
@@ -160011,6 +161297,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-48-政治工作-2",
+        "tnl-dark-guide-2022-txg-8-10-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"蔡雅玲\" \"曾任立委蔡明憲國會助理\" 台中市",
       "localEvidence": [
@@ -160586,6 +161876,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-1-52-政治工作-2",
+        "tnl-dark-guide-2022-nwt-1-6-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"蔡錦賢\" \"曾任淡水鎮5屆代表、2屆主席\" 新北市",
       "localEvidence": [
@@ -161059,6 +162353,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-12-128-政治工作-1",
+        "tnl-dark-guide-2022-txg-12-6-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"蔡耀頡\" \"曾任議員何明杰服務處執行長\" 台中市",
@@ -162165,6 +163463,10 @@
           "candidateNumber": 11
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-11-88-政治工作-2",
+        "tnl-dark-guide-2022-txg-11-11-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"鄭功進\" \"曾任振興里里長\" 台中市",
       "localEvidence": [
@@ -162386,6 +163688,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-10-43-政治工作-2",
+        "tnl-dark-guide-2022-khh-10-3-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"鄭光峰\" \"曾任民進黨高雄市黨部主委\" 高雄市",
@@ -163571,6 +164877,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-11-107-政治工作-1",
+        "tnl-dark-guide-2022-tnn-11-1-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"鄭佳欣\" \"曾任立委王定宇助理\" 台南市",
       "localEvidence": [
@@ -164129,6 +165439,10 @@
           "candidateNumber": 24
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-100-政治工作-1",
+        "tnl-dark-guide-2022-tpe-6-24-政治工作-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"鄭建炘\" \"曾任文山區樟林里里長\" 台北市",
       "localEvidence": [
@@ -164270,6 +165584,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-9-81-政治工作-2",
+        "tnl-dark-guide-2022-tao-9-5-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"鄭淑方\" \"曾任民進黨桃園市黨部執委、評委\" 桃園市",
       "localEvidence": [
@@ -164348,6 +165666,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-9-81-政治工作-1",
+        "tnl-dark-guide-2022-tao-9-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"鄭淑方\" \"曾任楊梅市市民代表\" 桃園市",
       "localEvidence": [
@@ -164425,6 +165747,10 @@
           "party": "民進黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-9-81-政治工作-3",
+        "tnl-dark-guide-2022-tao-9-5-政治工作-5"
       ],
       "status": "manual_review",
       "searchQuery": "\"鄭淑方\" \"曾任議員張火爐服務處主任\" 桃園市",
@@ -164997,6 +166323,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-9-84-政治工作-2",
+        "tnl-dark-guide-2022-tnn-9-1-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"盧崑福\" \"曾任安平區西門里里長\" 台南市",
       "localEvidence": [
@@ -165149,6 +166479,10 @@
           "party": "無黨籍",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-12-108-政治工作-1",
+        "tnl-dark-guide-2022-tnn-12-2-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"穎艾達利 Ingay Tali\" \"曾任議員蔡玉枝服務處法務主任\" 台南市",
@@ -166537,6 +167871,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-9-50-政治工作-2",
+        "tnl-dark-guide-2022-txg-9-2-政治工作-3"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"賴佳微\" \"曾任民進黨台中市黨部評議委員\" 台中市",
       "localEvidence": [],
@@ -166581,6 +167919,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-9-50-政治工作-3",
+        "tnl-dark-guide-2022-txg-9-2-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"賴佳微\" \"曾任議員賴穎鋌服務處主任\" 台中市",
@@ -166920,6 +168262,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-2-87-政治工作-3",
+        "tnl-dark-guide-2022-nwt-2-7-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"賴秋媚\" \"曾任民進黨泰山鄉黨部主委\" 新北市",
       "localEvidence": [
@@ -167074,6 +168420,10 @@
           "party": "民進黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-nwt-2-87-政治工作-2",
+        "tnl-dark-guide-2022-nwt-2-7-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"賴秋媚\" \"曾任立委吳秉叡助理\" 新北市",
@@ -167341,6 +168691,10 @@
           "candidateNumber": 9
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-89-政治工作-3",
+        "tnl-dark-guide-2022-txg-5-9-政治工作-4"
+      ],
       "status": "manual_review",
       "searchQuery": "\"賴朝國\" \"曾任國民黨潭子區黨部主委\" 台中市",
       "localEvidence": [
@@ -167430,6 +168784,10 @@
           "party": "國民黨",
           "candidateNumber": 9
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-89-政治工作-2",
+        "tnl-dark-guide-2022-txg-5-9-政治工作-3"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"賴朝國\" \"曾任鄉民代表\" 台中市",
@@ -167690,6 +169048,10 @@
           "candidateNumber": 9
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-104-政治工作-2",
+        "tnl-dark-guide-2022-txg-8-9-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"賴順仁\" \"曾任國民黨台中市黨部副主委\" 台中市",
       "localEvidence": [
@@ -167936,6 +169298,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-14-18-政治工作-2",
+        "tnl-dark-guide-2022-txg-14-2-政治工作-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"賴裕銘\" \"曾任3屆東勢鎮鎮民代表\" 台中市",
       "localEvidence": [
@@ -168001,6 +169367,10 @@
           "party": "無黨籍",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-14-18-政治工作-1",
+        "tnl-dark-guide-2022-txg-14-2-政治工作-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"賴裕銘\" \"曾任議員陳萬通服務處主任\" 台中市",
@@ -169085,6 +170455,10 @@
           "candidateNumber": 12
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-55-政治工作-2",
+        "tnl-dark-guide-2022-tpe-3-12-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"戴錫欽\" \"曾任立委林郁方、李慶安助理\" 台北市",
       "localEvidence": [
@@ -169149,6 +170523,10 @@
           "party": "國民黨",
           "candidateNumber": 12
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-55-政治工作-3",
+        "tnl-dark-guide-2022-tpe-3-12-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"戴錫欽\" \"曾任立法院助理工會副總幹事\" 台北市",
@@ -171616,6 +172994,10 @@
           "candidateNumber": 15
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-106-政治工作-1",
+        "tnl-dark-guide-2022-tpe-6-15-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"鍾沛君\" \"曾任國民黨文傳會副主委兼發言人\" 台北市",
       "localEvidence": [
@@ -172053,6 +173435,10 @@
           "party": "國民黨",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-9-75-政治工作-1",
+        "tnl-dark-guide-2022-khh-9-4-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"鍾易仲\" \"曾任立委鍾紹和助理\" 高雄市",
@@ -172619,6 +174005,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-11-8-政治工作-2",
+        "tnl-dark-guide-2022-khh-11-10-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"韓賜村\" \"曾任林園鄉鄉長、鄉民代表\" 高雄市",
       "localEvidence": [
@@ -172817,6 +174207,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-14-75-政治工作-1",
+        "tnl-dark-guide-2022-tao-14-5-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"簡志偉\" \"曾任立委簡東明國會辦公室主任\" 桃園市",
       "localEvidence": [
@@ -172894,6 +174288,10 @@
           "party": "國民黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-14-75-政治工作-2",
+        "tnl-dark-guide-2022-tao-14-5-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"簡志偉\" \"曾是駐紐約台北經濟文化辦事處專員\" 桃園市",
@@ -173504,6 +174902,10 @@
           "candidateNumber": 22
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-107-政治工作-3",
+        "tnl-dark-guide-2022-tpe-6-22-政治工作-8"
+      ],
       "status": "manual_review",
       "searchQuery": "\"簡舒培\" \"曾任立委田秋堇辦公室副主任\" 台北市",
       "localEvidence": [
@@ -173649,6 +175051,10 @@
           "party": "民進黨",
           "candidateNumber": 22
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-107-政治工作-2",
+        "tnl-dark-guide-2022-tpe-6-22-政治工作-7"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"簡舒培\" \"曾任議員徐佳青辦公室主任\" 台北市",
@@ -173928,6 +175334,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-6-6-政治工作-2",
+        "tnl-dark-guide-2022-khh-6-3-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"簡煥宗\" \"曾任立委邱太三國會助理\" 高雄市",
       "localEvidence": [
@@ -174049,6 +175459,10 @@
           "party": "民進黨",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-6-6-政治工作-3",
+        "tnl-dark-guide-2022-khh-6-3-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"簡煥宗\" \"曾任陳菊市長辦公室秘書\" 高雄市",
@@ -174624,6 +176038,10 @@
           "candidateNumber": 11
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-33-政治工作-2",
+        "tnl-dark-guide-2022-tpe-2-11-政治工作-3"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"闕枚莎\" \"曾任國大代表、國民黨全國青工總會會長\" 台北市",
       "localEvidence": [
@@ -175054,6 +176472,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-70-政治工作-3",
+        "tnl-dark-guide-2022-tpe-4-10-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"顏若芳\" \"曾任民進黨台北市黨代表\" 台北市",
       "localEvidence": [
@@ -175106,6 +176528,10 @@
           "party": "民進黨",
           "candidateNumber": 10
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-4-70-政治工作-2",
+        "tnl-dark-guide-2022-tpe-4-10-政治工作-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"顏若芳\" \"曾任議員簡余晏辦公室主任\" 台北市",
@@ -175291,6 +176717,10 @@
           "party": "國民黨",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-54-政治工作-2",
+        "tnl-dark-guide-2022-txg-2-8-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"顏莉敏\" \"曾任立委顏寬恒特別助理\" 台中市",
@@ -176282,6 +177712,10 @@
           "candidateNumber": 8
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-91-政治工作-2",
+        "tnl-dark-guide-2022-txg-5-8-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"羅永珍\" \"曾任1屆神岡鄉鄉長、2屆豐洲村村長\" 台中市",
       "localEvidence": [
@@ -176504,6 +177938,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-11-122-政治工作-1",
+        "tnl-dark-guide-2022-txg-11-6-政治工作-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"羅廷瑋\" \"曾任南區工學里里長\" 台中市",
       "localEvidence": [
@@ -176556,6 +177994,10 @@
           "party": "國民黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-11-122-政治工作-2",
+        "tnl-dark-guide-2022-txg-11-6-政治工作-4"
       ],
       "status": "manual_review",
       "searchQuery": "\"羅廷瑋\" \"曾任議員陳天汶秘書\" 台中市",
@@ -177563,6 +179005,10 @@
           "party": "國民黨",
           "candidateNumber": 9
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-65-政治工作-2",
+        "tnl-dark-guide-2022-txg-13-9-政治工作-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"蘇柏興\" \"曾任大里市民代表會副主席\" 台中市",
@@ -178715,6 +180161,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-2-7-其他-1",
+        "tnl-dark-guide-2022-txg-2-3-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"尤碧鈴\" \"國中教師資歷25年\" 台中市",
       "localEvidence": [
@@ -178779,6 +180229,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-2-14-其他-1",
+        "tnl-dark-guide-2022-tnn-2-7-其他-1"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"方一峰\" \"曾任西港慶安宮總幹事\" 台南市",
@@ -179116,6 +180570,10 @@
           "party": "無黨籍",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-2-31-其他-1",
+        "tnl-dark-guide-2022-tao-2-4-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"牛煦庭\" \"曾任桃園捷運監督聯盟召集人\" 桃園市",
@@ -180080,6 +181538,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-30-其他-1",
+        "tnl-dark-guide-2022-tpe-2-6-其他-1"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"王孝維\" \"曾任綠色和平電台主持人\" 台北市",
@@ -181677,6 +183139,10 @@
           "party": "無黨籍",
           "candidateNumber": 8
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-5-33-其他-1",
+        "tnl-dark-guide-2022-tnn-5-8-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"王清崎\" \"曾任蘇林社區發展協會總幹事\" 台南市",
@@ -183754,6 +185220,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-3-45-其他-1",
+        "tnl-dark-guide-2022-tao-3-7-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"朱珍瑤\" \"曾是選美小姐\" 桃園市",
       "localEvidence": [
@@ -184578,6 +186048,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-15-32-其他-1",
+        "tnl-dark-guide-2022-txg-15-1-其他-1"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"江愛珍\" \"曾是護理師\" 台中市",
       "localEvidence": [],
@@ -184757,6 +186231,10 @@
           "party": "民進黨",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-5-69-其他-2",
+        "tnl-dark-guide-2022-khh-5-6-其他-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"江瑞鴻\" \"仁武體育會理事長\" 高雄市",
@@ -186732,6 +188210,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-2-28-其他-1",
+        "tnl-dark-guide-2022-tpe-2-5-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"吳世正\" \"曾任記者、主播\" 台北市",
       "localEvidence": [
@@ -187528,6 +189010,10 @@
           "party": "時代力量",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-30-其他-1",
+        "tnl-dark-guide-2022-txg-7-1-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"吳佩芸\" \"曾是藥師\" 台中市",
@@ -190818,6 +192304,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-11-3-其他-1",
+        "tnl-dark-guide-2022-txg-11-7-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李中\" \"台中市建築開發公會總幹事\" 台中市",
       "localEvidence": [
@@ -192484,6 +193974,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-10-89-其他-1",
+        "tnl-dark-guide-2022-tnn-10-1-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李宗霖\" \"曾任喜樂島聯盟召集人\" 台南市",
       "localEvidence": [
@@ -193035,6 +194529,10 @@
           "party": "台灣基進",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-9-90-其他-1",
+        "tnl-dark-guide-2022-khh-9-1-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"李雨蓁\" \"成立「高雄好過日協會」\" 高雄市",
@@ -193865,6 +195363,10 @@
           "candidateNumber": 4
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-2-86-其他-1",
+        "tnl-dark-guide-2022-khh-2-4-其他-4"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"李柏融\" \"茄萣社服協會理事長\" 高雄市",
       "localEvidence": [],
@@ -194643,6 +196145,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-5-34-其他-1",
+        "tnl-dark-guide-2022-tnn-5-3-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"李偉智\" \"新化區農會理事長\" 台南市",
       "localEvidence": [
@@ -195225,6 +196731,10 @@
           "party": "國民黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-8-123-其他-1",
+        "tnl-dark-guide-2022-tpe-8-1-其他-1"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"李傅中武\" \"曾是警員\" 台北市",
@@ -196886,6 +198396,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-5-其他-1",
+        "tnl-dark-guide-2022-tpe-1-5-其他-1"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"汪志冰\" \"曾任中華民國全國總工會秘書長\" 台北市",
       "localEvidence": [
@@ -197178,6 +198692,10 @@
           "party": "國民黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-31-其他-1",
+        "tnl-dark-guide-2022-txg-8-1-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"沈佑蓮\" \"曾是護理師\" 台中市",
@@ -198763,6 +200281,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-7-105-其他-1",
+        "tnl-dark-guide-2022-khh-7-5-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林于凱\" \"曾參與籌組「台灣公務革新力量聯盟」\" 高雄市",
       "localEvidence": [
@@ -199803,6 +201325,10 @@
           "party": "民進黨",
           "candidateNumber": 1
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-13-24-其他-1",
+        "tnl-dark-guide-2022-tao-13-1-其他-1"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"林志強\" \"曾任台灣原社副秘書長\" 桃園市",
@@ -202109,6 +203635,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-10-40-其他-1",
+        "tnl-dark-guide-2022-tao-10-2-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林昭賢\" \"曾任龍潭區上林里福德宮管委會總幹事\" 桃園市",
       "localEvidence": [
@@ -202220,6 +203750,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-45-其他-2",
+        "tnl-dark-guide-2022-tpe-3-5-其他-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林柏勛\" \"曾任中華鯨豚協會烏石港賞鯨解說員\" 台北市",
       "localEvidence": [
@@ -202272,6 +203806,10 @@
           "party": "時代力量",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-45-其他-1",
+        "tnl-dark-guide-2022-tpe-3-5-其他-1"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"林柏勛\" \"影評人\" 台北市",
@@ -204073,6 +205611,10 @@
           "candidateNumber": 14
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-12-其他-1",
+        "tnl-dark-guide-2022-tpe-1-14-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"林瑞圖\" \"曾任磺田福佑宮主委、集應廟主委、地藏禪寺執行長、慈悟寺執行長\" 台北市",
       "localEvidence": [
@@ -205123,6 +206665,10 @@
           "party": "民眾黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-15-其他-1",
+        "tnl-dark-guide-2022-txg-8-5-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"邱于珊\" \"曾任台灣區觀光協會聯合會秘書長\" 台中市",
@@ -206968,6 +208514,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-17-29-其他-1",
+        "tnl-dark-guide-2022-txg-17-3-其他-1"
+      ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"柯靜志\" \"曾是船長\" 台中市",
       "localEvidence": [],
@@ -207238,6 +208788,10 @@
           "party": "台灣獨立黨",
           "candidateNumber": 14
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-khh-4-113-其他-1",
+        "tnl-dark-guide-2022-khh-4-14-其他-4"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"柳淑芳\" \"曾在高雄發起倒馬、救扁遊行\" 高雄市",
@@ -207592,6 +209146,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-41-其他-2",
+        "tnl-dark-guide-2022-tpe-3-7-其他-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"洪士奇\" \"「台北監督連線」成員之一\" 台北市",
       "localEvidence": [
@@ -207734,6 +209292,10 @@
           "party": "無黨籍",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-3-41-其他-1",
+        "tnl-dark-guide-2022-tpe-3-7-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"洪士奇\" \"曾任台北市立忠孝醫院副院長、中興醫院副院長\" 台北市",
@@ -208644,6 +210206,10 @@
           "party": "社會民主黨",
           "candidateNumber": 19
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-102-其他-1",
+        "tnl-dark-guide-2022-tpe-6-19-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"苗博雅\" \"曾任台灣廢除死刑推動聯盟法務主任\" 台北市",
@@ -209824,6 +211390,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-85-其他-3",
+        "tnl-dark-guide-2022-tpe-5-5-其他-3"
+      ],
       "status": "manual_review",
       "searchQuery": "\"徐立信\" \"「台北監督連線」成員之一\" 台北市",
       "localEvidence": [
@@ -209991,6 +211561,10 @@
           "candidateNumber": 5
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-85-其他-2",
+        "tnl-dark-guide-2022-tpe-5-5-其他-2"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"徐立信\" \"曾任司改會執行委員\" 台北市",
       "localEvidence": [
@@ -210067,6 +211641,10 @@
           "party": "無黨籍",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-85-其他-1",
+        "tnl-dark-guide-2022-tpe-5-5-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"徐立信\" \"曾任法扶基金會律師\" 台北市",
@@ -210510,6 +212088,10 @@
           "candidateNumber": 1
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-18-其他-1",
+        "tnl-dark-guide-2022-tao-7-1-其他-1"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"徐景文\" \"曾任中壢青商會會長、大內壢同濟會會長\" 桃園市",
       "localEvidence": [
@@ -210631,6 +212213,10 @@
           "party": "無黨籍",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-5-4-其他-1",
+        "tnl-dark-guide-2022-txg-5-4-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"徐瑄灃\" \"台灣籍中國律師\" 台中市",
@@ -213638,6 +215224,10 @@
           "party": "無黨籍",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-13-9-其他-1",
+        "tnl-dark-guide-2022-tao-13-3-其他-1"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"張秀菊\" \"原住民仙島部落發展協會理事\" 桃園市",
@@ -217413,6 +219003,10 @@
           "candidateNumber": 3
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-7-26-其他-1",
+        "tnl-dark-guide-2022-txg-7-3-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"張耀中\" \"曾是快樂聯播網FM89.5政論節目主持人\" 台中市",
       "localEvidence": [
@@ -221030,6 +222624,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-7-49-其他-1",
+        "tnl-dark-guide-2022-tnn-7-6-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳世霖\" \"大灣清水宮主委\" 台南市",
       "localEvidence": [
@@ -224507,6 +226105,10 @@
           "candidateNumber": 25
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-14-其他-3",
+        "tnl-dark-guide-2022-tpe-1-25-其他-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳政忠\" \"「台北監督連線」成員之一\" 台北市",
       "localEvidence": [
@@ -224559,6 +226161,10 @@
           "party": "無黨籍",
           "candidateNumber": 25
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-14-其他-2",
+        "tnl-dark-guide-2022-tpe-1-25-其他-4"
       ],
       "status": "not_found_after_stop_loss",
       "searchQuery": "\"陳政忠\" \"祖父為幸福集團創辦人陳兩傳，母親為林榮三姊姊林盡\" 台北市",
@@ -224649,6 +226255,10 @@
           "party": "無黨籍",
           "candidateNumber": 25
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-14-其他-1",
+        "tnl-dark-guide-2022-tpe-1-25-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳政忠\" \"曾創立宏福建設\" 台北市",
@@ -226924,6 +228534,10 @@
           "party": "國民黨",
           "candidateNumber": 7
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-11-其他-1",
+        "tnl-dark-guide-2022-tpe-1-7-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"陳重文\" \"曾任領航基金會董事（創辦人蔡正元）\" 台北市",
@@ -229253,6 +230867,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-11-27-其他-2",
+        "tnl-dark-guide-2022-tao-11-2-其他-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"陳睿生\" \"曾任桃園市客家青年會理事長\" 桃園市",
       "localEvidence": [
@@ -229355,6 +230973,10 @@
           "party": "民進黨",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-11-27-其他-1",
+        "tnl-dark-guide-2022-tao-11-2-其他-1"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"陳睿生\" \"曾任桃園市政府工商策進會副總幹事\" 桃園市",
@@ -229514,6 +231136,10 @@
           "party": "民進黨",
           "candidateNumber": 5
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tnn-5-35-其他-1",
+        "tnl-dark-guide-2022-tnn-5-5-其他-1"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"陳碧玉\" \"新市兒童關懷協會理事長\" 台南市",
@@ -237764,6 +239390,10 @@
           "candidateNumber": 22
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-4-其他-1",
+        "tnl-dark-guide-2022-tpe-1-22-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"黃郁芬\" \"曾任318太陽花運動發言人\" 台北市",
       "localEvidence": [
@@ -241096,6 +242726,10 @@
           "candidateNumber": 12
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-8-33-其他-1",
+        "tnl-dark-guide-2022-txg-8-12-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"楊欣怡\" \"曾參與台中市北屯區三光巷（長安新村）保留活化運動\" 台中市",
       "localEvidence": [
@@ -241293,6 +242927,10 @@
           "candidateNumber": 7
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-8-37-其他-2",
+        "tnl-dark-guide-2022-tao-8-7-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"楊家俍\" \"曾任桃園社區營造協會理事長、桃園東勢庄文化協會理事長\" 桃園市",
       "localEvidence": [
@@ -241439,6 +243077,10 @@
           "party": "無黨籍",
           "candidateNumber": 4
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-21-其他-1",
+        "tnl-dark-guide-2022-txg-13-4-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"楊偉浚\" \"曾任霧峰區阿罩霧福德祠、七府朝天宮主委\" 台中市",
@@ -241876,6 +243518,10 @@
           "candidateNumber": 23
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-8-其他-2",
+        "tnl-dark-guide-2022-tpe-1-23-其他-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"楊靜宇\" \"曾任台北市獸醫師公會理事長\" 台北市",
       "localEvidence": [
@@ -241929,6 +243575,10 @@
           "candidateNumber": 23
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-8-其他-1",
+        "tnl-dark-guide-2022-tpe-1-23-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"楊靜宇\" \"曾任動物醫院院長\" 台北市",
       "localEvidence": [
@@ -241981,6 +243631,10 @@
           "party": "無黨籍",
           "candidateNumber": 23
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-8-其他-3",
+        "tnl-dark-guide-2022-tpe-1-23-其他-3"
       ],
       "status": "manual_review",
       "searchQuery": "\"楊靜宇\" \"曾是News98電台主持人\" 台北市",
@@ -242304,6 +243958,10 @@
           "party": "國民黨",
           "candidateNumber": 13
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-19-其他-1",
+        "tnl-dark-guide-2022-tao-7-13-其他-1"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"葉明月\" \"曾任中壢區婦女會理事長\" 桃園市",
@@ -244688,6 +246346,10 @@
           "candidateNumber": 21
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-36-其他-1",
+        "tnl-dark-guide-2022-tao-7-21-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"劉安祺\" \"曾任國際獅子會會長聯誼會主席\" 桃園市",
       "localEvidence": [
@@ -246421,6 +248083,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-4-41-其他-2",
+        "tnl-dark-guide-2022-tao-4-10-其他-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"劉勝全\" \"曾任桃園市休閒農業發展協會理事長\" 桃園市",
       "localEvidence": [
@@ -246473,6 +248139,10 @@
           "party": "民進黨",
           "candidateNumber": 10
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-4-41-其他-1",
+        "tnl-dark-guide-2022-tao-4-10-其他-1"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"劉勝全\" \"曾任蘆竹區農會理事、監事\" 桃園市",
@@ -251012,6 +252682,10 @@
           "candidateNumber": 24
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-100-其他-2",
+        "tnl-dark-guide-2022-tpe-6-24-其他-2"
+      ],
       "status": "manual_review",
       "searchQuery": "\"鄭建炘\" \"曾任五星旗鐵衛隊發起人\" 台北市",
       "localEvidence": [
@@ -251064,6 +252738,10 @@
           "party": "臺灣人民共產黨",
           "candidateNumber": 24
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-100-其他-1",
+        "tnl-dark-guide-2022-tpe-6-24-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"鄭建炘\" \"曾任台灣人民抗日協會理事長\" 台北市",
@@ -253034,6 +254712,10 @@
           "candidateNumber": 2
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-14-18-其他-1",
+        "tnl-dark-guide-2022-txg-14-2-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"賴裕銘\" \"曾任東勢區農會理事、監事\" 台中市",
       "localEvidence": [
@@ -253190,6 +254872,10 @@
           "candidateNumber": 12
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-5-87-其他-1",
+        "tnl-dark-guide-2022-tpe-5-12-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"應曉薇\" \"曾是演員\" 台北市",
       "localEvidence": [
@@ -253300,6 +254986,10 @@
           "candidateNumber": 6
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-12-1-其他-1",
+        "tnl-dark-guide-2022-tao-12-6-其他-1"
+      ],
       "status": "manual_review",
       "searchQuery": "\"戴兆華\" \"工程師\" 桃園市",
       "localEvidence": [
@@ -253382,6 +255072,10 @@
           "party": "無黨籍",
           "candidateNumber": 6
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-12-1-其他-2",
+        "tnl-dark-guide-2022-tao-12-6-其他-2"
       ],
       "status": "manual_review",
       "searchQuery": "\"戴兆華\" \"曾是搶救大潭藻礁行動聯盟成員\" 桃園市",
@@ -253951,6 +255645,10 @@
           "party": "小民參政歐巴桑聯盟",
           "candidateNumber": 3
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-txg-13-9-其他-1",
+        "tnl-dark-guide-2022-txg-13-3-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"薛安琪\" \"曾任大腳小腳親子共學中區領隊\" 台中市",
@@ -254551,6 +256249,10 @@
           "party": "無黨籍",
           "candidateNumber": 2
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tao-7-25-其他-2",
+        "tnl-dark-guide-2022-tao-7-2-其他-2"
       ],
       "status": "auto_reviewable",
       "searchQuery": "\"謝美英\" \"曾任桃園市媒體記者協會副會長\" 桃園市",
@@ -255331,6 +257033,10 @@
           "candidateNumber": 10
         }
       ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-1-13-其他-2",
+        "tnl-dark-guide-2022-tpe-1-10-其他-2"
+      ],
       "status": "auto_reviewable",
       "searchQuery": "\"鍾佩玲\" \"曾任台灣綠色文化協會執行長\" 台北市",
       "localEvidence": [
@@ -255843,6 +257549,10 @@
           "party": "民進黨",
           "candidateNumber": 22
         }
+      ],
+      "sourceResearchIds": [
+        "tnl-dark-guide-2018-tpe-6-107-其他-1",
+        "tnl-dark-guide-2022-tpe-6-22-其他-1"
       ],
       "status": "manual_review",
       "searchQuery": "\"簡舒培\" \"曾是台北市女性權益促進會秘書長\" 台北市",

@@ -7043,26 +7043,6 @@
       ]
     },
     {
-      "researchId": "tnl-dark-guide-2022-nwt-5-14-政治家族-1",
-      "query": "葉元之 陳炎坤 岳父 桃園縣議員",
-      "outcome": "source_found_partial_manual_review",
-      "notes": "2017至2018年媒體可確認當時岳父關係與陳炎坤前桃園縣議員身分；未找到2022年同期可靠來源確認關係仍持續，較新非正式資料並稱「前岳父」，需人工核對。",
-      "sources": [
-        {
-          "tier": "trusted_media",
-          "name": "風傳媒",
-          "url": "https://www.storm.mg/article/354494",
-          "supports": "2017年報導稱前桃園縣議員陳炎坤為葉元之岳父"
-        },
-        {
-          "tier": "trusted_media",
-          "name": "NOWnews今日新聞",
-          "url": "https://www.nownews.com/news/2644229",
-          "supports": "2017年報導稱陳炎坤為葉元之岳父並曾任桃園縣議員"
-        }
-      ]
-    },
-    {
       "researchId": "tnl-dark-guide-2022-khh-13-1-政治家族-1",
       "query": "葛姵瑩 柯路加 姐夫 議員",
       "outcome": "not_found_after_stop_loss",

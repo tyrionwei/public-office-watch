@@ -3926,6 +3926,14 @@ async function writeSeed(seed, hash, args) {
         },
       },
     );
+    args.historicalAnchorIdentityResult = await supabaseRequest(
+      env,
+      'rpc/process_historical_anchor_identities',
+      {
+        method: 'POST',
+        rows: {},
+      },
+    );
   }
 
   args.reconciledHistoricalCecPersonMerges = await reconcileHistoricalCecImportedPeople(

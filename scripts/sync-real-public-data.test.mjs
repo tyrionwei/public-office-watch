@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
-import { classifyHistoricalCecCandidateEntry } from './sync-real-public-data.mjs';
+import {
+  classifyHistoricalCecCandidateEntry,
+  darkGuideFamilyReferenceNames,
+} from './sync-real-public-data.mjs';
 
 const root = 'votedata/votedata/voteData';
 
@@ -34,6 +37,15 @@ assert.deepEqual(
 assert.equal(
   classifyHistoricalCecCandidateEntry(`${root}/1994台灣省議員/區域/elcand.csv`),
   null,
+);
+
+assert.deepEqual(
+  darkGuideFamilyReferenceNames({
+    found: [{ mentionedName: '王小明' }],
+    ambiguousSameName: [{ mentionedName: '陳大華' }],
+    notFound: [{ mentionedName: '王小明' }, { mentionedName: ' 林小美 ' }],
+  }),
+  ['王小明', '林小美', '陳大華'],
 );
 
 console.log('sync-real-public-data tests passed');

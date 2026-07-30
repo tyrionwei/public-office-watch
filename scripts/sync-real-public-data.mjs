@@ -12,6 +12,24 @@ const defaultPersonEnrichmentClaimsPath = path.join(repoRoot, 'data-sources', 'p
 const defaultPersonEnrichmentSkippedPath = path.join(repoRoot, 'data-sources', 'person-enrichment-skipped.json');
 const defaultPersonSourcePeoplePath = path.join(repoRoot, 'data-sources', 'person-source-people.seed.json');
 const defaultElectionHistoryPath = path.join(repoRoot, 'data-sources', 'votetw-election-history.seed.json');
+const defaultDarkGuideFamilyReportPath = path.join(repoRoot, 'data-sources', 'tnl-dark-guide', 'family-people-report.json');
+
+function darkGuideFamilyReferenceNames(report) {
+  const names = [
+    ...(report?.found ?? []),
+    ...(report?.ambiguousSameName ?? []),
+    ...(report?.notFound ?? []),
+  ]
+    .map((row) => row?.mentionedName?.trim())
+    .filter(Boolean);
+
+  return [...new Set(names)].sort((left, right) => left.localeCompare(right, 'zh-Hant'));
+}
+
+function loadDarkGuideFamilyReferenceNames(reportPath = defaultDarkGuideFamilyReportPath) {
+  if (!fs.existsSync(reportPath)) return [];
+  return darkGuideFamilyReferenceNames(JSON.parse(fs.readFileSync(reportPath, 'utf8')));
+}
 
 function readLocalEnv() {
   const envPath = path.join(repoRoot, '.env.local');
@@ -3897,6 +3915,19 @@ async function writeSeed(seed, hash, args) {
   const probableIdentityMatchRows = buildProbableIdentityMatchRows(seed, sourcePersonByKey, people, startedAt, args);
   await upsertOrThrow(env, 'person_identity_matches', probableIdentityMatchRows, { onConflict: 'source_person_id,person_id' });
 
+  if (args.includeHistoricalCec) {
+    args.historicalPriorityIdentityResult = await supabaseRequest(
+      env,
+      'rpc/process_historical_priority_identities',
+      {
+        method: 'POST',
+        rows: {
+          p_family_reference_names: loadDarkGuideFamilyReferenceNames(),
+        },
+      },
+    );
+  }
+
   args.reconciledHistoricalCecPersonMerges = await reconcileHistoricalCecImportedPeople(
     env,
     seed,
@@ -4210,4 +4241,5 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
 
 export {
   classifyHistoricalCecCandidateEntry,
+  darkGuideFamilyReferenceNames,
 };

@@ -629,12 +629,38 @@ function combinedExternalFinding(researchClaim, externalFindingByResearchId) {
   };
 }
 
+function externalFindingCanAutoReview(finding) {
+  if (finding?.outcome !== 'source_found_manual_review') return false;
+  const acceptedTiers = new Set([
+    'official',
+    'trusted_media',
+    'secondary',
+    'institutional',
+    'candidate_official',
+    'reliable_secondary',
+    'first_party',
+  ]);
+  return (finding.sources ?? []).some((source) => (
+    acceptedTiers.has(source.tier)
+    && /^https?:\/\//.test(source.url ?? '')
+  ));
+}
+
 function researchStatus(category, evidence, externalFinding = null) {
-  if (['政治家族', '涉案紀錄'].includes(category) && evidence.length > 0) return 'manual_review';
+  const hasConflict = evidence.some((item) => (
+    String(item.reviewStatus ?? '').includes('conflict')
+    || String(item.claimType ?? '').includes('conflict')
+  ));
+  if (hasConflict) return 'manual_review';
+  if (externalFindingCanAutoReview(externalFinding)) return 'auto_reviewable';
   const exactOfficial = evidence.find((item) => (
     item.matchScore === 1
     && item.tier === 'official'
-    && item.reviewStatus === 'verified'
+    && [
+      'verified',
+      'candidate_self_reported_text_match',
+      'official_profile_text_match',
+    ].includes(item.reviewStatus)
   ));
   if (exactOfficial) return 'auto_reviewable';
   if (evidence.length > 0) return 'manual_review';
@@ -1009,16 +1035,16 @@ async function main() {
         unknown: 'Source type could not be established automatically.',
       },
       externalSourceLabels: {
-        candidate_official: 'Candidate or campaign page; first-party and manual review only.',
-        first_party: 'Party, candidate, or involved organization; manual review only.',
-        institutional: 'Institutional source that still needs claim-level context review.',
-        reliable_secondary: 'Reliable secondary source; manual review only.',
+        candidate_official: 'Candidate or campaign page; accepted only for a finding that directly supports the claim.',
+        first_party: 'Party, candidate, or involved organization; accepted only for a direct-support finding.',
+        institutional: 'Institutional source; accepted when the finding directly supports the claim.',
+        reliable_secondary: 'Reliable secondary source; accepted when the finding directly supports the claim.',
         other: 'Search lead that cannot support publication without stronger evidence.',
       },
-      candidateBulletins: 'CEC election bulletins provide an exact candidate-level source locator. Education and experience are candidate-declared, so even full-claim text matches remain manual review. Fuzzy matches are labeled possible_match and are only review pointers, not supporting evidence.',
-      localOfficialProfiles: 'MOI local-official profiles are matched only by exact normalized name and city. Education and experience text remains manual-review evidence; fuzzy matches are review pointers only.',
+      candidateBulletins: 'CEC election bulletins provide candidate-level sources. Exact full-claim text matches may auto-review; fuzzy matches and PDF-only locators remain manual review pointers.',
+      localOfficialProfiles: 'MOI local-official profiles are matched only by exact normalized name and city. Exact full-claim text matches may auto-review; fuzzy matches remain manual review pointers.',
       stopLoss: 'For unresolved claims, use one exact search query and inspect at most the two strongest relevant results. Do not retry protected sites, bypass access controls, or auto-approve same-name evidence without matching context.',
-      autoReviewRule: 'Exact normalized containment match against a verified official local claim. Candidate-declared bulletin education/experience, cross-ID election evidence inferred from identity context, external findings, and sensitive family/legal claims remain manual review only.',
+      autoReviewRule: 'Auto-review an exact official local match or an external finding explicitly marked as direct support with an accepted source tier. Partial matches, conflicts, update-required findings, suspicious/unknown sources, and identity-inferred evidence remain manual review.',
     },
     summary: {
       guideCandidateRows: guideRows.length,
@@ -1111,8 +1137,8 @@ ${categories.map((category) => {
 
 ## 審核與公開建議
 
-1. \`auto_reviewable\`：具有官方、已驗證且完整符合的本機證據，可進自動審核候選佇列；仍不代表已直接公開。
-2. \`manual_review\`：必須人工核對人物、敘述範圍與時間／案件階段。選舉公報的候選人自述與外部搜尋找到的候選頁面都屬此類。
+1. \`auto_reviewable\`：暗公報敘述有完整符合的官方本機證據，或外部查核已確認來源直接支持敘述且來源層級可接受；仍不代表已直接公開。
+2. \`manual_review\`：部分吻合、來源衝突、資料需更新、只有候選人定位頁，或來源屬 \`other\`／\`unknown\` 時必須人工核對。
 3. \`not_found_after_stop_loss\`：只保留為研究線索，不應公開為人物事實。
 4. \`external_search_needed\`：目前為 ${statusCounts.external_search_needed}；所有敘述均已有處置狀態。
 5. 政治家族人名對應另見 \`family-people-report.json\` 與 \`family-people-review.csv\`；名稱找到不等於關係成立，不自動建立人物關係。
@@ -1139,6 +1165,7 @@ export {
   evidenceTier,
   eligibleNameCityHistory,
   externalFindingEvidence,
+  externalFindingCanAutoReview,
   historicalSourceHistoryRow,
   moiLocalOfficialEvidence,
   normalizeText,

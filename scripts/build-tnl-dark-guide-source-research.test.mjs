@@ -10,6 +10,7 @@ import {
   evidenceTier,
   eligibleNameCityHistory,
   externalFindingEvidence,
+  externalFindingCanAutoReview,
   historicalSourceHistoryRow,
   moiLocalOfficialEvidence,
   normalizeText,
@@ -109,7 +110,7 @@ assert.equal(cecExperience.length, 1);
 assert.equal(cecExperience[0].claimType, 'candidate_reported_experience');
 assert.equal(cecExperience[0].matchScore, 1);
 assert.equal(cecExperience[0].reviewStatus, 'candidate_self_reported_text_match');
-assert.equal(researchStatus('政治工作', cecExperience), 'manual_review');
+assert.equal(researchStatus('政治工作', cecExperience), 'auto_reviewable');
 
 const cecEducation = cecBulletinEvidence({
   category: '其他',
@@ -118,7 +119,7 @@ const cecEducation = cecBulletinEvidence({
 }, parsedCecProfiles);
 assert.equal(cecEducation.length, 1);
 assert.equal(cecEducation[0].claimType, 'candidate_reported_education');
-assert.equal(researchStatus('其他', cecEducation), 'manual_review');
+assert.equal(researchStatus('其他', cecEducation), 'auto_reviewable');
 
 assert.deepEqual(cecBulletinEvidence({
   category: '政治家族',
@@ -182,7 +183,7 @@ const moiExperience = moiLocalOfficialEvidence({
 assert.equal(moiExperience.length, 1);
 assert.equal(moiExperience[0].claimType, 'official_profile_experience');
 assert.equal(moiExperience[0].reviewStatus, 'official_profile_text_match');
-assert.equal(researchStatus('政治工作', moiExperience), 'manual_review');
+assert.equal(researchStatus('政治工作', moiExperience), 'auto_reviewable');
 
 const moiEducation = moiLocalOfficialEvidence({
   category: '其他',
@@ -407,7 +408,7 @@ const countyCouncilTerms = derivedElectionEvidence({
 }]);
 assert.equal(countyCouncilTerms[0].tier, 'official');
 
-const externalEvidence = externalFindingEvidence({
+const directExternalFinding = {
   outcome: 'source_found_manual_review',
   sources: [{
     tier: 'official',
@@ -415,12 +416,42 @@ const externalEvidence = externalFindingEvidence({
     url: 'https://example.gov.tw/case',
     supports: '案件一審判決內容',
   }],
-}, {
+};
+const externalEvidence = externalFindingEvidence(directExternalFinding, {
   text: '貪污／法院審理中',
 });
 assert.equal(externalEvidence[0].tier, 'official');
 assert.equal(externalEvidence[0].reviewStatus, 'external_manual_review');
-assert.equal(researchStatus('涉案紀錄', externalEvidence), 'manual_review');
+assert.equal(externalFindingCanAutoReview(directExternalFinding), true);
+assert.equal(researchStatus('涉案紀錄', externalEvidence, directExternalFinding), 'auto_reviewable');
+
+const suspiciousFinding = {
+  outcome: 'source_found_manual_review',
+  sources: [{
+    tier: 'other',
+    name: '網友整理頁',
+    url: 'https://example.com/untrusted',
+  }],
+};
+assert.equal(externalFindingCanAutoReview(suspiciousFinding), false);
+assert.equal(
+  researchStatus('政治工作', externalFindingEvidence(suspiciousFinding, { text: '曾任助理' }), suspiciousFinding),
+  'manual_review',
+);
+
+const partialFinding = {
+  outcome: 'source_found_partial_manual_review',
+  sources: [{
+    tier: 'official',
+    name: '政府資料',
+    url: 'https://example.gov.tw/profile',
+  }],
+};
+assert.equal(externalFindingCanAutoReview(partialFinding), false);
+assert.equal(
+  researchStatus('政治工作', externalFindingEvidence(partialFinding, { text: '曾任助理' }), partialFinding),
+  'manual_review',
+);
 
 assert.equal(researchStatus('涉案紀錄', [], {
   outcome: 'not_found_after_stop_loss',
@@ -430,6 +461,6 @@ assert.equal(researchStatus('政治家族', [{
   matchScore: 1,
   tier: 'official',
   reviewStatus: 'verified',
-}]), 'manual_review');
+}]), 'auto_reviewable');
 
 console.log('build-tnl-dark-guide-source-research tests passed');

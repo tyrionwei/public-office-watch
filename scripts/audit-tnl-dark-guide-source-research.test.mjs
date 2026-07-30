@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { externalFindingCanAutoReview } from './build-tnl-dark-guide-source-research.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(repoRoot, 'data-sources', 'tnl-dark-guide');
@@ -139,22 +140,37 @@ for (const claim of report.claims) {
     increment(reportClaimCounts, `${occurrence.guideId}|${claim.category}`);
   }
 
-  if (['政治家族', '涉案紀錄'].includes(claim.category)) {
-    assert.notEqual(claim.status, 'auto_reviewable', `sensitive claim auto-approved: ${claim.researchId}`);
-  }
+  const hasConflict = claim.localEvidence.some((evidence) => (
+    String(evidence.reviewStatus ?? '').includes('conflict')
+    || String(evidence.claimType ?? '').includes('conflict')
+  ));
+  const hasAcceptedLocalEvidence = claim.localEvidence.some((evidence) => (
+    evidence.tier === 'official'
+    && evidence.matchScore === 1
+    && [
+      'verified',
+      'candidate_self_reported_text_match',
+      'official_profile_text_match',
+    ].includes(evidence.reviewStatus)
+  ));
+  const hasAcceptedExternalFinding = externalFindingCanAutoReview(claim.externalResearch);
 
   if (claim.status === 'auto_reviewable') {
-    assert.ok(claim.localEvidence.some((evidence) => (
-      evidence.tier === 'official'
-      && evidence.reviewStatus === 'verified'
-      && evidence.matchScore === 1
-    )), `auto-review claim lacks verified official exact evidence: ${claim.researchId}`);
+    assert.equal(hasConflict, false, `auto-review claim has conflicting evidence: ${claim.researchId}`);
+    assert.ok(
+      hasAcceptedLocalEvidence || hasAcceptedExternalFinding,
+      `auto-review claim lacks a direct accepted source: ${claim.researchId}`,
+    );
   }
 
   if (claim.status === 'manual_review') {
     assert.ok(
       claim.localEvidence.length > 0 || (claim.externalResearch?.sources?.length ?? 0) > 0,
       `manual-review claim has no review evidence: ${claim.researchId}`,
+    );
+    assert.ok(
+      !hasAcceptedExternalFinding || hasConflict,
+      `direct accepted source incorrectly left for manual review: ${claim.researchId}`,
     );
   }
 

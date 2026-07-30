@@ -62,8 +62,9 @@ function normalizeTaiwanText(value) {
 }
 
 export function normalizeHistoricalGeography(district, position) {
-  const context = `${normalizeTaiwanText(district)} ${normalizeTaiwanText(position)}`;
-  return context.match(/([\p{Script=Han}]{1,5}[縣市])/u)?.[1] ?? null;
+  const context = `${normalizeTaiwanText(district)} ${normalizeTaiwanText(position)}`
+    .replace(/\d{4}年?/gu, ' ');
+  return context.match(/(?:^|[^\p{Script=Han}])([\p{Script=Han}]{1,4}[縣市])/u)?.[1] ?? null;
 }
 
 export function modernizeIdentityGeography(historicalGeography) {
@@ -87,6 +88,52 @@ export function classifySeatType(district, position) {
   return 'regional';
 }
 
+export function canonicalElectionType(role) {
+  if (role === 'president') return 'presidential';
+  if (role === 'legislator') return 'legislative';
+  if (role === 'councilor') return 'councilor';
+  return 'other';
+}
+
+export function canonicalElectionName(year, role, historicalGeography = null) {
+  if (role === 'president') return `${year}年總統副總統選舉`;
+  if (role === 'legislator') return `${year}年立法委員選舉`;
+  if (role === 'councilor' && historicalGeography) return `${year}年${historicalGeography}議員選舉`;
+  return `${year}年其他選舉`;
+}
+
+export function canonicalRaceType(role, seatType, historicalGeography = null) {
+  if (role === 'president') return 'president';
+  if (role === 'legislator') {
+    if (seatType === 'party_list') return 'party_list_legislator';
+    if (['plain_indigenous', 'mountain_indigenous', 'indigenous'].includes(seatType)) return 'indigenous';
+    return 'legislative_district';
+  }
+  if (role === 'councilor') return historicalGeography?.endsWith('縣') ? 'county_councilor' : 'city_councilor';
+  return 'other';
+}
+
+function seatLabel(seatType) {
+  if (seatType === 'plain_indigenous') return '平地原住民';
+  if (seatType === 'mountain_indigenous') return '山地原住民';
+  if (seatType === 'indigenous') return '原住民';
+  if (seatType === 'party_list') return '不分區';
+  return null;
+}
+
+export function canonicalRaceTitle({ role, seatType, historicalGeography, districtNumber }) {
+  if (role === 'president') return '全國總統副總統選舉';
+  if (role === 'legislator' && seatType === 'party_list') return '全國不分區立法委員選舉';
+  if (role === 'legislator' && seatLabel(seatType)) return `全國${seatLabel(seatType)}立法委員選舉`;
+
+  const geography = historicalGeography ?? '';
+  const district = districtNumber == null ? '' : `第${districtNumber}選舉區`;
+  const seat = seatLabel(seatType) ?? '';
+  if (role === 'legislator') return `${geography}${district}立法委員選舉`;
+  if (role === 'councilor') return `${geography}${district}${seat}議員選舉`;
+  return `${geography}${district}${seat}其他選舉`;
+}
+
 function normalizedDistrictNumber(source) {
   const payloadValue = String(source.source_payload?.districtCode ?? '').trim();
   if (/^\d+$/.test(payloadValue) && Number.parseInt(payloadValue, 10) > 0) {
@@ -103,18 +150,27 @@ function sourceContext(source) {
   const identityGeography = modernizeIdentityGeography(historicalGeography);
   const role = classifyHistoricalRole(source.position);
   const seatType = classifySeatType(source.district, source.position);
-  const districtLabel = normalizeElectionDistrict(normalizeTaiwanText(source.district)) || null;
   const districtNumber = normalizedDistrictNumber(source);
-  const districtKey = districtNumber == null ? districtLabel ?? 'all' : `district-${districtNumber}`;
+  const districtKey = districtNumber == null ? seatType : `district-${districtNumber}`;
+  const eventGeography = role === 'councilor' ? historicalGeography : null;
+  const electionType = canonicalElectionType(role);
+  const electionName = canonicalElectionName(source.election_year, role, eventGeography);
+  const raceType = canonicalRaceType(role, seatType, historicalGeography);
+  const raceTitle = canonicalRaceTitle({ role, seatType, historicalGeography, districtNumber });
 
   return {
     historicalGeography,
     identityGeography,
     role,
     seatType,
-    districtLabel,
+    districtLabel: raceTitle,
     districtNumber,
-    eventContextKey: `${source.election_year}|${role}`,
+    electionType,
+    electionName,
+    raceType,
+    raceTitle,
+    regionScope: role === 'president' || (role === 'legislator' && seatType !== 'regional') ? 'national' : 'local',
+    eventContextKey: [source.election_year, role, eventGeography ?? 'national'].join('|'),
     raceContextKey: [source.election_year, role, historicalGeography ?? 'national', districtKey, seatType].join('|'),
   };
 }
@@ -174,13 +230,17 @@ function buildContextRows(sources, unmatchedSourceIds) {
     key,
     electionYear: rows[0].electionYear,
     role: rows[0].role,
+    historicalGeography: rows[0].role === 'councilor' ? rows[0].historicalGeography : null,
+    electionType: rows[0].electionType,
+    electionName: rows[0].electionName,
     sourceRowCount: rows.length,
     raceContextCount: new Set(rows.map((row) => row.raceContextKey)).size,
     unmatchedSourceRowCount: rows.filter((row) => row.isUnmatched).length,
-  })).sort((left, right) => left.electionYear - right.electionYear || left.role.localeCompare(right.role));
+  })).sort((left, right) => left.electionYear - right.electionYear || left.key.localeCompare(right.key, 'zh-Hant-TW'));
 
   const raceContexts = Array.from(raceGroups.entries()).map(([key, rows]) => ({
     key,
+    eventContextKey: rows[0].eventContextKey,
     electionYear: rows[0].electionYear,
     role: rows[0].role,
     historicalGeography: rows[0].historicalGeography,
@@ -188,12 +248,152 @@ function buildContextRows(sources, unmatchedSourceIds) {
     districtLabel: rows[0].districtLabel,
     districtNumber: rows[0].districtNumber,
     seatType: rows[0].seatType,
+    raceType: rows[0].raceType,
+    raceTitle: rows[0].raceTitle,
+    regionScope: rows[0].regionScope,
     sourceRowCount: rows.length,
     unmatchedSourceRowCount: rows.filter((row) => row.isUnmatched).length,
     sourcePersonKeys: rows.map((row) => row.sourcePersonKey).sort(),
   })).sort((left, right) => left.key.localeCompare(right.key, 'zh-Hant-TW'));
 
   return { compactRows, eventContexts, raceContexts };
+}
+
+function semanticElectionRole(election) {
+  const type = String(election?.election_type ?? '');
+  const name = normalizeTaiwanText(election?.name);
+  if (['presidential', 'president'].includes(type) || name.includes('總統')) return 'president';
+  if (['legislative', 'legislator'].includes(type) || name.includes('立法委員')) return 'legislator';
+  if (type === 'councilor' || (name.includes('議員') && !name.includes('代表'))) return 'councilor';
+  return 'other';
+}
+
+function existingDistrictNumber(race) {
+  const label = normalizeElectionDistrict(race?.title);
+  const match = String(label ?? '').match(/第(\d+)(?:選舉區|選區)/u);
+  return match ? Number.parseInt(match[1], 10) : null;
+}
+
+function existingSeatType(race, regionName) {
+  if (race?.race_type === 'party_list_legislator') return 'party_list';
+  return classifySeatType(race?.title, regionName);
+}
+
+function canonicalIdMap(rows, sourceKey, canonicalKey) {
+  return new Map((rows ?? []).map((row) => [row[sourceKey], row[canonicalKey]]));
+}
+
+function compactExistingElection(election) {
+  return {
+    id: election.id,
+    externalId: election.external_id,
+    name: election.name,
+    electionType: election.election_type,
+  };
+}
+
+function compactExistingRace(race, regionName) {
+  return {
+    id: race.id,
+    externalId: race.external_id,
+    title: race.title,
+    raceType: race.race_type,
+    regionName: regionName ?? null,
+  };
+}
+
+function dedupeByCanonicalId(rows, idFor) {
+  const seen = new Set();
+  return rows.filter((row) => {
+    const id = idFor(row);
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+}
+
+export function buildCoreComparisonPlan(eventContexts, raceContexts, dataset) {
+  const supportedRoles = new Set(['president', 'legislator', 'councilor']);
+  const supportedEventContexts = eventContexts.filter((context) => supportedRoles.has(context.role));
+  const supportedRaceContexts = raceContexts.filter((context) => supportedRoles.has(context.role));
+  const elections = dataset.elections ?? [];
+  const races = dataset.races ?? [];
+  const regionsById = new Map((dataset.regions ?? []).map((region) => [region.id, region.name]));
+  const electionsById = new Map(elections.map((election) => [election.id, election]));
+  const electionCanonicalIds = canonicalIdMap(
+    dataset.electionCanonicalMap,
+    'election_id',
+    'canonical_election_id',
+  );
+  const raceCanonicalIds = canonicalIdMap(dataset.raceCanonicalMap, 'race_id', 'canonical_race_id');
+
+  const eventPlans = supportedEventContexts.map((context) => {
+    const candidates = dedupeByCanonicalId(
+      elections.filter((election) => {
+        if (election.year !== context.electionYear || semanticElectionRole(election) !== context.role) return false;
+        if (context.role !== 'councilor') return true;
+        return normalizeHistoricalGeography(election.name, '') === context.historicalGeography;
+      }),
+      (election) => electionCanonicalIds.get(election.id) ?? election.id,
+    );
+    const action = candidates.length === 0 ? 'create_new' : candidates.length === 1 ? 'reuse_existing' : 'manual_review';
+    return {
+      ...context,
+      action,
+      existingCandidates: candidates.map((election) => ({
+        ...compactExistingElection(election),
+        canonicalId: electionCanonicalIds.get(election.id) ?? election.id,
+      })),
+    };
+  });
+  const eventPlansByKey = new Map(eventPlans.map((plan) => [plan.key, plan]));
+
+  const racePlans = supportedRaceContexts.map((context) => {
+    const eventPlan = eventPlansByKey.get(context.eventContextKey);
+    if (eventPlan?.action === 'create_new') {
+      return { ...context, action: 'create_new', existingCandidates: [] };
+    }
+
+    const allowedElectionIds = new Set(eventPlan?.existingCandidates.map((candidate) => candidate.canonicalId) ?? []);
+    const candidates = dedupeByCanonicalId(
+      races.filter((race) => {
+        const election = electionsById.get(race.election_id);
+        if (!election || election.year !== context.electionYear || semanticElectionRole(election) !== context.role) return false;
+        const canonicalElectionId = electionCanonicalIds.get(election.id) ?? election.id;
+        if (allowedElectionIds.size > 0 && !allowedElectionIds.has(canonicalElectionId)) return false;
+
+        const regionName = regionsById.get(race.region_id) ?? '';
+        const seatType = existingSeatType(race, regionName);
+        if (seatType !== context.seatType) return false;
+        if (context.regionScope === 'local') {
+          const geography = normalizeHistoricalGeography(race.title, regionName);
+          if (geography !== context.historicalGeography) return false;
+        }
+
+        const districtNumber = existingDistrictNumber(race);
+        return districtNumber === context.districtNumber
+          || (context.districtNumber === 1 && districtNumber == null);
+      }),
+      (race) => raceCanonicalIds.get(race.id) ?? race.id,
+    );
+    let action = candidates.length === 0 ? 'create_new' : candidates.length === 1 ? 'reuse_existing' : 'manual_review';
+    if (eventPlan?.action === 'manual_review') action = 'manual_review';
+    return {
+      ...context,
+      action,
+      existingCandidates: candidates.map((race) => ({
+        ...compactExistingRace(race, regionsById.get(race.region_id)),
+        canonicalId: raceCanonicalIds.get(race.id) ?? race.id,
+      })),
+    };
+  });
+
+  return {
+    eventPlans,
+    racePlans,
+    eventActionCounts: countBy(eventPlans, (plan) => plan.action),
+    raceActionCounts: countBy(racePlans, (plan) => plan.action),
+  };
 }
 
 function buildNewPersonPreview(unmatchedSources, reviewsBySourceId) {
@@ -263,6 +463,7 @@ export function buildHistoricalCecCorePreview(dataset, options = {}) {
   const unmatchedSources = dataset.sources.filter((source) => !activeMatchedSourceIds.has(source.id));
   const unmatchedSourceIds = new Set(unmatchedSources.map((source) => source.id));
   const { compactRows, eventContexts, raceContexts } = buildContextRows(dataset.sources, unmatchedSourceIds);
+  const comparisonPlan = buildCoreComparisonPlan(eventContexts, raceContexts, dataset);
   const { sourcesNeedingNewPerson, safeNewPeople, heldForReview } = buildNewPersonPreview(unmatchedSources, reviewsBySourceId);
   const reviewStatusCounts = countBy(
     unmatchedSources,
@@ -278,6 +479,9 @@ export function buildHistoricalCecCorePreview(dataset, options = {}) {
       identityGeography: 'Keep a separate modernized geography only for identity comparison.',
       safeNewPerson: 'Create a private source-scoped preview only when one official source row has no existing same-name public person and has gender, geography and role.',
       crossYearIdentity: 'Never merge cross-year records using context-only evidence.',
+      electionNaming: 'Use one canonical name per year, office family and historical jurisdiction.',
+      raceNaming: 'Remove leading zeroes and use explicit national, district and indigenous labels.',
+      seatClassification: 'Keep plain, mountain and generic indigenous seat types distinct from the database race_type.',
     },
     summary: {
       totalSourceRows: dataset.sources.length,
@@ -287,6 +491,14 @@ export function buildHistoricalCecCorePreview(dataset, options = {}) {
       affectedEventContextCount: eventContexts.filter((context) => context.unmatchedSourceRowCount > 0).length,
       raceContextCount: raceContexts.length,
       affectedRaceContextCount: raceContexts.filter((context) => context.unmatchedSourceRowCount > 0).length,
+      reuseExistingEventCount: comparisonPlan.eventActionCounts.reuse_existing ?? 0,
+      createNewEventCount: comparisonPlan.eventActionCounts.create_new ?? 0,
+      manualReviewEventCount: comparisonPlan.eventActionCounts.manual_review ?? 0,
+      reuseExistingRaceCount: comparisonPlan.raceActionCounts.reuse_existing ?? 0,
+      createNewRaceCount: comparisonPlan.raceActionCounts.create_new ?? 0,
+      manualReviewRaceCount: comparisonPlan.raceActionCounts.manual_review ?? 0,
+      outOfScopeEventContextCount: eventContexts.length - comparisonPlan.eventPlans.length,
+      outOfScopeRaceContextCount: raceContexts.length - comparisonPlan.racePlans.length,
       reviewQueueRows: unmatchedSources.length - (reviewStatusCounts.linked_claim_or_excluded_from_queue ?? 0),
       linkedClaimOrExcludedRows: reviewStatusCounts.linked_claim_or_excluded_from_queue ?? 0,
       needsNewPersonSourceRows: sourcesNeedingNewPerson.length,
@@ -299,6 +511,7 @@ export function buildHistoricalCecCorePreview(dataset, options = {}) {
     unmatchedByRole: countBy(compactRows.filter((row) => row.isUnmatched), (row) => row.role),
     eventContexts,
     raceContexts,
+    comparisonPlan,
     safeNewPeople,
     heldNewPeople: heldForReview,
   };
@@ -331,7 +544,16 @@ async function fetchRows(config, tableName, select, filters = {}) {
 }
 
 async function loadDataset(config) {
-  const [sources, matches, reviews] = await Promise.all([
+  const [
+    sources,
+    matches,
+    reviews,
+    elections,
+    races,
+    regions,
+    electionCanonicalMap,
+    raceCanonicalMap,
+  ] = await Promise.all([
     fetchRows(
       config,
       'source_people',
@@ -348,8 +570,26 @@ async function loadDataset(config) {
       'source_person_id,review_status,candidate_count,best_match_score',
       { order: 'source_person_id.asc' },
     ),
+    fetchRows(config, 'elections', 'id,external_id,name,year,election_type', { order: 'id.asc' }),
+    fetchRows(config, 'races', 'id,external_id,election_id,region_id,race_type,title', { order: 'id.asc' }),
+    fetchRows(config, 'regions', 'id,name,region_type', { order: 'id.asc' }),
+    fetchRows(config, 'election_canonical_map', 'election_id,canonical_election_id', {
+      order: 'election_id.asc',
+    }),
+    fetchRows(config, 'race_canonical_map', 'race_id,canonical_race_id', {
+      order: 'race_id.asc',
+    }),
   ]);
-  return { sources, matches, reviews };
+  return {
+    sources,
+    matches,
+    reviews,
+    elections,
+    races,
+    regions,
+    electionCanonicalMap,
+    raceCanonicalMap,
+  };
 }
 
 async function main() {

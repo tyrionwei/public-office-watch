@@ -11,6 +11,7 @@ import {
   eligibleNameCityHistory,
   externalFindingEvidence,
   historicalSourceHistoryRow,
+  moiLocalOfficialEvidence,
   normalizeText,
   originalSourceEvidence,
   researchStatus,
@@ -164,6 +165,42 @@ assert.equal(cecLocator[0].claimType, 'candidate_bulletin_manual_locator');
 assert.equal(cecLocator[0].matchScore, 0);
 assert.equal(cecLocator[0].reviewStatus, 'candidate_self_reported_unparsed');
 assert.equal(researchStatus('其他', cecLocator), 'manual_review');
+
+const moiProfiles = new Map([['guide-1', {
+  name: '山田摩衣',
+  city: '新北市',
+  education: '文化大學英國語文學系',
+  experience: '民主進步黨新北市黨部宣傳組組長\n立法院國會辦公室副主任',
+  sourceUrl: 'https://www.moi.gov.tw/LocalOfficial_Content.aspx?example=1',
+  guideIds: ['guide-1'],
+}]]);
+const moiExperience = moiLocalOfficialEvidence({
+  category: '政治工作',
+  text: '曾任民主進步黨新北市黨部宣傳組組長',
+  occurrences: [{ guideId: 'guide-1' }],
+}, moiProfiles);
+assert.equal(moiExperience.length, 1);
+assert.equal(moiExperience[0].claimType, 'official_profile_experience');
+assert.equal(moiExperience[0].reviewStatus, 'official_profile_text_match');
+assert.equal(researchStatus('政治工作', moiExperience), 'manual_review');
+
+const moiEducation = moiLocalOfficialEvidence({
+  category: '其他',
+  text: '文化大學英國語文學系',
+  occurrences: [{ guideId: 'guide-1' }],
+}, moiProfiles);
+assert.equal(moiEducation.length, 1);
+assert.equal(moiEducation[0].claimType, 'official_profile_education');
+assert.deepEqual(moiLocalOfficialEvidence({
+  category: '政治家族',
+  text: '父親曾任議員',
+  occurrences: [{ guideId: 'guide-1' }],
+}, moiProfiles), []);
+assert.deepEqual(moiLocalOfficialEvidence({
+  category: '涉案紀錄',
+  text: '法院審理中',
+  occurrences: [{ guideId: 'guide-1' }],
+}, moiProfiles), []);
 
 const officialClaim = {
   source_name: '中央選舉委員會選舉資料庫：公開資料包',

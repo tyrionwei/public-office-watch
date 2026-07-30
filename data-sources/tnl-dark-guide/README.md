@@ -16,6 +16,8 @@
 - `coverage-report.json`：兩屆資料與本機 Supabase 歷史候選人、2026 目前候選人的對照結果。
 - `family-people-report.json`：政治家族明確姓名與本機人物表的完整比對結果。
 - `family-people-review.csv`：方便人工篩選的政治家族姓名審核表。
+- `cec-councilor-bulletin-profiles.json`：中選會 2018、2022 議員選舉公報的候選人學歷、經歷與 PDF 定位。
+- `moi-local-official-profiles.json`：與暗公報人物姓名、縣市精確相符的現任議員官方履歷。
 - `source-research-report.json`：逐項線索、既有證據、來源層級與查核狀態的完整研究報告。
 - `source-research-review.csv`：可依人物、類別與查核狀態篩選的人工審核表。
 - `source-research-summary.md`：查核佇列總量、分類統計與停損規則摘要。
@@ -27,8 +29,11 @@
 ```bash
 node scripts/report-tnl-dark-guide-coverage.mjs
 node scripts/report-tnl-dark-guide-family-people.mjs
+node scripts/fetch-moi-local-official-profiles.mjs
 node scripts/build-tnl-dark-guide-source-research.mjs
 ```
+
+內政部履歷擷取為單線程低頻請求，只接受姓名與縣市完全相符的人物；履歷內的學歷與簡歷仍列為人工審核證據，不會自動核准。
 
 資料與報告驗證：
 

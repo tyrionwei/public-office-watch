@@ -9,6 +9,7 @@ const csvOutputPath = path.join(dataDir, 'source-research-review.csv');
 const summaryOutputPath = path.join(dataDir, 'source-research-summary.md');
 const findingsPath = path.join(dataDir, 'source-research-findings.json');
 const cecBulletinProfilesPath = path.join(dataDir, 'cec-councilor-bulletin-profiles.json');
+const moiLocalOfficialProfilesPath = path.join(dataDir, 'moi-local-official-profiles.json');
 const categories = ['政治工作', '政治家族', '涉案紀錄', '其他'];
 
 function readLocalEnv() {
@@ -507,6 +508,52 @@ function cecBulletinEvidence(researchClaim, profileByGuideId) {
   }];
 }
 
+function moiLocalOfficialEvidence(researchClaim, profileByGuideId) {
+  if (!['政治工作', '其他'].includes(researchClaim.category)) return [];
+  const profiles = uniqueBy(
+    (researchClaim.occurrences ?? [])
+      .map((occurrence) => profileByGuideId.get(occurrence.guideId))
+      .filter(Boolean),
+    (profile) => profile.sourceUrl,
+  );
+  const fields = researchClaim.category === '政治工作'
+    ? [['experience', 'official_profile_experience']]
+    : [
+      ['education', 'official_profile_education'],
+      ['experience', 'official_profile_experience'],
+    ];
+  const matched = [];
+  for (const profile of profiles) {
+    for (const [field, claimType] of fields) {
+      const excerpt = bestEvidenceExcerpt(researchClaim.text, profile[field]);
+      if (excerpt.score < 0.45) continue;
+      const directClaim = normalizeText(
+        String(researchClaim.text ?? '').replace(/^(曾任|現任|曾擔任|擔任|曾為|現為|為)/, ''),
+      );
+      const directTextMatch = directClaim.length >= 4
+        && normalizeText(profile[field]).includes(directClaim);
+      matched.push({
+        claimId: null,
+        claimType: directTextMatch ? claimType : `${claimType}_possible_match`,
+        claimValue: excerpt.text,
+        matchScore: excerpt.score,
+        tier: 'official',
+        reviewStatus: directTextMatch
+          ? 'official_profile_text_match'
+          : 'official_profile_possible_match',
+        visibility: 'review_only',
+        sourceType: 'official_local_official_profile',
+        sourceName: `內政部地方公職人員資訊專區（${directTextMatch ? '文字相符' : '可能相關'}）`,
+        sourceUrl: profile.sourceUrl,
+      });
+    }
+  }
+  return uniqueBy(
+    matched,
+    (item) => [item.claimType, item.claimValue, item.sourceUrl].join('|'),
+  );
+}
+
 function csvCell(value) {
   return `"${String(value ?? '').replaceAll('"', '""')}"`;
 }
@@ -576,6 +623,12 @@ async function main() {
   const cecBulletinReport = JSON.parse(fs.readFileSync(cecBulletinProfilesPath, 'utf8'));
   const cecBulletinProfileByGuideId = new Map(
     cecBulletinReport.profiles.map((profile) => [profile.guideId, profile]),
+  );
+  const moiLocalOfficialReport = JSON.parse(fs.readFileSync(moiLocalOfficialProfilesPath, 'utf8'));
+  const moiLocalOfficialProfileByGuideId = new Map(
+    moiLocalOfficialReport.profiles.flatMap((profile) => (
+      profile.guideIds.map((guideId) => [guideId, profile])
+    )),
   );
   const externalFindingByResearchId = new Map(externalFindings.map((finding) => [finding.researchId, finding]));
   const [elections, races, candidates, people, regions, canonicalMap, identityMatches, officialElectionSourcePeople] = await Promise.all([
@@ -861,6 +914,7 @@ async function main() {
       ...originalSourceEvidence(researchClaim),
       ...externalFindingEvidence(externalFinding, researchClaim),
       ...cecBulletinEvidence(researchClaim, cecBulletinProfileByGuideId),
+      ...moiLocalOfficialEvidence(researchClaim, moiLocalOfficialProfileByGuideId),
       ...directElectionEvidence,
       ...inferredElectionEvidence,
       ...nameCityElectionEvidence,
@@ -914,6 +968,7 @@ async function main() {
         unknown: 'Source type could not be established automatically.',
       },
       candidateBulletins: 'CEC election bulletins provide an exact candidate-level source locator. Education and experience are candidate-declared, so even full-claim text matches remain manual review. Fuzzy matches are labeled possible_match and are only review pointers, not supporting evidence.',
+      localOfficialProfiles: 'MOI local-official profiles are matched only by exact normalized name and city. Education and experience text remains manual-review evidence; fuzzy matches are review pointers only.',
       stopLoss: 'For unresolved claims, use one exact search query and inspect at most the two strongest relevant results. Do not retry protected sites, bypass access controls, or auto-approve same-name evidence without matching context.',
       autoReviewRule: 'Exact normalized containment match against a verified official local claim. Candidate-declared bulletin education/experience, cross-ID election evidence inferred from identity context, external findings, and sensitive family/legal claims remain manual review only.',
     },
@@ -925,6 +980,8 @@ async function main() {
       cecBulletinParsedRows: cecBulletinReport.profiles.filter((profile) => profile.mappingMode.startsWith('parsed_exact')).length,
       cecBulletinManualLocatorRows: cecBulletinReport.profiles.filter((profile) => profile.mappingMode === 'source_locator_only').length,
       cecBulletinMappingIssues: cecBulletinReport.summary.mappingIssues,
+      moiLocalOfficialProfiles: moiLocalOfficialReport.profiles.length,
+      moiLocalOfficialCoveredGuideRows: moiLocalOfficialReport.summary.coveredGuideRows,
       candidateYearRowsWithData: guideRows.filter((guide) => categories.some((category) => (guide.sections?.[category] ?? []).length > 0)).length,
       uniqueCanonicalPeopleWithData: new Set(rows.map((row) => row.canonicalPersonId)).size,
       rawClaims: rawResearchClaims.length,
@@ -976,6 +1033,7 @@ async function main() {
 - 原始敘述：${report.summary.rawClaims} 條；跨年份去重後：${report.summary.deduplicatedClaims} 條。
 - 身分對應疑義：${report.summary.mappingIssues} 筆。
 - 中選會公報候選人對應：${report.summary.cecBulletinCandidateRows} 筆；精確解析 ${report.summary.cecBulletinParsedRows} 筆，人工 PDF 定位 ${report.summary.cecBulletinManualLocatorRows} 筆，對應疑義 ${report.summary.cecBulletinMappingIssues} 筆。
+- 內政部地方公職人員官方履歷：${report.summary.moiLocalOfficialProfiles} 人，涵蓋暗公報候選人年度紀錄 ${report.summary.moiLocalOfficialCoveredGuideRows} 筆。
 
 ## 本機既有來源初篩
 
@@ -1022,6 +1080,7 @@ export {
   eligibleNameCityHistory,
   externalFindingEvidence,
   historicalSourceHistoryRow,
+  moiLocalOfficialEvidence,
   normalizeText,
   originalSourceEvidence,
   researchStatus,

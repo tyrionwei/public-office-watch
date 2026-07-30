@@ -10161,6 +10161,356 @@
           "supports": "王明麗經歷欄列11、12、13屆三峽鎮代表"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-3-24-政治工作-3",
+      "query": "\"尤榮智\" \"六甲區黨部\" 主委",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "精準搜尋只找到國民黨活動地點與中選會公報中的其他黨職，未找到可確認「國民黨六甲區黨部主委」的獨立可靠來源，依規則停損。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-1-9-政治工作-1",
+      "query": "\"王奕凱\" \"林岱樺\" 助理",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會立委補選公報的王奕凱經歷欄明載「立法院立委林岱樺國會助理」，可支持暗公報敘述；屬候選人申報資料，保留人工審核。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：第9屆立法委員臺北市第2選舉區缺額補選選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/02%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1/105%E5%B9%B4%E7%AC%AC9%E5%B1%86/04%E8%A3%9C%E9%81%B8/%E8%87%BA%E5%8C%97%E5%B8%82%E7%AC%AC2%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "王奕凱經歷欄列立法院立委林岱樺國會助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-1-8-政治工作-1",
+      "query": "\"王宣貿\" \"蔡易餘\" 服務處主任",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "臺南市議會官方頁列「立法委員蔡易餘辦公室主任」，可確認辦公室主任經歷；但與暗公報「服務處主任」用語不完全一致，列為部分相符。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市議會：王宣貿議員",
+          "url": "https://www.tncc.gov.tw/councilorpage.asp?mainid=C7939C21-E9F9-4C8C-85F1-8400A042C863",
+          "supports": "簡歷列立法委員蔡易餘辦公室主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-3-39-政治工作-2",
+      "query": "\"王振鴻\" \"國民黨\" 黨代表",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會107年臺北市議員公報明載王振鴻為中國國民黨第20屆全國黨代表，可支持敘述；屬候選人申報資料，保留人工審核。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：107年臺北市第3選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/01%E8%87%BA%E5%8C%97%E5%B8%82/%E8%87%BA%E5%8C%97%E5%B8%82%E7%AC%AC03%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "經歷欄列中國國民黨第20屆全國黨代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-5-5-政治工作-5",
+      "query": "\"王淑慧\" \"板橋市黨部\" 總幹事",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會103年新北市議員公報明載王淑慧曾任板橋市黨部總幹事，可支持敘述；屬候選人申報資料，保留人工審核。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：103年新北市第4選舉區議員選舉公報",
+          "url": "https://eebulletin.cec.gov.tw/103/03%E6%96%B0%E5%8C%97%E5%B8%82/%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC04%E9%81%B8%E8%88%89%E5%8D%80%28%E6%9D%BF%E6%A9%8B%E5%8D%80%29.pdf",
+          "supports": "王淑慧經歷欄列板橋市黨部總幹事"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-5-8-政治工作-1",
+      "query": "\"王清崎\" \"梁順發\" 助理",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "臺南市安定區公所新聞可確認王清崎為梁順發議員助理，但未證明「1998年後曾任5屆」的期間敘述，列為部分相符。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市安定區公所：安定區表揚晶鑽爸爸",
+          "url": "https://web.tainan.gov.tw/anding/News_Content.aspx?n=5660&s=89937",
+          "supports": "新聞明載市議員梁順發助理王清崎"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-5-33-政治工作-1",
+      "query": "\"王清崎\" \"梁順發\" 助理",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "臺南市安定區公所新聞可確認王清崎為梁順發議員助理，但未證明「曾任5屆」的期間敘述，列為部分相符。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺南市安定區公所：安定區表揚晶鑽爸爸",
+          "url": "https://web.tainan.gov.tw/anding/News_Content.aspx?n=5660&s=89937",
+          "supports": "新聞明載市議員梁順發助理王清崎"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-5-33-政治工作-2",
+      "query": "\"王清崎\" \"安定鄉代表\"",
+      "outcome": "source_found_manual_review",
+      "notes": "可信媒體人物背景報導明載王清崎曾當選鄉代表，可支持敘述，但未提供屆次等完整官方紀錄，保留人工審核。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報：王清崎退黨參選市議員",
+          "url": "https://www.chinatimes.com/realtimenews/20180816004675-260407",
+          "supports": "報導明載王清崎後來從政當選鄉代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-tnn-5-8-政治工作-2",
+      "query": "\"王清崎\" \"安定鄉代表\"",
+      "outcome": "source_found_manual_review",
+      "notes": "可信媒體人物背景報導明載王清崎曾當選鄉代表，人物與安定地區脈絡一致；仍待官方屆次紀錄確認。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中國時報：王清崎退黨參選市議員",
+          "url": "https://www.chinatimes.com/realtimenews/20180816004675-260407",
+          "supports": "報導明載安定人王清崎曾當選鄉代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-14-政治工作-1",
+      "query": "\"王景弘\" \"柯文哲\" 網路部 工程師",
+      "outcome": "source_found_manual_review",
+      "notes": "元智大學人物報導明載王景弘曾任柯文哲競選團隊網路部工程師，人物與職稱均一致。",
+      "sources": [
+        {
+          "tier": "institutional",
+          "name": "元智大學：程式衝撞未來，做沒人做但有趣的事",
+          "url": "https://www.yzu.edu.tw/admin/pr/index.php/tw/headlines/1163-",
+          "supports": "人物介紹列曾任柯文哲競選團隊網路部工程師"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-14-政治工作-4",
+      "query": "\"王景弘\" \"新北市政府研考會\" 研究員",
+      "outcome": "source_found_manual_review",
+      "notes": "READr政商人物資料庫列王景弘曾任新北市研考會約聘簡任研究員，可支持核心經歷；職稱細節仍交由人工核對。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "READr政商人物資料庫：王景弘",
+          "url": "https://whoareyou.readr.tw/person/43232",
+          "supports": "經歷列新北市研考會約聘簡任研究員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-4-38-政治工作-1",
+      "query": "\"王朝坤\" \"洪慈庸\" 特助",
+      "outcome": "source_found_manual_review",
+      "notes": "臺中市政府公開展覽說明會紀錄明載「洪慈庸立委服務處王朝坤特助」，可直接支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺中市政府：后里都市計畫公開展覽說明會紀錄",
+          "url": "https://cdn.www.taichung.gov.tw/media/214037/61251504971.pdf",
+          "supports": "出席意見欄列洪慈庸立委服務處王朝坤特助"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-4-26-政治工作-1",
+      "query": "\"王開玹\" \"王峻潭\" 服務處主任",
+      "outcome": "source_found_manual_review",
+      "notes": "媒體報導明載王峻潭之子王開玹也是服務處主任，可支持敘述；非官方人事資料，保留人工審核。",
+      "sources": [
+        {
+          "tier": "secondary",
+          "name": "民報：阿扁到玉井山上參拜神明",
+          "url": "https://www.peoplemedia.tw/news/4a7fd9e2-e608-422b-997c-7f032438dbc8",
+          "supports": "報導稱王峻潭的兒子、服務處主任王開玹"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-12-68-政治工作-1",
+      "query": "\"王義雄\" \"原民會\" 委員 高雄",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "搜尋結果只見王義雄現任議員對原民會的質詢與提案，未找到可確認其曾任中央原民會委員的可靠來源，依規則停損。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-6-47-政治工作-2",
+      "query": "\"王錦德\" \"賴清德\" 安南服務處 主任 機要",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中選會公報可確認王錦德曾任賴清德立委安南區服務處主任，但未確認暗公報同句中的「市長賴清德機要」，列為部分相符。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：99年臺南市第10選舉區議員選舉公報",
+          "url": "https://web.cec.gov.tw/api/file/43e1249b-1c1b-4c98-98d4-41e44fb8e5b2.pdf",
+          "supports": "王錦德經歷欄列立委賴清德服務處安南區主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-khh-10-2-政治工作-3",
+      "query": "\"朱挺玗\" \"洪秀柱\" 發言人 黨主席",
+      "outcome": "source_found_manual_review",
+      "notes": "中央社報導洪秀柱競選國民黨主席陣營公布9位發言人群，文中列出朱挺玗，可支持敘述。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社：9位發言人群挺柱",
+          "url": "https://www.cna.com.tw/news/aipl/201703250102.aspx",
+          "supports": "洪秀柱競選陣營發言人群名單包含朱挺玗"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-nwt-7-59-政治工作-2",
+      "query": "\"江怡臻\" \"國發院\" 院長室主任",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社可確認江怡臻在朱立倫任黨主席期間轉至國發院工作，但未列「院長室主任」完整職稱，列為部分相符。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社：江怡臻任副發言人",
+          "url": "https://www.cna.com.tw/news/aloc/201711210171.aspx",
+          "supports": "報導明載江怡臻在朱立倫任黨主席期間轉國發院工作"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-2-政治工作-4",
+      "query": "\"江怡臻\" \"國發院\" 院長室主任",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社可確認江怡臻曾在國發院工作，但未列「院長室主任」完整職稱，列為部分相符。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社：江怡臻任副發言人",
+          "url": "https://www.cna.com.tw/news/aloc/201711210171.aspx",
+          "supports": "報導明載江怡臻在朱立倫任黨主席期間轉國發院工作"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-8-2-政治工作-6",
+      "query": "\"江怡臻\" \"組發會\" 主委秘書",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "中央社可確認江怡臻曾在中國國民黨組發會工作，但未列「主委秘書」完整職稱，列為部分相符。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "中央社：江怡臻任副發言人",
+          "url": "https://www.cna.com.tw/news/aloc/201711210171.aspx",
+          "supports": "報導明載江怡臻曾在中國國民黨組發會工作"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tao-12-83-政治工作-1",
+      "query": "\"江承洲\" \"吳志揚\" 服務處秘書",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會107年桃園市議員公報明載江承洲曾任立法委員吳志揚辦公室秘書；「辦公室」與暗公報「服務處」用語略有差異，保留人工審核。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：107年桃園市第12選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/107%E5%B9%B4/03%E6%A1%83%E5%9C%92%E5%B8%82/%E6%A1%83%E5%9C%92%E5%B8%82%E7%AC%AC12%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+          "supports": "江承洲經歷欄列立法委員吳志揚辦公室秘書"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-10-58-政治工作-4",
+      "query": "\"江肇國\" \"立法院黨團\" 法案助理",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會103年臺中市議員公報明載江肇國曾任民主進步黨立法院黨團法案助理，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：103年臺中市第10選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC10%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "江肇國經歷欄列民主進步黨立法院黨團法案助理"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-10-58-政治工作-3",
+      "query": "\"江肇國\" \"林佳龍\" 文宣部副主任",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會103年臺中市議員公報明載江肇國曾任立法委員林佳龍辦公室文宣部副主任，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：103年臺中市第10選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/04%E8%87%BA%E4%B8%AD%E5%B8%82/%E8%87%BA%E4%B8%AD%E5%B8%82%E7%AC%AC10%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "江肇國經歷欄列立法委員林佳龍辦公室文宣部副主任"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-7-41-政治工作-2",
+      "query": "\"何文海\" \"民進黨中執委\"",
+      "outcome": "source_found_partial_manual_review",
+      "notes": "媒體報導可確認何文海於2024年當選民進黨中執委，但不足以單獨證明暗公報2018年資料所指的任職時間，列為部分相符。",
+      "sources": [
+        {
+          "tier": "trusted_media",
+          "name": "TVBS：民進黨中執委改選結果",
+          "url": "https://news.tvbs.com.tw/politics/2558585",
+          "supports": "報導明載何文海以20票當選中執委"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-txg-7-41-政治工作-3",
+      "query": "\"何文海\" \"全國黨代表\" 民進黨",
+      "outcome": "source_found_manual_review",
+      "notes": "臺中市議會官方議員名冊明載何文海為民主進步黨全國黨代表，可支持敘述。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "臺中市議會：第2屆議員名冊",
+          "url": "https://www.tccc.gov.tw/pic/DocCouncil/15616475410968%282%29.pdf",
+          "supports": "何文海經歷欄列民主進步黨全國黨代表"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-txg-7-2-政治工作-1",
+      "query": "\"何坤鑫\" \"民眾黨台中市黨部\" 南屯區主任",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "精準搜尋只找到何坤鑫曾以民眾黨相關身分參與活動、後以無黨籍參選，未找到可確認「民眾黨台中市黨部南屯區主任」的可靠來源，依規則停損。",
+      "sources": []
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-5-18-政治工作-1",
+      "query": "\"何堅心\" \"2屆縣議員\" 高雄",
+      "outcome": "source_found_manual_review",
+      "notes": "中選會103年高雄市議員公報明載何堅心曾任高雄縣議會第9、10屆議員，可確認共2屆。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：103年高雄市第5選舉區議員選舉公報",
+          "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/06%E9%AB%98%E9%9B%84%E5%B8%82/%E9%AB%98%E9%9B%84%E5%B8%82%E7%AC%AC5%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
+          "supports": "何堅心經歷欄列高雄縣議會第9、10屆議員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-khh-11-87-政治工作-1",
+      "query": "\"余聖明\" \"高雄縣委員\" 青工會 副會長",
+      "outcome": "not_found_after_stop_loss",
+      "notes": "精準搜尋未找到暗公報以外可確認國民黨高雄縣委員或青工會副會長職務的可靠來源，依規則停損。",
+      "sources": []
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T03:06:24.080Z",
+  "generatedAt": "2026-07-30T03:09:32.000Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "publicationStatus": "internal_research_only",
   "method": {
@@ -26,26 +26,26 @@
     "moiLocalOfficialProfiles": 355,
     "moiLocalOfficialCoveredGuideRows": 631,
     "candidateYearRowsWithData": 1447,
-    "uniqueCanonicalPeopleWithData": 1105,
+    "uniqueCanonicalPeopleWithData": 1103,
     "rawClaims": 5161,
-    "deduplicatedClaims": 4756,
+    "deduplicatedClaims": 4752,
     "statusCounts": {
-      "auto_reviewable": 704,
-      "manual_review": 3415,
+      "auto_reviewable": 705,
+      "manual_review": 3410,
       "external_search_needed": 520,
       "not_found_after_stop_loss": 117
     },
     "categoryCounts": {
       "政治工作": {
-        "people": 881,
-        "claims": 2577,
-        "autoReviewable": 543,
-        "manualReview": 1869,
+        "people": 879,
+        "claims": 2573,
+        "autoReviewable": 544,
+        "manualReview": 1864,
         "externalSearchNeeded": 118,
         "notFoundAfterStopLoss": 47
       },
       "政治家族": {
-        "people": 263,
+        "people": 262,
         "claims": 445,
         "autoReviewable": 0,
         "manualReview": 406,
@@ -27070,7 +27070,7 @@
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-8-69-政治家族-1",
-      "canonicalPersonId": "bcd9695a-fd9a-424e-ae9b-b68fde68592d",
+      "canonicalPersonId": "262236bd-047b-4e59-9e8f-cddf6aaaae3a",
       "personName": "陳儀君",
       "category": "政治家族",
       "text": "爸爸是前縣議員、五峰里里長陳一郎",
@@ -128470,27 +128470,27 @@
           "candidateNumber": 2
         }
       ],
-      "status": "manual_review",
+      "status": "auto_reviewable",
       "searchQuery": "\"陳儀君\" \"2018年當選議員\" 新北市",
       "localEvidence": [
         {
           "claimId": null,
           "claimType": "derived_election_result",
-          "claimValue": "2018年議員選舉當選（同名、同黨、同縣市身分推定）",
+          "claimValue": "2018年議員選舉當選",
           "matchScore": 1,
           "tier": "official",
-          "reviewStatus": "identity_inferred",
+          "reviewStatus": "verified",
           "visibility": "review_only",
           "sourceType": "election_result",
-          "sourceName": "中央選舉委員會選舉資料庫：公開資料包（身分待確認）",
-          "sourceUrl": "https://data.gov.tw/dataset/13119"
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T1/T1/1250b1f46d13d83f30143138454d28cd/A/65_000_00_000_0000.json"
         }
       ],
       "externalResearch": null
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-8-69-政治工作-2",
-      "canonicalPersonId": "bcd9695a-fd9a-424e-ae9b-b68fde68592d",
+      "canonicalPersonId": "262236bd-047b-4e59-9e8f-cddf6aaaae3a",
       "personName": "陳儀君",
       "category": "政治工作",
       "text": "曾任2屆新店市市民代表",
@@ -128512,6 +128512,14 @@
           "area": 8,
           "party": "國民黨",
           "candidateNumber": null
+        },
+        {
+          "guideId": "tnl-dark-guide-2022-nwt-9-2",
+          "year": 2022,
+          "city": "新北市",
+          "area": 9,
+          "party": "國民黨",
+          "candidateNumber": 2
         }
       ],
       "status": "manual_review",
@@ -128546,65 +128554,8 @@
       }
     },
     {
-      "researchId": "tnl-dark-guide-2022-nwt-9-2-政治工作-3",
-      "canonicalPersonId": "262236bd-047b-4e59-9e8f-cddf6aaaae3a",
-      "personName": "陳儀君",
-      "category": "政治工作",
-      "text": "曾任2屆新店市市民代表",
-      "originalSourceUrl": null,
-      "guidePageUrl": "https://www.thenewslens.com/election/2022/guide?city=nwt&area=9",
-      "occurrence": {
-        "guideId": "tnl-dark-guide-2022-nwt-9-2",
-        "year": 2022,
-        "city": "新北市",
-        "area": 9,
-        "party": "國民黨",
-        "candidateNumber": 2
-      },
-      "occurrences": [
-        {
-          "guideId": "tnl-dark-guide-2022-nwt-9-2",
-          "year": 2022,
-          "city": "新北市",
-          "area": 9,
-          "party": "國民黨",
-          "candidateNumber": 2
-        }
-      ],
-      "status": "manual_review",
-      "searchQuery": "\"陳儀君\" \"曾任2屆新店市市民代表\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "external_research_source",
-          "claimValue": "陳儀君簡歷列第6、7屆新店市民代表",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "external_manual_review",
-          "visibility": "review_only",
-          "sourceType": "external_research",
-          "sourceName": "中央選舉委員會：2014年新北市第8選舉區議員選舉公報",
-          "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC8%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf"
-        }
-      ],
-      "externalResearch": {
-        "researchId": "tnl-dark-guide-2022-nwt-9-2-政治工作-3",
-        "query": "\"陳儀君\" 新店市 市民代表 第六屆 第七屆",
-        "outcome": "source_found_manual_review",
-        "notes": "2014年中選會公報明列陳儀君曾任第6、7屆新店市民代表，可支持兩屆市民代表敘述。",
-        "sources": [
-          {
-            "tier": "official",
-            "name": "中央選舉委員會：2014年新北市第8選舉區議員選舉公報",
-            "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/05%E7%9B%B4%E8%BD%84%E5%B8%82%E8%AD%B0%E5%93%A1/103%E5%B9%B4/02%E6%96%B0%E5%8C%97%E5%B8%82/%E6%96%B0%E5%8C%97%E5%B8%82%E7%AC%AC8%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1.pdf",
-            "supports": "陳儀君簡歷列第6、7屆新店市民代表"
-          }
-        ]
-      }
-    },
-    {
       "researchId": "tnl-dark-guide-2018-nwt-8-69-政治工作-1",
-      "canonicalPersonId": "bcd9695a-fd9a-424e-ae9b-b68fde68592d",
+      "canonicalPersonId": "262236bd-047b-4e59-9e8f-cddf6aaaae3a",
       "personName": "陳儀君",
       "category": "政治工作",
       "text": "曾任2屆議員",
@@ -128648,7 +128599,7 @@
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-8-69-政治工作-3",
-      "canonicalPersonId": "bcd9695a-fd9a-424e-ae9b-b68fde68592d",
+      "canonicalPersonId": "262236bd-047b-4e59-9e8f-cddf6aaaae3a",
       "personName": "陳儀君",
       "category": "政治工作",
       "text": "曾任國民黨中央黨部婦女部主任",
@@ -128670,6 +128621,14 @@
           "area": 8,
           "party": "國民黨",
           "candidateNumber": null
+        },
+        {
+          "guideId": "tnl-dark-guide-2022-nwt-9-2",
+          "year": 2022,
+          "city": "新北市",
+          "area": 9,
+          "party": "國民黨",
+          "candidateNumber": 2
         }
       ],
       "status": "manual_review",
@@ -128688,50 +128647,6 @@
           "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/107年/02新北市/新北市議會第3屆議員選舉第8選舉區選舉公報.pdf",
           "sourcePage": 1
         },
-        {
-          "claimId": null,
-          "claimType": "official_profile_experience",
-          "claimValue": "前國民黨中央黨部婦女部主任",
-          "matchScore": 1,
-          "tier": "official",
-          "reviewStatus": "official_profile_text_match",
-          "visibility": "review_only",
-          "sourceType": "official_local_official_profile",
-          "sourceName": "內政部地方公職人員資訊專區（文字相符）",
-          "sourceUrl": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?n=573&_PARENT_ID=ER11112FA00037&_TYP=REP&TYP=KND0001"
-        }
-      ],
-      "externalResearch": null
-    },
-    {
-      "researchId": "tnl-dark-guide-2022-nwt-9-2-政治工作-4",
-      "canonicalPersonId": "262236bd-047b-4e59-9e8f-cddf6aaaae3a",
-      "personName": "陳儀君",
-      "category": "政治工作",
-      "text": "曾任國民黨中央黨部婦女部主任",
-      "originalSourceUrl": null,
-      "guidePageUrl": "https://www.thenewslens.com/election/2022/guide?city=nwt&area=9",
-      "occurrence": {
-        "guideId": "tnl-dark-guide-2022-nwt-9-2",
-        "year": 2022,
-        "city": "新北市",
-        "area": 9,
-        "party": "國民黨",
-        "candidateNumber": 2
-      },
-      "occurrences": [
-        {
-          "guideId": "tnl-dark-guide-2022-nwt-9-2",
-          "year": 2022,
-          "city": "新北市",
-          "area": 9,
-          "party": "國民黨",
-          "candidateNumber": 2
-        }
-      ],
-      "status": "manual_review",
-      "searchQuery": "\"陳儀君\" \"曾任國民黨中央黨部婦女部主任\" 新北市",
-      "localEvidence": [
         {
           "claimId": null,
           "claimType": "official_profile_experience",
@@ -132166,7 +132081,7 @@
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-4-116-政治工作-3",
-      "canonicalPersonId": "b4127571-89c7-4800-8586-b4b236fe9b49",
+      "canonicalPersonId": "ec752500-b11b-4814-8817-5d82ae991de8",
       "personName": "彭盛韶",
       "category": "政治工作",
       "text": "曾任柯文哲競選團隊政策部研究員",
@@ -132188,74 +132103,7 @@
           "area": 4,
           "party": "時代力量",
           "candidateNumber": null
-        }
-      ],
-      "status": "manual_review",
-      "searchQuery": "\"彭盛韶\" \"曾任柯文哲競選團隊政策部研究員\" 新北市",
-      "localEvidence": [
-        {
-          "claimId": null,
-          "claimType": "external_research_source",
-          "claimValue": "報導稱彭盛韶為柯辦政策部助理",
-          "matchScore": 1,
-          "tier": "trusted_media",
-          "reviewStatus": "external_manual_review",
-          "visibility": "review_only",
-          "sourceType": "external_research",
-          "sourceName": "公視新聞網：柯文哲競選辦公室竊聽案報導",
-          "sourceUrl": "https://news.pts.org.tw/article/284512"
         },
-        {
-          "claimId": null,
-          "claimType": "external_research_source",
-          "claimValue": "專訪記載彭盛韶加入柯文哲競選團隊政策部",
-          "matchScore": 1,
-          "tier": "trusted_media",
-          "reviewStatus": "external_manual_review",
-          "visibility": "review_only",
-          "sourceType": "external_research",
-          "sourceName": "信傳媒：彭盛韶人物專訪",
-          "sourceUrl": "https://www.cmmedia.com.tw/home/articles/9555"
-        }
-      ],
-      "externalResearch": {
-        "researchId": "tnl-dark-guide-2018-nwt-4-116-政治工作-3",
-        "query": "\"彭盛韶\" \"柯文哲\" 政策部 研究員",
-        "outcome": "source_found_manual_review",
-        "notes": "公視報導明列彭盛韶為柯文哲競選辦公室政策部助理，人物專訪亦記載其隸屬政策部，可支持敘述。",
-        "sources": [
-          {
-            "tier": "trusted_media",
-            "name": "公視新聞網：柯文哲競選辦公室竊聽案報導",
-            "url": "https://news.pts.org.tw/article/284512",
-            "supports": "報導稱彭盛韶為柯辦政策部助理"
-          },
-          {
-            "tier": "trusted_media",
-            "name": "信傳媒：彭盛韶人物專訪",
-            "url": "https://www.cmmedia.com.tw/home/articles/9555",
-            "supports": "專訪記載彭盛韶加入柯文哲競選團隊政策部"
-          }
-        ]
-      }
-    },
-    {
-      "researchId": "tnl-dark-guide-2022-nwt-5-7-政治工作-4",
-      "canonicalPersonId": "ec752500-b11b-4814-8817-5d82ae991de8",
-      "personName": "彭盛韶",
-      "category": "政治工作",
-      "text": "曾任柯文哲競選團隊政策部研究員",
-      "originalSourceUrl": null,
-      "guidePageUrl": "https://www.thenewslens.com/election/2022/guide?city=nwt&area=5",
-      "occurrence": {
-        "guideId": "tnl-dark-guide-2022-nwt-5-7",
-        "year": 2022,
-        "city": "新北市",
-        "area": 5,
-        "party": "時代力量",
-        "candidateNumber": 7
-      },
-      "occurrences": [
         {
           "guideId": "tnl-dark-guide-2022-nwt-5-7",
           "year": 2022,
@@ -132294,7 +132142,7 @@
         }
       ],
       "externalResearch": {
-        "researchId": "tnl-dark-guide-2022-nwt-5-7-政治工作-4",
+        "researchId": "tnl-dark-guide-2018-nwt-4-116-政治工作-3",
         "query": "\"彭盛韶\" \"柯文哲\" 政策部 研究員",
         "outcome": "source_found_manual_review",
         "notes": "公視報導明列彭盛韶為柯文哲競選辦公室政策部助理，人物專訪亦記載其隸屬政策部，可支持敘述。",
@@ -132373,7 +132221,7 @@
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-4-116-政治工作-1",
-      "canonicalPersonId": "b4127571-89c7-4800-8586-b4b236fe9b49",
+      "canonicalPersonId": "ec752500-b11b-4814-8817-5d82ae991de8",
       "personName": "彭盛韶",
       "category": "政治工作",
       "text": "曾任時代力量智庫副執行長、時代力量新北市黨部板橋區主任",
@@ -132412,13 +132260,25 @@
           "sourceName": "中央選舉委員會 2018 新北市議員選舉公報（候選人申報可能相關）",
           "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/107年/02新北市/新北市議會第3屆議員選舉第4選舉區選舉公報.pdf",
           "sourcePage": 1
+        },
+        {
+          "claimId": "c2504953-fac9-4fda-9ddb-2e31097874e0",
+          "claimType": "party_affiliation",
+          "claimValue": "時代力量",
+          "matchScore": 1,
+          "tier": "secondary",
+          "reviewStatus": "needs_more_evidence",
+          "visibility": "review_only",
+          "sourceType": null,
+          "sourceName": "VoteTW",
+          "sourceUrl": "https://votetw.com/wiki/%E5%BD%AD%E7%9B%9B%E9%9F%B6"
         }
       ],
       "externalResearch": null
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-4-116-政治工作-2",
-      "canonicalPersonId": "b4127571-89c7-4800-8586-b4b236fe9b49",
+      "canonicalPersonId": "ec752500-b11b-4814-8817-5d82ae991de8",
       "personName": "彭盛韶",
       "category": "政治工作",
       "text": "曾任經濟部部長機要、台北市政府資訊局專門委員",
@@ -132440,6 +132300,14 @@
           "area": 4,
           "party": "時代力量",
           "candidateNumber": null
+        },
+        {
+          "guideId": "tnl-dark-guide-2022-nwt-5-7",
+          "year": 2022,
+          "city": "新北市",
+          "area": 5,
+          "party": "時代力量",
+          "candidateNumber": 7
         }
       ],
       "status": "manual_review",
@@ -132457,39 +132325,7 @@
           "sourceName": "中央選舉委員會 2018 新北市議員選舉公報（候選人申報可能相關）",
           "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/107年/02新北市/新北市議會第3屆議員選舉第4選舉區選舉公報.pdf",
           "sourcePage": 1
-        }
-      ],
-      "externalResearch": null
-    },
-    {
-      "researchId": "tnl-dark-guide-2022-nwt-5-7-政治工作-3",
-      "canonicalPersonId": "ec752500-b11b-4814-8817-5d82ae991de8",
-      "personName": "彭盛韶",
-      "category": "政治工作",
-      "text": "曾任經濟部部長機要、台北市政府資訊局專門委員",
-      "originalSourceUrl": null,
-      "guidePageUrl": "https://www.thenewslens.com/election/2022/guide?city=nwt&area=5",
-      "occurrence": {
-        "guideId": "tnl-dark-guide-2022-nwt-5-7",
-        "year": 2022,
-        "city": "新北市",
-        "area": 5,
-        "party": "時代力量",
-        "candidateNumber": 7
-      },
-      "occurrences": [
-        {
-          "guideId": "tnl-dark-guide-2022-nwt-5-7",
-          "year": 2022,
-          "city": "新北市",
-          "area": 5,
-          "party": "時代力量",
-          "candidateNumber": 7
-        }
-      ],
-      "status": "manual_review",
-      "searchQuery": "\"彭盛韶\" \"曾任經濟部部長機要、台北市政府資訊局專門委員\" 新北市",
-      "localEvidence": [
+        },
         {
           "claimId": null,
           "claimType": "candidate_reported_experience_possible_match",
@@ -132508,7 +132344,7 @@
     },
     {
       "researchId": "tnl-dark-guide-2018-nwt-4-116-政治工作-4",
-      "canonicalPersonId": "b4127571-89c7-4800-8586-b4b236fe9b49",
+      "canonicalPersonId": "ec752500-b11b-4814-8817-5d82ae991de8",
       "personName": "彭盛韶",
       "category": "政治工作",
       "text": "曾服務於八里愛心教養院、萬里區公所",

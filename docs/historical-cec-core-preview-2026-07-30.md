@@ -137,7 +137,7 @@ historical races = 0
 
 57 組跨年份紀錄只有姓名、性別、縣市與職位等情境證據，缺少生日或穩定人物外部 ID，因此保留人工確認。
 
-## Local migration 套用結果
+## 選舉與選區 Local migration 套用結果
 
 - migration：`202607300024_build_historical_cec_elections_and_races.sql`
 - `202607300023` 的既有人物合併紀錄已存在；本次只補登 migration 歷史，沒有重複建立。
@@ -147,9 +147,19 @@ historical races = 0
 - 同一 migration 以單一交易重跑成功，數量仍為 4／8／982，證明 upsert 可重跑。
 - `published.regions`、`published.elections`、`published.races` 對這批 external ID 的筆數皆為 0。
 
+## 人物 Local migration 套用結果
+
+- migration：`202607300025_build_private_historical_cec_people.sql`
+- 建立 2,278 位來源限定人物，全部 `is_public = false`。
+- 建立 2,278 筆 `auto_matched` 官方來源配對，分數為 100。
+- `無`已在人物欄位正規化為`無黨籍`，不改動原始來源內容。
+- migration 以單一交易直接重跑成功，人物與配對數量均未增加。
+- `published.people` 對這批 external ID 的筆數為 0。
+- 中選會來源仍有 164 筆、57 組跨年份人物留在審核區，未自動合併或建立。
+
 ## 下一階段
 
-1. 建立 2,278 個非公開人物及其來源配對。
-2. 重新檢查 164 筆跨年份來源／57 組人物，不以情境相似自動合併。
-3. 人物、選舉、選區都確認後，才建立候選關係、票數、得票率與當選狀態。
+1. 以已確認的人物、選舉與選區建立候選關係。
+2. 對來源有提供的資料寫入號次、票數、得票率與當選狀態；缺值不猜測。
+3. 驗證同一來源只連到一位人物及一個標準選區。
 4. 最後獨立決定哪些歷史資料進入 `published`。

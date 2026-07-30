@@ -9987,6 +9987,68 @@
           "supports": "第17屆中央執行委員當選名單列有黃俊哲"
         }
       ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tpe-4-73-政治工作-2",
+      "query": "site:ly.gov.tw 王世堅 立法委員 第六屆",
+      "outcome": "source_found_manual_review",
+      "notes": "立法院第6屆王世堅委員頁列明屆別為第6屆，支持暗公報所述曾任1屆立法委員。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "立法院全球資訊網：王世堅委員（第6屆）",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1321",
+          "supports": "王世堅為第6屆立法委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2018-tnn-8-68-政治工作-2",
+      "query": "site:ly.gov.tw 唐碧娥 第四屆 第五屆 第六屆 立法委員",
+      "outcome": "source_found_manual_review",
+      "notes": "立法院第4屆委員名單列有唐碧娥，另其第6屆個人頁記載曾任第5、6屆立法委員，合計可確認第4、5、6屆共3屆。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "立法院全球資訊網：第4屆立法委員名單",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=143",
+          "supports": "第4屆立法委員名單列有唐碧娥"
+        },
+        {
+          "tier": "official",
+          "name": "立法院全球資訊網：唐碧娥委員（第6屆）",
+          "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=1412",
+          "supports": "經歷欄記載第五、六屆立法委員"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-4-7-政治工作-1",
+      "query": "site:web.cec.gov.tw 邱婷蔚 107年 新北市議員 當選",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "中選會107年新北市議會議員選舉結果清冊記載邱婷蔚得票18,575票，是否當選欄為「否」，與暗公報「2018年當選議員」敘述衝突。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：107年新北市議會議員選舉結果清冊",
+          "url": "https://web.cec.gov.tw/api/file/a0c1de44-0810-4e00-96ea-cfeb9a3e9d0f.pdf",
+          "supports": "第4選舉區邱婷蔚是否當選欄為否"
+        }
+      ]
+    },
+    {
+      "researchId": "tnl-dark-guide-2022-nwt-12-6-政治工作-1",
+      "query": "site:web.cec.gov.tw 蘇錦雄 Paylang Caya 107年 新北市議員 當選",
+      "outcome": "source_found_conflict_manual_review",
+      "notes": "中選會107年新北市議會議員選舉結果清冊記載蘇錦雄Paylang．Caya得票1,314票，是否當選欄為「否」，與暗公報「2018年當選議員」敘述衝突。",
+      "sources": [
+        {
+          "tier": "official",
+          "name": "中央選舉委員會：107年新北市議會議員選舉結果清冊",
+          "url": "https://web.cec.gov.tw/api/file/a0c1de44-0810-4e00-96ea-cfeb9a3e9d0f.pdf",
+          "supports": "第11選舉區蘇錦雄Paylang．Caya是否當選欄為否"
+        }
+      ]
     }
   ]
 }

@@ -34,6 +34,7 @@ BEGIN
     END IF;
 
     INSERT INTO public.races (
+        id,
         external_id,
         election_id,
         region_id,
@@ -48,6 +49,7 @@ BEGIN
     )
     VALUES
         (
+            '50eaec58-4a8b-48b8-9f9e-83137e41c067',
             'planned-2026-local-cec-changhua-councilor-10-mountain-indigenous',
             target_election_id,
             changhua_region_id,
@@ -61,6 +63,7 @@ BEGIN
             NOW()
         ),
         (
+            '1c6564c7-cef2-49ce-8594-e54014cb6084',
             'planned-2026-local-cec-hsinchu-city-councilor-7-mountain-indigenous',
             target_election_id,
             hsinchu_city_region_id,

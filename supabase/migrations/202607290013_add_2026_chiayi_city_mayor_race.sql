@@ -23,6 +23,7 @@ BEGIN
     END IF;
 
     INSERT INTO public.races (
+        id,
         external_id,
         election_id,
         region_id,
@@ -36,6 +37,7 @@ BEGIN
         updated_at
     )
     VALUES (
+        '9599a0fa-812a-4170-9bde-01a2090f78af',
         'planned-2026-local-cec-chiayi-city-mayor-10020',
         target_election_id,
         chiayi_city_region_id,

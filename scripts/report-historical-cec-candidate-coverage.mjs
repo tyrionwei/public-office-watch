@@ -112,6 +112,8 @@ function buildContexts(sources) {
         key: context.eventContextKey,
         electionYear: source.election_year,
         role: context.role,
+        electionType: context.electionType,
+        electionName: context.electionName,
         unmatchedSourceRowCount: 1,
       });
     }
@@ -125,6 +127,13 @@ function buildContexts(sources) {
     }
   }
   return { eventContexts: [...events.values()], raceContexts: [...races.values()] };
+}
+
+function preferredRegion(regions, name) {
+  const matches = regions.filter((region) => region.name === name);
+  return matches.find((region) => String(region.external_id ?? '').startsWith('tw-county-'))
+    ?? matches.find((region) => ['municipality', 'county', 'city'].includes(region.region_type))
+    ?? null;
 }
 
 function existingDistrictNumber(race) {
@@ -217,6 +226,8 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
     dataset,
   );
   const racePlansByKey = new Map(comparison.racePlans.map((plan) => [plan.key, plan]));
+  const eventPlansByKey = new Map(comparison.eventPlans.map((plan) => [plan.key, plan]));
+  const raceContextsByKey = new Map(contexts.raceContexts.map((context) => [context.key, context]));
   const directRaceCandidatesByKey = new Map();
 
   const prepared = sources.map((source) => {
@@ -340,6 +351,33 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
     'multiple_candidates',
     'candidate_on_other_race_same_event',
   ]);
+  const missingRaceRows = results.filter((row) => row.category === 'missing_race_context');
+  const missingRaceRowCounts = countBy(missingRaceRows, (row) => row.raceContextKey);
+  const missingRaceContexts = Object.entries(missingRaceRowCounts).map(([key, sourceRowCount]) => {
+    const context = raceContextsByKey.get(key);
+    const eventPlan = context ? eventPlansByKey.get(context.eventContextKey) : null;
+    const eventExternalId = eventPlan?.action === 'reuse_existing' && eventPlan.existingCandidates.length === 1
+      ? eventPlan.existingCandidates[0].externalId
+      : null;
+    const region = context?.regionScope === 'local'
+      ? preferredRegion(dataset.regions ?? [], context.historicalGeography)
+      : null;
+    return {
+      key,
+      eventContextKey: context?.eventContextKey ?? null,
+      eventPlanAction: eventPlan?.action ?? null,
+      racePlanAction: racePlansByKey.get(key)?.action ?? null,
+      eventExternalId,
+      regionExternalId: context?.regionScope === 'local' ? region?.external_id ?? null : null,
+      electionYear: context?.electionYear ?? null,
+      historicalGeography: context?.historicalGeography ?? null,
+      regionScope: context?.regionScope ?? null,
+      raceTitle: context?.raceTitle ?? null,
+      raceType: context?.raceType ?? null,
+      sourceRowCount,
+    };
+  }).sort((left, right) => left.key.localeCompare(right.key, 'zh-Hant-TW'));
+
   return {
     source: { sourceType, sourceId },
     policy: {
@@ -369,6 +407,7 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
     ),
     safeCreates: results.filter((row) => row.category === 'safe_create_candidate'),
     safeUpdates: results.filter((row) => row.category === 'safe_update_candidate'),
+    missingRaceContexts,
     manualReview: results.filter((row) => manualCategories.has(row.category)),
   };
 }
@@ -415,7 +454,7 @@ async function loadDataset(config) {
     }),
     fetchRows(config, 'elections', 'id,external_id,name,year,election_type', { order: 'id.asc' }),
     fetchRows(config, 'races', 'id,external_id,election_id,region_id,race_type,title', { order: 'id.asc' }),
-    fetchRows(config, 'regions', 'id,name,region_type', { order: 'id.asc' }),
+    fetchRows(config, 'regions', 'id,external_id,name,region_type', { order: 'id.asc' }),
     fetchRows(config, 'election_canonical_map', 'election_id,canonical_election_id', { order: 'election_id.asc' }),
     fetchRows(config, 'race_canonical_map', 'race_id,canonical_race_id', { order: 'race_id.asc' }),
   ]);

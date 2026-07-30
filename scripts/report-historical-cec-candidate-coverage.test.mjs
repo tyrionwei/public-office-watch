@@ -102,3 +102,33 @@ test('holds multiple identities and duplicate source assignments for manual revi
   assert.equal(report.categoryCounts.duplicate_source_assignment, 2);
   assert.equal(report.summary.manualReviewRows, 3);
 });
+
+test('reports each missing race context with one reusable election and canonical region', () => {
+  const data = fixture();
+  data.sources = [source('source-missing')];
+  data.matches = [{
+    source_person_id: 'source-missing',
+    person_id: 'person-missing',
+    match_status: 'auto_matched',
+    match_method: 'external_id',
+  }];
+  data.candidates = [];
+  data.races = [];
+  data.elections[0].name = '2022 councilor election';
+  data.elections[0].election_type = 'councilor';
+  data.regions[0].external_id = 'tw-county-63000';
+
+  const report = auditHistoricalCecCandidateCoverage(data);
+  assert.equal(report.categoryCounts.missing_race_context, 1);
+  assert.equal(report.missingRaceContexts.length, 1);
+  const [context] = report.missingRaceContexts;
+  assert.match(context.key, /^2022\|councilor\|.+\|district-1\|regional$/);
+  assert.equal(context.eventContextKey, '2022|councilor|national');
+  assert.equal(context.eventPlanAction, 'reuse_existing');
+  assert.equal(context.racePlanAction, 'create_new');
+  assert.equal(context.eventExternalId, 'election-2022');
+  assert.equal(context.regionExternalId, 'tw-county-63000');
+  assert.equal(context.regionScope, 'local');
+  assert.equal(context.raceType, 'city_councilor');
+  assert.equal(context.sourceRowCount, 1);
+});

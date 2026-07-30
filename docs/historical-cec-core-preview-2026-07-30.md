@@ -11,6 +11,8 @@
 - 回滾 SQL：`local-data/historical-cec-election-race-dry-run.sql`
 - 候選計畫：`local-data/historical-cec-candidate-plan.json`
 - 候選回滾 SQL：`local-data/historical-cec-candidate-dry-run.sql`
+- 缺少選區計畫：`local-data/historical-cec-missing-race-plan.json`
+- 缺少選區回滾 SQL：`local-data/historical-cec-missing-race-dry-run.sql`
 - `local-data` 下的輸出均位於本機忽略目錄，不會隨部署自動執行。
 
 ## 資料概況
@@ -170,17 +172,29 @@ historical races = 0
 - `published.candidates` 對這批 external ID 的筆數為 0。
 - 正式 Supabase 未連線、未寫入。
 
+## 補齊既有人物所需選區
+
+- migration：`202607300027_build_missing_historical_cec_races.sql`
+- 覆蓋率稽核原先找到 202 筆已配對來源，分布在 86 個尚未建立的歷史選區。
+- 86 個情境皆能唯一沿用既有選舉與官方／歷史地區，不需新增選舉事件或地區。
+- dry-run 在 Local 實際插入 86 筆後完整回滾，歷史選區基準維持 982。
+- 正式 Local migration 後歷史選區為 1,068，全部 `is_public = false`。
+- migration 以單一交易重跑後數量仍為 1,068，證明 upsert 可重跑。
+- `published.races` 對全部歷史選區的筆數為 0。
+- 正式 Supabase 未連線、未寫入。
+
 ## 既有候選涵蓋稽核
 
 詳見 `docs/historical-cec-candidate-coverage-2026-07-30.md`。
 
 - 8,622 筆既有人物配對中，8,599 筆只有一位有效人物，23 筆為多重人物配對。
-- 5,861 筆可安全建立候選，2,512 筆可安全更新官方欄位，24 筆已完整一致。
-- 另有 202 筆來源缺少 86 個歷史選區情境，需先補選區。
+- 補齊選區後，6,063 筆可安全建立候選，2,512 筆可安全更新官方欄位，24 筆已完整一致。
+- 缺少選區由 202 筆降為 0；可自動處理合計為 8,575 筆。
+- 目前人工待查只剩 23 筆多重人物配對。
 
 ## 下一階段
 
-1. 先建立 86 個缺少的歷史選區情境及其 202 筆候選所需關聯。
-2. 再以可回滾 migration 處理 5,861 筆候選建立與 2,512 筆官方欄位更新。
+1. 以可回滾 migration 處理 6,063 筆候選建立與 2,512 筆官方欄位更新。
+2. 重跑涵蓋稽核，確認 8,599 筆唯一人物來源都已有完整候選資料。
 3. 逐組處理 23 筆多重人物配對，以及目前保留的 164 筆、57 組跨年份身分。
 4. 最後獨立決定哪些歷史資料進入 `published`。

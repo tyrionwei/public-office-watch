@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T18:14:41.930Z",
+  "generatedAt": "2026-07-30T04:09:49.048Z",
   "databaseUrl": "http://127.0.0.1:54321",
   "method": {
     "description": "Extract names explicitly associated with a family relationship, then match them against all local people aliases and collapse matches by canonical person id.",
@@ -182,11 +182,11 @@
       "status": "found",
       "matches": [
         {
-          "personId": "24e08b05-9d96-4d79-9b77-05769ad4c52d",
+          "personId": "7a4d2370-42b0-4acf-9b41-545eb1905cec",
           "canonicalPersonId": "7a4d2370-42b0-4acf-9b41-545eb1905cec",
           "name": "江啟臣",
           "canonicalName": "江啟臣",
-          "externalId": "cec-2024-legislative-district-person-7098ee640f9a",
+          "externalId": "votetw-person-16be6c0b08bca14d",
           "isPublic": true
         }
       ],
@@ -1482,11 +1482,11 @@
       "status": "found",
       "matches": [
         {
-          "personId": "f02e35fe-0b38-4e59-8be1-37d5d7c207d5",
+          "personId": "d5bcb845-0aef-4c5d-80f2-90a202519d65",
           "canonicalPersonId": "d5286dc2-74e5-49f5-8c95-678e197c5181",
           "name": "莊競程",
           "canonicalName": "莊競程",
-          "externalId": "cec-2024-legislative-district-person-691ea34ac747",
+          "externalId": "votetw-person-bf20903865d0592f",
           "isPublic": true
         }
       ],
@@ -1695,11 +1695,11 @@
       "status": "found",
       "matches": [
         {
-          "personId": "6a51121a-ec90-433b-810c-01e501fe70a0",
+          "personId": "048dde39-a962-4b07-bacc-da27a9321665",
           "canonicalPersonId": "048dde39-a962-4b07-bacc-da27a9321665",
           "name": "陳一郎",
           "canonicalName": "陳一郎",
-          "externalId": "cec-2024-legislative-district-person-12653cfe1b6a",
+          "externalId": "votetw-person-02fab7d0667ef9bc",
           "isPublic": true
         }
       ],
@@ -1795,11 +1795,11 @@
       "status": "found",
       "matches": [
         {
-          "personId": "072996a8-3739-4c77-ae43-6d20cbddbdd8",
+          "personId": "880a10c4-3030-4345-8206-8481d872d9e6",
           "canonicalPersonId": "072996a8-3739-4c77-ae43-6d20cbddbdd8",
           "name": "陳世軒",
           "canonicalName": "陳世軒",
-          "externalId": "cec-2022-local-councilor-regional-person-e141eead0ba9",
+          "externalId": "votetw-person-09e64a2e60020ae9",
           "isPublic": true
         }
       ],
@@ -1992,11 +1992,11 @@
       "status": "found",
       "matches": [
         {
-          "personId": "f1f8067d-c13f-4ec2-a227-556a9d1d28d6",
+          "personId": "22762669-b516-44a1-813d-7bd13d71c7c9",
           "canonicalPersonId": "f1f8067d-c13f-4ec2-a227-556a9d1d28d6",
           "name": "陳思宇",
           "canonicalName": "陳思宇",
-          "externalId": "cec-2022-local-councilor-regional-person-15ead0d80bb8",
+          "externalId": "votetw-person-027e32c163d27195",
           "isPublic": true
         }
       ],
@@ -3499,11 +3499,11 @@
       "status": "ambiguous_same_name",
       "matches": [
         {
-          "personId": "6ec08fa9-c64b-48cc-9d2e-fc9e7521f2b6",
+          "personId": "ef07b22b-9b8a-4a0b-a0d3-373e4ef2d2be",
           "canonicalPersonId": "f00173e1-0f4b-462b-b739-302fc0122570",
           "name": "忠仁．達祿斯",
           "canonicalName": "忠仁．達祿斯",
-          "externalId": "cec-2024-legislative-plain-indigenous-person-6ae18e6dbbfa",
+          "externalId": "cec-2012-person-e7e5ba2e3e7c",
           "isPublic": true
         },
         {
@@ -3573,11 +3573,11 @@
       "status": "ambiguous_same_name",
       "matches": [
         {
-          "personId": "666c8d22-3600-4628-9fa1-aa83d8c5d982",
+          "personId": "14934ed5-c68d-47db-b731-c93b9cf251bf",
           "canonicalPersonId": "666c8d22-3600-4628-9fa1-aa83d8c5d982",
           "name": "林京玲",
           "canonicalName": "林京玲",
-          "externalId": "cec-2022-local-councilor-regional-person-e8aa8430ae99",
+          "externalId": "votetw-person-db36adc1fd3b04ab",
           "isPublic": true
         },
         {
@@ -3729,11 +3729,11 @@
           "isPublic": true
         },
         {
-          "personId": "2ec168eb-89ff-493a-a785-a775fa744853",
+          "personId": "ea762f11-b783-43ce-a3c5-c454f45030da",
           "canonicalPersonId": "99d51616-38d5-4d17-a14d-c74532c212fa",
           "name": "苗博雅",
           "canonicalName": "苗博雅",
-          "externalId": "cec-2024-legislative-district-person-6eacfa85327d",
+          "externalId": "cec-2018-local-councilor-person-regional-63000-06-19529",
           "isPublic": true
         }
       ],
@@ -3766,11 +3766,11 @@
           "isPublic": true
         },
         {
-          "personId": "d81d2477-9c28-4632-bde4-b274e11edee1",
+          "personId": "2d0adc65-3462-41ef-abbd-dd7f5f7f8ba4",
           "canonicalPersonId": "02826491-4272-4be2-96aa-84bbdd7dbce6",
           "name": "徐欣瑩",
           "canonicalName": "徐欣瑩",
-          "externalId": "cec-2024-legislative-district-person-1f7e38091bf4",
+          "externalId": "votetw-person-cd82344c508ea951",
           "isPublic": true
         },
         {
@@ -3803,19 +3803,19 @@
       "status": "ambiguous_same_name",
       "matches": [
         {
-          "personId": "698e8edd-ea97-4ea1-91f2-3765e9d15317",
-          "canonicalPersonId": "698e8edd-ea97-4ea1-91f2-3765e9d15317",
-          "name": "張家豪",
-          "canonicalName": "張家豪",
-          "externalId": "cec-2022-local-mayor-person-78a83991a3ef",
-          "isPublic": true
-        },
-        {
           "personId": "c8e9eb52-50e7-49aa-85b8-af121c67968a",
           "canonicalPersonId": "c8e9eb52-50e7-49aa-85b8-af121c67968a",
           "name": "張家豪",
           "canonicalName": "張家豪",
           "externalId": "votetw-person-7029c268b02b112f",
+          "isPublic": true
+        },
+        {
+          "personId": "bb3084ff-15fc-4721-8160-838bd23c5f87",
+          "canonicalPersonId": "698e8edd-ea97-4ea1-91f2-3765e9d15317",
+          "name": "張家豪",
+          "canonicalName": "張家豪",
+          "externalId": "votetw-person-a0ea0cab6e47db65",
           "isPublic": true
         }
       ],
@@ -4154,11 +4154,11 @@
           "isPublic": true
         },
         {
-          "personId": "53f5e2f0-8f8b-4224-820c-aadfd5c66eab",
+          "personId": "9c623faa-28df-456d-9020-bcbdd611eafb",
           "canonicalPersonId": "53f5e2f0-8f8b-4224-820c-aadfd5c66eab",
           "name": "陳明義",
           "canonicalName": "陳明義",
-          "externalId": "cec-2022-local-councilor-regional-person-67d9f0ad0b97",
+          "externalId": "votetw-person-f3dc6af1f354d130",
           "isPublic": true
         }
       ],
@@ -4489,11 +4489,11 @@
       "status": "ambiguous_same_name",
       "matches": [
         {
-          "personId": "1d525a06-f51b-4650-8fda-edd51744fbc3",
+          "personId": "3a633a3c-d64c-4146-ba7c-82fb285230bc",
           "canonicalPersonId": "5dffdbb8-9047-49d7-988f-b43e4bb38f6c",
           "name": "黃柏霖",
           "canonicalName": "黃柏霖",
-          "externalId": "cec-2024-legislative-district-person-e507875e5d35",
+          "externalId": "cec-2022-local-councilor-regional-person-87b0e8489861",
           "isPublic": true
         },
         {

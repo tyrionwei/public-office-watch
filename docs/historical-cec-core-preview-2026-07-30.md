@@ -93,7 +93,7 @@
 - 歷史結果狀態設為 `completed`。
 - external ID 由標準 context key 穩定產生，可重跑。
 - 產生器拒絕重複 external ID、重複 context key、重複 canonical 更新目標及未知歷史地區。
-- SQL 固定以 `BEGIN` 開始、`ROLLBACK` 結束，不可能由本階段留下資料。
+- dry-run SQL 固定以 `BEGIN` 開始、`ROLLBACK` 結束；正式 migration 則沿用相同 upsert 與筆數斷言。
 
 ## 回滾驗證
 
@@ -137,11 +137,19 @@ historical races = 0
 
 57 組跨年份紀錄只有姓名、性別、縣市與職位等情境證據，缺少生日或穩定人物外部 ID，因此保留人工確認。
 
+## Local migration 套用結果
+
+- migration：`202607300024_build_historical_cec_elections_and_races.sql`
+- `202607300023` 的既有人物合併紀錄已存在；本次只補登 migration 歷史，沒有重複建立。
+- 正式 migration 已套用至 Local Supabase，沒有連線或寫入正式 Supabase。
+- 套用後核心資料數量：歷史地區 4、歷史選舉 8、歷史選區 982。
+- 4 個地區、8 場選舉與 982 個選區皆維持 `is_public = false`。
+- 同一 migration 以單一交易重跑成功，數量仍為 4／8／982，證明 upsert 可重跑。
+- `published.regions`、`published.elections`、`published.races` 對這批 external ID 的筆數皆為 0。
+
 ## 下一階段
 
-1. 確認這份 4／8／4／982／286 計畫。
-2. 將已驗證的 ROLLBACK SQL 轉成正式 local migration。
-3. 只套用本機 Supabase，重跑對照確認全部改為沿用既有。
-4. 再建立 2,278 個非公開人物及其來源配對。
-5. 人物、選舉、選區都確認後，才建立候選關係、票數、得票率與當選狀態。
-6. 最後獨立決定哪些歷史資料進入 `published`。
+1. 建立 2,278 個非公開人物及其來源配對。
+2. 重新檢查 164 筆跨年份來源／57 組人物，不以情境相似自動合併。
+3. 人物、選舉、選區都確認後，才建立候選關係、票數、得票率與當選狀態。
+4. 最後獨立決定哪些歷史資料進入 `published`。

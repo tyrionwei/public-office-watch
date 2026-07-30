@@ -37,6 +37,7 @@ function parseArgs(argv) {
     previewPath: defaultPreviewPath,
     planPath: defaultPlanPath,
     sqlPath: defaultSqlPath,
+    migrationPath: null,
     write: false,
   };
   for (let index = 0; index < argv.length; index += 1) {
@@ -45,6 +46,7 @@ function parseArgs(argv) {
     else if (arg === '--preview') options.previewPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--plan') options.planPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--sql') options.sqlPath = path.resolve(argv[++index] ?? '');
+    else if (arg === '--migration') options.migrationPath = path.resolve(argv[++index] ?? '');
     else throw new Error(`Unsupported argument: ${arg}`);
   }
   return options;
@@ -122,11 +124,21 @@ export function buildHistoricalElectionRacePlan(preview, regions) {
   const regionExternalIds = new Map();
   for (const name of requiredRegionNames) {
     const existing = preferredRegion(regions, name);
+    const definition = historicalRegions.get(name);
+    if (definition && (!existing || existing.external_id === definition.externalId)) {
+      createRegions.push({
+        externalId: definition.externalId,
+        name,
+        slug: definition.slug,
+        regionType: 'county',
+      });
+      regionExternalIds.set(name, definition.externalId);
+      continue;
+    }
     if (existing?.external_id) {
       regionExternalIds.set(name, existing.external_id);
       continue;
     }
-    const definition = historicalRegions.get(name);
     if (!definition) throw new Error(`No canonical or historical region plan for: ${name}`);
     createRegions.push({
       externalId: definition.externalId,
@@ -224,7 +236,7 @@ function validatePlan(plan, preview) {
   }
 }
 
-function verificationBlock(plan) {
+function verificationBlock(plan, label) {
   const checks = [
     ['regions', plan.createRegions.map((row) => row.externalId)],
     ['elections', plan.createEvents.map((row) => row.externalId)],
@@ -233,21 +245,47 @@ function verificationBlock(plan) {
   const statements = checks.map(([table, ids]) => {
     const array = `ARRAY[${ids.map(sqlValue).join(', ')}]::TEXT[]`;
     return `    IF (SELECT COUNT(*) FROM ${table} WHERE external_id = ANY(${array})) <> ${ids.length} THEN
-        RAISE EXCEPTION 'Historical CEC dry-run ${table} count mismatch';
+        RAISE EXCEPTION 'Historical CEC ${label} ${table} count mismatch';
     END IF;`;
-  }).join('\n');
+  });
+  if (plan.normalizeEvents.length > 0) {
+    const values = valuesSql(plan.normalizeEvents, ['externalId', 'name', 'electionType']);
+    statements.push(`    IF (SELECT COUNT(*)
+        FROM elections AS election
+        JOIN (VALUES
+${values}
+        ) AS input(external_id, name, election_type)
+          ON election.external_id = input.external_id
+         AND election.name = input.name
+         AND election.election_type = input.election_type) <> ${plan.normalizeEvents.length} THEN
+        RAISE EXCEPTION 'Historical CEC ${label} election normalization mismatch';
+    END IF;`);
+  }
+  if (plan.normalizeRaces.length > 0) {
+    const values = valuesSql(plan.normalizeRaces, ['externalId', 'title', 'raceType']);
+    statements.push(`    IF (SELECT COUNT(*)
+        FROM races AS race
+        JOIN (VALUES
+${values}
+        ) AS input(external_id, title, race_type)
+          ON race.external_id = input.external_id
+         AND race.title = input.title
+         AND race.race_type = input.race_type) <> ${plan.normalizeRaces.length} THEN
+        RAISE EXCEPTION 'Historical CEC ${label} race normalization mismatch';
+    END IF;`);
+  }
   return `DO \$verify\$
 BEGIN
-${statements}
+${statements.join('\n')}
 END
 \$verify\$;`;
 }
 
-export function renderHistoricalElectionRaceSql(plan) {
-  const sections = [
-    '-- Generated historical CEC election/race dry-run. This file always rolls back.',
-    'BEGIN;',
-  ];
+export function renderHistoricalElectionRaceSql(plan, { rollback = true } = {}) {
+  const sections = [rollback
+    ? '-- Generated historical CEC election/race dry-run. This file always rolls back.'
+    : '-- Generated historical CEC election/race migration.'];
+  if (rollback) sections.push('BEGIN;');
   if (plan.createRegions.length > 0) {
     const columns = ['externalId', 'name', 'slug', 'regionType'];
     sections.push(`WITH input(external_id, name, slug, region_type) AS (
@@ -348,15 +386,16 @@ ${valuesSql(plan.normalizeRaces, columns)}
 WHERE race.external_id = input.external_id;`);
   }
   sections.push(
-    verificationBlock(plan),
+    verificationBlock(plan, rollback ? 'dry-run' : 'migration'),
     `SELECT
     ${plan.createRegions.length} AS planned_regions,
     ${plan.createEvents.length} AS planned_elections,
     ${plan.normalizeEvents.length} AS normalized_elections,
     ${plan.createRaces.length} AS planned_races,
     ${plan.normalizeRaces.length} AS normalized_races;`,
-    'ROLLBACK;',
   );
+  if (rollback) sections.push('ROLLBACK;');
+  else sections.push('SELECT published.promote(NULL);');
   return `${sections.join('\n\n')}\n`;
 }
 
@@ -405,9 +444,14 @@ async function main() {
     fs.writeFileSync(options.planPath, `${JSON.stringify(plan, null, 2)}\n`);
     fs.writeFileSync(options.sqlPath, sql);
   }
+  if (options.migrationPath) {
+    fs.mkdirSync(path.dirname(options.migrationPath), { recursive: true });
+    fs.writeFileSync(options.migrationPath, renderHistoricalElectionRaceSql(plan, { rollback: false }));
+  }
   console.log(JSON.stringify({
     outputPlan: options.write ? path.relative(repoRoot, options.planPath) : null,
     outputSql: options.write ? path.relative(repoRoot, options.sqlPath) : null,
+    outputMigration: options.migrationPath ? path.relative(repoRoot, options.migrationPath) : null,
     ...plan.summary,
   }, null, 2));
 }

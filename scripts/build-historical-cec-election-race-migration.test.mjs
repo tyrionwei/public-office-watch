@@ -96,6 +96,24 @@ test('builds historical regions and canonical event/race writes without publishi
   assert.match(sql, /2012年立法委員選舉/);
   assert.match(sql, /is_public, updated_at/);
   assert.match(sql, /ROLLBACK;/);
+
+  const migrationSql = renderHistoricalElectionRaceSql(plan, { rollback: false });
+  assert.doesNotMatch(migrationSql, /BEGIN;/);
+  assert.doesNotMatch(migrationSql, /ROLLBACK;/);
+  assert.match(migrationSql, /Historical CEC migration election normalization mismatch/);
+  assert.match(migrationSql, /SELECT published\.promote\(NULL\);/);
+
+  const repeatedPlan = buildHistoricalElectionRacePlan(preview, [
+    ...regions,
+    {
+      external_id: plan.createRegions[0].externalId,
+      name: plan.createRegions[0].name,
+      slug: plan.createRegions[0].slug,
+      region_type: plan.createRegions[0].regionType,
+    },
+  ]);
+  assert.equal(repeatedPlan.createRegions.length, 1);
+  assert.equal(repeatedPlan.createRegions[0].externalId, plan.createRegions[0].externalId);
 });
 
 test('refuses a missing non-historical region instead of guessing a modern mapping', () => {

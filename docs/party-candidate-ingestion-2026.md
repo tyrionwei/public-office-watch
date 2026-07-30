@@ -307,6 +307,33 @@ node scripts/preview-publish-reviewed-party-candidates.mjs
 node scripts/preview-publish-reviewed-party-candidates.mjs --write
 ```
 
+### Phase 10：正式來源新鮮度檢查（本機完成）
+
+- `report-party-candidate-source-freshness.mjs` 只讀 Local Supabase，不允許連線正式專案；
+  它以 `sourceCandidateKey` 比對最新正規化快照與 `source_people`，檢查清單增減及姓名、
+  黨籍、參選狀態、選區、提名日期、照片、學經歷、政見與社群連結是否改變。
+- 2026-07-30 重新讀取民進黨、國民黨、親民黨及台灣前進聯合網站，共 254 筆；
+  民眾黨因 Cloudflare 不繞過安全檢測，沿用 2026-07-29 由瀏覽器擷取的 64 筆快照，
+  並在報告中明確標為 `browser_snapshot`。
+- 318 筆官方來源皆能與本機來源列一對一匹配，排除半形／全形選區分隔符號差異後，
+  318 筆均無內容變動，沒有新增、移除或欄位更新。
+- 發布預覽仍為 317 筆有效候選及 1 筆已拒絕、非公開的張耀中來源稽核紀錄；
+  這一步只產生 `local-data/party-candidate-freshness-2026-07-30/report.json`，沒有寫入資料庫。
+
+```bash
+node scripts/report-party-candidate-source-freshness.mjs \
+  --input local-data/party-candidate-freshness-2026-07-30/dpp-mayors.json \
+  --input local-data/party-candidate-freshness-2026-07-30/dpp-councilors.json \
+  --input local-data/party-candidate-freshness-2026-07-30/kmt.json \
+  --input local-data/party-candidate-freshness-2026-07-30/pfp.json \
+  --input local-data/party-candidate-freshness-2026-07-30/taiwan-forward/new-power-party.json \
+  --input local-data/party-candidate-freshness-2026-07-30/taiwan-forward/taiwan-statebuilding-party.json \
+  --input local-data/party-candidate-freshness-2026-07-30/taiwan-forward/obasan-alliance.json \
+  --input local-data/party-candidate-freshness-2026-07-30/taiwan-forward/green-party-taiwan.json \
+  --browser-input data-sources/tpp/2026-election/normalized-candidates-2026-07-29.json \
+  --output local-data/party-candidate-freshness-2026-07-30/report.json
+```
+
 ## 本機執行
 
 ```bash

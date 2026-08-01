@@ -129,6 +129,9 @@ function createBridge(overrides: Partial<PublishedPublicDataBridge> = {}) {
     async loadPeoplePage() {
       return { items: [person], total: 1 };
     },
+    async loadPartyCandidatePage() {
+      return { items: [], total: 0 };
+    },
     async loadPersonProfiles() {
       return [];
     },

@@ -247,6 +247,12 @@ export function createPublishedPublicDataProvider(
       return result;
     },
 
+    async loadPartyCandidatePage(partyName: string, page: number, pageSize: number) {
+      const result = await bridge.loadPartyCandidatePage(partyName, page, pageSize);
+      candidates = mergeByKey(candidates, result.items, (candidate) => candidate.candidate_id);
+      return result;
+    },
+
     getPersonById(personId: string) {
       return people.find((person) => person.person_id === personId) ?? null;
     },

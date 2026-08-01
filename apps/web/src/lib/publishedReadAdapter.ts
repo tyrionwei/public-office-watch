@@ -426,6 +426,11 @@ export type PublishedPeoplePage = {
   total: number;
 };
 
+export type PublishedPartyCandidatePage = {
+  rows: PublicCandidate[];
+  total: number;
+};
+
 export type PublishedHomePageRows = {
   tickerRows: PublishedHomeTickerRow[];
   regionSummaryRows: PublishedRegionSummaryRow[];
@@ -516,6 +521,7 @@ export type PublishedReadAdapter = {
   loadRaceDetail(raceId: string): Promise<PublishedRaceDetailRows>;
   loadLocalOfficePeople(districtPrefixes: string[]): Promise<PublishedPeopleDirectoryRow[]>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
+  loadPartyCandidatePage(partyName: string, page: number, pageSize: number): Promise<PublishedPartyCandidatePage>;
   loadPartyData(): Promise<PublishedPartyDataRows>;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
   loadPersonProfiles(personIds: string[]): Promise<PublishedPersonProfileRows>;
@@ -937,6 +943,29 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
 
       return {
         rows: getRowsOrThrow(response, 'Published people directory'),
+        total: response.count ?? 0,
+      };
+    },
+
+    async loadPartyCandidatePage(rawPartyName, page, pageSize) {
+      const partyName = rawPartyName.trim();
+      if (!partyName) return { rows: [], total: 0 };
+
+      const pageRange = toPublicPageRange(page, pageSize);
+      const response = await client
+        .schema('published')
+        .from<PublicCandidate>('active_party_candidates')
+        .select(PERSON_CANDIDATE_COLUMNS, { count: 'exact' })
+        .in('party', getPartyNames(partyName))
+        .order('election_year', { ascending: false, nullsFirst: false })
+        .order('region_name', { ascending: true, nullsFirst: false })
+        .order('race_title', { ascending: true })
+        .order('person_name', { ascending: true })
+        .order('candidate_id', { ascending: true })
+        .range(pageRange.from, pageRange.to);
+
+      return {
+        rows: getRowsOrThrow(response, 'Published active party candidates'),
         total: response.count ?? 0,
       };
     },

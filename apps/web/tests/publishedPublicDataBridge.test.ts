@@ -52,6 +52,9 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
     async loadPeoplePage() {
       return { rows: [], total: 0 };
     },
+    async loadPartyCandidatePage() {
+      return { rows: [], total: 0 };
+    },
     async loadLocalOfficePeople() {
       return [];
     },
@@ -144,6 +147,22 @@ test('bridge resolves region filters and maps a published people page to fronten
     merged_role_labels: ['縣市首長'],
     merged_candidate_count: 0,
   });
+});
+
+test('bridge returns the bounded party candidate page from the published adapter', async () => {
+  const requests: Array<[string, number, number]> = [];
+  const adapter = createAdapter({
+    async loadPartyCandidatePage(partyName, page, pageSize) {
+      requests.push([partyName, page, pageSize]);
+      return { rows: [], total: 17 };
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter, () => null);
+
+  const result = await bridge.loadPartyCandidatePage('民主進步黨', 2, 8);
+
+  assert.deepEqual(requests, [['民主進步黨', 2, 8]]);
+  assert.deepEqual(result, { items: [], total: 17 });
 });
 
 test('bridge maps compact search rows to existing frontend result types', async () => {

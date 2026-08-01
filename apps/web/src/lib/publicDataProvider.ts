@@ -50,6 +50,11 @@ export type PublicPersonListPage = {
   total: number;
 };
 
+export type PublicCandidateListPage = {
+  items: PublicCandidate[];
+  total: number;
+};
+
 export type PublicRaceListPage = {
   items: PublicRace[];
   total: number;
@@ -99,6 +104,7 @@ export interface PublicDataProvider {
   getPeople(): PublicPerson[];
   getPeopleByFilters(filters?: PublicPersonFilters): PublicPersonListItem[];
   loadPeoplePage(filters: PublicPersonFilters, page: number, pageSize: number): Promise<PublicPersonListPage>;
+  loadPartyCandidatePage(partyName: string, page: number, pageSize: number): Promise<PublicCandidateListPage>;
   getPersonById(personId: string): PublicPerson | null;
   getPersonProfile(personId: string): PublicPersonProfile | null;
   loadPersonProfiles(personIds: string[]): Promise<PublicPersonProfile[]>;

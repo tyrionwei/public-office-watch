@@ -3,6 +3,7 @@
 GRANT USAGE ON SCHEMA published TO anon, authenticated;
 
 GRANT SELECT ON TABLE
+  published.active_party_candidates,
   published.candidates,
   published.election_race_facets,
   published.election_race_summaries,

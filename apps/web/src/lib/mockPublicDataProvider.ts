@@ -239,6 +239,35 @@ export const mockPublicDataProvider: PublicDataProvider = {
     };
   },
 
+  async loadPartyCandidatePage(partyName, page, pageSize) {
+    const normalizedPartyName = partyName.trim().replace(/臺/g, '台');
+    const activeStatuses = new Set([
+      'potential',
+      'party_nominee',
+      'officially_announced',
+      'registered',
+      'qualified',
+    ]);
+    const items = mockPublicCandidates
+      .filter((candidate) => (
+        candidate.party?.replace(/臺/g, '台') === normalizedPartyName
+        && activeStatuses.has(candidate.candidacy_status)
+        && candidate.election_result === 'pending'
+      ))
+      .sort((left, right) => (
+        (right.election_year ?? -1) - (left.election_year ?? -1)
+        || (left.region_name ?? '').localeCompare(right.region_name ?? '', 'zh-Hant-TW')
+        || left.race_title.localeCompare(right.race_title, 'zh-Hant-TW')
+        || left.person_name.localeCompare(right.person_name, 'zh-Hant-TW')
+      ));
+    const pageStart = (page - 1) * pageSize;
+
+    return {
+      items: items.slice(pageStart, pageStart + pageSize),
+      total: items.length,
+    };
+  },
+
   getPersonById(personId: string) {
     return mockPublicPeople.find((person) => person.person_id === personId) ?? null;
   },

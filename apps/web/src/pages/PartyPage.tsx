@@ -4,13 +4,14 @@ import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
+import { translateCandidateStatus } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
-import type { PublicPersonListPage } from '../lib/publicDataProvider';
+import type { PublicCandidateListPage, PublicPersonListPage } from '../lib/publicDataProvider';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { dataGuidancePath, partiesPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicPartyOfficer, PublicPersonListItem, PublicPersonStatus } from '../types/publicViews';
+import type { PublicCandidate, PublicPartyOfficer, PublicPersonListItem, PublicPersonStatus } from '../types/publicViews';
 
 function formatCurrency(value: number, locale: string) {
   return new Intl.NumberFormat(locale, {
@@ -24,6 +25,7 @@ const PARTY_PEOPLE_PAGE_SIZE = 8;
 const PARTY_OFFICER_PAGE_SIZE = 8;
 const CONTRIBUTION_PAGE_SIZE = 10;
 const emptyPeoplePage: PublicPersonListPage = { items: [], total: 0 };
+const emptyCandidatePage: PublicCandidateListPage = { items: [], total: 0 };
 
 function CompanyDirectorNames({ companyId, names }: { companyId: string; names: string[] }) {
   const { t } = useI18n();
@@ -121,6 +123,49 @@ function usePartyPeoplePage(
       active = false;
     };
   }, [page, partyName, status]);
+
+  return { ...result, loading };
+}
+
+function usePartyCandidatePage(partyName: string | null, page: number) {
+  const [result, setResult] = useState<PublicCandidateListPage>(emptyCandidatePage);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setResult(emptyCandidatePage);
+
+    if (!partyName) {
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setLoading(true);
+
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadPartyCandidatePage(
+        partyName,
+        page,
+        PARTY_PEOPLE_PAGE_SIZE,
+      ))
+      .then((nextPage) => {
+        if (active) setResult(nextPage);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) {
+          console.warn('Failed to load party candidate page', error);
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [page, partyName]);
 
   return { ...result, loading };
 }
@@ -243,6 +288,23 @@ function PersonMiniCard({
   );
 }
 
+function CandidateMiniCard({ candidate }: { candidate: PublicCandidate }) {
+  const { t } = useI18n();
+
+  return (
+    <Link
+      to={personPath(candidate.person_id)}
+      className="block pixel-corners border border-line/70 bg-bg/35 p-4 transition hover:border-accent/70 hover:bg-accent/5"
+    >
+      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+        {translateCandidateStatus(candidate, t)}
+      </p>
+      <h3 className="mt-2 font-display text-lg text-white">{candidate.person_name}</h3>
+      <p className="mt-2 text-sm text-slate-400">{candidate.race_title}</p>
+    </Link>
+  );
+}
+
 function SectionPagination({
   currentPage,
   total,
@@ -324,7 +386,7 @@ export function PartyPage() {
   const contributionRequestedPage = getSectionPage(searchParams, 'contributionPage');
   const partyOfficers = usePartyOfficers(party?.party_id ?? null);
   const officeholders = usePartyPeoplePage(party?.name ?? null, 'current', officeholderRequestedPage);
-  const candidates = usePartyPeoplePage(party?.name ?? null, 'candidate', candidateRequestedPage);
+  const candidates = usePartyCandidatePage(party?.name ?? null, candidateRequestedPage);
   const financeSummaries = party ? publicDataProvider.getPartyFinanceSummaries(party.party_id) : [];
   const companySummaries = party ? publicDataProvider.getPartyCompanyContributionSummaries(party.party_id) : [];
   const sortedCompanySummaries = companySummaries.slice().sort((left, right) =>
@@ -559,11 +621,10 @@ export function PartyPage() {
                   ) : candidates.items.length > 0 ? (
                     <>
                       <div className="grid gap-3">
-                        {candidates.items.map((person) => (
-                          <PersonMiniCard
-                            key={person.person_id}
-                            person={person}
-                            eyebrow={person.status_label}
+                        {candidates.items.map((candidate) => (
+                          <CandidateMiniCard
+                            key={candidate.candidate_id}
+                            candidate={candidate}
                           />
                         ))}
                       </div>

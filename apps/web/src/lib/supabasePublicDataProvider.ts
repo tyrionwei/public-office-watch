@@ -27,7 +27,7 @@ import type {
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import type { PollComparison } from '../types/polling';
 import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
-import type { HomePageData, HomeTicker, PublicDataProvider, PublicElectionIndexData, PublicPersonListPage, PublicRaceDetailData, PublicRaceListPage, PublicRaceQueryFilters, PublicSearchResult } from './publicDataProvider';
+import type { HomePageData, HomeTicker, PublicCandidateListPage, PublicDataProvider, PublicElectionIndexData, PublicPersonListPage, PublicRaceDetailData, PublicRaceListPage, PublicRaceQueryFilters, PublicSearchResult } from './publicDataProvider';
 import {
   buildLocalOfficeSummary,
   buildPersonListItems,
@@ -662,6 +662,50 @@ async function fetchPeoplePage(
     };
   });
 
+  return { items, total: count ?? items.length };
+}
+
+async function fetchPartyCandidatePage(
+  partyName: string,
+  page: number,
+  pageSize: number,
+): Promise<PublicCandidateListPage> {
+  await refreshSupabasePublicDataSnapshot();
+
+  const view = fromPublicView('public_candidates');
+  const normalizedPartyName = partyName.trim();
+  if (!view || !normalizedPartyName) {
+    return { items: [], total: 0 };
+  }
+
+  const partyNames = normalizedPartyName === '台灣民眾黨' || normalizedPartyName === '臺灣民眾黨'
+    ? ['台灣民眾黨', '臺灣民眾黨']
+    : [normalizedPartyName];
+  const pageRange = toPublicPageRange(page, pageSize);
+  const { data, error, count } = await view
+    .select('*', { count: 'exact' })
+    .in('party', partyNames)
+    .in('candidacy_status', ['potential', 'party_nominee', 'officially_announced', 'registered', 'qualified'])
+    .eq('election_result', 'pending')
+    .order('election_year', { ascending: false, nullsFirst: false })
+    .order('region_name', { ascending: true, nullsFirst: false })
+    .order('race_title', { ascending: true })
+    .order('person_name', { ascending: true })
+    .order('candidate_id', { ascending: true })
+    .range(pageRange.from, pageRange.to);
+
+  if (error) {
+    if (import.meta.env.DEV) {
+      console.warn('Failed to fetch public party candidate page: ' + error.message);
+    }
+    throw new Error('Failed to fetch public party candidate page.');
+  }
+
+  if (!Array.isArray(data)) {
+    throw new Error('Public party candidate page returned an invalid response.');
+  }
+
+  const items = data.map((row) => mapPublicCandidateRow(row as PublicCandidate));
   return { items, total: count ?? items.length };
 }
 
@@ -1364,6 +1408,10 @@ export const supabasePublicDataProvider: PublicDataProvider = {
 
   loadPeoplePage(filters, page, pageSize) {
     return loadCachedPeoplePage(filters, page, pageSize);
+  },
+
+  loadPartyCandidatePage(partyName, page, pageSize) {
+    return fetchPartyCandidatePage(partyName, page, pageSize);
   },
 
   getPersonById(personId: string) {

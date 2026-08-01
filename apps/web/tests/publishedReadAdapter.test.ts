@@ -164,6 +164,30 @@ test('people directory applies published filters without hiding party officers',
   assert.equal(fake.calls.some((call) => call[0] === 'eq' && call[1] === 'list_is_party_only'), false);
 });
 
+test('party candidate page reads the active published candidate view with stable pagination', async () => {
+  const row = { candidate_id: 'candidate-1', person_name: '測試候選人' };
+  const fake = createFakeClient({
+    active_party_candidates: { data: [row], error: null, count: 17 },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  const result = await adapter.loadPartyCandidatePage(' 臺灣民眾黨 ', 2, 8);
+
+  assert.deepEqual(result, { rows: [row], total: 17 });
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['from', 'active_party_candidates'],
+    ['select', PERSON_CANDIDATE_COLUMNS, { count: 'exact' }],
+    ['in', 'party', ['台灣民眾黨', '臺灣民眾黨']],
+    ['order', 'election_year', { ascending: false, nullsFirst: false }],
+    ['order', 'region_name', { ascending: true, nullsFirst: false }],
+    ['order', 'race_title', { ascending: true }],
+    ['order', 'person_name', { ascending: true }],
+    ['order', 'candidate_id', { ascending: true }],
+    ['range', 8, 15],
+  ]);
+});
+
 test('search calls the ranked published search function with a bounded limit', async () => {
   const row = { document_key: 'region:tp', entity_type: 'region', entity_id: 'tp', title: '臺北市' };
   const fake = createFakeClient({

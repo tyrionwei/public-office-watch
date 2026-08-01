@@ -10,8 +10,10 @@ const migrationsRoot = path.join(repoRoot, 'supabase', 'migrations');
 const publicAccessMigration = 'supabase/migrations/202607280004_published_public_read_access.sql';
 const supplementalPublicAccessMigrations = [
   'supabase/migrations/202607280005_published_ranked_search.sql',
+  'supabase/migrations/202608010002_published_active_party_candidate_access.sql',
 ];
 const reviewedRelations = [
+  'active_party_candidates',
   'candidates',
   'election_race_facets',
   'election_race_summaries',

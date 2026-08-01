@@ -94,6 +94,7 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadElectionRacePage'
   | 'loadRaceDetail'
   | 'loadPeoplePage'
+  | 'loadPartyCandidatePage'
   | 'loadPersonProfiles'
   | 'loadLocalOfficeSummaryByRegionId'
   | 'loadPartyOfficers'
@@ -462,6 +463,14 @@ export function createPublishedPublicDataBridge(
 
       return {
         items: result.rows.map((row) => mapPeopleRow(row, region)),
+        total: result.total,
+      };
+    },
+
+    async loadPartyCandidatePage(partyName, page, pageSize) {
+      const result = await adapter.loadPartyCandidatePage(partyName, page, pageSize);
+      return {
+        items: result.rows,
         total: result.total,
       };
     },

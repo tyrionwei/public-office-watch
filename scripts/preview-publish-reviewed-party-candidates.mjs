@@ -87,6 +87,28 @@ function planReviewedPartyCandidatePublication(dataset, options = {}) {
       continue;
     }
 
+    const publicationReview = objectValue(objectValue(source.source_payload)?.publicationReview);
+    const pendingCecClaim = candidacyClaims.length === 1
+      && candidacyClaims[0].review_status === 'needs_more_evidence'
+      && candidacyClaims[0].visibility === 'private'
+      && candidacyClaims[0].is_public === false;
+    const pendingCecMatch = sourceMatches.length === 1
+      && sourceMatches[0].match_status === 'auto_matched'
+      && sourceMatches[0].person_id === candidate?.person_id;
+    if (
+      publicationReview?.status === 'awaiting_cec_confirmation'
+      && source.is_public === false
+      && candidate?.is_public === false
+      && candidate?.candidacy_status === 'potential'
+      && candidate?.registration_status === 'unknown'
+      && candidate?.election_result === 'pending'
+      && pendingCecClaim
+      && pendingCecMatch
+    ) {
+      excluded.push({ source, reason: 'private identity is awaiting CEC candidacy confirmation' });
+      continue;
+    }
+
     const errors = [];
     const targetRace = objectValue(objectValue(source.source_payload)?.targetRace);
     const confirmedMatches = sourceMatches.filter((match) => match.match_status === 'auto_matched');

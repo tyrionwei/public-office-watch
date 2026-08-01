@@ -843,6 +843,26 @@ function historicalCecLegacyRaceKey(row) {
   return `${historicalCecLegacyCountyKey(row)}-${cleanCecCell(row[2])}`;
 }
 
+export function isHistoricalCecNationalResult(classification) {
+  return classification.kind === 'president'
+    || (classification.kind.startsWith('legislator-') && classification.kind.includes('indigenous'));
+}
+
+export function isHistoricalCecAggregateResultRow(row) {
+  return cleanCecCell(row[3]) === '000'
+    && cleanCecCell(row[4]) === '0000'
+    && ['0', '0000'].includes(cleanCecCell(row[5]));
+}
+
+export function historicalCecAggregateResultKey(row, classification, candidateNo = cleanCecCell(row[6])) {
+  candidateNo = cleanCecCell(candidateNo);
+  if (isHistoricalCecNationalResult(classification)) return candidateNo;
+  if (classification.kind.startsWith('local-councilor-') && classification.kind.includes('indigenous')) {
+    return `${historicalCecLegacyCountyKey(row)}-${candidateNo}`;
+  }
+  return `${historicalCecLegacyRaceKey(row)}-${candidateNo}`;
+}
+
 function normalizeHistoricalCecRegionName(name) {
   return normalizeIdentityText(String(name ?? '').replace('桃園縣', '桃園市'));
 }
@@ -901,24 +921,16 @@ function buildHistoricalCecAggregateResultByKey({ zipBuffer, entryName, classifi
   }
 
   const resultRows = parseDelimitedRows(readZipTextByEntry(zipBuffer, resultEntryName), ',');
-  const nationalRace = classification.kind === 'president' || classification.kind.includes('indigenous');
+  const nationalRace = isHistoricalCecNationalResult(classification);
 
   for (const row of resultRows) {
-    const aggregateRow =
-      cleanCecCell(row[3]) === '000' &&
-      cleanCecCell(row[4]) === '0000' &&
-      cleanCecCell(row[5]) === '0';
     const nationalTotal = cleanCecCell(row[0]) === '00' && cleanCecCell(row[1]) === '000';
 
-    if (!aggregateRow || (nationalRace && !nationalTotal)) {
+    if (!isHistoricalCecAggregateResultRow(row) || (nationalRace && !nationalTotal)) {
       continue;
     }
 
-    const candidateNo = cleanCecCell(row[6]);
-    const key = nationalRace
-      ? candidateNo
-      : `${historicalCecLegacyRaceKey(row)}-${candidateNo}`;
-    resultByKey.set(key, {
+    resultByKey.set(historicalCecAggregateResultKey(row, classification), {
       voteCount: Number.parseInt(cleanCecCell(row[7]), 10),
       voteRate: Number.parseFloat(cleanCecCell(row[8])),
       elected: cleanCecCell(row[9]) === '*',
@@ -1244,10 +1256,7 @@ function toHistoricalCecSourcePeople({ zipBuffer, source, seed }) {
       const districtCode = cleanCecCell(row[2]);
       const partyCode = cleanCecCell(row[7]);
       const vicePresident = cleanCecCell(row[15]) === 'Y';
-      const nationalRace = classification.kind === 'president' || classification.kind.includes('indigenous');
-      const resultKey = nationalRace
-        ? candidateNo
-        : `${historicalCecLegacyRaceKey(row)}-${candidateNo}`;
+      const resultKey = historicalCecAggregateResultKey(row, classification, candidateNo);
       const aggregateResult = resultByKey.get(resultKey);
       const elected = aggregateResult?.elected ?? cleanCecCell(row[14]) === '*';
       const incumbent = cleanCecCell(row[13]) === 'Y';

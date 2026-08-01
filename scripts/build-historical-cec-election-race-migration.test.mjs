@@ -116,6 +116,126 @@ test('builds historical regions and canonical event/race writes without publishi
   assert.equal(repeatedPlan.createRegions[0].externalId, plan.createRegions[0].externalId);
 });
 
+test('creates a historical Taoyuan County region instead of reusing modern Taoyuan City', () => {
+  const preview = {
+    summary: { createNewEventCount: 1, createNewRaceCount: 1 },
+    comparisonPlan: {
+      eventPlans: [{
+        key: '2009|councilor|national',
+        action: 'create_new',
+        electionName: '2009年直轄市及縣市議員選舉',
+        electionYear: 2009,
+        electionType: 'councilor',
+        existingCandidates: [],
+      }],
+      racePlans: [{
+        key: '2009|councilor|桃園縣|district-1|regional',
+        eventContextKey: '2009|councilor|national',
+        action: 'create_new',
+        historicalGeography: '桃園縣',
+        regionScope: 'local',
+        raceTitle: '桃園縣第1選舉區議員選舉',
+        raceType: 'county_councilor',
+        existingCandidates: [],
+      }],
+    },
+  };
+  const regions = [{
+    external_id: 'tw-county-68000',
+    name: '桃園市',
+    slug: 'taoyuan-city',
+    region_type: 'municipality',
+  }];
+
+  const plan = buildHistoricalElectionRacePlan(preview, regions);
+  assert.equal(plan.createRegions.length, 1);
+  assert.equal(plan.createRegions[0].name, '桃園縣');
+  assert.equal(plan.createRegions[0].externalId, 'cec-historical-county-taoyuan');
+  assert.equal(plan.createRaces[0].regionExternalId, 'cec-historical-county-taoyuan');
+  assert.equal(plan.createRaces[0].raceType, 'county_councilor');
+});
+
+test('creates pre-merger same-name city regions instead of reusing modern municipalities', () => {
+  const preview = {
+    summary: { createNewEventCount: 2, createNewRaceCount: 3 },
+    comparisonPlan: {
+      eventPlans: [{
+        key: '2005|councilor|national',
+        action: 'create_new',
+        electionName: '2005年直轄市及縣市議員選舉',
+        electionYear: 2005,
+        electionType: 'councilor',
+        existingCandidates: [],
+      }, {
+        key: '2006|councilor|national',
+        action: 'create_new',
+        electionName: '2006年直轄市及縣市議員選舉',
+        electionYear: 2006,
+        electionType: 'councilor',
+        existingCandidates: [],
+      }],
+      racePlans: [{
+        key: '2005|councilor|臺中市|district-1|regional',
+        eventContextKey: '2005|councilor|national',
+        action: 'create_new',
+        historicalGeography: '臺中市',
+        regionScope: 'local',
+        raceTitle: '臺中市第1選舉區議員選舉',
+        raceType: 'city_councilor',
+        existingCandidates: [],
+      }, {
+        key: '2005|councilor|臺南市|district-1|regional',
+        eventContextKey: '2005|councilor|national',
+        action: 'create_new',
+        historicalGeography: '臺南市',
+        regionScope: 'local',
+        raceTitle: '臺南市第1選舉區議員選舉',
+        raceType: 'city_councilor',
+        existingCandidates: [],
+      }, {
+        key: '2006|councilor|高雄市|district-1|regional',
+        eventContextKey: '2006|councilor|national',
+        action: 'create_new',
+        historicalGeography: '高雄市',
+        regionScope: 'local',
+        raceTitle: '高雄市第1選舉區議員選舉',
+        raceType: 'city_councilor',
+        existingCandidates: [],
+      }],
+    },
+  };
+  const regions = [{
+    external_id: 'tw-county-66000',
+    name: '臺中市',
+    slug: 'taichung-city',
+    region_type: 'municipality',
+  }, {
+    external_id: 'tw-county-67000',
+    name: '臺南市',
+    slug: 'tainan-city',
+    region_type: 'municipality',
+  }, {
+    external_id: 'tw-county-64000',
+    name: '高雄市',
+    slug: 'kaohsiung-city',
+    region_type: 'municipality',
+  }];
+
+  const plan = buildHistoricalElectionRacePlan(preview, regions);
+  assert.deepEqual(
+    plan.createRegions.map((region) => [region.name, region.regionType]),
+    [['高雄市', 'municipality'], ['臺中市', 'city'], ['臺南市', 'city']],
+  );
+  assert.deepEqual(
+    plan.createRaces.map((race) => race.regionExternalId),
+    [
+      'cec-historical-city-taichung',
+      'cec-historical-city-tainan',
+      'cec-historical-municipality-kaohsiung',
+    ],
+  );
+});
+
 test('refuses a missing non-historical region instead of guessing a modern mapping', () => {
   const preview = {
     summary: { createNewEventCount: 1, createNewRaceCount: 1 },

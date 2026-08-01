@@ -23,6 +23,7 @@ function expected(overrides = {}) {
 function report() {
   return {
     categoryCounts: { safe_create_candidate: 1, safe_update_candidate: 1 },
+    actionableByYear: { 2002: 1, 2014: 1 },
     safeCreates: [{
       sourcePersonId: '11111111-1111-4111-8111-111111111111',
       sourcePersonKey: 'cec-historical:create',
@@ -74,12 +75,31 @@ test('separates private creates from publication-preserving official updates', (
   assert.match(dryRunSql, /WHERE input\.operation = 'create'/);
   assert.match(dryRunSql, /WHERE input\.operation = 'update'/);
   assert.match(dryRunSql, /candidate\.is_public = input\.original_is_public/);
+  assert.match(dryRunSql, /UPDATE source_people source/);
+  assert.match(dryRunSql, /input\.operation = 'create'[\s\S]+person_identity_matches/);
+  assert.match(dryRunSql, /JOIN person_canonical_map person_map/);
+  assert.match(dryRunSql, /JOIN race_canonical_map race_map/);
   assert.match(dryRunSql, /ROLLBACK;/);
 
   const migrationSql = renderHistoricalCecExistingCandidateSql(plan, { rollback: false });
   assert.doesNotMatch(migrationSql, /ROLLBACK;/);
   assert.match(migrationSql, /SELECT published\.promote\(NULL\);/);
   assert.match(migrationSql, /unexpectedly published a newly created private candidate/);
+});
+
+test('can restrict a migration plan to one election year', () => {
+  const plan = buildHistoricalCecExistingCandidatePlan(report(), { electionYear: 2002 });
+  assert.deepEqual(plan.summary, {
+    createCandidates: 1,
+    updateCandidates: 0,
+    totalCandidates: 1,
+    withVoteCount: 1,
+    withVoteRate: 1,
+    elected: 0,
+    publicUpdates: 0,
+  });
+  assert.equal(plan.policy.electionYear, 2002);
+  assert.equal(plan.rows[0].electionYear, 2002);
 });
 
 test('rejects count drift, unsafe update fields and missing publication state', () => {

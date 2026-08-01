@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { auditHistoricalCecCandidateCoverage } from './report-historical-cec-candidate-coverage.mjs';
+import {
+  auditHistoricalCecCandidateCoverage,
+  historicalCandidateExternalId,
+} from './report-historical-cec-candidate-coverage.mjs';
 
 function source(id, name = id) {
   return {
@@ -88,6 +91,82 @@ test('separates exact, safely creatable and safely updatable candidate coverage'
   assert.equal(report.safeUpdates[0].candidateIsPublic, false);
 });
 
+test('audits an existing candidate even when its person was created from the historical source', () => {
+  const data = fixture();
+  data.sources = [source('source-update')];
+  data.matches = [{
+    source_person_id: 'source-update',
+    person_id: 'person-update',
+    match_status: 'auto_matched',
+    match_method: 'official_historical_source_scoped_new_person_v1',
+  }];
+  data.candidates = [{ ...exactCandidate('update', 'person-update'), vote_count: null }];
+
+  const report = auditHistoricalCecCandidateCoverage(data);
+  assert.equal(report.categoryCounts.safe_update_candidate, 1);
+  assert.equal(report.categoryCounts.new_private_candidate_scope, undefined);
+  assert.deepEqual(report.safeUpdates[0].mismatchFields, ['vote_count']);
+});
+
+test('prefers the stable source key candidate over another logical candidate', () => {
+  const data = fixture();
+  data.sources = [source('source-update')];
+  data.matches = [{
+    source_person_id: 'source-update',
+    person_id: 'person-update',
+    match_status: 'auto_matched',
+    match_method: 'external_id',
+  }];
+  const sourceCandidate = {
+    ...exactCandidate('source-key', 'person-update'),
+    external_id: historicalCandidateExternalId('cec:source-update'),
+    vote_count: null,
+  };
+  data.candidates = [exactCandidate('other', 'person-update'), sourceCandidate];
+
+  const report = auditHistoricalCecCandidateCoverage(data);
+  assert.equal(report.safeUpdates.length, 1);
+  assert.equal(report.safeUpdates[0].candidateId, 'source-key');
+  assert.deepEqual(report.safeUpdates[0].mismatchFields, ['vote_count']);
+});
+
+test('holds a source key candidate pointing at another person or race for manual review', () => {
+  const data = fixture();
+  data.sources = [source('source-conflict')];
+  data.matches = [{
+    source_person_id: 'source-conflict',
+    person_id: 'person-expected',
+    match_status: 'auto_matched',
+    match_method: 'external_id',
+  }];
+  data.candidates = [{
+    ...exactCandidate('source-key-conflict', 'person-other'),
+    external_id: historicalCandidateExternalId('cec:source-conflict'),
+  }];
+
+  const report = auditHistoricalCecCandidateCoverage(data);
+  assert.equal(report.categoryCounts.source_key_candidate_conflict, 1);
+  assert.equal(report.summary.manualReviewRows, 1);
+  assert.equal(report.manualReview[0].candidateId, 'source-key-conflict');
+});
+
+test('uses an existing source key candidate as the identity anchor when a match row is missing', () => {
+  const data = fixture();
+  data.sources = [source('source-update')];
+  data.matches = [];
+  data.candidates = [{
+    ...exactCandidate('source-key', 'person-update'),
+    external_id: historicalCandidateExternalId('cec:source-update'),
+    vote_count: null,
+  }];
+
+  const report = auditHistoricalCecCandidateCoverage(data);
+  assert.equal(report.categoryCounts.unmatched_identity, undefined);
+  assert.equal(report.safeUpdates.length, 1);
+  assert.equal(report.safeUpdates[0].personId, 'person-update');
+  assert.deepEqual(report.safeUpdates[0].mismatchFields, ['vote_count']);
+});
+
 test('holds multiple identities and duplicate source assignments for manual review', () => {
   const data = fixture();
   data.sources = [source('source-conflict'), source('source-duplicate-a'), source('source-duplicate-b')];
@@ -147,7 +226,7 @@ test('reports each missing race context with one reusable election and canonical
   assert.equal(report.missingRaceContexts.length, 1);
   const [context] = report.missingRaceContexts;
   assert.match(context.key, /^2022\|councilor\|.+\|district-1\|regional$/);
-  assert.equal(context.eventContextKey, '2022|councilor|national');
+  assert.equal(context.eventContextKey, '2022|councilor|combined');
   assert.equal(context.eventPlanAction, 'reuse_existing');
   assert.equal(context.racePlanAction, 'create_new');
   assert.equal(context.eventExternalId, 'election-2022');

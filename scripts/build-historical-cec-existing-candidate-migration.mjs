@@ -22,6 +22,7 @@ function parseArgs(argv) {
     planPath: defaultPlanPath,
     sqlPath: defaultSqlPath,
     migrationPath: null,
+    electionYear: null,
     write: false,
   };
   for (let index = 0; index < argv.length; index += 1) {
@@ -31,7 +32,11 @@ function parseArgs(argv) {
     else if (arg === '--plan') options.planPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--sql') options.sqlPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--migration') options.migrationPath = path.resolve(argv[++index] ?? '');
+    else if (arg === '--year') options.electionYear = Number.parseInt(argv[++index] ?? '', 10);
     else throw new Error(`Unsupported argument: ${arg}`);
+  }
+  if (options.electionYear != null && !Number.isInteger(options.electionYear)) {
+    throw new Error('Invalid election year');
   }
   return options;
 }
@@ -94,8 +99,9 @@ function officialFields(row, mismatchFields = null) {
   };
 }
 
-export function buildHistoricalCecExistingCandidatePlan(report) {
-  const creates = (report.safeCreates ?? []).map((row) => ({
+export function buildHistoricalCecExistingCandidatePlan(report, { electionYear = null } = {}) {
+  const includesYear = (row) => electionYear == null || row.electionYear === electionYear;
+  const creates = (report.safeCreates ?? []).filter(includesYear).map((row) => ({
     operation: 'create',
     sourcePersonId: row.sourcePersonId,
     sourcePersonKey: row.sourcePersonKey,
@@ -108,7 +114,7 @@ export function buildHistoricalCecExistingCandidatePlan(report) {
     raceContextKey: row.raceContextKey,
     ...officialFields(row),
   }));
-  const updates = (report.safeUpdates ?? []).map((row) => {
+  const updates = (report.safeUpdates ?? []).filter(includesYear).map((row) => {
     if (!row.candidateId) throw new Error(`Missing update candidate id: ${row.sourcePersonKey}`);
     if (!Array.isArray(row.mismatchFields) || row.mismatchFields.length === 0) {
       throw new Error(`Missing update mismatch fields: ${row.sourcePersonKey}`);
@@ -134,11 +140,15 @@ export function buildHistoricalCecExistingCandidatePlan(report) {
       ...officialFields(row, row.mismatchFields),
     };
   });
-  if (creates.length !== Number(report.categoryCounts?.safe_create_candidate ?? 0)) {
-    throw new Error('Safe create count mismatch');
-  }
-  if (updates.length !== Number(report.categoryCounts?.safe_update_candidate ?? 0)) {
-    throw new Error('Safe update count mismatch');
+  if (electionYear == null) {
+    if (creates.length !== Number(report.categoryCounts?.safe_create_candidate ?? 0)) {
+      throw new Error('Safe create count mismatch');
+    }
+    if (updates.length !== Number(report.categoryCounts?.safe_update_candidate ?? 0)) {
+      throw new Error('Safe update count mismatch');
+    }
+  } else if (creates.length + updates.length !== Number(report.actionableByYear?.[electionYear] ?? 0)) {
+    throw new Error(`Safe candidate count mismatch for ${electionYear}`);
   }
   const rows = [...creates, ...updates];
   assertUnique(rows, (row) => row.sourcePersonId, 'candidate source id');
@@ -154,6 +164,7 @@ export function buildHistoricalCecExistingCandidatePlan(report) {
       createsPublic: false,
       updatesPreservePublicationState: true,
       updateFields: [...allowedMismatchFields],
+      electionYear,
     },
     summary: {
       createCandidates: creates.length,
@@ -202,11 +213,14 @@ BEGIN
         SELECT 1 FROM ${tempTable} input
         WHERE NOT EXISTS (SELECT 1 FROM people person WHERE person.id = input.person_id)
            OR NOT EXISTS (SELECT 1 FROM races race WHERE race.id = input.race_id)
-           OR NOT EXISTS (
-                SELECT 1 FROM person_identity_matches match
-                WHERE match.source_person_id = input.source_person_id
-                  AND match.person_id = input.person_id
-                  AND match.match_status = 'auto_matched'
+           OR (
+                input.operation = 'create'
+                AND NOT EXISTS (
+                    SELECT 1 FROM person_identity_matches match
+                    WHERE match.source_person_id = input.source_person_id
+                      AND match.person_id = input.person_id
+                      AND match.match_status = 'auto_matched'
+                )
            )
     ) THEN
         RAISE EXCEPTION 'Historical CEC ${label} candidate identity or race mismatch';
@@ -229,9 +243,11 @@ BEGIN
         WHERE input.operation = 'update'
           AND NOT EXISTS (
               SELECT 1 FROM candidates candidate
+              JOIN person_canonical_map person_map ON person_map.person_id = candidate.person_id
+              JOIN race_canonical_map race_map ON race_map.race_id = candidate.race_id
               WHERE candidate.id = input.candidate_id
-                AND candidate.person_id = input.person_id
-                AND candidate.race_id = input.race_id
+                AND person_map.canonical_person_id = input.person_id
+                AND race_map.canonical_race_id = input.race_id
                 AND candidate.external_id IS NOT DISTINCT FROM input.candidate_external_id
                 AND candidate.is_public = input.original_is_public
           )
@@ -349,6 +365,20 @@ export function renderHistoricalCecExistingCandidateSql(plan, { rollback = true 
     set_is_elected, set_candidacy_status, set_election_result, set_registration_status
 ) VALUES
 ${valuesSql(plan.rows, columns)};`);
+  sections.push(`UPDATE source_people source
+SET source_payload = source.source_payload
+        || CASE WHEN input.set_candidate_no THEN jsonb_build_object('candidateNo', input.candidate_no) ELSE '{}'::JSONB END
+        || CASE WHEN input.set_vote_count THEN jsonb_build_object('voteCount', input.vote_count) ELSE '{}'::JSONB END
+        || CASE WHEN input.set_vote_rate THEN jsonb_build_object('voteRate', input.vote_rate) ELSE '{}'::JSONB END
+        || CASE WHEN input.set_is_elected THEN jsonb_build_object('elected', input.is_elected) ELSE '{}'::JSONB END,
+    updated_at = NOW()
+FROM ${tempTable} input
+WHERE source.id = input.source_person_id
+  AND source.source_person_key = input.source_person_key
+  AND source.source_type = '${sourceType}'
+  AND source.source_id = '${sourceId}'
+  AND source.election_year = input.election_year
+  AND (input.set_candidate_no OR input.set_vote_count OR input.set_vote_rate OR input.set_is_elected);`);
   sections.push(preflightBlock(plan, rollback ? 'dry-run' : 'migration'));
   sections.push(`INSERT INTO candidates (
     person_id, race_id, party, candidate_no, registration_status,
@@ -425,7 +455,7 @@ async function main() {
     throw new Error('Run report:historical-cec-candidate-coverage -- --write first.');
   }
   const report = JSON.parse(fs.readFileSync(options.reportPath, 'utf8'));
-  const plan = buildHistoricalCecExistingCandidatePlan(report);
+  const plan = buildHistoricalCecExistingCandidatePlan(report, { electionYear: options.electionYear });
   if (options.write) {
     fs.mkdirSync(path.dirname(options.planPath), { recursive: true });
     fs.mkdirSync(path.dirname(options.sqlPath), { recursive: true });

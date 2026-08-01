@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import {
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,
+  historicalCecAggregateResultKey,
+  isHistoricalCecAggregateResultRow,
+  isHistoricalCecNationalResult,
 } from './sync-real-public-data.mjs';
 
 const root = 'votedata/votedata/voteData';
@@ -38,6 +41,36 @@ assert.equal(
   classifyHistoricalCecCandidateEntry(`${root}/1994台灣省議員/區域/elcand.csv`),
   null,
 );
+
+const regionalCouncilor = { kind: 'local-councilor-regional' };
+const indigenousCouncilor = { kind: 'local-councilor-indigenous' };
+const indigenousLegislator = { kind: 'legislator-plain-indigenous' };
+const candidateRow = ['01', '001', '00', '000', '0000', '1'];
+const regionalCandidateRow = ['01', '001', '01', '000', '0000', '1'];
+const regionalResultRow = ['01', '001', '01', '000', '0000', '0000', '1'];
+const indigenousResultRow = ['01', '001', '01', '000', '0000', '0', '1'];
+
+assert.equal(isHistoricalCecAggregateResultRow(regionalResultRow), true);
+assert.equal(isHistoricalCecAggregateResultRow(indigenousResultRow), true);
+assert.equal(isHistoricalCecNationalResult(indigenousCouncilor), false);
+assert.equal(isHistoricalCecNationalResult(indigenousLegislator), true);
+assert.equal(
+  historicalCecAggregateResultKey(candidateRow, indigenousCouncilor, candidateRow[5]),
+  '01-001-1',
+);
+assert.equal(
+  historicalCecAggregateResultKey(indigenousResultRow, indigenousCouncilor),
+  '01-001-1',
+);
+assert.equal(
+  historicalCecAggregateResultKey(regionalCandidateRow, regionalCouncilor, regionalCandidateRow[5]),
+  historicalCecAggregateResultKey(regionalResultRow, regionalCouncilor),
+);
+assert.equal(
+  historicalCecAggregateResultKey(regionalResultRow, regionalCouncilor),
+  '01-001-01-1',
+);
+assert.equal(historicalCecAggregateResultKey(indigenousResultRow, indigenousLegislator), '1');
 
 assert.deepEqual(
   darkGuideFamilyReferenceNames({

@@ -12,9 +12,31 @@ const sourceUrl = 'https://data.gov.tw/dataset/13119';
 const localHostnames = new Set(['127.0.0.1', 'localhost', '::1']);
 const historicalRegions = new Map([
   ['臺北縣', { externalId: 'cec-historical-county-taipei', slug: 'historical-taipei-county' }],
+  ['桃園縣', { externalId: 'cec-historical-county-taoyuan', slug: 'historical-taoyuan-county' }],
   ['臺中縣', { externalId: 'cec-historical-county-taichung', slug: 'historical-taichung-county' }],
   ['臺南縣', { externalId: 'cec-historical-county-tainan', slug: 'historical-tainan-county' }],
   ['高雄縣', { externalId: 'cec-historical-county-kaohsiung', slug: 'historical-kaohsiung-county' }],
+]);
+
+const historicalSameNameRegions = new Map([
+  ['臺中市', {
+    beforeYear: 2010,
+    externalId: 'cec-historical-city-taichung',
+    slug: 'historical-taichung-city',
+    regionType: 'city',
+  }],
+  ['臺南市', {
+    beforeYear: 2010,
+    externalId: 'cec-historical-city-tainan',
+    slug: 'historical-tainan-city',
+    regionType: 'city',
+  }],
+  ['高雄市', {
+    beforeYear: 2010,
+    externalId: 'cec-historical-municipality-kaohsiung',
+    slug: 'historical-kaohsiung-city',
+    regionType: 'municipality',
+  }],
 ]);
 
 function readLocalEnv() {
@@ -71,6 +93,15 @@ function preferredRegion(regions, name) {
     ?? null;
 }
 
+function historicalRegionDefinition(name, electionYear) {
+  const renamedRegion = historicalRegions.get(name);
+  if (renamedRegion) return { ...renamedRegion, regionType: 'county' };
+  const sameNameRegion = historicalSameNameRegions.get(name);
+  const year = Number(electionYear);
+  return sameNameRegion && Number.isInteger(year) && year < sameNameRegion.beforeYear
+    ? sameNameRegion : null;
+}
+
 function sqlValue(value) {
   if (value == null) return 'NULL';
   if (typeof value === 'number') return String(value);
@@ -117,47 +148,52 @@ export function buildHistoricalElectionRacePlan(preview, regions) {
     .filter((plan) => plan.currentName !== plan.name || plan.currentType !== plan.electionType);
 
   const createRaceContexts = preview.comparisonPlan.racePlans.filter((plan) => plan.action === 'create_new');
-  const requiredRegionNames = [...new Set(
-    createRaceContexts.filter((plan) => plan.regionScope === 'local').map((plan) => plan.historicalGeography),
-  )].sort((left, right) => left.localeCompare(right, 'zh-Hant-TW'));
-  const createRegions = [];
-  const regionExternalIds = new Map();
-  for (const name of requiredRegionNames) {
-    const existing = preferredRegion(regions, name);
-    const definition = historicalRegions.get(name);
-    if (definition && (!existing || existing.external_id === definition.externalId)) {
-      createRegions.push({
-        externalId: definition.externalId,
-        name,
-        slug: definition.slug,
-        regionType: 'county',
-      });
-      regionExternalIds.set(name, definition.externalId);
-      continue;
-    }
-    if (existing?.external_id) {
-      regionExternalIds.set(name, existing.external_id);
-      continue;
-    }
-    if (!definition) throw new Error(`No canonical or historical region plan for: ${name}`);
-    createRegions.push({
-      externalId: definition.externalId,
-      name,
-      slug: definition.slug,
-      regionType: 'county',
+  const requiredRegionContexts = new Map();
+  for (const plan of createRaceContexts.filter((item) => item.regionScope === 'local')) {
+    const eventPlan = eventPlansByKey.get(plan.eventContextKey);
+    if (!eventPlan) throw new Error(`Missing event plan for region: ${plan.key}`);
+    const key = `${plan.historicalGeography}|${eventPlan.electionYear}`;
+    requiredRegionContexts.set(key, {
+      key,
+      name: plan.historicalGeography,
+      electionYear: eventPlan.electionYear,
     });
-    regionExternalIds.set(name, definition.externalId);
   }
+  const createRegionsByExternalId = new Map();
+  const regionExternalIds = new Map();
+  const orderedRegionContexts = [...requiredRegionContexts.values()]
+    .sort((left, right) => left.key.localeCompare(right.key, 'zh-Hant-TW'));
+  for (const context of orderedRegionContexts) {
+    const definition = historicalRegionDefinition(context.name, context.electionYear);
+    if (definition) {
+      createRegionsByExternalId.set(definition.externalId, {
+        externalId: definition.externalId,
+        name: context.name,
+        slug: definition.slug,
+        regionType: definition.regionType,
+      });
+      regionExternalIds.set(context.key, definition.externalId);
+      continue;
+    }
+    const existing = preferredRegion(regions, context.name);
+    if (existing?.external_id) {
+      regionExternalIds.set(context.key, existing.external_id);
+      continue;
+    }
+    throw new Error(`No canonical or historical region plan for: ${context.name}`);
+  }
+  const createRegions = [...createRegionsByExternalId.values()];
 
   const createRaces = createRaceContexts.map((plan) => {
     const eventPlan = eventPlansByKey.get(plan.eventContextKey);
     if (!eventPlan) throw new Error(`Missing event plan for race: ${plan.key}`);
+    const regionContextKey = `${plan.historicalGeography}|${eventPlan.electionYear}`;
     return {
       externalId: raceExternalId(plan.key),
       contextKey: plan.key,
       eventExternalId: plannedEventReference(eventPlan),
       regionExternalId: plan.regionScope === 'local'
-        ? regionExternalIds.get(plan.historicalGeography)
+        ? regionExternalIds.get(regionContextKey)
         : null,
       title: plan.raceTitle,
       raceType: plan.raceType,

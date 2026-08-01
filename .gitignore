@@ -27,6 +27,7 @@ gitleaks-report.json
 local-data/
 logs/
 tmp/
+apps/web/.env.rehearsal.local
 supabase/.branches/
 supabase/.temp/
 secrets.json

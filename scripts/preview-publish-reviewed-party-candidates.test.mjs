@@ -100,6 +100,39 @@ test('plans one reviewed nominee and preserves one rejected source as audit hist
   assert.equal(plan.excluded.length, 1);
 });
 
+test('keeps a source-scoped new person private while awaiting CEC confirmation', () => {
+  const dataset = validDataset();
+  const source = dataset.sources[1];
+  const match = dataset.matches[1];
+  const claim = dataset.claims[1];
+
+  source.source_payload.publicationReview = { status: 'awaiting_cec_confirmation' };
+  match.person_id = 'person-pending-cec';
+  match.match_status = 'auto_matched';
+  claim.person_id = 'person-pending-cec';
+  claim.review_status = 'needs_more_evidence';
+  dataset.candidates.push({
+    id: 'candidate-pending-cec',
+    external_id: source.source_person_key,
+    person_id: 'person-pending-cec',
+    race_id: 'race-rejected',
+    party: '民主進步黨',
+    registration_status: 'unknown',
+    candidacy_status: 'potential',
+    election_result: 'pending',
+    is_public: false,
+  });
+
+  const plan = planReviewedPartyCandidatePublication(dataset, {
+    expectedCount: 1,
+    expectedExcludedCount: 1,
+  });
+
+  assert.equal(plan.blocking.length, 0);
+  assert.equal(plan.eligible.length, 1);
+  assert.equal(plan.excluded[0].reason, 'private identity is awaiting CEC candidacy confirmation');
+});
+
 test('blocks publication when a nominee incorrectly implies CEC registration', () => {
   const dataset = validDataset();
   dataset.candidates[0].registration_status = 'registered';

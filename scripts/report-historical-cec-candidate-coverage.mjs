@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -80,6 +81,11 @@ function sameValue(left, right) {
   if (left == null && right == null) return true;
   if (typeof left === 'number' || typeof right === 'number') return Number(left) === Number(right);
   return left === right;
+}
+
+export function historicalCandidateExternalId(sourcePersonKey) {
+  const suffix = crypto.createHash('sha256').update(sourcePersonKey).digest('hex').slice(0, 16);
+  return `cec-historical-candidate-${suffix}`;
 }
 
 function expectedCandidate(source) {
@@ -248,6 +254,7 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
     dataset.candidates ?? [],
     (candidate) => canonicalPersonId(candidate.person_id),
   );
+  const candidatesByExternalId = new Map((dataset.candidates ?? []).map((candidate) => [candidate.external_id, candidate]));
   const racesById = new Map((dataset.races ?? []).map((race) => [race.id, race]));
   const raceCanonicalIds = new Map(
     (dataset.raceCanonicalMap ?? []).map((row) => [row.race_id, row.canonical_race_id]),
@@ -272,7 +279,11 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
     const context = buildHistoricalSourceContext(source);
     const sourceSummary = compactSource(source, context);
     const matches = matchesBySource.get(source.id) ?? [];
+    const sourceKeyCandidate = candidatesByExternalId.get(historicalCandidateExternalId(source.source_person_key));
     const distinctPersonIds = [...new Set(matches.map((match) => canonicalPersonId(match.person_id)))];
+    if (distinctPersonIds.length === 0 && sourceKeyCandidate) {
+      distinctPersonIds.push(canonicalPersonId(sourceKeyCandidate.person_id));
+    }
 
     if (distinctPersonIds.length === 0) {
       return { ...sourceSummary, category: 'unmatched_identity' };
@@ -285,7 +296,10 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
         matchMethods: [...new Set(matches.map((match) => match.match_method))],
       };
     }
-    if (matches.some((match) => match.match_method === newPersonMatchMethod)) {
+    if (
+      matches.some((match) => match.match_method === newPersonMatchMethod)
+      && (candidatesByPerson.get(distinctPersonIds[0]) ?? []).length === 0
+    ) {
       return { ...sourceSummary, category: 'new_private_candidate_scope', personId: distinctPersonIds[0] };
     }
 
@@ -335,6 +349,30 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
     if (row.category) return row;
     if (assignmentCounts[row.assignmentKey] > 1) {
       return { ...row, category: 'duplicate_source_assignment' };
+    }
+
+    const sourceKeyCandidate = candidatesByExternalId.get(historicalCandidateExternalId(row.sourcePersonKey));
+    if (sourceKeyCandidate) {
+      const sourceCandidatePersonId = canonicalPersonId(sourceKeyCandidate.person_id);
+      const sourceCandidateRaceId = canonicalRaceId(sourceKeyCandidate.race_id);
+      if (sourceCandidatePersonId !== row.personId || sourceCandidateRaceId !== row.expectedRaceId) {
+        return {
+          ...row,
+          category: 'source_key_candidate_conflict',
+          candidateId: sourceKeyCandidate.id,
+          candidatePersonId: sourceCandidatePersonId,
+          candidateRaceId: sourceCandidateRaceId,
+        };
+      }
+      const mismatchFields = candidateMismatches(sourceKeyCandidate, row.expected);
+      return {
+        ...row,
+        category: mismatchFields.length === 0 ? 'exact_candidate' : 'safe_update_candidate',
+        candidateId: sourceKeyCandidate.id,
+        candidateExternalId: sourceKeyCandidate.external_id,
+        candidateIsPublic: sourceKeyCandidate.is_public,
+        mismatchFields,
+      };
     }
 
     const personCandidates = candidatesByPerson.get(row.personId) ?? [];
@@ -387,6 +425,7 @@ export function auditHistoricalCecCandidateCoverage(dataset) {
     'missing_race_context',
     'race_mapping_conflict',
     'duplicate_source_assignment',
+    'source_key_candidate_conflict',
     'multiple_candidates',
     'candidate_on_other_race_same_event',
   ]);

@@ -7,6 +7,10 @@
     "doc": "docs"
   },
   "scripts": {
+    "rehearsal:prepare": "bash scripts/production-rehearsal.sh prepare",
+    "rehearsal:rebuild": "bash scripts/production-rehearsal.sh rebuild",
+    "rehearsal:report": "bash scripts/production-rehearsal.sh report",
+    "rehearsal:stop": "bash scripts/production-rehearsal.sh stop",
     "check": "npm run test:party-candidate-source-freshness && npm run test:data-reports && npm --prefix apps/web run test:read-contracts && npm --prefix apps/web run lint && npm --prefix apps/web run build && npm --prefix apps/web run check:data-boundary && npm --prefix apps/web run check:published-exposure && npm --prefix apps/web run check:public-view-contracts",
     "test": "npm run check",
     "test:party-candidate-source-freshness": "node --test scripts/report-party-candidate-source-freshness.test.mjs",

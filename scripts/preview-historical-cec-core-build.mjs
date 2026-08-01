@@ -72,6 +72,11 @@ export function modernizeIdentityGeography(historicalGeography) {
   return modernRegionNames.get(historicalGeography) ?? historicalGeography;
 }
 
+export function restoreHistoricalJurisdiction(historicalGeography, electionYear) {
+  if (historicalGeography === '桃園市' && Number(electionYear) < 2014) return '桃園縣';
+  return historicalGeography;
+}
+
 export function classifyHistoricalRole(position) {
   const value = normalizeTaiwanText(position);
   if (value.includes('總統')) return 'president';
@@ -98,10 +103,19 @@ export function canonicalElectionType(role) {
   return 'other';
 }
 
-export function canonicalElectionName(year, role) {
+export function canonicalCouncilorElectionScope(year, historicalGeography) {
+  if (Number(year) >= 2010) return 'combined';
+  return ['臺北市', '高雄市'].includes(historicalGeography) ? 'metropolitan' : 'county_city';
+}
+
+export function canonicalElectionName(year, role, electionScope = 'combined') {
   if (role === 'president') return `${year}年總統副總統選舉`;
   if (role === 'legislator') return `${year}年立法委員選舉`;
-  if (role === 'councilor') return `${year}年直轄市及縣市議員選舉`;
+  if (role === 'councilor') {
+    if (electionScope === 'metropolitan') return `${year}年直轄市議員選舉`;
+    if (electionScope === 'county_city') return `${year}年縣市議員選舉`;
+    return `${year}年直轄市及縣市議員選舉`;
+  }
   if (role === 'county_city_mayor') return `${year}年直轄市長及縣市長選舉`;
   return `${year}年其他選舉`;
 }
@@ -152,14 +166,20 @@ function normalizedDistrictNumber(source) {
 }
 
 export function buildHistoricalSourceContext(source) {
-  const historicalGeography = normalizeHistoricalGeography(source.district, source.position);
+  const historicalGeography = restoreHistoricalJurisdiction(
+    normalizeHistoricalGeography(source.district, source.position),
+    source.election_year,
+  );
   const identityGeography = modernizeIdentityGeography(historicalGeography);
   const role = classifyHistoricalRole(source.position);
   const seatType = classifySeatType(source.district, source.position);
   const districtNumber = normalizedDistrictNumber(source);
   const districtKey = districtNumber == null ? seatType : `district-${districtNumber}`;
   const electionType = canonicalElectionType(role);
-  const electionName = canonicalElectionName(source.election_year, role);
+  const electionScope = role === 'councilor'
+    ? canonicalCouncilorElectionScope(source.election_year, historicalGeography)
+    : 'national';
+  const electionName = canonicalElectionName(source.election_year, role, electionScope);
   const raceType = canonicalRaceType(role, seatType, historicalGeography);
   const raceTitle = canonicalRaceTitle({ role, seatType, historicalGeography, districtNumber });
 
@@ -167,6 +187,7 @@ export function buildHistoricalSourceContext(source) {
     historicalGeography,
     identityGeography,
     role,
+    electionScope,
     seatType,
     districtLabel: raceTitle,
     districtNumber,
@@ -175,7 +196,7 @@ export function buildHistoricalSourceContext(source) {
     raceType,
     raceTitle,
     regionScope: role === 'president' || (role === 'legislator' && seatType !== 'regional') ? 'national' : 'local',
-    eventContextKey: [source.election_year, role, 'national'].join('|'),
+    eventContextKey: [source.election_year, role, electionScope].join('|'),
     raceContextKey: [source.election_year, role, historicalGeography ?? 'national', districtKey, seatType].join('|'),
   };
 }
@@ -235,6 +256,7 @@ function buildContextRows(sources, unmatchedSourceIds) {
     key,
     electionYear: rows[0].electionYear,
     role: rows[0].role,
+    electionScope: rows[0].electionScope,
     historicalGeography: null,
     electionType: rows[0].electionType,
     electionName: rows[0].electionName,
@@ -271,6 +293,14 @@ function semanticElectionRole(election) {
   if (['legislative', 'legislator'].includes(type) || name.includes('立法委員')) return 'legislator';
   if (type === 'councilor' || (name.includes('議員') && !name.includes('代表'))) return 'councilor';
   return 'other';
+}
+
+function semanticCouncilorElectionScope(election) {
+  const name = normalizeTaiwanText(election?.name);
+  if (name.includes('直轄市及縣市') || name.includes('地方公職')) return 'combined';
+  if (name.includes('直轄市議員')) return 'metropolitan';
+  if (name.includes('縣市議員')) return 'county_city';
+  return 'combined';
 }
 
 function existingDistrictNumber(race) {
@@ -340,7 +370,9 @@ export function buildCoreComparisonPlan(eventContexts, raceContexts, dataset) {
   const eventPlans = supportedEventContexts.map((context) => {
     const candidates = dedupeByCanonicalId(
       elections.filter((election) => {
-        return election.year === context.electionYear && semanticElectionRole(election) === context.role;
+        if (election.year !== context.electionYear || semanticElectionRole(election) !== context.role) return false;
+        return context.role !== 'councilor'
+          || semanticCouncilorElectionScope(election) === (context.electionScope ?? 'combined');
       }),
       (election) => electionCanonicalIds.get(election.id) ?? election.id,
     );

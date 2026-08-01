@@ -4,6 +4,8 @@ import test from 'node:test';
 import {
   buildCoreComparisonPlan,
   buildHistoricalCecCorePreview,
+  buildHistoricalSourceContext,
+  canonicalCouncilorElectionScope,
   canonicalElectionName,
   canonicalElectionType,
   canonicalRaceTitle,
@@ -52,6 +54,28 @@ test('keeps historical jurisdictions separate from modern identity geography', (
   assert.equal(modernizeIdentityGeography('臺北縣'), '新北市');
   assert.equal(classifyHistoricalRole('第8屆立法委員候選人'), 'legislator');
   assert.equal(classifyHistoricalRole('臺北市市長候選人'), 'county_city_mayor');
+
+  const taoyuan2009 = buildHistoricalSourceContext(source({
+    id: 'taoyuan-2009',
+    name: '桃園舊制',
+    year: 2009,
+    position: '桃園市議員候選人',
+    district: '第01選舉區',
+  }));
+  assert.equal(taoyuan2009.historicalGeography, '桃園縣');
+  assert.equal(taoyuan2009.identityGeography, '桃園市');
+  assert.equal(taoyuan2009.raceType, 'county_councilor');
+  assert.equal(taoyuan2009.raceTitle, '桃園縣第1選舉區議員選舉');
+
+  const taoyuan2014 = buildHistoricalSourceContext(source({
+    id: 'taoyuan-2014',
+    name: '桃園新制',
+    year: 2014,
+    position: '桃園市議員候選人',
+    district: '第01選舉區',
+  }));
+  assert.equal(taoyuan2014.historicalGeography, '桃園市');
+  assert.equal(taoyuan2014.raceType, 'city_councilor');
 });
 
 test('previews only single-source new people and holds context-only cross-year identities', () => {
@@ -102,6 +126,10 @@ test('standardizes national, indigenous and numbered election contexts', () => {
   assert.equal(canonicalElectionType('president'), 'presidential');
   assert.equal(canonicalElectionName(2012, 'president'), '2012年總統副總統選舉');
   assert.equal(canonicalElectionName(1998, 'councilor'), '1998年直轄市及縣市議員選舉');
+  assert.equal(canonicalCouncilorElectionScope(2002, '臺北市'), 'metropolitan');
+  assert.equal(canonicalCouncilorElectionScope(2002, '桃園縣'), 'county_city');
+  assert.equal(canonicalElectionName(2002, 'councilor', 'metropolitan'), '2002年直轄市議員選舉');
+  assert.equal(canonicalElectionName(2002, 'councilor', 'county_city'), '2002年縣市議員選舉');
   assert.equal(canonicalElectionName(2022, 'county_city_mayor'), '2022年直轄市長及縣市長選舉');
   assert.equal(canonicalRaceType('county_city_mayor', 'regional', '宜蘭縣'), 'county_mayor');
   assert.equal(canonicalRaceType('county_city_mayor', 'regional', '臺北市'), 'municipality_mayor');

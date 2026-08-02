@@ -68,15 +68,15 @@ test('builds the fixed reviewed release boundary without publishing preview drif
   const { preview, claims } = fixture();
   const rows = buildFamilyReleaseRows(preview, claims);
 
-  assert.equal(rows.length, 98);
-  assert.equal(rows.filter((row) => row.confidence_level === 'A').length, 19);
-  assert.equal(rows.filter((row) => row.confidence_level === 'B').length, 79);
+  assert.equal(rows.length, expected.claims);
+  assert.equal(rows.filter((row) => row.confidence_level === 'A').length, expected.confidenceA);
+  assert.equal(rows.filter((row) => row.confidence_level === 'B').length, expected.confidenceB);
   assert.equal(rows.every((row) => row.visibility === 'public' && row.is_public === true), true);
 });
 
 test('rejects preview count, confidence and claim-content drift', () => {
   const countFixture = fixture();
-  countFixture.preview.summary.eligibleClaims = 97;
+  countFixture.preview.summary.eligibleClaims = 98;
   assert.throws(() => buildFamilyReleaseRows(countFixture.preview, countFixture.claims), /preview count drift/u);
 
   const confidenceFixture = fixture();

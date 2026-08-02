@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "codex-reviewed-family-evidence-2026-08-02",
+  "groups": [
+    {
+      "name": "苗博雅",
+      "canonicalPersonId": "99d51616-38d5-4d17-a14d-c74532c212fa",
+      "duplicatePersonIds": [
+        "5db93910-aaf1-4017-b79b-0802b9569c71"
+      ],
+      "evidence": {
+        "basis": "same uncommon name and continuous Taipei election history",
+        "signals": ["2016 legislative candidate", "2018/2022 Taipei councilor", "same political affiliation history"]
+      }
+    },
+    {
+      "name": "洪慈庸",
+      "canonicalPersonId": "7d5f2294-5677-46d3-bae2-7549962fd0d8",
+      "duplicatePersonIds": [
+        "9a50ffcc-4bab-4cfd-b320-8fb3ab43859f"
+      ],
+      "evidence": {
+        "basis": "same uncommon name and same Taichung legislative district across elections",
+        "signals": ["2016 New Power Party legislative candidate", "2020 independent legislative candidate", "Taichung district 3"]
+      }
+    },
+    {
+      "name": "徐欣瑩",
+      "canonicalPersonId": "02826491-4272-4be2-96aa-84bbdd7dbce6",
+      "duplicatePersonIds": [
+        "fce8e4e8-2586-430b-ad3c-33bfdff45d2e",
+        "3058aefa-8a31-4069-9f75-8f41179317bc"
+      ],
+      "evidence": {
+        "basis": "same uncommon name with continuous national and Hsinchu election history",
+        "signals": ["2016 vice-presidential candidate", "2018 Hsinchu County mayor candidate", "2012/2024 legislator"]
+      }
+    },
+    {
+      "name": "段緯宇",
+      "canonicalPersonId": "3584be22-bbd9-4cce-8954-3c0c30cf39e8",
+      "duplicatePersonIds": [
+        "5a6b62b3-42f1-4311-843a-4e31dc56d3f9"
+      ],
+      "evidence": {
+        "basis": "same uncommon name, party, and Taichung election history",
+        "signals": ["2002-2018 councilor history", "2012 legislator candidate", "People First Party"]
+      }
+    },
+    {
+      "name": "陳柏惟",
+      "canonicalPersonId": "008f5a30-f22f-4c01-85c9-de5a54f2839a",
+      "duplicatePersonIds": [
+        "067a9321-93cb-4547-ab80-8e37586de84c"
+      ],
+      "evidence": {
+        "basis": "same uncommon name and Taiwan Statebuilding political history",
+        "signals": ["2018 Kaohsiung councilor candidate", "2020 Taichung legislator candidate", "same public figure"]
+      }
+    },
+    {
+      "name": "陳根德",
+      "canonicalPersonId": "53d385ea-ca2d-41ee-abf0-2bcdad4cd684",
+      "duplicatePersonIds": [
+        "450b07e1-fe41-48aa-a749-33b023fedb55"
+      ],
+      "evidence": {
+        "basis": "same name, party, and Taoyuan legislative district across elections",
+        "signals": ["2012 legislator", "2016/2020 legislative candidate", "Kuomintang", "Taoyuan district 1"]
+      }
+    },
+    {
+      "name": "謝明源",
+      "canonicalPersonId": "376e10bc-f1d0-4c9b-abe6-1afec3ca2f91",
+      "duplicatePersonIds": [
+        "72242775-09bd-4074-8b91-e4e44ba2fa72"
+      ],
+      "evidence": {
+        "basis": "same name, party, and continuous Taichung councilor/legislator history",
+        "signals": ["1998-2018 Taichung councilor history", "2012 legislator candidate", "Democratic Progressive Party"]
+      }
+    },
+    {
+      "name": "李文正",
+      "canonicalPersonId": "5dd0e4e1-afd7-4ae4-bcbc-6ea430c940cc",
+      "duplicatePersonIds": [
+        "5402564b-53b9-49dd-bc34-3501479aa7cd"
+      ],
+      "evidence": {
+        "basis": "same 1959-02-04 DPP Tainan councilor across the county-city merger",
+        "signals": ["1998/2002/2005 former Tainan City councilor", "2010/2014 Tainan City councilor", "VoteTW profile records five terms"]
+      }
+    },
+    {
+      "name": "陳文賢",
+      "canonicalPersonId": "5b1b828d-55a9-4ea7-a560-a3499eb2bdf1",
+      "duplicatePersonIds": [
+        "519f3a95-3234-48a1-ab23-c1bd944a3968"
+      ],
+      "evidence": {
+        "basis": "same 1944-10-23 DPP Tainan councilor across the county-city merger",
+        "signals": ["2002/2005 Tainan County councilor", "2010/2014 Tainan City councilor", "father of Chen Chiu-hung"]
+      }
+    },
+    {
+      "name": "何志偉",
+      "canonicalPersonId": "6d1ca7b6-6794-408c-b4c8-2fc6112a526c",
+      "duplicatePersonIds": ["7ce2f22b-4db8-4b83-b912-10377927d931"],
+      "evidence": {
+        "basis": "same Taipei public figure across councilor and legislator elections",
+        "signals": ["Taipei councilor", "Taipei legislator", "same Democratic Progressive Party history"]
+      }
+    },
+    {
+      "name": "何敏誠",
+      "canonicalPersonId": "15ec152c-8f32-4471-97b2-e0711c9b4ae7",
+      "duplicatePersonIds": ["69d74142-ac95-49bc-8a8a-b59addbecb1b"],
+      "evidence": {
+        "basis": "same Taichung councilor across historical election sources",
+        "signals": ["same name", "same Taichung constituency", "continuous councilor history"]
+      }
+    },
+    {
+      "name": "吳顯森",
+      "canonicalPersonId": "ae7efdec-2412-4b56-afd5-aeb118b4dbb6",
+      "duplicatePersonIds": ["43cc4c35-738a-42c6-a5e2-5fdac399d7ec"],
+      "evidence": {
+        "basis": "same 1959-03-16 Taichung Daya public figure across party and election history",
+        "signals": ["former Daya township head and representative", "three-term Taichung councilor", "1998 New Party candidacy"]
+      }
+    },
+    {
+      "name": "宋進財",
+      "canonicalPersonId": "e99949c5-6f5b-4d6e-ab16-fa91008f84f0",
+      "duplicatePersonIds": ["81ac8e46-9f20-272b-82cb-07c701b900fa"],
+      "evidence": {
+        "basis": "same Taipei County and New Taipei indigenous councilor candidate",
+        "signals": ["same Chinese name", "same indigenous constituency", "Falong Opa name on later record"]
+      }
+    },
+    {
+      "name": "李榮鴻",
+      "canonicalPersonId": "fc1c590a-579f-4467-968f-0c5003a92f96",
+      "duplicatePersonIds": ["3edb1128-6b32-45b3-a009-5bb5519c8683"],
+      "evidence": {
+        "basis": "same 1949-06-23 Taichung councilor across historical elections",
+        "signals": ["2002 councilor", "2018 councilor", "same regional political history"]
+      }
+    },
+    {
+      "name": "忠仁．達祿斯",
+      "canonicalPersonId": "f00173e1-0f4b-462b-b739-302fc0122570",
+      "duplicatePersonIds": ["ba1f6eba-e719-4141-b706-91f782fa1cd2"],
+      "evidence": {
+        "basis": "same 1961-01-27 indigenous political figure across 2012, 2018, and 2024",
+        "signals": ["same uncommon indigenous name", "2018 CEC record", "2012 and 2024 VoteTW records"]
+      }
+    },
+    {
+      "name": "林阳乙",
+      "canonicalPersonId": "13239e74-bea0-497f-8917-2e93bf929e74",
+      "duplicatePersonIds": ["b9d7bd92-10d4-49e6-9e64-088bec792165"],
+      "evidence": {
+        "basis": "same 1961-04-16 Tainan councilor across 2010 and 2018",
+        "signals": ["same uncommon name", "same Tainan councilor history", "matching birth date"]
+      }
+    },
+    {
+      "name": "邱素貞",
+      "canonicalPersonId": "f1b01283-971a-4a04-9229-75200e719922",
+      "duplicatePersonIds": ["44a6a9e9-6ccb-4e53-9d4c-1f9e3a264fa1"],
+      "evidence": {
+        "basis": "same 1954-10-22 Taichung councilor across 2005 and 2018",
+        "signals": ["same name", "continuous Taichung councilor history", "matching birth date"]
+      }
+    },
+    {
+      "name": "高敏慧",
+      "canonicalPersonId": "cd3e84c5-d23d-43e0-93fd-58e8e9c019f4",
+      "duplicatePersonIds": ["a1bd7b4d-b479-4ed7-a97a-d875cbe46a50"],
+      "evidence": {
+        "basis": "same 1966-02-17 Taipei County and New Taipei councilor",
+        "signals": ["2005 Taipei County councilor", "2018 New Taipei councilor", "matching birth date"]
+      }
+    },
+    {
+      "name": "許崑源",
+      "canonicalPersonId": "162f0858-4455-4937-8409-d82aa4d3a9b7",
+      "duplicatePersonIds": ["317ad021-006e-4c6f-9415-5f9c6c559336"],
+      "evidence": {
+        "basis": "same 1957-05-01 Kaohsiung councilor across 1998 and 2018",
+        "signals": ["same uncommon name", "continuous Kaohsiung councilor history", "matching birth date"]
+      }
+    },
+    {
+      "name": "陳亭妃",
+      "canonicalPersonId": "0ecf679c-cff2-4e3b-88b6-f6ec68f6d563",
+      "duplicatePersonIds": ["7efaa9c1-ae10-4b2a-bbdc-22c2a8f1a6ab"],
+      "evidence": {
+        "basis": "same Tainan public figure across councilor and legislator elections",
+        "signals": ["1998 Tainan councilor", "2020 legislator", "same Democratic Progressive Party history"]
+      }
+    },
+    {
+      "name": "黃林玲玲",
+      "canonicalPersonId": "ae8b961a-006b-4fa8-a65d-09360d03cceb",
+      "duplicatePersonIds": ["762cd5d3-860c-43af-8956-244c8c9c34f8"],
+      "evidence": {
+        "basis": "same 1942-09-19 Taipei County and New Taipei councilor",
+        "signals": ["2005 Taipei County councilor", "2018 New Taipei councilor", "matching birth date"]
+      }
+    },
+    {
+      "name": "謝財旺",
+      "canonicalPersonId": "edc30c33-2441-47ea-bd0e-b67db01ab5d9",
+      "duplicatePersonIds": ["06552c38-dc26-4611-97b0-b57f79bcaa5e"],
+      "evidence": {
+        "basis": "same 1962-05-20 Tainan councilor across historical sources",
+        "signals": ["Tainan first and second council", "2014 historical record", "matching birth date"]
+      }
+    },
+    {
+      "name": "謝龍介",
+      "canonicalPersonId": "320c38ea-48a7-4cfb-a77b-5842abcda5ac",
+      "duplicatePersonIds": [
+        "a63c5700-322e-43d9-a19f-2092b0e94a70",
+        "296c00da-991f-4969-8e48-ad44b3cc9116"
+      ],
+      "evidence": {
+        "basis": "same 1961-10-03 Tainan public figure across councilor and legislator elections",
+        "signals": ["2002 and 2014 Tainan elections", "Legislative Yuan record", "matching birth date"]
+      }
+    },
+    {
+      "name": "顏清標",
+      "canonicalPersonId": "411b2176-0ec0-4c5e-95a7-001f6d53d486",
+      "duplicatePersonIds": ["48ec5663-3f75-4e0f-a1b4-9d04a193bb5e"],
+      "evidence": {
+        "basis": "same Taichung public figure across county councilor and legislator elections",
+        "signals": ["1998 Taichung County councilor", "2012 legislator", "same regional political history"]
+      }
+    }
+  ],
+  "partyCorrections": []
+}

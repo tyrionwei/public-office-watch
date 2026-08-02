@@ -8,11 +8,11 @@ const defaultOutputPath = path.join(
   repoRoot,
   'supabase',
   'migrations',
-  '202608010035_publish_tnl_dark_guide_family_claims.sql',
+  '202608010036_publish_tnl_dark_guide_family_claims.sql',
 );
 const localHostnames = new Set(['127.0.0.1', 'localhost', '::1']);
 const claimKeyPrefix = 'research:tnl-dark-guide-family:';
-const expected = { claims: 98, confidenceA: 19, confidenceB: 79 };
+const expected = { claims: 174, confidenceA: 29, confidenceB: 145 };
 
 function readLocalEnv() {
   const envPath = path.join(repoRoot, '.env.local');

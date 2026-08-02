@@ -15938,7 +15938,7 @@
         {
           "claimId": null,
           "claimType": "external_research_source",
-          "claimValue": "兩人為遠房表姊妹",
+          "claimValue": "林亮君與苗博雅為遠房表姊妹",
           "matchScore": 1,
           "tier": "trusted_media",
           "reviewStatus": "external_manual_review",
@@ -15950,7 +15950,7 @@
         {
           "claimId": null,
           "claimType": "external_research_source",
-          "claimValue": "兩人為表姊妹",
+          "claimValue": "林亮君與苗博雅為表姊妹",
           "matchScore": 1,
           "tier": "trusted_media",
           "reviewStatus": "external_manual_review",
@@ -15970,13 +15970,13 @@
             "tier": "trusted_media",
             "name": "Yahoo新聞",
             "url": "https://tw.news.yahoo.com/%E9%81%8E%E5%B9%B4%E8%AA%8D%E8%A6%AA-%E8%8B%97%E5%8D%9A%E9%9B%85-%E6%9E%97%E4%BA%AE%E5%90%9B%E7%AB%9F%E6%98%AF%E8%A1%A8%E5%A7%90%E5%A6%B9-130514886.html",
-            "supports": "兩人為遠房表姊妹"
+            "supports": "林亮君與苗博雅為遠房表姊妹"
           },
           {
             "tier": "trusted_media",
             "name": "臺視新聞",
             "url": "https://news.ttv.com.tw/news/11302130000300W/amp",
-            "supports": "兩人為表姊妹"
+            "supports": "林亮君與苗博雅為表姊妹"
           }
         ]
       }
@@ -18485,7 +18485,7 @@
         {
           "claimId": null,
           "claimType": "external_research_source",
-          "claimValue": "兩人為遠房表姊妹",
+          "claimValue": "苗博雅與林亮君為遠房表姊妹",
           "matchScore": 1,
           "tier": "trusted_media",
           "reviewStatus": "external_manual_review",
@@ -18497,7 +18497,7 @@
         {
           "claimId": null,
           "claimType": "external_research_source",
-          "claimValue": "兩人為遠房親戚／表姊妹",
+          "claimValue": "苗博雅與林亮君為遠房親戚／表姊妹",
           "matchScore": 1,
           "tier": "trusted_media",
           "reviewStatus": "external_manual_review",
@@ -18517,13 +18517,13 @@
             "tier": "trusted_media",
             "name": "Yahoo新聞",
             "url": "https://tw.news.yahoo.com/%E9%81%8E%E5%B9%B4%E8%AA%8D%E8%A6%AA-%E8%8B%97%E5%8D%9A%E9%9B%85-%E6%9E%97%E4%BA%AE%E5%90%9B%E7%AB%9F%E6%98%AF%E8%A1%A8%E5%A7%90%E5%A6%B9-130514886.html",
-            "supports": "兩人為遠房表姊妹"
+            "supports": "苗博雅與林亮君為遠房表姊妹"
           },
           {
             "tier": "trusted_media",
             "name": "臺視新聞",
             "url": "https://news.ttv.com.tw/news/11302130000300W",
-            "supports": "兩人為遠房親戚／表姊妹"
+            "supports": "苗博雅與林亮君為遠房親戚／表姊妹"
           }
         ]
       }

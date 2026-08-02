@@ -6,6 +6,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(repoRoot, 'data-sources', 'tnl-dark-guide');
 const defaultOutputPath = path.join(repoRoot, 'local-data', 'tnl-dark-guide-family-claims-preview.json');
+const reviewedAliasesPath = path.join(dataDir, 'reviewed-person-name-aliases.json');
+const reviewedRelativeResolutionsPath = path.join(dataDir, 'reviewed-family-relative-resolutions.json');
 const localHostnames = new Set(['127.0.0.1', 'localhost', '::1']);
 
 const acceptedEvidenceTiers = new Set([
@@ -40,6 +42,8 @@ registerRelation('sibling_in_law', '姻親手足', ['姐夫', '小叔', '小姑'
 registerRelation('uncle', '伯叔舅', ['伯伯', '伯父', '叔叔', '舅舅', '姨丈', '二叔', '三叔', '四叔']);
 registerRelation('aunt', '姑姨嬸', ['姑姑', '阿姨', '嬸嬸']);
 registerRelation('cousin', '堂／表親', ['堂兄', '堂弟', '堂哥', '堂妹', '表親', '表哥', '表姊', '表姐', '表弟']);
+registerRelation('cousin_in_law', '表姻親', ['表姐夫']);
+registerRelation('distant_cousin', '遠房表親', ['遠房表姊', '遠房表妹']);
 registerRelation('godmother', '乾媽', ['乾媽']);
 registerRelation('co_parent_in_law', '親家', ['親家']);
 registerRelation('son', '兒子', ['兒子', '長子']);
@@ -87,6 +91,110 @@ function normalizedName(value) {
     .toLowerCase();
 }
 
+function applyReviewedPersonNameAliases(familyPeopleReport, reviewedAliases) {
+  const aliasMap = new Map((reviewedAliases ?? [])
+    .filter((row) => row.reviewStatus === 'confirmed')
+    .map((row) => [normalizedName(row.alias), normalizedName(row.canonicalName)]));
+  const foundByName = new Map((familyPeopleReport.found ?? [])
+    .map((row) => [normalizedName(row.mentionedName), row.matches ?? []]));
+  const resolvedAliases = [];
+  const notFound = [];
+  for (const row of familyPeopleReport.notFound ?? []) {
+    const canonicalName = aliasMap.get(normalizedName(row.mentionedName));
+    const matches = canonicalName ? foundByName.get(canonicalName) : null;
+    if (matches?.length === 1) resolvedAliases.push({ ...row, matches });
+    else notFound.push(row);
+  }
+  return {
+    ...familyPeopleReport,
+    found: [...(familyPeopleReport.found ?? []), ...resolvedAliases],
+    notFound,
+  };
+}
+function applyReviewedFamilyRelativeResolutions(
+  familyPeopleReport,
+  reviewedResolutions,
+  canonicalPersonId,
+  peopleById,
+) {
+  const resolutions = Array.isArray(reviewedResolutions)
+    ? reviewedResolutions
+    : reviewedResolutions?.resolutions ?? [];
+  const byOccurrence = new Map();
+  for (const resolution of resolutions.filter((row) => row.reviewStatus === 'confirmed')) {
+    for (const occurrenceId of resolution.occurrenceIds ?? []) {
+      const key = `${occurrenceId}|${normalizedName(resolution.mentionedName)}`;
+      if (byOccurrence.has(key)) {
+        throw new Error(`Duplicate reviewed family-relative resolution: ${key}`);
+      }
+      byOccurrence.set(key, resolution);
+    }
+  }
+
+  const found = (familyPeopleReport.found ?? []).map((row) => ({
+    ...row,
+    occurrences: (row.occurrences ?? []).map((occurrence) => {
+      const key = `${occurrence.id}|${normalizedName(row.mentionedName)}`;
+      const resolution = byOccurrence.get(key);
+      return resolution?.relationshipOverride
+        ? { ...occurrence, relationship: resolution.relationshipOverride }
+        : occurrence;
+    }),
+  }));
+  const ambiguousSameName = [];
+  for (const row of familyPeopleReport.ambiguousSameName ?? []) {
+    const matches = uniqueBy((row.matches ?? []).map((match) => ({
+      ...match,
+      canonicalPersonId: canonicalPersonId(match.personId ?? match.canonicalPersonId),
+    })), (match) => match.canonicalPersonId);
+    const unresolvedOccurrences = [];
+    for (const occurrence of row.occurrences ?? []) {
+      const key = `${occurrence.id}|${normalizedName(row.mentionedName)}`;
+      const resolution = byOccurrence.get(key);
+      if (!resolution) {
+        unresolvedOccurrences.push(occurrence);
+        continue;
+      }
+      const selectedPersonId = canonicalPersonId(resolution.selectedPersonId);
+      let selectedMatches = matches.filter(
+        (match) => match.canonicalPersonId === selectedPersonId,
+      );
+      if (selectedMatches.length !== 1 && resolution.allowReviewedAlias === true) {
+        const selectedPerson = peopleById.get(selectedPersonId);
+        if (
+          !selectedPerson
+          || selectedPerson.is_public !== true
+          || normalizedName(selectedPerson.name) !== normalizedName(resolution.selectedPersonName)
+        ) {
+          throw new Error(`Reviewed family-relative alias target is invalid: ${key}`);
+        }
+        selectedMatches = [{
+          personId: selectedPersonId,
+          canonicalPersonId: selectedPersonId,
+          name: selectedPerson.name,
+        }];
+      }
+      if (selectedMatches.length !== 1) {
+        throw new Error(
+          `Reviewed family-relative resolution is not one of the ambiguous candidates: ${key}`,
+        );
+      }
+      found.push({
+        ...row,
+        matches: selectedMatches,
+        occurrences: [{
+          ...occurrence,
+          relationship: resolution.relationshipOverride ?? occurrence.relationship,
+        }],
+      });
+    }
+    if (unresolvedOccurrences.length > 0) {
+      ambiguousSameName.push({ ...row, occurrences: unresolvedOccurrences });
+    }
+  }
+
+  return { ...familyPeopleReport, found, ambiguousSameName };
+}
 export function normalizeFamilyRelation(value) {
   const relationType = relationAliases.get(String(value ?? '').trim()) ?? null;
   return relationType == null ? null : {
@@ -144,7 +252,7 @@ function evidenceSupportsFamilyFact(source, relativeName) {
   const supports = normalizedName(source.supports);
   const normalizedRelativeName = normalizedName(relativeName);
   if (!supports || !normalizedRelativeName || !supports.includes(normalizedRelativeName)) return false;
-  return /(父|母|女|子|妻|夫|兄|弟|姐|姊|妹|祖|孫|姑|叔|伯|舅|姨|甥|嬸|親|家族|結婚)/u.test(
+  return /(父|母|女|子|妻|夫|兄|弟|哥|姐|姊|妹|祖|孫|姑|叔|伯|舅|姨|甥|嬸|親|外|婆|媳|婚|家族|結婚)/u.test(
     String(source.supports ?? ''),
   );
 }
@@ -161,16 +269,20 @@ function targetRowsByOccurrence(familyPeopleReport, canonicalPersonId) {
     ['not_found', familyPeopleReport.notFound],
   ]) {
     for (const row of rows ?? []) {
+      const matches = uniqueBy((row.matches ?? []).map((match) => ({
+        ...match,
+        canonicalPersonId: canonicalPersonId(match.personId ?? match.canonicalPersonId),
+      })), (match) => match.canonicalPersonId);
+      const effectiveResolution = resolution === 'ambiguous' && matches.length === 1
+        ? 'found'
+        : resolution;
       for (const occurrence of row.occurrences ?? []) {
         const targets = rowsByOccurrence.get(occurrence.id) ?? [];
         targets.push({
-          resolution,
+          resolution: effectiveResolution,
           mentionedName: row.mentionedName,
           relationship: occurrence.relationship,
-          matches: uniqueBy((row.matches ?? []).map((match) => ({
-            ...match,
-            canonicalPersonId: canonicalPersonId(match.canonicalPersonId ?? match.personId),
-          })), (match) => match.canonicalPersonId),
+          matches,
         });
         rowsByOccurrence.set(occurrence.id, targets);
       }
@@ -223,6 +335,8 @@ function heldRow(row, reason, targets = []) {
 export function buildTnlFamilyClaimPreview({
   sourceResearchReport,
   familyPeopleReport,
+  reviewedPersonNameAliases = [],
+  reviewedFamilyRelativeResolutions = [],
   people = [],
   personCanonicalMap = [],
   existingClaims = [],
@@ -230,7 +344,13 @@ export function buildTnlFamilyClaimPreview({
   const canonicalIds = new Map(personCanonicalMap.map((row) => [row.person_id, row.canonical_person_id]));
   const canonicalPersonId = (personId) => canonicalIds.get(personId) ?? personId;
   const peopleById = new Map(people.map((person) => [person.id, person]));
-  const targetsByOccurrence = targetRowsByOccurrence(familyPeopleReport, canonicalPersonId);
+  const reviewedAliasFamilyPeopleReport = applyReviewedPersonNameAliases(
+    familyPeopleReport, reviewedPersonNameAliases,
+  );
+  const reviewedFamilyPeopleReport = applyReviewedFamilyRelativeResolutions(
+    reviewedAliasFamilyPeopleReport, reviewedFamilyRelativeResolutions, canonicalPersonId, peopleById,
+  );
+  const targetsByOccurrence = targetRowsByOccurrence(reviewedFamilyPeopleReport, canonicalPersonId);
   const existingFactKeys = existingFamilyFactKeys(existingClaims, canonicalPersonId);
   const researchRows = (sourceResearchReport.claims ?? []).filter((row) => (
     row.category === '政治家族' && row.status === 'auto_reviewable'
@@ -454,6 +574,8 @@ async function main() {
 
   const sourceResearchReport = JSON.parse(fs.readFileSync(path.join(dataDir, 'source-research-report.json'), 'utf8'));
   const familyPeopleReport = JSON.parse(fs.readFileSync(path.join(dataDir, 'family-people-report.json'), 'utf8'));
+  const reviewedPersonNameAliases = JSON.parse(fs.readFileSync(reviewedAliasesPath, 'utf8'));
+  const reviewedFamilyRelativeResolutions = JSON.parse(fs.readFileSync(reviewedRelativeResolutionsPath, 'utf8'));
   const existingClaims = await fetchRows(
     config,
     'person_claims',
@@ -464,6 +586,7 @@ async function main() {
     ...sourceResearchReport.claims.map((row) => row.canonicalPersonId),
     ...familyPeopleReport.found.flatMap((row) => row.matches.map((match) => match.personId)),
     ...familyPeopleReport.ambiguousSameName.flatMap((row) => row.matches.map((match) => match.personId)),
+    ...(reviewedFamilyRelativeResolutions.resolutions ?? []).map((row) => row.selectedPersonId),
     ...existingClaims.flatMap((claim) => [claim.person_id, claim.claim_json?.relativePersonId]),
   ];
   const personCanonicalMap = await fetchRowsByIds(
@@ -484,6 +607,8 @@ async function main() {
   const preview = buildTnlFamilyClaimPreview({
     sourceResearchReport,
     familyPeopleReport,
+    reviewedPersonNameAliases,
+    reviewedFamilyRelativeResolutions,
     people,
     personCanonicalMap,
     existingClaims,

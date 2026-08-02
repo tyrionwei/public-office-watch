@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "codex-reviewed-family-context-2026-08-02",
+  "resolutions": [
+    {
+      "mentionedName": "李香蘭",
+      "selectedPersonId": "94eff20a-301c-4240-b97e-a16a8d197378",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-khh-11-3-family-2",
+        "tnl-dark-guide-2022-khh-11-2-family-2"
+      ],
+      "basis": "來源明載屏東縣議員，可排除同名桃園里長",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "李麗華",
+      "selectedPersonId": "8d12f43f-752f-4af6-8073-77dc9609cb2a",
+      "occurrenceIds": [
+        "tnl-dark-guide-2022-txg-12-7-family-1"
+      ],
+      "basis": "來源明載四屆議員，可排除同名里長",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "林京玲",
+      "selectedPersonId": "d98f714d-29bc-4741-a136-ed2a36c929cb",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-txg-10-45-family-1"
+      ],
+      "basis": "來源明載臺中市公民里里長，可排除同名議員候選人",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "張家豪",
+      "selectedPersonId": "698e8edd-ea97-4ea1-91f2-3765e9d15317",
+      "occurrenceIds": [
+        "tnl-dark-guide-2022-tpe-6-6-family-1"
+      ],
+      "basis": "來源明載2022年動保黨臺北市長參選人，可排除同名地方候選人",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "陳怡潔",
+      "selectedPersonId": "1dea808d-673c-45d8-8b90-5f42d132f464",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-tpe-1-14-family-1",
+        "tnl-dark-guide-2022-tpe-1-25-family-1"
+      ],
+      "basis": "來源明載親民黨不分區立法委員，可排除同名里長與其他人物",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "陳昌輝",
+      "selectedPersonId": "92be827e-7c77-4961-8e54-d0034df53724",
+      "occurrenceIds": [
+        "tnl-dark-guide-2022-tnn-10-6-family-1"
+      ],
+      "basis": "來源明載曾任台聯臺南市黨部主委，可排除同名里長",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "陳明義",
+      "selectedPersonId": "53f5e2f0-8f8b-4224-820c-aadfd5c66eab",
+      "occurrenceIds": [
+        "tnl-dark-guide-2022-nwt-3-8-family-1"
+      ],
+      "basis": "來源明載新北市議員及國民黨發言人，可排除同名人物",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "陳建銘",
+      "selectedPersonId": "6333f2b6-52b8-4aed-bb33-b1272ddb9112",
+      "occurrenceIds": [
+        "tnl-dark-guide-2022-tpe-1-15-family-3"
+      ],
+      "basis": "來源明載無黨籍臺北市議員，可排除同名里長與其他地方候選人",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "黃柏霖",
+      "selectedPersonId": "5dffdbb8-9047-49d7-988f-b43e4bb38f6c",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-khh-7-1-family-3",
+        "tnl-dark-guide-2022-khh-7-13-family-3"
+      ],
+      "basis": "來源明載高雄市現任議員，可排除同名里長與其他人物",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "黃淑芬",
+      "selectedPersonId": "9d5e06a5-e079-45b0-901f-6ca743bb3031",
+      "occurrenceIds": [
+        "tnl-dark-guide-2022-tao-4-4-family-1"
+      ],
+      "basis": "來源明載桃園市中山里里長，可排除其他同名人物",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "李文正",
+      "selectedPersonId": "5dd0e4e1-afd7-4ae4-bcbc-6ea430c940cc",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-tnn-9-80-family-1",
+        "tnl-dark-guide-2022-tnn-9-8-family-1"
+      ],
+      "basis": "來源明載五屆臺南市議員，並以生日及合併前後連續議員經歷確認人物",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "陳文賢",
+      "selectedPersonId": "5b1b828d-55a9-4ea7-a560-a3499eb2bdf1",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-tnn-3-23-family-1",
+        "tnl-dark-guide-2022-tnn-3-1-family-1"
+      ],
+      "basis": "來源明載四屆臺南議員及陳秋宏之父，並以生日及合併前後連續議員經歷確認人物",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "王秋冬",
+      "selectedPersonId": "114adf9a-1e97-4d75-bf4d-856bbff56e42",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-txg-7-43-family-1",
+        "tnl-dark-guide-2022-txg-7-7-family-1"
+      ],
+      "basis": "來源明載臺中市民政局長、民政處長及三屆議員，可排除同名臺北市勞動局長",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "吳政勳",
+      "selectedPersonId": "f695acdd-f161-4947-9253-71efc3bf13a8",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-khh-11-3-family-4",
+        "tnl-dark-guide-2022-khh-11-2-family-4"
+      ],
+      "basis": "來源明載前高雄議員，可排除同名高雄里長候選人",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "林國雄",
+      "selectedPersonId": "2ebebc81-11d7-4b1e-9f68-ff28bf119b73",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-nwt-3-61-family-1"
+      ],
+      "basis": "來源人物為新北候選人且明載父親曾任兩屆議員，可對應前臺北縣議員並排除苗栗議員候選人與臺北里長",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "陳玉梅",
+      "selectedPersonId": "0c7ab122-f1b3-459a-b4a5-ea48bb266c5e",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-tpe-4-68-family-2",
+        "tnl-dark-guide-2022-tpe-4-5-family-1"
+      ],
+      "basis": "來源明載五屆臺北市議員，可排除同名高雄里長候選人",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "陳清玉",
+      "selectedPersonId": "1229f020-f3bc-437b-a140-249fe4f3d739",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-khh-4-44-family-1",
+        "tnl-dark-guide-2022-khh-4-19-family-1"
+      ],
+      "basis": "來源明載高雄前副議長及國民黨高市黨部前副主委，可排除同名新北里長候選人",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "黃忠信",
+      "selectedPersonId": "91c090b6-c054-4272-9b80-e2ea66a31ee1",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-nwt-4-55-family-1",
+        "tnl-dark-guide-2022-nwt-5-16-family-1"
+      ],
+      "basis": "來源明載兩屆臺北縣議員，可排除同名烏來里長候選人",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "黃啟川",
+      "selectedPersonId": "3118e3dd-83d8-4a2d-975c-773bdc4b3d10",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-khh-7-1-family-1",
+        "tnl-dark-guide-2018-khh-7-48-family-1",
+        "tnl-dark-guide-2022-khh-7-12-family-1",
+        "tnl-dark-guide-2022-khh-7-13-family-1"
+      ],
+      "basis": "來源明載七屆高雄市議員及前議長，可排除同名臺東里長候選人",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "廖國棟",
+      "selectedPersonId": "80b17e0e-20a9-4141-92fc-bdca821709f7",
+      "occurrenceIds": [
+        "tnl-dark-guide-2022-tao-13-6-family-1"
+      ],
+      "basis": "來源明載立法委員，選用已公開且具平地原住民立委選舉紀錄的人物；未在此步驟合併歷史私有紀錄",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "簡東明",
+      "selectedPersonId": "8f9d5656-496f-48f0-9b49-df850a2d4e53",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-tao-14-75-family-1",
+        "tnl-dark-guide-2022-tao-14-5-family-1"
+      ],
+      "basis": "來源明載三屆山地原住民立法委員，選用已公開且具立委選舉紀錄的人物；未在此步驟合併其他歷史紀錄",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "陳秀霞",
+      "selectedPersonId": "ef294869-af7b-5f7a-a6e3-7f58e59e85e0",
+      "selectedPersonName": "周陳秀霞",
+      "allowReviewedAlias": true,
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-tnn-4-25-family-2",
+        "tnl-dark-guide-2022-tnn-4-1-family-2"
+      ],
+      "basis": "兩屆來源均指向周奕齊之母周陳秀霞；此處只在指定出現位置接受冠夫姓短名，不建立全域陳秀霞別名。",
+      "reviewStatus": "confirmed"
+    },
+    {
+      "mentionedName": "李水樹",
+      "relationshipOverride": "外公",
+      "occurrenceIds": [
+        "tnl-dark-guide-2018-khh-4-72-family-1",
+        "tnl-dark-guide-2022-khh-4-10-family-1"
+      ],
+      "basis": "獨立來源明載李水樹為李雅芬外公；2022 暗公報的泛稱祖父統一為精確關係外公。",
+      "reviewStatus": "confirmed"
+    }
+  ]
+}

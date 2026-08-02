@@ -5,7 +5,7 @@ BEGIN;
 -- the canonical map so superseded source rows remain private.
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := '1af4c963-3825-478a-a412-15eed51bdb29';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-00f5c690fb4dddc2');
     target_race_count INTEGER;
     target_candidate_count INTEGER;
     target_canonical_person_count INTEGER;
@@ -157,14 +157,14 @@ SET
     voting_date = DATE '2010-11-27',
     is_public = TRUE,
     updated_at = NOW()
-WHERE id = '1af4c963-3825-478a-a412-15eed51bdb29';
+WHERE id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-00f5c690fb4dddc2');
 
 UPDATE races
 SET
     voting_date = DATE '2010-11-27',
     is_public = TRUE,
     updated_at = NOW()
-WHERE election_id = '1af4c963-3825-478a-a412-15eed51bdb29';
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-00f5c690fb4dddc2');
 
 UPDATE people person
 SET
@@ -176,7 +176,7 @@ WHERE person.is_public IS DISTINCT FROM TRUE
       FROM candidates candidate
       JOIN races race ON race.id = candidate.race_id
       JOIN person_canonical_map canonical ON canonical.person_id = candidate.person_id
-      WHERE race.election_id = '1af4c963-3825-478a-a412-15eed51bdb29'
+      WHERE race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-00f5c690fb4dddc2')
   );
 
 UPDATE candidates candidate
@@ -185,14 +185,14 @@ SET
     updated_at = NOW()
 FROM races race
 WHERE race.id = candidate.race_id
-  AND race.election_id = '1af4c963-3825-478a-a412-15eed51bdb29';
+  AND race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-00f5c690fb4dddc2');
 
 REFRESH MATERIALIZED VIEW public.public_people_list_cached;
 SELECT published.promote(NULL);
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := '1af4c963-3825-478a-a412-15eed51bdb29';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-00f5c690fb4dddc2');
     public_race_count INTEGER;
     public_candidate_count INTEGER;
     published_candidate_count INTEGER;

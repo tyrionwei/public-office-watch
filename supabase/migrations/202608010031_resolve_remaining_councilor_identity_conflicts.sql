@@ -86,6 +86,45 @@ INSERT INTO _remaining_councilor_identity_merges (
         '{"rule":"remaining_councilor_cross_year_identity_review","years":[2018,2022],"party":"時代力量","source":"https://whoareyou.readr.tw/politics/38500"}'
     );
 
+CREATE TEMP TABLE _remaining_councilor_identity_person_external_ids (
+    local_person_id UUID PRIMARY KEY,
+    external_id TEXT NOT NULL UNIQUE
+) ON COMMIT DROP;
+
+INSERT INTO _remaining_councilor_identity_person_external_ids (local_person_id, external_id)
+VALUES
+    ('4315cba3-0c0f-45f9-91fe-5dd2754c733b', 'votetw-person-263269f1087759a2'),
+    ('44188e5a-9dfd-44c9-9210-d8d8f644d5d6', 'votetw-person-3e4f91ff49f49db3'),
+    ('d4e74ca2-c772-4770-b830-42297e0d356b', 'votetw-person-03bcb067aac6f025'),
+    ('4e899438-b538-44bf-9fb6-bbfba86be4a4', 'votetw-person-55028e0d1ec7366d'),
+    ('5bf8dd2d-01db-4abf-aa0c-16c45a02b7f9', 'cec-historical-unresolved-person-fc087a7ce02c'),
+    ('e141c127-78d6-49fe-aa1e-a23589000194', 'votetw-person-c4e235c15b03ed57'),
+    ('3942ac9e-1220-47a6-a36e-d5c11d344d37', 'votetw-person-23dcf8c365a88bd6'),
+    ('7c60b696-8469-4acb-b9d4-10fbbd73030b', 'cec-historical-unresolved-person-669ceb745401'),
+    ('1912e1fe-d9e6-46cc-b612-6ede829105e4', 'cec-2022-local-councilor-regional-person-e2f528cf263d'),
+    ('c3f2ec0a-4257-4659-af49-bd628dc4635c', 'cec-historical-unresolved-person-360a215e00a1'),
+    ('d466c866-e621-499b-92f8-a15d1b3b5ff4', 'cec-2022-local-councilor-regional-person-04c89e218a97'),
+    ('8fc94618-6de6-4632-8f00-8a13ae07c728', 'cec-historical-unresolved-person-32ef82767ee3'),
+    ('5dffdbb8-9047-49d7-988f-b43e4bb38f6c', 'votetw-person-baefaf1bc2e2346b'),
+    ('a5ba4908-9a30-4936-9c43-609d5d9dd5bb', 'votetw-person-7392ae0bb28e2029'),
+    ('03cf4239-bb35-41bb-858c-368e925f4d15', 'votetw-person-37a3e3c6550f6eba'),
+    ('611a7935-b6e5-4c89-a0cf-62603d5fd279', 'cec-historical-unresolved-person-ad7e59c56abd'),
+    ('1866c816-4439-4dba-919f-3fe3ef5c2744', 'votetw-person-0b92fcae08b051b3'),
+    ('74a35cbd-5846-4288-930b-1a36f37c5a94', 'votetw-person-194b58ff10a87882'),
+    ('769d921c-72cb-46bb-9eea-f36511e82618', 'cec-2022-local-councilor-regional-person-579bf919b639'),
+    ('3d97e8ff-d610-4467-a140-4ff6e367f0fa', 'cec-2022-local-councilor-regional-person-1adbcc004820'),
+    ('e2e3a497-7e72-438b-81d5-15e2ddbade3f', 'cec-2022-local-councilor-regional-person-55a780888828');
+
+UPDATE _remaining_councilor_identity_merges input
+SET duplicate_person_id = duplicate.id,
+    canonical_person_id = canonical.id
+FROM _remaining_councilor_identity_person_external_ids duplicate_map
+JOIN people duplicate ON duplicate.external_id = duplicate_map.external_id
+JOIN _remaining_councilor_identity_person_external_ids canonical_map ON TRUE
+JOIN people canonical ON canonical.external_id = canonical_map.external_id
+WHERE duplicate_map.local_person_id = input.duplicate_person_id
+  AND canonical_map.local_person_id = input.canonical_person_id;
+
 DO $verify$
 BEGIN
     IF (SELECT COUNT(*) FROM _remaining_councilor_identity_merges) <> 10 THEN
@@ -184,6 +223,27 @@ INSERT INTO _rejected_same_name_councilor_matches (
         '2010臺北市第3選舉區候選人與臺中市第6選舉區候選人為不同人。'
     );
 
+CREATE TEMP TABLE _rejected_same_name_source_keys (
+    local_source_person_id UUID PRIMARY KEY,
+    source_person_key TEXT NOT NULL UNIQUE
+) ON COMMIT DROP;
+
+INSERT INTO _rejected_same_name_source_keys (local_source_person_id, source_person_key)
+VALUES
+    ('516bbb0c-b18d-4e55-b0c9-3e8f1bdca55a', 'cec-historical:af0d575e374e'),
+    ('82a48da6-e4b4-4870-a570-cdf6eaf71e4c', 'cec-historical:b2eb0c3d0dcc'),
+    ('9af109d7-17ad-4819-8569-2103a7ea8c17', 'cec-historical:5b6b1827b998');
+
+UPDATE _rejected_same_name_councilor_matches rejected
+SET source_person_id = source.id,
+    wrong_canonical_person_id = wrong_person.id
+FROM _rejected_same_name_source_keys source_map
+JOIN source_people source ON source.source_person_key = source_map.source_person_key
+JOIN _remaining_councilor_identity_person_external_ids wrong_map ON TRUE
+JOIN people wrong_person ON wrong_person.external_id = wrong_map.external_id
+WHERE source_map.local_source_person_id = rejected.source_person_id
+  AND wrong_map.local_person_id = rejected.wrong_canonical_person_id;
+
 UPDATE person_identity_matches match
 SET match_status = 'rejected_match',
     score = 0,
@@ -206,15 +266,15 @@ WHERE match.source_person_id = rejected.source_person_id
 
 DO $verify$
 BEGIN
-    IF (
-        SELECT COUNT(*)
+    IF EXISTS (
+        SELECT 1
         FROM _rejected_same_name_councilor_matches rejected
         JOIN person_identity_matches match ON match.source_person_id = rejected.source_person_id
         JOIN person_canonical_map canonical ON canonical.person_id = match.person_id
         WHERE canonical.canonical_person_id = rejected.wrong_canonical_person_id
-          AND match.match_status = 'rejected_match'
-    ) <> 3 THEN
-        RAISE EXCEPTION 'Same-name councilor rejection count mismatch';
+          AND match.match_status <> 'rejected_match'
+    ) THEN
+        RAISE EXCEPTION 'An active or unexpected same-name councilor match remains';
     END IF;
 
     IF EXISTS (

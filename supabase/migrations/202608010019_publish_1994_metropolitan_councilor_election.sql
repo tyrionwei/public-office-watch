@@ -2,7 +2,7 @@ BEGIN;
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0');
     race_count INTEGER;
     candidate_count INTEGER;
     region_count INTEGER;
@@ -162,18 +162,18 @@ WHERE region.is_public IS DISTINCT FROM TRUE
   AND region.id IN (
       SELECT DISTINCT race.region_id
       FROM races race
-      WHERE race.election_id = '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c'
+      WHERE race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0')
   );
 
 UPDATE elections
 SET is_public = TRUE,
     updated_at = NOW()
-WHERE id = '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c';
+WHERE id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0');
 
 UPDATE races
 SET is_public = TRUE,
     updated_at = NOW()
-WHERE election_id = '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c';
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0');
 
 UPDATE people person
 SET is_public = TRUE,
@@ -184,7 +184,7 @@ WHERE person.is_public IS DISTINCT FROM TRUE
       FROM candidates candidate
       JOIN races race ON race.id = candidate.race_id
       JOIN person_canonical_map canonical ON canonical.person_id = candidate.person_id
-      WHERE race.election_id = '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c'
+      WHERE race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0')
   );
 
 UPDATE candidates candidate
@@ -192,14 +192,14 @@ SET is_public = TRUE,
     updated_at = NOW()
 FROM races race
 WHERE race.id = candidate.race_id
-  AND race.election_id = '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c';
+  AND race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0');
 
 REFRESH MATERIALIZED VIEW public.public_people_list_cached;
 SELECT published.promote(NULL);
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0');
     public_election_count INTEGER;
     public_race_count INTEGER;
     public_candidate_count INTEGER;

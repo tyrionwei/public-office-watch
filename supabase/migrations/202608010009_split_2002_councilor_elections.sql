@@ -6,7 +6,7 @@ BEGIN;
 -- the two direct municipalities to a separate canonical event.
 DO $$
 DECLARE
-    combined_election_id CONSTANT UUID := '01759619-59f6-450c-8e37-f67a071af5d4';
+    combined_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f');
     metropolitan_election_id CONSTANT UUID := 'ba3d366d-b4c7-4e95-931a-93a82e693915';
     total_races INTEGER;
     total_candidates INTEGER;
@@ -106,7 +106,7 @@ SET name = '2002年縣市議員選舉',
     status = 'completed',
     is_public = FALSE,
     updated_at = NOW()
-WHERE id = '01759619-59f6-450c-8e37-f67a071af5d4';
+WHERE id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f');
 
 -- Keep pre-2010 event names aligned with the same direct-municipality versus
 -- county/city scope used by the importer.
@@ -128,28 +128,28 @@ SET region_id = '5b727075-9acc-4a74-b551-5560ff53694b',
     race_type = 'county_councilor',
     title = REGEXP_REPLACE(title, '^桃園市', '桃園縣'),
     updated_at = NOW()
-WHERE election_id = '01759619-59f6-450c-8e37-f67a071af5d4'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f')
   AND region_id = '47528594-2fd7-494e-9a25-93aeb8f98169'
   AND title LIKE '桃園市%';
 
 UPDATE races
 SET region_id = 'ecc3a0c7-1a30-486b-b75e-911b8cfabd2f',
     updated_at = NOW()
-WHERE election_id = '01759619-59f6-450c-8e37-f67a071af5d4'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f')
   AND region_id = 'c65dffcd-df64-4b19-90db-b28bd8c9317c'
   AND title LIKE '臺中市%';
 
 UPDATE races
 SET region_id = '1f381fd2-403f-4327-be83-6caa6dff32f7',
     updated_at = NOW()
-WHERE election_id = '01759619-59f6-450c-8e37-f67a071af5d4'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f')
   AND region_id = '042cf107-62f0-426b-bcdc-44900eb1e6ca'
   AND title LIKE '臺南市%';
 
 UPDATE races
 SET region_id = '797b1f94-cdab-4756-946e-2e100ab4965d',
     updated_at = NOW()
-WHERE election_id = '01759619-59f6-450c-8e37-f67a071af5d4'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f')
   AND region_id = '7b181cb2-9e4f-4334-984b-fd5430555c77'
   AND title LIKE '高雄市%';
 
@@ -158,7 +158,7 @@ SET election_id = 'ba3d366d-b4c7-4e95-931a-93a82e693915',
     voting_date = DATE '2002-12-07',
     is_public = FALSE,
     updated_at = NOW()
-WHERE election_id = '01759619-59f6-450c-8e37-f67a071af5d4'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f')
   AND region_id IN (
       'b1d8ccd1-1efe-4f73-9261-7320ed715a9f',
       '797b1f94-cdab-4756-946e-2e100ab4965d'
@@ -168,7 +168,7 @@ UPDATE races
 SET voting_date = DATE '2002-01-26',
     is_public = FALSE,
     updated_at = NOW()
-WHERE election_id = '01759619-59f6-450c-8e37-f67a071af5d4';
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f');
 
 DO $$
 DECLARE
@@ -183,13 +183,13 @@ BEGIN
     SELECT COUNT(*), COUNT(DISTINCT region_id)
     INTO county_races, county_regions
     FROM races
-    WHERE election_id = '01759619-59f6-450c-8e37-f67a071af5d4';
+    WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f');
 
     SELECT COUNT(*)
     INTO county_candidates
     FROM candidates candidate
     JOIN races race ON race.id = candidate.race_id
-    WHERE race.election_id = '01759619-59f6-450c-8e37-f67a071af5d4';
+    WHERE race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f');
 
     SELECT COUNT(*), COUNT(DISTINCT region_id)
     INTO metropolitan_races, metropolitan_regions
@@ -206,7 +206,7 @@ BEGIN
     INTO invalid_boundary_races
     FROM races
     WHERE election_id IN (
-        '01759619-59f6-450c-8e37-f67a071af5d4',
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
         'ba3d366d-b4c7-4e95-931a-93a82e693915'
     )
       AND region_id IN (

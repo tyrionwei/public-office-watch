@@ -46,6 +46,19 @@ INSERT INTO _historical_cec_existing_candidate_input_20260730 (
 ) VALUES
     ('update', 'f061e127-a623-44df-aaf9-1530ed9862f6', 'cec-historical:cafa78c3622e', '2a37533c-9e4c-4ac4-88d1-54c106cc704b', 'f5f1f5ed-6f0e-4385-900e-add028a171fd', '49c0cd61-8cc4-42ca-b850-16323d7d49be', 'cec-historical-candidate-512e782c51c85688', TRUE, '無黨籍', '10', 177, 1.43, FALSE, 'qualified', 'not_elected', 'not_elected', 2010, '2010|councilor|新北市|district-11|plain_indigenous', FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
 
+-- Candidate, person, and race UUIDs differ between independently restored
+-- environments. Resolve this update-only batch from the candidate's stable
+-- external ID before validating or applying the vote backfill.
+UPDATE _historical_cec_existing_candidate_input_20260730 input
+SET candidate_id = candidate.id,
+    person_id = person_map.canonical_person_id,
+    race_id = race_map.canonical_race_id
+FROM candidates candidate
+JOIN person_canonical_map person_map ON person_map.person_id = candidate.person_id
+JOIN race_canonical_map race_map ON race_map.race_id = candidate.race_id
+WHERE input.operation = 'update'
+  AND candidate.external_id = input.candidate_external_id;
+
 UPDATE source_people source
 SET source_payload = source.source_payload
         || CASE WHEN input.set_candidate_no THEN jsonb_build_object('candidateNo', input.candidate_no) ELSE '{}'::JSONB END

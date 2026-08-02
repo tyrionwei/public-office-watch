@@ -4,23 +4,21 @@ BEGIN;
 -- same-election different-district non-merge decisions before publication.
 DO $$
 BEGIN
-    IF NOT EXISTS (
+    IF EXISTS (
         SELECT 1
         FROM person_identity_matches
-        WHERE id = 'd7da0314-c29e-4b73-8256-16a47a3bed57'
-          AND source_person_id = '1f094fab-a321-450f-9d51-76203cdda35a'
-          AND person_id = 'e2e3a497-7e72-438b-81d5-15e2ddbade3f'
-          AND match_status = 'auto_matched'
+        WHERE source_person_id = '1f094fab-a321-450f-9d51-76203cdda35a'
+          AND person_id = (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-regional-person-55a780888828')
+          AND match_status NOT IN ('auto_matched', 'rejected_match')
     ) THEN
-        RAISE EXCEPTION 'Expected incorrect Taipei 陳淑華 source match was not found';
+        RAISE EXCEPTION 'Taipei 陳淑華 source match has an unexpected state';
     END IF;
 
     IF NOT EXISTS (
         SELECT 1
         FROM person_identity_matches
-        WHERE id = '909cc015-e80e-4ed4-bf27-73a2b342412f'
-          AND source_person_id = '1f094fab-a321-450f-9d51-76203cdda35a'
-          AND person_id = '7fae003d-f166-481c-85dd-0674462c0075'
+        WHERE source_person_id = '1f094fab-a321-450f-9d51-76203cdda35a'
+          AND person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-5a75f62f1ae4')
           AND match_status = 'auto_matched'
     ) THEN
         RAISE EXCEPTION 'Expected correct Taipei 陳淑華 source match was not found';
@@ -30,14 +28,14 @@ BEGIN
         SELECT 1
         FROM candidates candidate
         JOIN races race ON race.id = candidate.race_id
-        WHERE candidate.person_id = '08f31470-08ca-478c-bc07-d84a7b44cac1'
+        WHERE candidate.person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-fff56f5ee79b')
           AND race.title = '高雄市第1選舉區議員選舉'
           AND candidate.candidate_no = '4'
     ) OR NOT EXISTS (
         SELECT 1
         FROM candidates candidate
         JOIN races race ON race.id = candidate.race_id
-        WHERE candidate.person_id = '346a434f-fd59-4eda-9c88-7bf8e1a07409'
+        WHERE candidate.person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-8fca2724e590')
           AND race.title = '高雄市第1選舉區議員選舉'
           AND candidate.candidate_no = '8'
     ) OR NOT EXISTS (
@@ -45,7 +43,7 @@ BEGIN
         FROM candidates candidate
         JOIN races race ON race.id = candidate.race_id
         JOIN person_canonical_map canonical ON canonical.person_id = candidate.person_id
-        WHERE canonical.canonical_person_id = '383c916b-6a03-499d-a656-da0a27fea389'
+        WHERE canonical.canonical_person_id = (SELECT id FROM people WHERE external_id = 'votetw-person-9a8ed0051d888d9c')
           AND race.title = '高雄市第6選舉區議員選舉'
     ) THEN
         RAISE EXCEPTION 'Expected cross-election 高雄市 陳美雅 progression was not found';
@@ -66,15 +64,16 @@ SET match_status = 'rejected_match',
     reviewed_by = 'codex:official-election-evidence',
     reviewed_at = NOW(),
     updated_at = NOW()
-WHERE id = 'd7da0314-c29e-4b73-8256-16a47a3bed57';
+WHERE source_person_id = '1f094fab-a321-450f-9d51-76203cdda35a'
+  AND person_id = (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-regional-person-55a780888828');
 
 INSERT INTO person_merge_decisions (
     duplicate_person_id, canonical_person_id, status, confidence_level,
     reason, evidence_json, reviewed_by, reviewed_at, updated_at
 )
 SELECT
-    '08f31470-08ca-478c-bc07-d84a7b44cac1',
-    '383c916b-6a03-499d-a656-da0a27fea389',
+    (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-fff56f5ee79b'),
+    (SELECT id FROM people WHERE external_id = 'votetw-person-9a8ed0051d888d9c'),
     'verified',
     'A',
     '陳美雅連續參選2002、2006改制前高雄市第1選舉區及2010年後高雄市第6選舉區，姓名與黨籍一致，為同一人物。',
@@ -95,11 +94,11 @@ WHERE NOT EXISTS (
     FROM person_merge_decisions existing
     WHERE existing.status IN ('verified', 'rejected', 'archived')
       AND (
-          (existing.duplicate_person_id = '08f31470-08ca-478c-bc07-d84a7b44cac1'
-           AND existing.canonical_person_id = '383c916b-6a03-499d-a656-da0a27fea389')
+          (existing.duplicate_person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-fff56f5ee79b')
+           AND existing.canonical_person_id = (SELECT id FROM people WHERE external_id = 'votetw-person-9a8ed0051d888d9c'))
           OR
-          (existing.duplicate_person_id = '383c916b-6a03-499d-a656-da0a27fea389'
-           AND existing.canonical_person_id = '08f31470-08ca-478c-bc07-d84a7b44cac1')
+          (existing.duplicate_person_id = (SELECT id FROM people WHERE external_id = 'votetw-person-9a8ed0051d888d9c')
+           AND existing.canonical_person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-fff56f5ee79b'))
       )
 );
 
@@ -116,18 +115,18 @@ INSERT INTO _councilor_2002_distinct_people (
     name, left_person_id, right_person_id, left_district, right_district
 )
 VALUES
-    ('吳宗憲', '1687cf55-81df-4d8f-9bc0-456cdc9fc6e3', '6dad34bb-07e4-4669-9e82-90b9763187d1', '彰化縣第4選舉區', '桃園縣第12選舉區'),
-    ('吳宗憲', '1687cf55-81df-4d8f-9bc0-456cdc9fc6e3', 'cbcb27ef-4e95-4c18-bc65-73c418522f8f', '彰化縣第4選舉區', '高雄市第5選舉區'),
-    ('吳宗憲', '6dad34bb-07e4-4669-9e82-90b9763187d1', 'cbcb27ef-4e95-4c18-bc65-73c418522f8f', '桃園縣第12選舉區', '高雄市第5選舉區'),
-    ('張吉雄', 'd1ba2142-11f8-4c41-b2c2-def695648936', '9780f86a-63df-42b6-805d-f78e7bf97ab2', '桃園縣第9選舉區', '高雄市第5選舉區'),
-    ('張金文', 'abfff5c4-e83b-43c5-b98d-59f7879f8414', '57fb8073-f6a2-4539-8bcf-ffb3b70a72b5', '屏東縣第1選舉區', '彰化縣第5選舉區'),
-    ('李文彬', 'acf63d9d-a8d9-44f1-b5a2-9dc020abc232', '9df74a07-156e-4483-a31e-77b8d912be2b', '新竹市第3選舉區', '高雄縣第5選舉區'),
-    ('李武雄', '8b46d408-24ef-4bed-8712-fc2f76fadd17', '34ba7067-dc21-40b4-bc00-ac862e6ceadb', '彰化縣第1選舉區', '彰化縣第7選舉區'),
-    ('林大傑', '464ab18c-85a8-4a20-b304-cd8a507b7894', '55a4d8ca-304d-4070-bdbb-06b3ffa9d231', '彰化縣第1選舉區', '臺中縣第2選舉區'),
-    ('林建宏', '417132d0-beff-498a-9703-a9aed26d3871', '38457b9e-bf9b-4c30-be8a-7a648bbdc2c1', '宜蘭縣第3選舉區', '新竹市第2選舉區'),
-    ('林清華', '15558695-739e-4fb3-bed1-2b85de5105c6', '92369906-9100-4b89-b411-e35769716754', '臺中市第1選舉區', '臺中市第7選舉區平地原住民'),
-    ('江麗玉', '4db66154-2877-425a-80f2-0ce99e3e483f', '5a6136df-d25d-46c2-9a59-e6a8d0c58dc5', '基隆市第2選舉區', '臺北縣第8選舉區'),
-    ('陳淑華', 'e2e3a497-7e72-438b-81d5-15e2ddbade3f', '1fda6a12-6a42-4976-927e-8cddba2b1bbc', '臺中市第4選舉區', '臺北市第3選舉區');
+    ('吳宗憲', (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-149b72b68f5b'), (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-regional-person-5daf48c7de38'), '彰化縣第4選舉區', '桃園縣第12選舉區'),
+    ('吳宗憲', (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-149b72b68f5b'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-79f9fa59c078'), '彰化縣第4選舉區', '高雄市第5選舉區'),
+    ('吳宗憲', (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-regional-person-5daf48c7de38'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-79f9fa59c078'), '桃園縣第12選舉區', '高雄市第5選舉區'),
+    ('張吉雄', (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-e851726fd72d'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-da551e2701b7'), '桃園縣第9選舉區', '高雄市第5選舉區'),
+    ('張金文', (SELECT id FROM people WHERE external_id = 'votetw-person-3022cf0e4de1978c'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-d5970159e90e'), '屏東縣第1選舉區', '彰化縣第5選舉區'),
+    ('李文彬', (SELECT id FROM people WHERE external_id = 'cec-historical-person-c2878ffbf17474b5'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-de53935dc3b0'), '新竹市第3選舉區', '高雄縣第5選舉區'),
+    ('李武雄', (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-03cd80fdb344'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-af33457cd88b'), '彰化縣第1選舉區', '彰化縣第7選舉區'),
+    ('林大傑', (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-f38ec4545daa'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-7c25813cec63'), '彰化縣第1選舉區', '臺中縣第2選舉區'),
+    ('林建宏', (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-836002ab299e'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-8be14c03377e'), '宜蘭縣第3選舉區', '新竹市第2選舉區'),
+    ('林清華', (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-ede5d63bca18'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-fc71bd17a54a'), '臺中市第1選舉區', '臺中市第7選舉區平地原住民'),
+    ('江麗玉', (SELECT id FROM people WHERE external_id = 'cec-historical-person-92b12f2ea56c93fe'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-3cef98738dcc'), '基隆市第2選舉區', '臺北縣第8選舉區'),
+    ('陳淑華', (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-regional-person-55a780888828'), (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-b2eb0c3d0dcc'), '臺中市第4選舉區', '臺北市第3選舉區');
 
 DO $$
 BEGIN
@@ -206,7 +205,7 @@ BEGIN
     SELECT canonical_person_id
     INTO chen_meiya_canonical
     FROM person_canonical_map
-    WHERE person_id = '08f31470-08ca-478c-bc07-d84a7b44cac1';
+    WHERE person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-fff56f5ee79b');
 
     SELECT COUNT(*)
     INTO unresolved_source_conflicts
@@ -226,7 +225,7 @@ BEGIN
     ) conflict;
 
     IF same_name_rejections <> 12
-       OR chen_meiya_canonical <> '383c916b-6a03-499d-a656-da0a27fea389'
+       OR chen_meiya_canonical <> (SELECT id FROM people WHERE external_id = 'votetw-person-9a8ed0051d888d9c')
        OR unresolved_source_conflicts <> 0 THEN
         RAISE EXCEPTION
             '2002 identity resolution failed: rejections %, 陳美雅 canonical %, source conflicts %',

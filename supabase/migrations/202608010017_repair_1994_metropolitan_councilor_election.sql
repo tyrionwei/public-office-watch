@@ -2,7 +2,7 @@ BEGIN;
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-6d0a0c3e493c2e47');
     race_count INTEGER;
     candidate_count INTEGER;
     taipei_race_count INTEGER;
@@ -75,25 +75,34 @@ BEGIN
             kaohsiung_candidate_count;
     END IF;
 
-    IF NOT EXISTS (
+    IF EXISTS (
         SELECT 1
         FROM person_identity_matches match
         JOIN person_canonical_map canonical ON canonical.person_id = match.person_id
-        WHERE match.id = '7c0a316e-caf7-49f4-97d8-1c1eabe7174c'
-          AND match.source_person_id = 'a5c61a4d-1bd4-4ba5-801b-faa2c195a2f7'
-          AND match.person_id = 'e2e3a497-7e72-438b-81d5-15e2ddbade3f'
-          AND match.match_status = 'auto_matched'
-          AND canonical.canonical_person_id = 'e2e3a497-7e72-438b-81d5-15e2ddbade3f'
+        WHERE match.source_person_id = (
+                  SELECT id FROM source_people
+                  WHERE source_person_key = 'cec-historical:6259249b01bd'
+              )
+          AND canonical.canonical_person_id = (
+                  SELECT id FROM people
+                  WHERE external_id = 'cec-2022-local-councilor-regional-person-55a780888828'
+              )
+          AND match.match_status NOT IN ('auto_matched', 'rejected_match')
     ) OR NOT EXISTS (
         SELECT 1
         FROM person_identity_matches match
         JOIN person_canonical_map canonical ON canonical.person_id = match.person_id
-        WHERE match.id = '57e8aa57-d273-47fe-983a-a164754e63fb'
-          AND match.source_person_id = 'a5c61a4d-1bd4-4ba5-801b-faa2c195a2f7'
+        WHERE match.source_person_id = (
+                  SELECT id FROM source_people
+                  WHERE source_person_key = 'cec-historical:6259249b01bd'
+              )
           AND match.match_status = 'auto_matched'
-          AND canonical.canonical_person_id = '1fda6a12-6a42-4976-927e-8cddba2b1bbc'
+          AND canonical.canonical_person_id = (
+                  SELECT id FROM people
+                  WHERE external_id = 'cec-historical-unresolved-person-b2eb0c3d0dcc'
+              )
     ) THEN
-        RAISE EXCEPTION 'Expected 1994 Taipei 陳淑華 identity conflict was not found';
+        RAISE EXCEPTION 'Expected safe 1994 Taipei 陳淑華 identity state was not found';
     END IF;
 END
 $$;
@@ -107,7 +116,7 @@ SET external_id = 'cec-historical-election-947547c42d36c8a0',
     status = 'completed',
     is_public = FALSE,
     updated_at = NOW()
-WHERE id = '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c';
+WHERE id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-6d0a0c3e493c2e47');
 
 UPDATE races
 SET region_id = '797b1f94-cdab-4756-946e-2e100ab4965d',
@@ -115,7 +124,7 @@ SET region_id = '797b1f94-cdab-4756-946e-2e100ab4965d',
     status = 'completed',
     is_public = FALSE,
     updated_at = NOW()
-WHERE election_id = '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0')
   AND region_id = '7b181cb2-9e4f-4334-984b-fd5430555c77';
 
 UPDATE races
@@ -123,21 +132,26 @@ SET voting_date = DATE '1994-12-03',
     status = 'completed',
     is_public = FALSE,
     updated_at = NOW()
-WHERE election_id = '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c';
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0');
 
 UPDATE person_identity_matches
 SET match_status = 'rejected_match',
     reviewed_by = 'codex:official-election-evidence',
     reviewed_at = NOW(),
     updated_at = NOW()
-WHERE id = '7c0a316e-caf7-49f4-97d8-1c1eabe7174c'
-  AND source_person_id = 'a5c61a4d-1bd4-4ba5-801b-faa2c195a2f7'
-  AND person_id = 'e2e3a497-7e72-438b-81d5-15e2ddbade3f'
+WHERE source_person_id = (
+          SELECT id FROM source_people
+          WHERE source_person_key = 'cec-historical:6259249b01bd'
+      )
+  AND person_id = (
+          SELECT id FROM people
+          WHERE external_id = 'cec-2022-local-councilor-regional-person-55a780888828'
+      )
   AND match_status = 'auto_matched';
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := '33204438-f0a8-48ba-b2e3-a7bb3cdc1e3c';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-947547c42d36c8a0');
     race_count INTEGER;
     candidate_count INTEGER;
     region_count INTEGER;

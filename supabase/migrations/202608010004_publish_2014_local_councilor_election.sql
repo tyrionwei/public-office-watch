@@ -5,7 +5,7 @@ BEGIN;
 -- private and public_candidates resolves candidate links through the canonical map.
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := 'b8d78257-b4f2-48a3-8cb5-ea626a0382d9';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-5d2d565cde864a14');
     target_race_count INTEGER;
     target_candidate_count INTEGER;
     target_canonical_person_count INTEGER;
@@ -107,14 +107,14 @@ SET
     voting_date = DATE '2014-11-29',
     is_public = TRUE,
     updated_at = NOW()
-WHERE id = 'b8d78257-b4f2-48a3-8cb5-ea626a0382d9';
+WHERE id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-5d2d565cde864a14');
 
 UPDATE races
 SET
     voting_date = DATE '2014-11-29',
     is_public = TRUE,
     updated_at = NOW()
-WHERE election_id = 'b8d78257-b4f2-48a3-8cb5-ea626a0382d9';
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-5d2d565cde864a14');
 
 UPDATE people person
 SET
@@ -126,7 +126,7 @@ WHERE person.is_public IS DISTINCT FROM TRUE
       FROM candidates candidate
       JOIN races race ON race.id = candidate.race_id
       JOIN person_canonical_map canonical ON canonical.person_id = candidate.person_id
-      WHERE race.election_id = 'b8d78257-b4f2-48a3-8cb5-ea626a0382d9'
+      WHERE race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-5d2d565cde864a14')
   );
 
 UPDATE candidates candidate
@@ -135,14 +135,14 @@ SET
     updated_at = NOW()
 FROM races race
 WHERE race.id = candidate.race_id
-  AND race.election_id = 'b8d78257-b4f2-48a3-8cb5-ea626a0382d9';
+  AND race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-5d2d565cde864a14');
 
 REFRESH MATERIALIZED VIEW public.public_people_list_cached;
 SELECT published.promote(NULL);
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := 'b8d78257-b4f2-48a3-8cb5-ea626a0382d9';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-5d2d565cde864a14');
     public_race_count INTEGER;
     public_candidate_count INTEGER;
     published_candidate_count INTEGER;

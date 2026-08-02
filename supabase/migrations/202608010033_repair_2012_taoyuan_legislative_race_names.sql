@@ -24,6 +24,14 @@ INSERT INTO _taoyuan_legislative_race_repairs_2012 (
     (5, 'f1e3a97f-c99a-47ac-9c77-b4c6b88e1ec6', '4a68876e-f1db-466a-b1cb-0adf886224ff', 'cec-2012-legislative-district-06-002-05', 'cec-historical-race-4cdd0d18db8de657', '桃園縣第5選舉區立法委員選舉'),
     (6, '6d193295-9878-4ac6-87cb-be8961ae33f6', '7eab679d-48de-4f98-beee-3f3b005efdf7', 'cec-2012-legislative-district-06-002-06', 'cec-historical-race-c7de5b47b28597d6', '桃園縣第6選舉區立法委員選舉');
 
+UPDATE _taoyuan_legislative_race_repairs_2012 input
+SET canonical_race_id = canonical.id,
+    duplicate_race_id = duplicate.id
+FROM races canonical
+JOIN races duplicate ON TRUE
+WHERE canonical.external_id = input.canonical_external_id
+  AND duplicate.external_id = input.duplicate_external_id;
+
 DO $verify$
 BEGIN
     IF (SELECT COUNT(*) FROM _taoyuan_legislative_race_repairs_2012) <> 6 THEN

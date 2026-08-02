@@ -2115,6 +2115,19 @@ INSERT INTO _historical_cec_existing_candidate_input_20260730 (
     ('update', 'ffdc70d4-a314-41b0-905b-d35f90594236', 'cec-historical:6ac2d2790fd2', 'e394ae0d-abf8-c9d5-d19a-ec5598d40c81', '11868bef-6928-4465-865c-99fbb308ee22', 'e7e84ef2-cc50-498e-bab8-c1d189385861', 'cec-historical-candidate-547a448cd570b22d', FALSE, '中國國民黨', '25', 3675, 5.09, TRUE, 'qualified', 'elected', 'elected', 2002, '2002|councilor|南投縣|district-1|regional', FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE),
     ('update', 'fff747aa-407e-424a-8a5d-11aee3e58f70', 'cec-historical:3bbf4a17b791', '478bc341-36eb-41cb-bac3-2d254570a626', '4495e6fe-400d-492b-a852-5b3558630846', '3f8284c1-cbdd-496c-8ed8-35a6eba24ead', 'cec-historical-candidate-5b1f21353fbffab1', FALSE, '中國國民黨', '9', 3957, 5.06, FALSE, 'qualified', 'not_elected', 'not_elected', 2002, '2002|councilor|高雄縣|district-5|regional', FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
 
+-- Candidate, person, and race UUIDs differ between independently restored
+-- environments. Resolve this update-only batch from the candidate's stable
+-- external ID before validating or applying the vote backfill.
+UPDATE _historical_cec_existing_candidate_input_20260730 input
+SET candidate_id = candidate.id,
+    person_id = person_map.canonical_person_id,
+    race_id = race_map.canonical_race_id
+FROM candidates candidate
+JOIN person_canonical_map person_map ON person_map.person_id = candidate.person_id
+JOIN race_canonical_map race_map ON race_map.race_id = candidate.race_id
+WHERE input.operation = 'update'
+  AND candidate.external_id = input.candidate_external_id;
+
 UPDATE source_people source
 SET source_payload = source.source_payload
         || CASE WHEN input.set_candidate_no THEN jsonb_build_object('candidateNo', input.candidate_no) ELSE '{}'::JSONB END

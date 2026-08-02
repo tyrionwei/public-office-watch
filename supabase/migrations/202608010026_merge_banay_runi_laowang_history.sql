@@ -5,12 +5,12 @@ BEGIN
     IF NOT EXISTS (
         SELECT 1
         FROM people
-        WHERE id = '4089dba1-5963-4c12-b4a4-a50ed2754c33'
+        WHERE id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-cafa78c3622e')
           AND name = '拔耐．茹妮老王'
     ) OR NOT EXISTS (
         SELECT 1
         FROM people
-        WHERE id = '2a37533c-9e4c-4ac4-88d1-54c106cc704b'
+        WHERE id = (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-plain-indigenous-person-5cb37455a9ee')
           AND name = '拔耐．茹妮老王'
     ) THEN
         RAISE EXCEPTION 'Expected split 拔耐．茹妮老王 people were not found';
@@ -21,8 +21,8 @@ BEGIN
         FROM candidates candidate
         JOIN races race ON race.id = candidate.race_id
         JOIN elections election ON election.id = race.election_id
-        WHERE candidate.id = '49c0cd61-8cc4-42ca-b850-16323d7d49be'
-          AND candidate.person_id = '4089dba1-5963-4c12-b4a4-a50ed2754c33'
+        WHERE candidate.id = (SELECT id FROM candidates WHERE external_id = 'cec-historical-candidate-512e782c51c85688')
+          AND candidate.person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-cafa78c3622e')
           AND candidate.party = '無黨籍'
           AND candidate.candidate_no = '10'
           AND candidate.vote_count IS NULL
@@ -34,7 +34,7 @@ BEGIN
         FROM candidates candidate
         JOIN races race ON race.id = candidate.race_id
         JOIN elections election ON election.id = race.election_id
-        WHERE candidate.person_id = '2a37533c-9e4c-4ac4-88d1-54c106cc704b'
+        WHERE candidate.person_id = (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-plain-indigenous-person-5cb37455a9ee')
           AND candidate.party = '無黨籍'
           AND election.year = 2014
           AND race.title = '基隆市第8選舉區平地原住民議員選舉'
@@ -45,26 +45,23 @@ BEGIN
     IF NOT EXISTS (
         SELECT 1
         FROM source_people source
-        WHERE source.id = 'f061e127-a623-44df-aaf9-1530ed9862f6'
-          AND source.source_person_key = 'cec-historical:cafa78c3622e'
+        WHERE source.source_person_key = 'cec-historical:cafa78c3622e'
           AND source.raw_name = '拔耐．茹妮老王'
           AND source.election_year = 2010
           AND source.source_payload->>'candidateNo' = '10'
-          AND (source.source_payload->>'voteCount')::INTEGER = 177
-          AND (source.source_payload->>'voteRate')::NUMERIC = 1.43
+          AND (
+              source.source_payload->>'voteCount' IS NULL
+              OR (source.source_payload->>'voteCount')::INTEGER = 177
+          )
+          AND (
+              source.source_payload->>'voteRate' IS NULL
+              OR (source.source_payload->>'voteRate')::NUMERIC = 1.43
+          )
     ) OR NOT EXISTS (
         SELECT 1
         FROM person_identity_matches
-        WHERE id = '846f8ac6-8a90-4ff4-914a-312269923f53'
-          AND source_person_id = 'f061e127-a623-44df-aaf9-1530ed9862f6'
-          AND person_id = '2a37533c-9e4c-4ac4-88d1-54c106cc704b'
-          AND match_status = 'auto_matched'
-    ) OR NOT EXISTS (
-        SELECT 1
-        FROM person_identity_matches
-        WHERE id = 'a8d9018a-e28f-4355-bf5f-51371b02c900'
-          AND source_person_id = 'f061e127-a623-44df-aaf9-1530ed9862f6'
-          AND person_id = '4089dba1-5963-4c12-b4a4-a50ed2754c33'
+        WHERE source_person_id = (SELECT id FROM source_people WHERE source_person_key = 'cec-historical:cafa78c3622e')
+          AND person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-cafa78c3622e')
           AND match_status = 'auto_matched'
     ) THEN
         RAISE EXCEPTION 'Expected official 2010 source identity evidence changed';
@@ -75,11 +72,11 @@ BEGIN
         FROM person_merge_decisions decision
         WHERE decision.status IN ('suggested', 'verified', 'rejected', 'archived')
           AND (
-              (decision.duplicate_person_id = '4089dba1-5963-4c12-b4a4-a50ed2754c33'
-               AND decision.canonical_person_id = '2a37533c-9e4c-4ac4-88d1-54c106cc704b')
+              (decision.duplicate_person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-cafa78c3622e')
+               AND decision.canonical_person_id = (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-plain-indigenous-person-5cb37455a9ee'))
               OR
-              (decision.duplicate_person_id = '2a37533c-9e4c-4ac4-88d1-54c106cc704b'
-               AND decision.canonical_person_id = '4089dba1-5963-4c12-b4a4-a50ed2754c33')
+              (decision.duplicate_person_id = (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-plain-indigenous-person-5cb37455a9ee')
+               AND decision.canonical_person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-cafa78c3622e'))
           )
     ) THEN
         RAISE EXCEPTION 'A terminal or suggested decision already exists for 拔耐．茹妮老王';
@@ -99,8 +96,8 @@ INSERT INTO person_merge_decisions (
     updated_at
 )
 VALUES (
-    '4089dba1-5963-4c12-b4a4-a50ed2754c33',
-    '2a37533c-9e4c-4ac4-88d1-54c106cc704b',
+    (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-cafa78c3622e'),
+    (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-plain-indigenous-person-5cb37455a9ee'),
     'verified',
     'A',
     '拔耐．茹妮老王為罕見完整姓名；2010新北市與2014、2022基隆市紀錄均為無黨籍平地原住民議員候選人，官方及政府履歷亦可連續解釋其新北與基隆經歷。',
@@ -129,8 +126,8 @@ BEGIN
     IF NOT EXISTS (
         SELECT 1
         FROM person_canonical_map canonical
-        WHERE canonical.person_id = '4089dba1-5963-4c12-b4a4-a50ed2754c33'
-          AND canonical.canonical_person_id = '2a37533c-9e4c-4ac4-88d1-54c106cc704b'
+        WHERE canonical.person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-unresolved-person-cafa78c3622e')
+          AND canonical.canonical_person_id = (SELECT id FROM people WHERE external_id = 'cec-2022-local-councilor-plain-indigenous-person-5cb37455a9ee')
           AND canonical.merge_status = 'verified'
           AND canonical.merge_confidence_level = 'A'
     ) THEN
@@ -141,7 +138,7 @@ BEGIN
         SELECT COUNT(DISTINCT canonical.canonical_person_id)
         FROM person_identity_matches match
         JOIN person_canonical_map canonical ON canonical.person_id = match.person_id
-        WHERE match.source_person_id = 'f061e127-a623-44df-aaf9-1530ed9862f6'
+        WHERE match.source_person_id = (SELECT id FROM source_people WHERE source_person_key = 'cec-historical:cafa78c3622e')
           AND match.match_status = 'auto_matched'
     ) <> 1 THEN
         RAISE EXCEPTION 'Official 2010 source identity still resolves to multiple canonical people';

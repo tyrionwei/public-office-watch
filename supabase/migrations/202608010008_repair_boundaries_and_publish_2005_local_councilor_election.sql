@@ -5,7 +5,7 @@ BEGIN;
 -- intentionally does not widen publication to 2002 or earlier elections.
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db');
     target_race_count INTEGER;
     target_candidate_count INTEGER;
     target_canonical_person_count INTEGER;
@@ -59,7 +59,7 @@ BEGIN
     SELECT COUNT(*)
     INTO modern_kaohsiung_2006_race_count
     FROM races
-    WHERE election_id = '0851f811-2db9-4e67-ad2b-ea326cbc3157'
+    WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-17e9e7ed145f650a')
       AND region_id = '7b181cb2-9e4f-4334-984b-fd5430555c77'
       AND race_type = 'city_councilor'
       AND title LIKE '高雄市%';
@@ -98,8 +98,7 @@ BEGIN
         SELECT 1
         FROM candidates candidate
         JOIN races race ON race.id = candidate.race_id
-        WHERE candidate.id = '2919f7d2-32e3-4762-b786-f7a5a3be03c7'
-          AND candidate.person_id = '30e565a0-eec6-4561-bc45-de541fc57ed4'
+        WHERE candidate.external_id = 'cec-historical-candidate-40388803c150fbb1'
           AND race.title = '嘉義縣第1選舉區議員選舉'
           AND candidate.candidate_no = '2'
           AND candidate.vote_count = 7680
@@ -107,8 +106,7 @@ BEGIN
         SELECT 1
         FROM candidates candidate
         JOIN races race ON race.id = candidate.race_id
-        WHERE candidate.id = '4aa4c23c-f6f7-433b-a77d-ea04e345035e'
-          AND candidate.person_id = '362fd43a-5384-432f-9f88-1f45c15e9848'
+        WHERE candidate.external_id = 'cec-historical-candidate-8bacf06f4db3a4e7'
           AND race.title = '基隆市第7選舉區議員選舉'
           AND candidate.candidate_no = '10'
           AND candidate.vote_count = 2071
@@ -175,7 +173,7 @@ SET
     race_type = 'county_councilor',
     title = REGEXP_REPLACE(title, '^桃園市', '桃園縣'),
     updated_at = NOW()
-WHERE election_id = 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db')
   AND region_id = '47528594-2fd7-494e-9a25-93aeb8f98169'
   AND title LIKE '桃園市%';
 
@@ -183,7 +181,7 @@ UPDATE races
 SET
     region_id = 'ecc3a0c7-1a30-486b-b75e-911b8cfabd2f',
     updated_at = NOW()
-WHERE election_id = 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db')
   AND region_id = 'c65dffcd-df64-4b19-90db-b28bd8c9317c'
   AND title LIKE '臺中市%';
 
@@ -191,7 +189,7 @@ UPDATE races
 SET
     region_id = '1f381fd2-403f-4327-be83-6caa6dff32f7',
     updated_at = NOW()
-WHERE election_id = 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db')
   AND region_id = '042cf107-62f0-426b-bcdc-44900eb1e6ca'
   AND title LIKE '臺南市%';
 
@@ -199,7 +197,7 @@ UPDATE races
 SET
     region_id = '797b1f94-cdab-4756-946e-2e100ab4965d',
     updated_at = NOW()
-WHERE election_id = '0851f811-2db9-4e67-ad2b-ea326cbc3157'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-17e9e7ed145f650a')
   AND region_id = '7b181cb2-9e4f-4334-984b-fd5430555c77'
   AND title LIKE '高雄市%';
 
@@ -208,8 +206,8 @@ INSERT INTO person_merge_decisions (
     reason, evidence_json, reviewed_by, reviewed_at, updated_at
 )
 SELECT
-    '362fd43a-5384-432f-9f88-1f45c15e9848',
-    '30e565a0-eec6-4561-bc45-de541fc57ed4',
+    (SELECT person_id FROM candidates WHERE external_id = 'cec-historical-candidate-8bacf06f4db3a4e7'),
+    (SELECT person_id FROM candidates WHERE external_id = 'cec-historical-candidate-40388803c150fbb1'),
     'rejected',
     'A',
     'The two 2005 candidates named 楊秀玉 registered in different jurisdictions in the same election and are different people.',
@@ -231,19 +229,19 @@ WHERE NOT EXISTS (
     WHERE existing.status IN ('verified', 'rejected', 'archived')
       AND (
           (
-              existing.duplicate_person_id = '362fd43a-5384-432f-9f88-1f45c15e9848'
-              AND existing.canonical_person_id = '30e565a0-eec6-4561-bc45-de541fc57ed4'
+              existing.duplicate_person_id = (SELECT person_id FROM candidates WHERE external_id = 'cec-historical-candidate-8bacf06f4db3a4e7')
+              AND existing.canonical_person_id = (SELECT person_id FROM candidates WHERE external_id = 'cec-historical-candidate-40388803c150fbb1')
           )
           OR (
-              existing.duplicate_person_id = '30e565a0-eec6-4561-bc45-de541fc57ed4'
-              AND existing.canonical_person_id = '362fd43a-5384-432f-9f88-1f45c15e9848'
+              existing.duplicate_person_id = (SELECT person_id FROM candidates WHERE external_id = 'cec-historical-candidate-40388803c150fbb1')
+              AND existing.canonical_person_id = (SELECT person_id FROM candidates WHERE external_id = 'cec-historical-candidate-8bacf06f4db3a4e7')
           )
       )
 );
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db');
     target_race_count INTEGER;
     target_candidate_count INTEGER;
     target_canonical_person_count INTEGER;
@@ -381,7 +379,7 @@ BEGIN
     SELECT COUNT(*)
     INTO historical_kaohsiung_2006_race_count
     FROM races
-    WHERE election_id = '0851f811-2db9-4e67-ad2b-ea326cbc3157'
+    WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-17e9e7ed145f650a')
       AND region_id = '797b1f94-cdab-4756-946e-2e100ab4965d';
 
     IF target_race_count <> 196
@@ -434,7 +432,7 @@ WHERE region.is_public IS DISTINCT FROM TRUE
   AND region.id IN (
       SELECT DISTINCT race.region_id
       FROM races race
-      WHERE race.election_id = 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac'
+      WHERE race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db')
   );
 
 UPDATE elections
@@ -442,14 +440,14 @@ SET
     voting_date = DATE '2005-12-03',
     is_public = TRUE,
     updated_at = NOW()
-WHERE id = 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac';
+WHERE id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db');
 
 UPDATE races
 SET
     voting_date = DATE '2005-12-03',
     is_public = TRUE,
     updated_at = NOW()
-WHERE election_id = 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac';
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db');
 
 UPDATE people person
 SET
@@ -461,7 +459,7 @@ WHERE person.is_public IS DISTINCT FROM TRUE
       FROM candidates candidate
       JOIN races race ON race.id = candidate.race_id
       JOIN person_canonical_map canonical ON canonical.person_id = candidate.person_id
-      WHERE race.election_id = 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac'
+      WHERE race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db')
   );
 
 UPDATE candidates candidate
@@ -470,14 +468,14 @@ SET
     updated_at = NOW()
 FROM races race
 WHERE race.id = candidate.race_id
-  AND race.election_id = 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac';
+  AND race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db');
 
 REFRESH MATERIALIZED VIEW public.public_people_list_cached;
 SELECT published.promote(NULL);
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := 'e7d17ada-fbf6-42db-850b-79f6b9cf72ac';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-29d25dce67cee6db');
     public_race_count INTEGER;
     public_candidate_count INTEGER;
     published_candidate_count INTEGER;
@@ -515,7 +513,7 @@ BEGIN
     SELECT COUNT(*)
     INTO published_kaohsiung_2006_race_count
     FROM published.races
-    WHERE election_id = '0851f811-2db9-4e67-ad2b-ea326cbc3157'
+    WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-17e9e7ed145f650a')
       AND region_id = '797b1f94-cdab-4756-946e-2e100ab4965d';
 
     IF NOT EXISTS (

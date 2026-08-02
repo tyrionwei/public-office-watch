@@ -5,7 +5,7 @@ BEGIN;
 -- earlier elections.
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := 'fe57e556-081d-44e9-aaf6-27eae68542dc';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-ab20845d085c445b');
     target_race_count INTEGER;
     target_candidate_count INTEGER;
     target_canonical_person_count INTEGER;
@@ -65,8 +65,7 @@ BEGIN
         SELECT 1
         FROM candidates candidate
         JOIN races race ON race.id = candidate.race_id
-        WHERE candidate.id = '87f1d222-099e-429b-9ee7-fcd082dfeea3'
-          AND candidate.person_id = 'c9757d21-9bed-4bdf-a9b3-454c577a3d4c'
+        WHERE candidate.external_id = 'cec-historical-candidate-af0b114381467bdc'
           AND race.title = '屏東縣第3選舉區議員選舉'
           AND candidate.candidate_no = '2'
           AND candidate.vote_count = 463
@@ -74,8 +73,7 @@ BEGIN
         SELECT 1
         FROM candidates candidate
         JOIN races race ON race.id = candidate.race_id
-        WHERE candidate.id = '8ce5f865-db13-4199-9d61-0ebc51a8de99'
-          AND candidate.person_id = 'c9757d21-9bed-4bdf-a9b3-454c577a3d4c'
+        WHERE candidate.external_id = 'cec-historical-candidate-cf4b16a5fe5506b2'
           AND race.title = '屏東縣第11選舉區山地原住民議員選舉'
           AND candidate.candidate_no = '1'
           AND candidate.is_elected = TRUE
@@ -121,7 +119,7 @@ SET
     race_type = 'county_councilor',
     title = REGEXP_REPLACE(title, '^桃園市', '桃園縣'),
     updated_at = NOW()
-WHERE election_id = 'fe57e556-081d-44e9-aaf6-27eae68542dc'
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-ab20845d085c445b')
   AND region_id = '47528594-2fd7-494e-9a25-93aeb8f98169'
   AND title LIKE '桃園市%';
 
@@ -164,15 +162,15 @@ SET
     source_name = '中央選舉委員會公告',
     source_url = 'https://gazette.nat.gov.tw/EG_FileManager/eguploadpub/eg015243/ch02/type3/gov15/num4/OEg.pdf',
     updated_at = NOW()
-WHERE id = '87f1d222-099e-429b-9ee7-fcd082dfeea3';
+WHERE external_id = 'cec-historical-candidate-af0b114381467bdc';
 
 INSERT INTO person_merge_decisions (
     duplicate_person_id, canonical_person_id, status, confidence_level,
     reason, evidence_json, reviewed_by, reviewed_at, updated_at
 )
 SELECT
-    'd76944cb-9674-45e4-a4d3-97033d5ae82f',
-    'c9757d21-9bed-4bdf-a9b3-454c577a3d4c',
+    (SELECT id FROM people WHERE external_id = 'cec-historical-person-pan-cheng-chih-pingtung-2009-d3'),
+    (SELECT person_id FROM candidates WHERE external_id = 'cec-historical-candidate-cf4b16a5fe5506b2'),
     'rejected',
     'A',
     'The two 2009 Pingtung candidates named 潘政治 registered in different constituencies in the same election and are different people.',
@@ -193,14 +191,14 @@ SELECT
 WHERE NOT EXISTS (
     SELECT 1
     FROM person_merge_decisions existing
-    WHERE existing.duplicate_person_id = 'd76944cb-9674-45e4-a4d3-97033d5ae82f'
-      AND existing.canonical_person_id = 'c9757d21-9bed-4bdf-a9b3-454c577a3d4c'
+    WHERE existing.duplicate_person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-person-pan-cheng-chih-pingtung-2009-d3')
+      AND existing.canonical_person_id = (SELECT person_id FROM candidates WHERE external_id = 'cec-historical-candidate-cf4b16a5fe5506b2')
       AND existing.status = 'rejected'
 );
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := 'fe57e556-081d-44e9-aaf6-27eae68542dc';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-ab20845d085c445b');
     target_race_count INTEGER;
     target_candidate_count INTEGER;
     target_canonical_person_count INTEGER;
@@ -342,8 +340,8 @@ BEGIN
     IF NOT EXISTS (
         SELECT 1
         FROM candidates candidate
-        WHERE candidate.id = '87f1d222-099e-429b-9ee7-fcd082dfeea3'
-          AND candidate.person_id = 'd76944cb-9674-45e4-a4d3-97033d5ae82f'
+        WHERE candidate.external_id = 'cec-historical-candidate-af0b114381467bdc'
+          AND candidate.person_id = (SELECT id FROM people WHERE external_id = 'cec-historical-person-pan-cheng-chih-pingtung-2009-d3')
           AND candidate.party = '民主進步黨'
     ) THEN
         RAISE EXCEPTION 'Regional 2009 潘政治 candidate was not split and corrected';
@@ -356,14 +354,14 @@ SET
     voting_date = DATE '2009-12-05',
     is_public = TRUE,
     updated_at = NOW()
-WHERE id = 'fe57e556-081d-44e9-aaf6-27eae68542dc';
+WHERE id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-ab20845d085c445b');
 
 UPDATE races
 SET
     voting_date = DATE '2009-12-05',
     is_public = TRUE,
     updated_at = NOW()
-WHERE election_id = 'fe57e556-081d-44e9-aaf6-27eae68542dc';
+WHERE election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-ab20845d085c445b');
 
 UPDATE people person
 SET
@@ -375,7 +373,7 @@ WHERE person.is_public IS DISTINCT FROM TRUE
       FROM candidates candidate
       JOIN races race ON race.id = candidate.race_id
       JOIN person_canonical_map canonical ON canonical.person_id = candidate.person_id
-      WHERE race.election_id = 'fe57e556-081d-44e9-aaf6-27eae68542dc'
+      WHERE race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-ab20845d085c445b')
   );
 
 UPDATE candidates candidate
@@ -384,14 +382,14 @@ SET
     updated_at = NOW()
 FROM races race
 WHERE race.id = candidate.race_id
-  AND race.election_id = 'fe57e556-081d-44e9-aaf6-27eae68542dc';
+  AND race.election_id = (SELECT id FROM elections WHERE external_id = 'cec-historical-election-ab20845d085c445b');
 
 REFRESH MATERIALIZED VIEW public.public_people_list_cached;
 SELECT published.promote(NULL);
 
 DO $$
 DECLARE
-    target_election_id CONSTANT UUID := 'fe57e556-081d-44e9-aaf6-27eae68542dc';
+    target_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-ab20845d085c445b');
     public_race_count INTEGER;
     public_candidate_count INTEGER;
     published_candidate_count INTEGER;

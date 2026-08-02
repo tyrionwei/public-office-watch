@@ -65,6 +65,23 @@ INSERT INTO _final_historical_cec_person_merges_20260730 (
         '{"rule":"manual_remaining_identity_review","person":"孔文吉","evidence":["same 2020 election candidate number 10","same Chinese Nationalist Party affiliation","same mountain indigenous constituency","same election result"]}'
     );
 
+-- Resolve environment-specific person UUIDs by stable external ID.
+CREATE TEMP TABLE _person_id_map_202607300033 (source_person_id UUID PRIMARY KEY, person_external_id TEXT NOT NULL UNIQUE) ON COMMIT DROP;
+INSERT INTO _person_id_map_202607300033 (source_person_id, person_external_id) VALUES
+    ('0682ff2b-3cea-4a84-98cd-46f1eb8a9009'::UUID, 'votetw-person-3365814c56782ca4'),
+    ('395b7acc-40e6-4962-b80e-8faf9c435330'::UUID, 'votetw-person-ee91373f056a96fc'),
+    ('58cd7f37-341e-4077-b0de-cc5b1721252d'::UUID, 'votetw-person-c438286c00a10eaf'),
+    ('5cb4eaa0-d260-41ba-b87d-5828373ee13c'::UUID, 'cec-historical-unresolved-person-8ee9681e76e2'),
+    ('5d623ab5-a2a2-4c40-a094-6b3712d648e5'::UUID, 'cec-2012-person-31e42f161a3b'),
+    ('62899aef-5784-42f4-9b4d-c8854aa28a89'::UUID, 'votetw-person-7c34f8faf73b57a5'),
+    ('7c5ebbd2-91e6-4af0-b890-36ac7e5d556c'::UUID, 'ly-legislator-11-110086'),
+    ('a14805bb-dbb0-44d6-b7bf-77479658a7e0'::UUID, 'ly-legislator-11-110096'),
+    ('a74c7ba4-32fc-4f26-b7bb-1ad29f3eb676'::UUID, 'cec-historical-unresolved-person-0db10b20eae4'),
+    ('d202716e-11ab-4ea5-a481-6134b1674686'::UUID, 'votetw-person-90b36e644e18c9aa'),
+    ('d750f82c-8bff-40ea-b764-83af99a2c8f8'::UUID, 'votetw-person-284de7cd6d3ea7c4');
+UPDATE _final_historical_cec_person_merges_20260730 input SET duplicate_person_id=resolved.id FROM _person_id_map_202607300033 map JOIN people resolved ON resolved.external_id=map.person_external_id WHERE input.duplicate_person_id=map.source_person_id;
+UPDATE _final_historical_cec_person_merges_20260730 input SET canonical_person_id=resolved.id FROM _person_id_map_202607300033 map JOIN people resolved ON resolved.external_id=map.person_external_id WHERE input.canonical_person_id=map.source_person_id;
+
 DO $verify$
 BEGIN
     IF (SELECT COUNT(*) FROM _final_historical_cec_person_merges_20260730) <> 7 THEN

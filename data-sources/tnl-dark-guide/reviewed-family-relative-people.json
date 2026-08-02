@@ -35,7 +35,19 @@
     { "name": "陳健治", "position": "臺北市議員、議長、立法委員", "reviewStatus": "approved" },
     { "name": "廖國文", "position": "鄉長", "reviewStatus": "approved" },
     { "name": "賴清海", "position": "臺中市議員", "reviewStatus": "approved" },
-    { "name": "謝長廷", "position": "行政院院長、高雄市市長", "reviewStatus": "hold", "holdReason": "來源描述的是已終止的收養關係；目前資料模型無法正確表達關係有效期間。" },
+    {
+      "name": "謝長廷",
+      "position": "行政院院長、高雄市市長",
+      "reviewStatus": "hold",
+      "holdReason": "2018 年暗公報所述養父子關係在當時成立，但兩人於 2018 年選後終止收養，謝維洲其後改從生母姓，現名張維洲；目前公開關係模型無法正確表達有效期間，因此不發布為現存父子關係。",
+      "historicalIdentity": {
+        "formerName": "謝維洲",
+        "currentName": "張維洲",
+        "relationship": "謝長廷的養子",
+        "validAtSourceYear": 2018,
+        "currentStatus": "terminated_after_2018"
+      }
+    },
     { "name": "顏錦福", "position": "立法委員、臺北市議員", "reviewStatus": "approved" },
     { "name": "賴誠吉", "position": "臺灣省議員", "reviewStatus": "approved" },
     { "name": "劉順天", "position": "臺北縣板橋市首任市長", "reviewStatus": "approved" },

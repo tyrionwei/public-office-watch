@@ -2299,6 +2299,26 @@ INSERT INTO _historical_cec_candidate_input_20260730 (
     ('5a24123f-8e7e-4af6-93c7-5b29abbbce74', 'cec-historical:14fca996f33d', 'cec-historical-person-e0620c139630f3b5', 'cec-2018-local-councilor-regional-10018-04', 'cec-historical-candidate-e0620c139630f3b5', '中國國民黨', '15', 1773, 3.06, FALSE, 2018, '2018|councilor|新竹市|district-4|regional'),
     ('ad4d8dd2-7875-473a-9fb7-336a3fd927b6', 'cec-historical:e32b150a4fcb', 'cec-historical-person-a73483f9ec4a62d3', 'cec-historical-race-13d5259bb9f2d517', 'cec-historical-candidate-a73483f9ec4a62d3', '無黨籍', '8', 538, 0.49, FALSE, 2005, '2005|councilor|臺中縣|district-7|regional');
 
+-- Synchronize candidate result fields embedded in this migration.
+UPDATE public.source_people source
+SET source_person_key = input.source_person_key,
+    source_type = 'official_election',
+    source_id = 'cec-2024-votedata',
+    party = input.party,
+    election_year = input.election_year,
+    source_payload = jsonb_strip_nulls(
+        COALESCE(source.source_payload, '{}'::JSONB)
+        || jsonb_build_object(
+            'candidateNo', input.candidate_no,
+            'voteCount', input.vote_count,
+            'voteRate', input.vote_rate,
+            'elected', input.is_elected
+        )
+    ),
+    updated_at = NOW()
+FROM _historical_cec_candidate_input_20260730 input
+WHERE source.id = input.source_person_id;
+
 DO $verify$
 BEGIN
     IF (SELECT COUNT(*) FROM _historical_cec_candidate_input_20260730) <> 2278 THEN

@@ -42,6 +42,42 @@ FROM jsonb_to_recordset('[{"claim_key":"research:tnl-dark-guide-family:001887392
     updated_at TIMESTAMPTZ
 );
 
+CREATE TEMP TABLE _tnl_family_release_person_external_ids (
+    local_person_id UUID PRIMARY KEY,
+    external_id TEXT NOT NULL UNIQUE
+) ON COMMIT DROP;
+
+INSERT INTO _tnl_family_release_person_external_ids (local_person_id, external_id)
+VALUES
+    ('0c7ab122-f1b3-459a-b4a5-ea48bb266c5e', 'cec-historical-unresolved-person-f2b21d06ca69'),
+    ('114adf9a-1e97-4d75-bf4d-856bbff56e42', 'cec-historical-unresolved-person-26ab3d3ba785'),
+    ('1229f020-f3bc-437b-a140-249fe4f3d739', 'cec-historical-unresolved-person-c1d7dd7ef4d6'),
+    ('2ebebc81-11d7-4b1e-9f68-ff28bf119b73', 'cec-historical-unresolved-person-89238cbdf834'),
+    ('3118e3dd-83d8-4a2d-975c-773bdc4b3d10', 'cec-historical-unresolved-person-8658fc46a990'),
+    ('5b1b828d-55a9-4ea7-a560-a3499eb2bdf1', 'cec-historical-unresolved-person-5f0222bf7dae'),
+    ('5dd0e4e1-afd7-4ae4-bcbc-6ea430c940cc', 'cec-historical-unresolved-person-50680f93a44d'),
+    ('91c090b6-c054-4272-9b80-e2ea66a31ee1', 'cec-historical-unresolved-person-2316d1a55375'),
+    ('b7f39136-8899-4d70-bae4-7209c0f333c1', 'cec-historical-unresolved-person-d41f5434125e'),
+    ('e99949c5-6f5b-4d6e-ab16-fa91008f84f0', 'cec-historical-person-39732086039aa35a'),
+    ('f695acdd-f161-4947-9253-71efc3bf13a8', 'cec-historical-unresolved-person-a00eb0bc4943');
+
+UPDATE _tnl_family_release release
+SET person_id = person.id
+FROM _tnl_family_release_person_external_ids mapping
+JOIN people person ON person.external_id = mapping.external_id
+WHERE release.person_id = mapping.local_person_id;
+
+UPDATE _tnl_family_release release
+SET claim_json = jsonb_set(
+        release.claim_json,
+        '{relativePersonId}',
+        to_jsonb(person.id::TEXT),
+        false
+    )
+FROM _tnl_family_release_person_external_ids mapping
+JOIN people person ON person.external_id = mapping.external_id
+WHERE release.claim_json->>'relativePersonId' = mapping.local_person_id::TEXT;
+
 DO $$
 DECLARE
     missing_people INTEGER;
@@ -75,7 +111,20 @@ BEGIN
     ) required
     WHERE NOT EXISTS (SELECT 1 FROM people person WHERE person.id = required.id AND person.is_public = TRUE);
     IF missing_people > 0 THEN
-        RAISE EXCEPTION 'TNL family release is missing % public people', missing_people;
+        RAISE EXCEPTION 'TNL family release is missing % public people: %',
+            missing_people,
+            (
+                SELECT jsonb_agg(required.id ORDER BY required.id)
+                FROM (
+                    SELECT person_id AS id FROM _tnl_family_release
+                    UNION
+                    SELECT (claim_json->>'relativePersonId')::UUID FROM _tnl_family_release
+                ) required
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM people person
+                    WHERE person.id = required.id AND person.is_public = TRUE
+                )
+            );
     END IF;
 
     SELECT COUNT(*) INTO missing_cached_people

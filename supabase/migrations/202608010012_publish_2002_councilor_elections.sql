@@ -4,8 +4,8 @@ BEGIN;
 -- boundaries, identity decisions and complete CEC vote results are in place.
 DO $$
 DECLARE
-    county_election_id CONSTANT UUID := '01759619-59f6-450c-8e37-f67a071af5d4';
-    metropolitan_election_id CONSTANT UUID := 'ba3d366d-b4c7-4e95-931a-93a82e693915';
+    county_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f');
+    metropolitan_election_id CONSTANT UUID := (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5');
     county_race_count INTEGER;
     county_candidate_count INTEGER;
     county_region_count INTEGER;
@@ -200,8 +200,8 @@ WHERE region.is_public IS DISTINCT FROM TRUE
       SELECT DISTINCT race.region_id
       FROM races race
       WHERE race.election_id IN (
-          '01759619-59f6-450c-8e37-f67a071af5d4',
-          'ba3d366d-b4c7-4e95-931a-93a82e693915'
+          (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+          (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
       )
   );
 
@@ -209,16 +209,16 @@ UPDATE elections
 SET is_public = TRUE,
     updated_at = NOW()
 WHERE id IN (
-    '01759619-59f6-450c-8e37-f67a071af5d4',
-    'ba3d366d-b4c7-4e95-931a-93a82e693915'
+    (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+    (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
 );
 
 UPDATE races
 SET is_public = TRUE,
     updated_at = NOW()
 WHERE election_id IN (
-    '01759619-59f6-450c-8e37-f67a071af5d4',
-    'ba3d366d-b4c7-4e95-931a-93a82e693915'
+    (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+    (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
 );
 
 UPDATE people person
@@ -231,8 +231,8 @@ WHERE person.is_public IS DISTINCT FROM TRUE
       JOIN races race ON race.id = candidate.race_id
       JOIN person_canonical_map canonical ON canonical.person_id = candidate.person_id
       WHERE race.election_id IN (
-          '01759619-59f6-450c-8e37-f67a071af5d4',
-          'ba3d366d-b4c7-4e95-931a-93a82e693915'
+          (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+          (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
       )
   );
 
@@ -242,8 +242,8 @@ SET is_public = TRUE,
 FROM races race
 WHERE race.id = candidate.race_id
   AND race.election_id IN (
-      '01759619-59f6-450c-8e37-f67a071af5d4',
-      'ba3d366d-b4c7-4e95-931a-93a82e693915'
+      (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+      (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
   );
 
 REFRESH MATERIALIZED VIEW public.public_people_list_cached;
@@ -263,8 +263,8 @@ BEGIN
     INTO public_election_count
     FROM elections
     WHERE id IN (
-        '01759619-59f6-450c-8e37-f67a071af5d4',
-        'ba3d366d-b4c7-4e95-931a-93a82e693915'
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
     )
       AND is_public = TRUE;
 
@@ -272,8 +272,8 @@ BEGIN
     INTO public_race_count
     FROM races
     WHERE election_id IN (
-        '01759619-59f6-450c-8e37-f67a071af5d4',
-        'ba3d366d-b4c7-4e95-931a-93a82e693915'
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
     )
       AND is_public = TRUE;
 
@@ -282,8 +282,8 @@ BEGIN
     FROM candidates candidate
     JOIN races race ON race.id = candidate.race_id
     WHERE race.election_id IN (
-        '01759619-59f6-450c-8e37-f67a071af5d4',
-        'ba3d366d-b4c7-4e95-931a-93a82e693915'
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
     )
       AND candidate.is_public = TRUE;
 
@@ -294,8 +294,8 @@ BEGIN
     JOIN person_canonical_map canonical ON canonical.person_id = candidate.person_id
     JOIN people person ON person.id = canonical.canonical_person_id
     WHERE race.election_id IN (
-        '01759619-59f6-450c-8e37-f67a071af5d4',
-        'ba3d366d-b4c7-4e95-931a-93a82e693915'
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
     )
       AND person.is_public = TRUE;
 
@@ -303,24 +303,24 @@ BEGIN
     INTO published_election_count
     FROM published.elections
     WHERE election_id IN (
-        '01759619-59f6-450c-8e37-f67a071af5d4',
-        'ba3d366d-b4c7-4e95-931a-93a82e693915'
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
     );
 
     SELECT COUNT(*)
     INTO published_race_count
     FROM published.races
     WHERE election_id IN (
-        '01759619-59f6-450c-8e37-f67a071af5d4',
-        'ba3d366d-b4c7-4e95-931a-93a82e693915'
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
     );
 
     SELECT COUNT(*)
     INTO published_candidate_count
     FROM published.candidate_facts
     WHERE election_id IN (
-        '01759619-59f6-450c-8e37-f67a071af5d4',
-        'ba3d366d-b4c7-4e95-931a-93a82e693915'
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-64eb47f415a89d1f'),
+        (SELECT id FROM elections WHERE external_id = 'cec-historical-election-2de835db0c8749b5')
     );
 
     IF public_election_count <> 2

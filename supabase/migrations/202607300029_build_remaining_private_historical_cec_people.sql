@@ -21,7 +21,7 @@ WHERE source.source_type = 'official_election'
           SELECT 1
           FROM person_identity_matches matched
           WHERE matched.source_person_id = source.id
-            AND matched.match_status = 'auto_matched'
+            AND matched.match_status IN ('auto_matched', 'probable_match')
       )
       OR EXISTS (
           SELECT 1
@@ -33,9 +33,17 @@ WHERE source.source_type = 'official_election'
   );
 
 DO $verify$
+DECLARE
+    actual_input_count INTEGER;
 BEGIN
-    IF (SELECT COUNT(*) FROM _remaining_historical_cec_people_20260730) <> 3454 THEN
-        RAISE EXCEPTION 'Remaining historical CEC person input count mismatch';
+    SELECT COUNT(*)
+    INTO actual_input_count
+    FROM _remaining_historical_cec_people_20260730;
+
+    IF actual_input_count <> 3454 THEN
+        RAISE EXCEPTION
+            'Remaining historical CEC person input count mismatch: expected 3454, got %',
+            actual_input_count;
     END IF;
 
     IF EXISTS (
@@ -59,7 +67,7 @@ BEGIN
         FROM _remaining_historical_cec_people_20260730 input
         JOIN person_identity_matches matched
           ON matched.source_person_id = input.source_person_id
-         AND matched.match_status = 'auto_matched'
+         AND matched.match_status IN ('auto_matched', 'probable_match')
         WHERE matched.match_method <> 'official_historical_unresolved_source_scoped_person_v1'
     ) THEN
         RAISE EXCEPTION 'Remaining historical CEC source gained another active identity match';

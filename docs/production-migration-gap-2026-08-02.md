@@ -72,6 +72,7 @@
 - 兩個公開來源 guard 都為 0：沒有任何保留的公開 claim 或黨籍資料指向封存候選來源人物。
 - 最終 324.7 MiB rehearsal 中，既有公開人物、選舉、選區、候選人、候選事實與搜尋資料的穩定鍵均 `missing=0`；pending migration 另增加 107 位人物與 17 位候選人。
 - 可回復匯出已完成並通過 SHA-256 與資料列檢查；備份位於 `tmp/production-backups/2026-08-02-pre-compaction/`，不得提交至 Repo。
+- commit `35c78bf` 推送後另建立 `tmp/production-backups/2026-08-02-pre-deploy-35c78bf/`；此版包含正式端 `auth`／`storage` schema 與資料，完整還原後為 415,141,011 bytes，並通過相同核心列數驗證。
 
 ## 發布建議
 

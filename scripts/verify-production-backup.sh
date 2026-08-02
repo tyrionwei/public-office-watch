@@ -3,7 +3,7 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-backup_dir="$repo_root/tmp/production-backups/2026-08-02-pre-compaction"
+backup_dir="${1:-$repo_root/tmp/production-backups/2026-08-02-pre-compaction}"
 container="public-office-watch-backup-verify"
 image="public.ecr.aws/supabase/postgres:17.6.1.106"
 
@@ -24,6 +24,15 @@ trap cleanup EXIT
 for file in roles.sql schema.sql data.sql checksums.sha256; do
   [[ -f "$backup_dir/$file" ]] || fail "missing $backup_dir/$file"
 done
+
+if grep -q '^COPY "auth"\.' "$backup_dir/data.sql"; then
+  [[ -f "$backup_dir/auth-schema.sql" ]] \
+    || fail "data dump contains auth rows but auth-schema.sql is missing"
+fi
+if grep -q '^COPY "storage"\.' "$backup_dir/data.sql"; then
+  [[ -f "$backup_dir/storage-schema.sql" ]] \
+    || fail "data dump contains storage rows but storage-schema.sql is missing"
+fi
 
 docker inspect "$container" >/dev/null 2>&1 \
   && fail "refusing to replace existing container $container"
@@ -65,12 +74,37 @@ DO $$ BEGIN
   END IF;
 END $$;
 SQL
+
+if [[ -f "$backup_dir/auth-schema.sql" ]]; then
+  docker exec -i -e PGPASSWORD=backup-verify-local-only "$container" \
+    psql -X -v ON_ERROR_STOP=1 -h 127.0.0.1 -U supabase_admin -d postgres \
+    -c 'DROP SCHEMA IF EXISTS auth CASCADE;' >/dev/null
+  docker exec -i -e PGPASSWORD=backup-verify-local-only "$container" \
+    psql -X -v ON_ERROR_STOP=1 -h 127.0.0.1 -U supabase_admin -d postgres \
+    < "$backup_dir/auth-schema.sql" >/dev/null
+fi
+
+if [[ -f "$backup_dir/storage-schema.sql" ]]; then
+  docker exec -i -e PGPASSWORD=backup-verify-local-only "$container" \
+    psql -X -v ON_ERROR_STOP=1 -h 127.0.0.1 -U supabase_admin -d postgres \
+    -c 'DROP SCHEMA IF EXISTS storage CASCADE;' >/dev/null
+  docker exec -i -e PGPASSWORD=backup-verify-local-only "$container" \
+    psql -X -v ON_ERROR_STOP=1 -h 127.0.0.1 -U supabase_admin -d postgres \
+    < "$backup_dir/storage-schema.sql" >/dev/null
+fi
+
 docker exec -i "$container" \
   psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
   < "$backup_dir/schema.sql" >/dev/null
-docker exec -i "$container" \
-  psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
-  < "$backup_dir/data.sql" >/dev/null
+if [[ -f "$backup_dir/auth-schema.sql" || -f "$backup_dir/storage-schema.sql" ]]; then
+  docker exec -i -e PGPASSWORD=backup-verify-local-only "$container" \
+    psql -X -v ON_ERROR_STOP=1 -h 127.0.0.1 -U supabase_admin -d postgres \
+    < "$backup_dir/data.sql" >/dev/null
+else
+  docker exec -i "$container" \
+    psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
+    < "$backup_dir/data.sql" >/dev/null
+fi
 
 mapfile -t restored_counts < <(
   docker exec -i "$container" psql -X -At -v ON_ERROR_STOP=1 \

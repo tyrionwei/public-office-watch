@@ -181,6 +181,52 @@ test('published provider refreshes home and party snapshots atomically and cache
   assert.equal(assembly.provider.getPersonById('person-1')?.name, '測試市長');
 });
 
+test('published provider loads races for a region omitted from the bounded home race list', async () => {
+  let regionCalls = 0;
+  const baseBridge = createBridge();
+  const bridge = createBridge({
+    async loadHomePageData() {
+      const home = await baseBridge.loadHomePageData();
+      return { ...home, upcomingRaces: [] };
+    },
+    async loadRegionPageData() {
+      regionCalls += 1;
+      return {
+        region: null,
+        summary: null,
+        card: null,
+        childRegions: [],
+        relatedRaces: [{
+          id: 'race-region-1',
+          electionId: 'election-1',
+          title: '臺北市長',
+          region: '臺北市',
+          regionId: 'taipei',
+          date: '2026-11-28',
+          status: 'upcoming',
+          raceType: 'mayor',
+          partyTag: 'unknown',
+          partyLabel: '未知',
+        }],
+      };
+    },
+  });
+  const assembly = createPublishedPublicDataProvider(bridge);
+
+  await assembly.refresh();
+  assert.deepEqual(assembly.provider.getRelatedRacesByRegionId('taipei'), []);
+
+  const [first, second] = await Promise.all([
+    assembly.provider.loadRelatedRacesByRegionId('taipei'),
+    assembly.provider.loadRelatedRacesByRegionId('taipei'),
+  ]);
+
+  assert.equal(regionCalls, 1);
+  assert.equal(first[0]?.id, 'race-region-1');
+  assert.equal(second[0]?.id, 'race-region-1');
+  assert.equal(assembly.provider.getRelatedRacesByRegionId('taipei')[0]?.id, 'race-region-1');
+});
+
 test('published provider keeps the last complete snapshot when refresh fails and can retry', async () => {
   let fail = true;
   const baseBridge = createBridge();

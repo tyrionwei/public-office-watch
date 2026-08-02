@@ -82,6 +82,8 @@ export function createPublishedPublicDataProvider(
   let people: PublicPersonListItem[] = [];
   const profilesById = new Map<string, PublicPersonProfile>();
   const localOfficeSummaries = new Map<string, PublicLocalOfficeSummary>();
+  const loadedRaceRegionIds = new Set<string>();
+  const raceRegionPromises = new Map<string, Promise<UpcomingRace[]>>();
   let refreshPromise: Promise<void> | null = null;
 
   function getStageRegion(regionId: string) {
@@ -106,6 +108,34 @@ export function createPublishedPublicDataProvider(
     const region = getStageRegion(regionId);
     const keys = new Set([regionId, region?.id, region?.publicRegionId].filter(Boolean));
     return homeData.upcomingRaces.filter((race) => keys.has(race.regionId) || isNationalRace(race));
+  }
+
+  async function loadRelatedRaces(regionId: string) {
+    const region = getStageRegion(regionId);
+    const regionKey = region?.id ?? regionId;
+
+    if (loadedRaceRegionIds.has(regionKey)) {
+      return getRelatedRaces(regionId);
+    }
+
+    let pending = raceRegionPromises.get(regionKey);
+    if (!pending) {
+      pending = bridge.loadRegionPageData(regionKey)
+        .then((result) => {
+          homeData = {
+            ...homeData,
+            upcomingRaces: mergeByKey(homeData.upcomingRaces, result.relatedRaces, (race) => race.id),
+          };
+          loadedRaceRegionIds.add(regionKey);
+          return getRelatedRaces(regionId);
+        })
+        .finally(() => {
+          raceRegionPromises.delete(regionKey);
+        });
+      raceRegionPromises.set(regionKey, pending);
+    }
+
+    return pending;
   }
 
   function getEmptyLocalOfficeSummary(regionId: string) {
@@ -146,6 +176,8 @@ export function createPublishedPublicDataProvider(
     },
 
     getRelatedRacesByRegionId: getRelatedRaces,
+
+    loadRelatedRacesByRegionId: loadRelatedRaces,
 
     getElections() {
       return elections;

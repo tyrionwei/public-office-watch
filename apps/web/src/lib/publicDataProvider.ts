@@ -87,6 +87,7 @@ export interface PublicDataProvider {
   getChildStageRegions(parentId: string): StageRegionNode[];
   getUpcomingRaces(): UpcomingRace[];
   getRelatedRacesByRegionId(regionId: string): UpcomingRace[];
+  loadRelatedRacesByRegionId(regionId: string): Promise<UpcomingRace[]>;
   getElections(): PublicElection[];
   getElectionById(electionId: string): PublicElection | null;
   getRacesByElectionId(electionId: string): PublicRace[];

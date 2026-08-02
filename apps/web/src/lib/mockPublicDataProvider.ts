@@ -121,6 +121,10 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return upcomingRaces.filter((race) => race.regionId === baseRegionId || isNationalUpcomingRace(race));
   },
 
+  async loadRelatedRacesByRegionId(regionId: string) {
+    return this.getRelatedRacesByRegionId(regionId);
+  },
+
   getElections() {
     return mockPublicElections;
   },

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { LocalOfficeSummaryPanel } from '../components/LocalOfficeSummaryPanel';
@@ -23,7 +24,7 @@ export function RegionPage() {
   const regionSummary = publicDataProvider.getRegionSummary(safeRegionId);
   const regionCard = publicDataProvider.getRegionCardByStageRegionId(safeRegionId);
   const childRegions = regionNode ? publicDataProvider.getChildStageRegions(regionNode.id) : [];
-  const relatedRaces = publicDataProvider.getRelatedRacesByRegionId(safeRegionId);
+  const [relatedRaces, setRelatedRaces] = useState(() => publicDataProvider.getRelatedRacesByRegionId(safeRegionId));
   const sortedRelatedRaces = relatedRaces.slice().sort(compareUpcomingRacesForDisplay);
   const highlight = getRegionHighlightBackground(
     regionNode?.id,
@@ -31,6 +32,23 @@ export function RegionPage() {
     regionNode?.stageLabel,
   );
   const publicRegionId = regionNode?.publicRegionId ?? safeRegionId;
+
+  useEffect(() => {
+    let active = true;
+    setRelatedRaces(publicDataProvider.getRelatedRacesByRegionId(safeRegionId));
+
+    void publicDataProvider.loadRelatedRacesByRegionId(safeRegionId)
+      .then((races) => {
+        if (active) {
+          setRelatedRaces(races);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      active = false;
+    };
+  }, [safeRegionId]);
 
   return (
     <AppShell>

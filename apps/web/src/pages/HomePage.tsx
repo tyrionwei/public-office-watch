@@ -22,13 +22,13 @@ function getDefaultStageRegionId(regions: StageRegionNode[]) {
 export function HomePage() {
   const { t } = useI18n();
   const [selectedRegionId, setSelectedRegionId] = useState(() => getDefaultStageRegionId(publicDataProvider.getStageRegions()));
+  const [relatedRaces, setRelatedRaces] = useState(() => publicDataProvider
+    .getRelatedRacesByRegionId(selectedRegionId)
+    .filter((race) => race.status !== 'completed'));
   const [, startTransition] = useTransition();
 
   const homeData = publicDataProvider.getHomePageData();
   const pollComparison = publicDataProvider.getPollComparisonByElectionId(homeData.upcomingRaces[0]?.electionId ?? '');
-  const relatedRaces = publicDataProvider
-    .getRelatedRacesByRegionId(selectedRegionId)
-    .filter((race) => race.status !== 'completed');
 
   useEffect(() => {
     if (selectedRegionId) {
@@ -37,6 +37,25 @@ export function HomePage() {
 
     setSelectedRegionId(getDefaultStageRegionId(homeData.stageRegions));
   }, [homeData.stageRegions, selectedRegionId]);
+
+  useEffect(() => {
+    let active = true;
+    setRelatedRaces(publicDataProvider
+      .getRelatedRacesByRegionId(selectedRegionId)
+      .filter((race) => race.status !== 'completed'));
+
+    void publicDataProvider.loadRelatedRacesByRegionId(selectedRegionId)
+      .then((races) => {
+        if (active) {
+          setRelatedRaces(races.filter((race) => race.status !== 'completed'));
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      active = false;
+    };
+  }, [selectedRegionId]);
 
   const selectedRegionNode = publicDataProvider.getStageRegion(selectedRegionId) ?? homeData.stageRegions[0];
 

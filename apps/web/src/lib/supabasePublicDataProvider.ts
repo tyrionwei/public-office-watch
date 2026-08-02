@@ -1264,6 +1264,11 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     return snapshot.indexes.relatedRacesByRegionId.get(regionId) ?? [];
   },
 
+  async loadRelatedRacesByRegionId(regionId: string) {
+    await refreshSupabasePublicDataSnapshot();
+    return this.getRelatedRacesByRegionId(regionId);
+  },
+
   getElections() {
     void ensureElectionIndexDataset();
     return getSnapshot()?.elections ?? [];

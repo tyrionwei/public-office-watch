@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 DO $$
@@ -216,3 +218,5 @@ $$;
 SELECT published.promote(NULL);
 
 COMMIT;
+
+RESET statement_timeout;

@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 CREATE TEMP TABLE _verified_priority_person_merges (
     duplicate_person_id UUID PRIMARY KEY,
     canonical_person_id UUID NOT NULL,
@@ -189,3 +191,5 @@ FROM upserted_matches matched
 WHERE source.id = matched.source_person_id;
 
 SELECT published.promote(NULL);
+
+RESET statement_timeout;

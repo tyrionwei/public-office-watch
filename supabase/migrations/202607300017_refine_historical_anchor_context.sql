@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 CREATE OR REPLACE FUNCTION public.process_historical_anchor_identities()
 RETURNS TABLE (
     matched_source_rows INTEGER,
@@ -295,3 +297,5 @@ $$;
 
 COMMENT ON FUNCTION public.process_historical_anchor_identities() IS
     'Extends unique official identities across historical CEC records using canonical name, gender, geography, role, and indigenous constituency type. Geography falls back to the office label when the district is generic.';
+
+RESET statement_timeout;

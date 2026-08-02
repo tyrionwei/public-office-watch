@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 -- Publish the newest fully reconciled historical councilor batch first.
@@ -201,3 +203,5 @@ END
 $$;
 
 COMMIT;
+
+RESET statement_timeout;

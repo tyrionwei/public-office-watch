@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 -- Generated verified historical CEC person merge decisions.
 
 CREATE TEMP TABLE _historical_cec_person_merges_20260730 (
@@ -4938,3 +4940,5 @@ END
 $verify$;
 
 SELECT published.promote(NULL);
+
+RESET statement_timeout;

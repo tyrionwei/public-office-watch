@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 -- Repair two verified 2009 identity/geography issues before publishing this
@@ -448,3 +450,5 @@ END
 $$;
 
 COMMIT;
+
+RESET statement_timeout;

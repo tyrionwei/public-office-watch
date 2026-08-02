@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 CREATE TEMP TABLE _final_historical_person_merges (
@@ -216,3 +218,5 @@ REFRESH MATERIALIZED VIEW public.public_people_list_cached;
 SELECT published.promote(NULL);
 
 COMMIT;
+
+RESET statement_timeout;

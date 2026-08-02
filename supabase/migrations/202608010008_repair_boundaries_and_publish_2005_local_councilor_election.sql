@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 -- Repair pre-merger jurisdictions with names that overlap modern regions, then
@@ -543,3 +545,5 @@ END
 $$;
 
 COMMIT;
+
+RESET statement_timeout;

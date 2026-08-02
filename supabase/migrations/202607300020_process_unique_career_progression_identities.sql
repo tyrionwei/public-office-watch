@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 CREATE OR REPLACE FUNCTION public.process_unique_career_progression_identities()
 RETURNS TABLE (
     matched_source_rows INTEGER,
@@ -242,3 +244,5 @@ COMMENT ON FUNCTION public.process_unique_career_progression_identities() IS
     'Links historical CEC records to one official person when name, known gender, party, and geography agree but the public office has changed. Direct CEC and Legislative Yuan person IDs count as official anchors.';
 
 SELECT * FROM public.process_unique_career_progression_identities();
+
+RESET statement_timeout;

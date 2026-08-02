@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 -- The CEC archive groups both 2002 councilor cycles under the same year, but
@@ -239,3 +241,5 @@ $$;
 SELECT published.promote(NULL);
 
 COMMIT;
+
+RESET statement_timeout;

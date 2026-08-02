@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 CREATE OR REPLACE FUNCTION public.process_historical_anchor_identities()
 RETURNS TABLE (
     matched_source_rows INTEGER,
@@ -262,3 +264,5 @@ GRANT EXECUTE ON FUNCTION public.process_historical_anchor_identities() TO servi
 
 COMMENT ON FUNCTION public.process_historical_anchor_identities() IS
     'Extends unique confirmed official identities across historical CEC records with the same canonical name, gender, geography, and role. Same-year collisions and ambiguous people remain in review.';
+
+RESET statement_timeout;

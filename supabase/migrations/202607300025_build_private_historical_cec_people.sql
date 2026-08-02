@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 -- Generated historical CEC private person migration.
 
 CREATE TEMP TABLE _historical_cec_person_input_20260730 (
@@ -2485,3 +2487,5 @@ END
 $verify$;
 
 DROP TABLE _historical_cec_person_input_20260730;
+
+RESET statement_timeout;

@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 -- Generated historical CEC election/race migration.
 
 WITH input(external_id, event_external_id, region_external_id, race_type, title) AS (
@@ -56,3 +58,5 @@ SELECT
     0 AS normalized_races;
 
 SELECT published.promote(NULL);
+
+RESET statement_timeout;

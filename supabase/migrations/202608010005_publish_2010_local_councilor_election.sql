@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 -- Publish the next reconciled historical councilor batch without widening the
@@ -251,3 +253,5 @@ END
 $$;
 
 COMMIT;
+
+RESET statement_timeout;

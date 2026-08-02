@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 INSERT INTO person_merge_decisions (
     duplicate_person_id,
     canonical_person_id,
@@ -53,3 +55,5 @@ WHERE EXISTS (
   );
 
 SELECT published.promote(NULL);
+
+RESET statement_timeout;

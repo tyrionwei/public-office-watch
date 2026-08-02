@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 -- Build private source-scoped people for every remaining unmatched historical CEC row.
 -- These records preserve candidate coverage without guessing that a same-name person is identical.
 
@@ -205,3 +207,5 @@ BEGIN
     END IF;
 END
 $verify$;
+
+RESET statement_timeout;

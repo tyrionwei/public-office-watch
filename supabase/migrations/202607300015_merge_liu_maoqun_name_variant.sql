@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 INSERT INTO person_merge_decisions (
@@ -46,3 +48,5 @@ AND NOT EXISTS (
 SELECT published.promote(NULL);
 
 COMMIT;
+
+RESET statement_timeout;

@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 -- Resolve the two remaining 2002 source identity conflicts and record explicit
@@ -241,3 +243,5 @@ SELECT published.promote(NULL);
 DROP TABLE _councilor_2002_distinct_people;
 
 COMMIT;
+
+RESET statement_timeout;

@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 WITH eligible_matches AS (
@@ -67,3 +69,5 @@ COMMENT ON FUNCTION public.normalize_election_district_label(TEXT) IS
     'Normalizes stored district labels; used with unique-name, gender, role, and exact-district evidence during identity review.';
 
 COMMIT;
+
+RESET statement_timeout;

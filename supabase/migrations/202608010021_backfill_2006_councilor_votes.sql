@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 -- Generated existing-person historical CEC candidate migration.
 
 CREATE TEMP TABLE _historical_cec_existing_candidate_input_20260730 (
@@ -268,3 +270,5 @@ END
 $verify$;
 
 DROP TABLE _historical_cec_existing_candidate_input_20260730;
+
+RESET statement_timeout;

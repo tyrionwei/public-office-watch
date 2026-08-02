@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 -- Publish the two official 2002 councilor cycles only after the historical
@@ -344,3 +346,5 @@ END
 $$;
 
 COMMIT;
+
+RESET statement_timeout;

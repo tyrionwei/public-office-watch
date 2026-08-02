@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 -- Publish only the reconciled 2006 Taipei and Kaohsiung councilor batch.
@@ -252,3 +254,5 @@ END
 $$;
 
 COMMIT;
+
+RESET statement_timeout;

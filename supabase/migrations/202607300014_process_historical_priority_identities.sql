@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 CREATE OR REPLACE FUNCTION public.process_historical_priority_identities(
     p_family_reference_names JSONB DEFAULT '[]'::JSONB
 )
@@ -279,3 +281,5 @@ GRANT EXECUTE ON FUNCTION public.process_historical_priority_identities(JSONB) T
 
 COMMENT ON FUNCTION public.process_historical_priority_identities(JSONB) IS
     'Creates and matches safe historical CEC identities in priority order: elected people, named Dark Guide family references, then repeated cross-year candidacies. Ambiguous names remain in review.';
+
+RESET statement_timeout;

@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 CREATE TEMP TABLE _national_candidate_identity_merges_2020 (
@@ -251,3 +253,5 @@ REFRESH MATERIALIZED VIEW public.public_people_list_cached;
 SELECT published.promote(NULL);
 
 COMMIT;
+
+RESET statement_timeout;

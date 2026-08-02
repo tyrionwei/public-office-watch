@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 CREATE OR REPLACE FUNCTION public.process_context_disambiguated_identities()
 RETURNS TABLE (
     matched_source_rows INTEGER,
@@ -245,3 +247,5 @@ COMMENT ON FUNCTION public.process_context_disambiguated_identities() IS
     'Resolves one-to-many CEC identity reviews only when complete election context leaves one compatible canonical person; unresolved ambiguity remains manual.';
 
 SELECT * FROM public.process_context_disambiguated_identities();
+
+RESET statement_timeout;

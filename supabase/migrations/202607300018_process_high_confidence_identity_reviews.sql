@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 CREATE OR REPLACE FUNCTION public.process_high_confidence_identity_reviews()
 RETURNS TABLE (
     votetw_crosschecked_rows INTEGER,
@@ -451,3 +453,5 @@ COMMENT ON FUNCTION public.process_high_confidence_identity_reviews() IS
     'Auto-matches high-score CEC identities only after exact VoteTW election corroboration or a unique full-context comparison; ambiguous one-to-many candidates remain in review.';
 
 SELECT * FROM public.process_high_confidence_identity_reviews();
+
+RESET statement_timeout;

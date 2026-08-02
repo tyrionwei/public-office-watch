@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 CREATE TEMP TABLE _councilor_1998_distinct_people (
@@ -220,3 +222,5 @@ $$;
 SELECT published.promote(NULL);
 
 COMMIT;
+
+RESET statement_timeout;

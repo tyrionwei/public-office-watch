@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 -- The 1998 CEC source year contains two councilor cycles: county/city councils
@@ -298,3 +300,5 @@ $$;
 SELECT published.promote(NULL);
 
 COMMIT;
+
+RESET statement_timeout;

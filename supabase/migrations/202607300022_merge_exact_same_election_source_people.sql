@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 CREATE TEMP TABLE _exact_same_election_person_merges ON COMMIT DROP AS
 WITH verified_birth_dates AS (
     SELECT
@@ -177,3 +179,5 @@ SELECT * FROM public.process_historical_anchor_identities();
 SELECT * FROM public.process_high_confidence_identity_reviews();
 SELECT * FROM public.process_context_disambiguated_identities();
 SELECT * FROM public.process_unique_career_progression_identities();
+
+RESET statement_timeout;

@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 CREATE TEMP TABLE _taoyuan_legislative_race_repairs_2012 (
@@ -134,3 +136,5 @@ $verify$;
 SELECT published.promote(NULL);
 
 COMMIT;
+
+RESET statement_timeout;

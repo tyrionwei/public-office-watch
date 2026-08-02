@@ -1,3 +1,5 @@
+SET statement_timeout = 0;
+
 BEGIN;
 
 DO $$
@@ -375,3 +377,5 @@ END
 $$;
 
 COMMIT;
+
+RESET statement_timeout;

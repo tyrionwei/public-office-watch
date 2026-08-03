@@ -30,6 +30,17 @@ export const regionHighlightBackgrounds: Record<string, RegionHighlightBackgroun
   'county-09007': { regionId: 'county-09007', image: '/assets/regions/county-09007-day.webp', feature: '藍眼淚海岸與石屋', focalPoint: '72% 54%' },
 };
 
+const regionHighlightImageVersion = '2';
+
+export function getRegionHighlightImageSources(image: string) {
+  const smallImage = image.replace(/\.webp$/, '-960.webp');
+
+  return {
+    src: `${image}?v=${regionHighlightImageVersion}`,
+    srcSet: `${smallImage}?v=${regionHighlightImageVersion} 960w, ${image}?v=${regionHighlightImageVersion} 1440w`,
+  };
+}
+
 export function getRegionHighlightBackground(
   regionId: string | null | undefined,
   publicRegionId?: string | null,

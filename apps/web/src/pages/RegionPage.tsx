@@ -4,7 +4,7 @@ import { AppShell } from '../components/AppShell';
 import { LocalOfficeSummaryPanel } from '../components/LocalOfficeSummaryPanel';
 import { SectionPanel } from '../components/SectionPanel';
 import { translateRaceStatus } from '../data/electionI18n';
-import { getRegionHighlightBackground } from '../data/regionHighlights';
+import { getRegionHighlightBackground, getRegionHighlightImageSources } from '../data/regionHighlights';
 import { compareUpcomingRacesForDisplay } from '../data/upcomingRaceSort';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
@@ -32,6 +32,7 @@ export function RegionPage() {
     regionNode?.stageLabel,
   );
   const publicRegionId = regionNode?.publicRegionId ?? safeRegionId;
+  const highlightImage = highlight ? getRegionHighlightImageSources(highlight.image) : null;
 
   useEffect(() => {
     let active = true;
@@ -56,12 +57,24 @@ export function RegionPage() {
         <div className="space-y-5">
           <header
             className="pixel-corners relative min-h-[330px] overflow-hidden border border-line/80 bg-panel"
-            style={highlight ? {
-              backgroundImage: `linear-gradient(90deg, rgba(5, 10, 22, 0.96) 0%, rgba(5, 10, 22, 0.78) 42%, rgba(5, 10, 22, 0.2) 78%), url(${highlight.image})`,
-              backgroundPosition: `center, ${highlight.focalPoint}`,
-              backgroundSize: 'cover',
-            } : undefined}
           >
+            {highlightImage ? (
+              <>
+                <img
+                  src={highlightImage.src}
+                  srcSet={highlightImage.srcSet}
+                  sizes="(min-width: 1536px) 1440px, 100vw"
+                  alt=""
+                  aria-hidden="true"
+                  {...({ fetchpriority: 'high' } as const)}
+                  loading="eager"
+                  decoding="async"
+                  className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                  style={{ objectPosition: highlight?.focalPoint ?? 'center' }}
+                />
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(5,10,22,0.96)_0%,rgba(5,10,22,0.78)_42%,rgba(5,10,22,0.2)_78%)]" />
+              </>
+            ) : null}
             <div className="relative flex min-h-[330px] max-w-3xl flex-col justify-between p-5 sm:p-7">
               <div className="flex items-center gap-3 text-xs text-slate-400">
                 <Link to={homePath()} className="text-accent hover:text-white">{t('regionPage.guide')}</Link>

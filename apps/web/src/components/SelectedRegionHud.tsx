@@ -3,7 +3,7 @@ import { useI18n } from '../i18n';
 import { translateRaceCategory } from '../data/electionI18n';
 import { getRaceCategoryByType } from '../data/electionLabels';
 import type { RaceCategoryKey } from '../data/electionLabels';
-import { getRegionHighlightBackground } from '../data/regionHighlights';
+import { getRegionHighlightBackground, getRegionHighlightImageSources } from '../data/regionHighlights';
 import type { UpcomingRace } from '../data/mockHomeData';
 import { regionPath } from '../routes/routePaths';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
@@ -33,9 +33,7 @@ export function SelectedRegionHud({ races, regionNode, regionSummary }: Selected
 
   const electionCategories = Array.from(categoryCounts.values()).sort((left, right) => left.order - right.order);
   const highlightBackground = getRegionHighlightBackground(regionNode?.id, regionNode?.publicRegionId, regionNode?.stageLabel);
-  const heroBackgroundImage = highlightBackground
-    ? `linear-gradient(180deg,rgba(5,12,24,0.18),rgba(5,12,24,0.58)),url(${highlightBackground.image})`
-    : 'linear-gradient(180deg,rgba(12,93,161,0.94),rgba(10,68,122,0.86) 48%,rgba(9,27,57,0.96))';
+  const highlightImage = highlightBackground ? getRegionHighlightImageSources(highlightBackground.image) : null;
 
   if (!regionSummary || !regionNode) {
     return null;
@@ -51,11 +49,25 @@ export function SelectedRegionHud({ races, regionNode, regionSummary }: Selected
           className="relative flex min-h-[380px] flex-col overflow-hidden rounded-sm border border-accent/25 bg-slate-950 bg-cover bg-center p-6"
           data-region-highlight={highlightBackground?.regionId ?? regionNode.id}
           data-region-highlight-feature={highlightBackground?.feature ?? undefined}
-          style={{
-            backgroundImage: heroBackgroundImage,
-            backgroundPosition: highlightBackground?.focalPoint ?? 'center',
-          }}
+          style={!highlightImage ? {
+            backgroundImage: 'linear-gradient(180deg,rgba(12,93,161,0.94),rgba(10,68,122,0.86) 48%,rgba(9,27,57,0.96))',
+          } : undefined}
         >
+          {highlightImage ? (
+            <img
+              src={highlightImage.src}
+              srcSet={highlightImage.srcSet}
+              sizes="(min-width: 1280px) 36vw, (min-width: 768px) 70vw, 100vw"
+              alt=""
+              aria-hidden="true"
+              {...({ fetchpriority: 'high' } as const)}
+              loading="eager"
+              decoding="async"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: highlightBackground?.focalPoint ?? 'center' }}
+            />
+          ) : null}
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,12,24,0.18),rgba(5,12,24,0.58))]" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_36%,rgba(125,211,252,0.28),transparent_34%),linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px)] [background-size:auto,100%_18px]" />
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-28 bg-[linear-gradient(180deg,transparent,rgba(5,12,24,0.9))]" />
           <div className="relative flex flex-1 flex-col">

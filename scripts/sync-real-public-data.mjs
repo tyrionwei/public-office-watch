@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import zlib from 'node:zlib';
+import { assessLegalRecordMatch } from './legal-record-review-policy.mjs';
 import { normalizeElectionDistrict } from './normalize-election-district.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -3515,45 +3516,66 @@ function scoreLegalLeadMatch(lead, person) {
     return { score: 0, reasons: ['name did not match'] };
   }
 
-  let score = 45;
-  const reasons = ['normalized name matched'];
-
-  if (lead.sourceType === 'court_document' || lead.sourceType === 'judicial_api' || lead.sourceType === 'government_open_data') {
-    score += 15;
-    reasons.push('official legal source');
-  }
-
   const matchedHints = lead.sourcePayload?.matchedHints ?? {};
-  const targetPersonId = lead.sourcePayload?.targetPerson?.personId ?? null;
+  const reviewEvidence = lead.sourcePayload?.reviewEvidence ?? {};
+  const explicitIdentity = reviewEvidence.identityEvidence ?? {};
+  const explicitCase = reviewEvidence.caseEvidence ?? {};
   const evidenceText = normalizeIdentityText([lead.title, lead.summary, lead.reason].filter(Boolean).join(' '));
   const personDistrict = normalizeIdentityText(person.district);
   const personParty = normalizeIdentityText(person.party);
   const personPosition = normalizeIdentityText(person.position);
+  const districtMatched = Boolean(
+    matchedHints.district || (personDistrict && evidenceText.includes(personDistrict.slice(0, 3))),
+  );
+  const partyMatched = Boolean(
+    matchedHints.party || (personParty && evidenceText.includes(personParty)),
+  );
+  const positionMatched = Boolean(
+    matchedHints.position || (personPosition && evidenceText.includes(personPosition.slice(0, 4))),
+  );
+  const criminalCaseTypes = new Set(['M', '刑事', 'criminal']);
+  const judgmentYear = Number.parseInt(String(lead.judgmentDate ?? '').slice(0, 4), 10);
+  const incidentYear = Number.parseInt(String(reviewEvidence.incidentYear ?? ''), 10);
+  const assessment = assessLegalRecordMatch({
+    normalizedNameMatch: true,
+    sourceType: lead.sourceType,
+    sourceUrl: lead.sourceUrl,
+    scope: reviewEvidence.scope ?? (criminalCaseTypes.has(lead.caseType) ? 'criminal' : 'unknown'),
+    subjectRole: reviewEvidence.subjectRole ?? 'unknown',
+    identityEvidence: {
+      exactBirthDate: explicitIdentity.exactBirthDate === true,
+      exactOfficeAndDistrict:
+        explicitIdentity.exactOfficeAndDistrict === true || (positionMatched && districtMatched),
+      newsIdentityBridge: explicitIdentity.newsIdentityBridge === true,
+      caseNarrativeBridge: explicitIdentity.caseNarrativeBridge === true,
+      exactOffice: explicitIdentity.exactOffice === true || positionMatched,
+      district: explicitIdentity.district === true || districtMatched,
+      partyAtIncident: explicitIdentity.partyAtIncident === true || partyMatched,
+      educationOrExperience:
+        explicitIdentity.educationOrExperience === true || matchedHints.education || matchedHints.experience,
+      gender: explicitIdentity.gender === true,
+    },
+    caseEvidence: {
+      officialDocumentUrlConfirmed: explicitCase.officialDocumentUrlConfirmed === true,
+      caseNumberConfirmed: explicitCase.caseNumberConfirmed === true || Boolean(lead.caseNumber),
+      judgmentDateConfirmed: explicitCase.judgmentDateConfirmed === true || Boolean(lead.judgmentDate),
+      offenseConfirmed: explicitCase.offenseConfirmed === true || Boolean(lead.reason),
+      caseStageConfirmed: explicitCase.caseStageConfirmed === true,
+      outcomeConfirmed: explicitCase.outcomeConfirmed === true,
+      finalityChecked: explicitCase.finalityChecked === true,
+      isFinal: explicitCase.isFinal === true,
+    },
+    conflicts: reviewEvidence.conflicts ?? [],
+    incidentYear: Number.isInteger(incidentYear) ? incidentYear : undefined,
+    judgmentYear: Number.isInteger(judgmentYear) ? judgmentYear : undefined,
+    allowPreIncidentJudgment: reviewEvidence.allowPreIncidentJudgment === true,
+  });
 
-  if (targetPersonId && targetPersonId === person.id) {
-    score += 5;
-    reasons.push('fetch target person matched canonical person');
-  }
-
-  if (matchedHints.district || (personDistrict && evidenceText.includes(personDistrict.slice(0, 3)))) {
-    score += 10;
-    reasons.push('district hint matched');
-  }
-
-  if (matchedHints.party || (personParty && evidenceText.includes(personParty))) {
-    score += 5;
-    reasons.push('party hint matched');
-  }
-
-  if (matchedHints.position || (personPosition && evidenceText.includes(personPosition.slice(0, 4)))) {
-    score += 5;
-    reasons.push('position hint matched');
-  }
-
-  score -= 20;
-  reasons.push('legal record requires manual identity confirmation');
-
-  return { score: Math.max(0, Math.min(89, score)), reasons };
+  return {
+    score: assessment.overallScore,
+    reasons: [...assessment.reasons, ...assessment.blockers],
+    assessment,
+  };
 }
 
 function buildLegalRecordLeadRows(seed, canonicalPeople, startedAt) {
@@ -3571,7 +3593,20 @@ function buildLegalRecordLeadRows(seed, canonicalPeople, startedAt) {
     const best = candidates
       .map((person) => ({ person, ...scoreLegalLeadMatch(lead, person) }))
       .sort((left, right) => right.score - left.score)[0];
-    const matchStatus = best?.score >= 75 ? 'probable_match' : best?.score >= 50 ? 'possible_match' : 'unmatched';
+    const matchStatus = best?.assessment?.decision === 'auto_verified'
+      ? 'verified'
+      : best?.score >= 75
+        ? 'probable_match'
+        : best?.score >= 50
+          ? 'possible_match'
+          : best?.assessment?.decision === 'rejected_or_hold'
+            ? 'rejected_match'
+            : 'unmatched';
+    const reviewStatus = best?.assessment?.decision === 'auto_verified'
+      ? 'verified'
+      : best?.assessment?.decision === 'rejected_or_hold'
+        ? 'needs_more_evidence'
+        : 'pending';
 
     return {
       lead_key: lead.leadKey,
@@ -3590,13 +3625,21 @@ function buildLegalRecordLeadRows(seed, canonicalPeople, startedAt) {
       summary: lead.summary,
       raw_name: lead.rawName,
       normalized_name: lead.normalizedName,
-      matched_person_id: best?.score > 0 ? best.person.id : null,
+      matched_person_id: candidates.length === 1
+        ? candidates[0].id
+        : best?.score > 0
+          ? best.person.id
+          : null,
       match_score: best?.score ?? 0,
       match_status: matchStatus,
-      confidence_level: lead.confidenceLevel,
-      review_status: 'pending',
+      confidence_level: best?.assessment?.decision === 'auto_verified' ? 'A' : lead.confidenceLevel,
+      review_status: reviewStatus,
       review_note: best?.reasons?.join('; ') ?? null,
-      source_payload: lead.sourcePayload ?? {},
+      source_payload: {
+        ...(lead.sourcePayload ?? {}),
+        reviewAssessment: best?.assessment ?? null,
+        candidatePersonIds: candidates.map((person) => person.id),
+      },
       is_public: false,
       updated_at: startedAt,
     };
@@ -4281,6 +4324,7 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
 }
 
 export {
+  buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,
 };

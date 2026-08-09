@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,
   historicalCecAggregateResultKey,
@@ -80,5 +81,47 @@ assert.deepEqual(
   }),
   ['王小明', '林小美', '陳大華'],
 );
+
+const [reviewOnlyLegalLead] = buildLegalRecordLeadRows(
+  {
+    legalRecordLeads: [{
+      leadKey: 'media-only:test-person',
+      sourceId: 'trusted-news',
+      sourceType: 'media_report',
+      sourceName: '可信媒體',
+      sourceUrl: 'https://example.com/report',
+      caseNumber: null,
+      judgmentDate: null,
+      caseType: '刑事',
+      reason: '案件報導',
+      rawName: '測試人物',
+      normalizedName: '測試人物',
+      confidenceLevel: 'C',
+      sourcePayload: {
+        reviewEvidence: {
+          scope: 'criminal',
+          subjectRole: 'defendant',
+          identityEvidence: { newsIdentityBridge: true },
+          caseEvidence: {},
+        },
+      },
+    }],
+  },
+  [{
+    id: '00000000-0000-0000-0000-000000000001',
+    name: '測試人物',
+    party: '測試黨',
+    position: '議員',
+    district: '測試市第1選舉區',
+  }],
+  '2026-08-09T00:00:00.000Z',
+);
+assert.equal(reviewOnlyLegalLead.matched_person_id, '00000000-0000-0000-0000-000000000001');
+assert.equal(reviewOnlyLegalLead.review_status, 'pending');
+assert.deepEqual(
+  reviewOnlyLegalLead.source_payload.candidatePersonIds,
+  ['00000000-0000-0000-0000-000000000001'],
+);
+assert.equal(reviewOnlyLegalLead.is_public, false);
 
 console.log('sync-real-public-data tests passed');

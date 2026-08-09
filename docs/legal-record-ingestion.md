@@ -1,18 +1,188 @@
-# Legal Record Ingestion
+# 刑事紀錄搜尋、比對與匯入流程
 
-This document defines the first safe path for legal/criminal record data.
+本流程用於暗公報既有線索，以及日後直接從站內人物名單搜尋刑事紀錄。目標是先找出案件，再分別確認「案件中的人是不是本站人物」與「案件目前的司法結果」，最後才進入審核及發布。
 
-## Current Status
+## 安全邊界
 
-- `legal_record_leads` stores private review-only legal leads.
-- `legal_record_review_queue` exposes pending leads for internal review.
-- No legal lead is exposed through public views.
-- No legal lead automatically creates a public `legal_case` claim.
-- The sync accepts optional local seed input through `data-sources/legal-record-leads.seed.json`.
+- `legal_record_leads` 只存內部線索與審核資料。
+- `legal_record_review_queue` 顯示待人工處理的配對。
+- 自動過審只代表人物與來源配對已達門檻，不代表可自動公開。
+- 公開仍須另外確認呈現文字、案件階段、是否定讞、來源連結及是否有較新的裁判。
+- 只有姓名相同，不論來源是新聞或裁判書，都不得過審。
 
-## Commands
+## 本階段資料範圍
 
-Fetch Judicial Yuan API leads into the private lead seed file:
+「只處理刑法」在此採實務上的「刑事程序」範圍：
+
+- 納入刑法案件，以及貪污治罪條例、公職人員選舉罷免法、槍砲彈藥刀械管制條例等特別刑法案件。
+- 納入刑事判決、刑事裁定及其上訴結果。
+- 排除民事、行政、選舉當選無效／選舉無效等非刑事程序、懲戒與少年事件。
+- 非刑事資料可作身分或案件脈絡的旁證，但不建立刑事紀錄。
+- 無罪、不起訴或後續撤銷等資料若用來更正先前指控，應保留為案件結果，不得寫成有罪紀錄。
+
+## 標準流程
+
+### 1. 建立人物識別包
+
+從正式人物資料整理：
+
+- `person_id`、標準姓名及曾用名。
+- 現任與曾任職位、任職縣市／選區。
+- 歷年黨籍；黨籍必須對應事件發生時間，不以現任黨籍倒推。
+- 參選年份、公開生日或年齡、學經歷等可用識別線索。
+
+職位、黨籍與地區只是識別線索；單獨一項不能排除同名。
+
+### 2. 先用新聞定位案件
+
+優先查詢可信媒體與官方新聞稿，範例：
+
+```text
+"姓名" "現任或曾任職位" 判刑
+"姓名" 議員 起訴
+"姓名" 縣市 罪名
+"姓名" 定讞
+"姓名" 無罪 上訴駁回
+```
+
+若姓名常見，加入選區、政黨、任職機關或同案人物。若曾改名，所有姓名分別搜尋。
+
+新聞階段要取得的案件錨點：
+
+- 涉及罪名或法條。
+- 事件發生的大約年份或期間。
+- 法院、檢察署、案號或同案被告。
+- 起訴／一審／二審／定讞／無罪等報導階段。
+- 刑度、判決日期或其他可反查裁判書的獨特敘述。
+
+新聞的主要作用是定位案件與確認身分，不以新聞摘要取代裁判結果。
+
+### 3. 先確認是不是同一人
+
+至少符合下列其中一種，才進入裁判書搜尋：
+
+- 一項強識別：公開生日、完整職位加選區、官方人物 ID，或案件敘述直接指出該公職身分。
+- 兩項彼此獨立的非姓名線索：例如職位＋地區、事件當時黨籍＋選區、經歷＋同案人物。
+
+出現生日、性別、任職地區或案件角色衝突時停止自動配對，送人工審核。同名多人不得以搜尋結果排序猜測。
+
+### 4. 搜尋司法院裁判書
+
+優先使用新聞中的案號；其次使用姓名搭配罪名、法院或地區。裁判書系統支援完整案號、簡化案號與全文布林條件。
+
+事件年份只作搜尋下限，不是唯一裁判年度：
+
+1. 先查事件發生年至後 3 年。
+2. 找不到或案件仍在上訴，擴至事件後 10 年。
+3. 仍未結束時一路查到目前年度。
+4. 原則上不接受早於事件年份的裁判；若新聞寫的是曝光年份而非發生年份，須記錄例外理由。
+
+取得一筆判決後，繼續以姓名、原案號、上訴法院及裁判內引用案號追查後續裁判，不能停在新聞提到的那一審。
+
+### 5. 建立案件時間鏈
+
+每一案至少整理：
+
+- 犯罪／事件期間。
+- 起訴資料（若可得）。
+- 各審級法院、案號、裁判日期與結果。
+- 最新已知結果及是否定讞。
+- 官方裁判書連結與補充新聞。
+
+不得把「被指控、遭調查、遭起訴」寫成「有罪」，也不得把一審或二審判決直接寫成定讞。
+
+### 6. 雙軸評分
+
+系統使用 `scripts/legal-record-review-policy.mjs`，分別計算：
+
+- `identityScore`：案件當事人是否為本站人物。
+- `caseEvidenceScore`：罪名、案號、階段、結果與定讞狀態是否有官方證據。
+- `overallScore`：取兩者較低分，不使用平均，避免單一面向高分掩蓋另一面向證據不足。
+
+自動過審必須同時符合：
+
+- 刑事程序，且本站人物本人為被告。
+- 司法院裁判書或其他官方司法來源附可用連結。
+- `identityScore >= 90`。
+- `caseEvidenceScore >= 90`。
+- 已確認案號、裁判日期、罪名、案件階段與結果。
+- 已搜尋後續上訴，且最新結果已確認定讞。
+- 沒有生日、性別、地區、案件角色或時間矛盾。
+
+符合後標為 `auto_verified`，但 `is_public` 仍為 `false`。
+
+下列情況送人工審核：
+
+- 非定讞、後續上訴未查完或最新狀態不明。
+- 只有新聞，找不到公開裁判書。
+- 同名一對多、只有職位或地區等弱線索。
+- 裁判書被匿名化，或人物姓名在舊裁判書公開政策範圍之外。
+- 涉案者其實是助理、親屬、樁腳或公司人員，而不是本站人物本人。
+- 新聞與裁判結果不一致，或有撤銷、改判、無罪、不起訴等後續結果。
+
+### 7. 審核資料包
+
+可自動評分的 seed 在 `sourcePayload.reviewEvidence` 保存：
+
+```json
+{
+  "scope": "criminal",
+  "subjectRole": "defendant",
+  "incidentYear": 2018,
+  "identityEvidence": {
+    "exactOfficeAndDistrict": true,
+    "newsIdentityBridge": true,
+    "caseNarrativeBridge": true
+  },
+  "caseEvidence": {
+    "officialDocumentUrlConfirmed": true,
+    "caseNumberConfirmed": true,
+    "judgmentDateConfirmed": true,
+    "offenseConfirmed": true,
+    "caseStageConfirmed": true,
+    "outcomeConfirmed": true,
+    "finalityChecked": true,
+    "isFinal": true
+  },
+  "conflicts": []
+}
+```
+
+對人工審核項目，必須準備：
+
+- 建議配對的 `person_id` 與人物識別包。
+- 所有新聞來源與官方裁判書來源。
+- 搜尋用罪名、案號、事件年份及已搜尋的裁判年度範圍。
+- 各審結果、目前是否定讞及尚待確認的問題。
+- 身分分數、案件證據分數、加扣分理由與衝突欄位。
+
+## 不可推論的情況
+
+- 找不到裁判書不代表沒有案件；可能是舊資料、匿名化、未公開或新聞資訊有誤。
+- 搜到同名裁判書不代表是同一人。
+- 當事人親屬、助理或公司人員犯罪，不等於該人物有犯罪紀錄。
+- 判決年份不等於犯罪年份。
+- 媒體寫「定讞」仍應查後續裁判或官方資料確認。
+- 裁判書內容與網站摘要不一致時，以裁判書原文及最新裁判為準。
+
+## 停損與狀態
+
+- 完成姓名＋職位、姓名＋地區／黨籍、姓名＋罪名等一輪查詢仍無可靠線索：`not_found_after_stop_loss`。
+- 有可信新聞但無官方裁判：保留 `media_only`，送人工審核，不自動過審。
+- 有裁判但身分不足：`needs_identity_evidence`。
+- 有同名矛盾或非本人涉案：`rejected_or_hold`，不得建立人物刑事紀錄。
+- 取得新上訴結果時更新同一案件鏈，不另建看似不同的重複案件。
+
+## 司法院資料工具分工
+
+- 裁判書查詢系統用於歷史案件的人名、案號與全文搜尋。
+- `scripts/fetch-judicial-legal-record-leads.mjs` 使用的 JList API 只提供近 7 日異動清單，適合監測新裁判，不是完整歷史搜尋器。
+- API 帳密只能放本機環境變數；程式只保存摘要與來源資訊，不保存完整裁判全文。
+- API 若通知裁判撤下或不公開，應同步移除本地保存的裁判內容，僅保留必要的處理紀錄。
+
+## 指令
+
+監測近 7 日司法院裁判異動：
 
 ```bash
 JUDICIAL_OPEN_DATA_USER="..." \
@@ -22,92 +192,16 @@ npm run fetch:judicial-legal-leads -- \
   --max-docs 50
 ```
 
-Use public people from Supabase as target names:
-
-```bash
-JUDICIAL_OPEN_DATA_USER="..." \
-JUDICIAL_OPEN_DATA_PASSWORD="..." \
-SUPABASE_URL="http://127.0.0.1:54321" \
-SUPABASE_ANON_KEY="..." \
-npm run fetch:judicial-legal-leads -- \
-  --target-names-from-supabase \
-  --max-docs 50
-```
-
-Dry-run:
+寫入本機 Supabase 的私有審核表前先 dry-run：
 
 ```bash
 npm run sync:legal-leads:dry-run
 ```
 
-Write to Supabase:
+確認後寫入：
 
 ```bash
 SUPABASE_URL="http://127.0.0.1:54321" \
 SUPABASE_SERVICE_ROLE_KEY="..." \
 npm run sync:legal-leads:write
 ```
-
-Use a different lead file:
-
-```bash
-node scripts/sync-real-public-data.mjs \
-  --weekly \
-  --include-legal-record-leads \
-  --legal-record-leads ./data-sources/legal-record-leads.seed.json
-```
-
-## Lead Format
-
-`legalRecordLeads` is intentionally review-first. A lead may include:
-
-- `leadKey`
-- `sourceId`
-- `sourceType`
-- `sourceName`
-- `sourceUrl`
-- `courtName`
-- `caseYear`
-- `caseCode`
-- `caseNumber`
-- `judgmentDate`
-- `caseType`
-- `reason`
-- `title`
-- `summary`
-- `rawName`
-- `confidenceLevel`
-- `sourcePayload`
-
-Name-only matches are allowed only as private leads. They must not be published.
-
-## Matching Rules
-
-- Normalized name match is only a lead, not proof.
-- District, party, position, or source text hints can raise the private match score.
-- Legal leads are capped below auto-publication.
-- A verified public `legal_case` claim requires manual confirmation and an explicit source URL.
-
-## Source Notes
-
-- Primary source planning target: Judicial Yuan open data platform.
-- The Judicial Yuan judgment API requires an account/password from the Judicial Yuan open data platform. Auth returns a token that is valid for 6 hours.
-- The official API service window is 00:00-06:00 Asia/Taipei. The fetcher enforces this by default.
-- The API provides a 7-days-prior judgment change list and individual judgment full text by `jid`.
-- The older data.gov.tw dataset `63205` is treated as historical reference because it has been marked for consolidation/removal.
-- If the Judicial Yuan API requires account-based access, fetch credentials should stay outside the repo and only normalized leads should be written.
-
-## Fetcher Boundary
-
-- `scripts/fetch-judicial-legal-record-leads.mjs` does not write to Supabase.
-- It requires an explicit target-name JSON file.
-- It can alternatively load target identity records from the `public_people` public view when Supabase public env vars are provided.
-- Supabase targets include `person_id`, name, gender, party, position, district, education, and experience. The fetcher stores those hints in `source_payload.targetPerson` and records which non-name hints appeared in the court text.
-- It only writes matched lead summaries to `data-sources/legal-record-leads.seed.json`.
-- It does not store complete judgment text; `summary` is capped for review context.
-
-## Same-Name Handling
-
-- One court document can create separate private leads for same-name people because the lead key includes `person_id` when available.
-- Name-only official court matches remain below publication threshold.
-- Extra hints such as district, party, position, education, or experience can raise private `match_score`, but legal leads are still capped below auto-publication and remain review-only.

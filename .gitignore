@@ -30,6 +30,7 @@ tmp/
 apps/web/.env.rehearsal.local
 supabase/.branches/
 supabase/.temp/
+supabase/snippets/
 secrets.json
 appsettings.Development.json
 

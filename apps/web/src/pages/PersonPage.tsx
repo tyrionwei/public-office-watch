@@ -12,6 +12,7 @@ import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { getCandidateElectionLabel, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonClaim, PublicPersonPartyAffiliation, PublicPersonTimelineItem } from '../types/publicViews';
@@ -68,47 +69,6 @@ const claimTypeLabels: Record<PublicPersonClaim['claim_type'], TranslationKey> =
   other: 'person.claim.other',
 };
 
-function splitProfileText(value: string | null | undefined) {
-  return value
-    ?.split(/[;；]/)
-    .map((item) => item.trim())
-    .filter(Boolean) ?? [];
-}
-
-function uniqueProfileItems(value: string | null | undefined) {
-  const seen = new Set<string>();
-  return splitProfileText(value).map((item) => item.replace(/\/+$/, '').trim()).filter((item) => {
-    const key = item.replace(/\s+/g, '').toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-
-function meaningfulEducationItems(value: string | null | undefined) {
-  const items = uniqueProfileItems(value);
-  const specificItems = items.filter((item) => !/^(?:國小|國中|高中|高職|專科|大學|學士|碩士|博士)(?:學歷)?$/.test(item));
-  return specificItems.length > 0 ? specificItems : items;
-}
-
-function meaningfulExperienceItems(value: string | null | undefined, currentPosition: string) {
-  const normalizeRole = (role: string) => role
-    .replace(/^(?:中華民國|共和國)/, '')
-    .replace(/\s+/g, '')
-    .toLowerCase();
-  const normalizedCurrentPosition = normalizeRole(currentPosition);
-  const filteredItems = uniqueProfileItems(value).filter((item) => {
-    const normalizedItem = normalizeRole(item);
-    if (item.length > 240) return false;
-    if (normalizedItem === '政治人物' || normalizedItem === 'politician' || normalizedItem === '政府首腦') return false;
-    if (normalizedItem === normalizedCurrentPosition) return false;
-    if (/^(?:19|20)\d{2}年.*選舉/.test(normalizedItem)) return false;
-    return true;
-  });
-  const chineseItems = filteredItems.filter((item) => /[\u3400-\u9fff]/.test(item));
-  return chineseItems.length > 0 ? chineseItems : filteredItems;
-}
-
 function formatUpdatedAt(value: string | null | undefined, locale: string, fallback: string) {
   if (!value) return fallback;
   const date = new Date(value);
@@ -123,12 +83,15 @@ type SourceRecord = {
 
 function collectProfileSources(fallbackName: string, ...groups: SourceRecord[][]) {
   const sources = new Map<string, { name: string; url: string }>();
+  const sourceUrls = new Set<string>();
   groups.flat().forEach((record) => {
     if (!record.source_url) return;
     const name = record.source_name?.trim() || fallbackName;
+    const url = record.source_url.trim();
     const key = name.toLowerCase();
-    if (sources.has(key)) return;
-    sources.set(key, { name, url: record.source_url });
+    if (!url || sources.has(key) || sourceUrls.has(url)) return;
+    sources.set(key, { name, url });
+    sourceUrls.add(url);
   });
   return Array.from(sources.values()).slice(0, 12);
 }
@@ -398,8 +361,8 @@ export function PersonPage() {
   const familyClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'family_relation')) : [];
   const displayPosition = person ? getPersonDisplayPosition(person) : t('person.publicRecord');
   const profilePosition = person ? getPersonDisplayPosition(person, t('person.toBeAdded')) : t('person.toBeAdded');
-  const educationItems = person ? meaningfulEducationItems(person.education) : [];
-  const experienceItems = person ? meaningfulExperienceItems(person.experience, displayPosition) : [];
+  const educationItems = person ? educationProfileItems(person.education) : [];
+  const experienceItems = person ? experienceProfileItems(person.experience, displayPosition) : [];
   const profileSources = profile
     ? collectProfileSources(t('person.publicSource'), profile.candidate_records, profile.party_affiliations, profile.public_claims)
     : [];

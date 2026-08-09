@@ -5,7 +5,7 @@ import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { PersonFeedbackPanel } from '../components/PersonFeedbackPanel';
 import { SectionPanel } from '../components/SectionPanel';
-import { pickDefaultCandidateSprite } from '../data/defaultCharacterAssets';
+import { pickDefaultCandidateSprite, xiezhiMascotSprite } from '../data/defaultCharacterAssets';
 import { translateCandidacyStatus, translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
@@ -355,6 +355,11 @@ export function PersonPage() {
   const theme = partyTheme[toPartyThemeKey(person?.party)];
   const publicClaims = profile ? visibleProfileClaims(profile.public_claims) : [];
   const birthDateClaim = profile ? claimsByType(profile.public_claims, 'birth_date')[0] ?? null : null;
+  const primaryPhotoUrl = person?.primary_photo_thumbnail_url ?? person?.primary_photo_url ?? null;
+  const portraitSrc = person
+    ? primaryPhotoUrl ?? pickDefaultCandidateSprite(person.name, person.gender, birthDateClaim?.claim_value)
+    : xiezhiMascotSprite;
+  const usesMascotFallback = Boolean(person && !primaryPhotoUrl && portraitSrc === xiezhiMascotSprite);
   const platformClaims = profile ? claimsByType(profile.public_claims, 'platform') : [];
   const financeClaims = profile ? claimsByType(profile.public_claims, 'finance_summary') : [];
   const legalClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'legal_case')) : [];
@@ -403,13 +408,25 @@ export function PersonPage() {
         {person && profile ? (
           <div className="space-y-4">
             <section className="grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
-              <div className="pixel-corners flex min-h-[220px] items-end justify-center border border-line/70 bg-bg/40 p-4">
-                <img
-                  src={person.primary_photo_thumbnail_url ?? person.primary_photo_url ?? pickDefaultCandidateSprite(person.name, person.gender)}
-                  alt={person.primary_photo_url ? person.name : ''}
-                  className="max-h-[190px] w-auto object-contain object-bottom [image-rendering:pixelated]"
-                />
-              </div>
+              <figure className="space-y-2">
+                <div className="pixel-corners relative flex min-h-[220px] items-end justify-center border border-line/70 bg-bg/40 p-4">
+                  <img
+                    src={portraitSrc}
+                    alt={primaryPhotoUrl ? person.name : usesMascotFallback ? t('person.mascotFallbackLabel') : ''}
+                    className="max-h-[190px] w-auto object-contain object-bottom [image-rendering:pixelated]"
+                  />
+                  {usesMascotFallback ? (
+                    <span className="absolute left-2 top-2 border border-cyan-300/50 bg-[#07101f]/90 px-2 py-1 text-[10px] text-cyan-100">
+                      {t('person.mascotFallbackLabel')}
+                    </span>
+                  ) : null}
+                </div>
+                {usesMascotFallback ? (
+                  <figcaption className="text-xs leading-5 text-slate-400">
+                    {t('person.mascotFallbackDescription')}
+                  </figcaption>
+                ) : null}
+              </figure>
 
               <div>
                 <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{person.role_label}</p>

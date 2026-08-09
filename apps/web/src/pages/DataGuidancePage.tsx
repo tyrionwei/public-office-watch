@@ -1,6 +1,7 @@
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
+import { xiezhiMascotPoses } from '../data/defaultCharacterAssets';
 import { useI18n } from '../i18n';
 
 const principleKeys = [
@@ -90,6 +91,22 @@ export function DataGuidancePage() {
                 {t(key)}
               </p>
             ))}
+          </div>
+        </SectionPanel>
+
+        <SectionPanel title={t('dataGuidance.mascotTitle')} eyebrow={t('dataGuidance.mascotEyebrow')}>
+          <div className="grid items-center gap-4 sm:grid-cols-[128px_minmax(0,1fr)]">
+            <div className="flex justify-center">
+              <img
+                src={xiezhiMascotPoses.idle}
+                alt={t('dataGuidance.mascotName')}
+                className="h-32 w-auto object-contain [image-rendering:pixelated]"
+              />
+            </div>
+            <div>
+              <h3 className="font-display text-xl text-white">{t('dataGuidance.mascotName')}</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-300">{t('dataGuidance.mascotDescription')}</p>
+            </div>
           </div>
         </SectionPanel>
 

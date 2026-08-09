@@ -6,6 +6,7 @@ import {
   useState,
   type FormEvent,
 } from 'react';
+import { xiezhiMascotPoses } from '../data/defaultCharacterAssets';
 import { useI18n } from '../i18n';
 import {
   ChatApiError,
@@ -594,7 +595,17 @@ export function GlobalChatWidget() {
             {isLoadingOlder ? <p className="py-2 text-center text-[11px] text-slate-500">{text.loading}</p> : null}
             {!hasMore && messages.length > 0 ? <p className="py-2 text-center text-[11px] text-slate-500">{text.earliest}</p> : null}
             {isLoading && messages.length === 0 ? <p className="py-8 text-center text-xs text-slate-400">{text.loading}</p> : null}
-            {!isLoading && messages.length === 0 ? <p className="py-8 text-center text-xs text-slate-500">{text.empty}</p> : null}
+            {!isLoading && messages.length === 0 ? (
+              <div className="flex flex-col items-center py-6 text-center">
+                <img
+                  src={xiezhiMascotPoses.play}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-20 w-auto object-contain [image-rendering:pixelated]"
+                />
+                <p className="mt-2 text-xs text-slate-500">{text.empty}</p>
+              </div>
+            ) : null}
 
             <div className="space-y-2">
               {datedMessages.map(({ message, showDate }) => (

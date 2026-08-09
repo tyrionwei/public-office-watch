@@ -1,4 +1,5 @@
-import { pickDefaultCandidateSprite, unknownCandidateSprite } from '../data/defaultCharacterAssets';
+import { pickDefaultCandidateSprite, unknownCandidateSprite, xiezhiMascotSprite } from '../data/defaultCharacterAssets';
+import { useI18n } from '../i18n';
 import type { PartyThemeKey } from '../styles/partyThemes';
 
 type PixelCandidateSpriteProps = {
@@ -16,7 +17,9 @@ export function PixelCandidateSprite({
   variant,
   align = 'left',
 }: PixelCandidateSpriteProps) {
+  const { t } = useI18n();
   const spriteSrc = partyKey === 'unknown' ? unknownCandidateSprite : pickDefaultCandidateSprite(`${displayName}-${variant}`);
+  const usesMascot = spriteSrc === xiezhiMascotSprite;
 
   return (
     <div className={`flex ${align === 'right' ? 'justify-end' : 'justify-start'}`}>
@@ -35,6 +38,7 @@ export function PixelCandidateSprite({
         <div className="min-w-0">
           <p className="font-display text-sm text-white">{displayName}</p>
           <p className="mt-1 text-xs text-slate-400">{partyLabel}</p>
+          {usesMascot ? <p className="mt-1 text-[10px] text-cyan-200/75">{t('person.mascotFallbackLabel')}</p> : null}
         </div>
       </div>
     </div>

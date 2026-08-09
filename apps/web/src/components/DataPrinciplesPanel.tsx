@@ -1,4 +1,5 @@
 import { dataPrinciplesGuideSprite } from '../data/defaultCharacterAssets';
+import { useI18n } from '../i18n';
 import { PixelFrame } from './PixelFrame';
 
 type DataPrinciplesPanelProps = {
@@ -14,6 +15,8 @@ const fixedNotes = [
 ];
 
 export function DataPrinciplesPanel({ principles }: DataPrinciplesPanelProps) {
+  const { t } = useI18n();
+
   return (
     <PixelFrame
       title="Data Principles"
@@ -31,14 +34,15 @@ export function DataPrinciplesPanel({ principles }: DataPrinciplesPanelProps) {
               </span>
             ))}
           </div>
-          <div className="relative hidden min-h-[150px] items-end justify-center overflow-visible sm:flex">
+          <div className="relative hidden min-h-[150px] flex-col items-center justify-end overflow-visible sm:flex">
             <img
               src={dataPrinciplesGuideSprite}
               alt=""
-              className="h-[148px] w-auto object-contain object-bottom drop-shadow-[0_12px_10px_rgba(0,0,0,0.44)] [image-rendering:pixelated]"
+              className="h-[126px] w-auto object-contain object-bottom drop-shadow-[0_12px_10px_rgba(0,0,0,0.44)] [image-rendering:pixelated]"
               aria-hidden="true"
               draggable={false}
             />
+            <p className="mt-1 text-center text-[10px] leading-4 text-cyan-200/75">{t('dataGuidance.mascotGuide')}</p>
           </div>
         </div>
 

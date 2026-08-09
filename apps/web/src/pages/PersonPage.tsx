@@ -225,6 +225,16 @@ function ClaimCard({ claim }: { claim: PublicPersonClaim }) {
         {t(claimTypeLabels[claim.claim_type])}
       </p>
       <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value}</h3>
+      {claim.claim_type === 'legal_case' && claim.source_url ? (
+        <a
+          href={claim.source_url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-block text-xs text-accent hover:text-white"
+        >
+          {claim.source_name?.trim() || t('person.publicSource')} ↗
+        </a>
+      ) : null}
     </article>
   );
 }

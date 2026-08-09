@@ -57,7 +57,7 @@ if (fs.existsSync(familyReportPath)) {
   if (summary?.familyClaimEntries !== 478 || summary?.claimsWithExplicitName !== 471) {
     fail('Family people report has unexpected claim counts');
   }
-  if ((summary.uniqueNamesFound + summary.uniqueNamesAmbiguous + summary.uniqueNamesNotFound) !== 312) {
+  if ((summary.uniqueNamesFound + summary.uniqueNamesAmbiguous + summary.uniqueNamesNotFound) !== 314) {
     fail('Family people report has unexpected unique-name counts');
   }
 }

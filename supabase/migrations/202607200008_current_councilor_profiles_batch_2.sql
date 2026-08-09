@@ -37,7 +37,7 @@ INSERT INTO _current_councilor_profiles_batch_2 VALUES
         '宜蘭縣議會：第20屆議員林詩穎',
         'https://www.ilcc.gov.tw/Html/H_05/H_0501.asp?User_id=A2008&clique=DDP&pic=2',
         'cec-2022-yilan-county-councilor-candidates',
-        DATE '1983-06-17',
+        DATE '1982-06-17',
         'female',
         '中國文化大學政治學系',
         '宜蘭縣議會第20屆議員；第20、21屆頭城鎮民代表；民進黨中央黨部社會運動部專員；民進黨宜蘭縣黨部第16、17、18、19屆執行委員'

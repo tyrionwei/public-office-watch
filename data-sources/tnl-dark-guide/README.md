@@ -21,6 +21,7 @@
 - `source-research-report.json`：逐項線索、既有證據、來源層級與查核狀態的完整研究報告。
 - `source-research-review.csv`：可依人物、類別與查核狀態篩選的人工審核表。
 - `source-research-summary.md`：查核佇列總量、分類統計與停損規則摘要。
+- `local-data/tnl-dark-guide-legal-claims-preview.json`：177 條涉案分類與 32 條只讀安全發布預覽；本機產物不納入 Git。
 
 ## 重新產生對照報告
 
@@ -31,6 +32,7 @@ node scripts/report-tnl-dark-guide-coverage.mjs
 node scripts/report-tnl-dark-guide-family-people.mjs
 node scripts/fetch-moi-local-official-profiles.mjs
 node scripts/build-tnl-dark-guide-source-research.mjs
+npm run preview:tnl-dark-guide-legal-claims
 ```
 
 內政部履歷擷取為單線程低頻請求，只接受姓名與縣市完全相符的人物；履歷內的學歷與簡歷仍列為人工審核證據，不會自動核准。

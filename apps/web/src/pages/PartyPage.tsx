@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
+import { PartyFinanceCompositionChart } from '../components/PartyFinanceCompositionChart';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { translateCandidateStatus } from '../data/electionI18n';
@@ -408,6 +409,13 @@ export function PartyPage() {
     party.contact_phone,
   ].some(Boolean) : false;
   const theme = party ? partyTheme[party.theme_key] : partyTheme.unknown;
+  const financeCompositionSegments = latestFinance ? [
+    { key: 'individual', label: t('partyDetail.individualDonations'), value: latestFinance.individual_donation_total, color: theme.accent },
+    { key: 'business', label: t('parties.businessDonations'), value: latestFinance.business_donation_total, color: theme.primary },
+    { key: 'group', label: t('partyDetail.groupDonations'), value: latestFinance.civil_group_donation_total, color: '#67e8f9' },
+    { key: 'anonymous', label: t('partyDetail.anonymousDonations'), value: latestFinance.anonymous_donation_total, color: '#fbbf24' },
+    { key: 'other', label: t('partyDetail.otherIncome'), value: latestFinance.other_income_total, color: '#f472b6' },
+  ] : [];
   const officeholderPageCount = Math.max(1, Math.ceil(officeholders.total / PARTY_PEOPLE_PAGE_SIZE));
   const candidatePageCount = Math.max(1, Math.ceil(candidates.total / PARTY_PEOPLE_PAGE_SIZE));
   const officerPageCount = Math.max(1, Math.ceil(primaryPartyOfficers.length / PARTY_OFFICER_PAGE_SIZE));
@@ -646,6 +654,24 @@ export function PartyPage() {
 
             {latestFinance ? (
               <SectionPanel title={t('partyDetail.financeTitle', { year: latestFinance.report_year })} eyebrow={t('partyDetail.financeEyebrow')}>
+                <div className="mb-5 pixel-corners border border-line/70 bg-[linear-gradient(135deg,rgba(8,17,35,0.92),rgba(15,24,46,0.72))] p-4 sm:p-5">
+                  <div className="mb-4 flex flex-wrap items-end justify-between gap-2 border-b border-line/60 pb-3">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">{t('partyDetail.financeMixEyebrow')}</p>
+                      <h4 className="mt-1 font-display text-lg text-white">{t('partyDetail.financeMixTitle')}</h4>
+                    </div>
+                    <span className="text-xs text-slate-500">{latestFinance.report_year}</span>
+                  </div>
+                  <PartyFinanceCompositionChart
+                    ariaLabel={t('partyDetail.financeMixAria', { year: latestFinance.report_year })}
+                    totalLabel={t('partyDetail.financeMixTotal')}
+                    totalIncome={latestFinance.income_total}
+                    segments={financeCompositionSegments}
+                    unclassifiedLabel={t('partyDetail.financeMixUnclassified')}
+                    formatValue={currency}
+                    locale={language}
+                  />
+                </div>
                 <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
                   {[
                     [t('partyDetail.individualDonations'), latestFinance.individual_donation_total],

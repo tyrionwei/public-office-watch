@@ -118,9 +118,9 @@ export function createPublishedPublicDataProvider(
       return getRelatedRaces(regionId);
     }
 
-    let pending = raceRegionPromises.get(regionKey);
-    if (!pending) {
-      pending = bridge.loadRegionPageData(regionKey)
+    let inFlightRequest = raceRegionPromises.get(regionKey);
+    if (!inFlightRequest) {
+      inFlightRequest = bridge.loadRegionPageData(regionKey)
         .then((result) => {
           homeData = {
             ...homeData,
@@ -132,10 +132,10 @@ export function createPublishedPublicDataProvider(
         .finally(() => {
           raceRegionPromises.delete(regionKey);
         });
-      raceRegionPromises.set(regionKey, pending);
+      raceRegionPromises.set(regionKey, inFlightRequest);
     }
 
-    return pending;
+    return inFlightRequest;
   }
 
   function getEmptyLocalOfficeSummary(regionId: string) {

@@ -16,7 +16,7 @@ function assertUnique(items, field) {
 
 test('builds the complete elected executive scope with stable unique identifiers', () => {
   assert.equal(seed.summary.personCount, 85);
-  assert.equal(seed.summary.newHistoricalPersonCount, 39);
+  assert.equal(seed.summary.newHistoricalPersonCount, 42);
   assert.equal(seed.summary.candidateCount, 131);
   assert.equal(seed.summary.raceCount, 126);
   assertUnique(seed.people, 'externalId');
@@ -30,7 +30,7 @@ test('builds the complete elected executive scope with stable unique identifiers
 test('new historical people are not presented as current officeholders', () => {
   const newPeople = seed.people.filter((person) =>
     person.sourcePayload.identitySelection === 'new_person_from_official_elected_record');
-  assert.equal(newPeople.length, 39);
+  assert.equal(newPeople.length, 42);
   for (const person of newPeople) {
     assert.match(person.position, /^曾任/);
     assert.equal(person.party, null);
@@ -42,6 +42,15 @@ test('reviewed duplicate identities select the intended canonical public people'
   assert.equal(seed.people.find((person) => person.name === '黃敏惠')?.externalId, 'votetw-person-050c1cb8f8324450');
   assert.equal(seed.people.find((person) => person.name === '賴清德')?.externalId, 'votetw-person-dfa78bb8c53fc15c');
   assert.equal(seed.people.find((person) => person.name === '陳福海')?.externalId, 'cec-2022-local-mayor-person-1a37920d575e');
+});
+
+test('does not reuse same-name people whose office and region contradict the official record', () => {
+  for (const name of ['陳建年', '楊秋興', '蘇文雄']) {
+    const person = seed.people.find((candidate) => candidate.name === name);
+    assert.match(person?.externalId ?? '', /^cec-elected-executive-person-/);
+    assert.match(person?.position ?? '', /^曾任/);
+    assert.equal(person?.sourcePayload.identityResolution, 'created_from_official_elected_record');
+  }
 });
 
 test('election-time incumbency and ticket role remain historical candidate facts', () => {

@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import zlib from 'node:zlib';
 import { assessLegalRecordMatch } from './legal-record-review-policy.mjs';
 import { normalizeElectionDistrict } from './normalize-election-district.mjs';
+import { canonicalPartyName } from './lib/party-name-normalization.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultSeedPath = path.join(repoRoot, 'data-sources', 'real-public-data.seed.json');
@@ -54,6 +55,42 @@ function readLocalEnv() {
 }
 
 const localEnv = readLocalEnv();
+
+const reviewedCandidateResultOverrides = new Map([
+  ['votetw-candidate-eaa98ca6e1255bff', { voteCount: 236, voteRate: 50, isElected: true, sourceName: '嘉義縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/33e69d9d-e0bd-41ba-bfe3-6d12be8a5b28.pdf' }],
+  ['votetw-candidate-6793854d16967e86', { voteCount: 236, voteRate: 50, isElected: false, sourceName: '嘉義縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/33e69d9d-e0bd-41ba-bfe3-6d12be8a5b28.pdf' }],
+  ['votetw-candidate-153ca9738d6bcef3', { voteCount: 185, voteRate: 50.1355, isElected: true, sourceName: '嘉義縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/fe426522-6520-44b5-8a6b-84def12036cf.pdf' }],
+  ['votetw-candidate-bec3e9721678142f', { voteCount: 184, voteRate: 49.8645, isElected: false, sourceName: '嘉義縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/fe426522-6520-44b5-8a6b-84def12036cf.pdf' }],
+  ['votetw-candidate-891950e6d8bb4b56', { voteCount: 297, voteRate: 47.37, isElected: true, sourceName: '中央通訊社', sourceUrl: 'https://www.cna.com.tw/news/aloc/202211280200.aspx' }],
+  ['votetw-candidate-d04f25a1eb1c7fd2', { voteCount: 297, voteRate: 47.37, isElected: false, sourceName: '中央通訊社', sourceUrl: 'https://www.cna.com.tw/news/aloc/202211280200.aspx' }],
+  ['votetw-candidate-ad463f1716c7c4d2', { voteCount: 1383, voteRate: 50, isElected: true, sourceName: 'TVBS新聞網', sourceUrl: 'https://news.tvbs.com.tw/politics/1974748' }],
+  ['votetw-candidate-3c494e240e01c3c2', { voteCount: 1383, voteRate: 50, isElected: false, sourceName: 'TVBS新聞網', sourceUrl: 'https://news.tvbs.com.tw/politics/1974748' }],
+  ['votetw-candidate-cb11e5359183171e', { voteCount: 228, voteRate: 50, isElected: true, sourceName: '苗栗縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/6f2b6bfa-5b08-4b2a-b251-bc6c4aa62561.pdf' }],
+  ['votetw-candidate-25a62574caf87845', { voteCount: 228, voteRate: 50, isElected: false, sourceName: '苗栗縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/6f2b6bfa-5b08-4b2a-b251-bc6c4aa62561.pdf' }],
+  ['votetw-candidate-fe7f72c703633a2a', { voteCount: 203, voteRate: 50.1235, isElected: true, sourceName: '雲林縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/6b191e3b-eaf9-407a-a446-b554803b98dc.pdf' }],
+  ['votetw-candidate-1ad3e8bf74173068', { voteCount: 202, voteRate: 49.8765, isElected: false, sourceName: '雲林縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/6b191e3b-eaf9-407a-a446-b554803b98dc.pdf' }],
+  ['votetw-candidate-e7d61cbee1a0a4c4', { voteCount: 625, voteRate: 49.6, isElected: true, sourceName: '中央通訊社', sourceUrl: 'https://www.cna.com.tw/news/aloc/202211280120.aspx' }],
+  ['votetw-candidate-53209209ab64f72e', { voteCount: 625, voteRate: 49.6, isElected: false, sourceName: '中央通訊社', sourceUrl: 'https://www.cna.com.tw/news/aloc/202211280120.aspx' }],
+  ['votetw-candidate-960a95f638d84d72', { voteCount: 714, voteRate: 50, isElected: true, sourceName: '高雄市選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/d06b632e-47ce-4395-8a61-e9f4cc462778.pdf' }],
+  ['votetw-candidate-1aba7d85ba47d8ea', { voteCount: 714, voteRate: 50, isElected: false, sourceName: '高雄市選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/d06b632e-47ce-4395-8a61-e9f4cc462778.pdf' }],
+]);
+
+export function applyReviewedCandidateResultOverride(row) {
+  const override = reviewedCandidateResultOverrides.get(row.external_id);
+  if (!override) return row;
+
+  return {
+    ...row,
+    vote_count: override.voteCount,
+    vote_rate: override.voteRate,
+    is_elected: override.isElected,
+    candidacy_status: 'qualified',
+    election_result: override.isElected ? 'elected' : 'not_elected',
+    registration_status: override.isElected ? 'elected' : 'not_elected',
+    source_name: override.sourceName,
+    source_url: override.sourceUrl,
+  };
+}
 
 function candidateCandidacyStatus(candidate) {
   const explicitStatus = candidate.candidacyStatus ?? candidate.candidacy_status;
@@ -483,12 +520,7 @@ function zipDirname(entryName) {
 }
 
 function normalizePartyName(name) {
-  if (name === '臺灣民眾黨') return '台灣民眾黨';
-  if (name === '臺灣基進') return '台灣基進';
-  if (name === '台灣綠黨') return '綠黨';
-  if (name === '臺灣社會民主黨') return '社會民主黨';
-  if (name === '無黨籍及未經政黨推薦') return '無黨籍';
-  return name;
+  return canonicalPartyName(name);
 }
 
 function toGregorianYear(value) {
@@ -3967,7 +3999,7 @@ async function writeSeed(seed, hash, args) {
     const personExternalId = candidate.personExternalId ?? candidate.person_external_id;
     const raceExternalId = candidate.raceExternalId ?? candidate.race_external_id;
     const source = getSource(seed, sourceId);
-    return {
+    return applyReviewedCandidateResultOverride({
       external_id: candidate.externalId ?? candidate.external_id ?? null,
       person_id: personByExternalId.get(personExternalId)?.id ?? null,
       race_id: raceByExternalId.get(raceExternalId)?.id ?? null,
@@ -3984,7 +4016,7 @@ async function writeSeed(seed, hash, args) {
       source_url: candidate.sourceUrl ?? candidate.source_url ?? source.url,
       is_public: candidate.isPublic ?? candidate.is_public ?? true,
       updated_at: startedAt,
-    };
+    });
   });
 
   await upsertOrThrow(env, 'candidates', candidateRows, { onConflict: 'external_id' });
@@ -4121,7 +4153,7 @@ async function writeSeed(seed, hash, args) {
     const source = getSource(seed, party.sourceId);
     return {
       external_id: party.externalId,
-      name: party.name,
+      name: normalizePartyName(party.name),
       short_name: party.shortName ?? null,
       slug: party.slug,
       theme_key: party.themeKey,

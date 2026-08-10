@@ -6,6 +6,7 @@ import {
   buildHistoricalCecCorePreview,
   buildHistoricalSourceContext,
   canonicalCouncilorElectionScope,
+  canonicalLocalElectionScope,
   canonicalElectionName,
   canonicalElectionType,
   canonicalRaceTitle,
@@ -128,9 +129,14 @@ test('standardizes national, indigenous and numbered election contexts', () => {
   assert.equal(canonicalElectionName(1998, 'councilor'), '1998年直轄市及縣市議員選舉');
   assert.equal(canonicalCouncilorElectionScope(2002, '臺北市'), 'metropolitan');
   assert.equal(canonicalCouncilorElectionScope(2002, '桃園縣'), 'county_city');
+  assert.equal(canonicalCouncilorElectionScope(2010, '臺中市'), 'metropolitan');
+  assert.equal(canonicalCouncilorElectionScope(2014, '宜蘭縣'), 'combined');
   assert.equal(canonicalElectionName(2002, 'councilor', 'metropolitan'), '2002年直轄市議員選舉');
   assert.equal(canonicalElectionName(2002, 'councilor', 'county_city'), '2002年縣市議員選舉');
-  assert.equal(canonicalElectionName(2022, 'county_city_mayor'), '2022年直轄市長及縣市長選舉');
+  assert.equal(canonicalLocalElectionScope(2009, '桃園縣'), 'county_city');
+  assert.equal(canonicalElectionName(2006, 'county_city_mayor', 'metropolitan'), '2006年直轄市長選舉');
+  assert.equal(canonicalElectionName(2009, 'county_city_mayor', 'county_city'), '2009年縣市長選舉');
+  assert.equal(canonicalElectionName(2022, 'county_city_mayor'), '2022年直轄市及縣市長選舉');
   assert.equal(canonicalRaceType('county_city_mayor', 'regional', '宜蘭縣'), 'county_mayor');
   assert.equal(canonicalRaceType('county_city_mayor', 'regional', '臺北市'), 'municipality_mayor');
   assert.equal(classifySeatType('平地原住民', '第8屆立法委員候選人'), 'plain_indigenous');

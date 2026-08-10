@@ -164,6 +164,7 @@ function flattenPlan(plan) {
       expectedName: normalizeName(group.name),
       canonicalPersonId: group.canonicalPersonId,
       duplicatePersonId,
+      confidenceLevel: group.confidenceLevel ?? 'B',
       evidence: group.evidence,
     };
   }));
@@ -249,7 +250,7 @@ async function main() {
       duplicate_person_id: item.duplicatePersonId,
       canonical_person_id: item.canonicalPersonId,
       status: 'verified',
-      confidence_level: 'B',
+      confidence_level: item.confidenceLevel,
       reason: 'manually reviewed same public figure across election years and office types',
       evidence_json: {
         rule: 'reviewed_cross_office_public_figure',

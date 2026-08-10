@@ -1,6 +1,6 @@
-import type { PublicElection, PublicElectionRaceSummary, PublicRace } from '../types/publicViews';
-import { compareElectionRegionLabels, compareRacesForDisplay, getElectionCountyCityName, getRaceCategory, getRaceCategoryByType, groupRacesByCategory } from './electionLabels';
-import type { RaceCategoryKey } from './electionLabels';
+import type { PublicElection, PublicElectionRaceSummary, PublicRace } from '../types/publicViews.ts';
+import { compareElectionRegionLabels, compareRacesForDisplay, getElectionCountyCityName, getRaceCategory, getRaceCategoryByType, groupRacesByCategory } from './electionLabels.ts';
+import type { RaceCategoryKey } from './electionLabels.ts';
 
 export type ElectionEventFamily = 'national' | 'local' | 'referendum' | 'recall' | 'by_election' | 'other';
 
@@ -29,6 +29,7 @@ export type ElectionEvent = {
 };
 
 const statusOrder: PublicElection['status'][] = ['active', 'upcoming', 'announced', 'draft', 'completed', 'cancelled', 'unknown'];
+const firstNineInOneElectionYear = 2014;
 const localRaceTypes = new Set<PublicRace['race_type']>([
   'municipality_mayor',
   'county_mayor',
@@ -94,6 +95,14 @@ function getInitialFamily(election: PublicElection) {
   return 'other';
 }
 
+function getLegacyLocalEventKind(election: PublicElection) {
+  if (election.election_type === 'councilor') return 'councilor';
+  if (election.election_type === 'township_representative') return 'township-representative';
+  if (election.election_type === 'village_chief') return 'village-chief';
+  if (['local', 'local_chief'].includes(election.election_type)) return null;
+  return election.election_type;
+}
+
 function buildEventTitle(year: number | null, family: ElectionEventFamily, elections: PublicElection[], raceTypes: PublicRace['race_type'][]) {
   const yearLabel = year ? `${year}` : '未定年份';
   const categories = new Set(raceTypes.map((raceType) => getRaceCategoryByType(raceType).key));
@@ -110,7 +119,10 @@ function buildEventTitle(year: number | null, family: ElectionEventFamily, elect
     if (hasLegislator) return `${yearLabel} 立法委員選舉`;
   }
 
-  if (family === 'local') return `${yearLabel} 地方公職人員選舉 / 九合一大選`;
+  if (family === 'local') {
+    if (year !== null && year < firstNineInOneElectionYear && elections.length === 1) return elections[0].name;
+    return `${yearLabel} 地方公職人員選舉 / 九合一大選`;
+  }
   if (family === 'referendum') return `${yearLabel} 公民投票`;
   if (family === 'recall') return `${yearLabel} 罷免投票`;
   if (family === 'by_election') return `${yearLabel} 補選`;
@@ -174,9 +186,12 @@ function finalizeEvent(elections: PublicElection[], allRaces: PublicRace[], allS
     return [category.key, category] as const;
   })).values()).sort((left, right) => left.order - right.order);
   const regionGroups = groupRacesByRegion(races);
+  const legacyLocalKind = family === 'local' && year !== null && year < firstNineInOneElectionYear
+    ? getLegacyLocalEventKind(elections[0])
+    : null;
 
   return {
-    key: buildElectionEventKey(year, votingDate, family),
+    key: buildElectionEventKey(year, votingDate, family, legacyLocalKind),
     title: buildEventTitle(year, family, elections, raceTypes),
     year,
     votingDate,
@@ -194,8 +209,9 @@ function finalizeEvent(elections: PublicElection[], allRaces: PublicRace[], allS
   };
 }
 
-export function buildElectionEventKey(year: number | null, votingDate: string | null, family: ElectionEventFamily) {
-  return `${year ?? 'unknown'}-${votingDate ?? 'undated'}-${family}`;
+export function buildElectionEventKey(year: number | null, votingDate: string | null, family: ElectionEventFamily, discriminator: string | null = null) {
+  const baseKey = `${year ?? 'unknown'}-${votingDate ?? 'undated'}-${family}`;
+  return discriminator ? `${baseKey}-${discriminator}` : baseKey;
 }
 
 export function buildElectionEvents(elections: PublicElection[], races: PublicRace[], raceSummaries: PublicElectionRaceSummary[] = []) {
@@ -203,7 +219,11 @@ export function buildElectionEvents(elections: PublicElection[], races: PublicRa
 
   for (const election of elections) {
     const year = getDisplayElectionYear(election);
-    const key = buildElectionEventKey(year, election.voting_date, getInitialFamily(election));
+    const family = getInitialFamily(election);
+    const legacyLocalKind = family === 'local' && year !== null && year < firstNineInOneElectionYear
+      ? getLegacyLocalEventKind(election)
+      : null;
+    const key = buildElectionEventKey(year, election.voting_date, family, legacyLocalKind);
     const group = groups.get(key) ?? [];
     group.push(election);
     groups.set(key, group);

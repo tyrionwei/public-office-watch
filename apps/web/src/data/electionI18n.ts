@@ -160,7 +160,18 @@ export function translateElectionEventTitle(event: ElectionEvent, t: Translate) 
     if (hasLegislator) return t('event.title.legislator', { year });
   }
 
-  if (event.family === 'local') return t('event.title.local', { year });
+  if (event.family === 'local') {
+    if (event.year !== null && event.year < 2014) {
+      const electionName = event.elections[0]?.name ?? '';
+      if (electionName.includes('直轄市長')) return t('event.title.metropolitanMayor', { year });
+      if (electionName.includes('直轄市議員')) return t('event.title.metropolitanCouncilor', { year });
+      if (electionName.includes('縣市長')) return t('event.title.countyCityMayor', { year });
+      if (electionName.includes('縣市議員')) return t('event.title.countyCityCouncilor', { year });
+      return event.title;
+    }
+
+    return t('event.title.local', { year });
+  }
   if (event.family === 'referendum') return t('event.title.referendum', { year });
   if (event.family === 'recall') return t('event.title.recall', { year });
   if (event.family === 'by_election') return t('event.title.byElection', { year });

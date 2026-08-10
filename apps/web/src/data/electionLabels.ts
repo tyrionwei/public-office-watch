@@ -1,5 +1,5 @@
 import type { PublicCandidate, PublicElection, PublicRace } from '../types/publicViews';
-import { taiwanRegions } from './taiwanRegions';
+import { taiwanRegions } from './taiwanRegions.ts';
 
 export const electionTypeLabels: Record<PublicElection['election_type'] | string, string> = {
   presidential: '總統副總統',

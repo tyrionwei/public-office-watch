@@ -108,6 +108,17 @@ export function buildFamilyReleaseRows(preview, claims) {
     ) throw new Error(`Claim drifted after release preview: ${claim.claim_key}`);
     return {
       ...claim,
+      claim_json: {
+        ...claim.claim_json,
+        publicationGate: {
+          ...claim.claim_json?.publicationGate,
+          status: 'published',
+        },
+        verificationPolicy: {
+          ...claim.claim_json?.verificationPolicy,
+          publicationStillRequired: false,
+        },
+      },
       review_score: Number(claim.review_score),
       visibility: 'public',
       is_public: true,

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "risk-audit:2026-08-10-cross-year-official-career",
+  "groups": [
+    {
+      "name": "林宜瑾",
+      "canonicalPersonId": "574f1edd-001d-49ad-b9c5-44da5c545056",
+      "confidenceLevel": "A",
+      "duplicatePersonIds": [
+        "04827fb4-6e02-4f79-aca9-00e2882fe0bc",
+        "12097615-e458-4e31-b254-04f94f4ab111",
+        "c5e86743-47cf-467c-8ef5-31b257f20e79"
+      ],
+      "evidence": {
+        "basis": "Legislative Yuan and CEC profile identify the current legislator as the same person who served six consecutive Tainan county and city council terms.",
+        "candidateYears": [1998, 2002, 2005, 2010, 2014, 2018, 2020, 2024],
+        "candidateOffices": ["縣市議員", "直轄市議員", "立法委員"],
+        "officialSources": [
+          "https://www.ly.gov.tw/Pages/List.aspx?nodeid=46779",
+          "https://bulletin.cec.gov.tw/01選舉公報/02立法委員/113年第11屆/02區域立法委員/06臺南市/第4選舉區/臺南市立委第4選舉區.pdf"
+        ]
+      }
+    },
+    {
+      "name": "王定宇",
+      "canonicalPersonId": "0ee1d8d0-b836-47ee-aebc-97ca91294694",
+      "confidenceLevel": "A",
+      "duplicatePersonIds": [
+        "58416322-45cb-4d44-9b92-f0c666c9b9e7",
+        "5bcdb803-dff4-41e3-bc84-f3a98397cbf3",
+        "6a4d79c2-2272-4761-82b9-b3ca2b332c18"
+      ],
+      "evidence": {
+        "basis": "Legislative Yuan profile lists the 15th and 16th Tainan City Council and first Tainan Municipal Council terms before the 9th through 11th Legislative Yuan terms.",
+        "candidateYears": [1998, 2002, 2005, 2010, 2016, 2020, 2024],
+        "candidateOffices": ["直轄市議員", "立法委員"],
+        "officialSources": ["https://www.ly.gov.tw/Pages/List.aspx?nodeid=1811"]
+      }
+    },
+    {
+      "name": "許淑華",
+      "canonicalPersonId": "9c21c186-06fa-4616-858e-79f24c8d11fb",
+      "confidenceLevel": "A",
+      "duplicatePersonIds": [
+        "47d43f37-a90d-4b8f-ae40-908db6aad8cf",
+        "5301fc21-dd24-48f8-940a-6aeb8d83f5d9"
+      ],
+      "evidence": {
+        "basis": "Nantou County profile states one council term, two Nantou mayor terms, three legislative terms, and the 2022 county magistrate term; CEC records the 2002 PFP council candidacy.",
+        "candidateYears": [2002, 2016, 2020, 2022],
+        "candidateOffices": ["縣市議員", "立法委員", "縣長"],
+        "officialSources": [
+          "https://www.nantou.gov.tw/big5/introduction-magistrate.php",
+          "https://db.cec.gov.tw/ElecTable/Election/ElecTickets?areaCode=00&cityCode=008&dataLevel=A&dataType=tickets&deptCode=000&legisId=T1&liCode=0000&prvCode=01&subjectId=T2&typeId=ELC"
+        ]
+      }
+    }
+  ]
+}

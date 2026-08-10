@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  applyReviewedCandidateResultOverride,
   buildPersonEnrichmentClaimRows,
   buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
@@ -74,6 +75,36 @@ assert.equal(
   '01-001-01-1',
 );
 assert.equal(historicalCecAggregateResultKey(indigenousResultRow, indigenousLegislator), '1');
+
+assert.deepEqual(
+  applyReviewedCandidateResultOverride({
+    external_id: 'votetw-candidate-eaa98ca6e1255bff',
+    vote_count: 236,
+    vote_rate: 50,
+    is_elected: false,
+    candidacy_status: 'qualified',
+    election_result: 'not_elected',
+    registration_status: 'not_elected',
+    source_name: 'VoteTW',
+    source_url: 'https://votetw.com/',
+  }),
+  {
+    external_id: 'votetw-candidate-eaa98ca6e1255bff',
+    vote_count: 236,
+    vote_rate: 50,
+    is_elected: true,
+    candidacy_status: 'qualified',
+    election_result: 'elected',
+    registration_status: 'elected',
+    source_name: '嘉義縣選舉委員會',
+    source_url: 'https://web.cec.gov.tw/api/file/33e69d9d-e0bd-41ba-bfe3-6d12be8a5b28.pdf',
+  },
+);
+
+assert.equal(
+  applyReviewedCandidateResultOverride({ external_id: 'unreviewed-candidate', is_elected: false }).is_elected,
+  false,
+);
 
 assert.equal(
   scoreClaim({

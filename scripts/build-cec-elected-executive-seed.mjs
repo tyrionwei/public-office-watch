@@ -41,6 +41,12 @@ const AMBIGUOUS_SELECTIONS = new Map([
   ['蘇煥智', 'cec-2022-local-mayor-person-078a934fe9ed'],
 ]);
 
+// A same-name record is not enough when its office and region contradict the
+// official elected-executive record. Keep these historical officials separate.
+const FORCE_NEW_PERSON_NAMES = new Set([
+  '陳建年', '楊秋興', '蘇文雄',
+]);
+
 const EXISTING_CANDIDATE_IDS = new Map([
   ['2012:president:馬英九', 'cec-historical-candidate-fbeb0a876fdaa402'],
   ['2012:vice_president:吳敦義', 'cec-historical-candidate-f5c641156009efc0'],
@@ -132,9 +138,9 @@ function toCanonicalPerson(entry) {
   const records = entry.sourceRecords;
   const latest = latestRecord(records);
   let match = null;
-  if (entry.resolution === 'unique_match') {
+  if (!FORCE_NEW_PERSON_NAMES.has(entry.name) && entry.resolution === 'unique_match') {
     match = entry.matches[0];
-  } else if (entry.resolution === 'ambiguous_match') {
+  } else if (!FORCE_NEW_PERSON_NAMES.has(entry.name) && entry.resolution === 'ambiguous_match') {
     const selectedExternalId = AMBIGUOUS_SELECTIONS.get(entry.name);
     match = entry.matches.find((candidate) => candidate.external_id === selectedExternalId) ?? null;
     if (!match) throw new Error(`Missing reviewed ambiguous selection for ${entry.name}.`);

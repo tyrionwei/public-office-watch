@@ -16,6 +16,7 @@ import type {
   PublicPersonStatus,
 } from '../types/publicViews.ts';
 import type { PartyThemeKey } from '../styles/partyThemes.ts';
+import { canonicalPartyName } from './partyNames.ts';
 
 const statusLabels: Record<PublicPersonStatus, string> = {
   current: '現任',
@@ -148,14 +149,7 @@ const strokeCollator = new Intl.Collator('zh-Hant-TW-u-co-stroke');
 const fallbackCollator = new Intl.Collator('zh-Hant-TW');
 
 export function normalizePartyLabel(party: string | null | undefined) {
-  const value = party?.trim();
-  if (!value) return '未知政黨';
-  if (value === '臺灣民眾黨') return '台灣民眾黨';
-  if (value === '臺灣基進') return '台灣基進';
-  if (value === '台灣綠黨') return '綠黨';
-  if (value === '臺灣社會民主黨') return '社會民主黨';
-  if (value === '無黨籍及未經政黨推薦') return '無黨籍';
-  return value;
+  return canonicalPartyName(party) ?? '未知政黨';
 }
 
 export function toPartyThemeKey(partyLabel: string | null | undefined): PartyThemeKey {

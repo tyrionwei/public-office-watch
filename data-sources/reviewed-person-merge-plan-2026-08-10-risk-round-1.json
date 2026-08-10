@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "risk-audit:2026-08-10-recent-high-exposure",
+  "groups": [
+    {
+      "name": "唐儀靜",
+      "confidenceLevel": "A",
+      "canonicalPersonId": "08c78b83-b063-4f43-95d2-7f29d550203e",
+      "duplicatePersonIds": [
+        "2f5976e0-8d39-4f77-abc5-596eb8e4975c",
+        "abebd944-9e98-4c1a-867a-d04700e416a9"
+      ],
+      "evidence": {
+        "basis": "CEC records and contemporary coverage identify the 2005, 2014, 2018 and 2026 Tainan candidacies as the same former councilor.",
+        "candidateYears": [2005, 2014, 2018, 2026],
+        "candidateOffices": ["臺南市議員"],
+        "officialSources": [
+          "https://web.cec.gov.tw/api/file/edeb0060-1dd7-4055-9f9c-e3d283416be5.pdf",
+          "https://web.cec.gov.tw/api/file/648bc303-1ebf-4115-a133-e93c9d6af156.pdf",
+          "https://web.cec.gov.tw/api/file/71ecb970-369b-4538-a6f0-4936dd4c3728.pdf"
+        ],
+        "corroboratingSources": ["https://www.cna.com.tw/news/aloc/201804240247.aspx"]
+      }
+    },
+    {
+      "name": "李婉鈺",
+      "confidenceLevel": "A",
+      "canonicalPersonId": "d84635b6-18e4-498b-9641-716bbb82eb97",
+      "duplicatePersonIds": ["0eb535f8-c9b8-47d2-a8a0-490fd53e101c"],
+      "evidence": {
+        "basis": "CEC candidate registry gives the 2016 legislative candidate the same name, gender and 1972-03-27 birth date as the council candidate history.",
+        "candidateYears": [2010, 2014, 2016, 2018, 2020, 2022],
+        "candidateOffices": ["新北市議員", "立法委員"],
+        "officialSources": ["https://web.cec.gov.tw/api/file/dae24331-a1c1-4b8d-9516-edb2a3518a49.pdf"]
+      }
+    },
+    {
+      "name": "張肇良",
+      "confidenceLevel": "A",
+      "canonicalPersonId": "01bcc037-dc12-49b3-b9b2-5e04033ad2be",
+      "duplicatePersonIds": ["731d0df9-45fd-4579-b7aa-bae172e6a28e"],
+      "evidence": {
+        "basis": "CEC 2016 bulletin gives birth date 1964-09-30 and explicitly lists the county and city council terms found on the canonical profile.",
+        "candidateYears": [1998, 2002, 2005, 2009, 2014, 2016, 2018, 2022],
+        "candidateOffices": ["桃園縣市議員", "立法委員"],
+        "officialSources": ["https://bulletin.cec.gov.tw/01選舉公報/02立法委員/105年第9屆/01區域/03桃園市/桃園市立委選舉第5選舉區.pdf"]
+      }
+    },
+    {
+      "name": "陳明義",
+      "confidenceLevel": "A",
+      "canonicalPersonId": "53f5e2f0-8f8b-4224-820c-aadfd5c66eab",
+      "duplicatePersonIds": ["637c35ce-d506-4807-93de-19faca0f2eff"],
+      "evidence": {
+        "basis": "CEC 2016 bulletin identifies the legislative candidate as the serving New Taipei councilor and gives birth date 1967-09-18.",
+        "candidateYears": [2002, 2005, 2010, 2014, 2016, 2018, 2020, 2022],
+        "candidateOffices": ["臺北縣／新北市議員", "立法委員"],
+        "officialSources": ["https://bulletin.cec.gov.tw/01選舉公報/02立法委員/105年第9屆/01區域/02新北市/新北市立委選舉2.3選舉區.pdf"]
+      }
+    },
+    {
+      "name": "陳麗娜",
+      "confidenceLevel": "A",
+      "canonicalPersonId": "af8d759a-1b06-408b-9db9-d0c2d0880ea7",
+      "duplicatePersonIds": ["4bcbb465-c25e-4694-87a5-cc21a3634ae1"],
+      "evidence": {
+        "basis": "CEC 2020 bulletin gives birth date 1970-03-10 and lists the same pre- and post-merger Kaohsiung council terms.",
+        "candidateYears": [2006, 2010, 2014, 2018, 2020, 2022],
+        "candidateOffices": ["高雄市議員", "立法委員"],
+        "officialSources": ["https://bulletin.cec.gov.tw/01選舉公報/02立法委員/109年第10屆/02區域立法委員/07高雄市/高雄市第8選區立委.pdf"]
+      }
+    },
+    {
+      "name": "黃仁",
+      "confidenceLevel": "A",
+      "canonicalPersonId": "e6fecff0-169b-46ee-ae6e-888179d54342",
+      "duplicatePersonIds": ["bc5dfc3a-8e6b-4d79-bbce-43dc5ef0c1a7"],
+      "evidence": {
+        "basis": "CEC records show the same KMT politician in the 2020 and 2024 nationwide plain-indigenous legislative elections and the Taichung council history.",
+        "candidateYears": [2005, 2010, 2018, 2020, 2022, 2024],
+        "candidateOffices": ["臺中市議員", "平地原住民立法委員"],
+        "officialSources": ["https://db.cec.gov.tw/ElecTable/Election/ElecTickets?areaCode=00&cityCode=000&dataLevel=N&dataType=tickets&deptCode=000&legisId=L2&liCode=0000&prvCode=00&subjectId=L0&themeId=199e3ebf417ddbebac3a19c0befd306f&typeId=ELC"]
+      }
+    },
+    {
+      "name": "黃柏霖",
+      "confidenceLevel": "A",
+      "canonicalPersonId": "5dffdbb8-9047-49d7-988f-b43e4bb38f6c",
+      "duplicatePersonIds": ["18dec222-d16b-469b-9466-7adbf0b5dd96"],
+      "evidence": {
+        "basis": "CEC legislative bulletin gives birth date 1967-10-31 and lists the same Kaohsiung council service found on the canonical profile.",
+        "candidateYears": [2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024],
+        "candidateOffices": ["高雄市議員", "立法委員"],
+        "officialSources": ["https://bulletin.cec.gov.tw/01選舉公報/02立法委員/109年第10屆/02區域立法委員/07高雄市/高雄市第5選舉區立委正面.pdf"]
+      }
+    },
+    {
+      "name": "李眉蓁",
+      "confidenceLevel": "A",
+      "canonicalPersonId": "3a73e79e-74d5-473a-88d2-bc32554bd4fb",
+      "duplicatePersonIds": ["3ec6e2cf-bcfd-4f2e-9a86-375ceedada3a"],
+      "evidence": {
+        "basis": "CEC 2006 result roster gives the PFP candidate birth date 1979-03-21, matching the later KMT council and legislative candidate.",
+        "candidateYears": [2006, 2010, 2014, 2018, 2022, 2024],
+        "candidateOffices": ["高雄市議員", "立法委員"],
+        "officialSources": ["https://web.cec.gov.tw/api/file/0b5ee5dd-0316-492b-9f8b-33669f224c44.pdf"]
+      }
+    }
+  ]
+}

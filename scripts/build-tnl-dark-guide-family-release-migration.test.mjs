@@ -30,6 +30,8 @@ function localClaim(item) {
       relationType: 'father',
       relationLabel: '父親',
       relativePersonId: '00000000-0000-4000-8000-000000000002',
+      publicationGate: { status: 'verified_not_published' },
+      verificationPolicy: { publicationStillRequired: true },
     },
     confidence_level: item.confidenceLevel,
     review_score: item.reviewScore,
@@ -72,6 +74,8 @@ test('builds the fixed reviewed release boundary without publishing preview drif
   assert.equal(rows.filter((row) => row.confidence_level === 'A').length, expected.confidenceA);
   assert.equal(rows.filter((row) => row.confidence_level === 'B').length, expected.confidenceB);
   assert.equal(rows.every((row) => row.visibility === 'public' && row.is_public === true), true);
+  assert.equal(rows.every((row) => row.claim_json.publicationGate.status === 'published'), true);
+  assert.equal(rows.every((row) => row.claim_json.verificationPolicy.publicationStillRequired === false), true);
 });
 
 test('rejects preview count, confidence and claim-content drift', () => {

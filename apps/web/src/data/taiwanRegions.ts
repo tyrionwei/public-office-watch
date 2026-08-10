@@ -1,5 +1,5 @@
-import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
-import { countyCityBoundarySource } from './taiwanMapSources';
+import type { StageRegionNode, StageRegionSummary } from '../types/stageMap.ts';
+import { countyCityBoundarySource } from './taiwanMapSources.ts';
 
 const boundaryNote = '行政區邊界不等於正式選舉選區，此資料僅作為區域導覽與公開資料索引用途。';
 const sourceNote = '縣市 metadata 依政府開放資料集欄位規劃整理，未包含人物、公司、關係、候選人或民調真實資料。';

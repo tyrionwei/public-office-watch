@@ -534,7 +534,7 @@
     },
     {
       "externalId": "party-tsu",
-      "name": "台灣團結聯盟",
+      "name": "台聯黨",
       "shortName": "台聯",
       "slug": "tsu",
       "themeKey": "unknown",
@@ -566,7 +566,7 @@
     },
     {
       "externalId": "party-green",
-      "name": "綠黨",
+      "name": "台灣綠黨",
       "shortName": "綠黨",
       "slug": "green-party",
       "themeKey": "unknown",

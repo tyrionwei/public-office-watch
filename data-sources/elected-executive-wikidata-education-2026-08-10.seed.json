@@ -1,0 +1,732 @@
+{
+  "schemaVersion": 1,
+  "name": "person-enrichment-claims",
+  "updatedAt": "2026-08-10",
+  "notes": "Reviewed-source supplemental person claims. Wikidata/Wikipedia-derived records are review-only by default.",
+  "personClaims": [
+    {
+      "personId": "920f0d39-5dda-463c-a2bc-c133ea9c5c1d",
+      "personName": "呂秀蓮",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；伊利諾大學厄巴納-香檳分校；哈佛法學院；臺北市立第一女子高級中學",
+      "claimJson": {
+        "wikidataQid": "Q465284",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q465284"
+    },
+    {
+      "personId": "28353953-8fbf-4f42-9b11-116e45194084",
+      "personName": "李炷烽",
+      "claimType": "education",
+      "claimValue": "國立臺灣師範大學；國立金門高級中學；高雄市私立復華高級中學",
+      "claimJson": {
+        "wikidataQid": "Q8982294",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8982294"
+    },
+    {
+      "personId": "8ed2a9f8-05a9-4a93-9e6f-1a669ffe7c11",
+      "personName": "李登輝",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；康乃爾大學；京都大學；愛荷華州立大學；臺北市立大同高級中學；新北市私立淡江高級中學；臺灣總督府臺北高等學校",
+      "claimJson": {
+        "wikidataQid": "Q315528",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q315528"
+    },
+    {
+      "personId": "eada4822-6e55-4217-9d50-79a8c1bd5bb5",
+      "personName": "阮剛猛",
+      "claimType": "education",
+      "claimValue": "國立臺中教育大學",
+      "claimJson": {
+        "wikidataQid": "Q8276023",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8276023"
+    },
+    {
+      "personId": "249f8dfa-35d4-451e-ba7d-dfde78138e26",
+      "personName": "林宗男",
+      "claimType": "education",
+      "claimValue": "明治大學",
+      "claimJson": {
+        "wikidataQid": "Q8351531",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8351531"
+    },
+    {
+      "personId": "acabe2c9-8d91-4ce5-ac99-0f995b99ee59",
+      "personName": "林政則",
+      "claimType": "education",
+      "claimValue": "東吳大學；國立大學",
+      "claimJson": {
+        "wikidataQid": "Q8274439",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8274439"
+    },
+    {
+      "personId": "05eb5add-efe5-4b2f-94fa-dfcb62a2d042",
+      "personName": "徐慶元",
+      "claimType": "education",
+      "claimValue": "國立成功大學",
+      "claimJson": {
+        "wikidataQid": "Q8348863",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8348863"
+    },
+    {
+      "personId": "89359ae8-d701-4e36-841a-98ec54b2f00f",
+      "personName": "翁金珠",
+      "claimType": "education",
+      "claimValue": "國立臺灣師範大學",
+      "claimJson": {
+        "wikidataQid": "Q8031967",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8031967"
+    },
+    {
+      "personId": "2af92905-58e7-4ab1-bdb4-e700dba2d10f",
+      "personName": "張博雅",
+      "claimType": "education",
+      "claimValue": "高雄醫學大學；約翰·霍普金斯大學；國立臺灣大學；國立台灣師範大學附屬高級中學",
+      "claimJson": {
+        "wikidataQid": "Q4515439",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q4515439"
+    },
+    {
+      "personId": "427fa9f4-cd52-5b38-9224-793dee8ca381",
+      "personName": "張溫鷹",
+      "claimType": "education",
+      "claimValue": "國立政治大學；牛津大學；南安普敦大學；高雄醫學大學；臺北醫學大學；中山醫學大學",
+      "claimJson": {
+        "wikidataQid": "Q700825",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q700825"
+    },
+    {
+      "personId": "df8bf0ba-b448-bbc5-f23d-264e4dca1813",
+      "personName": "張榮味",
+      "claimType": "education",
+      "claimValue": "雲林縣土庫鎮馬光國民小學；雲林縣立土庫國民中學；嘉義市私立神州高級中學進修學校；革命實踐研究院；國立嘉義大學",
+      "claimJson": {
+        "wikidataQid": "Q15909770",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15909770"
+    },
+    {
+      "personId": "e5c40f13-040d-46b3-aad3-c4bce26d51dd",
+      "personName": "張燦鍙",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；加州理工學院；萊斯大學",
+      "claimJson": {
+        "wikidataQid": "Q5537816",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q5537816"
+    },
+    {
+      "personId": "3f242b68-c535-0fcb-077f-fa4336ffaf72",
+      "personName": "許財利",
+      "claimType": "education",
+      "claimValue": "國立空中大學",
+      "claimJson": {
+        "wikidataQid": "Q15902640",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15902640"
+    },
+    {
+      "personId": "47986e4d-fd92-4a27-9ab0-92f9b553d380",
+      "personName": "許添財",
+      "claimType": "education",
+      "claimValue": "中國文化大學；哥倫比亞大學；羅格斯大學；新學院",
+      "claimJson": {
+        "wikidataQid": "Q698464",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q698464"
+    },
+    {
+      "personId": "48f3a634-ad9f-4df1-8552-d6a47d4b25ff",
+      "personName": "連戰",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；芝加哥大學；國立台灣師範大學附屬高級中學；西安市后宰门小学；臺北市大同區日新國民小學；臺北市立成功高級中學",
+      "claimJson": {
+        "wikidataQid": "Q558718",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 90,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched",
+            "district or party hint matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched",
+            "district or party hint matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q558718"
+    },
+    {
+      "personId": "b98f0367-699f-4666-a07c-7378585bde87",
+      "personName": "陳水在",
+      "claimType": "education",
+      "claimValue": "國防大學政治作戰學院",
+      "claimJson": {
+        "wikidataQid": "Q8272213",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8272213"
+    },
+    {
+      "personId": "74092f74-4092-58cd-90bb-34c36b37f974",
+      "personName": "陳水扁",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；臺南市官田區隆田國民小學；臺南市立麻豆國民中學；國立臺南第一高級中學",
+      "claimJson": {
+        "wikidataQid": "Q22368",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 90,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched",
+            "district or party hint matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched",
+            "district or party hint matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q22368"
+    },
+    {
+      "personId": "6a42ee5a-69d8-4c9f-9470-47c3df4b1c32",
+      "personName": "陳麗貞",
+      "claimType": "education",
+      "claimValue": "中國醫藥大學",
+      "claimJson": {
+        "wikidataQid": "Q8347296",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347296"
+    },
+    {
+      "personId": "b01e3c16-2a6f-410d-ad0b-167549937d37",
+      "personName": "彭百顯",
+      "claimType": "education",
+      "claimValue": "中國文化大學；倫敦大學",
+      "claimJson": {
+        "wikidataQid": "Q8351731",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8351731"
+    },
+    {
+      "personId": "8ffa8cb8-470f-43e7-9008-eaebaa1a2842",
+      "personName": "劉立群",
+      "claimType": "education",
+      "claimValue": "國立馬祖高級中學；國立屏東科技大學；國立政治大學；西雅圖社群大學",
+      "claimJson": {
+        "wikidataQid": "Q98452918",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q98452918"
+    },
+    {
+      "personId": "43bdc778-d53c-417f-802d-591a20dc0975",
+      "personName": "劉守成",
+      "claimType": "education",
+      "claimValue": "輔仁大學",
+      "claimJson": {
+        "wikidataQid": "Q6653724",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q6653724"
+    },
+    {
+      "personId": "2996fee6-52d5-4df0-8b9f-8b86060f0aae",
+      "personName": "鄭永金",
+      "claimType": "education",
+      "claimValue": "中國文化大學；敏實科技大學",
+      "claimJson": {
+        "wikidataQid": "Q8272084",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8272084"
+    },
+    {
+      "personId": "7d06da8b-da53-4f3b-9af2-5534d19e5626",
+      "personName": "謝長廷",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；京都大學；國立臺北商業大學；京都大學大學院法學研究科・法學部；臺北市大同區日新國民小學；臺北市立成功高級中學",
+      "claimJson": {
+        "wikidataQid": "Q472310",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q472310"
+    },
+    {
+      "personId": "7758cfb3-5057-4ece-9cd3-b1506dd431ca",
+      "personName": "蘇嘉全",
+      "claimType": "education",
+      "claimValue": "國立臺灣海洋大學；國立屏東高級中學；國立中山大學",
+      "claimJson": {
+        "wikidataQid": "Q700774",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q700774"
+    }
+  ]
+}

@@ -366,7 +366,7 @@ function scoreMatch(row, candidate) {
   return { score, reasons };
 }
 
-function matchCandidate(row, candidatesByName) {
+export function matchCandidate(row, candidatesByName) {
   const candidates = candidatesByName.get(normalizeIdentityText(row.name)) ?? [];
   const scored = candidates
     .map((candidate) => ({ candidate, ...scoreMatch(row, candidate) }))
@@ -375,6 +375,12 @@ function matchCandidate(row, candidatesByName) {
   const second = scored[1] ?? null;
 
   if (!best || best.score < 75 || (second && best.score - second.score < 15)) {
+    return null;
+  }
+
+  const hasSpecificDiscriminator = best.reasons.some((reason) =>
+    ['candidate number matched', 'party matched', 'race title matched'].includes(reason));
+  if (!hasSpecificDiscriminator) {
     return null;
   }
 
@@ -592,8 +598,10 @@ async function main() {
   }, null, 2));
 }
 
-main().catch((error) => {
-  const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`CEC 2024 person profile enrichment failed: ${message}`);
-  process.exit(1);
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`CEC 2024 person profile enrichment failed: ${message}`);
+    process.exit(1);
+  });
+}

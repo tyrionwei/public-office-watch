@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { canonicalPartyName } from './lib/party-name-normalization.mjs';
 
 const sourceId = 'votetw-election-history';
 const apiUrl = 'https://votetw.com/w/api.php';
@@ -148,8 +149,8 @@ function cleanRate(value) {
 
 function normalizePartyName(value) {
   const party = cleanValue(value);
-  if (!party || party === '無') return '無黨籍';
-  return party;
+  if (!party) return '無黨籍';
+  return canonicalPartyName(party);
 }
 
 function genderFromName() {

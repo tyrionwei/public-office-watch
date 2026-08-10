@@ -103,9 +103,14 @@ export function canonicalElectionType(role) {
   return 'other';
 }
 
-export function canonicalCouncilorElectionScope(year, historicalGeography) {
-  if (Number(year) >= 2010) return 'combined';
+export function canonicalLocalElectionScope(year, historicalGeography) {
+  if (Number(year) >= 2014) return 'combined';
+  if (Number(year) === 2010) return 'metropolitan';
   return ['臺北市', '高雄市'].includes(historicalGeography) ? 'metropolitan' : 'county_city';
+}
+
+export function canonicalCouncilorElectionScope(year, historicalGeography) {
+  return canonicalLocalElectionScope(year, historicalGeography);
 }
 
 export function canonicalElectionName(year, role, electionScope = 'combined') {
@@ -116,7 +121,11 @@ export function canonicalElectionName(year, role, electionScope = 'combined') {
     if (electionScope === 'county_city') return `${year}年縣市議員選舉`;
     return `${year}年直轄市及縣市議員選舉`;
   }
-  if (role === 'county_city_mayor') return `${year}年直轄市長及縣市長選舉`;
+  if (role === 'county_city_mayor') {
+    if (electionScope === 'metropolitan') return `${year}年直轄市長選舉`;
+    if (electionScope === 'county_city') return `${year}年縣市長選舉`;
+    return `${year}年直轄市及縣市長選舉`;
+  }
   return `${year}年其他選舉`;
 }
 
@@ -176,8 +185,8 @@ export function buildHistoricalSourceContext(source) {
   const districtNumber = normalizedDistrictNumber(source);
   const districtKey = districtNumber == null ? seatType : `district-${districtNumber}`;
   const electionType = canonicalElectionType(role);
-  const electionScope = role === 'councilor'
-    ? canonicalCouncilorElectionScope(source.election_year, historicalGeography)
+  const electionScope = ['councilor', 'county_city_mayor'].includes(role)
+    ? canonicalLocalElectionScope(source.election_year, historicalGeography)
     : 'national';
   const electionName = canonicalElectionName(source.election_year, role, electionScope);
   const raceType = canonicalRaceType(role, seatType, historicalGeography);

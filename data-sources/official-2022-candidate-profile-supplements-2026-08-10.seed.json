@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "name": "official-2022-candidate-profile-supplements-2026-08-10",
+  "updatedAt": "2026-08-10",
+  "notes": "Fills the remaining high-priority 2022 candidate profile gaps from CEC bulletins. Birth date, education, and experience claims are A confidence after exact candidate-context matching.",
+  "sources": [
+    {
+      "id": "cec-2022-tainan-councilor-district-8",
+      "name": "中央選舉委員會：2022 年臺南市第 8 選舉區議員選舉公報",
+      "url": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/05臺南市/第八選舉區.pdf"
+    },
+    {
+      "id": "cec-2022-taoyuan-councilor-district-2",
+      "name": "中央選舉委員會：2022 年桃園市第 2 選舉區議員選舉公報",
+      "url": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/03桃園市/桃園市第2選舉區.pdf"
+    },
+    {
+      "id": "cec-2022-tainan-councilor-district-10",
+      "name": "中央選舉委員會：2022 年臺南市第 10 選舉區議員選舉公報",
+      "url": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/05臺南市/第十選舉區.pdf"
+    }
+  ],
+  "summary": {
+    "personCount": 3,
+    "claimCount": 6,
+    "officialClaimCount": 6,
+    "secondaryClaimCount": 0
+  },
+  "personClaims": [
+    {
+      "claimKey": "official-2022-candidate-profile:jiang-mingzong:birth_date",
+      "personId": "a1e5032e-ec18-4d72-a811-e13a8bf603a9",
+      "personName": "江明宗",
+      "claimType": "birth_date",
+      "claimValue": "1981-09-15",
+      "claimJson": {
+        "value": "1981-09-15",
+        "electionYear": 2022,
+        "district": "臺南市第8選舉區",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_birth_party_region_and_2022_race",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-tainan-councilor-district-8",
+      "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/05臺南市/第八選舉區.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2022-candidate-profile:jiang-mingzong:education",
+      "personId": "a1e5032e-ec18-4d72-a811-e13a8bf603a9",
+      "personName": "江明宗",
+      "claimType": "education",
+      "claimValue": "中國科技大學資訊管理系",
+      "claimJson": {
+        "value": "中國科技大學資訊管理系",
+        "electionYear": 2022,
+        "district": "臺南市第8選舉區",
+        "candidateNumber": 2,
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_party_district_candidate_number",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-tainan-councilor-district-8",
+      "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/05臺南市/第八選舉區.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2022-candidate-profile:chen-hongwei:birth_date",
+      "personId": "0db62d14-a37b-4ab4-91d0-bfb3321728ab",
+      "personName": "陳泓維",
+      "claimType": "birth_date",
+      "claimValue": "1987-05-08",
+      "claimJson": {
+        "value": "1987-05-08",
+        "electionYear": 2022,
+        "district": "桃園市第2選舉區",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_birth_region_and_2020_2022_races",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-taoyuan-councilor-district-2",
+      "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/03桃園市/桃園市第2選舉區.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2022-candidate-profile:chen-hongwei:education",
+      "personId": "0db62d14-a37b-4ab4-91d0-bfb3321728ab",
+      "personName": "陳泓維",
+      "claimType": "education",
+      "claimValue": "龍華科技大學文創系（2022年選舉公報記載大四）",
+      "claimJson": {
+        "value": "龍華科技大學文創系（2022年選舉公報記載大四）",
+        "electionYear": 2022,
+        "district": "桃園市第2選舉區",
+        "candidateNumber": 9,
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_candidate_number_and_prior_race",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-taoyuan-councilor-district-2",
+      "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/03桃園市/桃園市第2選舉區.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2022-candidate-profile:chen-jinzhong:birth_date",
+      "personId": "f2677b32-6259-46e0-92ba-a3a543e8ec48",
+      "personName": "陳金鐘",
+      "claimType": "birth_date",
+      "claimValue": "1960-11-09",
+      "claimJson": {
+        "value": "1960-11-09",
+        "electionYear": 2022,
+        "district": "臺南市第10選舉區",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_birth_party_region_and_2018_2022_races",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-tainan-councilor-district-10",
+      "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/05臺南市/第十選舉區.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2022-candidate-profile:chen-jinzhong:experience",
+      "personId": "f2677b32-6259-46e0-92ba-a3a543e8ec48",
+      "personName": "陳金鐘",
+      "claimType": "experience",
+      "claimValue": "臺南市政府社會局機要秘書；臺南市立醫院名譽副院長；臺南市議會第2屆議員；嘉南藥理科技大學講師",
+      "claimJson": {
+        "value": "臺南市政府社會局機要秘書；臺南市立醫院名譽副院長；臺南市議會第2屆議員；嘉南藥理科技大學講師",
+        "electionYear": 2022,
+        "district": "臺南市第10選舉區",
+        "candidateNumber": 4,
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_party_district_candidate_number_and_prior_race",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-tainan-councilor-district-10",
+      "sourceUrl": "https://bulletin.cec.gov.tw/01選舉公報/05直轄市議員/111年/05臺南市/第十選舉區.pdf",
+      "observedAt": "2026-08-10"
+    }
+  ]
+}

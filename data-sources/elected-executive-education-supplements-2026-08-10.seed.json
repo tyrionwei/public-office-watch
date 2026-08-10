@@ -1,0 +1,1445 @@
+{
+  "schemaVersion": 1,
+  "name": "elected-executive-education-supplements-2026-08-10",
+  "updatedAt": "2026-08-10",
+  "notes": "Reviewed education supplements for elected presidents, vice presidents, and county/city chiefs. University-level entries omit lower schools; people without university records retain only the highest confirmed education.",
+  "sources": [
+    {
+      "id": "hualien-high-school-distinguished-alumni-wang-ching-feng",
+      "name": "國立花蓮高級中學：歷屆傑出校友",
+      "url": "https://www.hlhs.hlc.edu.tw/content?a=T0RESU16UTVNamt4TURrPTBrRE0xZ2pOeGNsVGludGVseQ%3D%3D"
+    },
+    {
+      "id": "wikipedia-yu-cheng-hsien-education",
+      "name": "維基百科：余政憲",
+      "url": "https://zh.wikipedia.org/wiki/%E4%BD%99%E6%94%BF%E6%86%B2"
+    },
+    {
+      "id": "cec-2012-taitung-legislator-bulletin-wu-chun-li",
+      "name": "中央選舉委員會：第8屆立法委員選舉臺東縣選舉公報",
+      "url": "https://web.cec.gov.tw/api/file/a4d9f4fa-f6ec-4c99-bd2c-0a4624b496b8.pdf"
+    },
+    {
+      "id": "wikidata-q465284",
+      "name": "Wikidata：呂秀蓮",
+      "url": "https://www.wikidata.org/wiki/Q465284"
+    },
+    {
+      "id": "wikidata-q8982294",
+      "name": "Wikidata：李炷烽",
+      "url": "https://www.wikidata.org/wiki/Q8982294"
+    },
+    {
+      "id": "wikidata-q315528",
+      "name": "Wikidata：李登輝",
+      "url": "https://www.wikidata.org/wiki/Q315528"
+    },
+    {
+      "id": "legislative-yuan-lee-ya-ching-profile",
+      "name": "立法院：李雅景委員簡介",
+      "url": "https://www.ly.gov.tw/EngPages/List.aspx?nodeid=1119"
+    },
+    {
+      "id": "wikidata-q8276023",
+      "name": "Wikidata：阮剛猛",
+      "url": "https://www.wikidata.org/wiki/Q8276023"
+    },
+    {
+      "id": "fu-jen-alumni-chou-hsi-wei",
+      "name": "輔仁大學：校友資料",
+      "url": "https://www.fju.edu.tw/file/news/Public971/2008121101929.pdf"
+    },
+    {
+      "id": "wikidata-q8351531",
+      "name": "Wikidata：林宗男",
+      "url": "https://www.wikidata.org/wiki/Q8351531"
+    },
+    {
+      "id": "wikidata-q8274439",
+      "name": "Wikidata：林政則",
+      "url": "https://www.wikidata.org/wiki/Q8274439"
+    },
+    {
+      "id": "wikidata-q8348863",
+      "name": "Wikidata：徐慶元",
+      "url": "https://www.wikidata.org/wiki/Q8348863"
+    },
+    {
+      "id": "wikidata-q8031967",
+      "name": "Wikidata：翁金珠",
+      "url": "https://www.wikidata.org/wiki/Q8031967"
+    },
+    {
+      "id": "wikidata-q4515439",
+      "name": "Wikidata：張博雅",
+      "url": "https://www.wikidata.org/wiki/Q4515439"
+    },
+    {
+      "id": "wikidata-q700825",
+      "name": "Wikidata：張溫鷹",
+      "url": "https://www.wikidata.org/wiki/Q700825"
+    },
+    {
+      "id": "wikidata-q15909770",
+      "name": "Wikidata：張榮味",
+      "url": "https://www.wikidata.org/wiki/Q15909770"
+    },
+    {
+      "id": "wikipedia-chang-fu-hsing-education",
+      "name": "維基百科：張福興",
+      "url": "https://zh.wikipedia.org/wiki/%E5%BC%B5%E7%A6%8F%E8%88%88_%28%E6%94%BF%E6%B2%BB%E4%BA%BA%E7%89%A9%29"
+    },
+    {
+      "id": "wikidata-q5537816",
+      "name": "Wikidata：張燦鍙",
+      "url": "https://www.wikidata.org/wiki/Q5537816"
+    },
+    {
+      "id": "wikidata-q15902640",
+      "name": "Wikidata：許財利",
+      "url": "https://www.wikidata.org/wiki/Q15902640"
+    },
+    {
+      "id": "wikidata-q698464",
+      "name": "Wikidata：許添財",
+      "url": "https://www.wikidata.org/wiki/Q698464"
+    },
+    {
+      "id": "wikidata-q558718",
+      "name": "Wikidata：連戰",
+      "url": "https://www.wikidata.org/wiki/Q558718"
+    },
+    {
+      "id": "wikidata-q8272213",
+      "name": "Wikidata：陳水在",
+      "url": "https://www.wikidata.org/wiki/Q8272213"
+    },
+    {
+      "id": "wikidata-q22368",
+      "name": "Wikidata：陳水扁",
+      "url": "https://www.wikidata.org/wiki/Q22368"
+    },
+    {
+      "id": "legislative-yuan-chen-tang-shan-profile",
+      "name": "立法院：陳唐山委員簡介",
+      "url": "https://www.ly.gov.tw/EngPages/List.aspx?nodeid=11473"
+    },
+    {
+      "id": "wikidata-q8347296",
+      "name": "Wikidata：陳麗貞",
+      "url": "https://www.wikidata.org/wiki/Q8347296"
+    },
+    {
+      "id": "miaoli-former-magistrate-fu-hsueh-peng",
+      "name": "苗栗縣政府：第十三屆縣長傅學鵬",
+      "url": "https://www.miaoli.gov.tw/News_Content2.aspx?n=270&s=9538"
+    },
+    {
+      "id": "wikidata-q8351731",
+      "name": "Wikidata：彭百顯",
+      "url": "https://www.wikidata.org/wiki/Q8351731"
+    },
+    {
+      "id": "nchu-distinguished-alumnus-huang-chung-sheng",
+      "name": "國立中興大學：傑出校友黃仲生",
+      "url": "https://archive.nchu.edu.tw/data/special/special6_3.pdf"
+    },
+    {
+      "id": "legislative-yuan-yang-chiu-hsing-profile",
+      "name": "立法院：楊秋興委員簡介",
+      "url": "https://www.ly.gov.tw/EngPages/List.aspx?nodeid=1027"
+    },
+    {
+      "id": "taichung-literature-liao-yung-lai-profile",
+      "name": "臺中文學館：廖莫白（廖永來）作家小傳",
+      "url": "https://www.tlm.taichung.gov.tw/form/Details.aspx?Parser=2%2C8%2C46%2C95%2C%2C%2C104"
+    },
+    {
+      "id": "wikidata-q98452918",
+      "name": "Wikidata：劉立群",
+      "url": "https://www.wikidata.org/wiki/Q98452918"
+    },
+    {
+      "id": "wikidata-q6653724",
+      "name": "Wikidata：劉守成",
+      "url": "https://www.wikidata.org/wiki/Q6653724"
+    },
+    {
+      "id": "cec-2014-hsinchu-mayor-bulletin-tsai-jen-chien",
+      "name": "中央選舉委員會：2014年新竹市市長選舉公報",
+      "url": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/04%E7%B8%A3%E5%B8%82%E9%95%B7/103%E5%B9%B4/08%E6%96%B0%E7%AB%B9%E5%B8%82%E5%B8%82%E9%95%B7.pdf"
+    },
+    {
+      "id": "wikidata-q8272084",
+      "name": "Wikidata：鄭永金",
+      "url": "https://www.wikidata.org/wiki/Q8272084"
+    },
+    {
+      "id": "wikidata-q472310",
+      "name": "Wikidata：謝長廷",
+      "url": "https://www.wikidata.org/wiki/Q472310"
+    },
+    {
+      "id": "votetw-legislative-yuan-hsieh-shen-shan",
+      "name": "VoteTW：謝深山立法院資料",
+      "url": "https://votetw.com/data/candidate/%E8%AC%9D%E6%B7%B1%E5%B1%B1"
+    },
+    {
+      "id": "wikidata-q700774",
+      "name": "Wikidata：蘇嘉全",
+      "url": "https://www.wikidata.org/wiki/Q700774"
+    }
+  ],
+  "summary": {
+    "personCount": 37,
+    "claimCount": 37,
+    "confidenceA": 10,
+    "confidenceB": 1,
+    "confidenceC": 26
+  },
+  "personClaims": [
+    {
+      "claimKey": "elected-executive-education:a653d368-9ed2-416f-9688-a229468ea988",
+      "personId": "a653d368-9ed2-416f-9688-a229468ea988",
+      "personName": "王慶豐",
+      "claimType": "education",
+      "claimValue": "國立花蓮高級中學",
+      "claimJson": {
+        "value": "國立花蓮高級中學",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "hualien-high-school-distinguished-alumni-wang-ching-feng",
+      "sourceName": "國立花蓮高級中學：歷屆傑出校友",
+      "sourceUrl": "https://www.hlhs.hlc.edu.tw/content?a=T0RESU16UTVNamt4TURrPTBrRE0xZ2pOeGNsVGludGVseQ%3D%3D",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:484d4c79-bde6-4fa3-909e-ca6944abaf14",
+      "personId": "484d4c79-bde6-4fa3-909e-ca6944abaf14",
+      "personName": "余政憲",
+      "claimType": "education",
+      "claimValue": "逢甲大學國際貿易學系；義守大學管理科學研究所碩士",
+      "claimJson": {
+        "value": "逢甲大學國際貿易學系；義守大學管理科學研究所碩士",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikipedia-yu-cheng-hsien-education",
+      "sourceName": "維基百科：余政憲",
+      "sourceUrl": "https://zh.wikipedia.org/wiki/%E4%BD%99%E6%94%BF%E6%86%B2",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:342827b8-0ea2-4fb0-a7c2-15ef700bb3c3",
+      "personId": "342827b8-0ea2-4fb0-a7c2-15ef700bb3c3",
+      "personName": "吳俊立",
+      "claimType": "education",
+      "claimValue": "國立高雄應用科技大學財經與商業法律碩士",
+      "claimJson": {
+        "value": "國立高雄應用科技大學財經與商業法律碩士",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2012-taitung-legislator-bulletin-wu-chun-li",
+      "sourceName": "中央選舉委員會：第8屆立法委員選舉臺東縣選舉公報",
+      "sourceUrl": "https://web.cec.gov.tw/api/file/a4d9f4fa-f6ec-4c99-bd2c-0a4624b496b8.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:920f0d39-5dda-463c-a2bc-c133ea9c5c1d",
+      "personId": "920f0d39-5dda-463c-a2bc-c133ea9c5c1d",
+      "personName": "呂秀蓮",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；伊利諾大學厄巴納－香檳分校；哈佛法學院",
+      "claimJson": {
+        "value": "國立臺灣大學；伊利諾大學厄巴納－香檳分校；哈佛法學院",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q465284",
+      "sourceName": "Wikidata：呂秀蓮",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q465284",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:28353953-8fbf-4f42-9b11-116e45194084",
+      "personId": "28353953-8fbf-4f42-9b11-116e45194084",
+      "personName": "李炷烽",
+      "claimType": "education",
+      "claimValue": "國立臺灣師範大學",
+      "claimJson": {
+        "value": "國立臺灣師範大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8982294",
+      "sourceName": "Wikidata：李炷烽",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8982294",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:8ed2a9f8-05a9-4a93-9e6f-1a669ffe7c11",
+      "personId": "8ed2a9f8-05a9-4a93-9e6f-1a669ffe7c11",
+      "personName": "李登輝",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；京都大學；愛荷華州立大學；康乃爾大學",
+      "claimJson": {
+        "value": "國立臺灣大學；京都大學；愛荷華州立大學；康乃爾大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q315528",
+      "sourceName": "Wikidata：李登輝",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q315528",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:7f36fb12-47d8-49d6-9bd6-4400ac20d9fc",
+      "personId": "7f36fb12-47d8-49d6-9bd6-4400ac20d9fc",
+      "personName": "李雅景",
+      "claimType": "education",
+      "claimValue": "南華大學管理研究所碩士班",
+      "claimJson": {
+        "value": "南華大學管理研究所碩士班",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "legislative-yuan-lee-ya-ching-profile",
+      "sourceName": "立法院：李雅景委員簡介",
+      "sourceUrl": "https://www.ly.gov.tw/EngPages/List.aspx?nodeid=1119",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:eada4822-6e55-4217-9d50-79a8c1bd5bb5",
+      "personId": "eada4822-6e55-4217-9d50-79a8c1bd5bb5",
+      "personName": "阮剛猛",
+      "claimType": "education",
+      "claimValue": "國立臺中教育大學",
+      "claimJson": {
+        "value": "國立臺中教育大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8276023",
+      "sourceName": "Wikidata：阮剛猛",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8276023",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:400df4eb-a8e4-4d76-966a-d486a9fe97b1",
+      "personId": "400df4eb-a8e4-4d76-966a-d486a9fe97b1",
+      "personName": "周錫瑋",
+      "claimType": "education",
+      "claimValue": "輔仁大學大眾傳播學系",
+      "claimJson": {
+        "value": "輔仁大學大眾傳播學系",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "fu-jen-alumni-chou-hsi-wei",
+      "sourceName": "輔仁大學：校友資料",
+      "sourceUrl": "https://www.fju.edu.tw/file/news/Public971/2008121101929.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:249f8dfa-35d4-451e-ba7d-dfde78138e26",
+      "personId": "249f8dfa-35d4-451e-ba7d-dfde78138e26",
+      "personName": "林宗男",
+      "claimType": "education",
+      "claimValue": "明治大學",
+      "claimJson": {
+        "value": "明治大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8351531",
+      "sourceName": "Wikidata：林宗男",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8351531",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:acabe2c9-8d91-4ce5-ac99-0f995b99ee59",
+      "personId": "acabe2c9-8d91-4ce5-ac99-0f995b99ee59",
+      "personName": "林政則",
+      "claimType": "education",
+      "claimValue": "東吳大學",
+      "claimJson": {
+        "value": "東吳大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8274439",
+      "sourceName": "Wikidata：林政則",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8274439",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:05eb5add-efe5-4b2f-94fa-dfcb62a2d042",
+      "personId": "05eb5add-efe5-4b2f-94fa-dfcb62a2d042",
+      "personName": "徐慶元",
+      "claimType": "education",
+      "claimValue": "國立成功大學",
+      "claimJson": {
+        "value": "國立成功大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8348863",
+      "sourceName": "Wikidata：徐慶元",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8348863",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:89359ae8-d701-4e36-841a-98ec54b2f00f",
+      "personId": "89359ae8-d701-4e36-841a-98ec54b2f00f",
+      "personName": "翁金珠",
+      "claimType": "education",
+      "claimValue": "國立臺灣師範大學",
+      "claimJson": {
+        "value": "國立臺灣師範大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8031967",
+      "sourceName": "Wikidata：翁金珠",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8031967",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:2af92905-58e7-4ab1-bdb4-e700dba2d10f",
+      "personId": "2af92905-58e7-4ab1-bdb4-e700dba2d10f",
+      "personName": "張博雅",
+      "claimType": "education",
+      "claimValue": "高雄醫學大學；國立臺灣大學；約翰霍普金斯大學",
+      "claimJson": {
+        "value": "高雄醫學大學；國立臺灣大學；約翰霍普金斯大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q4515439",
+      "sourceName": "Wikidata：張博雅",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q4515439",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:427fa9f4-cd52-5b38-9224-793dee8ca381",
+      "personId": "427fa9f4-cd52-5b38-9224-793dee8ca381",
+      "personName": "張溫鷹",
+      "claimType": "education",
+      "claimValue": "高雄醫學大學；國立政治大學；牛津大學；南安普敦大學",
+      "claimJson": {
+        "value": "高雄醫學大學；國立政治大學；牛津大學；南安普敦大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q700825",
+      "sourceName": "Wikidata：張溫鷹",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q700825",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:df8bf0ba-b448-bbc5-f23d-264e4dca1813",
+      "personId": "df8bf0ba-b448-bbc5-f23d-264e4dca1813",
+      "personName": "張榮味",
+      "claimType": "education",
+      "claimValue": "嘉義市私立神州高級中學進修學校",
+      "claimJson": {
+        "value": "嘉義市私立神州高級中學進修學校",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q15909770",
+      "sourceName": "Wikidata：張榮味",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15909770",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:1c099574-d15a-45e3-8b97-8ce600ce65d2",
+      "personId": "1c099574-d15a-45e3-8b97-8ce600ce65d2",
+      "personName": "張福興",
+      "claimType": "education",
+      "claimValue": "東吳大學法學士；近畿大學法學碩士；近畿大學法學博士",
+      "claimJson": {
+        "value": "東吳大學法學士；近畿大學法學碩士；近畿大學法學博士",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikipedia-chang-fu-hsing-education",
+      "sourceName": "維基百科：張福興",
+      "sourceUrl": "https://zh.wikipedia.org/wiki/%E5%BC%B5%E7%A6%8F%E8%88%88_%28%E6%94%BF%E6%B2%BB%E4%BA%BA%E7%89%A9%29",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:e5c40f13-040d-46b3-aad3-c4bce26d51dd",
+      "personId": "e5c40f13-040d-46b3-aad3-c4bce26d51dd",
+      "personName": "張燦鍙",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；萊斯大學；加州理工學院",
+      "claimJson": {
+        "value": "國立臺灣大學；萊斯大學；加州理工學院",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q5537816",
+      "sourceName": "Wikidata：張燦鍙",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q5537816",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:3f242b68-c535-0fcb-077f-fa4336ffaf72",
+      "personId": "3f242b68-c535-0fcb-077f-fa4336ffaf72",
+      "personName": "許財利",
+      "claimType": "education",
+      "claimValue": "國立空中大學",
+      "claimJson": {
+        "value": "國立空中大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q15902640",
+      "sourceName": "Wikidata：許財利",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q15902640",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:47986e4d-fd92-4a27-9ab0-92f9b553d380",
+      "personId": "47986e4d-fd92-4a27-9ab0-92f9b553d380",
+      "personName": "許添財",
+      "claimType": "education",
+      "claimValue": "中國文化大學；哥倫比亞大學；羅格斯大學；新學院",
+      "claimJson": {
+        "value": "中國文化大學；哥倫比亞大學；羅格斯大學；新學院",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q698464",
+      "sourceName": "Wikidata：許添財",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q698464",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:48f3a634-ad9f-4df1-8552-d6a47d4b25ff",
+      "personId": "48f3a634-ad9f-4df1-8552-d6a47d4b25ff",
+      "personName": "連戰",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；芝加哥大學",
+      "claimJson": {
+        "value": "國立臺灣大學；芝加哥大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 90,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched",
+            "district or party hint matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched",
+            "district or party hint matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q558718",
+      "sourceName": "Wikidata：連戰",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q558718",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:b98f0367-699f-4666-a07c-7378585bde87",
+      "personId": "b98f0367-699f-4666-a07c-7378585bde87",
+      "personName": "陳水在",
+      "claimType": "education",
+      "claimValue": "國防大學政治作戰學院",
+      "claimJson": {
+        "value": "國防大學政治作戰學院",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8272213",
+      "sourceName": "Wikidata：陳水在",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8272213",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:74092f74-4092-58cd-90bb-34c36b37f974",
+      "personId": "74092f74-4092-58cd-90bb-34c36b37f974",
+      "personName": "陳水扁",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學",
+      "claimJson": {
+        "value": "國立臺灣大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 90,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched",
+            "district or party hint matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched",
+            "district or party hint matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q22368",
+      "sourceName": "Wikidata：陳水扁",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q22368",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:341151fa-57cb-4257-bde1-1cde18e30767",
+      "personId": "341151fa-57cb-4257-bde1-1cde18e30767",
+      "personName": "陳唐山",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學大氣科學學士；奧克拉荷馬大學碩士；普渡大學博士",
+      "claimJson": {
+        "value": "國立臺灣大學大氣科學學士；奧克拉荷馬大學碩士；普渡大學博士",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "legislative-yuan-chen-tang-shan-profile",
+      "sourceName": "立法院：陳唐山委員簡介",
+      "sourceUrl": "https://www.ly.gov.tw/EngPages/List.aspx?nodeid=11473",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:6a42ee5a-69d8-4c9f-9470-47c3df4b1c32",
+      "personId": "6a42ee5a-69d8-4c9f-9470-47c3df4b1c32",
+      "personName": "陳麗貞",
+      "claimType": "education",
+      "claimValue": "中國醫藥大學",
+      "claimJson": {
+        "value": "中國醫藥大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8347296",
+      "sourceName": "Wikidata：陳麗貞",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8347296",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:87547a7a-6f96-4c6d-8b9f-2b6163638fe4",
+      "personId": "87547a7a-6f96-4c6d-8b9f-2b6163638fe4",
+      "personName": "傅學鵬",
+      "claimType": "education",
+      "claimValue": "臺灣省立苗栗高級中學",
+      "claimJson": {
+        "value": "臺灣省立苗栗高級中學",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "miaoli-former-magistrate-fu-hsueh-peng",
+      "sourceName": "苗栗縣政府：第十三屆縣長傅學鵬",
+      "sourceUrl": "https://www.miaoli.gov.tw/News_Content2.aspx?n=270&s=9538",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:b01e3c16-2a6f-410d-ad0b-167549937d37",
+      "personId": "b01e3c16-2a6f-410d-ad0b-167549937d37",
+      "personName": "彭百顯",
+      "claimType": "education",
+      "claimValue": "中國文化大學；倫敦大學",
+      "claimJson": {
+        "value": "中國文化大學；倫敦大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8351731",
+      "sourceName": "Wikidata：彭百顯",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8351731",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:c82ab6b3-4017-4e0b-bc34-a63f5193d94d",
+      "personId": "c82ab6b3-4017-4e0b-bc34-a63f5193d94d",
+      "personName": "黃仲生",
+      "claimType": "education",
+      "claimValue": "國立中興大學園藝學系",
+      "claimJson": {
+        "value": "國立中興大學園藝學系",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "nchu-distinguished-alumnus-huang-chung-sheng",
+      "sourceName": "國立中興大學：傑出校友黃仲生",
+      "sourceUrl": "https://archive.nchu.edu.tw/data/special/special6_3.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:b157683c-24ff-4155-96e7-5b1d928dc5a8",
+      "personId": "b157683c-24ff-4155-96e7-5b1d928dc5a8",
+      "personName": "楊秋興",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學土木工程系；國立臺灣大學土木工程研究所碩士",
+      "claimJson": {
+        "value": "國立臺灣大學土木工程系；國立臺灣大學土木工程研究所碩士",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "legislative-yuan-yang-chiu-hsing-profile",
+      "sourceName": "立法院：楊秋興委員簡介",
+      "sourceUrl": "https://www.ly.gov.tw/EngPages/List.aspx?nodeid=1027",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:1de86cff-c913-4f96-8ab6-bf297a787be9",
+      "personId": "1de86cff-c913-4f96-8ab6-bf297a787be9",
+      "personName": "廖永來",
+      "claimType": "education",
+      "claimValue": "臺灣省立臺中師範專科學校",
+      "claimJson": {
+        "value": "臺灣省立臺中師範專科學校",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "taichung-literature-liao-yung-lai-profile",
+      "sourceName": "臺中文學館：廖莫白（廖永來）作家小傳",
+      "sourceUrl": "https://www.tlm.taichung.gov.tw/form/Details.aspx?Parser=2%2C8%2C46%2C95%2C%2C%2C104",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:8ffa8cb8-470f-43e7-9008-eaebaa1a2842",
+      "personId": "8ffa8cb8-470f-43e7-9008-eaebaa1a2842",
+      "personName": "劉立群",
+      "claimType": "education",
+      "claimValue": "國立屏東科技大學；國立政治大學；西雅圖社群大學",
+      "claimJson": {
+        "value": "國立屏東科技大學；國立政治大學；西雅圖社群大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q98452918",
+      "sourceName": "Wikidata：劉立群",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q98452918",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:43bdc778-d53c-417f-802d-591a20dc0975",
+      "personId": "43bdc778-d53c-417f-802d-591a20dc0975",
+      "personName": "劉守成",
+      "claimType": "education",
+      "claimValue": "輔仁大學",
+      "claimJson": {
+        "value": "輔仁大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q6653724",
+      "sourceName": "Wikidata：劉守成",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q6653724",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:98b884c6-47dc-4604-b6d1-84f6e67a696b",
+      "personId": "98b884c6-47dc-4604-b6d1-84f6e67a696b",
+      "personName": "蔡仁堅",
+      "claimType": "education",
+      "claimValue": "臺北醫學院藥學系；哈佛大學政府學院公共行政碩士",
+      "claimJson": {
+        "value": "臺北醫學院藥學系；哈佛大學政府學院公共行政碩士",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2014-hsinchu-mayor-bulletin-tsai-jen-chien",
+      "sourceName": "中央選舉委員會：2014年新竹市市長選舉公報",
+      "sourceUrl": "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/04%E7%B8%A3%E5%B8%82%E9%95%B7/103%E5%B9%B4/08%E6%96%B0%E7%AB%B9%E5%B8%82%E5%B8%82%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:2996fee6-52d5-4df0-8b9f-8b86060f0aae",
+      "personId": "2996fee6-52d5-4df0-8b9f-8b86060f0aae",
+      "personName": "鄭永金",
+      "claimType": "education",
+      "claimValue": "中國文化大學；敏實科技大學",
+      "claimJson": {
+        "value": "中國文化大學；敏實科技大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q8272084",
+      "sourceName": "Wikidata：鄭永金",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8272084",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:7d06da8b-da53-4f3b-9af2-5534d19e5626",
+      "personId": "7d06da8b-da53-4f3b-9af2-5534d19e5626",
+      "personName": "謝長廷",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學；京都大學",
+      "claimJson": {
+        "value": "國立臺灣大學；京都大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q472310",
+      "sourceName": "Wikidata：謝長廷",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q472310",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:a3dd1d76-f6fe-45ac-ac59-ecd96118164f",
+      "personId": "a3dd1d76-f6fe-45ac-ac59-ecd96118164f",
+      "personName": "謝深山",
+      "claimType": "education",
+      "claimValue": "臺灣省立花蓮工業職業學校",
+      "claimJson": {
+        "value": "臺灣省立花蓮工業職業學校",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_and_elected_executive_office",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "votetw-legislative-yuan-hsieh-shen-shan",
+      "sourceName": "VoteTW：謝深山立法院資料",
+      "sourceUrl": "https://votetw.com/data/candidate/%E8%AC%9D%E6%B7%B1%E5%B1%B1",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-education:7758cfb3-5057-4ece-9cd3-b1506dd431ca",
+      "personId": "7758cfb3-5057-4ece-9cd3-b1506dd431ca",
+      "personName": "蘇嘉全",
+      "claimType": "education",
+      "claimValue": "國立臺灣海洋大學；國立中山大學",
+      "claimJson": {
+        "value": "國立臺灣海洋大學；國立中山大學",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "position matched"
+          ],
+          "targetGender": "male",
+          "wikidataGender": "male",
+          "corroboratingSignals": [
+            "position matched"
+          ]
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact elected executive identity; education normalized to the public profile display policy."
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-q700774",
+      "sourceName": "Wikidata：蘇嘉全",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q700774",
+      "observedAt": "2026-08-10"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "person-enrichment-skipped-targets",
-  "updatedAt": "2026-08-09",
+  "updatedAt": "2026-08-10",
   "notes": "Targets that did not produce confident Wikidata enrichment claims. This file can be reused with --target-names.",
   "skippedTargets": [
     {
@@ -20,8 +20,8 @@
         "rejectedWikidataQids": []
       },
       "name": "王慶豐",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1011: 7.8666666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:12:35.434Z"
     },
     {
       "target": {
@@ -39,84 +39,8 @@
         "rejectedWikidataQids": []
       },
       "name": "余政憲",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1011: 7.8666666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "342827b8-0ea2-4fb0-a7c2-15ef700bb3c3",
-        "name": "吳俊立",
-        "gender": "male",
-        "party": "無黨籍",
-        "position": "臺東縣縣長",
-        "district": "臺東縣縣長選舉",
-        "education": "",
-        "experience": "2005年臺東縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "吳俊立",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 13.683333333333 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "920f0d39-5dda-463c-a2bc-c133ea9c5c1d",
-        "name": "呂秀蓮",
-        "gender": "female",
-        "party": "民主進步黨",
-        "position": "副總統、桃園市市長",
-        "district": "總統副總統全國選舉、總統副總統全國選舉、桃園縣縣長選舉",
-        "education": "",
-        "experience": "1997年桃園縣縣長當選、2000年副總統當選、2004年副總統當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "呂秀蓮",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 13.683333333333 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "28353953-8fbf-4f42-9b11-116e45194084",
-        "name": "李炷烽",
-        "gender": "male",
-        "party": "新黨",
-        "position": "金門縣縣長",
-        "district": "金門縣縣長選舉、金門縣縣長選舉",
-        "education": "",
-        "experience": "2001年金門縣縣長當選、2005年金門縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "李炷烽",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 14.316666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "8ed2a9f8-05a9-4a93-9e6f-1a669ffe7c11",
-        "name": "李登輝",
-        "gender": "male",
-        "party": "中國國民黨",
-        "position": "總統",
-        "district": "總統副總統全國選舉",
-        "education": "",
-        "experience": "1996年總統當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "李登輝",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 14.316666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:12:35.434Z"
     },
     {
       "target": {
@@ -134,27 +58,8 @@
         "rejectedWikidataQids": []
       },
       "name": "李雅景",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 14.316666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "eada4822-6e55-4217-9d50-79a8c1bd5bb5",
-        "name": "阮剛猛",
-        "gender": "male",
-        "party": "中國國民黨",
-        "position": "彰化縣縣長",
-        "district": "彰化縣縣長選舉",
-        "education": "",
-        "experience": "1997年彰化縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "阮剛猛",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 15.35 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:12:35.434Z"
     },
     {
       "target": {
@@ -172,141 +77,8 @@
         "rejectedWikidataQids": []
       },
       "name": "周錫瑋",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 15.35 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "249f8dfa-35d4-451e-ba7d-dfde78138e26",
-        "name": "林宗男",
-        "gender": "male",
-        "party": "民主進步黨",
-        "position": "南投縣縣長",
-        "district": "南投縣縣長選舉",
-        "education": "",
-        "experience": "2001年南投縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "林宗男",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 16.05 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "acabe2c9-8d91-4ce5-ac99-0f995b99ee59",
-        "name": "林政則",
-        "gender": "male",
-        "party": "中國國民黨",
-        "position": "新竹市市長",
-        "district": "新竹市市長選舉、新竹市市長選舉",
-        "education": "",
-        "experience": "2001年新竹市市長當選、2005年新竹市市長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "林政則",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 16.05 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "05eb5add-efe5-4b2f-94fa-dfcb62a2d042",
-        "name": "徐慶元",
-        "gender": "male",
-        "party": "親民黨",
-        "position": "臺東縣縣長",
-        "district": "臺東縣縣長選舉",
-        "education": "",
-        "experience": "2001年臺東縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "徐慶元",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1014: 16.05 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "89359ae8-d701-4e36-841a-98ec54b2f00f",
-        "name": "翁金珠",
-        "gender": "female",
-        "party": "民主進步黨",
-        "position": "彰化縣縣長",
-        "district": "彰化縣縣長選舉",
-        "education": "",
-        "experience": "2001年彰化縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "翁金珠",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1016: 10.1 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "2af92905-58e7-4ab1-bdb4-e700dba2d10f",
-        "name": "張博雅",
-        "gender": "female",
-        "party": "無黨籍",
-        "position": "嘉義市市長",
-        "district": "嘉義市市長選舉",
-        "education": "",
-        "experience": "1997年嘉義市市長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "張博雅",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1016: 10.1 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "427fa9f4-cd52-5b38-9224-793dee8ca381",
-        "name": "張溫鷹",
-        "gender": "female",
-        "party": "民主進步黨",
-        "position": "臺中市市長",
-        "district": "臺中市市長選舉",
-        "education": "",
-        "experience": "1997年臺中市市長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "張溫鷹",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 13.416666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "df8bf0ba-b448-bbc5-f23d-264e4dca1813",
-        "name": "張榮味",
-        "gender": "male",
-        "party": "中國國民黨",
-        "position": "雲林縣縣長",
-        "district": "雲林縣縣長選舉",
-        "education": "",
-        "experience": "2001年雲林縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "張榮味",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 13.416666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:12:35.434Z"
     },
     {
       "target": {
@@ -324,122 +96,8 @@
         "rejectedWikidataQids": []
       },
       "name": "張福興",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 13.416666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "e5c40f13-040d-46b3-aad3-c4bce26d51dd",
-        "name": "張燦鍙",
-        "gender": "male",
-        "party": "民主進步黨",
-        "position": "臺南市市長",
-        "district": "臺南市市長選舉",
-        "education": "",
-        "experience": "1997年臺南市市長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "張燦鍙",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 13.816666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "3f242b68-c535-0fcb-077f-fa4336ffaf72",
-        "name": "許財利",
-        "gender": "male",
-        "party": "中國國民黨",
-        "position": "基隆市市長",
-        "district": "基隆市市長選舉、基隆市市長選舉",
-        "education": "",
-        "experience": "2001年基隆市市長當選、2005年基隆市市長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "許財利",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 13.816666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "47986e4d-fd92-4a27-9ab0-92f9b553d380",
-        "name": "許添財",
-        "gender": "male",
-        "party": "民主進步黨",
-        "position": "臺南市市長",
-        "district": "臺南市市長選舉、臺南市市長選舉",
-        "education": "",
-        "experience": "2001年臺南市市長當選、2005年臺南市市長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "許添財",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 14.25 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "48f3a634-ad9f-4df1-8552-d6a47d4b25ff",
-        "name": "連戰",
-        "gender": "male",
-        "party": "中國國民黨",
-        "position": "副總統",
-        "district": "總統副總統全國選舉",
-        "education": "",
-        "experience": "1996年副總統當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "連戰",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 14.25 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "b98f0367-699f-4666-a07c-7378585bde87",
-        "name": "陳水在",
-        "gender": "male",
-        "party": "中國國民黨",
-        "position": "金門縣縣長",
-        "district": "金門縣縣長選舉",
-        "education": "",
-        "experience": "1997年金門縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "陳水在",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 14.25 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "74092f74-4092-58cd-90bb-34c36b37f974",
-        "name": "陳水扁",
-        "gender": "male",
-        "party": "民主進步黨",
-        "position": "總統、臺北市市長",
-        "district": "總統副總統全國選舉、總統副總統全國選舉、臺北市市長選舉",
-        "education": "",
-        "experience": "1994年臺北市市長當選、2000年總統當選、2004年總統當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "陳水扁",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 14.433333333333 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:14:58.597Z"
     },
     {
       "target": {
@@ -457,27 +115,8 @@
         "rejectedWikidataQids": []
       },
       "name": "陳唐山",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 14.433333333333 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "6a42ee5a-69d8-4c9f-9470-47c3df4b1c32",
-        "name": "陳麗貞",
-        "gender": "female",
-        "party": "無黨籍",
-        "position": "嘉義市市長",
-        "district": "嘉義市市長選舉",
-        "education": "",
-        "experience": "2001年嘉義市市長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "陳麗貞",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 15.316666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:16:41.677Z"
     },
     {
       "target": {
@@ -495,27 +134,8 @@
         "rejectedWikidataQids": []
       },
       "name": "傅學鵬",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 15.316666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "b01e3c16-2a6f-410d-ad0b-167549937d37",
-        "name": "彭百顯",
-        "gender": "male",
-        "party": "無黨籍",
-        "position": "南投縣縣長",
-        "district": "南投縣縣長選舉",
-        "education": "",
-        "experience": "1997年南投縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "彭百顯",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 15.316666666667 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:16:41.677Z"
     },
     {
       "target": {
@@ -533,8 +153,8 @@
         "rejectedWikidataQids": []
       },
       "name": "黃仲生",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 16.1 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:16:41.677Z"
     },
     {
       "target": {
@@ -552,8 +172,8 @@
         "rejectedWikidataQids": []
       },
       "name": "楊秋興",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 16.1 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:16:41.677Z"
     },
     {
       "target": {
@@ -571,46 +191,8 @@
         "rejectedWikidataQids": []
       },
       "name": "廖永來",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 16.1 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "8ffa8cb8-470f-43e7-9008-eaebaa1a2842",
-        "name": "劉立群",
-        "gender": "male",
-        "party": "中國國民黨",
-        "position": "連江縣縣長",
-        "district": "連江縣縣長選舉",
-        "education": "",
-        "experience": "1997年連江縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "劉立群",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 12.15 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "43bdc778-d53c-417f-802d-591a20dc0975",
-        "name": "劉守成",
-        "gender": "male",
-        "party": "民主進步黨",
-        "position": "宜蘭縣縣長",
-        "district": "宜蘭縣縣長選舉、宜蘭縣縣長選舉",
-        "education": "",
-        "experience": "1997年宜蘭縣縣長當選、2001年宜蘭縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "劉守成",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 12.15 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:16:41.677Z"
     },
     {
       "target": {
@@ -628,46 +210,8 @@
         "rejectedWikidataQids": []
       },
       "name": "蔡仁堅",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 11.15 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "2996fee6-52d5-4df0-8b9f-8b86060f0aae",
-        "name": "鄭永金",
-        "gender": "male",
-        "party": "中國國民黨",
-        "position": "新竹縣縣長",
-        "district": "新竹縣縣長選舉、新竹縣縣長選舉",
-        "education": "",
-        "experience": "2001年新竹縣縣長當選、2005年新竹縣縣長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "鄭永金",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 11.15 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
-    },
-    {
-      "target": {
-        "personId": "7d06da8b-da53-4f3b-9af2-5534d19e5626",
-        "name": "謝長廷",
-        "gender": "male",
-        "party": "民主進步黨",
-        "position": "高雄市市長",
-        "district": "高雄市市長選舉、高雄市市長選舉",
-        "education": "",
-        "experience": "1998年高雄市市長當選、2002年高雄市市長當選",
-        "missingSignals": [
-          "education"
-        ],
-        "rejectedWikidataQids": []
-      },
-      "name": "謝長廷",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 11.15 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:18:01.670Z"
     },
     {
       "target": {
@@ -685,8 +229,8 @@
         "rejectedWikidataQids": []
       },
       "name": "謝深山",
-      "reason": "Wikidata API failed: maxlag: Waiting for wdqs1013: 11.6 seconds lagged.",
-      "checkedAt": "2026-08-09T20:50:28.319Z"
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-10T04:18:01.670Z"
     }
   ]
 }

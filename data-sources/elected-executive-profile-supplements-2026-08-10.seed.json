@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "name": "elected-executive-profile-supplements-2026-08-10",
+  "updatedAt": "2026-08-10",
+  "notes": "Completes the remaining non-photo profile gaps for former vice president Chen Chien-jen. Official Academia Sinica and Executive Yuan sources receive A confidence; Wikidata birth/gender facts receive B confidence.",
+  "sources": [
+    {
+      "id": "academia-sinica-chen-chien-jen-profile",
+      "name": "中央研究院：陳建仁院士簡歷",
+      "url": "https://academicians.sinica.edu.tw/index.php?id=122&r=academician-n%2Fshow"
+    },
+    {
+      "id": "executive-yuan-chen-chien-jen-profile",
+      "name": "行政院：陳建仁院長簡歷",
+      "url": "https://www.ey.gov.tw/Page/275F4CE091E4EE08/cce8ff5c-bd53-4e84-9cd0-373b5d6b5572"
+    },
+    {
+      "id": "wikidata-chen-chien-jen-q9182314",
+      "name": "Wikidata：陳建仁（Q9182314）",
+      "url": "https://www.wikidata.org/wiki/Q9182314"
+    }
+  ],
+  "summary": {
+    "personCount": 1,
+    "claimCount": 4,
+    "officialClaimCount": 2,
+    "secondaryClaimCount": 2
+  },
+  "personClaims": [
+    {
+      "claimKey": "elected-executive-profile:chen-chien-jen:birth_date",
+      "personId": "e97ba67c-140b-49a5-9561-50aabbad73b7",
+      "personName": "陳建仁",
+      "claimType": "birth_date",
+      "claimValue": "1951-06-06",
+      "claimJson": {
+        "value": "1951-06-06",
+        "wikidataEntityId": "Q9182314",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_former_vice_president_and_academician",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact Wikidata entity for the former vice president, cross-checked against official Academia Sinica and Executive Yuan profiles."
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-chen-chien-jen-q9182314",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9182314",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-profile:chen-chien-jen:gender",
+      "personId": "e97ba67c-140b-49a5-9561-50aabbad73b7",
+      "personName": "陳建仁",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "value": "male",
+        "wikidataEntityId": "Q9182314",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_former_vice_president_and_academician",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Exact Wikidata entity for the former vice president, cross-checked against official Academia Sinica and Executive Yuan profiles."
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wikidata-chen-chien-jen-q9182314",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q9182314",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-profile:chen-chien-jen:education",
+      "personId": "e97ba67c-140b-49a5-9561-50aabbad73b7",
+      "personName": "陳建仁",
+      "claimType": "education",
+      "claimValue": "國立臺灣大學動物學系理學士；國立臺灣大學公共衛生研究所碩士；美國約翰霍普金斯大學流行病學系理學博士",
+      "claimJson": {
+        "value": "國立臺灣大學動物學系理學士；國立臺灣大學公共衛生研究所碩士；美國約翰霍普金斯大學流行病學系理學博士",
+        "identityMatch": {
+          "status": "matched",
+          "method": "official_academician_profile_exact_name",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Official Academia Sinica academician profile."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "academia-sinica-chen-chien-jen-profile",
+      "sourceUrl": "https://academicians.sinica.edu.tw/index.php?id=122&r=academician-n%2Fshow",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "elected-executive-profile:chen-chien-jen:experience",
+      "personId": "e97ba67c-140b-49a5-9561-50aabbad73b7",
+      "personName": "陳建仁",
+      "claimType": "experience",
+      "claimValue": "國立臺灣大學公共衛生學院教授、院長；行政院衛生署署長；行政院國家科學委員會主任委員；中央研究院副院長；中華民國副總統（2016–2020）；行政院院長（2023–2024）；中央研究院院長（2026–）",
+      "claimJson": {
+        "value": "國立臺灣大學公共衛生學院教授、院長；行政院衛生署署長；行政院國家科學委員會主任委員；中央研究院副院長；中華民國副總統（2016–2020）；行政院院長（2023–2024）；中央研究院院長（2026–）",
+        "identityMatch": {
+          "status": "matched",
+          "method": "official_academia_and_executive_yuan_profiles_exact_name",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "Official Academia Sinica and Executive Yuan career profiles."
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "academia-sinica-chen-chien-jen-profile",
+      "sourceUrl": "https://academicians.sinica.edu.tw/index.php?id=122&r=academician-n%2Fshow",
+      "observedAt": "2026-08-10"
+    }
+  ]
+}

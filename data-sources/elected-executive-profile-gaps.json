@@ -1,0 +1,5401 @@
+{
+  "schemaVersion": 1,
+  "name": "elected-executive-profile-gaps",
+  "generatedAt": "2026-08-09T20:50:38.074Z",
+  "scope": "Elected presidents, vice presidents, and county/city chiefs found in the local published election history.",
+  "summary": {
+    "personCount": 109,
+    "winCount": 181,
+    "currentExecutiveStatusMismatchCount": 0,
+    "missingBirthDateCount": 0,
+    "missingGenderCount": 0,
+    "missingEducationCount": 37,
+    "missingExperienceCount": 0,
+    "missingLicensedPhotoCount": 109
+  },
+  "entries": [
+    {
+      "personId": "a653d368-9ed2-416f-9688-a229468ea988",
+      "name": "王慶豐",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年花蓮縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "花蓮縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "花蓮縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "484d4c79-bde6-4fa3-909e-ca6944abaf14",
+      "name": "余政憲",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年高雄縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "高雄縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "342827b8-0ea2-4fb0-a7c2-15ef700bb3c3",
+      "name": "吳俊立",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "無黨籍",
+        "gender": "male",
+        "education": null,
+        "experience": "2005年臺東縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺東縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "臺東縣縣長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "920f0d39-5dda-463c-a2bc-c133ea9c5c1d",
+      "name": "呂秀蓮",
+      "listStatus": "former",
+      "listRole": "vice_president",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "female",
+        "education": null,
+        "experience": "1997年桃園縣縣長當選、2000年副總統當選、2004年副總統當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "vice_president",
+          "officeName": "副總統",
+          "electionYear": 2004,
+          "electionName": "2004年第11任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "vice_president",
+          "officeName": "副總統",
+          "electionYear": 2000,
+          "electionName": "2000年第10任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "桃園市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "桃園縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "28353953-8fbf-4f42-9b11-116e45194084",
+      "name": "李炷烽",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "2001年金門縣縣長當選、2005年金門縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "金門縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "金門縣縣長選舉",
+          "party": "新黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "金門縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "金門縣縣長選舉",
+          "party": "新黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "8ed2a9f8-05a9-4a93-9e6f-1a669ffe7c11",
+      "name": "李登輝",
+      "listStatus": "former",
+      "listRole": "president",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1996年總統當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "president",
+          "officeName": "總統",
+          "electionYear": 1996,
+          "electionName": "1996年第9任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "7f36fb12-47d8-49d6-9bd6-4400ac20d9fc",
+      "name": "李雅景",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年嘉義縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "嘉義縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "eada4822-6e55-4217-9d50-79a8c1bd5bb5",
+      "name": "阮剛猛",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年彰化縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "彰化縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "彰化縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "400df4eb-a8e4-4d76-966a-d486a9fe97b1",
+      "name": "周錫瑋",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "2005年臺北縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新北市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "臺北縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "249f8dfa-35d4-451e-ba7d-dfde78138e26",
+      "name": "林宗男",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "2001年南投縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "南投縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "南投縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "acabe2c9-8d91-4ce5-ac99-0f995b99ee59",
+      "name": "林政則",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "2001年新竹市市長當選、2005年新竹市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "新竹市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "新竹市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "05eb5add-efe5-4b2f-94fa-dfcb62a2d042",
+      "name": "徐慶元",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "2001年臺東縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺東縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "臺東縣縣長選舉",
+          "party": "親民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "89359ae8-d701-4e36-841a-98ec54b2f00f",
+      "name": "翁金珠",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "female",
+        "education": null,
+        "experience": "2001年彰化縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "彰化縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "彰化縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "2af92905-58e7-4ab1-bdb4-e700dba2d10f",
+      "name": "張博雅",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "female",
+        "education": null,
+        "experience": "1997年嘉義市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "嘉義市市長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "427fa9f4-cd52-5b38-9224-793dee8ca381",
+      "name": "張溫鷹",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "female",
+        "education": null,
+        "experience": "1997年臺中市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "臺中市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://memory.nhrm.gov.tw/TopicExploration/Person/Detail/2761"
+        }
+      ]
+    },
+    {
+      "personId": "df8bf0ba-b448-bbc5-f23d-264e4dca1813",
+      "name": "張榮味",
+      "listStatus": "former",
+      "listRole": "councilor",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "無黨籍",
+        "gender": "male",
+        "education": null,
+        "experience": "2001年雲林縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "雲林縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "雲林縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "1c099574-d15a-45e3-8b97-8ce600ce65d2",
+      "name": "張福興",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "2001年花蓮縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "花蓮縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "花蓮縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "e5c40f13-040d-46b3-aad3-c4bce26d51dd",
+      "name": "張燦鍙",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年臺南市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "臺南市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "3f242b68-c535-0fcb-077f-fa4336ffaf72",
+      "name": "許財利",
+      "listStatus": "former",
+      "listRole": "councilor",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "無黨籍",
+        "gender": "male",
+        "education": null,
+        "experience": "2001年基隆市市長當選、2005年基隆市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "基隆市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "基隆市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "基隆市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "基隆市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "47986e4d-fd92-4a27-9ab0-92f9b553d380",
+      "name": "許添財",
+      "listStatus": "former",
+      "listRole": "legislator",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": null,
+        "experience": "2001年臺南市市長當選、2005年臺南市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "臺南市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "臺南市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "48f3a634-ad9f-4df1-8552-d6a47d4b25ff",
+      "name": "連戰",
+      "listStatus": "former",
+      "listRole": "vice_president",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1996年副總統當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "vice_president",
+          "officeName": "副總統",
+          "electionYear": 1996,
+          "electionName": "1996年第9任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "b98f0367-699f-4666-a07c-7378585bde87",
+      "name": "陳水在",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年金門縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "金門縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "金門縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "74092f74-4092-58cd-90bb-34c36b37f974",
+      "name": "陳水扁",
+      "listStatus": "former",
+      "listRole": "president",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1994年臺北市市長當選、2000年總統當選、2004年總統當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "president",
+          "officeName": "總統",
+          "electionYear": 2004,
+          "electionName": "2004年第11任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "president",
+          "officeName": "總統",
+          "electionYear": 2000,
+          "electionName": "2000年第10任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺北市市長",
+          "electionYear": 1994,
+          "electionName": "1994年直轄市長選舉",
+          "raceTitle": "臺北市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://www.president.gov.tw/NEWS/1998"
+        }
+      ]
+    },
+    {
+      "personId": "341151fa-57cb-4257-bde1-1cde18e30767",
+      "name": "陳唐山",
+      "listStatus": "former",
+      "listRole": "legislator",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": null,
+        "experience": "1997年臺南縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "臺南縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "6a42ee5a-69d8-4c9f-9470-47c3df4b1c32",
+      "name": "陳麗貞",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "female",
+        "education": null,
+        "experience": "2001年嘉義市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "嘉義市市長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "87547a7a-6f96-4c6d-8b9f-2b6163638fe4",
+      "name": "傅學鵬",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年苗栗縣縣長當選、2001年苗栗縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "苗栗縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "苗栗縣縣長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "苗栗縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "苗栗縣縣長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "b01e3c16-2a6f-410d-ad0b-167549937d37",
+      "name": "彭百顯",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年南投縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "南投縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "南投縣縣長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "c82ab6b3-4017-4e0b-bc34-a63f5193d94d",
+      "name": "黃仲生",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "2001年臺中縣縣長當選、2005年臺中縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "臺中縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "臺中縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "ad797fdc-aa23-4648-8a1a-944e22728b46",
+      "name": "楊秋興",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "無黨籍",
+        "gender": "male",
+        "education": null,
+        "experience": "2001年高雄縣縣長當選、2005年高雄縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "高雄縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "高雄縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "1de86cff-c913-4f96-8ab6-bf297a787be9",
+      "name": "廖永來",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年臺中縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "臺中縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "8ffa8cb8-470f-43e7-9008-eaebaa1a2842",
+      "name": "劉立群",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年連江縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "連江縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "連江縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "43bdc778-d53c-417f-802d-591a20dc0975",
+      "name": "劉守成",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年宜蘭縣縣長當選、2001年宜蘭縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "宜蘭縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "宜蘭縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "宜蘭縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "宜蘭縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "98b884c6-47dc-4604-b6d1-84f6e67a696b",
+      "name": "蔡仁堅",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1997年新竹市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "新竹市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "2996fee6-52d5-4df0-8b9f-8b86060f0aae",
+      "name": "鄭永金",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "無黨籍",
+        "gender": "male",
+        "education": null,
+        "experience": "2001年新竹縣縣長當選、2005年新竹縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "新竹縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "新竹縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://votetw.com/wiki/%E9%84%AD%E6%B0%B8%E9%87%91"
+        }
+      ]
+    },
+    {
+      "personId": "7d06da8b-da53-4f3b-9af2-5534d19e5626",
+      "name": "謝長廷",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "1998年高雄市市長當選、2002年高雄市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 2002,
+          "electionName": "2002年直轄市長選舉",
+          "raceTitle": "高雄市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 1998,
+          "electionName": "1998年直轄市長選舉",
+          "raceTitle": "高雄市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "a3dd1d76-f6fe-45ac-ac59-ecd96118164f",
+      "name": "謝深山",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": null,
+        "experience": "2005年花蓮縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "花蓮縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "花蓮縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "7758cfb3-5057-4ece-9cd3-b1506dd431ca",
+      "name": "蘇嘉全",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": null,
+        "experience": "1997年屏東縣縣長當選、2001年屏東縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "education",
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "屏東縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "屏東縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "屏東縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "屏東縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "e98d6971-8a74-4ad8-b1b0-01b55518a112",
+      "name": "王忠銘",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "連江縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "連江縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "連江縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E7%8E%8B%E5%BF%A0%E9%8A%98"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q115005512"
+        },
+        {
+          "sourceName": "連江縣政府：縣長專欄與縣府組織",
+          "sourceUrl": "https://www.matsu.gov.tw/chhtml/chiefpage/371030000A/19"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "75b6c579-b135-441d-9f35-5ea518408ea3",
+      "name": "王乾發",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "大專",
+        "experience": "2005年澎湖縣縣長當選、2009年澎湖縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "澎湖縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "澎湖縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "澎湖縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "澎湖縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "70acf77e-1cc5-493b-8b59-18624bcf1eb9",
+      "name": "王惠美",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "彰化縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "female",
+        "education": "碩士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "彰化縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "彰化縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "彰化縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "彰化縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E7%8E%8B%E6%83%A0%E7%BE%8E"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8279684"
+        },
+        {
+          "sourceName": "彰化縣政府：縣長、副縣長、秘書長與副秘書長",
+          "sourceUrl": "https://www.chcg.gov.tw/ch2/intro-magistrate.aspx"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q65047532"
+        }
+      ]
+    },
+    {
+      "personId": "0e20421e-370a-4913-a679-d3f2cbcc9ec1",
+      "name": "朱立倫",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "博士",
+        "experience": "2001年桃園縣縣長當選、2005年桃園縣縣長當選、2010年新北市市長當選、2014年新北市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新北市市長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "新北市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "新北市市長",
+          "electionYear": 2010,
+          "electionName": "2010年直轄市長選舉",
+          "raceTitle": "新北市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "桃園市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "桃園縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "桃園市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "桃園縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://votetw.com/wiki/%E6%9C%B1%E7%AB%8B%E5%80%AB"
+        }
+      ]
+    },
+    {
+      "personId": "6e1be250-dae5-4a48-91b4-d63b624153c6",
+      "name": "吳志揚",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2009年桃園縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "桃園市市長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "桃園縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E5%90%B3%E5%BF%97%E6%8F%9A"
+        }
+      ]
+    },
+    {
+      "personId": "b07deb66-c95b-489f-9743-4e513b584608",
+      "name": "吳敦義",
+      "listStatus": "former",
+      "listRole": "vice_president",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "大專",
+        "experience": "1994年高雄市市長當選、2012年副總統當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "vice_president",
+          "officeName": "副總統",
+          "electionYear": 2012,
+          "electionName": "2012年第13任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 1994,
+          "electionName": "1994年直轄市長選舉",
+          "raceTitle": "高雄市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "fea61296-414b-4173-bcc5-7d1fc00730dd",
+      "name": "呂國華",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": null,
+        "experience": "2005年宜蘭縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "宜蘭縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "宜蘭縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E5%91%82%E5%9C%8B%E8%8F%AF"
+        }
+      ]
+    },
+    {
+      "personId": "501ff9c9-957d-f15f-e151-80da66dff8b5",
+      "name": "李沃士",
+      "listStatus": "former",
+      "listRole": "councilor",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "新黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2009年金門縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "金門縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "金門縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "519ace87-079b-4ba5-8702-22a316081232",
+      "name": "李朝卿",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2005年南投縣縣長當選、2009年南投縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "南投縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "南投縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "南投縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "南投縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "967db279-437a-4049-968d-0e08d7e680e5",
+      "name": "李進勇",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "1997年基隆市市長當選、2014年雲林縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "雲林縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "雲林縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "基隆市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "基隆市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%9D%8E%E9%80%B2%E5%8B%87"
+        }
+      ]
+    },
+    {
+      "personId": "391b3698-7d82-69ae-f2be-6d716c13d4ef",
+      "name": "卓伯源",
+      "listStatus": "former",
+      "listRole": "councilor",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2005年彰化縣縣長當選、2009年彰化縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "彰化縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "彰化縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "彰化縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "彰化縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "7a649459-5657-4668-b914-79dd75d77fb7",
+      "name": "周春米",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "屏東縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "female",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "屏東縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "屏東縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E5%91%A8%E6%98%A5%E7%B1%B3"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q22774121"
+        },
+        {
+          "sourceName": "民主進步黨 2026 選舉官網－縣市長候選人",
+          "sourceUrl": "https://teamtaiwan.dpp.org.tw/#mayor"
+        },
+        {
+          "sourceName": "屏東縣政府：首長專區",
+          "sourceUrl": "https://www.pthg.gov.tw/cp.aspx?n=2CD2D022F4AA2FE5"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "立法院開放資料：歷屆委員資料",
+          "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
+        }
+      ]
+    },
+    {
+      "personId": "4651cf27-0772-4b00-bed2-939467073e77",
+      "name": "林右昌",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2014年基隆市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "基隆市市長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "基隆市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "基隆市市長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "基隆市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E5%8F%B3%E6%98%8C"
+        }
+      ]
+    },
+    {
+      "personId": "c4b5b26a-1dca-4fef-b110-e6bba9138e19",
+      "name": "林光華",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "專科",
+        "experience": "1997年新竹縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "新竹縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E5%85%89%E8%8F%AF"
+        }
+      ]
+    },
+    {
+      "personId": "0a3d9f85-c289-4113-93e3-07011fff82bd",
+      "name": "林佳龍",
+      "listStatus": "former",
+      "listRole": "legislator",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "博士",
+        "experience": "2014年臺中市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "臺中市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q6550004"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E4%BD%B3%E9%BE%8D"
+        }
+      ]
+    },
+    {
+      "personId": "693afeca-5d42-4802-8a78-23597443a368",
+      "name": "林明溱",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2014年南投縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "南投縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "南投縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "南投縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "南投縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%98%8E%E6%BA%B1"
+        }
+      ]
+    },
+    {
+      "personId": "03823e3c-45a7-45a3-8a03-800bc9bf7b44",
+      "name": "林姿妙",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "宜蘭縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "female",
+        "education": "專科",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "宜蘭縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "宜蘭縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "宜蘭縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "宜蘭縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q11105918"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E5%A7%BF%E5%A6%99"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "f00e54b4-b482-48ef-a98c-e91d063f7d7e",
+      "name": "林智堅",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2014年新竹市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹市市長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "新竹市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹市市長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "新竹市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%99%BA%E5%A0%85"
+        }
+      ]
+    },
+    {
+      "personId": "31ce8a62-b3ab-40db-8ff6-93374a8567fc",
+      "name": "林聰賢",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2009年宜蘭縣縣長當選、2014年宜蘭縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "宜蘭縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "宜蘭縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "宜蘭縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "宜蘭縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "574b4d4e-5feb-4740-8a9c-1422deffc250",
+      "name": "邱鏡淳",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2009年新竹縣縣長當選、2014年新竹縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "新竹縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "新竹縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "0d12b2a3-6c0f-4533-bc7b-d130f8604443",
+      "name": "侯友宜",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "新北市市長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "博士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新北市市長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "新北市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E6%96%B0%E5%8C%97%E5%B8%82%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "新北市市長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "新北市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/C1/00/a0222f6529a3ff2192a1a04f209eaac3/C/00_000_00_000_0000.json"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q9187249"
+        },
+        {
+          "sourceName": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+          "sourceUrl": "https://2024.cec.gov.tw/data/json/cand/P1/00000.json"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E4%BE%AF%E5%8F%8B%E5%AE%9C"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "新北市政府：市長、副市長與機關首長",
+          "sourceUrl": "https://www.ntpc.gov.tw/ch/home.jsp?id=03e0d4f8fe4bf200"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q72856113"
+        }
+      ]
+    },
+    {
+      "personId": "7ceadf52-bdeb-45ae-9542-9fd3ace7a502",
+      "name": "柯文哲",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "台灣民眾黨",
+        "gender": "male",
+        "education": "博士",
+        "experience": "2014年臺北市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺北市市長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "臺北市市長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/C1/00/a0222f6529a3ff2192a1a04f209eaac3/C/00_000_00_000_0000.json"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺北市市長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "臺北市市長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+          "sourceUrl": "https://2024.cec.gov.tw/data/json/cand/P1/00000.json"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q18113714"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%9F%AF%E6%96%87%E5%93%B2"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q18669033"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q124293439"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q132705410"
+        },
+        {
+          "sourceName": "台灣民眾黨：現任黨公職",
+          "sourceUrl": "https://www.tpp.org.tw/member/1"
+        }
+      ]
+    },
+    {
+      "personId": "697355d8-2c04-4c81-8829-a1dbfb1102a2",
+      "name": "胡志強",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "博士",
+        "experience": "2001年臺中市市長當選、2005年臺中市市長當選、2010年臺中市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 2010,
+          "electionName": "2010年直轄市長選舉",
+          "raceTitle": "臺中市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "臺中市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "臺中市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "801b13e5-b4fd-4ca7-b5b8-360b4f3dfd7f",
+      "name": "徐榛蔚",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "花蓮縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "female",
+        "education": "大學",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "花蓮縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "花蓮縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "花蓮縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "花蓮縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E5%BE%90%E6%A6%9B%E8%94%9A"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q28418899"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "花蓮縣政府：縣府團隊",
+          "sourceUrl": "https://www.hl.gov.tw/cp.aspx?n=32793"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8956378"
+        }
+      ]
+    },
+    {
+      "personId": "21829747-4a81-4640-a510-dd010029d383",
+      "name": "徐耀昌",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2014年苗栗縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "苗栗縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "苗栗縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "苗栗縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "苗栗縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E5%BE%90%E8%80%80%E6%98%8C"
+        }
+      ]
+    },
+    {
+      "personId": "c5568991-0359-4589-bb15-219f71326c3e",
+      "name": "涂醒哲",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "博士",
+        "experience": "2014年嘉義市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義市市長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "嘉義市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%B6%82%E9%86%92%E5%93%B2"
+        }
+      ]
+    },
+    {
+      "personId": "5e842cbe-1b73-4012-a0ef-621c93bafa94",
+      "name": "翁章梁",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "嘉義縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "嘉義縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "嘉義縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E7%BF%81%E7%AB%A0%E6%A2%81"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q48928203"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "嘉義縣政府：縣長、副縣長與秘書長",
+          "sourceUrl": "https://www.cyhg.gov.tw/cp.aspx?n=0900128317CBBFCF"
+        }
+      ]
+    },
+    {
+      "personId": "32833018-e18f-4fa7-9458-a289062a4eb1",
+      "name": "郝龍斌",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "博士",
+        "experience": "2006年臺北市市長當選、2010年臺北市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺北市市長",
+          "electionYear": 2010,
+          "electionName": "2010年直轄市長選舉",
+          "raceTitle": "臺北市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺北市市長",
+          "electionYear": 2006,
+          "electionName": "2006年直轄市長選舉",
+          "raceTitle": "臺北市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://votetw.com/wiki/%E9%83%9D%E9%BE%8D%E6%96%8C"
+        }
+      ]
+    },
+    {
+      "personId": "885a9996-9437-40f1-a86c-3adde4f4e566",
+      "name": "馬英九",
+      "listStatus": "former",
+      "listRole": "president",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "博士",
+        "experience": "1998年臺北市市長當選、2002年臺北市市長當選、2008年總統當選、2012年總統當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "president",
+          "officeName": "總統",
+          "electionYear": 2012,
+          "electionName": "2012年第13任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "president",
+          "officeName": "總統",
+          "electionYear": 2008,
+          "electionName": "2008年第12任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺北市市長",
+          "electionYear": 2002,
+          "electionName": "2002年直轄市長選舉",
+          "raceTitle": "臺北市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺北市市長",
+          "electionYear": 1998,
+          "electionName": "1998年直轄市長選舉",
+          "raceTitle": "臺北市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "a86bf49e-1d29-43b0-a0d2-bf0e423fd9a2",
+      "name": "高虹安",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "新竹市市長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "台灣民眾黨",
+        "gender": "female",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹市市長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "新竹市市長選舉",
+          "party": "台灣民眾黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%AB%98%E8%99%B9%E5%AE%89"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q85885392"
+        },
+        {
+          "sourceName": "新竹市政府：市長、副市長、秘書長、副秘書長與局處首長",
+          "sourceUrl": "https://www.hccg.gov.tw/hccg/app/artwebsite?module=artwebsite&id=900&serno=null"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "立法院開放資料：歷屆委員資料",
+          "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
+        }
+      ]
+    },
+    {
+      "personId": "69ff01ac-819e-42ce-8366-05dd7898e909",
+      "name": "張花冠",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "female",
+        "education": "碩士",
+        "experience": "2009年嘉義縣縣長當選、2014年嘉義縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "嘉義縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "嘉義縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "65d1885c-d64c-e8e2-2cad-22235bb932e5",
+      "name": "張通榮",
+      "listStatus": "former",
+      "listRole": "councilor",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "大專",
+        "experience": "2009年基隆市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "基隆市市長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "基隆市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "c30e7ac5-0838-407c-9fb7-20a750a1388f",
+      "name": "張善政",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "桃園市市長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "桃園市市長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "桃園市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E6%A1%83%E5%9C%92%E5%B8%82%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E5%BC%B5%E5%96%84%E6%94%BF"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q10294207"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "cae4d254-c26c-4990-942c-677e24434555",
+      "name": "張麗善",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "雲林縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "female",
+        "education": "碩士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "雲林縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "雲林縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "雲林縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "雲林縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E5%BC%B5%E9%BA%97%E5%96%84"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8273132"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q61056629"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q15909770"
+        }
+      ]
+    },
+    {
+      "personId": "570feaae-353b-4ec6-a73e-e2c04cffe856",
+      "name": "曹啟鴻",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "大專",
+        "experience": "2005年屏東縣縣長當選、2009年屏東縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "屏東縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "屏東縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "屏東縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "屏東縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "5a934759-44b4-402f-9173-5fa8c98484b3",
+      "name": "許明財",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2009年新竹市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹市市長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "新竹市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%A8%B1%E6%98%8E%E8%B2%A1"
+        }
+      ]
+    },
+    {
+      "personId": "9c21c186-06fa-4616-858e-79f24c8d11fb",
+      "name": "許淑華",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "南投縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "female",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "南投縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "南投縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q18659220"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "南投縣政府：縣長、副縣長、秘書長與副秘書長",
+          "sourceUrl": "https://www.nantou.gov.tw/big5/introduction-magistrate.php"
+        },
+        {
+          "sourceName": "立法院開放資料：歷屆委員資料",
+          "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%A8%B1%E6%B7%91%E8%8F%AF"
+        }
+      ]
+    },
+    {
+      "personId": "a493d1c6-a6c6-4fbe-96f2-2a9ce4952d7c",
+      "name": "陳光復",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "澎湖縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "高中",
+        "experience": "2014年澎湖縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "澎湖縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "澎湖縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "澎湖縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "澎湖縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%85%89%E5%BE%A9"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8347192"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "d47e556d-f6f8-4462-9b90-af760ce055e8",
+      "name": "陳其邁",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "高雄市市長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "高雄市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E9%AB%98%E9%9B%84%E5%B8%82%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%85%B6%E9%82%81"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q5090717"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "高雄市政府：市長與市府本部首長",
+          "sourceUrl": "https://www.kcg.gov.tw/cp.aspx?n=59C096A5BBC7AFB1"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8272200"
+        }
+      ]
+    },
+    {
+      "personId": "d3026390-97d2-4013-acd3-531f59fed6ac",
+      "name": "陳明文",
+      "listStatus": "former",
+      "listRole": "legislator",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": null,
+        "experience": "2001年嘉義縣縣長當選、2005年嘉義縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "嘉義縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "嘉義縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E6%98%8E%E6%96%87"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "e97ba67c-140b-49a5-9561-50aabbad73b7",
+      "name": "陳建仁",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "unknown",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "vice_president",
+          "officeName": "副總統",
+          "electionYear": 2016,
+          "electionName": "2016年總統選舉",
+          "raceTitle": "全國",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2016%E5%B9%B4%E7%B8%BD%E7%B5%B1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "Wikidata：陳建仁（Q9182314）",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q9182314"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%BB%BA%E4%BB%81"
+        },
+        {
+          "sourceName": "中央研究院：陳建仁院士簡歷",
+          "sourceUrl": "https://academicians.sinica.edu.tw/index.php?id=122&r=academician-n%2Fshow"
+        }
+      ]
+    },
+    {
+      "personId": "cf3bcf95-227c-4889-8860-3c897e1f6eb5",
+      "name": "陳建年",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "無黨籍",
+        "gender": "male",
+        "education": null,
+        "experience": "1997年臺東縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺東縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "臺東縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%BB%BA%E5%B9%B4"
+        }
+      ]
+    },
+    {
+      "personId": "8bd0900a-154a-4d3d-9cd6-ff67fefa39f4",
+      "name": "陳雪生",
+      "listStatus": "current",
+      "listRole": "legislator",
+      "currentOfficeLabel": "第11屆立法委員",
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": "CHENHSUEN-SHENG",
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "省立豐原高級商業學校;",
+        "experience": "第八、九、十屆立法委員〈2012-2024〉;連江縣第三、四屆縣長〈2001-2009〉;第三屆國大代表〈1996-2000〉;馬祖馬尾經貿交流協會理事長;國立馬祖高中校友會理事長;中國國民黨連江縣黨部主任委員;連江縣體育會會長;  ;",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "連江縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "連江縣縣長選舉",
+          "party": "親民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "連江縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "連江縣縣長選舉",
+          "party": "親民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E9%9B%AA%E7%94%9F"
+        },
+        {
+          "sourceName": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+          "sourceUrl": "https://2024.cec.gov.tw/data/json/cand/L1/09007.json"
+        },
+        {
+          "sourceName": "立法院開放資料：歷屆委員資料",
+          "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
+        }
+      ]
+    },
+    {
+      "personId": "ab7db2e9-cc0e-4a8b-8b8c-42a8ea3d0d4d",
+      "name": "陳菊",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "female",
+        "education": "碩士",
+        "experience": "2006年高雄市市長當選、2010年高雄市市長當選、2014年高雄市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "高雄市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 2010,
+          "electionName": "2010年直轄市長選舉",
+          "raceTitle": "高雄市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 2006,
+          "electionName": "2006年直轄市長選舉",
+          "raceTitle": "高雄市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "e53d804a-023f-4cc0-aa69-7d7f5264e74e",
+      "name": "陳福海",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "金門縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "無黨籍",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2014年金門縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "金門縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "金門縣縣長選舉",
+          "party": "無黨籍",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "金門縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "金門縣縣長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW",
+          "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E7%A6%8F%E6%B5%B7"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8984370"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "金門縣政府：縣長介紹",
+          "sourceUrl": "https://www.kinmen.gov.tw/cp.aspx?n=ADFC186F490AC26E"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q113026202"
+        }
+      ]
+    },
+    {
+      "personId": "2ebb787e-5abb-45fe-9dd0-364e5418e046",
+      "name": "傅崐萁",
+      "listStatus": "current",
+      "listRole": "legislator",
+      "currentOfficeLabel": "第11屆立法委員",
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": "FU KUN-CHI",
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "淡江大學中國大陸研究所碩士;",
+        "experience": "2010-2018九連冠五星縣長;第16、17屆花蓮縣長;第5、6、7、10、11屆立法委員;立法院全院聯席會主席;立法院國民黨團總召集人;立法院國防委員會召集人;立法院預算委員會召集人;立法院親民黨團總召集人;立法院世界臺商之友會副會長;  ;",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "花蓮縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "花蓮縣縣長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "花蓮縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "花蓮縣縣長選舉",
+          "party": "無黨籍",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "立法院開放資料：歷屆委員資料",
+          "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E5%82%85%E5%B4%90%E8%90%81"
+        },
+        {
+          "sourceName": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+          "sourceUrl": "https://2024.cec.gov.tw/data/json/cand/L1/10015.json"
+        },
+        {
+          "sourceName": "中國國民黨全球資訊網：現任黨務主管個人資料",
+          "sourceUrl": "https://www1.kmt.org.tw/people.aspx?mid=21&pid=2267"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "a0959bb6-fc41-4012-b5dc-52d136c4bb73",
+      "name": "黃偉哲",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "臺南市市長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "臺南市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E5%8D%97%E5%B8%82%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "臺南市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/C1/00/a0222f6529a3ff2192a1a04f209eaac3/C/00_000_00_000_0000.json"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%BB%83%E5%81%89%E5%93%B2"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8348653"
+        },
+        {
+          "sourceName": "臺南市政府：市長與局處首長",
+          "sourceUrl": "https://www.tainan.gov.tw/cp.aspx?n=5034"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q11176444"
+        }
+      ]
+    },
+    {
+      "personId": "67112f49-26cb-4f83-9966-554a868809b6",
+      "name": "黃健庭",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2009年臺東縣縣長當選、2014年臺東縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺東縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "臺東縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺東縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "臺東縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "fd6e72ae-7f70-4ca3-a48b-b66dc0b97196",
+      "name": "黃敏惠",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "嘉義市市長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "female",
+        "education": "嘉義大學管理碩士；臺灣師範大學國文系；宏仁女中；嘉義國中；垂楊國小",
+        "experience": "中山女高教師；第三屆國大代表；第四、五、六屆立法委員；第七、八、十屆嘉義市市長；中華民國智障者體育運動協會理事長；救國團總團部指導委員；中國國民黨副主席、代理主席",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義市市長",
+          "electionYear": 2022,
+          "electionName": "2022年嘉義市第11屆市長重行選舉",
+          "raceTitle": "嘉義市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會：嘉義市第11屆市長重行選舉結果",
+          "sourceUrl": "https://web.cec.gov.tw/central/article/37714"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義市市長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "嘉義市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義市市長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "嘉義市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "嘉義市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "嘉義市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://eebulletin.cec.gov.tw/111/23%E5%98%89%E7%BE%A9%E5%B8%82/01%E5%B8%82%E9%95%B7/%E5%98%89%E7%BE%A9%E5%B8%82%E7%AC%AC11%E5%B1%86%E5%B8%82%E9%95%B7%E9%87%8D%E8%A1%8C%E9%81%B8%E8%88%89%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%BB%83%E6%95%8F%E6%83%A0"
+        }
+      ]
+    },
+    {
+      "personId": "db2ed4f2-1f21-4753-81df-21a47c6610ec",
+      "name": "楊文科",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "新竹縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "新竹縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "新竹縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "新竹縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%A5%8A%E6%96%87%E7%A7%91"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q55707847"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "新竹縣政府：縣長、副縣長、秘書長與副秘書長",
+          "sourceUrl": "https://www.hsinchu.gov.tw/cp.aspx?n=134"
+        }
+      ]
+    },
+    {
+      "personId": "b0245494-645a-4725-a8f7-361850763c19",
+      "name": "楊綏生",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "大專",
+        "experience": "2009年連江縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "連江縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "連江縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "9b12f5b0-f0ad-4a3a-9719-a7c2a87f6e6c",
+      "name": "楊鎮浯",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "金門縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "金門縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW",
+          "sourceUrl": "https://votetw.com/wiki/%E6%A5%8A%E9%8E%AE%E6%B5%AF"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "84773468-e615-4869-85e5-43aa28f38001",
+      "name": "劉政鴻",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "高中",
+        "experience": "2005年苗栗縣縣長當選、2009年苗栗縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "苗栗縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "苗栗縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "苗栗縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "苗栗縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "ffa18148-ef17-4829-af1d-18f200636df0",
+      "name": "劉增應",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2014年連江縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "連江縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "連江縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "連江縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "連江縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E5%8A%89%E5%A2%9E%E6%87%89"
+        }
+      ]
+    },
+    {
+      "personId": "2fd48aa8-5048-4f53-8599-b684be939fe7",
+      "name": "潘孟安",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2014年屏東縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "屏東縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "屏東縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "屏東縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "屏東縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E6%BD%98%E5%AD%9F%E5%AE%89"
+        }
+      ]
+    },
+    {
+      "personId": "5d623ab5-a2a2-4c40-a094-6b3712d648e5",
+      "name": "蔡英文",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "female",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "president",
+          "officeName": "總統",
+          "electionYear": 2020,
+          "electionName": "2020年總統副總統選舉",
+          "raceTitle": "全國總統副總統選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2020%E5%B9%B4%E7%B8%BD%E7%B5%B1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "president",
+          "officeName": "總統",
+          "electionYear": 2016,
+          "electionName": "2016年總統選舉",
+          "raceTitle": "全國",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2016%E5%B9%B4%E7%B8%BD%E7%B5%B1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%94%A1%E8%8B%B1%E6%96%87"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "a4a44dff-efa9-45cc-8371-cbaa4cf6772d",
+      "name": "蔣萬安",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "臺北市市長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺北市市長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "臺北市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E5%8C%97%E5%B8%82%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%94%A3%E8%90%AC%E5%AE%89"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q15920021"
+        },
+        {
+          "sourceName": "臺北市政府：市長、副市長與機關首長",
+          "sourceUrl": "https://www.gov.taipei/News_Content_Leader.aspx?n=5A0C91ADEE6E7C46&sms=7CAF6BD4D3E48630&s=5C77853F1AB78232"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "立法院開放資料：歷屆委員資料",
+          "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q5371883"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q15915513"
+        }
+      ]
+    },
+    {
+      "personId": "488dac0b-324b-4842-9f4c-374259c89356",
+      "name": "鄭文燦",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2014年桃園市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "桃園市市長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "桃園市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/C1/00/a0222f6529a3ff2192a1a04f209eaac3/C/00_000_00_000_0000.json"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "桃園市市長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "桃園市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%84%AD%E6%96%87%E7%87%A6"
+        }
+      ]
+    },
+    {
+      "personId": "cc4de44b-a6ba-4816-b388-ad59cb379d9a",
+      "name": "盧秀燕",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "臺中市市長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "female",
+        "education": "碩士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "臺中市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E4%B8%AD%E5%B8%82%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺中市市長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "臺中市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/C1/00/a0222f6529a3ff2192a1a04f209eaac3/C/00_000_00_000_0000.json"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E7%9B%A7%E7%A7%80%E7%87%95"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8274707"
+        },
+        {
+          "sourceName": "臺中市政府：市長、副市長、秘書長、副秘書長與局處首長",
+          "sourceUrl": "https://www.taichung.gov.tw/8868/9942/9986/9989/1173576/post"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q9320607"
+        }
+      ]
+    },
+    {
+      "personId": "1d6d74ef-ea70-4503-bc59-6bf36d9f25cf",
+      "name": "蕭美琴",
+      "listStatus": "current",
+      "listRole": "vice_president",
+      "currentOfficeLabel": "副總統",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "female",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "vice_president",
+          "officeName": "副總統",
+          "electionYear": 2024,
+          "electionName": "2024年第16任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2024%E5%B9%B4%E7%B8%BD%E7%B5%B1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%95%AD%E7%BE%8E%E7%90%B4"
+        },
+        {
+          "sourceName": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+          "sourceUrl": "https://2024.cec.gov.tw/data/json/cand/P1/00000.json"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q700752"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q125839545"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q125839371"
+        }
+      ]
+    },
+    {
+      "personId": "61be071b-fb12-4b3b-9df3-2750aadd11b4",
+      "name": "蕭萬長",
+      "listStatus": "former",
+      "listRole": "vice_president",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": null,
+        "gender": "male",
+        "education": "研究所(甲種特考)",
+        "experience": "2008年副總統當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "vice_president",
+          "officeName": "副總統",
+          "electionYear": 2008,
+          "electionName": "2008年第12任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "2adc7731-918e-4dee-9b18-c748b08d910c",
+      "name": "賴峰偉",
+      "listStatus": "former",
+      "listRole": "local_chief",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "博士",
+        "experience": "1997年澎湖縣縣長當選、2001年澎湖縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "澎湖縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "澎湖縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "澎湖縣縣長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "澎湖縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "澎湖縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "澎湖縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%B3%B4%E5%B3%B0%E5%81%89"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8279791"
+        }
+      ]
+    },
+    {
+      "personId": "e333ae37-8821-4f98-8a90-54a4d217dbce",
+      "name": "賴清德",
+      "listStatus": "current",
+      "listRole": "president",
+      "currentOfficeLabel": "總統",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2010年臺南市市長當選、2014年臺南市市長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "president",
+          "officeName": "總統",
+          "electionYear": 2024,
+          "electionName": "2024年第16任總統副總統選舉",
+          "raceTitle": "總統副總統全國選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2024%E5%B9%B4%E7%B8%BD%E7%B5%B1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "vice_president",
+          "officeName": "副總統",
+          "electionYear": 2020,
+          "electionName": "2020年總統副總統選舉",
+          "raceTitle": "全國總統副總統選舉",
+          "party": "民主進步黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2020%E5%B9%B4%E7%B8%BD%E7%B5%B1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "臺南市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 2010,
+          "electionName": "2010年直轄市長選舉",
+          "raceTitle": "臺南市市長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+          "sourceUrl": "https://2024.cec.gov.tw/data/json/cand/P1/00000.json"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q3847080"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%B3%B4%E6%B8%85%E5%BE%B7"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q123425455"
+        }
+      ]
+    },
+    {
+      "personId": "889ac819-8f59-409b-aa0a-d3339ac713b4",
+      "name": "謝國樑",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "基隆市市長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "基隆市市長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "基隆市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%AC%9D%E5%9C%8B%E6%A8%91"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8274088"
+        },
+        {
+          "sourceName": "基隆市政府：市長與副市長",
+          "sourceUrl": "https://www.klcg.gov.tw/tw/klcg1/3176.html"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q24840363"
+        }
+      ]
+    },
+    {
+      "personId": "84e77ee0-ab1f-4c49-8e91-0b93758a01af",
+      "name": "鍾東錦",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "苗栗縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "無黨籍",
+        "gender": "male",
+        "education": null,
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "苗栗縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "苗栗縣縣長選舉",
+          "party": "無黨籍",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q50088349"
+        },
+        {
+          "sourceName": "苗栗縣政府：縣長、副縣長、秘書長與副秘書長",
+          "sourceUrl": "https://www.miaoli.gov.tw/cp.aspx?n=265"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%8D%BE%E6%9D%B1%E9%8C%A6"
+        }
+      ]
+    },
+    {
+      "personId": "6eec8a91-e26f-4ee6-a177-fe44ddd554d9",
+      "name": "韓國瑜",
+      "listStatus": "current",
+      "listRole": "legislator",
+      "currentOfficeLabel": "立法院院長（第11屆立法委員）",
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": "Kuo-Yu Han",
+        "party": "中國國民黨",
+        "gender": "male",
+        "education": "東吳大學英國語文學系文學士學位;政治大學東亞研究所法學碩士;",
+        "experience": "典亮慈善基金會董事長;高雄市市長;台北農產公司總經理;立法委員（第二、三、四屆）;台北縣議員;  ;",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "高雄市市長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "高雄市市長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/C1/00/a0222f6529a3ff2192a1a04f209eaac3/C/00_000_00_000_0000.json"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%9F%93%E5%9C%8B%E7%91%9C"
+        },
+        {
+          "sourceName": "立法院開放資料：歷屆委員資料",
+          "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8274095"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q64211371"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q60992430"
+        },
+        {
+          "sourceName": "立法院全球資訊網：院長",
+          "sourceUrl": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=120&pid=1"
+        }
+      ]
+    },
+    {
+      "personId": "141f8f59-b843-4e75-a4fd-79a78bfb3342",
+      "name": "魏明谷",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "碩士",
+        "experience": "2014年彰化縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "彰化縣縣長",
+          "electionYear": 2014,
+          "electionName": "2014年直轄市及縣市長選舉",
+          "raceTitle": "彰化縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%AD%8F%E6%98%8E%E8%B0%B7"
+        }
+      ]
+    },
+    {
+      "personId": "9aab0133-5336-4ef4-92c7-75021c9e32e3",
+      "name": "蘇文雄",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "無黨籍",
+        "gender": "male",
+        "education": "高中(職)以下",
+        "experience": "1997年雲林縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "雲林縣縣長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "雲林縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%98%87%E6%96%87%E9%9B%84"
+        }
+      ]
+    },
+    {
+      "personId": "36a6eb0f-e140-4064-ae2f-ebced0d153ff",
+      "name": "蘇治芬",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "female",
+        "education": "高中",
+        "experience": "2005年雲林縣縣長當選、2009年雲林縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "雲林縣縣長",
+          "electionYear": 2009,
+          "electionName": "2009年縣市長選舉",
+          "raceTitle": "雲林縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "雲林縣縣長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "雲林縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "中央選舉委員會 2024 選舉專區：候選人 JSON",
+          "sourceUrl": "https://2024.cec.gov.tw/data/json/cand/L1/10009.json"
+        },
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%98%87%E6%B2%BB%E8%8A%AC"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "立法院開放資料：歷屆委員資料",
+          "sourceUrl": "https://data.ly.gov.tw/getds.action?id=16"
+        }
+      ]
+    },
+    {
+      "personId": "65d9cd32-9adf-4e92-a603-088127472ce0",
+      "name": "蘇貞昌",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "民主進步黨",
+        "gender": "male",
+        "education": "大學",
+        "experience": "1997年臺北縣縣長當選、2001年臺北縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "新北市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "臺北縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "新北市市長",
+          "electionYear": 1997,
+          "electionName": "1997年縣市長選舉",
+          "raceTitle": "臺北縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E8%98%87%E8%B2%9E%E6%98%8C"
+        }
+      ]
+    },
+    {
+      "personId": "62e0e49d-09a7-472b-9af0-86b30992e437",
+      "name": "蘇煥智",
+      "listStatus": "former",
+      "listRole": "other",
+      "currentOfficeLabel": null,
+      "shouldBeCurrent": false,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "台灣維新",
+        "gender": "male",
+        "education": null,
+        "experience": "2001年臺南縣縣長當選、2005年臺南縣縣長當選",
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 2005,
+          "electionName": "2005年縣市長選舉",
+          "raceTitle": "臺南縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺南市市長",
+          "electionYear": 2001,
+          "electionName": "2001年縣市長選舉",
+          "raceTitle": "臺南縣縣長選舉",
+          "party": "民主進步黨",
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW",
+          "sourceUrl": "https://votetw.com/wiki/%E8%98%87%E7%85%A5%E6%99%BA"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        }
+      ]
+    },
+    {
+      "personId": "4f1f31ff-5180-4d96-94e6-1de8d5ed408a",
+      "name": "饒慶鈴",
+      "listStatus": "current",
+      "listRole": "local_chief",
+      "currentOfficeLabel": "臺東縣縣長",
+      "shouldBeCurrent": true,
+      "currentExecutiveStatusMismatch": false,
+      "profile": {
+        "alias": null,
+        "party": "中國國民黨",
+        "gender": "female",
+        "education": "博士",
+        "experience": null,
+        "primaryPhotoUrl": null
+      },
+      "missing": [
+        "licensed_photo"
+      ],
+      "wins": [
+        {
+          "officeType": "local_chief",
+          "officeName": "臺東縣縣長",
+          "electionYear": 2022,
+          "electionName": "2022年地方公職人員選舉",
+          "raceTitle": "臺東縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        },
+        {
+          "officeType": "local_chief",
+          "officeName": "臺東縣縣長",
+          "electionYear": 2018,
+          "electionName": "2018年地方公職人員選舉",
+          "raceTitle": "臺東縣縣長選舉",
+          "party": "中國國民黨",
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/2018%E5%B9%B4%E7%B8%A3%E5%B8%82%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "publicClaimSources": [
+        {
+          "sourceName": "VoteTW historical election results",
+          "sourceUrl": "https://votetw.com/wiki/%E9%A5%92%E6%85%B6%E9%88%B4"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q16260582"
+        },
+        {
+          "sourceName": "中央選舉委員會選舉資料庫：公開資料包",
+          "sourceUrl": "https://data.gov.tw/dataset/13119"
+        },
+        {
+          "sourceName": "臺東縣政府：縣府介紹",
+          "sourceUrl": "https://www.taitung.gov.tw/cp.aspx?n=13358"
+        },
+        {
+          "sourceName": "Wikidata 人物補充資料",
+          "sourceUrl": "https://www.wikidata.org/wiki/Q8276042"
+        }
+      ]
+    }
+  ]
+}

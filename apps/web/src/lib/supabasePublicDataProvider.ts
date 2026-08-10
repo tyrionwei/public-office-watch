@@ -4,13 +4,17 @@ import type {
   PublicCandidate,
   PublicCompany,
   PublicElection,
+  PublicElectionEducationDistribution,
   PublicElectionRaceFacet,
   PublicElectionRaceSummary,
   PublicHomeElectionTicker,
+  PublicPartyElectionPerformance,
   PublicLocalOfficeSummary,
   PublicParty,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
+  PublicPartyLegalStatistics,
+  PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
   PublicPerson,
   PublicPersonClaim,
@@ -28,6 +32,8 @@ import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import type { PollComparison } from '../types/polling';
 import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
 import type { HomePageData, HomeTicker, PublicCandidateListPage, PublicDataProvider, PublicElectionIndexData, PublicPersonListPage, PublicRaceDetailData, PublicRaceListPage, PublicRaceQueryFilters, PublicSearchResult } from './publicDataProvider';
+import { buildPartyLegalStatistics } from './legalStatistics.ts';
+import { buildPartyPeopleStatistics } from './partyPeopleStatistics.ts';
 import {
   buildLocalOfficeSummary,
   buildPersonListItems,
@@ -1341,6 +1347,56 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     return facetRows;
   },
 
+  async loadElectionEducationDistribution(eventKey, electionIds, filters = {}) {
+    const client = getSupabasePublicClient();
+    if (!client) return [];
+    const normalizedEventKey = eventKey.trim();
+    const normalizedElectionIds = Array.from(new Set(electionIds.filter(Boolean))).slice(0, 500);
+    if (!normalizedEventKey || normalizedElectionIds.length === 0) return [];
+
+    const raceTypes = Array.from(new Set(filters.raceTypes ?? []));
+    const { data, error } = await client.schema('published').rpc('election_education_distribution', {
+      p_event_key: normalizedEventKey,
+      p_election_ids: normalizedElectionIds,
+      p_race_types: raceTypes.length > 0 ? raceTypes : null,
+      p_region_key: filters.regionKey?.trim() || null,
+    });
+
+    if (error || !Array.isArray(data)) {
+      if (error && import.meta.env.DEV) {
+        console.warn(`Failed to fetch election education distribution: ${error.message}`);
+      }
+      return [];
+    }
+
+    return data as PublicElectionEducationDistribution[];
+  },
+
+  async loadElectionPartyPerformance(eventKey, electionIds, filters = {}) {
+    const client = getSupabasePublicClient();
+    if (!client) return [];
+    const normalizedEventKey = eventKey.trim();
+    const normalizedElectionIds = Array.from(new Set(electionIds.filter(Boolean))).slice(0, 500);
+    if (!normalizedEventKey || normalizedElectionIds.length === 0) return [];
+
+    const raceTypes = Array.from(new Set(filters.raceTypes ?? []));
+    const { data, error } = await client.schema('published').rpc('election_party_performance', {
+      p_event_key: normalizedEventKey,
+      p_election_ids: normalizedElectionIds,
+      p_race_types: raceTypes.length > 0 ? raceTypes : null,
+      p_region_key: filters.regionKey?.trim() || null,
+    });
+
+    if (error || !Array.isArray(data)) {
+      if (error && import.meta.env.DEV) {
+        console.warn(`Failed to fetch election party performance: ${error.message}`);
+      }
+      return [];
+    }
+
+    return data as PublicPartyElectionPerformance[];
+  },
+
   async loadRacesByElectionIds(electionIds, filters = {}) {
     await refreshSupabasePublicDataSnapshot();
     const uniqueElectionIds = Array.from(new Set(electionIds.filter(Boolean)));
@@ -1417,6 +1473,48 @@ export const supabasePublicDataProvider: PublicDataProvider = {
 
   loadPartyCandidatePage(partyName, page, pageSize) {
     return fetchPartyCandidatePage(partyName, page, pageSize);
+  },
+
+  async loadPartyPeopleStatistics(partyName) {
+    const normalizedPartyName = partyName.trim();
+    const client = getSupabasePublicClient();
+    if (!normalizedPartyName || !client) {
+      return buildPartyPeopleStatistics(normalizedPartyName, [], []);
+    }
+
+    const { data, error } = await client.schema('published').rpc(
+      'party_people_statistics',
+      { p_party_name: normalizedPartyName },
+    );
+    if (error || !Array.isArray(data) || data.length !== 19) {
+      if (error && import.meta.env.DEV) {
+        console.warn(`Failed to fetch party people statistics: ${error.message}`);
+      }
+      return buildPartyPeopleStatistics(normalizedPartyName, [], []);
+    }
+
+    return data as PublicPartyPeopleStatisticRow[];
+  },
+
+  async loadPartyLegalStatistics(partyName) {
+    const normalizedPartyName = partyName.trim();
+    const client = getSupabasePublicClient();
+    if (!normalizedPartyName || !client) {
+      return buildPartyLegalStatistics(normalizedPartyName, [], []);
+    }
+
+    const { data, error } = await client.schema('published').rpc(
+      'party_legal_statistics',
+      { p_party_name: normalizedPartyName },
+    );
+    if (error || !Array.isArray(data) || data.length !== 1) {
+      if (error && import.meta.env.DEV) {
+        console.warn(`Failed to fetch party legal statistics: ${error.message}`);
+      }
+      return buildPartyLegalStatistics(normalizedPartyName, [], []);
+    }
+
+    return data[0] as PublicPartyLegalStatistics;
   },
 
   getPersonById(personId: string) {

@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   ELECTION_COLUMNS,
+  ELECTION_EDUCATION_DISTRIBUTION_LIMIT,
   ELECTION_FACET_BATCH_LIMIT,
   ELECTION_ID_BATCH_SIZE,
   ELECTION_INDEX_LIMIT,
+  ELECTION_PARTY_PERFORMANCE_LIMIT,
   ELECTION_RACE_PAGE_ELECTION_LIMIT,
   ELECTION_RACE_PAGE_SIZE,
   HOME_RACE_LIMIT,
@@ -365,6 +367,104 @@ test('election facets de-duplicate and batch at 200 ids with a fixed row ceiling
     ['limit', ELECTION_FACET_BATCH_LIMIT],
   ]);
 });
+
+test('election education distribution uses a bounded reviewed RPC with normalized filters', async () => {
+  const row = {
+    education_key: 'master',
+    candidate_count: 10,
+  };
+  const fake = createFakeClient({
+    'rpc:election_education_distribution': { data: [row], error: null, count: 1 },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadElectionEducationDistribution(
+    ' 2026-local ',
+    ['election-1', 'election-1', ''],
+    { raceTypes: ['councilor', 'councilor'], regionKey: ' taipei ' },
+  ), [row]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc'), [[
+    'rpc',
+    'election_education_distribution',
+    {
+      p_event_key: '2026-local',
+      p_election_ids: ['election-1'],
+      p_race_types: ['councilor'],
+      p_region_key: 'taipei',
+    },
+  ]]);
+  assert.equal(ELECTION_EDUCATION_DISTRIBUTION_LIMIT, 9);
+});
+
+test('election party performance uses a bounded reviewed RPC with normalized filters', async () => {
+  const row = {
+    party_name: '民主進步黨',
+    candidate_count: 10,
+    elected_count: 6,
+    pending_count: 0,
+  };
+  const fake = createFakeClient({
+    'rpc:election_party_performance': { data: [row], error: null, count: 1 },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadElectionPartyPerformance(
+    ' 2022-local ',
+    ['election-1', 'election-1', ''],
+    { raceTypes: ['councilor', 'councilor'], regionKey: ' taipei ' },
+  ), [row]);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc'), [[
+    'rpc',
+    'election_party_performance',
+    {
+      p_event_key: '2022-local',
+      p_election_ids: ['election-1'],
+      p_race_types: ['councilor'],
+      p_region_key: 'taipei',
+    },
+  ]]);
+  assert.equal(ELECTION_PARTY_PERFORMANCE_LIMIT, 50);
+});
+test('party legal statistics reads exactly one aggregate row', async () => {
+  const row = {
+    party_name: '民主進步黨',
+    total_people: 100,
+    final_conviction_people: 2,
+    non_final_people: 1,
+    other_record_people: 1,
+    acquittal_only_people: 1,
+    no_confirmed_record_people: 95,
+    confirmed_record_people: 5,
+    record_count: 7,
+    final_conviction_records: 3,
+    non_final_records: 1,
+    other_records: 1,
+    acquittal_records: 2,
+  };
+  const fake = createFakeClient({
+    'rpc:party_legal_statistics': { data: [row], error: null, count: 1 },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadPartyLegalStatistics(' 民主進步黨 '), row);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc'), [[
+    'rpc',
+    'party_legal_statistics',
+    { p_party_name: '民主進步黨' },
+  ]]);
+});
+
+test('party legal statistics requires a non-empty party name', async () => {
+  const fake = createFakeClient({});
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await assert.rejects(
+    () => adapter.loadPartyLegalStatistics(' '),
+    /require a party name/u,
+  );
+  assert.deepEqual(fake.calls, []);
+});
+
 
 test('person profiles de-duplicate at most four ids and bound every published relation', async () => {
   const person = { person_id: 'person-2', name: '測試人物' };
@@ -787,5 +887,57 @@ test('party officers skip the database for an empty party id', async () => {
   const adapter = createPublishedReadAdapter(fake.client);
 
   assert.deepEqual(await adapter.loadPartyOfficers(' '), []);
+  assert.deepEqual(fake.calls, []);
+});
+test('party people statistics use the published RPC and require all buckets', async () => {
+  const bucketPairs = [
+    ['current_status', 'current'],
+    ['current_status', 'not_current'],
+    ['gender', 'male'],
+    ['gender', 'female'],
+    ['gender', 'unknown'],
+    ['age', 'under_40'],
+    ['age', '40_49'],
+    ['age', '50_59'],
+    ['age', '60_plus'],
+    ['age', 'unknown'],
+    ['education', 'doctorate'],
+    ['education', 'master'],
+    ['education', 'university'],
+    ['education', 'tertiary_unspecified'],
+    ['education', 'junior_college'],
+    ['education', 'high_school'],
+    ['education', 'secondary_or_below'],
+    ['education', 'other'],
+    ['education', 'unknown'],
+  ];
+  const rows = bucketPairs.map(([dimension_key, bucket_key]) => ({
+    party_name: '民主進步黨',
+    dimension_key,
+    bucket_key,
+    people_count: 0,
+    total_people: 1,
+  }));
+  const fake = createFakeClient({
+    'rpc:party_people_statistics': { data: rows, error: null, count: 19 },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadPartyPeopleStatistics(' 民主進步黨 '), rows);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc'), [[
+    'rpc',
+    'party_people_statistics',
+    { p_party_name: '民主進步黨' },
+  ]]);
+});
+
+test('party people statistics require a non-empty party name', async () => {
+  const fake = createFakeClient({});
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await assert.rejects(
+    () => adapter.loadPartyPeopleStatistics(' '),
+    /require a party name/u,
+  );
   assert.deepEqual(fake.calls, []);
 });

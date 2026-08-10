@@ -221,6 +221,14 @@ export function createPublishedPublicDataProvider(
       return bridge.loadElectionRaceFacets(electionIds);
     },
 
+    loadElectionEducationDistribution(eventKey, electionIds, filters = {}) {
+      return bridge.loadElectionEducationDistribution(eventKey, electionIds, filters);
+    },
+
+    loadElectionPartyPerformance(eventKey, electionIds, filters = {}) {
+      return bridge.loadElectionPartyPerformance(eventKey, electionIds, filters);
+    },
+
     async loadRacesByElectionIds(electionIds: string[], filters: PublicRaceQueryFilters = {}) {
       const electionIdSet = new Set(electionIds);
       return races.filter((race) => (
@@ -324,6 +332,14 @@ export function createPublishedPublicDataProvider(
 
     loadPartyOfficers(partyId: string) {
       return bridge.loadPartyOfficers(partyId);
+    },
+
+    loadPartyPeopleStatistics(partyName: string) {
+      return bridge.loadPartyPeopleStatistics(partyName);
+    },
+
+    loadPartyLegalStatistics(partyName: string) {
+      return bridge.loadPartyLegalStatistics(partyName);
     },
 
     getPartyFinanceSummaries(partyId: string): PublicPartyFinanceSummary[] {

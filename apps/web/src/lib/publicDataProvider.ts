@@ -4,13 +4,17 @@ import type {
   PublicCandidate,
   PublicCompany,
   PublicElection,
+  PublicElectionEducationDistribution,
   PublicElectionRaceFacet,
   PublicElectionRaceSummary,
   PublicLocalOfficeSummary,
   PublicParty,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
+  PublicPartyLegalStatistics,
+  PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
+  PublicPartyElectionPerformance,
   PublicPerson,
   PublicPersonFilters,
   PublicPersonListItem,
@@ -98,6 +102,8 @@ export interface PublicDataProvider {
   getCandidatesByRaceId(raceId: string): PublicCandidate[];
   loadElectionIndex(): Promise<PublicElectionIndexData>;
   loadElectionRaceFacets(electionIds: string[]): Promise<PublicElectionRaceFacet[]>;
+  loadElectionPartyPerformance(eventKey: string, electionIds: string[], filters?: PublicRaceQueryFilters): Promise<PublicPartyElectionPerformance[]>;
+  loadElectionEducationDistribution(eventKey: string, electionIds: string[], filters?: PublicRaceQueryFilters): Promise<PublicElectionEducationDistribution[]>;
   loadRacesByElectionIds(electionIds: string[], filters?: PublicRaceQueryFilters): Promise<PublicRace[]>;
   loadElectionRacePage(eventKey: string, electionIds: string[], filters: PublicRaceQueryFilters, page: number, pageSize: number): Promise<PublicRaceListPage>;
   loadRaceDetail(raceId: string): Promise<PublicRaceDetailData>;
@@ -115,6 +121,8 @@ export interface PublicDataProvider {
   getParties(): PublicParty[];
   getPartyBySlug(partySlug: string): PublicParty | null;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
+  loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
+  loadPartyLegalStatistics(partyName: string): Promise<PublicPartyLegalStatistics>;
   getPartyFinanceSummaries(partyId: string): PublicPartyFinanceSummary[];
   getPartyCompanyContributionSummaries(partyId: string): PublicPartyCompanyContributionSummary[];
   searchPublicRecords(query: string): Promise<PublicSearchResult[]>;

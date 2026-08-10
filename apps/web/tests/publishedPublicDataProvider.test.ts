@@ -120,6 +120,12 @@ function createBridge(overrides: Partial<PublishedPublicDataBridge> = {}) {
     async loadElectionRaceFacets() {
       return [];
     },
+    async loadElectionEducationDistribution() {
+      return [];
+    },
+    async loadElectionPartyPerformance() {
+      return [];
+    },
     async loadElectionRacePage() {
       return { items: [], total: 0 };
     },
@@ -149,6 +155,23 @@ function createBridge(overrides: Partial<PublishedPublicDataBridge> = {}) {
     },
     async loadPartyOfficers() {
       return [];
+    },
+    async loadPartyLegalStatistics() {
+      return {
+        party_name: '測試黨',
+        total_people: 1,
+        final_conviction_people: 0,
+        non_final_people: 0,
+        other_record_people: 0,
+        acquittal_only_people: 0,
+        no_confirmed_record_people: 1,
+        confirmed_record_people: 0,
+        record_count: 0,
+        final_conviction_records: 0,
+        non_final_records: 0,
+        other_records: 0,
+        acquittal_records: 0,
+      };
     },
     async searchPublicRecords() {
       return [];

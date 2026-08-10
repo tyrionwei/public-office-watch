@@ -2,7 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
+import { PartyCompanyContributionChart } from '../components/PartyCompanyContributionChart';
 import { PartyFinanceCompositionChart } from '../components/PartyFinanceCompositionChart';
+import { PartyLegalStatisticsChart } from '../components/PartyLegalStatisticsChart';
+import { PartyPeopleStatisticsChart } from '../components/PartyPeopleStatisticsChart';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { translateCandidateStatus } from '../data/electionI18n';
@@ -12,7 +15,14 @@ import type { PublicCandidateListPage, PublicPersonListPage } from '../lib/publi
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { dataGuidancePath, partiesPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicCandidate, PublicPartyOfficer, PublicPersonListItem, PublicPersonStatus } from '../types/publicViews';
+import type {
+  PublicCandidate,
+  PublicPartyLegalStatistics,
+  PublicPartyPeopleStatisticRow,
+  PublicPartyOfficer,
+  PublicPersonListItem,
+  PublicPersonStatus,
+} from '../types/publicViews';
 
 function formatCurrency(value: number, locale: string) {
   return new Intl.NumberFormat(locale, {
@@ -207,6 +217,82 @@ function usePartyOfficers(partyId: string | null) {
   return { officers, loading };
 }
 
+function usePartyPeopleStatistics(partyName: string | null) {
+  const [rows, setRows] = useState<PublicPartyPeopleStatisticRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setRows([]);
+
+    if (!partyName) {
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setLoading(true);
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadPartyPeopleStatistics(partyName))
+      .then((nextRows) => {
+        if (active) setRows(nextRows);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) {
+          console.warn('Failed to load party people statistics', error);
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [partyName]);
+
+  return { rows, loading };
+}
+
+function usePartyLegalStatistics(partyName: string | null) {
+  const [summary, setSummary] = useState<PublicPartyLegalStatistics | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setSummary(null);
+
+    if (!partyName) {
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setLoading(true);
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadPartyLegalStatistics(partyName))
+      .then((nextSummary) => {
+        if (active) setSummary(nextSummary);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) {
+          console.warn('Failed to load party legal statistics', error);
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [partyName]);
+
+  return { summary, loading };
+}
+
 type PartyOfficerGroup = {
   person_id: string;
   person_name: string;
@@ -388,6 +474,8 @@ export function PartyPage() {
   const partyOfficers = usePartyOfficers(party?.party_id ?? null);
   const officeholders = usePartyPeoplePage(party?.name ?? null, 'current', officeholderRequestedPage);
   const candidates = usePartyCandidatePage(party?.name ?? null, candidateRequestedPage);
+  const peopleStatistics = usePartyPeopleStatistics(party?.name ?? null);
+  const legalStatistics = usePartyLegalStatistics(party?.name ?? null);
   const financeSummaries = party ? publicDataProvider.getPartyFinanceSummaries(party.party_id) : [];
   const companySummaries = party ? publicDataProvider.getPartyCompanyContributionSummaries(party.party_id) : [];
   const sortedCompanySummaries = companySummaries.slice().sort((left, right) =>
@@ -652,6 +740,92 @@ export function PartyPage() {
               </div>
             </SectionPanel>
 
+            <SectionPanel title={t('partyDetail.peopleStatsTitle')} eyebrow={t('partyDetail.peopleStatsEyebrow')}>
+              {peopleStatistics.loading ? (
+                <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                  {t('partyDetail.peopleStatsLoading')}
+                </p>
+              ) : peopleStatistics.rows[0] && peopleStatistics.rows[0].total_people > 0 ? (
+                <>
+                  <PartyPeopleStatisticsChart
+                    rows={peopleStatistics.rows}
+                    accent={theme.accent}
+                    labels={{
+                      dimensions: {
+                        current_status: t('partyDetail.peopleStatsCurrentStatus'),
+                        gender: t('partyDetail.peopleStatsGender'),
+                        age: t('partyDetail.peopleStatsAge'),
+                        education: t('partyDetail.peopleStatsEducation'),
+                      },
+                      buckets: {
+                        current: t('partyDetail.peopleStatsCurrent'),
+                        not_current: t('partyDetail.peopleStatsNotCurrent'),
+                        male: t('partyDetail.peopleStatsMale'),
+                        female: t('partyDetail.peopleStatsFemale'),
+                        under_40: t('partyDetail.peopleStatsUnder40'),
+                        '40_49': t('partyDetail.peopleStats40To49'),
+                        '50_59': t('partyDetail.peopleStats50To59'),
+                        '60_plus': t('partyDetail.peopleStats60Plus'),
+                        doctorate: t('event.educationDoctorate'),
+                        master: t('event.educationMaster'),
+                        university: t('event.educationUniversity'),
+                        tertiary_unspecified: t('event.educationTertiaryUnspecified'),
+                        junior_college: t('event.educationJuniorCollege'),
+                        high_school: t('event.educationHighSchool'),
+                        secondary_or_below: t('event.educationSecondaryOrBelow'),
+                        other: t('event.educationOther'),
+                        unknown: t('event.educationUnknown'),
+                      },
+                      currentRatio: t('partyDetail.peopleStatsCurrentRatio'),
+                      peopleUnit: (count) => t('partyDetail.legalPeopleCount', { count }),
+                    }}
+                  />
+                  <p className="mt-5 border-t border-line/60 pt-4 text-xs leading-6 text-slate-500">
+                    {t('partyDetail.peopleStatsScopeNote')}
+                  </p>
+                </>
+              ) : (
+                <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                  {t('partyDetail.peopleStatsUnavailable')}
+                </p>
+              )}
+            </SectionPanel>
+
+            <SectionPanel title={t('partyDetail.legalTitle')} eyebrow={t('partyDetail.legalEyebrow')}>
+              {legalStatistics.loading ? (
+                <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                  {t('partyDetail.legalLoading')}
+                </p>
+              ) : legalStatistics.summary && legalStatistics.summary.total_people > 0 ? (
+                <>
+                  <PartyLegalStatisticsChart
+                    summary={legalStatistics.summary}
+                    accent={theme.accent}
+                    labels={{
+                      peopleDistribution: t('partyDetail.legalPeopleDistribution'),
+                      finalConviction: t('partyDetail.legalFinalConviction'),
+                      nonFinal: t('partyDetail.legalNonFinal'),
+                      other: t('partyDetail.legalOther'),
+                      acquittalOnly: t('partyDetail.legalAcquittalOnly'),
+                      noConfirmed: t('partyDetail.legalNoConfirmed'),
+                      confirmedPeople: t('partyDetail.legalConfirmedPeople'),
+                      records: t('partyDetail.legalRecords'),
+                      recordBreakdown: t('partyDetail.legalRecordBreakdown'),
+                      peopleUnit: (count) => t('partyDetail.legalPeopleCount', { count }),
+                      recordsUnit: (count) => t('partyDetail.legalRecordCount', { count }),
+                    }}
+                  />
+                  <p className="mt-5 border-t border-line/60 pt-4 text-xs leading-6 text-slate-500">
+                    {t('partyDetail.legalScopeNote')}
+                  </p>
+                </>
+              ) : (
+                <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                  {t('partyDetail.legalUnavailable')}
+                </p>
+              )}
+            </SectionPanel>
+
             {latestFinance ? (
               <SectionPanel title={t('partyDetail.financeTitle', { year: latestFinance.report_year })} eyebrow={t('partyDetail.financeEyebrow')}>
                 <div className="mb-5 pixel-corners border border-line/70 bg-[linear-gradient(135deg,rgba(8,17,35,0.92),rgba(15,24,46,0.72))] p-4 sm:p-5">
@@ -703,6 +877,19 @@ export function PartyPage() {
             <SectionPanel title={t('partyDetail.companyTitle')} eyebrow={t('partyDetail.companyEyebrow')}>
               {companySummaries.length > 0 ? (
                 <>
+                  <div className="mb-5 pixel-corners border border-line/70 bg-[linear-gradient(135deg,rgba(8,17,35,0.92),rgba(15,24,46,0.72))] p-4 sm:p-5">
+                    <div className="mb-4 border-b border-line/60 pb-3">
+                      <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">{t('partyDetail.topCompaniesChartEyebrow')}</p>
+                      <h4 className="mt-1 font-display text-lg text-white">{t('partyDetail.topCompaniesChartTitle')}</h4>
+                    </div>
+                    <PartyCompanyContributionChart
+                      rows={sortedCompanySummaries}
+                      amountLabel={t('partyDetail.companyDonationChartAria')}
+                      countLabel={(count) => t('partyDetail.donationTimes', { count })}
+                      formatValue={currency}
+                      accent={theme.accent}
+                    />
+                  </div>
                   <div className="grid gap-3 lg:grid-cols-2">
                     {visibleCompanySummaries.map((summary) => (
                       <article key={`${summary.party_id}-${summary.company_id}`} className="pixel-corners border border-line/70 bg-bg/35 p-4">

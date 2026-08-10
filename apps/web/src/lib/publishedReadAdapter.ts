@@ -1,12 +1,16 @@
 import type {
   PublicElection,
+  PublicElectionEducationDistribution,
   PublicElectionRaceFacet,
   PublicElectionRaceSummary,
   PublicCandidate,
   PublicParty,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
+  PublicPartyLegalStatistics,
+  PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
+  PublicPartyElectionPerformance,
   PublicPersonClaim,
   PublicPersonPartyAffiliation,
   PublicPersonRole,
@@ -31,6 +35,8 @@ export const ELECTION_ID_BATCH_SIZE = 200;
 export const ELECTION_FACET_BATCH_LIMIT = 1000;
 export const ELECTION_RACE_PAGE_ELECTION_LIMIT = 500;
 export const ELECTION_RACE_PAGE_SIZE = PUBLIC_ELECTION_RACE_PAGE_SIZE;
+export const ELECTION_EDUCATION_DISTRIBUTION_LIMIT = 9;
+export const ELECTION_PARTY_PERFORMANCE_LIMIT = 50;
 export const PERSON_PROFILE_BATCH_LIMIT = 4;
 export const PERSON_CANDIDATE_LIMIT = 100;
 export const PERSON_CLAIM_LIMIT = 400;
@@ -40,6 +46,7 @@ export const PARTY_LIMIT = 200;
 export const PARTY_FINANCE_LIMIT = 100;
 export const PARTY_COMPANY_CONTRIBUTION_LIMIT = 1000;
 export const PARTY_OFFICER_LIMIT = 200;
+export const PARTY_PEOPLE_STATISTICS_LIMIT = 19;
 export const PERSON_PARTY_AFFILIATION_LIMIT = 100;
 
 const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
@@ -352,6 +359,8 @@ export type PublishedElectionRow = PublicElection;
 export type PublishedElectionRaceSummaryRow = PublicElectionRaceSummary;
 
 export type PublishedElectionRaceFacetRow = PublicElectionRaceFacet;
+export type PublishedElectionEducationDistributionRow = PublicElectionEducationDistribution;
+export type PublishedPartyElectionPerformanceRow = PublicPartyElectionPerformance;
 
 export type PublishedRaceRow = Pick<
   PublicRace,
@@ -511,6 +520,16 @@ export type PublishedReadAdapter = {
   loadRegionPage(regionSlug: string): Promise<PublishedRegionPageRows>;
   loadElectionIndex(): Promise<PublishedElectionIndexRows>;
   loadElectionRaceFacets(electionIds: string[]): Promise<PublishedElectionRaceFacetRow[]>;
+  loadElectionEducationDistribution(
+    eventKey: string,
+    electionIds: string[],
+    filters: { raceTypes?: PublicRace['race_type'][]; regionKey?: string },
+  ): Promise<PublishedElectionEducationDistributionRow[]>;
+  loadElectionPartyPerformance(
+    eventKey: string,
+    electionIds: string[],
+    filters: { raceTypes?: PublicRace['race_type'][]; regionKey?: string },
+  ): Promise<PublishedPartyElectionPerformanceRow[]>;
   loadElectionRacePage(
     eventKey: string,
     electionIds: string[],
@@ -524,6 +543,8 @@ export type PublishedReadAdapter = {
   loadPartyCandidatePage(partyName: string, page: number, pageSize: number): Promise<PublishedPartyCandidatePage>;
   loadPartyData(): Promise<PublishedPartyDataRows>;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
+  loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
+  loadPartyLegalStatistics(partyName: string): Promise<PublicPartyLegalStatistics>;
   loadPersonProfiles(personIds: string[]): Promise<PublishedPersonProfileRows>;
   search(query: string): Promise<PublishedSearchResultRow[]>;
 };
@@ -697,29 +718,35 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         .limit(ELECTION_INDEX_LIMIT);
       const electionRows = getRowsOrThrow(electionResponse, 'Published elections');
       const electionIds = electionRows.map((row) => row.election_id);
-      const raceSummaryRows: PublishedElectionRaceSummaryRow[] = [];
+      const raceSummaryBatches: string[][] = [];
 
       for (let index = 0; index < electionIds.length; index += ELECTION_ID_BATCH_SIZE) {
-        const chunk = electionIds.slice(index, index + ELECTION_ID_BATCH_SIZE);
+        raceSummaryBatches.push(electionIds.slice(index, index + ELECTION_ID_BATCH_SIZE));
+      }
+
+      const raceSummaryRows = (await Promise.all(raceSummaryBatches.map(async (chunk) => {
         const response = await published
           .from<PublishedElectionRaceSummaryRow>('election_race_summaries')
           .select(ELECTION_RACE_SUMMARY_COLUMNS)
           .in('election_id', chunk)
           .order('election_id', { ascending: true })
           .limit(chunk.length);
-        raceSummaryRows.push(...getRowsOrThrow(response, 'Published election race summaries'));
-      }
+        return getRowsOrThrow(response, 'Published election race summaries');
+      }))).flat();
 
       return { electionRows, raceSummaryRows };
     },
 
     async loadElectionRaceFacets(rawElectionIds) {
       const electionIds = normalizeElectionIds(rawElectionIds);
-      const facetRows: PublishedElectionRaceFacetRow[] = [];
+      const facetBatches: string[][] = [];
       const published = client.schema('published');
 
       for (let index = 0; index < electionIds.length; index += ELECTION_ID_BATCH_SIZE) {
-        const chunk = electionIds.slice(index, index + ELECTION_ID_BATCH_SIZE);
+        facetBatches.push(electionIds.slice(index, index + ELECTION_ID_BATCH_SIZE));
+      }
+
+      return (await Promise.all(facetBatches.map(async (chunk) => {
         const response = await published
           .from<PublishedElectionRaceFacetRow>('election_race_facets')
           .select(ELECTION_RACE_FACET_COLUMNS, { count: 'exact' })
@@ -733,10 +760,60 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         if ((response.count ?? rows.length) > rows.length) {
           throw new Error(`Published election race facets exceeded the ${ELECTION_FACET_BATCH_LIMIT}-row batch limit.`);
         }
-        facetRows.push(...rows);
+        return rows;
+      }))).flat();
+    },
+
+    async loadElectionEducationDistribution(eventKey, rawElectionIds, filters) {
+      const electionIds = normalizeElectionRacePageIds(rawElectionIds);
+      if (electionIds.length === 0) return [];
+
+      const normalizedEventKey = eventKey.trim();
+      if (!normalizedEventKey) {
+        throw new Error('Published election education distribution requires an event key.');
       }
 
-      return facetRows;
+      const raceTypes = Array.from(new Set(filters.raceTypes ?? []));
+      const response = await client.schema('published').rpc<PublishedElectionEducationDistributionRow>('election_education_distribution',
+        {
+          p_event_key: normalizedEventKey,
+          p_election_ids: electionIds,
+          p_race_types: raceTypes.length > 0 ? raceTypes : null,
+          p_region_key: filters.regionKey?.trim() || null,
+        },
+      );
+
+      return getBoundedRowsOrThrow(
+        response,
+        'Published election education distribution',
+        ELECTION_EDUCATION_DISTRIBUTION_LIMIT,
+      );
+    },
+
+    async loadElectionPartyPerformance(eventKey, rawElectionIds, filters) {
+      const electionIds = normalizeElectionRacePageIds(rawElectionIds);
+      if (electionIds.length === 0) return [];
+
+      const normalizedEventKey = eventKey.trim();
+      if (!normalizedEventKey) {
+        throw new Error('Published election party performance requires an event key.');
+      }
+
+      const raceTypes = Array.from(new Set(filters.raceTypes ?? []));
+      const response = await client.schema('published').rpc<PublishedPartyElectionPerformanceRow>('election_party_performance',
+        {
+          p_event_key: normalizedEventKey,
+          p_election_ids: electionIds,
+          p_race_types: raceTypes.length > 0 ? raceTypes : null,
+          p_region_key: filters.regionKey?.trim() || null,
+        },
+      );
+
+      return getBoundedRowsOrThrow(
+        response,
+        'Published election party performance',
+        ELECTION_PARTY_PERFORMANCE_LIMIT,
+      );
     },
 
     async loadElectionRacePage(eventKey, rawElectionIds, filters, page, pageSize) {
@@ -908,6 +985,46 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         'Published party officers',
         PARTY_OFFICER_LIMIT,
       );
+    },
+    async loadPartyPeopleStatistics(rawPartyName) {
+      const partyName = rawPartyName.trim();
+      if (!partyName) {
+        throw new Error('Published party people statistics require a party name.');
+      }
+
+      const response = await client.schema('published').rpc<PublicPartyPeopleStatisticRow>('party_people_statistics', {
+        p_party_name: partyName,
+      });
+      const rows = getBoundedRowsOrThrow(
+        response,
+        'Published party people statistics',
+        PARTY_PEOPLE_STATISTICS_LIMIT,
+      );
+      if (rows.length !== PARTY_PEOPLE_STATISTICS_LIMIT) {
+        throw new Error('Published party people statistics did not return the expected dimensions.');
+      }
+      return rows;
+    },
+
+
+    async loadPartyLegalStatistics(rawPartyName) {
+      const partyName = rawPartyName.trim();
+      if (!partyName) {
+        throw new Error('Published party legal statistics require a party name.');
+      }
+
+      const response = await client.schema('published').rpc<PublicPartyLegalStatistics>('party_legal_statistics', {
+        p_party_name: partyName,
+      });
+      const rows = getBoundedRowsOrThrow(
+        response,
+        'Published party legal statistics',
+        1,
+      );
+      if (rows.length !== 1) {
+        throw new Error('Published party legal statistics did not return one summary row.');
+      }
+      return rows[0];
     },
 
     async loadPeoplePage(request) {

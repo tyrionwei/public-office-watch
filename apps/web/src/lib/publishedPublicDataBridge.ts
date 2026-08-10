@@ -91,6 +91,8 @@ export type PublishedPublicDataBridge = Pick<
   PublicDataProvider,
   | 'loadElectionIndex'
   | 'loadElectionRaceFacets'
+  | 'loadElectionEducationDistribution'
+  | 'loadElectionPartyPerformance'
   | 'loadElectionRacePage'
   | 'loadRaceDetail'
   | 'loadPeoplePage'
@@ -98,6 +100,8 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadPersonProfiles'
   | 'loadLocalOfficeSummaryByRegionId'
   | 'loadPartyOfficers'
+  | 'loadPartyPeopleStatistics'
+  | 'loadPartyLegalStatistics'
   | 'searchPublicRecords'
 > & {
   loadHomePageData(): Promise<HomePageData>;
@@ -402,6 +406,14 @@ export function createPublishedPublicDataBridge(
       return adapter.loadElectionRaceFacets(electionIds);
     },
 
+    loadElectionEducationDistribution(eventKey, electionIds, filters = {}) {
+      return adapter.loadElectionEducationDistribution(eventKey, electionIds, filters);
+    },
+
+    loadElectionPartyPerformance(eventKey, electionIds, filters = {}) {
+      return adapter.loadElectionPartyPerformance(eventKey, electionIds, filters);
+    },
+
     loadElectionRacePage(eventKey, electionIds, filters, page, pageSize) {
       return adapter.loadElectionRacePage(eventKey, electionIds, filters, page, pageSize);
     },
@@ -447,6 +459,14 @@ export function createPublishedPublicDataBridge(
 
     loadPartyOfficers(partyId) {
       return adapter.loadPartyOfficers(partyId);
+    },
+
+    loadPartyPeopleStatistics(partyName) {
+      return adapter.loadPartyPeopleStatistics(partyName);
+    },
+
+    loadPartyLegalStatistics(partyName) {
+      return adapter.loadPartyLegalStatistics(partyName);
     },
 
     async loadPeoplePage(filters, page, pageSize) {

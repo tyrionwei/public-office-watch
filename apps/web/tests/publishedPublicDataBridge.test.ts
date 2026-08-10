@@ -43,6 +43,12 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
     async loadElectionRaceFacets() {
       return [];
     },
+    async loadElectionEducationDistribution() {
+      return [];
+    },
+    async loadElectionPartyPerformance() {
+      return [];
+    },
     async loadElectionRacePage() {
       return { items: [], total: 0 };
     },
@@ -63,6 +69,23 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
     },
     async loadPartyOfficers() {
       return [];
+    },
+    async loadPartyLegalStatistics() {
+      return {
+        party_name: '',
+        total_people: 0,
+        final_conviction_people: 0,
+        non_final_people: 0,
+        other_record_people: 0,
+        acquittal_only_people: 0,
+        no_confirmed_record_people: 0,
+        confirmed_record_people: 0,
+        record_count: 0,
+        final_conviction_records: 0,
+        non_final_records: 0,
+        other_records: 0,
+        acquittal_records: 0,
+      };
     },
     async loadPersonProfiles() {
       return { personRows: [], candidateRows: [], claimRows: [], partyAffiliationRows: [] };
@@ -730,6 +753,33 @@ test('bridge forwards one bounded party-officer roster', async () => {
   const bridge = createPublishedPublicDataBridge(adapter);
 
   assert.deepEqual(await bridge.loadPartyOfficers('party-1'), [officer]);
+});
+
+test('bridge forwards one bounded party legal statistics summary', async () => {
+  const summary = {
+    party_name: '測試政黨',
+    total_people: 100,
+    final_conviction_people: 2,
+    non_final_people: 1,
+    other_record_people: 1,
+    acquittal_only_people: 1,
+    no_confirmed_record_people: 95,
+    confirmed_record_people: 5,
+    record_count: 7,
+    final_conviction_records: 3,
+    non_final_records: 1,
+    other_records: 1,
+    acquittal_records: 2,
+  };
+  const adapter = createAdapter({
+    async loadPartyLegalStatistics(partyName) {
+      assert.equal(partyName, '測試政黨');
+      return summary;
+    },
+  });
+  const bridge = createPublishedPublicDataBridge(adapter);
+
+  assert.deepEqual(await bridge.loadPartyLegalStatistics('測試政黨'), summary);
 });
 
 test('bridge learns published region labels from the home snapshot', async () => {

@@ -16,6 +16,9 @@ import {
 import { getRaceRegionGroup } from '../data/electionEvents';
 import { compareRacesForDisplay } from '../data/electionLabels';
 import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
+import { buildElectionEducationDistribution, buildPartyElectionPerformance } from './electionStatistics.ts';
+import { buildPartyLegalStatistics } from './legalStatistics.ts';
+import { buildPartyPeopleStatistics } from './partyPeopleStatistics.ts';
 import { buildLocalOfficeSummary, buildPersonListItems, buildPersonProfile, filterPersonListItems } from './personData';
 import { assertPublicViewName, allowedPublicViews } from './publicViewRegistry';
 import type { PublicDataProvider, PublicSearchResult } from './publicDataProvider';
@@ -192,6 +195,25 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return Array.from(groups.values());
   },
 
+  async loadElectionEducationDistribution(_eventKey, electionIds, filters = {}) {
+    return buildElectionEducationDistribution(
+      mockPublicCandidates,
+      mockPublicRaces,
+      mockPublicPeople,
+      mockPublicPersonClaims,
+      electionIds,
+      filters,
+    );
+  },
+  async loadElectionPartyPerformance(_eventKey, electionIds, filters = {}) {
+    return buildPartyElectionPerformance(
+      mockPublicCandidates,
+      mockPublicRaces,
+      electionIds,
+      filters,
+    );
+  },
+
   async loadRacesByElectionIds(electionIds, filters = {}) {
     const selectedIds = new Set(electionIds);
     const selectedRaceTypes = new Set(filters.raceTypes ?? []);
@@ -315,6 +337,22 @@ export const mockPublicDataProvider: PublicDataProvider = {
 
   async loadPartyOfficers() {
     return [];
+  },
+
+  async loadPartyPeopleStatistics(partyName) {
+    return buildPartyPeopleStatistics(
+      partyName,
+      mockPublicPeople,
+      mockPublicPersonClaims,
+    );
+  },
+
+  async loadPartyLegalStatistics(partyName) {
+    return buildPartyLegalStatistics(
+      partyName,
+      mockPublicPeople,
+      mockPublicPersonClaims,
+    );
   },
 
   getPartyFinanceSummaries(partyId: string) {

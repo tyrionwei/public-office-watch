@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
+import { ElectionPartyPerformanceChart } from '../components/ElectionPartyPerformanceChart';
+import { ElectionEducationDistributionChart } from '../components/ElectionEducationDistributionChart';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
@@ -15,7 +17,7 @@ import type { PublicRaceListPage } from '../lib/publicDataProvider';
 import { PUBLIC_ELECTION_RACE_PAGE_SIZE as PAGE_SIZE } from '../lib/publicReadContracts';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { electionEventPath, electionsPath, racePath } from '../routes/routePaths';
-import type { PublicElectionRaceFacet } from '../types/publicViews';
+import type { PublicElectionEducationDistribution, PublicElectionRaceFacet, PublicPartyElectionPerformance } from '../types/publicViews';
 
 type CategoryOption = RaceCategory & { count: number };
 type RegionOption = { key: string; label: string; count: number };
@@ -87,7 +89,11 @@ export function ElectionEventPage() {
   const [facets, setFacets] = useState<PublicElectionRaceFacet[]>([]);
   const [racePage, setRacePage] = useState<PublicRaceListPage>({ items: [], total: 0 });
   const [loading, setLoading] = useState(true);
+  const [educationDistribution, setEducationDistribution] = useState<PublicElectionEducationDistribution[]>([]);
+  const [educationDistributionLoading, setEducationDistributionLoading] = useState(false);
   const [racesLoading, setRacesLoading] = useState(false);
+  const [partyPerformance, setPartyPerformance] = useState<PublicPartyElectionPerformance[]>([]);
+  const [partyPerformanceLoading, setPartyPerformanceLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -133,6 +139,11 @@ export function ElectionEventPage() {
   const selectedCategoryOption = categoryOptions.find((option) => option.key === selectedCategoryParam)
     ?? categoryOptions[0];
   const selectedCategory = selectedCategoryOption?.key ?? '';
+  const selectedRaceTypes = useMemo(() => Array.from(new Set(
+    facets
+      .filter((facet) => getRaceCategoryByType(facet.race_type).key === selectedCategory)
+      .map((facet) => facet.race_type),
+  )), [facets, selectedCategory]);
   const regionOptions = buildRegionOptions(
     facets.filter((facet) => getRaceCategoryByType(facet.race_type).key === selectedCategory),
   );
@@ -153,17 +164,12 @@ export function ElectionEventPage() {
       };
     }
 
-    const raceTypes = Array.from(new Set(
-      facets
-        .filter((facet) => getRaceCategoryByType(facet.race_type).key === selectedCategory)
-        .map((facet) => facet.race_type),
-    ));
     setRacesLoading(true);
 
     void publicDataProvider.loadElectionRacePage(
       event.key,
       event.elections.map((election) => election.election_id),
-      { raceTypes, regionKey: selectedRegion || undefined },
+      { raceTypes: selectedRaceTypes, regionKey: selectedRegion || undefined },
       requestedPage,
       PAGE_SIZE,
     )
@@ -180,7 +186,72 @@ export function ElectionEventPage() {
     return () => {
       active = false;
     };
-  }, [event, facets, requestedPage, selectedCategory, selectedRegion]);
+  }, [event, requestedPage, selectedCategory, selectedRaceTypes, selectedRegion]);
+
+  useEffect(() => {
+    let active = true;
+    setEducationDistribution([]);
+
+    if (!event || !selectedCategory) {
+      setEducationDistributionLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setEducationDistributionLoading(true);
+    void publicDataProvider.loadElectionEducationDistribution(
+      event.key,
+      event.elections.map((election) => election.election_id),
+      { raceTypes: selectedRaceTypes, regionKey: selectedRegion || undefined },
+    )
+      .then((rows) => {
+        if (active) setEducationDistribution(rows);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) console.warn('Failed to load election education distribution', error);
+      })
+      .finally(() => {
+        if (active) setEducationDistributionLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [event, selectedCategory, selectedRaceTypes, selectedRegion]);
+
+
+  useEffect(() => {
+    let active = true;
+    setPartyPerformance([]);
+
+    if (!event || event.status !== 'completed' || !selectedCategory) {
+      setPartyPerformanceLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setPartyPerformanceLoading(true);
+    void publicDataProvider.loadElectionPartyPerformance(
+      event.key,
+      event.elections.map((election) => election.election_id),
+      { raceTypes: selectedRaceTypes, regionKey: selectedRegion || undefined },
+    )
+      .then((rows) => {
+        if (active) setPartyPerformance(rows);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) console.warn('Failed to load election party performance', error);
+      })
+      .finally(() => {
+        if (active) setPartyPerformanceLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [event, selectedCategory, selectedRaceTypes, selectedRegion]);
 
   if (!event) {
     return (
@@ -261,7 +332,51 @@ export function ElectionEventPage() {
             </PixelFrame>
           </aside>
 
-          <SectionPanel title={t('event.raceItems')} eyebrow={`${selectedCategoryLabel} / ${selectedRegionLabel}`}>
+          <div className="min-w-0 space-y-4">
+            {event.status === 'completed' && (partyPerformanceLoading || partyPerformance.length > 0) ? (
+              <SectionPanel title={t('event.partyPerformanceTitle')} eyebrow={t('event.partyPerformanceEyebrow')}>
+                {partyPerformanceLoading ? (
+                  <p className="text-sm text-slate-400">{t('event.partyPerformanceLoading')}</p>
+                ) : (
+                  <ElectionPartyPerformanceChart
+                    rows={partyPerformance}
+                    candidateLabel={t('event.partyPerformanceCandidates')}
+                    electedLabel={t('event.partyPerformanceElected')}
+                    rateLabel={t('event.partyPerformanceRate')}
+                    otherPartiesLabel={t('event.partyPerformanceOther')}
+                    formatCount={(count) => new Intl.NumberFormat(language).format(count)}
+                  />
+                )}
+              </SectionPanel>
+            ) : null}
+
+            {educationDistributionLoading || educationDistribution.length > 0 ? (
+              <SectionPanel title={t('event.educationDistributionTitle')} eyebrow={t('event.educationDistributionEyebrow')}>
+                {educationDistributionLoading ? (
+                  <p className="text-sm text-slate-400">{t('event.educationDistributionLoading')}</p>
+                ) : (
+                  <ElectionEducationDistributionChart
+                    rows={educationDistribution}
+                    labels={{
+                      doctorate: t('event.educationDoctorate'),
+                      master: t('event.educationMaster'),
+                      university: t('event.educationUniversity'),
+                      tertiary_unspecified: t('event.educationTertiaryUnspecified'),
+                      junior_college: t('event.educationJuniorCollege'),
+                      high_school: t('event.educationHighSchool'),
+                      secondary_or_below: t('event.educationSecondaryOrBelow'),
+                      other: t('event.educationOther'),
+                      unknown: t('event.educationUnknown'),
+                    }}
+                    countLabel={t('event.educationCandidates')}
+                    formatCount={(count) => new Intl.NumberFormat(language).format(count)}
+                  />
+                )}
+              </SectionPanel>
+            ) : null}
+
+
+            <SectionPanel title={t('event.raceItems')} eyebrow={`${selectedCategoryLabel} / ${selectedRegionLabel}`}>
             {!selectedCategory ? (
               <p className="text-sm text-slate-400">{t('event.noPublicRaces')}</p>
             ) : racesLoading ? (
@@ -357,7 +472,8 @@ export function ElectionEventPage() {
             ) : (
               <p className="text-sm text-slate-400">{t('event.noMatches')}</p>
             )}
-          </SectionPanel>
+            </SectionPanel>
+          </div>
 
           <aside className="space-y-3">
             <PixelFrame title={t('event.regionFilter')}>

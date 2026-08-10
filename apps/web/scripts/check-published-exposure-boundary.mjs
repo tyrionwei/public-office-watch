@@ -11,6 +11,10 @@ const publicAccessMigration = 'supabase/migrations/202607280004_published_public
 const supplementalPublicAccessMigrations = [
   'supabase/migrations/202607280005_published_ranked_search.sql',
   'supabase/migrations/202608010002_published_active_party_candidate_access.sql',
+  'supabase/migrations/202608100014_add_election_party_performance.sql',
+  'supabase/migrations/202608100015_add_election_education_distribution.sql',
+  'supabase/migrations/202608100016_add_party_legal_statistics.sql',
+  'supabase/migrations/202608100017_add_party_people_statistics.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -32,7 +36,7 @@ const reviewedRelations = [
   'search_results',
 ];
 const directlyQueriedRelations = reviewedRelations.filter((relation) => relation !== 'search_results');
-const reviewedFunctions = ['election_race_page', 'person_claims_for', 'search_public_records'];
+const reviewedFunctions = ['election_education_distribution', 'election_party_performance', 'election_race_page', 'party_legal_statistics', 'party_people_statistics', 'person_claims_for', 'search_public_records'];
 const issues = [];
 
 function read(relativePath) {

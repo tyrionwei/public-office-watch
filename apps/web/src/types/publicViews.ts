@@ -241,6 +241,76 @@ export type PublicCandidate = {
   photo_license_type: string | null;
 };
 
+export type PublicPartyElectionPerformance = {
+  party_name: string;
+  candidate_count: number;
+  elected_count: number;
+  pending_count: number;
+};
+
+export type PublicPartyLegalStatistics = {
+  party_name: string;
+  total_people: number;
+  final_conviction_people: number;
+  non_final_people: number;
+  other_record_people: number;
+  acquittal_only_people: number;
+  no_confirmed_record_people: number;
+  confirmed_record_people: number;
+  record_count: number;
+  final_conviction_records: number;
+  non_final_records: number;
+  other_records: number;
+  acquittal_records: number;
+};
+
+export type PublicPartyPeopleStatisticDimension =
+  | 'current_status'
+  | 'gender'
+  | 'age'
+  | 'education';
+
+export type PublicPartyPeopleStatisticBucket =
+  | 'current'
+  | 'not_current'
+  | 'male'
+  | 'female'
+  | 'under_40'
+  | '40_49'
+  | '50_59'
+  | '60_plus'
+  | 'doctorate'
+  | 'master'
+  | 'university'
+  | 'tertiary_unspecified'
+  | 'junior_college'
+  | 'high_school'
+  | 'secondary_or_below'
+  | 'other'
+  | 'unknown';
+
+export type PublicPartyPeopleStatisticRow = {
+  party_name: string;
+  dimension_key: PublicPartyPeopleStatisticDimension;
+  bucket_key: PublicPartyPeopleStatisticBucket;
+  people_count: number;
+  total_people: number;
+};
+
+export type PublicElectionEducationDistribution = {
+  education_key:
+    | 'doctorate'
+    | 'master'
+    | 'university'
+    | 'tertiary_unspecified'
+    | 'junior_college'
+    | 'high_school'
+    | 'secondary_or_below'
+    | 'other'
+    | 'unknown';
+  candidate_count: number;
+};
+
 export type PublicHomeElectionTicker = {
   election_id: string;
   election_name: string;

@@ -39,6 +39,7 @@ const blockedTermAllowlist = {
     path.join(srcRoot, 'pages', 'PartyPage.tsx'),
     path.join(srcRoot, 'lib', 'internalDataProgress.ts'),
     path.join(srcRoot, 'lib', 'internalReviewData.ts'),
+    path.join(srcRoot, 'lib', 'electionStatistics.ts'),
     path.join(srcRoot, 'lib', 'mockPublicDataProvider.ts'),
     path.join(srcRoot, 'lib', 'supabasePublicDataProvider.ts'),
     path.join(srcRoot, 'lib', 'supabasePublicViewMappers.ts'),

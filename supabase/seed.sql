@@ -31,7 +31,27 @@ GRANT EXECUTE ON FUNCTION published.election_race_page(
   INTEGER
 ) TO anon, authenticated;
 
+GRANT EXECUTE ON FUNCTION published.election_education_distribution(
+  TEXT,
+  UUID[],
+  TEXT[],
+  TEXT
+) TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.election_party_performance(
+  TEXT,
+  UUID[],
+  TEXT[],
+  TEXT
+) TO anon, authenticated;
+
 GRANT EXECUTE ON FUNCTION published.person_claims_for(UUID[])
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.party_legal_statistics(TEXT)
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.party_people_statistics(TEXT)
 TO anon, authenticated;
 
 GRANT EXECUTE ON FUNCTION published.search_public_records(TEXT, INTEGER)

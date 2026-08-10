@@ -130,6 +130,7 @@ function decodeHtml(value) {
     .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16)))
     .replace(/&#(\d+);/g, (_, number) => String.fromCodePoint(Number.parseInt(number, 10)))
     .replace(/&nbsp;/g, ' ')
+    .replace(/&emsp;/g, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
@@ -615,24 +616,18 @@ function fieldBetween(text, startLabel, endLabels) {
 
 function parseCouncilRows(html, listRow) {
   const sourceUrl = listRow.url;
-  const text = cleanInlineText(html);
-  const firstLabelIndex = text.indexOf(listRow.label);
-  const secondLabelIndex = firstLabelIndex >= 0 ? text.indexOf(listRow.label, firstLabelIndex + listRow.label.length) : -1;
-  const start = (secondLabelIndex >= 0 ? secondLabelIndex : firstLabelIndex) + listRow.label.length;
+  const rows = [];
+  const linkPattern = /<a\b[^>]*href="([^"]*member-detail-lightbox[^"]*)"[^>]*title="([^"]+)"[^>]*>/giu;
 
-  if (firstLabelIndex < 0 || start < listRow.label.length) {
-    throw new Error(`Unable to parse council district members from ${sourceUrl}`);
-  }
+  for (const match of html.matchAll(linkPattern)) {
+    const profileUrl = new URL(decodeHtml(match[1]), sourceUrl).toString();
+    const name = cleanInlineText(match[2]);
+    if (!/^[\p{Script=Han}]{2,4}$/u.test(name)) continue;
 
-  const namesText = text.slice(start).split(/回上一頁|回首頁|隱私宣告/)[0];
-  const names = [...namesText.matchAll(/[\p{Script=Han}]{2,4}/gu)]
-    .map((match) => match[0])
-    .filter((name) => !/選區|竹北|湖口|新豐|關西|新埔|橫山|尖石|芎林|竹東|五峰|寶山|北埔|峨眉|平地|原住民/.test(name));
-
-  return [...new Set(names)].map((name) => ({
+    rows.push({
     sourceId: councilSourceId,
     sourceName: councilSourceName,
-    sourceUrl,
+    sourceUrl: profileUrl,
     externalId: `current-councilor-${hashId([sourceUrl, name].join('|'))}`,
     name,
     gender: 'unknown',
@@ -642,13 +637,43 @@ function parseCouncilRows(html, listRow) {
     education: '',
     experience: '',
     sourcePayload: {
-      profileUrl: sourceUrl,
+      profileUrl,
+      listPageUrl: sourceUrl,
       districtLabel: listRow.label,
       roleOrigin: 'elected',
       elected: true,
       identityStatus: 'needs_identity_check',
     },
-  }));
+    });
+  }
+
+  if (rows.length === 0) {
+    throw new Error(`Unable to parse council district members from ${sourceUrl}`);
+  }
+
+  return rows;
+}
+
+function parseCouncilorDetail(html, row) {
+  const text = cleanText(html);
+  const genderText = fieldBetweenAny(text, ['性 別：', '性別：', '性 別'], ['選舉區別']);
+  const party = normalizePartyName(fieldBetweenAny(text, ['黨 籍：', '黨籍：', '黨 籍'], ['聯絡方式', '學經歷'])) || row.party;
+  const education = fieldBetweenAny(text, ['學 歷：', '學歷：', '學 歷'], ['經 歷：', '經歷：', '經 歷']);
+  const experience = fieldBetweenAny(text, ['經 歷：', '經歷：', '經 歷'], ['政見', '回上一頁']);
+  const platform = fieldBetweenAny(text, ['政 見：', '政見：', '政 見'], ['回上一頁']);
+
+  if (!text.includes(row.name)) {
+    throw new Error(`Unable to verify official name from ${row.sourceUrl}`);
+  }
+
+  return {
+    ...row,
+    gender: genderText.includes('女') ? 'female' : genderText.includes('男') ? 'male' : row.gender,
+    party,
+    education,
+    experience,
+    platform,
+  };
 }
 
 async function fetchCouncilProfiles() {
@@ -671,9 +696,31 @@ async function fetchCouncilProfiles() {
     }
   });
 
+  const directoryProfiles = parsedRows.flatMap((row) => row.profiles);
+  const profileRows = await mapLimit(directoryProfiles, 4, async (row) => {
+    try {
+      return { profile: parseCouncilorDetail(await fetchText(row.sourceUrl), row), skippedRow: null };
+    } catch (error) {
+      return {
+        profile: row,
+        skippedRow: {
+          sourceId: councilSourceId,
+          name: row.name,
+          position: row.position,
+          district: row.district,
+          sourceUrl: row.sourceUrl,
+          reason: error instanceof Error ? error.message : String(error),
+        },
+      };
+    }
+  });
+
   return {
-    profiles: parsedRows.flatMap((row) => row.profiles),
-    skippedRows: parsedRows.map((row) => row.skippedRow).filter(Boolean),
+    profiles: profileRows.map((row) => row.profile),
+    skippedRows: [
+      ...parsedRows.map((row) => row.skippedRow).filter(Boolean),
+      ...profileRows.map((row) => row.skippedRow).filter(Boolean),
+    ],
   };
 }
 function fieldBetweenAny(text, startLabels, endLabels) {
@@ -836,7 +883,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [publicPeople, councilResult, govResult] = await Promise.all([
-    fetchAllRows('public_people', 'person_id,name,gender,party,position,district,education,experience'),
+    fetchAllRows('public_people_directory', 'person_id,name,gender,party,position,district,education,experience'),
     fetchCouncilProfiles(),
     fetchGovProfiles(),
   ]);

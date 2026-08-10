@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import {
+  buildPersonEnrichmentClaimRows,
   buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,
   historicalCecAggregateResultKey,
   isHistoricalCecAggregateResultRow,
   isHistoricalCecNationalResult,
+  scoreClaim,
 } from './sync-real-public-data.mjs';
 
 const root = 'votedata/votedata/voteData';
@@ -72,6 +74,51 @@ assert.equal(
   '01-001-01-1',
 );
 assert.equal(historicalCecAggregateResultKey(indigenousResultRow, indigenousLegislator), '1');
+
+assert.equal(
+  scoreClaim({
+    claimType: 'birth_date',
+    sourceType: 'official_election',
+    confidenceLevel: 'A',
+    hasMatchedPerson: true,
+  }).score,
+  95,
+);
+
+const [manuallyApprovedMediaProfile] = buildPersonEnrichmentClaimRows(
+  {
+    personEnrichmentClaims: [{
+      claimKey: 'media-profile:test-person:education',
+      personId: '00000000-0000-0000-0000-000000000002',
+      personName: '測試候選人',
+      claimType: 'education',
+      claimValue: '測試大學',
+      claimJson: {
+        manualReview: {
+          status: 'approved',
+          reviewedAt: '2026-08-10',
+        },
+      },
+      confidenceLevel: 'B',
+      reviewStatus: 'verified',
+      visibility: 'public',
+      sourceId: 'reputable-media-profile',
+      sourceName: '可信媒體',
+      sourceUrl: 'https://example.com/profile',
+      observedAt: '2026-08-10',
+    }],
+  },
+  [{
+    id: '00000000-0000-0000-0000-000000000002',
+    external_id: null,
+    name: '測試候選人',
+  }],
+  '2026-08-10T00:00:00.000Z',
+);
+assert.equal(manuallyApprovedMediaProfile.review_score, 50);
+assert.equal(manuallyApprovedMediaProfile.review_status, 'verified');
+assert.equal(manuallyApprovedMediaProfile.visibility, 'public');
+assert.equal(manuallyApprovedMediaProfile.is_public, true);
 
 assert.deepEqual(
   darkGuideFamilyReferenceNames({

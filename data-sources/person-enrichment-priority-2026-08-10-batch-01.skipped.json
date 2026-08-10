@@ -1,0 +1,534 @@
+{
+  "schemaVersion": 1,
+  "name": "person-enrichment-skipped-targets",
+  "updatedAt": "2026-08-09",
+  "notes": "Targets that did not produce confident Wikidata enrichment claims. This file can be reused with --target-names.",
+  "skippedTargets": [
+    {
+      "target": {
+        "personId": "490d584d-4c76-43e5-b992-3a4fa6ec9e3d",
+        "name": "尹立",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "高雄市第4選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "尹立",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "bfcb9b45-63dd-4adb-888f-16ec27bbbe97",
+        "name": "王乾明",
+        "gender": "unknown",
+        "party": "台灣民眾黨",
+        "position": "",
+        "district": "宜蘭縣第六選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "王乾明",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "2e1ab449-c504-4b41-a4d0-fa30d7d5b6bf",
+        "name": "何翊綾",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "台中市第11選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "何翊綾",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "c3463bb6-d53c-4c62-b24c-91566626434d",
+        "name": "吳中源",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "台中市第1選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "吳中源",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "7f291c12-d6cd-4957-b4ea-09748c3e61c4",
+        "name": "吳昇翰",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "新北市第8選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "吳昇翰",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "513876c5-42fd-46a2-96b1-8a39119e6560",
+        "name": "吳奕萱",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "新北市第3選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "吳奕萱",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "84037db5-7de3-41ee-a0fb-f101e2a099c0",
+        "name": "吳昱鋒",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "高雄市第10選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "吳昱鋒",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "66a5bb25-3446-418f-a869-9d38830c9c41",
+        "name": "吳淑瑾",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "澎湖縣",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "吳淑瑾",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "a4008521-1376-4cc8-a63a-25d6e93c90af",
+        "name": "吳淳祐",
+        "gender": "unknown",
+        "party": "台灣民眾黨",
+        "position": "",
+        "district": "南投縣第一選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "吳淳祐",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "3f9daf32-e001-49b4-addf-256c5081b5ed",
+        "name": "李四川",
+        "gender": "unknown",
+        "party": "中國國民黨",
+        "position": "",
+        "district": "新北市",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "李四川",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "ea017950-1883-4729-bc28-d5cc5112bbb0",
+        "name": "李昆穎",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "新北市第5選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "李昆穎",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "72500c5a-2142-450f-8412-a5820318da3e",
+        "name": "沈震南",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "台南市第8選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "沈震南",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "a4b7bc29-735a-4076-a8e0-271cbf89337e",
+        "name": "林子揚",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "台北市第4選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "林子揚",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "62eff3e5-97ec-4c74-bfb9-9457cd52ac2e",
+        "name": "林建南",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "台南市第8選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "林建南",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "8d9ebdf4-de29-4c13-a0b2-d304d8cc9a28",
+        "name": "林國漳",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "宜蘭縣",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "林國漳",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "1cf6da08-a6bb-41a7-a1a0-2c33df1aef4b",
+        "name": "邸聖德",
+        "gender": "unknown",
+        "party": "台灣民眾黨",
+        "position": "",
+        "district": "新北市第九選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "邸聖德",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "d63551e3-bd49-4736-9769-ff5c120efc01",
+        "name": "胡家智",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "桃園市第4選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "胡家智",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "b1cd8e80-11ae-4b5b-85df-f67f23826121",
+        "name": "馬郁雯",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "台北市第5選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "馬郁雯",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "8b37e84a-ce1d-4005-a162-f6a49d060237",
+        "name": "高嘉瑜",
+        "gender": "female",
+        "party": "民主進步黨",
+        "position": "臺北市區域議員",
+        "district": "臺北市第2選舉區",
+        "education": "碩士",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "高嘉瑜",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "e1f63d55-8125-4c86-a9b8-fec27de931bc",
+        "name": "張以理",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "高雄市第4選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "張以理",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "1ff061aa-63c0-41fc-a8aa-5f3e2c0b2547",
+        "name": "張佩芸",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "桃園市第12選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "張佩芸",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "10984f92-5245-4a16-b7fe-bb581f25c869",
+        "name": "張贊聞",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "桃園市第10選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "張贊聞",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "1ccc57b2-3f24-4a3a-a1b7-35cc1a97542a",
+        "name": "連小華",
+        "gender": "unknown",
+        "party": "台灣民眾黨",
+        "position": "",
+        "district": "臺中市第四選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "連小華",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    },
+    {
+      "target": {
+        "personId": "db0e16ea-37a2-43a2-b689-eaebe04b8a41",
+        "name": "郭凡",
+        "gender": "unknown",
+        "party": "民主進步黨",
+        "position": "",
+        "district": "台北市第3選區",
+        "education": "",
+        "experience": "",
+        "missingSignals": [
+          "birth_date",
+          "external_id",
+          "education",
+          "experience"
+        ],
+        "rejectedWikidataQids": []
+      },
+      "name": "郭凡",
+      "reason": "no confident Wikidata entity match",
+      "checkedAt": "2026-08-09T18:08:11.737Z"
+    }
+  ]
+}

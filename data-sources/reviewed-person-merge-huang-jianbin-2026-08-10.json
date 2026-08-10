@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "codex-assisted-official-source-review",
+  "groups": [
+    {
+      "name": "黃建賓",
+      "canonicalPersonId": "0d6c109d-412c-461f-a366-aff5814564ef",
+      "duplicatePersonIds": [
+        "5ef912b0-15e7-4942-a4fb-9081b4644c01"
+      ],
+      "evidence": {
+        "identityConclusion": "The 2022 Taitung Daren Township mayor and the 2024 Taitung legislator are the same public figure.",
+        "matchedSignals": [
+          "exact name",
+          "same 1978-12-25 birth date",
+          "Legislative Yuan profile lists service as the 18th and 19th Daren Township mayor",
+          "2024 VoteTW election history links both offices"
+        ],
+        "officialSourceUrl": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=46829",
+        "separateSameNamePersonId": "1cda7f2e-79bb-4bbf-8d2e-831f4481b554",
+        "separatePersonReason": "The 2018 Taipei Songshan District Songji Village chief has a different region, party context, education, and election history."
+      }
+    }
+  ]
+}

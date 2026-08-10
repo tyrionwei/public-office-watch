@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "name": "person-enrichment-claims",
+  "updatedAt": "2026-08-09",
+  "notes": "Reviewed-source supplemental person claims. Wikidata/Wikipedia-derived records are review-only by default.",
+  "personClaims": [
+    {
+      "personId": "b6a1431d-318d-45c8-9653-5f7e3a61b8cc",
+      "personName": "戴瑋姍",
+      "claimType": "experience",
+      "claimValue": "新北市議員；政治人物",
+      "claimJson": {
+        "positions": [
+          "新北市議員",
+          "新北市議員"
+        ],
+        "occupations": [
+          "政治人物"
+        ],
+        "wikidataQid": "Q30948938",
+        "identityMatch": {
+          "version": "wikidata-identity-v2",
+          "status": "matched",
+          "score": 85,
+          "reasons": [
+            "normalized name matched",
+            "gender matched",
+            "education matched"
+          ],
+          "targetGender": "female",
+          "wikidataGender": "female",
+          "corroboratingSignals": [
+            "education matched"
+          ]
+        }
+      },
+      "confidenceLevel": "C",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "wikidata-person-enrichment",
+      "sourceName": "Wikidata 人物補充資料",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q30948938"
+    }
+  ]
+}

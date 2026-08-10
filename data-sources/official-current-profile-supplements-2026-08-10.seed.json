@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "name": "official-current-profile-supplements-2026-08-10",
+  "updatedAt": "2026-08-10",
+  "notes": "Verified current township mayor profile gaps filled from matching CEC mayor bulletins and current township office profile pages.",
+  "sources": [
+    {
+      "id": "cec-2022-township-mayor-bulletins",
+      "name": "中央選舉委員會 2022 鄉鎮市長選舉公報",
+      "url": "https://eebulletin.cec.gov.tw/"
+    },
+    {
+      "id": "yunlin-gukeng-official-officer-profile",
+      "name": "雲林縣古坑鄉公所：鄉長簡介",
+      "url": "https://gukeng.yunlin.gov.tw/cp.aspx?n=4743"
+    },
+    {
+      "id": "yilan-toucheng-official-officer-profile",
+      "name": "宜蘭縣頭城鎮公所：鎮長介紹",
+      "url": "https://toucheng.e-land.gov.tw/cp.aspx?n=6475"
+    }
+  ],
+  "summary": {
+    "personCount": 11,
+    "claimCount": 22,
+    "officialElectionBulletinPersonCount": 9,
+    "currentOfficeProfilePersonCount": 2
+  },
+  "personClaims": [
+    {
+      "claimKey": "official-current-profile:cec-2022:79854a8f-72d6-4226-b184-81bc77b7b174:birth_date",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "birth_date",
+      "claimValue": "1962-02-06",
+      "claimJson": {
+        "value": "1962-02-06",
+        "officeTitle": "嘉義縣東石鄉鄉長",
+        "district": "嘉義縣東石鄉鄉長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/13%E5%98%89%E7%BE%A9%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E6%9D%B1%E7%9F%B3%E9%84%89%E9%84%89%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:79854a8f-72d6-4226-b184-81bc77b7b174:gender",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "value": "male",
+        "officeTitle": "嘉義縣東石鄉鄉長",
+        "district": "嘉義縣東石鄉鄉長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/13%E5%98%89%E7%BE%A9%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E6%9D%B1%E7%9F%B3%E9%84%89%E9%84%89%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:79854a8f-72d6-4226-b184-81bc77b7b174:education",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "education",
+      "claimValue": "國立空中大學公共行政學副學士畢業",
+      "claimJson": {
+        "value": "國立空中大學公共行政學副學士畢業",
+        "officeTitle": "嘉義縣東石鄉鄉長",
+        "district": "嘉義縣東石鄉鄉長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/13%E5%98%89%E7%BE%A9%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E6%9D%B1%E7%9F%B3%E9%84%89%E9%84%89%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:79854a8f-72d6-4226-b184-81bc77b7b174:experience",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "experience",
+      "claimValue": "東石鄉公所秘書；嘉義區漁會總幹事；東石鄉公所顧問；嘉義區漁會顧問",
+      "claimJson": {
+        "value": "東石鄉公所秘書；嘉義區漁會總幹事；東石鄉公所顧問；嘉義區漁會顧問",
+        "officeTitle": "嘉義縣東石鄉鄉長",
+        "district": "嘉義縣東石鄉鄉長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/13%E5%98%89%E7%BE%A9%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E6%9D%B1%E7%9F%B3%E9%84%89%E9%84%89%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:yunlin-gukeng:49fda6c7-6fe3-4d91-bc6f-1c820a13c941:education",
+      "personId": "49fda6c7-6fe3-4d91-bc6f-1c820a13c941",
+      "personName": "林慧如",
+      "claimType": "education",
+      "claimValue": "永光國民小學；古坑國民中學；北一女中；國立政治大學國際貿易學系",
+      "claimJson": {
+        "value": "永光國民小學；古坑國民中學；北一女中；國立政治大學國際貿易學系",
+        "officeTitle": "雲林縣古坑鄉鄉長",
+        "identityMatch": {
+          "status": "matched",
+          "method": "current_office_profile_exact_name",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "yunlin-gukeng-official-officer-profile",
+      "sourceUrl": "https://gukeng.yunlin.gov.tw/cp.aspx?n=4743",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:yunlin-gukeng:49fda6c7-6fe3-4d91-bc6f-1c820a13c941:experience",
+      "personId": "49fda6c7-6fe3-4d91-bc6f-1c820a13c941",
+      "personName": "林慧如",
+      "claimType": "experience",
+      "claimValue": "第12至15屆雲林縣議員；2005至2014年擔任古坑鄉長；2017年擔任雲林縣政府勞工處處長、農業處處長；2021年擔任農村發展基金會執行長",
+      "claimJson": {
+        "value": "第12至15屆雲林縣議員；2005至2014年擔任古坑鄉長；2017年擔任雲林縣政府勞工處處長、農業處處長；2021年擔任農村發展基金會執行長",
+        "officeTitle": "雲林縣古坑鄉鄉長",
+        "identityMatch": {
+          "status": "matched",
+          "method": "current_office_profile_exact_name",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "yunlin-gukeng-official-officer-profile",
+      "sourceUrl": "https://gukeng.yunlin.gov.tw/cp.aspx?n=4743",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:yilan-toucheng:ea9f73bd-bdca-4fea-a341-c511635ab52e:education",
+      "personId": "ea9f73bd-bdca-4fea-a341-c511635ab52e",
+      "personName": "蔡文益",
+      "claimType": "education",
+      "claimValue": "佛光大學社會研究所碩士",
+      "claimJson": {
+        "value": "佛光大學社會研究所碩士",
+        "officeTitle": "宜蘭縣頭城鎮鎮長",
+        "identityMatch": {
+          "status": "matched",
+          "method": "current_office_profile_exact_name",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "yilan-toucheng-official-officer-profile",
+      "sourceUrl": "https://toucheng.e-land.gov.tw/cp.aspx?n=6475",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:yilan-toucheng:ea9f73bd-bdca-4fea-a341-c511635ab52e:experience",
+      "personId": "ea9f73bd-bdca-4fea-a341-c511635ab52e",
+      "personName": "蔡文益",
+      "claimType": "experience",
+      "claimValue": "宜蘭縣議會第16至19屆議員；中國國民黨中央委員；救國團頭城團委會會長；頭城區漁會理事；頭城後備輔導中心組長；頭城鎮民代表；宜蘭縣青工會總會長；宜蘭縣青年團團長；頭城義警顧問團長；頭城民防顧問；頭城18式氣功顧問；民眾服務社機車班講師",
+      "claimJson": {
+        "value": "宜蘭縣議會第16至19屆議員；中國國民黨中央委員；救國團頭城團委會會長；頭城區漁會理事；頭城後備輔導中心組長；頭城鎮民代表；宜蘭縣青工會總會長；宜蘭縣青年團團長；頭城義警顧問團長；頭城民防顧問；頭城18式氣功顧問；民眾服務社機車班講師",
+        "officeTitle": "宜蘭縣頭城鎮鎮長",
+        "identityMatch": {
+          "status": "matched",
+          "method": "current_office_profile_exact_name",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "yilan-toucheng-official-officer-profile",
+      "sourceUrl": "https://toucheng.e-land.gov.tw/cp.aspx?n=6475",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:367f1b6c-c451-4806-af50-a0efe554bc72:birth_date",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "birth_date",
+      "claimValue": "1968-05-15",
+      "claimJson": {
+        "value": "1968-05-15",
+        "officeTitle": "彰化縣田中鎮鎮長",
+        "district": "彰化縣田中鎮鎮長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/10%E5%BD%B0%E5%8C%96%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E7%94%B0%E4%B8%AD%E9%8E%AE%E9%8E%AE%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:367f1b6c-c451-4806-af50-a0efe554bc72:gender",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "value": "female",
+        "officeTitle": "彰化縣田中鎮鎮長",
+        "district": "彰化縣田中鎮鎮長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/10%E5%BD%B0%E5%8C%96%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E7%94%B0%E4%B8%AD%E9%8E%AE%E9%8E%AE%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:367f1b6c-c451-4806-af50-a0efe554bc72:education",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "education",
+      "claimValue": "達德商工；環球科技大學二專部",
+      "claimJson": {
+        "value": "達德商工；環球科技大學二專部",
+        "officeTitle": "彰化縣田中鎮鎮長",
+        "district": "彰化縣田中鎮鎮長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/10%E5%BD%B0%E5%8C%96%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E7%94%B0%E4%B8%AD%E9%8E%AE%E9%8E%AE%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:367f1b6c-c451-4806-af50-a0efe554bc72:experience",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "experience",
+      "claimValue": "田中鎮民代表會第17屆副主席；彰化縣議會第16至19屆議員；三潭國小家長會長；社頭國中家長會副會長；田中向陽、二水天霖慈善會會員；蕭氏宗親會會員、顧問及理事；社頭義警分隊、田中後備憲兵及青工會顧問；慈濟功德會會員",
+      "claimJson": {
+        "value": "田中鎮民代表會第17屆副主席；彰化縣議會第16至19屆議員；三潭國小家長會長；社頭國中家長會副會長；田中向陽、二水天霖慈善會會員；蕭氏宗親會會員、顧問及理事；社頭義警分隊、田中後備憲兵及青工會顧問；慈濟功德會會員",
+        "officeTitle": "彰化縣田中鎮鎮長",
+        "district": "彰化縣田中鎮鎮長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/10%E5%BD%B0%E5%8C%96%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E7%94%B0%E4%B8%AD%E9%8E%AE%E9%8E%AE%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:0bdf6d74-e2b2-41ef-8e07-1d2461876731:birth_date",
+      "personId": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+      "personName": "李明哲",
+      "claimType": "birth_date",
+      "claimValue": "1966-10-07",
+      "claimJson": {
+        "value": "1966-10-07",
+        "officeTitle": "宜蘭縣蘇澳鎮鎮長",
+        "district": "宜蘭縣蘇澳鎮鎮長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/15%E5%AE%9C%E8%98%AD%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:0bdf6d74-e2b2-41ef-8e07-1d2461876731:gender",
+      "personId": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+      "personName": "李明哲",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "value": "male",
+        "officeTitle": "宜蘭縣蘇澳鎮鎮長",
+        "district": "宜蘭縣蘇澳鎮鎮長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/15%E5%AE%9C%E8%98%AD%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:0bdf6d74-e2b2-41ef-8e07-1d2461876731:education",
+      "personId": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+      "personName": "李明哲",
+      "claimType": "education",
+      "claimValue": "馬賽國小；文化國中；宜蘭高中；淡江大學電算系學士；美國紐海文大學電腦與資訊碩士",
+      "claimJson": {
+        "value": "馬賽國小；文化國中；宜蘭高中；淡江大學電算系學士；美國紐海文大學電腦與資訊碩士",
+        "officeTitle": "宜蘭縣蘇澳鎮鎮長",
+        "district": "宜蘭縣蘇澳鎮鎮長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/15%E5%AE%9C%E8%98%AD%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:0bdf6d74-e2b2-41ef-8e07-1d2461876731:experience",
+      "personId": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+      "personName": "李明哲",
+      "claimType": "experience",
+      "claimValue": "第18屆蘇澳鎮長；巨路國際股份有限公司軟體工程師；蘭陽技術學院資管系講師；宜蘭縣工業策進會委員；蘇澳網球協會會長；文化國中家長會副會長",
+      "claimJson": {
+        "value": "第18屆蘇澳鎮長；巨路國際股份有限公司軟體工程師；蘭陽技術學院資管系講師；宜蘭縣工業策進會委員；蘇澳網球協會會長；文化國中家長會副會長",
+        "officeTitle": "宜蘭縣蘇澳鎮鎮長",
+        "district": "宜蘭縣蘇澳鎮鎮長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/15%E5%AE%9C%E8%98%AD%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:dad339c3-c68e-4b84-b909-2dc028865a54:birth_date",
+      "personId": "dad339c3-c68e-4b84-b909-2dc028865a54",
+      "personName": "江淑芬",
+      "claimType": "birth_date",
+      "claimValue": "1961-04-19",
+      "claimJson": {
+        "value": "1961-04-19",
+        "officeTitle": "彰化縣溪州鄉鄉長",
+        "district": "彰化縣溪州鄉鄉長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/10%E5%BD%B0%E5%8C%96%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E6%BA%AA%E5%B7%9E%E9%84%89%E9%84%89%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:318f6f92-c43f-45a0-8c03-4836cd3c7b96:birth_date",
+      "personId": "318f6f92-c43f-45a0-8c03-4836cd3c7b96",
+      "personName": "林清水",
+      "claimType": "birth_date",
+      "claimValue": "1956-03-22",
+      "claimJson": {
+        "value": "1956-03-22",
+        "officeTitle": "花蓮縣光復鄉鄉長",
+        "district": "花蓮縣光復鄉鄉長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/16%E8%8A%B1%E8%93%AE%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E5%85%89%E5%BE%A9%E9%84%89%E9%84%89%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:2edc2a2c-4c59-4e3c-8da4-649ad4e517fa:birth_date",
+      "personId": "2edc2a2c-4c59-4e3c-8da4-649ad4e517fa",
+      "personName": "游淑貞",
+      "claimType": "birth_date",
+      "claimValue": "1967-11-25",
+      "claimJson": {
+        "value": "1967-11-25",
+        "officeTitle": "花蓮縣吉安鄉鄉長",
+        "district": "花蓮縣吉安鄉鄉長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/16%E8%8A%B1%E8%93%AE%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E5%90%89%E5%AE%89%E9%84%89%E9%84%89%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:49fda6c7-6fe3-4d91-bc6f-1c820a13c941:birth_date",
+      "personId": "49fda6c7-6fe3-4d91-bc6f-1c820a13c941",
+      "personName": "林慧如",
+      "claimType": "birth_date",
+      "claimValue": "1962-06-07",
+      "claimJson": {
+        "value": "1962-06-07",
+        "officeTitle": "雲林縣古坑鄉鄉長",
+        "district": "雲林縣古坑鄉鄉長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/12%E9%9B%B2%E6%9E%97%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E5%8F%A4%E5%9D%91%E9%84%89%E9%95%B7.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:003428f7-94f8-4d22-9b25-26b8d28b24b1:birth_date",
+      "personId": "003428f7-94f8-4d22-9b25-26b8d28b24b1",
+      "personName": "陳建名",
+      "claimType": "birth_date",
+      "claimValue": "1978-10-05",
+      "claimJson": {
+        "value": "1978-10-05",
+        "officeTitle": "雲林縣褒忠鄉鄉長",
+        "district": "雲林縣褒忠鄉鄉長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/12%E9%9B%B2%E6%9E%97%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E8%A4%92%E5%BF%A0%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-current-profile:cec-2022:ea9f73bd-bdca-4fea-a341-c511635ab52e:birth_date",
+      "personId": "ea9f73bd-bdca-4fea-a341-c511635ab52e",
+      "personName": "蔡文益",
+      "claimType": "birth_date",
+      "claimValue": "1972-08-04",
+      "claimJson": {
+        "value": "1972-08-04",
+        "officeTitle": "宜蘭縣頭城鎮鎮長",
+        "district": "宜蘭縣頭城鎮鎮長選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_district_office",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cec-2022-township-mayor-bulletins",
+      "sourceUrl": "https://eebulletin.cec.gov.tw/111/15%E5%AE%9C%E8%98%AD%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E9%A0%AD%E5%9F%8E%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/%E9%A0%AD%E5%9F%8E%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+      "observedAt": "2026-08-10"
+    }
+  ]
+}

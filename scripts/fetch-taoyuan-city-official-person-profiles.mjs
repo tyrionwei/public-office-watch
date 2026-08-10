@@ -692,7 +692,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [publicPeople, councilResult, govResult] = await Promise.all([
-    fetchAllRows('public_people', 'person_id,name,gender,party,position,district,education,experience'),
+    fetchAllRows('public_people_directory', 'person_id,name,gender,party,position,district,education,experience'),
     fetchCouncilProfiles(),
     fetchGovProfiles(),
   ]);

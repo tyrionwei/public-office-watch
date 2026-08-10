@@ -117,12 +117,49 @@ function isBlank(value) {
   return value == null || String(value).trim() === '';
 }
 
-function currentPriority(person) {
-  return isBlank(person.current_office_label) ? 1 : 0;
-}
-
 function profileGapPriority(missing) {
   return missing.includes('education') || missing.includes('experience') ? 0 : 1;
+}
+
+function isAdministrativeCurrentOfficial(person) {
+  if (person.list_status !== 'current') return false;
+
+  const text = String(person.current_office_label ?? person.position ?? '');
+  const electedOffice = /(總統|副總統|立法委員|議員|縣長|市長|鄉長|鎮長|代表|村長|里長)/;
+  return text !== '' && !electedOffice.test(text);
+}
+
+function priorityGroup(person, priorElectionYears) {
+  if (person.list_status === 'current' && !isAdministrativeCurrentOfficial(person)) {
+    return 'current_elected_official';
+  }
+
+  if (person.list_status === 'candidate' && Number(person.election_year) === 2026 && priorElectionYears.length > 0) {
+    return 'returning_candidate';
+  }
+
+  if (isAdministrativeCurrentOfficial(person)) {
+    return 'administrative_current_official';
+  }
+
+  if (person.list_status === 'candidate' && Number(person.election_year) === 2026) {
+    return 'first_time_2026_candidate';
+  }
+
+  if (person.list_status === 'candidate') {
+    return 'historical_candidate';
+  }
+
+  return 'other';
+}
+
+function priorityRank(group) {
+  if (group === 'current_elected_official') return 0;
+  if (group === 'returning_candidate') return 1;
+  if (group === 'administrative_current_official') return 2;
+  if (group === 'first_time_2026_candidate') return 3;
+  if (group === 'historical_candidate') return 4;
+  return 5;
 }
 
 function rolePriority(person) {
@@ -170,7 +207,7 @@ function missingSignals(person, publicClaimTypes) {
   return missing;
 }
 
-function targetFromPerson(person, missing) {
+function targetFromPerson(person, missing, group, priorElectionYears) {
   return {
     personId: person.person_id,
     name: person.name,
@@ -178,11 +215,58 @@ function targetFromPerson(person, missing) {
     party: person.party ?? '',
     position: person.position ?? '',
     currentOfficeLabel: person.current_office_label ?? '',
+    listStatus: person.list_status,
+    electionYear: person.election_year,
     district: person.district ?? '',
     education: person.education ?? '',
     experience: person.experience ?? '',
+    priorityGroup: group,
+    priorElectionYears,
     missingSignals: missing,
   };
+}
+
+function postgrestIn(values) {
+  return `in.(${values.map((value) => `"${String(value)}"`).join(',')})`;
+}
+
+async function fetchClaimsForPeople(people) {
+  const claims = [];
+  const personIds = people.map((person) => person.person_id);
+
+  for (let index = 0; index < personIds.length; index += 20) {
+    claims.push(...await fetchAllRows('public_person_claims', 'claim_id,person_id,claim_type', 1000, {
+      person_id: postgrestIn(personIds.slice(index, index + 20)),
+      claim_type: 'in.(birth_date,external_id,education,experience)',
+    }));
+  }
+
+  return claims;
+}
+
+async function fetchCandidateHistoryForPeople(people) {
+  const candidates = [];
+  const personIds = people.map((person) => person.person_id);
+
+  for (let index = 0; index < personIds.length; index += 20) {
+    candidates.push(...await fetchAllRows('public_candidates', 'person_id,election_year', 1000, {
+      person_id: postgrestIn(personIds.slice(index, index + 20)),
+    }));
+  }
+
+  const yearsByPerson = new Map();
+  for (const candidate of candidates) {
+    const year = Number(candidate.election_year);
+    if (!Number.isFinite(year) || year >= 2026) continue;
+
+    const years = yearsByPerson.get(candidate.person_id) ?? new Set();
+    years.add(year);
+    yearsByPerson.set(candidate.person_id, years);
+  }
+
+  return new Map(
+    [...yearsByPerson].map(([personId, years]) => [personId, [...years].sort((left, right) => right - left)]),
+  );
 }
 
 async function main() {
@@ -191,31 +275,42 @@ async function main() {
   }
 
   const options = parseArgs(process.argv.slice(2));
-  const [people, publicClaims] = await Promise.all([
-    fetchAllRows(
-      'public_people',
-      'person_id,name,gender,party,position,current_office_label,district,education,experience',
-      1000,
-      {},
-      'person_id.asc',
-    ),
-    fetchAllRows('public_person_claims', 'claim_id,person_id,claim_type', 1000, {
-      claim_type: 'in.(birth_date,external_id,education,experience)',
-    }, 'claim_id.asc'),
+  const people = await fetchAllRows(
+    'public_people_directory',
+    'person_id,name,gender,party,position,current_office_label,district,education,experience,list_status,election_year',
+    1000,
+    {
+      list_status: 'in.(current,candidate)',
+      list_is_grassroots: 'eq.false',
+    },
+    'person_id.asc',
+  );
+  const [publicClaims, candidateHistoryYears] = await Promise.all([
+    fetchClaimsForPeople(people),
+    fetchCandidateHistoryForPeople(people),
   ]);
   const publicClaimTypes = claimTypesByPerson(publicClaims);
   const targets = people
-    .map((person) => ({ person, missing: missingSignals(person, publicClaimTypes) }))
+    .map((person) => {
+      const missing = missingSignals(person, publicClaimTypes);
+      const priorElectionYears = candidateHistoryYears.get(person.person_id) ?? [];
+      return {
+        person,
+        missing,
+        priorElectionYears,
+        group: priorityGroup(person, priorElectionYears),
+      };
+    })
     .filter(({ missing }) => missing.includes('birth_date') || missing.includes('education') || missing.includes('experience'))
     .sort((left, right) =>
-      currentPriority(left.person) - currentPriority(right.person) ||
-      rolePriority(left.person) - rolePriority(right.person) ||
+      priorityRank(left.group) - priorityRank(right.group) ||
       profileGapPriority(left.missing) - profileGapPriority(right.missing) ||
+      rolePriority(left.person) - rolePriority(right.person) ||
       right.missing.length - left.missing.length ||
       left.person.name.localeCompare(right.person.name, 'zh-Hant-TW'),
     )
     .slice(0, options.limit)
-    .map(({ person, missing }) => targetFromPerson(person, missing));
+    .map(({ person, missing, group, priorElectionYears }) => targetFromPerson(person, missing, group, priorElectionYears));
 
   const output = {
     schemaVersion: 1,
@@ -236,6 +331,8 @@ async function main() {
       name: target.name,
       position: target.position,
       currentOfficeLabel: target.currentOfficeLabel,
+      priorityGroup: target.priorityGroup,
+      priorElectionYears: target.priorElectionYears,
       missingSignals: target.missingSignals,
     })),
   }, null, 2));

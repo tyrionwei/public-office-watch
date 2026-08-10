@@ -476,6 +476,14 @@ function normalizeCouncilorName(value) {
     .trim();
 }
 
+function normalizePartyName(value) {
+  const party = cleanInlineText(value);
+  if (party === '國民黨') return '中國國民黨';
+  if (party === '民進黨') return '民主進步黨';
+  if (party.includes('無黨')) return '無黨籍';
+  return party;
+}
+
 function parseCouncilRows(html, pageRow) {
   const rows = [];
   const itemPattern = /href\s*=\s*['"]([^'"]*\/Parliamentary_Content\/315\/(\d+))['"][^>]*title\s*=\s*['"]([^'"]+)['"][\s\S]*?<div class="caption">\s*<span>([^<]+)<\/span>/giu;
@@ -518,6 +526,31 @@ function parseCouncilRows(html, pageRow) {
   return [...byExternalId.values()];
 }
 
+function parseCouncilorDetail(html, row) {
+  const content = cleanText(html);
+  const party = normalizePartyName(fieldBetweenAny(content, ['黨籍'], ['聯絡電話', '聯絡地址'])) || row.party;
+  const education = fieldBetweenAny(content, ['學歷'], ['經歷']);
+  const experience = fieldBetweenAny(content, ['經歷'], ['政見']);
+  const platform = fieldBetweenAny(content, ['政見'], ['個人資訊', '回上一頁', '網站功能']);
+
+  if (!normalizeIdentityText(content).includes(normalizeIdentityText(row.name))) {
+    throw new Error('Unable to verify official name from ' + row.sourcePayload.profileUrl);
+  }
+
+  return {
+    ...row,
+    sourceUrl: row.sourcePayload.profileUrl,
+    party,
+    education,
+    experience,
+    platform,
+    sourcePayload: {
+      ...row.sourcePayload,
+      listPageUrl: row.sourceUrl,
+    },
+  };
+}
+
 async function fetchCouncilProfiles() {
   const parsedRows = await mapLimit(councilPageRows, 2, async (pageRow) => {
     try {
@@ -538,9 +571,32 @@ async function fetchCouncilProfiles() {
     }
   });
 
+  const directoryProfiles = parsedRows.flatMap((row) => row.profiles);
+  const profileRows = await mapLimit(directoryProfiles, 4, async (row) => {
+    try {
+      const html = await fetchText(row.sourcePayload.profileUrl);
+      return { profile: parseCouncilorDetail(html, row), skippedRow: null };
+    } catch (error) {
+      return {
+        profile: row,
+        skippedRow: {
+          sourceId: councilSourceId,
+          name: row.name,
+          position: row.position,
+          district: row.district,
+          sourceUrl: row.sourcePayload.profileUrl,
+          reason: error instanceof Error ? error.message : String(error),
+        },
+      };
+    }
+  });
+
   return {
-    profiles: parsedRows.flatMap((row) => row.profiles),
-    skippedRows: parsedRows.map((row) => row.skippedRow).filter(Boolean),
+    profiles: profileRows.map((row) => row.profile),
+    skippedRows: [
+      ...parsedRows.map((row) => row.skippedRow).filter(Boolean),
+      ...profileRows.map((row) => row.skippedRow).filter(Boolean),
+    ],
   };
 }
 
@@ -625,7 +681,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [publicPeople, councilResult, govResult] = await Promise.all([
-    fetchAllRows('public_people', 'person_id,name,gender,party,position,district,education,experience'),
+    fetchAllRows('public_people_directory', 'person_id,name,gender,party,position,district,education,experience'),
     fetchCouncilProfiles(),
     fetchGovProfiles(),
   ]);

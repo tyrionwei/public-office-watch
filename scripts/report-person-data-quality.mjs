@@ -430,7 +430,7 @@ async function main() {
     mergeDecisions,
     reviewQueue,
   ] = await Promise.all([
-    fetchRows('public_people', 'person_id,name,alias,gender,party,position,election_year,district,education,experience,updated_at,primary_photo_url', options, 'person_id.asc'),
+    fetchRows('public_people_directory', 'person_id,name,alias,gender,party,position,election_year,district,education,experience,updated_at,primary_photo_url', options, 'person_id.asc'),
     fetchRows('public_candidates', 'candidate_id,person_id,person_name,person_party,person_position,race_title,election_name,election_year,region_name,party,registration_status', options, 'candidate_id.asc'),
     fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json,confidence_level,source_name,source_url', options, 'claim_id.asc'),
     fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json,confidence_level,source_name,source_url', options, 'claim_id.asc', { claim_type: 'eq.external_id' }),

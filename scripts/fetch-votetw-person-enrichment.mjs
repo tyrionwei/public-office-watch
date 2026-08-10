@@ -162,7 +162,7 @@ async function loadTargetsFromSupabase() {
   const pageSize = 1000;
   let offset = 0;
   while (true) {
-    const url = new URL(`${supabaseUrl}/rest/v1/public_people`);
+    const url = new URL(`${supabaseUrl}/rest/v1/public_people_directory`);
     url.searchParams.set('select', 'person_id,name,gender,party,position,district,education,experience');
     url.searchParams.set('order', 'name.asc,person_id.asc');
     const response = await fetch(url, {

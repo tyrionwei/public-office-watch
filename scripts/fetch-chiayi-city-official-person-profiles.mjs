@@ -510,9 +510,54 @@ async function fetchCouncilProfiles() {
     }
   });
 
+  const directoryProfiles = parsedRows.flatMap((row) => row.profiles);
+  const profileRows = await mapLimit(directoryProfiles, 2, async (row) => {
+    const profileUrl = row.sourcePayload.profileUrl;
+
+    try {
+      const html = await fetchText(profileUrl);
+      const content = cleanText(html);
+      const education = fieldBetweenAny(content, ['學歷:', '學歷：', '學歷'], ['經歷:', '經歷：', '經歷']);
+      const experience = fieldBetweenAny(content, ['經歷:', '經歷：', '經歷'], ['市政論壇', '屆次', '回上頁', '網站功能']);
+
+      if (!content.includes(row.name) && !content.includes(row.sourcePayload.originalLabel)) {
+        throw new Error('Unable to verify official name from ' + profileUrl);
+      }
+
+      return {
+        profile: {
+          ...row,
+          sourceUrl: profileUrl,
+          education,
+          experience,
+          sourcePayload: {
+            ...row.sourcePayload,
+            listPageUrl: row.sourceUrl,
+          },
+        },
+        skippedRow: null,
+      };
+    } catch (error) {
+      return {
+        profile: row,
+        skippedRow: {
+          sourceId: councilSourceId,
+          name: row.name,
+          position: row.position,
+          district: row.district,
+          sourceUrl: profileUrl,
+          reason: error instanceof Error ? error.message : String(error),
+        },
+      };
+    }
+  });
+
   return {
-    profiles: parsedRows.flatMap((row) => row.profiles),
-    skippedRows: parsedRows.map((row) => row.skippedRow).filter(Boolean),
+    profiles: profileRows.map((row) => row.profile),
+    skippedRows: [
+      ...parsedRows.map((row) => row.skippedRow).filter(Boolean),
+      ...profileRows.map((row) => row.skippedRow).filter(Boolean),
+    ],
   };
 }
 
@@ -597,7 +642,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [publicPeople, councilResult, govResult] = await Promise.all([
-    fetchAllRows('public_people', 'person_id,name,gender,party,position,district,education,experience'),
+    fetchAllRows('public_people_directory', 'person_id,name,gender,party,position,district,education,experience'),
     fetchCouncilProfiles(),
     fetchGovProfiles(),
   ]);

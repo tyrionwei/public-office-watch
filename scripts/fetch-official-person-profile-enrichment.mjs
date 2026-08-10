@@ -333,7 +333,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [publicPeople, publicExternalIdClaims] = await Promise.all([
-    fetchAllRows('public_people', 'person_id,name,gender,party,position,district,education,experience'),
+    fetchAllRows('public_people_directory', 'person_id,name,gender,party,position,district,education,experience'),
     fetchAllRows('public_person_claims', 'person_id,claim_type,claim_value,source_name'),
   ]);
   const indexes = personIndexes(publicPeople, publicExternalIdClaims);

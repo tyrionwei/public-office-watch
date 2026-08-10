@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "codex-assisted-official-source-review",
+  "groups": [
+    {
+      "name": "高嘉瑜",
+      "canonicalPersonId": "5b1f1a78-c9e0-44da-a663-eb10ec5f5659",
+      "duplicatePersonIds": [
+        "8b37e84a-ce1d-4005-a162-f6a49d060237"
+      ],
+      "evidence": {
+        "identityConclusion": "The 2018 and 2026 Taipei city council candidacies and the 2020/2024 Taipei legislator records belong to the same public figure.",
+        "matchedSignals": [
+          "exact name",
+          "same Democratic Progressive Party affiliation",
+          "CEC records and the Legislative Yuan profile connect the Taipei councilor and legislator career",
+          "the 2026 DPP page identifies the same former Taipei councilor in Taipei City district 2"
+        ],
+        "officialSourceUrl": "https://data.ly.gov.tw/getds.action?id=16",
+        "upcomingSourceUrl": "https://teamtaiwan.dpp.org.tw/councilor?city=63000&district=%E7%AC%AC02%E9%81%B8%E5%8D%80"
+      }
+    },
+    {
+      "name": "戴瑋姍",
+      "canonicalPersonId": "257ed283-b986-4575-b9a2-eb4e13adb4df",
+      "duplicatePersonIds": [
+        "b6a1431d-318d-45c8-9653-5f7e3a61b8cc"
+      ],
+      "evidence": {
+        "identityConclusion": "The records spelled 戴瑋姍 and 戴瑋姗 are the same New Taipei City councilor and 2026 DPP nominee.",
+        "matchedSignals": [
+          "traditional and variant form of the same name",
+          "same 1990-01-23 birth date",
+          "same Democratic Progressive Party affiliation",
+          "continuous 2018, 2022 and 2026 New Taipei City councilor history",
+          "official New Taipei City Council profile matches the current office"
+        ],
+        "officialSourceUrl": "https://www.ntp.gov.tw/councilor-detail?program=37&A=5&C=595",
+        "upcomingSourceUrl": "https://teamtaiwan.dpp.org.tw/councilor?city=65000&district=%E7%AC%AC05%E9%81%B8%E5%8D%80"
+      }
+    }
+  ]
+}

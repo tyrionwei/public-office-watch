@@ -188,7 +188,7 @@ async function supabaseJson(url) {
   return body;
 }
 
-async function fetchAllRows(viewName, select, pageSize = 1000) {
+async function fetchAllRows(viewName, select, pageSize = 1000, params = {}) {
   const rows = [];
 
   for (let offset = 0; ; offset += pageSize) {
@@ -196,6 +196,9 @@ async function fetchAllRows(viewName, select, pageSize = 1000) {
     url.searchParams.set('select', select);
     url.searchParams.set('offset', String(offset));
     url.searchParams.set('limit', String(pageSize));
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
 
     const page = await supabaseJson(url);
     rows.push(...page);
@@ -468,6 +471,29 @@ function candidatesByName(candidates) {
   return byName;
 }
 
+function addCurrentLegislatorFallbacks(candidates, currentLegislators) {
+  const candidatePersonIds = new Set(
+    candidates
+      .filter((candidate) => String(candidate.election_name ?? '').includes('第11屆立法委員選舉'))
+      .map((candidate) => candidate.person_id),
+  );
+  const fallbacks = currentLegislators
+    .filter((person) => !candidatePersonIds.has(person.person_id))
+    .map((person) => ({
+      person_id: person.person_id,
+      person_name: person.name,
+      person_party: person.party,
+      person_position: person.position,
+      race_title: person.district,
+      election_name: '第11屆立法委員選舉',
+      region_name: '',
+      party: person.party,
+      candidate_no: '',
+    }));
+
+  return [...candidates, ...fallbacks];
+}
+
 async function main() {
   if (!anonKey) {
     throw new Error('Set SUPABASE_ANON_KEY for CEC 2024 person profile enrichment.');
@@ -475,14 +501,23 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const rawSources = [];
-  const [officialRows, publicCandidates] = await Promise.all([
+  const [officialRows, publicCandidates, currentLegislators] = await Promise.all([
     fetchOfficialCandidateRows(options, rawSources),
     fetchAllRows(
       'public_candidates',
       'person_id,person_name,person_party,person_position,race_title,election_name,region_name,party,candidate_no',
     ),
+    fetchAllRows(
+      'public_people_directory',
+      'person_id,name,party,position,current_office_label,district,list_status,election_year',
+      1000,
+      {
+        list_status: 'eq.current',
+        current_office_label: 'eq.第11屆立法委員',
+      },
+    ),
   ]);
-  const index = candidatesByName(publicCandidates);
+  const index = candidatesByName(addCurrentLegislatorFallbacks(publicCandidates, currentLegislators));
   const personClaims = [];
   const unmatchedRows = [];
   const summary = {

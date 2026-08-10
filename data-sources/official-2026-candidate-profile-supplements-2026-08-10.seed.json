@@ -1,0 +1,736 @@
+{
+  "schemaVersion": 1,
+  "name": "official-2026-candidate-profile-supplements-2026-08-10",
+  "updatedAt": "2026-08-10",
+  "notes": "2026 candidate profile supplements. Claims are public only when the official biography and 2026 candidate identity are both confirmed; otherwise they remain review-only.",
+  "sources": [
+    {
+      "id": "kmt-official-officer-profile",
+      "name": "中國國民黨全球資訊網：李四川歷任秘書長簡歷",
+      "url": "https://www1.kmt.org.tw/people.aspx?mid=20&pid=1798"
+    },
+    {
+      "id": "kaohsiung-city-government-officer-profile",
+      "name": "高雄市政府文化局：尹立歷任局長簡歷",
+      "url": "https://khcc.kcg.gov.tw/rwd_home02.aspx?ID=$1204&IDK=2&DATA=-1&EXEC=L&AP=$1204_HISTORY-1"
+    },
+    {
+      "id": "moea-official-officer-profile",
+      "name": "經濟部：公股代表名冊",
+      "url": "https://www.moea.gov.tw/Mns/main/content/wHandMenuFile.ashx?file_id=8334"
+    },
+    {
+      "id": "dpp-official-party-profile",
+      "name": "民主進步黨新北市黨部：吳奕萱候選人座談會",
+      "url": "https://www.dppnt.org.tw/20260522news/"
+    },
+    {
+      "id": "wu-yufeng-official-candidate-profile",
+      "name": "吳昱鋒 2026 前鎮小港市議員候選人官方網站",
+      "url": "https://www.xn--hrrq23bkt6a.com/"
+    },
+    {
+      "id": "tvbs-reputable-media-profile",
+      "name": "TVBS 新聞網：馬郁雯人物專訪",
+      "url": "https://news.tvbs.com.tw/politics/2993314"
+    },
+    {
+      "id": "udn-reputable-media-profile",
+      "name": "聯合新聞網：沈震南人物專訪",
+      "url": "https://udn.com/news/story/124652/9321579"
+    },
+    {
+      "id": "dyu-official-university-profile",
+      "name": "大葉大學：校友張以理榮任高雄市政府青年局局長",
+      "url": "https://bulletin.dyu.edu.tw/index.php?goBack=1&isHidden=1&msg_ID=48850&pool_ID=5030"
+    },
+    {
+      "id": "cna-reputable-media-profile",
+      "name": "中央通訊社：張以理卸任青年局長並投入市議員選舉",
+      "url": "https://www.cna.com.tw/news/aloc/202502170115.aspx"
+    },
+    {
+      "id": "nccu-official-university-profile",
+      "name": "國立政治大學：林子揚從僑務工作思考臺灣政治",
+      "url": "https://www.nccu.edu.tw/p/405-1000-18641,c87.php?Lang=zh-tw"
+    },
+    {
+      "id": "wu-yisyuan-official-candidate-profile",
+      "name": "吳奕萱 LinkedIn 公開履歷",
+      "url": "https://tw.linkedin.com/in/wuyisyuan"
+    },
+    {
+      "id": "yzu-official-university-profile",
+      "name": "元智大學社會暨政策科學學系系友會：張贊聞",
+      "url": "https://sites.google.com/g.yzu.edu.tw/scdept-sc/%E9%A6%96%E9%A0%81"
+    },
+    {
+      "id": "mirror-daily-reputable-media-profile",
+      "name": "鏡報：民進黨湧言會議員參選新人介紹",
+      "url": "https://www.mnews.tw/external/mirrordaily41231"
+    },
+    {
+      "id": "china-times-reputable-media-profile",
+      "name": "中國時報：劉品妡、郭凡投入臺北市議員初選",
+      "url": "https://www.chinatimes.com/realtimenews/20251202001703-260407"
+    },
+    {
+      "id": "ftv-reputable-media-profile",
+      "name": "民視新聞網：郭凡投入臺北市議員選舉",
+      "url": "https://www.ftvnews.com.tw/news/detail/2026301W0178"
+    }
+  ],
+  "summary": {
+    "personCount": 12,
+    "claimCount": 24,
+    "publicClaimCount": 24,
+    "reviewOnlyClaimCount": 0
+  },
+  "personClaims": [
+    {
+      "claimKey": "official-2026-candidate-profile:kmt:3f9daf32-e001-49b4-addf-256c5081b5ed:education",
+      "personId": "3f9daf32-e001-49b4-addf-256c5081b5ed",
+      "personName": "李四川",
+      "claimType": "education",
+      "claimValue": "國立臺北科技大學電機研究所碩士",
+      "claimJson": {
+        "value": "國立臺北科技大學電機研究所碩士",
+        "candidateContext": "2026 新北市市長選舉",
+        "identityEvidenceUrls": [
+          "https://www.kmt.org.tw/2026/04/blog-post_59.html?m=1"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_party_current_office_and_2026_candidate_announcement",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "kmt-official-officer-profile",
+      "sourceUrl": "https://www1.kmt.org.tw/people.aspx?mid=20&pid=1798",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:kmt:3f9daf32-e001-49b4-addf-256c5081b5ed:experience",
+      "personId": "3f9daf32-e001-49b4-addf-256c5081b5ed",
+      "personName": "李四川",
+      "claimType": "experience",
+      "claimValue": "臺北市政府工務局新建工程處總工程司及處長；臺北市政府工務局衛生下水道工程處處長；臺北縣政府工務局局長；臺北縣政府副縣長；新北市政府副市長；行政院秘書長",
+      "claimJson": {
+        "value": "臺北市政府工務局新建工程處總工程司及處長；臺北市政府工務局衛生下水道工程處處長；臺北縣政府工務局局長；臺北縣政府副縣長；新北市政府副市長；行政院秘書長",
+        "candidateContext": "2026 新北市市長選舉",
+        "identityEvidenceUrls": [
+          "https://www.kmt.org.tw/2026/04/blog-post_59.html?m=1"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_party_current_office_and_2026_candidate_announcement",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "kmt-official-officer-profile",
+      "sourceUrl": "https://www1.kmt.org.tw/people.aspx?mid=20&pid=1798",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:khcc:490d584d-4c76-43e5-b992-3a4fa6ec9e3d:education",
+      "personId": "490d584d-4c76-43e5-b992-3a4fa6ec9e3d",
+      "personName": "尹立",
+      "claimType": "education",
+      "claimValue": "國立台灣科技大學設計研究所碩士",
+      "claimJson": {
+        "value": "國立台灣科技大學設計研究所碩士",
+        "candidateContext": "2026 高雄市第4選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202502170115.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_former_office_region_and_current_candidate_report",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "kaohsiung-city-government-officer-profile",
+      "sourceUrl": "https://khcc.kcg.gov.tw/rwd_home02.aspx?ID=$1204&IDK=2&DATA=-1&EXEC=L&AP=$1204_HISTORY-1",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:khcc:490d584d-4c76-43e5-b992-3a4fa6ec9e3d:experience",
+      "personId": "490d584d-4c76-43e5-b992-3a4fa6ec9e3d",
+      "personName": "尹立",
+      "claimType": "experience",
+      "claimValue": "高雄市政府文化局局長；樹德科技大學動畫與遊戲設計系系主任；中華民國設計師協會理事長、榮譽理事長；2015全國運動會藝術總監",
+      "claimJson": {
+        "value": "高雄市政府文化局局長；樹德科技大學動畫與遊戲設計系系主任；中華民國設計師協會理事長、榮譽理事長；2015全國運動會藝術總監",
+        "candidateContext": "2026 高雄市第4選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202502170115.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_former_office_region_and_current_candidate_report",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "kaohsiung-city-government-officer-profile",
+      "sourceUrl": "https://khcc.kcg.gov.tw/rwd_home02.aspx?ID=$1204&IDK=2&DATA=-1&EXEC=L&AP=$1204_HISTORY-1",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:moea:8d9ebdf4-de29-4c13-a0b2-d304d8cc9a28:education",
+      "personId": "8d9ebdf4-de29-4c13-a0b2-d304d8cc9a28",
+      "personName": "林國漳",
+      "claimType": "education",
+      "claimValue": "國立中興大學法律研究所碩士",
+      "claimJson": {
+        "value": "國立中興大學法律研究所碩士",
+        "candidateContext": "2026 宜蘭縣縣長選舉",
+        "identityEvidenceUrls": [
+          "https://www.dpp.org.tw/content_print/media/11541",
+          "https://www.cna.com.tw/news/aipl/202606160327.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_profession_region_official_candidate_announcement_and_current_report",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "moea-official-officer-profile",
+      "sourceUrl": "https://www.moea.gov.tw/Mns/main/content/wHandMenuFile.ashx?file_id=8334",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:moea:8d9ebdf4-de29-4c13-a0b2-d304d8cc9a28:experience",
+      "personId": "8d9ebdf4-de29-4c13-a0b2-d304d8cc9a28",
+      "personName": "林國漳",
+      "claimType": "experience",
+      "claimValue": "林國漳律師事務所所長；財團法人法律扶助基金會宜蘭分會會長",
+      "claimJson": {
+        "value": "林國漳律師事務所所長；財團法人法律扶助基金會宜蘭分會會長",
+        "candidateContext": "2026 宜蘭縣縣長選舉",
+        "identityEvidenceUrls": [
+          "https://www.dpp.org.tw/content_print/media/11541",
+          "https://www.cna.com.tw/news/aipl/202606160327.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_profession_region_official_candidate_announcement_and_current_report",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "moea-official-officer-profile",
+      "sourceUrl": "https://www.moea.gov.tw/Mns/main/content/wHandMenuFile.ashx?file_id=8334",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:dpp-new-taipei:513876c5-42fd-46a2-96b1-8a39119e6560:experience",
+      "personId": "513876c5-42fd-46a2-96b1-8a39119e6560",
+      "personName": "吳奕萱",
+      "claimType": "experience",
+      "claimValue": "十年國會、議會幕僚歷練",
+      "claimJson": {
+        "value": "十年國會、議會幕僚歷練",
+        "candidateContext": "2026 新北市第3選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202602040150.aspx",
+          "https://www.cna.com.tw/news/aloc/202603240183.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_party_district_and_official_party_candidate_profile",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "dpp-official-party-profile",
+      "sourceUrl": "https://www.dppnt.org.tw/20260522news/",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:wu-yufeng:84037db5-7de3-41ee-a0fb-f101e2a099c0:education",
+      "personId": "84037db5-7de3-41ee-a0fb-f101e2a099c0",
+      "personName": "吳昱鋒",
+      "claimType": "education",
+      "claimValue": "國立高雄大學電機工程學系；國立政治大學科技管理研究所碩士",
+      "claimJson": {
+        "value": "國立高雄大學電機工程學系；國立政治大學科技管理研究所碩士",
+        "candidateContext": "2026 高雄市第10選舉區議員選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_region_district_and_candidate_owned_profile",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wu-yufeng-official-candidate-profile",
+      "sourceUrl": "https://www.xn--hrrq23bkt6a.com/",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:wu-yufeng:84037db5-7de3-41ee-a0fb-f101e2a099c0:experience",
+      "personId": "84037db5-7de3-41ee-a0fb-f101e2a099c0",
+      "personName": "吳昱鋒",
+      "claimType": "experience",
+      "claimValue": "智食良果股份有限公司創辦人；投身新創領域並募集新創基金；參與籌備與國營企業合資的新創企業",
+      "claimJson": {
+        "value": "智食良果股份有限公司創辦人；投身新創領域並募集新創基金；參與籌備與國營企業合資的新創企業",
+        "candidateContext": "2026 高雄市第10選舉區議員選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_region_district_and_candidate_owned_profile",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wu-yufeng-official-candidate-profile",
+      "sourceUrl": "https://www.xn--hrrq23bkt6a.com/",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "reputable-media-2026-candidate-profile:tvbs:b1cd8e80-11ae-4b5b-85df-f67f23826121:education",
+      "personId": "b1cd8e80-11ae-4b5b-85df-f67f23826121",
+      "personName": "馬郁雯",
+      "claimType": "education",
+      "claimValue": "長榮大學大眾傳播學系",
+      "claimJson": {
+        "value": "長榮大學大眾傳播學系",
+        "candidateContext": "2026 臺北市第5選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202602060090.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_former_occupation_party_region_and_current_candidate_announcement",
+          "score": 95
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "姓名、前職、政黨、選區與中央社現屆參選報導相互吻合。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "tvbs-reputable-media-profile",
+      "sourceUrl": "https://news.tvbs.com.tw/politics/2993314",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "reputable-media-2026-candidate-profile:tvbs:b1cd8e80-11ae-4b5b-85df-f67f23826121:experience",
+      "personId": "b1cd8e80-11ae-4b5b-85df-f67f23826121",
+      "personName": "馬郁雯",
+      "claimType": "experience",
+      "claimValue": "三立新聞主播、政治記者；曾採訪新北警政、立法院、市議會及國防新聞",
+      "claimJson": {
+        "value": "三立新聞主播、政治記者；曾採訪新北警政、立法院、市議會及國防新聞",
+        "candidateContext": "2026 臺北市第5選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202602060090.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_former_occupation_party_region_and_current_candidate_announcement",
+          "score": 95
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "姓名、前職、政黨、選區與中央社現屆參選報導相互吻合。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "tvbs-reputable-media-profile",
+      "sourceUrl": "https://news.tvbs.com.tw/politics/2993314",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "reputable-media-2026-candidate-profile:udn:72500c5a-2142-450f-8412-a5820318da3e:education",
+      "personId": "72500c5a-2142-450f-8412-a5820318da3e",
+      "personName": "沈震南",
+      "claimType": "education",
+      "claimValue": "臺南第一高級中學；國立清華大學化學系；國立成功大學化學研究所",
+      "claimJson": {
+        "value": "臺南第一高級中學；國立清華大學化學系；國立成功大學化學研究所",
+        "candidateContext": "2026 臺南市第8選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://udn.com/news/story/124652/9651059"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_family_relationship_region_district_and_current_candidate_profile",
+          "score": 95
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "姓名、親屬與助理經歷、臺南選區及現屆參選報導相互吻合。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "udn-reputable-media-profile",
+      "sourceUrl": "https://udn.com/news/story/124652/9321579",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "reputable-media-2026-candidate-profile:udn:72500c5a-2142-450f-8412-a5820318da3e:experience",
+      "personId": "72500c5a-2142-450f-8412-a5820318da3e",
+      "personName": "沈震南",
+      "claimType": "experience",
+      "claimValue": "臺南市議員沈震東助理",
+      "claimJson": {
+        "value": "臺南市議員沈震東助理",
+        "candidateContext": "2026 臺南市第8選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://udn.com/news/story/124652/9651059"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_family_relationship_region_district_and_current_candidate_profile",
+          "score": 95
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "姓名、親屬與助理經歷、臺南選區及現屆參選報導相互吻合。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "udn-reputable-media-profile",
+      "sourceUrl": "https://udn.com/news/story/124652/9321579",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:dyu:e1f63d55-8125-4c86-a9b8-fec27de931bc:education",
+      "personId": "e1f63d55-8125-4c86-a9b8-fec27de931bc",
+      "personName": "張以理",
+      "claimType": "education",
+      "claimValue": "大葉大學工業設計學系",
+      "claimJson": {
+        "value": "大葉大學工業設計學系",
+        "candidateContext": "2026 高雄市第4選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202502170115.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_design_profession_former_office_region_and_current_candidate_report",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "dyu-official-university-profile",
+      "sourceUrl": "https://bulletin.dyu.edu.tw/index.php?goBack=1&isHidden=1&msg_ID=48850&pool_ID=5030",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "reputable-media-2026-candidate-profile:cna:e1f63d55-8125-4c86-a9b8-fec27de931bc:experience",
+      "personId": "e1f63d55-8125-4c86-a9b8-fec27de931bc",
+      "personName": "張以理",
+      "claimType": "experience",
+      "claimValue": "高雄市政府青年局局長（2020年至2025年）",
+      "claimJson": {
+        "value": "高雄市政府青年局局長（2020年至2025年）",
+        "candidateContext": "2026 高雄市第4選舉區議員選舉",
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_former_office_region_and_current_candidate_report",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "中央社同篇報導明確記載任職期間、卸任及投入同區議員選舉。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "cna-reputable-media-profile",
+      "sourceUrl": "https://www.cna.com.tw/news/aloc/202502170115.aspx",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:nccu:a4b7bc29-735a-4076-a8e0-271cbf89337e:education",
+      "personId": "a4b7bc29-735a-4076-a8e0-271cbf89337e",
+      "personName": "林子揚",
+      "claimType": "education",
+      "claimValue": "國立政治大學國家發展研究所碩士；國立政治大學國家發展研究所博士班",
+      "claimJson": {
+        "value": "國立政治大學國家發展研究所碩士；國立政治大學國家發展研究所博士班",
+        "candidateContext": "2026 臺北市第4選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://udn.com/news/story/124652/9375709"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_public_service_career_party_region_and_current_candidate_report",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "nccu-official-university-profile",
+      "sourceUrl": "https://www.nccu.edu.tw/p/405-1000-18641,c87.php?Lang=zh-tw",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:nccu:a4b7bc29-735a-4076-a8e0-271cbf89337e:experience",
+      "personId": "a4b7bc29-735a-4076-a8e0-271cbf89337e",
+      "personName": "林子揚",
+      "claimType": "experience",
+      "claimValue": "行政院發言人室助理；國家安全會議諮詢委員助理；駐泰國台北經濟文化辦事處主任；僑務委員會委員長辦公室主任",
+      "claimJson": {
+        "value": "行政院發言人室助理；國家安全會議諮詢委員助理；駐泰國台北經濟文化辦事處主任；僑務委員會委員長辦公室主任",
+        "candidateContext": "2026 臺北市第4選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://udn.com/news/story/124652/9375709"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_public_service_career_party_region_and_current_candidate_report",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "nccu-official-university-profile",
+      "sourceUrl": "https://www.nccu.edu.tw/p/405-1000-18641,c87.php?Lang=zh-tw",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:linkedin:513876c5-42fd-46a2-96b1-8a39119e6560:education",
+      "personId": "513876c5-42fd-46a2-96b1-8a39119e6560",
+      "personName": "吳奕萱",
+      "claimType": "education",
+      "claimValue": "國立政治大學",
+      "claimJson": {
+        "value": "國立政治大學",
+        "candidateContext": "2026 新北市第3選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.dppnt.org.tw/20260522news/",
+          "https://www.cna.com.tw/news/aloc/202602040150.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_current_legislative_office_role_party_region_and_candidate_profile",
+          "score": 100
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "公開履歷所列立委吳思瑤辦公室職務，與政黨及中央社候選人資料相互吻合。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "wu-yisyuan-official-candidate-profile",
+      "sourceUrl": "https://tw.linkedin.com/in/wuyisyuan",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:yzu:10984f92-5245-4a16-b7fe-bb581f25c869:education",
+      "personId": "10984f92-5245-4a16-b7fe-bb581f25c869",
+      "personName": "張贊聞",
+      "claimType": "education",
+      "claimValue": "元智大學社會暨政策科學學系社會學碩士",
+      "claimJson": {
+        "value": "元智大學社會暨政策科學學系社會學碩士",
+        "candidateContext": "2026 桃園市第10選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://teamtaiwan.dpp.org.tw/councilor?city=68000&district=%E7%AC%AC10%E9%81%B8%E5%8D%80"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_local_organization_role_region_and_official_party_candidate_profile",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "yzu-official-university-profile",
+      "sourceUrl": "https://sites.google.com/g.yzu.edu.tw/scdept-sc/%E9%A6%96%E9%A0%81",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "official-2026-candidate-profile:yzu:10984f92-5245-4a16-b7fe-bb581f25c869:experience",
+      "personId": "10984f92-5245-4a16-b7fe-bb581f25c869",
+      "personName": "張贊聞",
+      "claimType": "experience",
+      "claimValue": "湯荃有限公司負責人；桃園市信賴台灣之友會龍潭聯合分會會長",
+      "claimJson": {
+        "value": "湯荃有限公司負責人；桃園市信賴台灣之友會龍潭聯合分會會長",
+        "candidateContext": "2026 桃園市第10選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://teamtaiwan.dpp.org.tw/councilor?city=68000&district=%E7%AC%AC10%E9%81%B8%E5%8D%80"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_local_organization_role_region_and_official_party_candidate_profile",
+          "score": 100
+        }
+      },
+      "confidenceLevel": "A",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "yzu-official-university-profile",
+      "sourceUrl": "https://sites.google.com/g.yzu.edu.tw/scdept-sc/%E9%A6%96%E9%A0%81",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "reputable-media-2026-candidate-profile:mirror-daily:db0e16ea-37a2-43a2-b689-eaebe04b8a41:education",
+      "personId": "db0e16ea-37a2-43a2-b689-eaebe04b8a41",
+      "personName": "郭凡",
+      "claimType": "education",
+      "claimValue": "雪梨大學國際關係學系",
+      "claimJson": {
+        "value": "雪梨大學國際關係學系",
+        "candidateContext": "2026 臺北市第3選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202602060090.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_party_region_district_and_current_primary_report",
+          "score": 95
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "姓名、政黨、松山信義選區及同組初選登記人物與中央社報導相互吻合。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "mirror-daily-reputable-media-profile",
+      "sourceUrl": "https://www.mnews.tw/external/mirrordaily41231",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "reputable-media-2026-candidate-profile:ftv:db0e16ea-37a2-43a2-b689-eaebe04b8a41:experience",
+      "personId": "db0e16ea-37a2-43a2-b689-eaebe04b8a41",
+      "personName": "郭凡",
+      "claimType": "experience",
+      "claimValue": "曾任多位民意代表助理",
+      "claimJson": {
+        "value": "曾任多位民意代表助理",
+        "candidateContext": "2026 臺北市第3選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202602060090.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_party_region_district_and_current_primary_report",
+          "score": 95
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "姓名、政黨、松山信義選區及同組初選登記人物與中央社報導相互吻合。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "ftv-reputable-media-profile",
+      "sourceUrl": "https://www.ftvnews.com.tw/news/detail/2026301W0178",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "reputable-media-2026-candidate-profile:china-times:b3efe28b-9260-4617-bd6e-1580fb563ae7:education",
+      "personId": "b3efe28b-9260-4617-bd6e-1580fb563ae7",
+      "personName": "劉品妡",
+      "claimType": "education",
+      "claimValue": "東吳大學政治學系學士；英國倫敦大學藝術與文化管理碩士",
+      "claimJson": {
+        "value": "東吳大學政治學系學士；英國倫敦大學藝術與文化管理碩士",
+        "candidateContext": "2026 臺北市第6選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202602060090.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_current_office_role_party_region_district_and_current_primary_report",
+          "score": 95
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "姓名、趙怡翔辦公室職務、政黨與大安文山選區均與中央社報導相互吻合。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "china-times-reputable-media-profile",
+      "sourceUrl": "https://www.chinatimes.com/realtimenews/20251202001703-260407",
+      "observedAt": "2026-08-10"
+    },
+    {
+      "claimKey": "reputable-media-2026-candidate-profile:china-times:b3efe28b-9260-4617-bd6e-1580fb563ae7:experience",
+      "personId": "b3efe28b-9260-4617-bd6e-1580fb563ae7",
+      "personName": "劉品妡",
+      "claimType": "experience",
+      "claimValue": "立法委員羅美玲辦公室特助；臺北市議員趙怡翔辦公室執行長",
+      "claimJson": {
+        "value": "立法委員羅美玲辦公室特助；臺北市議員趙怡翔辦公室執行長",
+        "candidateContext": "2026 臺北市第6選舉區議員選舉",
+        "identityEvidenceUrls": [
+          "https://www.cna.com.tw/news/aloc/202602060090.aspx"
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "method": "exact_name_current_office_role_party_region_district_and_current_primary_report",
+          "score": 95
+        },
+        "manualReview": {
+          "status": "approved",
+          "reviewedAt": "2026-08-10",
+          "reason": "姓名、趙怡翔辦公室職務、政黨與大安文山選區均與中央社報導相互吻合。"
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "verified",
+      "visibility": "public",
+      "sourceId": "china-times-reputable-media-profile",
+      "sourceUrl": "https://www.chinatimes.com/realtimenews/20251202001703-260407",
+      "observedAt": "2026-08-10"
+    }
+  ]
+}

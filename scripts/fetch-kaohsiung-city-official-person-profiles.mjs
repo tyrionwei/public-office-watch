@@ -201,13 +201,13 @@ function archiveRaw(url, response, bodyText) {
   fs.writeFileSync(manifestPath, JSON.stringify({ generatedAt: fetchedAt, sources }, null, 2) + '\n');
 }
 
-async function fetchText(url) {
+async function fetchText(url, timeoutMs = 30000) {
   let response;
 
   try {
     response = await fetch(url, {
       headers: { 'user-agent': 'Mozilla/5.0 public-office-watch local data sync' },
-      signal: AbortSignal.timeout(30000),
+      signal: AbortSignal.timeout(timeoutMs),
     });
   } catch (error) {
     throw new Error(`fetch failed: ${url}: ${error instanceof Error ? error.message : String(error)}`);
@@ -725,7 +725,24 @@ async function fetchCouncilProfiles() {
     throw new Error('Unable to parse Kaohsiung councilor list.');
   }
 
-  const parsedRows = listRows.map((row) => ({ profile: parseCouncilorDetail('', row), skippedRow: null }));
+  const parsedRows = await mapLimit(listRows, 6, async (row) => {
+    try {
+      const html = await fetchText(row.sourceUrl, 15000);
+      return { profile: parseCouncilorDetail(html, row), skippedRow: null };
+    } catch (error) {
+      return {
+        profile: parseCouncilorDetail('', row),
+        skippedRow: {
+          sourceId: councilSourceId,
+          name: row.name,
+          position: '高雄市議員',
+          district: row.district,
+          sourceUrl: row.sourceUrl,
+          reason: error instanceof Error ? error.message : String(error),
+        },
+      };
+    }
+  });
 
   return {
     profiles: parsedRows.map((row) => row.profile).filter(Boolean),
@@ -948,7 +965,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [publicPeople, councilResult, govResult] = await Promise.all([
-    fetchAllRows('public_people', 'person_id,name,gender,party,position,district,education,experience'),
+    fetchAllRows('public_people_directory', 'person_id,name,gender,party,position,district,education,experience'),
     fetchCouncilProfiles(),
     fetchGovProfiles(),
   ]);

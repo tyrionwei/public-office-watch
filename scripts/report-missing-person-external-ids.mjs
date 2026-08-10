@@ -174,7 +174,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [people, allClaims, publicClaims, mergeDecisions] = await Promise.all([
-    fetchRows('public_people', 'person_id,name,gender,party,position,election_year,district', options),
+    fetchRows('public_people_directory', 'person_id,name,gender,party,position,election_year,district', options),
     fetchRows('person_claims', 'id,person_id,claim_type,claim_value,claim_json,review_status,visibility,is_public,source_name,source_url', options),
     fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json,source_name,source_url', options),
     fetchRows('person_merge_decisions', 'duplicate_person_id,canonical_person_id,status', options),

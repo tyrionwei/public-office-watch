@@ -1,0 +1,2993 @@
+{
+  "schemaVersion": 1,
+  "name": "votetw-person-enrichment-claims",
+  "sourceId": "votetw-person-enrichment",
+  "generatedAt": "2026-08-09T17:10:26.438Z",
+  "summary": {
+    "targetCount": 10,
+    "rawSourceCount": 10,
+    "claimCount": 42,
+    "skippedCount": 3,
+    "legalClaimCount": 0,
+    "platformClaimCount": 0
+  },
+  "sources": [
+    {
+      "id": "votetw-person-enrichment",
+      "name": "VoteTW",
+      "url": "https://votetw.com/",
+      "licenseNote": "Public VoteTW wiki pages fetched with pageid/revision metadata and raw source archival."
+    }
+  ],
+  "rawSources": [
+    {
+      "title": "林俊雄",
+      "pageid": 129334,
+      "lastrevid": 166895,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E4%BF%8A%E9%9B%84",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E6%9E%97%E4%BF%8A%E9%9B%84&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/林俊雄-129334-166895.wiki",
+      "sha256": "cb86b9e656582a7b1a5ef6df63914276384e5f6773a0331a18af4b28e1f25840",
+      "bytes": 3668
+    },
+    {
+      "title": "林慧如",
+      "pageid": 3182,
+      "lastrevid": 167377,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%85%A7%E5%A6%82",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E6%9E%97%E6%85%A7%E5%A6%82&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/林慧如-3182-167377.wiki",
+      "sha256": "63398ee3f9992595a92378a4243f59d013c27a0f5d565614242dc2502def4bf8",
+      "bytes": 19091
+    },
+    {
+      "title": "蔡文益",
+      "pageid": 5774,
+      "lastrevid": 172746,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E8%94%A1%E6%96%87%E7%9B%8A",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E8%94%A1%E6%96%87%E7%9B%8A&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/蔡文益-5774-172746.wiki",
+      "sha256": "5d918263782e660077aa409e37406c40fb8bc9c921231ac60724a0ac9f8b5de2",
+      "bytes": 3382
+    },
+    {
+      "title": "蕭淑芬",
+      "pageid": 7980,
+      "lastrevid": 173282,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E8%95%AD%E6%B7%91%E8%8A%AC",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E8%95%AD%E6%B7%91%E8%8A%AC&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/蕭淑芬-7980-173282.wiki",
+      "sha256": "cc94a9aa61bed55a3f3c3abfe8bd4c047bfe407b8eb2e8fc8773866e6bf5b7c0",
+      "bytes": 3271
+    },
+    {
+      "title": "江淑芬",
+      "pageid": 131520,
+      "lastrevid": 169322,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E6%B1%9F%E6%B7%91%E8%8A%AC",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E6%B1%9F%E6%B7%91%E8%8A%AC&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/江淑芬-131520-169322.wiki",
+      "sha256": "7574166a9c897ccc76747bdc01eb6f8a28d4fadf87f4f550bd1f3e470b8564c5",
+      "bytes": 3147
+    },
+    {
+      "title": "李明哲",
+      "pageid": 1817,
+      "lastrevid": 166205,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E6%9D%8E%E6%98%8E%E5%93%B2",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E6%9D%8E%E6%98%8E%E5%93%B2&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/李明哲-1817-166205.wiki",
+      "sha256": "14cb495ed9c1031d9a98bd8a5e3ef37b8d2b4ad91fca69aab873ac0a39dd6a46",
+      "bytes": 6701
+    },
+    {
+      "title": "林清水",
+      "pageid": 130173,
+      "lastrevid": 167831,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%B8%85%E6%B0%B4",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E6%9E%97%E6%B8%85%E6%B0%B4&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/林清水-130173-167831.wiki",
+      "sha256": "ee4529409d7d5b3b83d1cf3d547e8d2c89e269100ca345ae96ab67b9e1dc5fce",
+      "bytes": 3036
+    },
+    {
+      "title": "陳建名",
+      "pageid": 5621,
+      "lastrevid": 177049,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%BB%BA%E5%90%8D",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E9%99%B3%E5%BB%BA%E5%90%8D&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/陳建名-5621-177049.wiki",
+      "sha256": "c47249c4a7d10fabba763581b177f5fef9086497fc8551e328c35c10656087e3",
+      "bytes": 6573
+    },
+    {
+      "title": "游淑貞",
+      "pageid": 132186,
+      "lastrevid": 170053,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E6%B8%B8%E6%B7%91%E8%B2%9E",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E6%B8%B8%E6%B7%91%E8%B2%9E&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/游淑貞-132186-170053.wiki",
+      "sha256": "89743f3cd5e826a0d7aa81590fdf8ee54c2bc7d8eacb89ccb62680c611d00816",
+      "bytes": 2873
+    },
+    {
+      "title": "黃建賓",
+      "pageid": 8389,
+      "lastrevid": 179399,
+      "revisionTimestamp": null,
+      "sourceUrl": "https://votetw.com/wiki/%E9%BB%83%E5%BB%BA%E8%B3%93",
+      "rawUrl": "https://votetw.com/w/index.php?title=%E9%BB%83%E5%BB%BA%E8%B3%93&action=raw",
+      "rawPath": "/home/xiaosha/.openclaw/workspace/public-office-watch/data-sources/raw/votetw/黃建賓-8389-179399.wiki",
+      "sha256": "020b11f3f289a981d925d74417a65b7d580133be251ad8b92e8b7e2a7b42a921",
+      "bytes": 9250
+    }
+  ],
+  "skippedTargets": [
+    {
+      "target": {
+        "personId": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+        "name": "李明哲",
+        "pageTitle": "李明哲",
+        "birthDate": null,
+        "gender": "male",
+        "party": "民主進步黨",
+        "position": "宜蘭縣蘇澳鎮鎮長",
+        "district": "宜蘭縣蘇澳鎮鎮長選舉",
+        "electionYear": 2018,
+        "sourceElectionSeedPersonExternalId": null,
+        "education": "碩士",
+        "experience": ""
+      },
+      "reason": "multiple same-name profiles on one VoteTW page and target has no birthday",
+      "sourceProfiles": [
+        {
+          "name": "李明哲",
+          "birthDate": "1968-10-31",
+          "party": "中國國民黨",
+          "electionRecordCount": 1
+        },
+        {
+          "name": "李明哲",
+          "birthDate": "1966-10-07",
+          "party": "民主進步黨",
+          "electionRecordCount": 1
+        }
+      ]
+    },
+    {
+      "target": {
+        "personId": "318f6f92-c43f-45a0-8c03-4836cd3c7b96",
+        "name": "林清水",
+        "pageTitle": "林清水",
+        "birthDate": null,
+        "gender": "male",
+        "party": "中國國民黨",
+        "position": "花蓮縣光復鄉鄉長",
+        "district": "花蓮縣光復鄉鄉長選舉",
+        "electionYear": 2018,
+        "sourceElectionSeedPersonExternalId": null,
+        "education": "碩士",
+        "experience": ""
+      },
+      "reason": "multiple same-name profiles on one VoteTW page and target has no birthday",
+      "sourceProfiles": [
+        {
+          "name": "林清水",
+          "birthDate": "1956-03-22",
+          "party": "中國國民黨",
+          "electionRecordCount": 1
+        },
+        {
+          "name": "林清水",
+          "birthDate": "1951-11-05",
+          "party": "無",
+          "electionRecordCount": 1
+        }
+      ]
+    },
+    {
+      "target": {
+        "personId": "2edc2a2c-4c59-4e3c-8da4-649ad4e517fa",
+        "name": "游淑貞",
+        "pageTitle": "游淑貞",
+        "birthDate": null,
+        "gender": "female",
+        "party": "中國國民黨",
+        "position": "花蓮縣吉安鄉鄉長",
+        "district": "花蓮縣吉安鄉鄉長選舉",
+        "electionYear": 2018,
+        "sourceElectionSeedPersonExternalId": null,
+        "education": "大學",
+        "experience": ""
+      },
+      "reason": "multiple same-name profiles on one VoteTW page and target has no birthday",
+      "sourceProfiles": [
+        {
+          "name": "游淑貞",
+          "birthDate": "1967-11-25",
+          "party": "中國國民黨",
+          "electionRecordCount": 1
+        },
+        {
+          "name": "游淑貞",
+          "birthDate": "1958-04-20",
+          "party": "無",
+          "electionRecordCount": 1
+        }
+      ]
+    }
+  ],
+  "personClaims": [
+    {
+      "claimKey": "votetw-person-enrichment:79854a8f-72d6-4226-b184-81bc77b7b174:external_id:dfb7f03baa25a44b",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "external_id",
+      "claimValue": "votetw:129334:林俊雄:1962-02-06",
+      "claimJson": {
+        "externalIdType": "votetw_profile",
+        "electionRecords": [
+          {
+            "election": "2022年嘉義縣東石鄉鄉長選舉",
+            "name": "林俊雄",
+            "gender": "male",
+            "birthDate": "1962-02-06",
+            "education": "專科",
+            "party": "無",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-02-06",
+          "sourceProfileKey": "林俊雄:1962-02-06",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年嘉義縣東石鄉鄉長選舉",
+              "name": "林俊雄",
+              "gender": "male",
+              "birthDate": "1962-02-06",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林俊雄",
+          "pageid": 129334,
+          "lastrevid": 166895,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E4%BF%8A%E9%9B%84",
+      "observedAt": "2026-08-09T17:10:26.323Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:79854a8f-72d6-4226-b184-81bc77b7b174:birth_date:2545cb148b9510f6",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "birth_date",
+      "claimValue": "1962-02-06",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-02-06",
+          "sourceProfileKey": "林俊雄:1962-02-06",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年嘉義縣東石鄉鄉長選舉",
+              "name": "林俊雄",
+              "gender": "male",
+              "birthDate": "1962-02-06",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林俊雄",
+          "pageid": 129334,
+          "lastrevid": 166895,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E4%BF%8A%E9%9B%84",
+      "observedAt": "2026-08-09T17:10:26.328Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:79854a8f-72d6-4226-b184-81bc77b7b174:gender:4bc1f9cc1a67e6dc",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-02-06",
+          "sourceProfileKey": "林俊雄:1962-02-06",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年嘉義縣東石鄉鄉長選舉",
+              "name": "林俊雄",
+              "gender": "male",
+              "birthDate": "1962-02-06",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林俊雄",
+          "pageid": 129334,
+          "lastrevid": 166895,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E4%BF%8A%E9%9B%84",
+      "observedAt": "2026-08-09T17:10:26.328Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:79854a8f-72d6-4226-b184-81bc77b7b174:education:5683566cb4004563",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "education",
+      "claimValue": "專科學歷",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-02-06",
+          "sourceProfileKey": "林俊雄:1962-02-06",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年嘉義縣東石鄉鄉長選舉",
+              "name": "林俊雄",
+              "gender": "male",
+              "birthDate": "1962-02-06",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林俊雄",
+          "pageid": 129334,
+          "lastrevid": 166895,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E4%BF%8A%E9%9B%84",
+      "observedAt": "2026-08-09T17:10:26.328Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:79854a8f-72d6-4226-b184-81bc77b7b174:party_affiliation:ba173c276a313d28",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "party_affiliation",
+      "claimValue": "無",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年嘉義縣東石鄉鄉長選舉",
+            "name": "林俊雄",
+            "gender": "male",
+            "birthDate": "1962-02-06",
+            "education": "專科",
+            "party": "無",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-02-06",
+          "sourceProfileKey": "林俊雄:1962-02-06",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年嘉義縣東石鄉鄉長選舉",
+              "name": "林俊雄",
+              "gender": "male",
+              "birthDate": "1962-02-06",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林俊雄",
+          "pageid": 129334,
+          "lastrevid": 166895,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E4%BF%8A%E9%9B%84",
+      "observedAt": "2026-08-09T17:10:26.328Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:79854a8f-72d6-4226-b184-81bc77b7b174:experience:d8ff69770e21190d",
+      "personId": "79854a8f-72d6-4226-b184-81bc77b7b174",
+      "personName": "林俊雄",
+      "claimType": "experience",
+      "claimValue": "2022年嘉義縣東石鄉鄉長選舉",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年嘉義縣東石鄉鄉長選舉",
+            "name": "林俊雄",
+            "gender": "male",
+            "birthDate": "1962-02-06",
+            "education": "專科",
+            "party": "無",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "experienceType": "election_history",
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-02-06",
+          "sourceProfileKey": "林俊雄:1962-02-06",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年嘉義縣東石鄉鄉長選舉",
+              "name": "林俊雄",
+              "gender": "male",
+              "birthDate": "1962-02-06",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林俊雄",
+          "pageid": 129334,
+          "lastrevid": 166895,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E4%BF%8A%E9%9B%84",
+      "observedAt": "2026-08-09T17:10:26.328Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:49fda6c7-6fe3-4d91-bc6f-1c820a13c941:external_id:79b9904382e0de70",
+      "personId": "49fda6c7-6fe3-4d91-bc6f-1c820a13c941",
+      "personName": "林慧如",
+      "claimType": "external_id",
+      "claimValue": "votetw:3182:林慧如:1962-06-07",
+      "claimJson": {
+        "externalIdType": "votetw_profile",
+        "electionRecords": [
+          {
+            "election": "2022年雲林縣古坑鄉鄉長選舉",
+            "name": "林慧如",
+            "gender": "female",
+            "birthDate": "1962-06-07",
+            "education": "大學",
+            "party": "民主進步黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-06-07",
+          "sourceProfileKey": "林慧如:1962-06-07",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣古坑鄉鄉長選舉",
+              "name": "林慧如",
+              "gender": "female",
+              "birthDate": "1962-06-07",
+              "education": "大學",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林慧如",
+          "pageid": 3182,
+          "lastrevid": 167377,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%85%A7%E5%A6%82",
+      "observedAt": "2026-08-09T17:10:26.343Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:49fda6c7-6fe3-4d91-bc6f-1c820a13c941:birth_date:49c81a02febf3489",
+      "personId": "49fda6c7-6fe3-4d91-bc6f-1c820a13c941",
+      "personName": "林慧如",
+      "claimType": "birth_date",
+      "claimValue": "1962-06-07",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-06-07",
+          "sourceProfileKey": "林慧如:1962-06-07",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣古坑鄉鄉長選舉",
+              "name": "林慧如",
+              "gender": "female",
+              "birthDate": "1962-06-07",
+              "education": "大學",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林慧如",
+          "pageid": 3182,
+          "lastrevid": 167377,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%85%A7%E5%A6%82",
+      "observedAt": "2026-08-09T17:10:26.343Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:49fda6c7-6fe3-4d91-bc6f-1c820a13c941:gender:300db790ed896c8b",
+      "personId": "49fda6c7-6fe3-4d91-bc6f-1c820a13c941",
+      "personName": "林慧如",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-06-07",
+          "sourceProfileKey": "林慧如:1962-06-07",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣古坑鄉鄉長選舉",
+              "name": "林慧如",
+              "gender": "female",
+              "birthDate": "1962-06-07",
+              "education": "大學",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林慧如",
+          "pageid": 3182,
+          "lastrevid": 167377,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%85%A7%E5%A6%82",
+      "observedAt": "2026-08-09T17:10:26.343Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:49fda6c7-6fe3-4d91-bc6f-1c820a13c941:education:f9abdee976d82955",
+      "personId": "49fda6c7-6fe3-4d91-bc6f-1c820a13c941",
+      "personName": "林慧如",
+      "claimType": "education",
+      "claimValue": "大學學歷",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-06-07",
+          "sourceProfileKey": "林慧如:1962-06-07",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣古坑鄉鄉長選舉",
+              "name": "林慧如",
+              "gender": "female",
+              "birthDate": "1962-06-07",
+              "education": "大學",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林慧如",
+          "pageid": 3182,
+          "lastrevid": 167377,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%85%A7%E5%A6%82",
+      "observedAt": "2026-08-09T17:10:26.343Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:49fda6c7-6fe3-4d91-bc6f-1c820a13c941:party_affiliation:48068e85f39febd9",
+      "personId": "49fda6c7-6fe3-4d91-bc6f-1c820a13c941",
+      "personName": "林慧如",
+      "claimType": "party_affiliation",
+      "claimValue": "民主進步黨",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年雲林縣古坑鄉鄉長選舉",
+            "name": "林慧如",
+            "gender": "female",
+            "birthDate": "1962-06-07",
+            "education": "大學",
+            "party": "民主進步黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-06-07",
+          "sourceProfileKey": "林慧如:1962-06-07",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣古坑鄉鄉長選舉",
+              "name": "林慧如",
+              "gender": "female",
+              "birthDate": "1962-06-07",
+              "education": "大學",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林慧如",
+          "pageid": 3182,
+          "lastrevid": 167377,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%85%A7%E5%A6%82",
+      "observedAt": "2026-08-09T17:10:26.343Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:49fda6c7-6fe3-4d91-bc6f-1c820a13c941:experience:08ef5c5f9b210a52",
+      "personId": "49fda6c7-6fe3-4d91-bc6f-1c820a13c941",
+      "personName": "林慧如",
+      "claimType": "experience",
+      "claimValue": "2022年雲林縣古坑鄉鄉長選舉",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年雲林縣古坑鄉鄉長選舉",
+            "name": "林慧如",
+            "gender": "female",
+            "birthDate": "1962-06-07",
+            "education": "大學",
+            "party": "民主進步黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "experienceType": "election_history",
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1962-06-07",
+          "sourceProfileKey": "林慧如:1962-06-07",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣古坑鄉鄉長選舉",
+              "name": "林慧如",
+              "gender": "female",
+              "birthDate": "1962-06-07",
+              "education": "大學",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "林慧如",
+          "pageid": 3182,
+          "lastrevid": 167377,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%9E%97%E6%85%A7%E5%A6%82",
+      "observedAt": "2026-08-09T17:10:26.343Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:ea9f73bd-bdca-4fea-a341-c511635ab52e:external_id:5c0cddeb05ccfb8a",
+      "personId": "ea9f73bd-bdca-4fea-a341-c511635ab52e",
+      "personName": "蔡文益",
+      "claimType": "external_id",
+      "claimValue": "votetw:5774:蔡文益:1972-08-04",
+      "claimJson": {
+        "externalIdType": "votetw_profile",
+        "electionRecords": [
+          {
+            "election": "2022年宜蘭縣頭城鎮鎮長選舉",
+            "name": "蔡文益",
+            "gender": "male",
+            "birthDate": "1972-08-04",
+            "education": "碩士",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1972-08-04",
+          "sourceProfileKey": "蔡文益:1972-08-04",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年宜蘭縣頭城鎮鎮長選舉",
+              "name": "蔡文益",
+              "gender": "male",
+              "birthDate": "1972-08-04",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蔡文益",
+          "pageid": 5774,
+          "lastrevid": 172746,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%94%A1%E6%96%87%E7%9B%8A",
+      "observedAt": "2026-08-09T17:10:26.354Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:ea9f73bd-bdca-4fea-a341-c511635ab52e:birth_date:38352e94b0881bdd",
+      "personId": "ea9f73bd-bdca-4fea-a341-c511635ab52e",
+      "personName": "蔡文益",
+      "claimType": "birth_date",
+      "claimValue": "1972-08-04",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1972-08-04",
+          "sourceProfileKey": "蔡文益:1972-08-04",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年宜蘭縣頭城鎮鎮長選舉",
+              "name": "蔡文益",
+              "gender": "male",
+              "birthDate": "1972-08-04",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蔡文益",
+          "pageid": 5774,
+          "lastrevid": 172746,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%94%A1%E6%96%87%E7%9B%8A",
+      "observedAt": "2026-08-09T17:10:26.354Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:ea9f73bd-bdca-4fea-a341-c511635ab52e:gender:1d8bd456b81aab96",
+      "personId": "ea9f73bd-bdca-4fea-a341-c511635ab52e",
+      "personName": "蔡文益",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1972-08-04",
+          "sourceProfileKey": "蔡文益:1972-08-04",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年宜蘭縣頭城鎮鎮長選舉",
+              "name": "蔡文益",
+              "gender": "male",
+              "birthDate": "1972-08-04",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蔡文益",
+          "pageid": 5774,
+          "lastrevid": 172746,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%94%A1%E6%96%87%E7%9B%8A",
+      "observedAt": "2026-08-09T17:10:26.354Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:ea9f73bd-bdca-4fea-a341-c511635ab52e:education:7ba4c34fb5646ba9",
+      "personId": "ea9f73bd-bdca-4fea-a341-c511635ab52e",
+      "personName": "蔡文益",
+      "claimType": "education",
+      "claimValue": "碩士學歷",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1972-08-04",
+          "sourceProfileKey": "蔡文益:1972-08-04",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年宜蘭縣頭城鎮鎮長選舉",
+              "name": "蔡文益",
+              "gender": "male",
+              "birthDate": "1972-08-04",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蔡文益",
+          "pageid": 5774,
+          "lastrevid": 172746,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%94%A1%E6%96%87%E7%9B%8A",
+      "observedAt": "2026-08-09T17:10:26.354Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:ea9f73bd-bdca-4fea-a341-c511635ab52e:party_affiliation:7bbf3a1b9434d8b1",
+      "personId": "ea9f73bd-bdca-4fea-a341-c511635ab52e",
+      "personName": "蔡文益",
+      "claimType": "party_affiliation",
+      "claimValue": "中國國民黨",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年宜蘭縣頭城鎮鎮長選舉",
+            "name": "蔡文益",
+            "gender": "male",
+            "birthDate": "1972-08-04",
+            "education": "碩士",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1972-08-04",
+          "sourceProfileKey": "蔡文益:1972-08-04",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年宜蘭縣頭城鎮鎮長選舉",
+              "name": "蔡文益",
+              "gender": "male",
+              "birthDate": "1972-08-04",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蔡文益",
+          "pageid": 5774,
+          "lastrevid": 172746,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%94%A1%E6%96%87%E7%9B%8A",
+      "observedAt": "2026-08-09T17:10:26.354Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:ea9f73bd-bdca-4fea-a341-c511635ab52e:experience:9ca292509d39ffbe",
+      "personId": "ea9f73bd-bdca-4fea-a341-c511635ab52e",
+      "personName": "蔡文益",
+      "claimType": "experience",
+      "claimValue": "2022年宜蘭縣頭城鎮鎮長選舉",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年宜蘭縣頭城鎮鎮長選舉",
+            "name": "蔡文益",
+            "gender": "male",
+            "birthDate": "1972-08-04",
+            "education": "碩士",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "experienceType": "election_history",
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1972-08-04",
+          "sourceProfileKey": "蔡文益:1972-08-04",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年宜蘭縣頭城鎮鎮長選舉",
+              "name": "蔡文益",
+              "gender": "male",
+              "birthDate": "1972-08-04",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蔡文益",
+          "pageid": 5774,
+          "lastrevid": 172746,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%94%A1%E6%96%87%E7%9B%8A",
+      "observedAt": "2026-08-09T17:10:26.354Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:367f1b6c-c451-4806-af50-a0efe554bc72:external_id:8617b9abb1ce4a3f",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "external_id",
+      "claimValue": "votetw:7980:蕭淑芬:1968-05-15",
+      "claimJson": {
+        "externalIdType": "votetw_profile",
+        "electionRecords": [
+          {
+            "election": "2022年彰化縣田中鎮鎮長選舉",
+            "name": "蕭淑芬",
+            "gender": "female",
+            "birthDate": "1968-05-15",
+            "education": "專科",
+            "party": "無",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1968-05-15",
+          "sourceProfileKey": "蕭淑芬:1968-05-15",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣田中鎮鎮長選舉",
+              "name": "蕭淑芬",
+              "gender": "female",
+              "birthDate": "1968-05-15",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蕭淑芬",
+          "pageid": 7980,
+          "lastrevid": 173282,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%95%AD%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.366Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:367f1b6c-c451-4806-af50-a0efe554bc72:birth_date:f3eed6edbab386ed",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "birth_date",
+      "claimValue": "1968-05-15",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1968-05-15",
+          "sourceProfileKey": "蕭淑芬:1968-05-15",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣田中鎮鎮長選舉",
+              "name": "蕭淑芬",
+              "gender": "female",
+              "birthDate": "1968-05-15",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蕭淑芬",
+          "pageid": 7980,
+          "lastrevid": 173282,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%95%AD%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.366Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:367f1b6c-c451-4806-af50-a0efe554bc72:gender:6f4ab4712cb58bc9",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1968-05-15",
+          "sourceProfileKey": "蕭淑芬:1968-05-15",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣田中鎮鎮長選舉",
+              "name": "蕭淑芬",
+              "gender": "female",
+              "birthDate": "1968-05-15",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蕭淑芬",
+          "pageid": 7980,
+          "lastrevid": 173282,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%95%AD%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.366Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:367f1b6c-c451-4806-af50-a0efe554bc72:education:4665b03de2aaa1bf",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "education",
+      "claimValue": "專科學歷",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1968-05-15",
+          "sourceProfileKey": "蕭淑芬:1968-05-15",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣田中鎮鎮長選舉",
+              "name": "蕭淑芬",
+              "gender": "female",
+              "birthDate": "1968-05-15",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蕭淑芬",
+          "pageid": 7980,
+          "lastrevid": 173282,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%95%AD%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.366Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:367f1b6c-c451-4806-af50-a0efe554bc72:party_affiliation:5162d524fceb12a0",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "party_affiliation",
+      "claimValue": "無",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年彰化縣田中鎮鎮長選舉",
+            "name": "蕭淑芬",
+            "gender": "female",
+            "birthDate": "1968-05-15",
+            "education": "專科",
+            "party": "無",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1968-05-15",
+          "sourceProfileKey": "蕭淑芬:1968-05-15",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣田中鎮鎮長選舉",
+              "name": "蕭淑芬",
+              "gender": "female",
+              "birthDate": "1968-05-15",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蕭淑芬",
+          "pageid": 7980,
+          "lastrevid": 173282,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%95%AD%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.366Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:367f1b6c-c451-4806-af50-a0efe554bc72:experience:5f3256702852f086",
+      "personId": "367f1b6c-c451-4806-af50-a0efe554bc72",
+      "personName": "蕭淑芬",
+      "claimType": "experience",
+      "claimValue": "2022年彰化縣田中鎮鎮長選舉",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年彰化縣田中鎮鎮長選舉",
+            "name": "蕭淑芬",
+            "gender": "female",
+            "birthDate": "1968-05-15",
+            "education": "專科",
+            "party": "無",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "experienceType": "election_history",
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1968-05-15",
+          "sourceProfileKey": "蕭淑芬:1968-05-15",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣田中鎮鎮長選舉",
+              "name": "蕭淑芬",
+              "gender": "female",
+              "birthDate": "1968-05-15",
+              "education": "專科",
+              "party": "無",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "蕭淑芬",
+          "pageid": 7980,
+          "lastrevid": 173282,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E8%95%AD%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.366Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:dad339c3-c68e-4b84-b909-2dc028865a54:external_id:44bed3639e497ba5",
+      "personId": "dad339c3-c68e-4b84-b909-2dc028865a54",
+      "personName": "江淑芬",
+      "claimType": "external_id",
+      "claimValue": "votetw:131520:江淑芬:1961-04-19",
+      "claimJson": {
+        "externalIdType": "votetw_profile",
+        "electionRecords": [
+          {
+            "election": "2022年彰化縣溪州鄉鄉長選舉",
+            "name": "江淑芬",
+            "gender": "female",
+            "birthDate": "1961-04-19",
+            "education": "高中(職)",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1961-04-19",
+          "sourceProfileKey": "江淑芬:1961-04-19",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣溪州鄉鄉長選舉",
+              "name": "江淑芬",
+              "gender": "female",
+              "birthDate": "1961-04-19",
+              "education": "高中(職)",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "江淑芬",
+          "pageid": 131520,
+          "lastrevid": 169322,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%B1%9F%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.379Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:dad339c3-c68e-4b84-b909-2dc028865a54:birth_date:f2460238520ca6b4",
+      "personId": "dad339c3-c68e-4b84-b909-2dc028865a54",
+      "personName": "江淑芬",
+      "claimType": "birth_date",
+      "claimValue": "1961-04-19",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1961-04-19",
+          "sourceProfileKey": "江淑芬:1961-04-19",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣溪州鄉鄉長選舉",
+              "name": "江淑芬",
+              "gender": "female",
+              "birthDate": "1961-04-19",
+              "education": "高中(職)",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "江淑芬",
+          "pageid": 131520,
+          "lastrevid": 169322,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%B1%9F%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.379Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:dad339c3-c68e-4b84-b909-2dc028865a54:gender:47734d6c73715a31",
+      "personId": "dad339c3-c68e-4b84-b909-2dc028865a54",
+      "personName": "江淑芬",
+      "claimType": "gender",
+      "claimValue": "female",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1961-04-19",
+          "sourceProfileKey": "江淑芬:1961-04-19",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣溪州鄉鄉長選舉",
+              "name": "江淑芬",
+              "gender": "female",
+              "birthDate": "1961-04-19",
+              "education": "高中(職)",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "江淑芬",
+          "pageid": 131520,
+          "lastrevid": 169322,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%B1%9F%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.379Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:dad339c3-c68e-4b84-b909-2dc028865a54:education:7a070763bad2d520",
+      "personId": "dad339c3-c68e-4b84-b909-2dc028865a54",
+      "personName": "江淑芬",
+      "claimType": "education",
+      "claimValue": "高中(職)學歷",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1961-04-19",
+          "sourceProfileKey": "江淑芬:1961-04-19",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣溪州鄉鄉長選舉",
+              "name": "江淑芬",
+              "gender": "female",
+              "birthDate": "1961-04-19",
+              "education": "高中(職)",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "江淑芬",
+          "pageid": 131520,
+          "lastrevid": 169322,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%B1%9F%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.379Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:dad339c3-c68e-4b84-b909-2dc028865a54:party_affiliation:e6e318c68aff7c8d",
+      "personId": "dad339c3-c68e-4b84-b909-2dc028865a54",
+      "personName": "江淑芬",
+      "claimType": "party_affiliation",
+      "claimValue": "中國國民黨",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年彰化縣溪州鄉鄉長選舉",
+            "name": "江淑芬",
+            "gender": "female",
+            "birthDate": "1961-04-19",
+            "education": "高中(職)",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1961-04-19",
+          "sourceProfileKey": "江淑芬:1961-04-19",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣溪州鄉鄉長選舉",
+              "name": "江淑芬",
+              "gender": "female",
+              "birthDate": "1961-04-19",
+              "education": "高中(職)",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "江淑芬",
+          "pageid": 131520,
+          "lastrevid": 169322,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%B1%9F%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.379Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:dad339c3-c68e-4b84-b909-2dc028865a54:experience:c022b5a8260bc580",
+      "personId": "dad339c3-c68e-4b84-b909-2dc028865a54",
+      "personName": "江淑芬",
+      "claimType": "experience",
+      "claimValue": "2022年彰化縣溪州鄉鄉長選舉",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年彰化縣溪州鄉鄉長選舉",
+            "name": "江淑芬",
+            "gender": "female",
+            "birthDate": "1961-04-19",
+            "education": "高中(職)",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "experienceType": "election_history",
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1961-04-19",
+          "sourceProfileKey": "江淑芬:1961-04-19",
+          "sameNameProfileCount": 2
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 2,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年彰化縣溪州鄉鄉長選舉",
+              "name": "江淑芬",
+              "gender": "female",
+              "birthDate": "1961-04-19",
+              "education": "高中(職)",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "江淑芬",
+          "pageid": 131520,
+          "lastrevid": 169322,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E6%B1%9F%E6%B7%91%E8%8A%AC",
+      "observedAt": "2026-08-09T17:10:26.379Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:003428f7-94f8-4d22-9b25-26b8d28b24b1:external_id:ce975ba48700b8a3",
+      "personId": "003428f7-94f8-4d22-9b25-26b8d28b24b1",
+      "personName": "陳建名",
+      "claimType": "external_id",
+      "claimValue": "votetw:5621:陳建名:1978-10-05",
+      "claimJson": {
+        "externalIdType": "votetw_profile",
+        "electionRecords": [
+          {
+            "election": "2022年雲林縣褒忠鄉鄉長選舉",
+            "name": "陳建名",
+            "gender": "male",
+            "birthDate": "1978-10-05",
+            "education": "專科",
+            "party": "民主進步黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-10-05",
+          "sourceProfileKey": "陳建名:1978-10-05",
+          "sameNameProfileCount": 4
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 4,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣褒忠鄉鄉長選舉",
+              "name": "陳建名",
+              "gender": "male",
+              "birthDate": "1978-10-05",
+              "education": "專科",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "陳建名",
+          "pageid": 5621,
+          "lastrevid": 177049,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%BB%BA%E5%90%8D",
+      "observedAt": "2026-08-09T17:10:26.414Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:003428f7-94f8-4d22-9b25-26b8d28b24b1:birth_date:38e6476b79defe1e",
+      "personId": "003428f7-94f8-4d22-9b25-26b8d28b24b1",
+      "personName": "陳建名",
+      "claimType": "birth_date",
+      "claimValue": "1978-10-05",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-10-05",
+          "sourceProfileKey": "陳建名:1978-10-05",
+          "sameNameProfileCount": 4
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 4,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣褒忠鄉鄉長選舉",
+              "name": "陳建名",
+              "gender": "male",
+              "birthDate": "1978-10-05",
+              "education": "專科",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "陳建名",
+          "pageid": 5621,
+          "lastrevid": 177049,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%BB%BA%E5%90%8D",
+      "observedAt": "2026-08-09T17:10:26.414Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:003428f7-94f8-4d22-9b25-26b8d28b24b1:gender:d18a102b685667b9",
+      "personId": "003428f7-94f8-4d22-9b25-26b8d28b24b1",
+      "personName": "陳建名",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-10-05",
+          "sourceProfileKey": "陳建名:1978-10-05",
+          "sameNameProfileCount": 4
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 4,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣褒忠鄉鄉長選舉",
+              "name": "陳建名",
+              "gender": "male",
+              "birthDate": "1978-10-05",
+              "education": "專科",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "陳建名",
+          "pageid": 5621,
+          "lastrevid": 177049,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%BB%BA%E5%90%8D",
+      "observedAt": "2026-08-09T17:10:26.414Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:003428f7-94f8-4d22-9b25-26b8d28b24b1:education:b3eefd8d60f8bdff",
+      "personId": "003428f7-94f8-4d22-9b25-26b8d28b24b1",
+      "personName": "陳建名",
+      "claimType": "education",
+      "claimValue": "專科學歷",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-10-05",
+          "sourceProfileKey": "陳建名:1978-10-05",
+          "sameNameProfileCount": 4
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 4,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣褒忠鄉鄉長選舉",
+              "name": "陳建名",
+              "gender": "male",
+              "birthDate": "1978-10-05",
+              "education": "專科",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "陳建名",
+          "pageid": 5621,
+          "lastrevid": 177049,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%BB%BA%E5%90%8D",
+      "observedAt": "2026-08-09T17:10:26.414Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:003428f7-94f8-4d22-9b25-26b8d28b24b1:party_affiliation:44f427ec4344a5fd",
+      "personId": "003428f7-94f8-4d22-9b25-26b8d28b24b1",
+      "personName": "陳建名",
+      "claimType": "party_affiliation",
+      "claimValue": "民主進步黨",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年雲林縣褒忠鄉鄉長選舉",
+            "name": "陳建名",
+            "gender": "male",
+            "birthDate": "1978-10-05",
+            "education": "專科",
+            "party": "民主進步黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-10-05",
+          "sourceProfileKey": "陳建名:1978-10-05",
+          "sameNameProfileCount": 4
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 4,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣褒忠鄉鄉長選舉",
+              "name": "陳建名",
+              "gender": "male",
+              "birthDate": "1978-10-05",
+              "education": "專科",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "陳建名",
+          "pageid": 5621,
+          "lastrevid": 177049,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%BB%BA%E5%90%8D",
+      "observedAt": "2026-08-09T17:10:26.414Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:003428f7-94f8-4d22-9b25-26b8d28b24b1:experience:8e082002e3a8a198",
+      "personId": "003428f7-94f8-4d22-9b25-26b8d28b24b1",
+      "personName": "陳建名",
+      "claimType": "experience",
+      "claimValue": "2022年雲林縣褒忠鄉鄉長選舉",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2022年雲林縣褒忠鄉鄉長選舉",
+            "name": "陳建名",
+            "gender": "male",
+            "birthDate": "1978-10-05",
+            "education": "專科",
+            "party": "民主進步黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "experienceType": "election_history",
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-10-05",
+          "sourceProfileKey": "陳建名:1978-10-05",
+          "sameNameProfileCount": 4
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 4,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年雲林縣褒忠鄉鄉長選舉",
+              "name": "陳建名",
+              "gender": "male",
+              "birthDate": "1978-10-05",
+              "education": "專科",
+              "party": "民主進步黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "陳建名",
+          "pageid": 5621,
+          "lastrevid": 177049,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%99%B3%E5%BB%BA%E5%90%8D",
+      "observedAt": "2026-08-09T17:10:26.414Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:5ef912b0-15e7-4942-a4fb-9081b4644c01:external_id:f42e175284e6d500",
+      "personId": "5ef912b0-15e7-4942-a4fb-9081b4644c01",
+      "personName": "黃建賓",
+      "claimType": "external_id",
+      "claimValue": "votetw:8389:黃建賓:1978-12-25",
+      "claimJson": {
+        "externalIdType": "votetw_profile",
+        "electionRecords": [
+          {
+            "election": "2024年立法委員選舉臺東縣選舉區（區域）",
+            "name": "黃建賓",
+            "gender": "male",
+            "birthDate": "1978-12-25",
+            "education": "碩士",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          },
+          {
+            "election": "2022年臺東縣大武鄉鄉長選舉",
+            "name": "黃建賓",
+            "gender": "male",
+            "birthDate": "1978-12-25",
+            "education": "碩士",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-12-25",
+          "sourceProfileKey": "黃建賓:1978-12-25",
+          "sameNameProfileCount": 3
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 3,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年臺東縣大武鄉鄉長選舉",
+              "name": "黃建賓",
+              "gender": "male",
+              "birthDate": "1978-12-25",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "黃建賓",
+          "pageid": 8389,
+          "lastrevid": 179399,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%BB%83%E5%BB%BA%E8%B3%93",
+      "observedAt": "2026-08-09T17:10:26.438Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:5ef912b0-15e7-4942-a4fb-9081b4644c01:birth_date:4bff0afc2698f358",
+      "personId": "5ef912b0-15e7-4942-a4fb-9081b4644c01",
+      "personName": "黃建賓",
+      "claimType": "birth_date",
+      "claimValue": "1978-12-25",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-12-25",
+          "sourceProfileKey": "黃建賓:1978-12-25",
+          "sameNameProfileCount": 3
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 3,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年臺東縣大武鄉鄉長選舉",
+              "name": "黃建賓",
+              "gender": "male",
+              "birthDate": "1978-12-25",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "黃建賓",
+          "pageid": 8389,
+          "lastrevid": 179399,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%BB%83%E5%BB%BA%E8%B3%93",
+      "observedAt": "2026-08-09T17:10:26.438Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:5ef912b0-15e7-4942-a4fb-9081b4644c01:gender:4878c2615c50dd0f",
+      "personId": "5ef912b0-15e7-4942-a4fb-9081b4644c01",
+      "personName": "黃建賓",
+      "claimType": "gender",
+      "claimValue": "male",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-12-25",
+          "sourceProfileKey": "黃建賓:1978-12-25",
+          "sameNameProfileCount": 3
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 3,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年臺東縣大武鄉鄉長選舉",
+              "name": "黃建賓",
+              "gender": "male",
+              "birthDate": "1978-12-25",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "黃建賓",
+          "pageid": 8389,
+          "lastrevid": 179399,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%BB%83%E5%BB%BA%E8%B3%93",
+      "observedAt": "2026-08-09T17:10:26.438Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:5ef912b0-15e7-4942-a4fb-9081b4644c01:education:b817578b317fe891",
+      "personId": "5ef912b0-15e7-4942-a4fb-9081b4644c01",
+      "personName": "黃建賓",
+      "claimType": "education",
+      "claimValue": "碩士學歷",
+      "claimJson": {
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-12-25",
+          "sourceProfileKey": "黃建賓:1978-12-25",
+          "sameNameProfileCount": 3
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 3,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年臺東縣大武鄉鄉長選舉",
+              "name": "黃建賓",
+              "gender": "male",
+              "birthDate": "1978-12-25",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "黃建賓",
+          "pageid": 8389,
+          "lastrevid": 179399,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%BB%83%E5%BB%BA%E8%B3%93",
+      "observedAt": "2026-08-09T17:10:26.438Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:5ef912b0-15e7-4942-a4fb-9081b4644c01:party_affiliation:91d53c1b6f588719",
+      "personId": "5ef912b0-15e7-4942-a4fb-9081b4644c01",
+      "personName": "黃建賓",
+      "claimType": "party_affiliation",
+      "claimValue": "中國國民黨",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2024年立法委員選舉臺東縣選舉區（區域）",
+            "name": "黃建賓",
+            "gender": "male",
+            "birthDate": "1978-12-25",
+            "education": "碩士",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          },
+          {
+            "election": "2022年臺東縣大武鄉鄉長選舉",
+            "name": "黃建賓",
+            "gender": "male",
+            "birthDate": "1978-12-25",
+            "education": "碩士",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-12-25",
+          "sourceProfileKey": "黃建賓:1978-12-25",
+          "sameNameProfileCount": 3
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 3,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年臺東縣大武鄉鄉長選舉",
+              "name": "黃建賓",
+              "gender": "male",
+              "birthDate": "1978-12-25",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "黃建賓",
+          "pageid": 8389,
+          "lastrevid": 179399,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%BB%83%E5%BB%BA%E8%B3%93",
+      "observedAt": "2026-08-09T17:10:26.438Z"
+    },
+    {
+      "claimKey": "votetw-person-enrichment:5ef912b0-15e7-4942-a4fb-9081b4644c01:experience:bca96c7d20ac59a3",
+      "personId": "5ef912b0-15e7-4942-a4fb-9081b4644c01",
+      "personName": "黃建賓",
+      "claimType": "experience",
+      "claimValue": "2024年立法委員選舉臺東縣選舉區（區域）；2022年臺東縣大武鄉鄉長選舉",
+      "claimJson": {
+        "electionRecords": [
+          {
+            "election": "2024年立法委員選舉臺東縣選舉區（區域）",
+            "name": "黃建賓",
+            "gender": "male",
+            "birthDate": "1978-12-25",
+            "education": "碩士",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          },
+          {
+            "election": "2022年臺東縣大武鄉鄉長選舉",
+            "name": "黃建賓",
+            "gender": "male",
+            "birthDate": "1978-12-25",
+            "education": "碩士",
+            "party": "中國國民黨",
+            "district": null,
+            "votes": null,
+            "voteRate": null,
+            "incumbent": null,
+            "elected": null
+          }
+        ],
+        "experienceType": "election_history",
+        "identityMatch": {
+          "status": "matched",
+          "matchedBy": "unique_election_context",
+          "targetBirthDate": null,
+          "sourceBirthDate": "1978-12-25",
+          "sourceProfileKey": "黃建賓:1978-12-25",
+          "sameNameProfileCount": 3
+        },
+        "publicationGate": {
+          "status": "review_required",
+          "reason": "VoteTW person enrichment is imported as review-only before publication",
+          "matchedBy": "unique_election_context",
+          "sameNameProfileCount": 3,
+          "electionContextMatch": {
+            "score": 2,
+            "signals": {
+              "position": false,
+              "district": true,
+              "party": true
+            },
+            "electionRecord": {
+              "election": "2022年臺東縣大武鄉鄉長選舉",
+              "name": "黃建賓",
+              "gender": "male",
+              "birthDate": "1978-12-25",
+              "education": "碩士",
+              "party": "中國國民黨",
+              "district": null,
+              "votes": null,
+              "voteRate": null,
+              "incumbent": null,
+              "elected": null
+            }
+          }
+        },
+        "voteTw": {
+          "pageTitle": "黃建賓",
+          "pageid": 8389,
+          "lastrevid": 179399,
+          "revisionTimestamp": null
+        }
+      },
+      "confidenceLevel": "B",
+      "reviewStatus": "pending",
+      "visibility": "review_only",
+      "sourceId": "votetw-person-enrichment",
+      "sourceName": "VoteTW",
+      "sourceUrl": "https://votetw.com/wiki/%E9%BB%83%E5%BB%BA%E8%B3%93",
+      "observedAt": "2026-08-09T17:10:26.438Z"
+    }
+  ]
+}

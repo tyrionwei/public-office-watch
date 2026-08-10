@@ -127,9 +127,29 @@ async function updateRows(tableName, params, values) {
   return body;
 }
 
+async function callRpc(functionName, values = {}) {
+  const response = await fetch(restUrl(`rpc/${functionName}`), {
+    method: 'POST',
+    headers: {
+      apikey: serviceRoleKey,
+      authorization: `Bearer ${serviceRoleKey}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(values),
+    signal: AbortSignal.timeout(30000),
+  });
+
+  if (!response.ok) {
+    const body = await response.json();
+    throw new Error(`Failed to call ${functionName}: ${body?.message ?? response.statusText}`);
+  }
+}
+
 function normalizeName(value) {
   const chinesePrefix = String(value ?? '').match(/^[\u3400-\u9fff]+/)?.[0] ?? '';
-  return chinesePrefix.replace(/\s+/g, '');
+  return chinesePrefix
+    .replace(/\s+/g, '')
+    .replaceAll('姗', '姍');
 }
 
 function flattenPlan(plan) {
@@ -296,6 +316,14 @@ async function main() {
     }
   }
 
+  const cacheRefreshRequired = options.write && (
+    items.length > 0
+    || partyCorrections.length > 0
+  );
+  if (cacheRefreshRequired) {
+    await callRpc('refresh_public_people_list_cached');
+  }
+
   console.log(JSON.stringify({
     status: 'ok',
     dryRun: !options.write,
@@ -305,6 +333,7 @@ async function main() {
     rowsToInsert: rows.length,
     alreadyAppliedCount: alreadyApplied.length,
     insertedCount: inserted.length,
+    cacheRefreshed: cacheRefreshRequired,
     rows,
     partyCorrections: {
       plannedCount: partyCorrections.length,
@@ -324,4 +353,3 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
-

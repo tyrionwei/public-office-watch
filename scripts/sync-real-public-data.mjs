@@ -566,14 +566,13 @@ function sourcePersonKeyFor(person) {
 function sourceTypeForSourceId(sourceId) {
   if (sourceId.includes('cec')) return 'official_election';
   if (sourceId.includes('votetw')) return 'public_reference';
+  if (sourceId.includes('official-party-profile')) return 'official_party_profile';
+  if (sourceId.includes('official-candidate-profile')) return 'official_candidate_profile';
+  if (sourceId.includes('official-university-profile')) return 'official_university_profile';
   if (
     sourceId.includes('ly') ||
-    sourceId.includes('taipei-city-council') ||
-    sourceId.includes('taipei-city-government') ||
-    sourceId.includes('new-taipei-city-council') ||
-    sourceId.includes('new-taipei-city-government') ||
-    sourceId.includes('hsinchu-city-council') ||
-    sourceId.includes('hsinchu-city-government')
+    /(?:^|-)(?:city|county)-(?:council|government)(?:-|$)/u.test(sourceId) ||
+    sourceId.includes('official-officer')
   ) return 'official_officeholder';
   if (sourceId.includes('cy') || sourceId.includes('political-finance')) return 'official_party_finance';
   if (sourceId.includes('wikidata')) return 'wikidata';
@@ -619,7 +618,7 @@ function scoreClaim({ claimType, sourceType, confidenceLevel, hasMatchedPerson }
     reasons.push('linked to canonical person');
   }
 
-  if (['name', 'gender', 'party', 'position', 'district', 'external_id'].includes(claimType)) {
+  if (['name', 'gender', 'birth_date', 'party', 'position', 'district', 'external_id'].includes(claimType)) {
     score += 10;
     reasons.push('low-ambiguity identity field');
   }
@@ -2605,20 +2604,43 @@ function wikidataRejectedPersonQidKey(row) {
   return `${row.person_id}:${qid}`;
 }
 
-async function fetchExistingPersonClaimReviewStates(env) {
-  const rows = await selectAllOrThrow(
+function postgrestIn(values) {
+  return `in.(${values.map((value) => `"${String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`).join(',')})`;
+}
+
+async function fetchExistingPersonClaimReviewStates(env, incomingRows) {
+  const select = 'claim_key,person_id,claim_type,claim_value,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json';
+  const claimKeys = [...new Set(incomingRows.map((row) => row.claim_key).filter(Boolean))];
+  const rows = [];
+
+  for (let index = 0; index < claimKeys.length; index += 20) {
+    rows.push(...await selectAllOrThrow(
+      env,
+      'person_claims',
+      select,
+      1000,
+      {
+        claim_key: postgrestIn(claimKeys.slice(index, index + 20)),
+        review_status: 'in.(verified,rejected,archived)',
+      },
+    ));
+  }
+
+  rows.push(...await selectAllOrThrow(
     env,
     'person_claims',
-    'claim_key,person_id,claim_type,claim_value,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json',
+    select,
     1000,
-    { review_status: 'in.(verified,rejected,archived)' },
-  );
+    { review_status: 'eq.rejected' },
+  ));
 
-  const byClaimKey = new Map(rows.map((row) => [row.claim_key, row]));
+  const uniqueRows = [...new Map(rows.map((row) => [row.claim_key, row])).values()];
+
+  const byClaimKey = new Map(uniqueRows.map((row) => [row.claim_key, row]));
   const byWikidataSemanticKey = new Map();
   const rejectedWikidataPersonQids = new Map();
 
-  for (const row of rows) {
+  for (const row of uniqueRows) {
     const semanticKey = wikidataSemanticClaimKey(row);
     if (semanticKey) {
       byWikidataSemanticKey.set(semanticKey, row);
@@ -3646,7 +3668,7 @@ function buildLegalRecordLeadRows(seed, canonicalPeople, startedAt) {
   });
 }
 
-function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt, args = {}) {
+export function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt, args = {}) {
   const peopleById = new Map(canonicalPeople.map((person) => [person.id, person]));
   const peopleByExternalId = new Map(
     canonicalPeople
@@ -3694,7 +3716,13 @@ function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt, args =
         confidenceLevel: claim.confidenceLevel,
         hasMatchedPerson: true,
       });
+      const manuallyApproved =
+        claim.visibility === 'public' &&
+        claim.reviewStatus === 'verified' &&
+        claim.claimJson?.manualReview?.status === 'approved' &&
+        !['legal_case', 'family_relation'].includes(claim.claimType);
       const allowAutoPublic =
+        manuallyApproved ||
         (claim.visibility === 'public' &&
           claim.reviewStatus === 'verified' &&
           scoring.score >= (args.claimAutoApproveThreshold ?? 90) &&
@@ -4032,15 +4060,27 @@ async function writeSeed(seed, hash, args) {
       .filter((item) => item !== null),
   );
 
-  const existingPersonClaimReviewStates = await fetchExistingPersonClaimReviewStates(env);
+  const incomingPersonClaimRows = buildPersonClaimRows(
+    seed,
+    sourcePersonByKey,
+    personByExternalId,
+    startedAt,
+    autoApprovedPersonBySourceKey,
+    args,
+  );
+  const incomingPersonEnrichmentClaimRows = buildPersonEnrichmentClaimRows(seed, peopleRefresh, startedAt, args);
+  const existingPersonClaimReviewStates = await fetchExistingPersonClaimReviewStates(
+    env,
+    [...incomingPersonClaimRows, ...incomingPersonEnrichmentClaimRows],
+  );
   const personClaimRows = preserveReviewedPersonClaimRows(
-    buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, startedAt, autoApprovedPersonBySourceKey, args),
+    incomingPersonClaimRows,
     existingPersonClaimReviewStates,
   );
   await upsertOrThrow(env, 'person_claims', personClaimRows, { onConflict: 'claim_key' });
 
   const personEnrichmentClaimRows = preserveReviewedPersonClaimRows(
-    buildPersonEnrichmentClaimRows(seed, peopleRefresh, startedAt, args),
+    incomingPersonEnrichmentClaimRows,
     existingPersonClaimReviewStates,
   );
   await upsertOrThrow(env, 'person_claims', personEnrichmentClaimRows, { onConflict: 'claim_key' });
@@ -4327,4 +4367,5 @@ export {
   buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,
+  scoreClaim,
 };

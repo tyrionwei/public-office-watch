@@ -384,6 +384,7 @@ export type PublicPersonIdentitySource = {
 export type PublicPersonClaim = {
   claim_id: string;
   person_id: string;
+  candidate_id?: string | null;
   claim_type:
     | 'name'
     | 'alias'

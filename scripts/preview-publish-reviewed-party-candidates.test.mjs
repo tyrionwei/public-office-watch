@@ -85,7 +85,7 @@ function validDataset() {
     ],
     canonicalMap: [{ person_id: 'person-valid', canonical_person_id: 'person-valid' }],
     people: [{ id: 'person-valid', is_public: false }],
-    races: [{ id: 'race-valid', is_public: true }],
+    races: [{ id: 'race-valid', election_id: 'election-valid', is_public: true }],
   };
 }
 
@@ -210,5 +210,11 @@ test('turns official profile arrays into verified public claims without duplicat
   assert.deepEqual(claims.map((claim) => claim.claim_type), ['education', 'experience', 'platform']);
   assert.equal(claims[0].claim_value, '測試大學');
   assert.equal(claims[2].claim_json.platformText, '改善交通；增加托育');
+  assert.equal(claims[2].candidate_id, 'candidate-valid');
+  assert.deepEqual(claims[2].claim_json.electionContext, {
+    candidateId: 'candidate-valid',
+    raceId: 'race-valid',
+    electionId: 'election-valid',
+  });
   assert.ok(claims.every((claim) => claim.review_status === 'verified' && claim.visibility === 'public' && claim.is_public));
 });

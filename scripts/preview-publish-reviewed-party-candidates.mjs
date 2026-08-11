@@ -179,6 +179,7 @@ function buildProfileClaimRows(plan, publishedAt) {
       claim_key: `${item.source.source_person_key}:${field}`,
       person_id: item.candidate.person_id,
       source_person_id: item.source.id,
+      candidate_id: field === 'platform' ? item.candidate.id : null,
       claim_type: field,
       claim_value: claimValue,
       claim_json: {
@@ -187,7 +188,14 @@ function buildProfileClaimRows(plan, publishedAt) {
         sourceCandidateKey: objectValue(item.source.source_payload)?.sourceCandidateKey ?? null,
         field,
         items,
-        ...(field === 'platform' ? { platformText: claimValue } : {}),
+        ...(field === 'platform' ? {
+          platformText: claimValue,
+          electionContext: {
+            candidateId: item.candidate.id,
+            raceId: item.race.id,
+            electionId: item.race.election_id,
+          },
+        } : {}),
       },
       confidence_level: 'A',
       review_status: 'verified',
@@ -361,7 +369,7 @@ async function loadDataset(config) {
   const [canonicalMap, people, races] = await Promise.all([
     fetchRowsByValues(config, 'person_canonical_map', 'person_id,canonical_person_id', 'person_id', personIds),
     fetchRowsByValues(config, 'people', 'id,is_public', 'id', personIds),
-    fetchRowsByValues(config, 'races', 'id,is_public', 'id', raceIds),
+    fetchRowsByValues(config, 'races', 'id,election_id,is_public', 'id', raceIds),
   ]);
   return { sources, matches, claims, candidates, canonicalMap, people, races };
 }

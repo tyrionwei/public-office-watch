@@ -247,6 +247,11 @@ export const mockPublicPersonClaims: PublicPersonClaim[] = [
         sourceKind: 'template',
         templateTitle: '模板:範例公開政見',
       },
+      electionContext: {
+        candidateId: 'candidate-example-b',
+        raceId: 'race-example-council',
+        electionId: 'election-local-2026',
+      },
     },
     confidence_level: 'B',
     review_score: 90,

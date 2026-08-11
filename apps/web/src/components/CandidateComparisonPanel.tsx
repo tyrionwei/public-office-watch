@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
+import { platformClaimsForCandidate } from '../lib/candidatePlatform';
 import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
@@ -196,7 +197,10 @@ export function CandidateComparisonPanel({
             <ComparisonRow label={t('race.comparePlatform')} candidates={candidates}>
               {(candidate) => {
                 const profile = profilesByPersonId.get(candidate.person_id) ?? null;
-                return <TextList values={profileValues(profile, 'platform')} emptyLabel={t('race.compareNoData')} />;
+                const claims = profile
+                  ? platformClaimsForCandidate(profile.public_claims, candidate.candidate_id, currentRaceId)
+                  : [];
+                return <TextList values={uniqueValues(claims.map(claimText))} emptyLabel={t('race.compareNoData')} />;
               }}
             </ComparisonRow>
 
@@ -205,7 +209,10 @@ export function CandidateComparisonPanel({
                 const profile = profilesByPersonId.get(candidate.person_id);
                 const statuses = [
                   [t('race.compareExperience'), profile?.experience_status === 'available'],
-                  [t('race.comparePlatform'), profile?.platform_status === 'available'],
+                  [
+                    t('race.comparePlatform'),
+                    Boolean(profile && platformClaimsForCandidate(profile.public_claims, candidate.candidate_id, currentRaceId).length > 0),
+                  ],
                   [t('person.financeTitle'), Boolean(profile && profile.contribution_status !== 'todo')],
                   [t('person.legalTitle'), profile?.public_claims.some((claim) => claim.claim_type === 'legal_case')],
                 ] as const;

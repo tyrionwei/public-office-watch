@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "lookbackHours": 36,
+  "feed": {
+    "provider": "Google News RSS",
+    "baseUrl": "https://news.google.com/rss/search",
+    "language": "zh-TW",
+    "country": "TW",
+    "edition": "TW:zh-Hant"
+  },
+  "categories": [
+    {
+      "key": "party_affiliation",
+      "label": "黨籍異動",
+      "queryTerms": ["退黨", "退出政黨", "開除黨籍", "撤銷黨籍", "加入政黨", "恢復黨籍", "更換黨籍"],
+      "eventTerms": ["退黨", "退出", "開除黨籍", "撤銷黨籍", "加入", "入黨", "恢復黨籍", "黨籍"]
+    },
+    {
+      "key": "candidacy_status",
+      "label": "參選狀態",
+      "queryTerms": ["退選", "撤回登記", "停止競選", "撤銷候選資格", "不再參選"],
+      "eventTerms": ["退選", "撤回登記", "停止競選", "撤銷", "候選資格", "不再參選"]
+    },
+    {
+      "key": "office_status",
+      "label": "公職異動",
+      "queryTerms": ["請辭", "辭職", "停職", "解職", "罷免", "遞補", "補選"],
+      "eventTerms": ["請辭", "辭職", "停職", "解職", "罷免", "遞補", "補選"]
+    },
+    {
+      "key": "legal_procedure",
+      "label": "司法程序",
+      "queryTerms": ["搜索", "約談", "聲押", "羈押", "交保", "起訴", "判刑", "有罪", "無罪", "定讞"],
+      "eventTerms": ["搜索", "約談", "聲押", "羈押", "交保", "起訴", "判刑", "有罪", "無罪", "定讞"]
+    }
+  ],
+  "trustedPublishers": [
+    "中央社",
+    "公視新聞網",
+    "華視新聞網",
+    "臺視新聞",
+    "台視新聞",
+    "民視新聞網",
+    "聯合新聞網",
+    "自由時報",
+    "中國時報",
+    "TVBS新聞網",
+    "三立新聞網",
+    "Newtalk新聞",
+    "風傳媒"
+  ]
+}

@@ -51,7 +51,7 @@ test('language toggle switches the public shell copy without resizing controls',
   const enButton = await languageButtons.nth(1).boundingBox();
   expect(zhButton?.width).toBe(enButton?.width);
 
-  await page.getByRole('button', { name: 'EN' }).click();
+  await page.getByRole('button', { name: 'EN', exact: true }).click();
 
   await expect(page.getByRole('link', { name: '⌂ Home' })).toBeVisible();
   await expect(page.getByPlaceholder('Search people, companies, parties, elections, regions')).toBeVisible();
@@ -70,7 +70,7 @@ test('language toggle switches the public shell copy without resizing controls',
 test('desktop public pages do not introduce horizontal overflow in English', async ({ page }) => {
   for (const path of ['/', '/people']) {
     await page.goto(path);
-    await page.getByRole('button', { name: 'EN' }).click();
+    await page.getByRole('button', { name: 'EN', exact: true }).click();
     await expectNoHorizontalOverflow(page);
   }
 });
@@ -103,11 +103,48 @@ test('county highlight panel provides a distinct background for every county cit
     });
     await expect(highlightPanel).toHaveAttribute('data-region-highlight', county.id);
 
-    const backgroundImage = await highlightPanel.evaluate((element) => window.getComputedStyle(element).backgroundImage);
-    expect(backgroundImage).toContain('/assets/regions/' + county.id + '-day.webp');
+    const highlightImage = highlightPanel.locator('img').first();
+    await expect(highlightImage).toHaveAttribute('src', new RegExp('/assets/regions/' + county.id + '-day\\.webp\\?v=2$'));
   }
 
   await expectNoHorizontalOverflow(page);
+});
+
+test('homepage region selection survives navigation and browser back', async ({ page }) => {
+  await page.goto('/');
+
+  await page.locator('[aria-label="選取 臺中市"]').first().evaluate((element) => {
+    element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+  });
+
+  await expect(page).toHaveURL(/\?region=taichung-city$/);
+  await expect(page.locator('[data-region-highlight]')).toHaveAttribute('data-region-highlight', 'county-66000');
+
+  await page.locator('a[href="/people"]').first().click();
+  await expect(page).toHaveURL(/\/people$/);
+  await page.goBack();
+
+  await expect(page).toHaveURL(/\?region=taichung-city$/);
+  await expect(page.locator('[data-region-highlight]')).toHaveAttribute('data-region-highlight', 'county-66000');
+});
+
+test('homepage falls back safely when the region query is unknown', async ({ page }) => {
+  await page.goto('/?region=not-a-region');
+
+  await expect(page.locator('[data-region-highlight]')).toHaveAttribute('data-region-highlight', 'county-63000');
+});
+
+test('people filters and pagination survive profile navigation and browser back', async ({ page }) => {
+  await page.goto('/people?status=current&page=2');
+
+  const profileLink = page.locator('main a[href^="/people/"]').first();
+  await expect(profileLink).toBeVisible();
+  await profileLink.click();
+  await expect(page).toHaveURL(/\/people\/[^/?]+$/);
+  await page.goBack();
+
+  await expect(page).toHaveURL(/\/people\?status=current&page=2$/);
+  await expect(page.locator('select').filter({ has: page.locator('option[value="current"]') })).toHaveValue('current');
 });
 
 test('legacy election links redirect to the bounded event page', async ({ page }) => {
@@ -175,6 +212,11 @@ test('elections page groups elections into events and opens race detail', async 
   await expect(page.getByRole('heading', { name: '項目分類' })).toBeVisible();
   await expect(page.getByText('縣市 / 區域')).toBeVisible();
 
+  const categoryLink = page.locator('main a[href*="category="]').first();
+  await expect(categoryLink).toBeVisible();
+  await categoryLink.click();
+  const filteredEventUrl = page.url();
+
   const raceLinks = page.locator('main a[href^="/elections/races/"]');
   const raceCount = await raceLinks.count();
 
@@ -182,6 +224,8 @@ test('elections page groups elections into events and opens race detail', async 
     await raceLinks.first().click();
     await expect(page.getByRole('heading', { name: '選區項目細節' })).toBeVisible();
     await expect(page.getByText('候選名冊')).toBeVisible();
+    await page.goBack();
+    await expect(page).toHaveURL(filteredEventUrl);
   }
 
   await expectNoHorizontalOverflow(page);

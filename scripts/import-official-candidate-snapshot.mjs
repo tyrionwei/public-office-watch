@@ -32,8 +32,7 @@ function parseArgs(argv) {
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === '--write') {
-      options.write = true;
-      continue;
+      throw new Error('--write was removed because it could publish unreviewed candidates; use the staged review workflow');
     }
     if (arg === '--input') {
       options.inputPath = argv[index + 1] ?? null;

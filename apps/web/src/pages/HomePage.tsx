@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, useTransition } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { LocalOfficeSummaryPanel } from '../components/LocalOfficeSummaryPanel';
 import { PollComparisonPanel } from '../components/PollComparisonPanel';
@@ -19,24 +20,25 @@ function getDefaultStageRegionId(regions: StageRegionNode[]) {
   return taipeiRegion?.id ?? regions.find((region) => region.level === 'county_city')?.id ?? regions[0]?.id ?? '';
 }
 
+function getSelectedStageRegionId(regions: StageRegionNode[], requestedRegionId: string | null) {
+  if (requestedRegionId && regions.some((region) => region.id === requestedRegionId)) {
+    return requestedRegionId;
+  }
+
+  return getDefaultStageRegionId(regions);
+}
+
 export function HomePage() {
   const { t } = useI18n();
-  const [selectedRegionId, setSelectedRegionId] = useState(() => getDefaultStageRegionId(publicDataProvider.getStageRegions()));
+  const [searchParams, setSearchParams] = useSearchParams();
+  const homeData = publicDataProvider.getHomePageData();
+  const selectedRegionId = getSelectedStageRegionId(homeData.stageRegions, searchParams.get('region'));
   const [relatedRaces, setRelatedRaces] = useState(() => publicDataProvider
     .getRelatedRacesByRegionId(selectedRegionId)
     .filter((race) => race.status !== 'completed'));
   const [, startTransition] = useTransition();
 
-  const homeData = publicDataProvider.getHomePageData();
   const pollComparison = publicDataProvider.getPollComparisonByElectionId(homeData.upcomingRaces[0]?.electionId ?? '');
-
-  useEffect(() => {
-    if (selectedRegionId) {
-      return;
-    }
-
-    setSelectedRegionId(getDefaultStageRegionId(homeData.stageRegions));
-  }, [homeData.stageRegions, selectedRegionId]);
 
   useEffect(() => {
     let active = true;
@@ -63,10 +65,16 @@ export function HomePage() {
 
 
   const handleSelectRegion = useCallback((regionId: string) => {
+    if (regionId === selectedRegionId && searchParams.get('region') === regionId) {
+      return;
+    }
+
     startTransition(() => {
-      setSelectedRegionId(regionId);
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.set('region', regionId);
+      setSearchParams(nextParams);
     });
-  }, [startTransition]);
+  }, [searchParams, selectedRegionId, setSearchParams, startTransition]);
 
   return (
     <AppShell ticker={homeData.ticker}>

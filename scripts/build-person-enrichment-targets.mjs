@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultOutputPath = path.join(repoRoot, 'data-sources', 'person-profile-gap-targets.json');
@@ -43,6 +43,11 @@ function parseArgs(argv) {
   const options = {
     outputPath: defaultOutputPath,
     limit: 500,
+    includeResearchSignals: false,
+    excludeFirstTime2026: false,
+    excludeAdministrativeCurrent: false,
+    includeGrassrootsLast: false,
+    includeFormer: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -57,6 +62,31 @@ function parseArgs(argv) {
     if (arg === '--limit') {
       options.limit = Number.parseInt(argv[index + 1] ?? '', 10);
       index += 1;
+      continue;
+    }
+
+    if (arg === '--include-research-signals') {
+      options.includeResearchSignals = true;
+      continue;
+    }
+
+    if (arg === '--exclude-first-time-2026') {
+      options.excludeFirstTime2026 = true;
+      continue;
+    }
+
+    if (arg === '--exclude-administrative-current') {
+      options.excludeAdministrativeCurrent = true;
+      continue;
+    }
+
+    if (arg === '--include-grassroots-last') {
+      options.includeGrassrootsLast = true;
+      continue;
+    }
+
+    if (arg === '--include-former') {
+      options.includeFormer = true;
       continue;
     }
 
@@ -125,16 +155,41 @@ function isAdministrativeCurrentOfficial(person) {
   if (person.list_status !== 'current') return false;
 
   const text = String(person.current_office_label ?? person.position ?? '');
+  if (text.includes('副市長') || text.includes('副縣長')) return true;
+  if (countyCityChiefOffices.has(text)) return false;
   const electedOffice = /(總統|副總統|立法委員|議員|縣長|市長|鄉長|鎮長|代表|村長|里長)/;
   return text !== '' && !electedOffice.test(text);
 }
 
-function priorityGroup(person, priorElectionYears) {
+function personRoleText(person) {
+  return [person.current_office_label, person.position, person.district]
+    .filter(Boolean)
+    .join(' ');
+}
+
+function isCountyCityChief(text) {
+  return [...countyCityChiefOffices].some((office) => String(text).includes(office));
+}
+
+function isGrassrootsPerson(person) {
+  const text = personRoleText(person);
+  if (/(總統|副總統|立法委員|議員|縣長|市長|鄉長|鎮長)/.test(text)) return false;
+  if (/(區長|鄉民代表|鎮民代表|市民代表|鄉鎮市民代表|區民代表|村長|里長)/.test(text)) return true;
+  return person.list_is_grassroots === true;
+}
+
+function priorityGroup(person, history) {
+  if (isGrassrootsPerson(person)) {
+    if (person.list_status === 'current') return 'grassroots_current';
+    if (history.hasElectedHistory) return 'grassroots_former_elected';
+    return 'grassroots_never_elected';
+  }
+
   if (person.list_status === 'current' && !isAdministrativeCurrentOfficial(person)) {
     return 'current_elected_official';
   }
 
-  if (person.list_status === 'candidate' && Number(person.election_year) === 2026 && priorElectionYears.length > 0) {
+  if (person.list_status === 'candidate' && Number(person.election_year) === 2026 && history.years.length > 0) {
     return 'returning_candidate';
   }
 
@@ -146,7 +201,7 @@ function priorityGroup(person, priorElectionYears) {
     return 'first_time_2026_candidate';
   }
 
-  if (person.list_status === 'candidate') {
+  if (person.list_status === 'candidate' || history.electionCount > 0) {
     return 'historical_candidate';
   }
 
@@ -159,17 +214,28 @@ function priorityRank(group) {
   if (group === 'administrative_current_official') return 2;
   if (group === 'first_time_2026_candidate') return 3;
   if (group === 'historical_candidate') return 4;
-  return 5;
+  if (group === 'other') return 5;
+  if (group === 'grassroots_current') return 6;
+  if (group === 'grassroots_former_elected') return 7;
+  return 8;
 }
 
-function rolePriority(person) {
-  const text = String(person.current_office_label ?? person.position ?? '');
-  if (countyCityChiefOffices.has(text)) return 0;
-  if (text.includes('議員') && !text.includes('立法委員')) return 1;
-  if (text.includes('總統') || text.includes('副總統')) return 2;
-  if (text.includes('立法委員')) return 3;
-  if (/(縣長|市長)$/.test(text)) return 4;
-  return 5;
+function processingPriority(person, history) {
+  const text = personRoleText(person);
+  const exactOffice = String(person.current_office_label ?? person.position ?? '');
+
+  if (isGrassrootsPerson(person)) {
+    if (person.list_status === 'current') return 5;
+    if (history.hasElectedHistory) return 6;
+    if (history.electionCount > 1) return 7;
+    return 8;
+  }
+
+  if (/(總統|副總統)/.test(text)) return 0;
+  if (/立法委員/.test(text) || countyCityChiefOffices.has(exactOffice) || isCountyCityChief(text)) return 1;
+  if (/議員/.test(text)) return 2;
+  if (/(鄉長|鎮長|市長)/.test(text)) return 3;
+  return 4;
 }
 
 function claimTypesByPerson(claims) {
@@ -184,7 +250,7 @@ function claimTypesByPerson(claims) {
   return byPerson;
 }
 
-function missingSignals(person, publicClaimTypes) {
+function missingSignals(person, publicClaimTypes, includeResearchSignals = false) {
   const claimTypes = publicClaimTypes.get(person.person_id) ?? new Set();
   const missing = [];
 
@@ -203,11 +269,17 @@ function missingSignals(person, publicClaimTypes) {
   if (isBlank(person.experience) && !claimTypes.has('experience')) {
     missing.push('experience');
   }
+  if (includeResearchSignals && !claimTypes.has('family_relation')) {
+    missing.push('family_relation');
+  }
+  if (includeResearchSignals && !claimTypes.has('legal_case')) {
+    missing.push('legal_case');
+  }
 
   return missing;
 }
 
-function targetFromPerson(person, missing, group, priorElectionYears) {
+function targetFromPerson(person, missing, group, history) {
   return {
     personId: person.person_id,
     name: person.name,
@@ -221,7 +293,10 @@ function targetFromPerson(person, missing, group, priorElectionYears) {
     education: person.education ?? '',
     experience: person.experience ?? '',
     priorityGroup: group,
-    priorElectionYears,
+    processingPriority: processingPriority(person, history),
+    priorElectionYears: history.years,
+    hasElectedHistory: history.hasElectedHistory,
+    electionCount: history.electionCount,
     missingSignals: missing,
   };
 }
@@ -233,11 +308,19 @@ function postgrestIn(values) {
 async function fetchClaimsForPeople(people) {
   const claims = [];
   const personIds = people.map((person) => person.person_id);
+  const personIdSet = new Set(personIds);
 
-  for (let index = 0; index < personIds.length; index += 20) {
+  if (personIds.length > 5000) {
+    const allClaims = await fetchAllRows('public_person_claims', 'claim_id,person_id,claim_type', 1000, {
+      claim_type: 'in.(birth_date,external_id,education,experience,family_relation,legal_case)',
+    });
+    return allClaims.filter((claim) => personIdSet.has(claim.person_id));
+  }
+
+  for (let index = 0; index < personIds.length; index += 50) {
     claims.push(...await fetchAllRows('public_person_claims', 'claim_id,person_id,claim_type', 1000, {
-      person_id: postgrestIn(personIds.slice(index, index + 20)),
-      claim_type: 'in.(birth_date,external_id,education,experience)',
+      person_id: postgrestIn(personIds.slice(index, index + 50)),
+      claim_type: 'in.(birth_date,external_id,education,experience,family_relation,legal_case)',
     }));
   }
 
@@ -245,28 +328,54 @@ async function fetchClaimsForPeople(people) {
 }
 
 async function fetchCandidateHistoryForPeople(people) {
-  const candidates = [];
   const personIds = people.map((person) => person.person_id);
+  const personIdSet = new Set(personIds);
+  const candidates = personIds.length > 5000
+    ? (await fetchAllRows('public_candidates', 'person_id,election_year,election_result'))
+      .filter((candidate) => personIdSet.has(candidate.person_id))
+    : [];
 
-  for (let index = 0; index < personIds.length; index += 20) {
-    candidates.push(...await fetchAllRows('public_candidates', 'person_id,election_year', 1000, {
-      person_id: postgrestIn(personIds.slice(index, index + 20)),
-    }));
+  if (personIds.length <= 5000) {
+    for (let index = 0; index < personIds.length; index += 50) {
+      candidates.push(...await fetchAllRows('public_candidates', 'person_id,election_year,election_result', 1000, {
+        person_id: postgrestIn(personIds.slice(index, index + 50)),
+      }));
+    }
   }
 
-  const yearsByPerson = new Map();
+  const historyByPerson = new Map();
   for (const candidate of candidates) {
     const year = Number(candidate.election_year);
-    if (!Number.isFinite(year) || year >= 2026) continue;
-
-    const years = yearsByPerson.get(candidate.person_id) ?? new Set();
-    years.add(year);
-    yearsByPerson.set(candidate.person_id, years);
+    const history = historyByPerson.get(candidate.person_id) ?? {
+      years: new Set(),
+      hasElectedHistory: false,
+      electionCount: 0,
+      latestElectionYear: null,
+    };
+    history.electionCount += 1;
+    if (candidate.election_result === 'elected') history.hasElectedHistory = true;
+    if (Number.isFinite(year)) {
+      if (year < 2026) history.years.add(year);
+      history.latestElectionYear = Math.max(history.latestElectionYear ?? year, year);
+    }
+    historyByPerson.set(candidate.person_id, history);
   }
 
   return new Map(
-    [...yearsByPerson].map(([personId, years]) => [personId, [...years].sort((left, right) => right - left)]),
+    [...historyByPerson].map(([personId, history]) => [personId, {
+      ...history,
+      years: [...history.years].sort((left, right) => right - left),
+    }]),
   );
+}
+
+function emptyCandidateHistory() {
+  return { years: [], hasElectedHistory: false, electionCount: 0, latestElectionYear: null };
+}
+
+function effectiveElectionYear(person, history) {
+  const personYear = Number(person.election_year);
+  return history.latestElectionYear ?? (Number.isFinite(personYear) ? personYear : 0);
 }
 
 async function main() {
@@ -275,42 +384,46 @@ async function main() {
   }
 
   const options = parseArgs(process.argv.slice(2));
+  const peopleFilters = {
+    list_status: options.includeFormer ? 'in.(current,candidate,former)' : 'in.(current,candidate)',
+  };
+  if (!options.includeGrassrootsLast) peopleFilters.list_is_grassroots = 'eq.false';
   const people = await fetchAllRows(
     'public_people_directory',
-    'person_id,name,gender,party,position,current_office_label,district,education,experience,list_status,election_year',
+    'person_id,name,gender,party,position,current_office_label,district,education,experience,list_status,list_is_grassroots,election_year',
     1000,
-    {
-      list_status: 'in.(current,candidate)',
-      list_is_grassroots: 'eq.false',
-    },
+    peopleFilters,
     'person_id.asc',
   );
-  const [publicClaims, candidateHistoryYears] = await Promise.all([
+  const [publicClaims, candidateHistories] = await Promise.all([
     fetchClaimsForPeople(people),
     fetchCandidateHistoryForPeople(people),
   ]);
   const publicClaimTypes = claimTypesByPerson(publicClaims);
   const targets = people
     .map((person) => {
-      const missing = missingSignals(person, publicClaimTypes);
-      const priorElectionYears = candidateHistoryYears.get(person.person_id) ?? [];
+      const missing = missingSignals(person, publicClaimTypes, options.includeResearchSignals);
+      const history = candidateHistories.get(person.person_id) ?? emptyCandidateHistory();
       return {
         person,
         missing,
-        priorElectionYears,
-        group: priorityGroup(person, priorElectionYears),
+        history,
+        group: priorityGroup(person, history),
       };
     })
-    .filter(({ missing }) => missing.includes('birth_date') || missing.includes('education') || missing.includes('experience'))
+    .filter(({ missing }) => missing.length > 0)
+    .filter(({ group }) => !options.excludeFirstTime2026 || group !== 'first_time_2026_candidate')
+    .filter(({ group }) => !options.excludeAdministrativeCurrent || group !== 'administrative_current_official')
     .sort((left, right) =>
+      processingPriority(left.person, left.history) - processingPriority(right.person, right.history) ||
+      effectiveElectionYear(right.person, right.history) - effectiveElectionYear(left.person, left.history) ||
       priorityRank(left.group) - priorityRank(right.group) ||
       profileGapPriority(left.missing) - profileGapPriority(right.missing) ||
-      rolePriority(left.person) - rolePriority(right.person) ||
       right.missing.length - left.missing.length ||
       left.person.name.localeCompare(right.person.name, 'zh-Hant-TW'),
     )
     .slice(0, options.limit)
-    .map(({ person, missing, group, priorElectionYears }) => targetFromPerson(person, missing, group, priorElectionYears));
+    .map(({ person, missing, group, history }) => targetFromPerson(person, missing, group, history));
 
   const output = {
     schemaVersion: 1,
@@ -338,8 +451,20 @@ async function main() {
   }, null, 2));
 }
 
-main().catch((error) => {
-  const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`person enrichment target generation failed: ${message}`);
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`person enrichment target generation failed: ${message}`);
+    process.exit(1);
+  });
+}
+
+export {
+  isAdministrativeCurrentOfficial,
+  isGrassrootsPerson,
+  missingSignals,
+  parseArgs,
+  processingPriority,
+  priorityGroup,
+  priorityRank,
+};

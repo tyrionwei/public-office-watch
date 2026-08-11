@@ -22,7 +22,49 @@ import { buildPartyPeopleStatistics } from './partyPeopleStatistics.ts';
 import { buildLocalOfficeSummary, buildPersonListItems, buildPersonProfile, filterPersonListItems } from './personData';
 import { assertPublicViewName, allowedPublicViews } from './publicViewRegistry';
 import type { PublicDataProvider, PublicSearchResult } from './publicDataProvider';
-import type { PublicPersonProfile } from '../types/publicViews';
+import type { PublicPersonProfile, PublicUpdate } from '../types/publicViews';
+
+const mockPublicUpdates: PublicUpdate[] = [
+  {
+    update_id: 'update-feed-launched',
+    update_type: 'site',
+    title: '公開更新動態上線',
+    summary: '集中呈現本站已審核且已公開的資料新增、修正與功能變更。',
+    entity_type: null,
+    entity_id: null,
+    entity_href: null,
+    source_name: null,
+    source_url: null,
+    occurred_at: null,
+    published_at: '2026-08-11T09:00:00+08:00',
+  },
+  {
+    update_id: 'campaign-platform-election-scope',
+    update_type: 'election',
+    title: '政見改為依選舉與參選紀錄呈現',
+    summary: '同一人物在不同選舉提出的政見會分開顯示，避免跨屆資料混在一起。',
+    entity_type: 'election',
+    entity_id: null,
+    entity_href: '/elections',
+    source_name: null,
+    source_url: null,
+    occurred_at: null,
+    published_at: '2026-08-10T18:00:00+08:00',
+  },
+  {
+    update_id: 'party-announced-candidates-2026',
+    update_type: 'candidate',
+    title: '補充 2026 政黨公告參選資料',
+    summary: '在中選會正式公告前，依政黨公開資料標示已宣布參選或政黨推薦狀態。',
+    entity_type: 'election',
+    entity_id: null,
+    entity_href: '/elections',
+    source_name: null,
+    source_url: null,
+    occurred_at: null,
+    published_at: '2026-08-09T18:00:00+08:00',
+  },
+];
 
 const providerViews = [
   'public_home_election_ticker',
@@ -332,6 +374,10 @@ export const mockPublicDataProvider: PublicDataProvider = {
 
   async loadCurrentLegislatorPartySummary() {
     return [];
+  },
+
+  async loadPublicUpdates(limit = 50) {
+    return mockPublicUpdates.slice(0, Math.max(1, Math.min(Math.trunc(limit), 50)));
   },
 
   getCompanies() {

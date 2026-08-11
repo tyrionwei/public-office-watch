@@ -166,6 +166,12 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
         ? 'Compare political parties, officeholders, candidates, political donations, and public-data statistics.'
         : '比較臺灣政黨、現任人員、候選人、政治獻金與公開資料統計。',
     },
+    '/updates': {
+      title: isEnglish ? 'Public updates' : '公開更新動態',
+      description: isEnglish
+        ? 'Review recent, verified additions and corrections to Public Office Watch public data.'
+        : '查看公職資料觀測站最近已審核並公開的資料新增、修正與功能更新。',
+    },
     '/data-guidance': {
       title: isEnglish ? 'Data guidance' : '資料說明',
       description: isEnglish

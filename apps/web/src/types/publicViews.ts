@@ -1,5 +1,21 @@
 import type { PartyThemeKey } from '../styles/partyThemes';
 
+export type PublicUpdateType = 'candidate' | 'person' | 'party' | 'election' | 'correction' | 'site';
+
+export type PublicUpdate = {
+  update_id: string;
+  update_type: PublicUpdateType;
+  title: string;
+  summary: string;
+  entity_type: 'person' | 'party' | 'election' | 'race' | 'region' | null;
+  entity_id: string | null;
+  entity_href: string | null;
+  source_name: string | null;
+  source_url: string | null;
+  occurred_at: string | null;
+  published_at: string;
+};
+
 export type PublicPerson = {
   person_id: string;
   name: string;

@@ -16,6 +16,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/202608100016_add_party_legal_statistics.sql',
   'supabase/migrations/202608100017_add_party_people_statistics.sql',
   'supabase/migrations/202608110003_add_national_office_holders.sql',
+  'supabase/migrations/202608110006_public_update_feed.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -36,6 +37,7 @@ const reviewedRelations = [
   'person_party_affiliations',
   'races',
   'regions',
+  'update_feed',
   'search_results',
 ];
 const directlyQueriedRelations = reviewedRelations.filter((relation) => relation !== 'search_results');

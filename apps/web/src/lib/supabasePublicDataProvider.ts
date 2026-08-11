@@ -29,6 +29,7 @@ import type {
   PublicRace,
   PublicRegion,
   PublicRegionElectionSummary,
+  PublicUpdate,
 } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import type { PollComparison } from '../types/polling';
@@ -1597,6 +1598,28 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     }
 
     return data as PublicLegislatorPartySummary[];
+  },
+
+  async loadPublicUpdates(rawLimit = 50) {
+    const client = getSupabasePublicClient();
+    if (!client) return [];
+    const limit = Math.max(1, Math.min(Math.trunc(rawLimit), 50));
+    const { data, error } = await client
+      .schema('published')
+      .from('update_feed')
+      .select('update_id,update_type,title,summary,entity_type,entity_id,entity_href,source_name,source_url,occurred_at,published_at')
+      .order('published_at', { ascending: false })
+      .order('update_id', { ascending: false })
+      .limit(limit);
+
+    if (error || !Array.isArray(data)) {
+      if (error && import.meta.env.DEV) {
+        console.warn(`Failed to fetch public updates: ${error.message}`);
+      }
+      return [];
+    }
+
+    return data as PublicUpdate[];
   },
 
   getCompanies() {

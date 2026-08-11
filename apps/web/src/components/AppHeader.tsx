@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useI18n } from '../i18n';
-import { aboutPath, dataGuidancePath, electionsPath, homePath, partiesPath, peoplePath } from '../routes/routePaths';
+import { aboutPath, dataGuidancePath, electionsPath, homePath, partiesPath, peoplePath, updatesPath } from '../routes/routePaths';
 import { GlobalSearch } from './GlobalSearch';
 
 type AppHeaderProps = {
@@ -13,6 +13,7 @@ const navItems = [
   { labelKey: 'nav.people', mark: '◎', to: peoplePath(), end: false },
   { labelKey: 'nav.elections', mark: '◇', to: electionsPath(), end: false },
   { labelKey: 'nav.parties', mark: '▧', to: partiesPath(), end: false },
+  { labelKey: 'nav.updates', mark: '↻', to: updatesPath(), end: false },
   { labelKey: 'nav.dataGuidance', mark: '▣', to: dataGuidancePath(), end: false },
   { labelKey: 'nav.about', mark: 'i', to: aboutPath(), end: false },
 ] as const;
@@ -57,7 +58,7 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
             <GlobalSearch />
           </div>
 
-          <nav className="grid grid-cols-2 gap-2 sm:grid-cols-6 2xl:flex 2xl:items-stretch" aria-label={t('nav.mainAria')}>
+          <nav className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-7 2xl:flex 2xl:items-stretch" aria-label={t('nav.mainAria')}>
             {navItems.map((item) => (
               <NavLink
                 key={item.labelKey}
@@ -65,7 +66,7 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
                 end={item.end}
                 className={({ isActive }) =>
                   [
-                    'pixel-corners flex min-h-12 min-w-[104px] flex-col items-center justify-center gap-1 border px-3 py-2 text-center transition focus:outline-none focus:ring-2 focus:ring-accent/35',
+                    'pixel-corners flex min-h-12 min-w-[88px] flex-col items-center justify-center gap-1 border px-3 py-2 text-center transition focus:outline-none focus:ring-2 focus:ring-accent/35',
                     isActive
                       ? 'border-accent bg-accent/14 text-white shadow-[0_0_16px_rgba(114,232,255,0.16)]'
                       : 'border-line/80 bg-bg/38 text-slate-300 hover:border-accent/45 hover:text-white',

@@ -101,6 +101,7 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadLocalOfficeSummaryByRegionId'
   | 'loadNationalOfficeHolders'
   | 'loadCurrentLegislatorPartySummary'
+  | 'loadPublicUpdates'
   | 'loadPartyOfficers'
   | 'loadPartyPeopleStatistics'
   | 'loadPartyLegalStatistics'
@@ -457,6 +458,10 @@ export function createPublishedPublicDataBridge(
 
     loadCurrentLegislatorPartySummary() {
       return adapter.loadCurrentLegislatorPartySummary();
+    },
+
+    loadPublicUpdates(limit) {
+      return adapter.loadPublicUpdates(limit);
     },
 
     async loadPartyData() {

@@ -61,6 +61,10 @@ export function aboutPath() {
   return '/about';
 }
 
+export function updatesPath() {
+  return '/updates';
+}
+
 export function internalReviewQueuePath() {
   return '/internal/review-queue';
 }

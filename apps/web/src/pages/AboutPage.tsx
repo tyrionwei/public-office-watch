@@ -64,8 +64,8 @@ export function AboutPage() {
         </PixelFrame>
 
         <SectionPanel title={t('about.progressTitle')} eyebrow={t('about.progressEyebrow')}>
-          <div className="grid gap-3 md:grid-cols-3">
-            {(['about.progressMap', 'about.progressData', 'about.progressBoundary'] as const).map((key) => (
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {(['about.progressMap', 'about.progressData', 'about.progressBoundary', 'about.progressUpdates'] as const).map((key) => (
               <p key={key} className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm leading-6 text-slate-300">
                 {t(key)}
               </p>

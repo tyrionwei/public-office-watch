@@ -1,7 +1,7 @@
 const siteName = '公職資料觀測站';
 const englishSiteName = 'Public Office Watch';
 const defaultDescription = '查詢臺灣公職人物、政黨、選舉、候選人政見、政治獻金與公開資料來源。';
-const staticSitemapPaths = ['/', '/people', '/elections', '/parties', '/data-guidance', '/about'];
+const staticSitemapPaths = ['/', '/people', '/elections', '/parties', '/updates', '/data-guidance', '/about'];
 const dynamicSitemapGroups = ['people', 'parties', 'regions', 'elections', 'races'];
 const emptySeoCatalog = { version: 1, generatedAt: null, pages: [] };
 
@@ -105,6 +105,7 @@ function documentMetadata(pathname, catalog = emptySeoCatalog) {
     '/people': { title: '人物', description: '瀏覽臺灣公職人物的經歷、黨籍、參選紀錄、政見與公開資料來源。' },
     '/elections': { title: '選舉', description: '瀏覽臺灣歷屆選舉、選區、候選人、當選結果與政見比較。' },
     '/parties': { title: '政黨與政治獻金', description: '比較臺灣政黨、現任人員、候選人、政治獻金與公開資料統計。' },
+    '/updates': { title: '公開更新動態', description: '查看公職資料觀測站最近已審核並公開的資料新增、修正與功能更新。' },
     '/data-guidance': { title: '資料說明', description: '了解公職資料觀測站如何蒐集、審核、引用與呈現公開資料。' },
     '/about': { title: '關於本站', description: '認識公職資料觀測站的目標、資料原則與開源開發方式。' },
   };

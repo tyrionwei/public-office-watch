@@ -21,7 +21,8 @@ GRANT SELECT ON TABLE
   published.person_party_affiliations,
   published.races,
   published.regions,
-  published.search_results
+  published.search_results,
+  published.update_feed
 TO anon, authenticated;
 
 GRANT EXECUTE ON FUNCTION published.election_race_page(

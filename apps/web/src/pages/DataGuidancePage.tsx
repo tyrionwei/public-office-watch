@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { xiezhiMascotPoses } from '../data/defaultCharacterAssets';
 import { useI18n } from '../i18n';
+import { updatesPath } from '../routes/routePaths';
 
 const principleKeys = [
   'dataGuidance.principlePublic',
@@ -17,6 +19,12 @@ const confidenceLevels = [
   ['B', 'dataGuidance.confidenceB'],
   ['C', 'dataGuidance.confidenceC'],
   ['D', 'dataGuidance.confidenceD'],
+] as const;
+
+const publicUpdateFlowKeys = [
+  'dataGuidance.updateCollect',
+  'dataGuidance.updateReview',
+  'dataGuidance.updatePublish',
 ] as const;
 
 const sourceLinks = [
@@ -119,6 +127,24 @@ export function DataGuidancePage() {
               </article>
             ))}
           </div>
+        </SectionPanel>
+
+        <SectionPanel title={t('dataGuidance.updatesTitle')} eyebrow={t('dataGuidance.updatesEyebrow')}>
+          <p className="max-w-4xl text-sm leading-6 text-slate-300">{t('dataGuidance.updatesDescription')}</p>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            {publicUpdateFlowKeys.map((key, index) => (
+              <article key={key} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                <p className="font-display text-sm text-accent">0{index + 1}</p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">{t(key)}</p>
+              </article>
+            ))}
+          </div>
+          <Link
+            to={updatesPath()}
+            className="mt-4 inline-flex border border-accent/45 bg-accent/10 px-4 py-2 text-sm text-accent transition hover:border-accent hover:text-white"
+          >
+            {t('dataGuidance.viewUpdates')} →
+          </Link>
         </SectionPanel>
 
         <SectionPanel title={t('dataGuidance.donationTitle')} eyebrow={t('dataGuidance.donationEyebrow')}>

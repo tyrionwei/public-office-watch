@@ -326,6 +326,10 @@ export function createPublishedPublicDataProvider(
       return bridge.loadCurrentLegislatorPartySummary();
     },
 
+    loadPublicUpdates(limit) {
+      return bridge.loadPublicUpdates(limit);
+    },
+
     getCompanies(): PublicCompany[] {
       return [];
     },

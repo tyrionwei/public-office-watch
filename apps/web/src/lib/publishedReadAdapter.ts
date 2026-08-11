@@ -19,6 +19,7 @@ import type {
   PublicPersonStatus,
   PublicRace,
   PublicRegion,
+  PublicUpdate,
 } from '../types/publicViews';
 import {
   PUBLIC_ELECTION_RACE_PAGE_SIZE,
@@ -53,6 +54,7 @@ export const PARTY_COMPANY_CONTRIBUTION_LIMIT = 1000;
 export const PARTY_OFFICER_LIMIT = 200;
 export const PARTY_PEOPLE_STATISTICS_LIMIT = 19;
 export const PERSON_PARTY_AFFILIATION_LIMIT = 100;
+export const PUBLIC_UPDATE_LIMIT = 50;
 
 const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
   'announced',
@@ -183,6 +185,20 @@ export const NATIONAL_OFFICE_HOLDER_COLUMNS = [
   'observed_at',
   'display_order',
   'updated_at',
+].join(',');
+
+export const PUBLIC_UPDATE_COLUMNS = [
+  'update_id',
+  'update_type',
+  'title',
+  'summary',
+  'entity_type',
+  'entity_id',
+  'entity_href',
+  'source_name',
+  'source_url',
+  'occurred_at',
+  'published_at',
 ].join(',');
 
 export const LEGISLATOR_PARTY_SUMMARY_COLUMNS = [
@@ -569,6 +585,7 @@ export type PublishedReadAdapter = {
   loadLocalOfficePeople(districtPrefixes: string[]): Promise<PublishedPeopleDirectoryRow[]>;
   loadNationalOfficeHolders(): Promise<PublishedNationalOfficeHolderRow[]>;
   loadCurrentLegislatorPartySummary(): Promise<PublishedLegislatorPartySummaryRow[]>;
+  loadPublicUpdates(limit?: number): Promise<PublicUpdate[]>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
   loadPartyCandidatePage(partyName: string, page: number, pageSize: number): Promise<PublishedPartyCandidatePage>;
   loadPartyData(): Promise<PublishedPartyDataRows>;
@@ -1003,6 +1020,19 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         'Published current legislator party summary',
         LEGISLATOR_PARTY_SUMMARY_LIMIT,
       );
+    },
+
+    async loadPublicUpdates(rawLimit = PUBLIC_UPDATE_LIMIT) {
+      const limit = Math.max(1, Math.min(Math.trunc(rawLimit), PUBLIC_UPDATE_LIMIT));
+      const response = await client
+        .schema('published')
+        .from<PublicUpdate>('update_feed')
+        .select(PUBLIC_UPDATE_COLUMNS)
+        .order('published_at', { ascending: false })
+        .order('update_id', { ascending: false })
+        .limit(limit);
+
+      return getRowsOrThrow(response, 'Published update feed');
     },
 
     async loadPartyData() {

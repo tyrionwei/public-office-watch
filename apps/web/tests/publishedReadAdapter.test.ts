@@ -31,6 +31,8 @@ import {
   PERSON_CLAIM_LIMIT,
   PERSON_PARTY_AFFILIATION_LIMIT,
   PERSON_PROFILE_BATCH_LIMIT,
+  PUBLIC_UPDATE_COLUMNS,
+  PUBLIC_UPDATE_LIMIT,
   RACE_DETAIL_CANDIDATE_LIMIT,
   RACE_DETAIL_PARTY_AFFILIATION_LIMIT,
   RACE_DETAIL_COLUMNS,
@@ -869,6 +871,30 @@ test('current legislator party summary reads one bounded aggregate', async () =>
     ['order', 'legislator_count', { ascending: false }],
     ['order', 'party_name', { ascending: true }],
     ['limit', LEGISLATOR_PARTY_SUMMARY_LIMIT + 1],
+  ]);
+});
+
+test('public update feed reads only the newest bounded published rows', async () => {
+  const row = {
+    update_id: 'update-1',
+    update_type: 'site',
+    title: '公開更新動態上線',
+    summary: '測試公開更新。',
+    published_at: '2026-08-11T01:00:00Z',
+  };
+  const fake = createFakeClient({
+    update_feed: { data: [row], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadPublicUpdates(PUBLIC_UPDATE_LIMIT + 10), [row]);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['from', 'update_feed'],
+    ['select', PUBLIC_UPDATE_COLUMNS],
+    ['order', 'published_at', { ascending: false }],
+    ['order', 'update_id', { ascending: false }],
+    ['limit', PUBLIC_UPDATE_LIMIT],
   ]);
 });
 

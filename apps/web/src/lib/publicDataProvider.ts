@@ -23,6 +23,7 @@ import type {
   PublicPersonPartyAffiliation,
   PublicPersonProfile,
   PublicRace,
+  PublicUpdate,
 } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 
@@ -125,6 +126,7 @@ export interface PublicDataProvider {
   loadLocalOfficeSummaryByRegionId(regionId: string): Promise<PublicLocalOfficeSummary>;
   loadNationalOfficeHolders(): Promise<PublicNationalOfficeHolder[]>;
   loadCurrentLegislatorPartySummary(): Promise<PublicLegislatorPartySummary[]>;
+  loadPublicUpdates(limit?: number): Promise<PublicUpdate[]>;
   getCompanies(): PublicCompany[];
   getParties(): PublicParty[];
   getPartyBySlug(partySlug: string): PublicParty | null;

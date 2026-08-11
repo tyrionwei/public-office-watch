@@ -74,3 +74,19 @@ test('publishes a sitemap index with separated public entity maps', () => {
   assert.match(robots, /Disallow: \/internal\//);
   assert.match(robots, /Sitemap: https:\/\/watch\.example\/sitemap\.xml/);
 });
+
+test('publishes sitemap groups from a split catalog manifest', () => {
+  const manifest = {
+    version: 2,
+    generatedAt: '2026-08-11T00:00:00.000Z',
+    groups: {
+      people: { path: '/seo-catalog/people.json', count: 1 },
+      races: { path: '/seo-catalog/races.json', count: 1 },
+    },
+  };
+  const index = sitemapIndexXml('https://watch.example', manifest);
+
+  assert.match(index, /sitemaps\/people\.xml/);
+  assert.match(index, /sitemaps\/races\.xml/);
+  assert.doesNotMatch(index, /sitemaps\/elections\.xml/);
+});

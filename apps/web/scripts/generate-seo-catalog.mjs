@@ -5,6 +5,7 @@ import { validateProductionEnvironment } from './environmentGuards.mjs';
 
 const pageSize = 1000;
 const sitemapPageLimit = 45_000;
+const sitesFileSizeLimit = 25 * 1024 * 1024;
 
 const sources = [
   {
@@ -178,6 +179,28 @@ export function createSeoCatalog(datasets, generatedAt = new Date().toISOString(
   return { version: 1, generatedAt, pages };
 }
 
+export function writeSeoCatalogFiles(catalog, outputPath) {
+  const catalogDirectory = resolve(dirname(outputPath), 'seo-catalog');
+  mkdirSync(catalogDirectory, { recursive: true });
+
+  const groups = {};
+  for (const source of sources) {
+    const pages = catalog.pages.filter((page) => page.group === source.key);
+    const fileName = `${source.key}.json`;
+    const contents = `${JSON.stringify({ version: 1, generatedAt: catalog.generatedAt, pages })}\n`;
+    if (Buffer.byteLength(contents) > sitesFileSizeLimit) {
+      throw new Error(`${source.key} SEO catalog exceeds the Sites 25 MiB file limit.`);
+    }
+    writeFileSync(resolve(catalogDirectory, fileName), contents, 'utf8');
+    groups[source.key] = { path: `/seo-catalog/${fileName}`, count: pages.length };
+  }
+
+  const manifest = { version: 2, generatedAt: catalog.generatedAt, groups };
+  mkdirSync(dirname(outputPath), { recursive: true });
+  writeFileSync(outputPath, `${JSON.stringify(manifest)}\n`, 'utf8');
+  return manifest;
+}
+
 export async function fetchPublishedRows({
   supabaseUrl,
   anonKey,
@@ -232,8 +255,7 @@ async function main() {
   const datasets = Object.fromEntries(sources.map((source, index) => [source.key, results[index]]));
   const catalog = createSeoCatalog(datasets);
 
-  mkdirSync(dirname(outputPath), { recursive: true });
-  writeFileSync(outputPath, `${JSON.stringify(catalog)}\n`, 'utf8');
+  writeSeoCatalogFiles(catalog, outputPath);
   console.log(`SEO catalog generated with ${catalog.pages.length} public pages.`);
 }
 

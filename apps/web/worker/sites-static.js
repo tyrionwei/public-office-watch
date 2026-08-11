@@ -4,8 +4,10 @@ const defaultDescription = '查詢臺灣公職人物、政黨、選舉、候選�
 const staticSitemapPaths = ['/', '/people', '/elections', '/parties', '/updates', '/data-guidance', '/about'];
 const dynamicSitemapGroups = ['people', 'parties', 'regions', 'elections', 'races'];
 const emptySeoCatalog = { version: 1, generatedAt: null, pages: [] };
+const emptySeoManifest = { version: 2, generatedAt: null, groups: {} };
 
-let cachedSeoCatalogPromise = null;
+let cachedSeoManifestPromise = null;
+const cachedSeoCatalogPromises = new Map();
 
 function addSecurityHeaders(response) {
   const headers = new Headers(response.headers);
@@ -51,12 +53,54 @@ function normalizeCatalog(value) {
 }
 
 async function loadSeoCatalog(env, origin) {
-  cachedSeoCatalogPromise ??= env.ASSETS
+  cachedSeoManifestPromise ??= env.ASSETS
     .fetch(new Request(new URL('/seo-catalog.json', origin)))
-    .then(async (response) => (response.ok ? normalizeCatalog(await response.json()) : emptySeoCatalog))
-    .catch(() => emptySeoCatalog);
+    .then(async (response) => {
+      if (!response.ok) return emptySeoManifest;
+      const value = await response.json();
+      if (!value || value.version !== 2 || !value.groups || typeof value.groups !== 'object') {
+        return emptySeoManifest;
+      }
+      const groups = Object.fromEntries(Object.entries(value.groups).filter(([group, item]) => (
+        dynamicSitemapGroups.includes(group)
+        && item
+        && typeof item.path === 'string'
+        && item.path.startsWith('/seo-catalog/')
+      )));
+      return {
+        version: 2,
+        generatedAt: typeof value.generatedAt === 'string' ? value.generatedAt : null,
+        groups,
+      };
+    })
+    .catch(() => emptySeoManifest);
 
-  return cachedSeoCatalogPromise;
+  return cachedSeoManifestPromise;
+}
+
+async function loadSeoCatalogGroup(env, origin, group) {
+  if (!group || !dynamicSitemapGroups.includes(group)) return emptySeoCatalog;
+  const manifest = await loadSeoCatalog(env, origin);
+  const entry = manifest.groups[group];
+  if (!entry) return emptySeoCatalog;
+
+  if (!cachedSeoCatalogPromises.has(group)) {
+    cachedSeoCatalogPromises.set(group, env.ASSETS
+      .fetch(new Request(new URL(entry.path, origin)))
+      .then(async (response) => (response.ok ? normalizeCatalog(await response.json()) : emptySeoCatalog))
+      .catch(() => emptySeoCatalog));
+  }
+
+  return cachedSeoCatalogPromises.get(group);
+}
+
+function catalogGroupForPathname(pathname) {
+  if (/^\/people\/[^/]+$/.test(pathname)) return 'people';
+  if (/^\/parties\/[^/]+$/.test(pathname)) return 'parties';
+  if (/^\/regions\/[^/]+$/.test(pathname)) return 'regions';
+  if (/^\/elections\/races\/[^/]+$/.test(pathname)) return 'races';
+  if (/^\/elections\/[^/]+$/.test(pathname)) return 'elections';
+  return null;
 }
 
 function getCatalogPage(pathname, catalog) {
@@ -199,9 +243,10 @@ function sitemapEntries(catalog, group) {
 }
 
 function sitemapIndexXml(origin, catalog = emptySeoCatalog) {
-  const groups = ['static', ...dynamicSitemapGroups.filter((group) => (
-    catalog.pages.some((page) => page.group === group)
-  ))];
+  const availableGroups = catalog.version === 2
+    ? dynamicSitemapGroups.filter((group) => catalog.groups?.[group])
+    : dynamicSitemapGroups.filter((group) => catalog.pages.some((page) => page.group === group));
+  const groups = ['static', ...availableGroups];
   const entries = groups
     .map((group) => `  <sitemap><loc>${escapeXml(new URL(`/sitemaps/${group}.xml`, origin).toString())}</loc></sitemap>`)
     .join('\n');
@@ -229,8 +274,8 @@ const worker = {
       return textResponse(robotsText(url.origin), 'text/plain; charset=utf-8');
     }
     if (request.method === 'GET' && url.pathname === '/sitemap.xml') {
-      const catalog = await loadSeoCatalog(env, url.origin);
-      return textResponse(sitemapIndexXml(url.origin, catalog), 'application/xml; charset=utf-8');
+      const manifest = await loadSeoCatalog(env, url.origin);
+      return textResponse(sitemapIndexXml(url.origin, manifest), 'application/xml; charset=utf-8');
     }
     const sitemapMatch = url.pathname.match(/^\/sitemaps\/([a-z]+)\.xml$/);
     if (request.method === 'GET' && sitemapMatch) {
@@ -238,13 +283,16 @@ const worker = {
       if (group !== 'static' && !dynamicSitemapGroups.includes(group)) {
         return addSecurityHeaders(new Response('Not found', { status: 404 }));
       }
-      const catalog = await loadSeoCatalog(env, url.origin);
+      const catalog = group === 'static'
+        ? emptySeoCatalog
+        : await loadSeoCatalogGroup(env, url.origin, group);
       return textResponse(sitemapXml(url.origin, sitemapEntries(catalog, group)), 'application/xml; charset=utf-8');
     }
     if (isDocumentRoute(request)) {
+      const group = catalogGroupForPathname(url.pathname.replace(/\/$/, '') || '/');
       const [indexResponse, catalog] = await Promise.all([
         env.ASSETS.fetch(new Request(new URL('/', request.url), request)),
-        loadSeoCatalog(env, url.origin),
+        loadSeoCatalogGroup(env, url.origin, group),
       ]);
       const html = injectDocumentMetadata(await indexResponse.text(), request.url, catalog);
       const headers = new Headers(indexResponse.headers);

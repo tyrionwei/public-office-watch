@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import test from 'node:test';
-import { createSeoCatalog, fetchPublishedRows } from '../scripts/generate-seo-catalog.mjs';
+import { createSeoCatalog, fetchPublishedRows, writeSeoCatalogFiles } from '../scripts/generate-seo-catalog.mjs';
 
 test('creates deduplicated public entity metadata from published rows', () => {
   const catalog = createSeoCatalog({
@@ -48,4 +51,27 @@ test('reads the published schema with the anon credential and bounded pages', as
   assert.match(requests[0].url, /rest\/v1\/parties/);
   assert.equal(requests[0].options.headers['accept-profile'], 'published');
   assert.equal(requests[0].options.headers.authorization, 'Bearer anon-key');
+});
+
+test('writes a lightweight manifest and one bounded file per SEO group', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'public-office-watch-seo-'));
+  try {
+    const catalog = createSeoCatalog({
+      people: [{ person_id: 'person-1', name: '王小明' }],
+      parties: [],
+      regions: [],
+      elections: [],
+      races: [],
+    }, '2026-08-11T00:00:00.000Z');
+    const outputPath = join(directory, 'seo-catalog.json');
+    const manifest = writeSeoCatalogFiles(catalog, outputPath);
+    const people = JSON.parse(readFileSync(join(directory, 'seo-catalog', 'people.json'), 'utf8'));
+
+    assert.equal(manifest.version, 2);
+    assert.deepEqual(manifest.groups.people, { path: '/seo-catalog/people.json', count: 1 });
+    assert.equal(people.pages[0].path, '/people/person-1');
+    assert.equal(JSON.parse(readFileSync(outputPath, 'utf8')).groups.people.count, 1);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });

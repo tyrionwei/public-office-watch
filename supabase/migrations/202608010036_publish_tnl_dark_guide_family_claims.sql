@@ -78,6 +78,33 @@ FROM _tnl_family_release_person_external_ids mapping
 JOIN people person ON person.external_id = mapping.external_id
 WHERE release.claim_json->>'relativePersonId' = mapping.local_person_id::TEXT;
 
+-- This same-name record was originally linked to the Pingtung councilor.
+-- The cited father, former Taichung councilor Hung Chin-fu, identifies the
+-- subject as the Taichung plain-indigenous councilor instead.
+UPDATE _tnl_family_release
+SET person_id = 'd87a57f2-becb-4be7-8272-3a1337ef3845'
+WHERE claim_key = 'research:tnl-dark-guide-family:f442ee890eed3f95';
+
+-- The reviewed release was assembled before all duplicate-person decisions
+-- were finalized. Public read models contain canonical IDs only, so normalize
+-- both ends before validating cache coverage or publishing the claims.
+UPDATE _tnl_family_release release
+SET person_id = canonical_map.canonical_person_id
+FROM person_canonical_map canonical_map
+WHERE canonical_map.person_id = release.person_id
+  AND release.person_id IS DISTINCT FROM canonical_map.canonical_person_id;
+
+UPDATE _tnl_family_release release
+SET claim_json = jsonb_set(
+        release.claim_json,
+        '{relativePersonId}',
+        to_jsonb(canonical_map.canonical_person_id::TEXT),
+        false
+    )
+FROM person_canonical_map canonical_map
+WHERE release.claim_json->>'relativePersonId' = canonical_map.person_id::TEXT
+  AND canonical_map.person_id IS DISTINCT FROM canonical_map.canonical_person_id;
+
 DO $$
 DECLARE
     missing_people INTEGER;
@@ -140,8 +167,16 @@ BEGIN
         SELECT 1
         FROM person_claims existing
         JOIN _tnl_family_release incoming USING (claim_key)
-        WHERE existing.person_id IS DISTINCT FROM incoming.person_id
-           OR existing.claim_type IS DISTINCT FROM incoming.claim_type
+        LEFT JOIN person_canonical_map existing_map ON existing_map.person_id = existing.person_id
+        LEFT JOIN person_canonical_map incoming_map ON incoming_map.person_id = incoming.person_id
+        WHERE existing.claim_type IS DISTINCT FROM incoming.claim_type
+           OR (
+               existing.person_id IS DISTINCT FROM incoming.person_id
+               AND NOT (
+                   existing_map.canonical_person_id IS NOT NULL
+                   AND existing_map.canonical_person_id = incoming_map.canonical_person_id
+               )
+           )
     ) THEN
         RAISE EXCEPTION 'TNL family release claim-key identity conflict';
     END IF;

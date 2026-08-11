@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { BgmProvider } from './components/BgmProvider';
 import { GlobalChatWidget } from './components/GlobalChatWidget';
 import { LanguageProvider, useI18n } from './i18n';
+import { RouteMetadata } from './components/RouteMetadata';
 import { publicDataReadyEvent, refreshConfiguredPublicDataProvider } from './lib/publicDataProviderFactory';
 import { aboutPath, dataGuidancePath, electionsPath, homePath, internalChatAdminPath, internalDataProgressPath, internalReviewQueuePath, partiesPath, peoplePath } from './routes/routePaths';
 
@@ -75,6 +76,7 @@ function AppRoutes({
 
   return (
     <>
+      <RouteMetadata />
       <Suspense fallback={<div className="min-h-screen bg-[#050a16]" />}>
         <Routes>
           <Route path={homePath()} element={<HomePage />} />

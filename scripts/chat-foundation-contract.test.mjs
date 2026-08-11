@@ -215,8 +215,8 @@ test('chat admin edge function verifies a non-anonymous admin without exposing p
 test('chat admin page uses one-time email login and remains available during public-data failure', () => {
   assert.match(adminClient, /shouldCreateUser: false/);
   assert.match(adminClient, /getSupabaseChatAdminClient/);
-  assert.match(app, /isChatAdminRoute/);
-  assert.match(app, /publicDataStatus !== 'ready' && !isChatAdminRoute/);
+  assert.match(app, /isInternalAdminRoute/);
+  assert.match(app, /publicDataStatus !== 'ready' && !isInternalAdminRoute/);
   assert.match(adminPage, /立即關閉聊天室/);
   assert.match(adminPage, /一般政治立場或用語爭議不在處理範圍/);
   assert.match(adminPage, /安全紀錄保存/);

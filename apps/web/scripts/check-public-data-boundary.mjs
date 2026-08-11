@@ -48,7 +48,9 @@ const blockedTermAllowlist = {
   rejected: new Set([
     path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
     path.join(srcRoot, 'lib', 'internalReviewData.ts'),
+    path.join(srcRoot, 'lib', 'publicUpdateAdmin.ts'),
     path.join(srcRoot, 'components', 'PersonFeedbackReviewPanel.tsx'),
+    path.join(srcRoot, 'pages', 'InternalUpdateAdminPage.tsx'),
   ]),
 };
 const allowedCreateClientFile = path.join(srcRoot, 'lib', 'supabasePublicClient.ts');

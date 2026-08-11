@@ -76,3 +76,7 @@ export function internalDataProgressPath() {
 export function internalChatAdminPath() {
   return '/internal/chat-admin';
 }
+
+export function internalUpdateAdminPath() {
+  return '/internal/update-admin';
+}

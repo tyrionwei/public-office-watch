@@ -158,6 +158,8 @@ site_url = "http://127.0.0.1:3000"
 additional_redirect_urls = [
   "http://127.0.0.1:5173/internal/chat-admin",
   "http://localhost:5173/internal/chat-admin",
+  "http://127.0.0.1:5173/internal/update-admin",
+  "http://localhost:5173/internal/update-admin",
   "https://127.0.0.1:3000"
 ]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
@@ -413,3 +415,6 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 
 [functions.chat-api]
 verify_jwt = true
+
+[functions.update-admin]
+verify_jwt = false

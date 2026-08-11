@@ -237,10 +237,13 @@ export const mockPublicDataProvider: PublicDataProvider = {
 
   async loadRaceDetail(raceId: string) {
     const race = this.getRaceById(raceId);
+    const candidates = this.getCandidatesByRaceId(raceId);
+    const personIds = new Set(candidates.map((candidate) => candidate.person_id));
     return {
       race,
       election: race ? this.getElectionById(race.election_id) : null,
-      candidates: this.getCandidatesByRaceId(raceId),
+      candidates,
+      partyAffiliations: mockPublicPersonPartyAffiliations.filter((affiliation) => personIds.has(affiliation.person_id)),
     };
   },
 

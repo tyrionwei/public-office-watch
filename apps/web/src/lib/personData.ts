@@ -152,6 +152,65 @@ export function normalizePartyLabel(party: string | null | undefined) {
   return canonicalPartyName(party) ?? '未知政黨';
 }
 
+export function getPartyChangeAffiliations(
+  affiliations: PublicPersonPartyAffiliation[],
+  currentParty: string | null | undefined,
+) {
+  const representativeByParty = new Map<string, PublicPersonPartyAffiliation>();
+
+  for (const affiliation of affiliations) {
+    if (affiliation.role_context === 'party_officer') continue;
+    const partyName = canonicalPartyName(affiliation.party_name);
+    if (partyName && !representativeByParty.has(partyName)) {
+      representativeByParty.set(partyName, affiliation);
+    }
+  }
+
+  const distinctParties = new Set(representativeByParty.keys());
+  const normalizedCurrentParty = canonicalPartyName(currentParty);
+  if (normalizedCurrentParty) distinctParties.add(normalizedCurrentParty);
+
+  return distinctParties.size > 1
+    ? Array.from(representativeByParty.values())
+    : [];
+}
+
+function partyAffiliationYear(affiliation: PublicPersonPartyAffiliation) {
+  if (affiliation.observed_year !== null) return affiliation.observed_year;
+
+  for (const value of [affiliation.observed_date, affiliation.start_date, affiliation.end_date]) {
+    const year = value?.match(/(?:19|20)\d{2}/)?.[0];
+    if (year) return Number.parseInt(year, 10);
+  }
+
+  return null;
+}
+
+export function getPreviousPartyName(
+  affiliations: PublicPersonPartyAffiliation[],
+  candidateParty: string | null | undefined,
+  electionYear: number | null | undefined,
+) {
+  const normalizedCandidateParty = canonicalPartyName(candidateParty);
+  if (!normalizedCandidateParty || electionYear === null || electionYear === undefined) return null;
+
+  const previousAffiliation = affiliations
+    .filter((affiliation) => affiliation.role_context !== 'party_officer')
+    .map((affiliation) => ({
+      partyName: canonicalPartyName(affiliation.party_name),
+      year: partyAffiliationYear(affiliation),
+    }))
+    .filter((item) => (
+      item.partyName !== null
+      && item.partyName !== normalizedCandidateParty
+      && item.year !== null
+      && item.year < electionYear
+    ))
+    .sort((left, right) => (right.year ?? Number.MIN_SAFE_INTEGER) - (left.year ?? Number.MIN_SAFE_INTEGER))[0];
+
+  return previousAffiliation?.partyName ?? null;
+}
+
 export function toPartyThemeKey(partyLabel: string | null | undefined): PartyThemeKey {
   const label = normalizePartyLabel(partyLabel);
   if (label === '民主進步黨') return 'dpp';

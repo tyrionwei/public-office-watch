@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
-import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonClaim, PublicPersonProfile } from '../types/publicViews';
@@ -112,6 +112,11 @@ export function CandidateComparisonPanel({
             <div className="grid gap-4 pb-5" style={{ gridTemplateColumns: `repeat(${candidates.length}, minmax(240px, 1fr))` }}>
               {candidates.map((candidate) => {
                 const partyLabel = normalizePartyLabel(candidate.party ?? candidate.person_party);
+                const previousPartyName = getPreviousPartyName(
+                  profilesByPersonId.get(candidate.person_id)?.party_affiliations ?? [],
+                  partyLabel,
+                  candidate.election_year,
+                );
                 const theme = partyTheme[toPartyThemeKey(partyLabel)];
                 return (
                   <header key={candidate.person_id} className="min-w-0 border-l-2 pl-4" style={{ borderColor: theme.accent }}>
@@ -122,6 +127,11 @@ export function CandidateComparisonPanel({
                         <span className="mt-2 inline-block border px-2 py-1 text-xs" style={{ borderColor: theme.accent, color: theme.text }}>
                           {partyLabel}
                         </span>
+                        {previousPartyName ? (
+                          <p className="mt-1 truncate text-[11px] text-slate-500">
+                            {t('race.previousParty')}: {previousPartyName}
+                          </p>
+                        ) : null}
                       </div>
                       <button type="button" onClick={() => onRemove(candidate.person_id)} className="shrink-0 text-xs text-slate-500 hover:text-rose-300">
                         {t('race.compareRemove')}

@@ -12,7 +12,7 @@ import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import type { PublicRaceDetailData } from '../lib/publicDataProvider';
-import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { electionEventPath, electionsPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonProfile } from '../types/publicViews';
@@ -41,7 +41,12 @@ export function RacePage() {
   const { raceId } = useParams();
   const safeRaceId = raceId ?? '';
   const [searchParams, setSearchParams] = useSearchParams();
-  const [detail, setDetail] = useState<PublicRaceDetailData>({ race: null, election: null, candidates: [] });
+  const [detail, setDetail] = useState<PublicRaceDetailData>({
+    race: null,
+    election: null,
+    candidates: [],
+    partyAffiliations: [],
+  });
   const [loading, setLoading] = useState(true);
   const [comparisonProfiles, setComparisonProfiles] = useState<PublicPersonProfile[]>([]);
   const [comparisonLoading, setComparisonLoading] = useState(false);
@@ -49,7 +54,7 @@ export function RacePage() {
   useEffect(() => {
     let active = true;
     setLoading(true);
-    setDetail({ race: null, election: null, candidates: [] });
+    setDetail({ race: null, election: null, candidates: [], partyAffiliations: [] });
 
     void refreshConfiguredPublicDataProvider()
       .then(() => publicDataProvider.loadRaceDetail(safeRaceId))
@@ -187,6 +192,11 @@ export function RacePage() {
               <div className="divide-y divide-line/60">
                 {candidates.map((candidate) => {
                   const partyLabel = normalizePartyLabel(candidate.party ?? candidate.person_party);
+                  const previousPartyName = getPreviousPartyName(
+                    detail.partyAffiliations.filter((affiliation) => affiliation.person_id === candidate.person_id),
+                    partyLabel,
+                    candidate.election_year,
+                  );
                   const theme = partyTheme[toPartyThemeKey(partyLabel)];
                   const isSelected = selectedPersonIds.includes(candidate.person_id);
                   const selectionDisabled = !candidate.person_id || (!isSelected && selectedPersonIds.length >= 4);
@@ -218,6 +228,11 @@ export function RacePage() {
                         >
                           {partyLabel}
                         </span>
+                        {previousPartyName ? (
+                          <p className="mt-1 truncate text-[11px] text-slate-500">
+                            {t('race.previousParty')}: {previousPartyName}
+                          </p>
+                        ) : null}
                       </div>
                       <p className={isCandidateElected(candidate) ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
                         {translateCandidateStatus(candidate, t)}

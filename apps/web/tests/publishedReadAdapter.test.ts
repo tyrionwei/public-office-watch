@@ -13,6 +13,7 @@ import {
   HOME_REGION_LIMIT,
   LOCAL_OFFICE_PERSON_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
+  PERSON_PARTY_AFFILIATION_COLUMNS,
   PARTY_COLUMNS,
   PARTY_COMPANY_CONTRIBUTION_COLUMNS,
   PARTY_COMPANY_CONTRIBUTION_LIMIT,
@@ -27,6 +28,7 @@ import {
   PERSON_PARTY_AFFILIATION_LIMIT,
   PERSON_PROFILE_BATCH_LIMIT,
   RACE_DETAIL_CANDIDATE_LIMIT,
+  RACE_DETAIL_PARTY_AFFILIATION_LIMIT,
   RACE_DETAIL_COLUMNS,
   REGION_CHILD_LIMIT,
   REGION_RACE_LIMIT,
@@ -687,10 +689,17 @@ test('race detail reads one race then bounded election and candidate rows', asyn
     race_id: 'race-1',
     election_id: 'election-1',
   };
+  const partyAffiliation = {
+    affiliation_id: 'affiliation-1',
+    person_id: 'person-1',
+    party_name: '中國國民黨',
+    observed_year: 2018,
+  };
   const fake = createFakeClient({
     races: { data: [race], error: null, count: null },
     elections: { data: [election], error: null, count: null },
     candidates: { data: [candidate], error: null, count: null },
+    person_party_affiliations: { data: [partyAffiliation], error: null, count: null },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -698,6 +707,7 @@ test('race detail reads one race then bounded election and candidate rows', asyn
     raceRow: race,
     electionRow: election,
     candidateRows: [candidate],
+    partyAffiliationRows: [partyAffiliation],
   });
   assert.deepEqual(fake.calls, [
     ['schema', 'published'],
@@ -716,6 +726,13 @@ test('race detail reads one race then bounded election and candidate rows', asyn
     ['order', 'person_name', { ascending: true }],
     ['order', 'candidate_id', { ascending: true }],
     ['limit', RACE_DETAIL_CANDIDATE_LIMIT + 1],
+    ['from', 'person_party_affiliations'],
+    ['select', PERSON_PARTY_AFFILIATION_COLUMNS],
+    ['in', 'person_id', ['person-1']],
+    ['order', 'person_id', { ascending: true }],
+    ['order', 'observed_year', { ascending: false, nullsFirst: false }],
+    ['order', 'affiliation_id', { ascending: true }],
+    ['limit', RACE_DETAIL_PARTY_AFFILIATION_LIMIT + 1],
   ]);
 });
 
@@ -729,6 +746,7 @@ test('race detail stops after a missing race', async () => {
     raceRow: null,
     electionRow: null,
     candidateRows: [],
+    partyAffiliationRows: [],
   });
   assert.equal(fake.calls.some((call) => call[0] === 'from' && call[1] === 'candidates'), false);
 });

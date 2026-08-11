@@ -425,6 +425,7 @@ export function createPublishedPublicDataBridge(
         race: rows.raceRow,
         election: rows.electionRow,
         candidates: rows.candidateRows,
+        partyAffiliations: rows.partyAffiliationRows,
       };
     },
 

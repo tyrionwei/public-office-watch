@@ -1427,7 +1427,7 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     const race = raceRows[0] ? mapPublicRaceRow(raceRows[0] as PublicRace) : null;
 
     if (!race) {
-      return { race: null, election: null, candidates: [] };
+      return { race: null, election: null, candidates: [], partyAffiliations: [] };
     }
 
     const [electionRows, candidateRows] = await Promise.all([
@@ -1435,10 +1435,19 @@ export const supabasePublicDataProvider: PublicDataProvider = {
       fetchRows('public_candidates', (query) => query.eq('race_id', raceId)),
     ]);
 
+    const candidates = candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate));
+    const personIds = Array.from(new Set(candidates.map((candidate) => candidate.person_id).filter(Boolean)));
+    const partyAffiliationRows = personIds.length > 0
+      ? await fetchRows('public_person_party_affiliations', (query) => query.in('person_id', personIds))
+      : [];
+
     return {
       race,
       election: electionRows[0] ? mapPublicElectionRow(electionRows[0] as PublicElection) : null,
-      candidates: candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate)),
+      candidates,
+      partyAffiliations: partyAffiliationRows.map((row) => (
+        mapPublicPersonPartyAffiliationRow(row as PublicPersonPartyAffiliation)
+      )),
     };
   },
 

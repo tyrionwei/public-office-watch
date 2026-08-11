@@ -42,6 +42,7 @@ export const PERSON_CANDIDATE_LIMIT = 100;
 export const PERSON_CLAIM_LIMIT = 400;
 export const LOCAL_OFFICE_PERSON_LIMIT = 200;
 export const RACE_DETAIL_CANDIDATE_LIMIT = 100;
+export const RACE_DETAIL_PARTY_AFFILIATION_LIMIT = 1000;
 export const PARTY_LIMIT = 200;
 export const PARTY_FINANCE_LIMIT = 100;
 export const PARTY_COMPANY_CONTRIBUTION_LIMIT = 1000;
@@ -468,6 +469,7 @@ export type PublishedRaceDetailRows = {
   raceRow: PublicRace | null;
   electionRow: PublicElection | null;
   candidateRows: PublicCandidate[];
+  partyAffiliationRows: PublicPersonPartyAffiliation[];
 };
 
 export type PublishedPartyDataRows = {
@@ -855,7 +857,7 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
     async loadRaceDetail(rawRaceId) {
       const raceId = rawRaceId.trim();
       if (!raceId) {
-        return { raceRow: null, electionRow: null, candidateRows: [] };
+        return { raceRow: null, electionRow: null, candidateRows: [], partyAffiliationRows: [] };
       }
 
       const published = client.schema('published');
@@ -867,7 +869,7 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       const raceRow = getRowsOrThrow(raceResponse, 'Published race detail')[0] ?? null;
 
       if (!raceRow) {
-        return { raceRow: null, electionRow: null, candidateRows: [] };
+        return { raceRow: null, electionRow: null, candidateRows: [], partyAffiliationRows: [] };
       }
 
       const [electionResponse, candidateResponse] = await Promise.all([
@@ -886,14 +888,32 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           .limit(RACE_DETAIL_CANDIDATE_LIMIT + 1),
       ]);
 
+      const candidateRows = getBoundedRowsOrThrow(
+        candidateResponse,
+        'Published race candidates',
+        RACE_DETAIL_CANDIDATE_LIMIT,
+      );
+      const personIds = Array.from(new Set(candidateRows.map((candidate) => candidate.person_id).filter(Boolean)));
+      const partyAffiliationRows = personIds.length === 0
+        ? []
+        : getBoundedRowsOrThrow(
+          await published
+            .from<PublicPersonPartyAffiliation>('person_party_affiliations')
+            .select(PERSON_PARTY_AFFILIATION_COLUMNS)
+            .in('person_id', personIds)
+            .order('person_id', { ascending: true })
+            .order('observed_year', { ascending: false, nullsFirst: false })
+            .order('affiliation_id', { ascending: true })
+            .limit(RACE_DETAIL_PARTY_AFFILIATION_LIMIT + 1),
+          'Published race party affiliations',
+          RACE_DETAIL_PARTY_AFFILIATION_LIMIT,
+        );
+
       return {
         raceRow,
         electionRow: getRowsOrThrow(electionResponse, 'Published race election')[0] ?? null,
-        candidateRows: getBoundedRowsOrThrow(
-          candidateResponse,
-          'Published race candidates',
-          RACE_DETAIL_CANDIDATE_LIMIT,
-        ),
+        candidateRows,
+        partyAffiliationRows,
       };
     },
 

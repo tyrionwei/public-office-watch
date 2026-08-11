@@ -130,7 +130,7 @@ function createBridge(overrides: Partial<PublishedPublicDataBridge> = {}) {
       return { items: [], total: 0 };
     },
     async loadRaceDetail() {
-      return { race: null, election: null, candidates: [] };
+      return { race: null, election: null, candidates: [], partyAffiliations: [] };
     },
     async loadPeoplePage() {
       return { items: [person], total: 1 };

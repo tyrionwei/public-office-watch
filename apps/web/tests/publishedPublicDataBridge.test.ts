@@ -53,7 +53,7 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
       return { items: [], total: 0 };
     },
     async loadRaceDetail() {
-      return { raceRow: null, electionRow: null, candidateRows: [] };
+      return { raceRow: null, electionRow: null, candidateRows: [], partyAffiliationRows: [] };
     },
     async loadPeoplePage() {
       return { rows: [], total: 0 };
@@ -643,9 +643,15 @@ test('bridge maps bounded race detail rows to the public provider contract', asy
     source_url: null,
   };
   const candidates = [{ candidate_id: 'candidate-1', race_id: 'race-1' }];
+  const partyAffiliations = [{ affiliation_id: 'affiliation-1', person_id: 'person-1' }];
   const adapter = createAdapter({
     async loadRaceDetail() {
-      return { raceRow: race, electionRow: election, candidateRows: candidates as never[] };
+      return {
+        raceRow: race,
+        electionRow: election,
+        candidateRows: candidates as never[],
+        partyAffiliationRows: partyAffiliations as never[],
+      };
     },
   });
   const bridge = createPublishedPublicDataBridge(adapter);
@@ -654,6 +660,7 @@ test('bridge maps bounded race detail rows to the public provider contract', asy
     race,
     election,
     candidates,
+    partyAffiliations,
   });
 });
 

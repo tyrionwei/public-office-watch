@@ -11,7 +11,7 @@ import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
-import { getCandidateElectionLabel, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
@@ -351,7 +351,7 @@ export function PersonPage() {
   const profile = loading ? null : publicDataProvider.getPersonProfile(safePersonId);
   const person = profile?.person ?? null;
   const partyOffices = profile?.party_affiliations.filter((affiliation) => affiliation.role_context === 'party_officer' && affiliation.is_current) ?? [];
-  const partyAffiliations = profile?.party_affiliations.filter((affiliation) => affiliation.role_context !== 'party_officer') ?? [];
+  const partyAffiliations = profile ? getPartyChangeAffiliations(profile.party_affiliations, person?.party) : [];
   const theme = partyTheme[toPartyThemeKey(person?.party)];
   const publicClaims = profile ? visibleProfileClaims(profile.public_claims) : [];
   const birthDateClaim = profile ? claimsByType(profile.public_claims, 'birth_date')[0] ?? null : null;

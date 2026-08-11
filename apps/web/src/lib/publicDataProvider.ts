@@ -18,6 +18,7 @@ import type {
   PublicPerson,
   PublicPersonFilters,
   PublicPersonListItem,
+  PublicPersonPartyAffiliation,
   PublicPersonProfile,
   PublicRace,
 } from '../types/publicViews';
@@ -73,6 +74,7 @@ export type PublicRaceDetailData = {
   race: PublicRace | null;
   election: PublicElection | null;
   candidates: PublicCandidate[];
+  partyAffiliations: PublicPersonPartyAffiliation[];
 };
 
 export type PublicRaceQueryFilters = {

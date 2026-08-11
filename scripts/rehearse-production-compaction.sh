@@ -3,17 +3,18 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-backup_dir="$repo_root/tmp/production-backups/2026-08-02-pre-compaction"
+backup_dir="${BACKUP_DIR:-$repo_root/tmp/production-backups/2026-08-11-pre-deploy-7cd6146}"
 report_dir="$repo_root/tmp/production-compaction-rehearsal"
 report_file="$report_dir/report.txt"
 bootstrap_sql="$repo_root/tmp/production-source-bootstrap/source-people.sql"
 existing_people_bootstrap_sql="$repo_root/tmp/production-existing-people-bootstrap/people-and-identity-matches.sql"
 public_set_verification_sql="$repo_root/scripts/verify-production-compaction-public-set.sql"
 container="public-office-watch-compaction-rehearsal"
-reference_container="supabase_db_public-office-watch-rehearsal"
+reference_container="${REFERENCE_CONTAINER:-supabase_db_public-office-watch}"
 image="public.ecr.aws/supabase/postgres:17.6.1.106"
-first_pending_version="202607300011"
-last_pending_version="202608010036"
+first_pending_version="${FIRST_PENDING_VERSION:-202608030001}"
+last_pending_version="${LAST_PENDING_VERSION:-202608110016}"
+skip_migration_versions=",${SKIP_MIGRATION_VERSIONS:-},"
 budget_bytes=$((350 * 1024 * 1024))
 
 fail() {
@@ -27,7 +28,7 @@ cleanup() {
   fi
   if [[ "$container" == "public-office-watch-compaction-rehearsal" ]] \
     && docker inspect "$container" >/dev/null 2>&1; then
-    docker rm -f "$container" >/dev/null
+    docker rm -f "$container" >/dev/null 2>&1 || true
   fi
 }
 
@@ -60,11 +61,15 @@ for file in production-compaction-phase-1.sql production-compaction-phase-2.sql 
   [[ -f "$repo_root/scripts/$file" ]] || fail "missing scripts/$file"
 done
 
-"$repo_root/scripts/build-production-source-bootstrap.sh" >/dev/null
+FIRST_PENDING_VERSION="$first_pending_version" \
+LAST_PENDING_VERSION="$last_pending_version" \
+  "$repo_root/scripts/build-production-source-bootstrap.sh" >/dev/null
 [[ -f "$bootstrap_sql" ]] || fail "source bootstrap was not generated"
 
-"$repo_root/scripts/build-production-existing-people-bootstrap.sh" >/dev/null
-[[ -f "$existing_people_bootstrap_sql" ]] || fail "existing people bootstrap was not generated"
+if [[ ! "$first_pending_version" > "202607300028" && ! "$last_pending_version" < "202607300028" ]]; then
+  "$repo_root/scripts/build-production-existing-people-bootstrap.sh" >/dev/null
+  [[ -f "$existing_people_bootstrap_sql" ]] || fail "existing people bootstrap was not generated"
+fi
 
 docker inspect "$container" >/dev/null 2>&1 \
   && fail "refusing to replace existing container $container"
@@ -131,6 +136,10 @@ docker exec -i "$container" \
   psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
   < "$backup_dir/data.sql" >/dev/null
 
+docker exec -i "$container" \
+  psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
+  -c 'REFRESH MATERIALIZED VIEW public.public_people_list_cached;' >/dev/null
+
 baseline_bytes="$(database_size)"
 
 docker exec -i "$container" \
@@ -143,11 +152,28 @@ docker exec -i "$container" \
 
 phase_1_bytes="$(database_size)"
 
+expected_migrations=0
+for migration in "$repo_root"/supabase/migrations/*.sql; do
+  version="$(basename "$migration")"
+  version="${version%%_*}"
+  if [[ ! "$version" < "$first_pending_version" && ! "$version" > "$last_pending_version" ]]; then
+    if [[ "$skip_migration_versions" == *",$version,"* ]]; then
+      continue
+    fi
+    expected_migrations=$((expected_migrations + 1))
+  fi
+done
+(( expected_migrations > 0 )) || fail "no migrations found in requested range"
+
 applied_migrations=0
 for migration in "$repo_root"/supabase/migrations/*.sql; do
   version="$(basename "$migration")"
   version="${version%%_*}"
   if [[ "$version" < "$first_pending_version" || "$version" > "$last_pending_version" ]]; then
+    continue
+  fi
+  if [[ "$skip_migration_versions" == *",$version,"* ]]; then
+    printf 'skipping %s\n' "$(basename "$migration")"
     continue
   fi
 
@@ -164,8 +190,8 @@ for migration in "$repo_root"/supabase/migrations/*.sql; do
   applied_migrations=$((applied_migrations + 1))
 done
 
-[[ "$applied_migrations" == "59" ]] \
-  || fail "expected 59 pending migrations, applied $applied_migrations"
+[[ "$applied_migrations" == "$expected_migrations" ]] \
+  || fail "expected $expected_migrations pending migrations, applied $applied_migrations"
 
 post_migration_bytes="$(database_size)"
 

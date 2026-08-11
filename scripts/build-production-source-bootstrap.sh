@@ -8,8 +8,8 @@ output_dir="$repo_root/tmp/production-source-bootstrap"
 required_ids="$output_dir/required-source-ids.txt"
 container_ids="/tmp/public-office-watch-required-source-ids.txt"
 bootstrap_sql="$output_dir/source-people.sql"
-first_pending_version="202607300011"
-last_pending_version="202608010036"
+first_pending_version="${FIRST_PENDING_VERSION:-202608030001}"
+last_pending_version="${LAST_PENDING_VERSION:-202608110016}"
 
 fail() {
   printf 'production source bootstrap: %s\n' "$*" >&2

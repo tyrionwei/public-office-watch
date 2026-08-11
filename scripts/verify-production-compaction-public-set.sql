@@ -127,9 +127,20 @@ WHERE NOT EXISTS (
 )
 ORDER BY reference.entity_type, reference.stable_key;
 
+SELECT 'added|' || actual.entity_type || '|' || actual.stable_key
+FROM _actual_public_keys actual
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM _reference_public_keys reference
+    WHERE reference.entity_type = actual.entity_type
+      AND reference.stable_key = actual.stable_key
+)
+ORDER BY actual.entity_type, actual.stable_key;
+
 DO $$
 DECLARE
     missing_total BIGINT;
+    added_total BIGINT;
 BEGIN
     SELECT COALESCE(SUM(missing_from_compacted), 0)
     INTO missing_total
@@ -137,6 +148,14 @@ BEGIN
 
     IF missing_total <> 0 THEN
         RAISE EXCEPTION 'compaction removed % stable public entities', missing_total;
+    END IF;
+
+    SELECT COALESCE(SUM(added_by_pending_migrations), 0)
+    INTO added_total
+    FROM _public_set_comparison;
+
+    IF added_total <> 0 THEN
+        RAISE EXCEPTION 'pending migrations added % unexpected stable public entities', added_total;
     END IF;
 
     IF (SELECT COUNT(*) FROM public.public_people_list_cached)

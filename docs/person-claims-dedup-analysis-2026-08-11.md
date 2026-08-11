@@ -67,6 +67,16 @@
 - 108 項前端讀取契約、public view 契約與資料邊界檢查通過。
 - 既有 local migration ledger 落後，CLI 會先嘗試重跑舊 migration；本輪因此直接執行已通過回滾演練的 SQL，未改寫既有 migration 紀錄。
 
+## Rehearsal 結果
+
+Migration 與 `scripts/production-compaction-phase-2.sql` 已依序套用 rehearsal：
+
+- Compaction 預覽只列出 928 筆 `person_claims`，其他資料表與外鍵影響均為 0。
+- `person_claims` 實際刪除 928 筆，剩餘 42,214 筆全部符合正式 runtime 保留規則。
+- Rehearsal 資料庫由 343 MB 降至 334 MB，名目 500 MiB 額度餘裕約由 157 MB 增至 166 MB。
+- `person_claims` 實體大小由 75 MB 降至 67 MB。
+- Published rehearsal smoke test 通過：17 個核准關係可讀，內部 release、promote 與 identity 資料維持封鎖。
+
 ## JSON 重複內容
 
 82,296 條 claims 的 `claim_json` 含有 `sourcePayload`，而且全部都有有效的 `source_person_id`，`sourcePersonKey` 也都與 `source_people` 一致。`source_people.source_payload` 已保存同一來源內容，移除 claims 內的 `sourcePayload` 與 `sourcePersonKey`，以逐列欄位大小估算可少約 48 MB。
@@ -75,7 +85,7 @@
 
 ## 後續
 
-1. 在 rehearsal 套用 migration 與正式 compaction，確認封存列不進正式 runtime 資料，並重跑容量、公開契約與人物頁 smoke test。
+1. 正式部署前對正式快照重跑唯讀預覽與備份驗證；確認仍精確命中 928 筆後，才套用 migration 與 compaction。
 2. 15 組例外維持原狀，另做人工審核；司法紀錄不納入自動去重。
 3. `claim_json.sourcePayload` 的約 48 MB 潛在縮減維持下一個獨立階段，不與本次封存混做。
 

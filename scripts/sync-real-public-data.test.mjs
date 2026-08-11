@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   applyReviewedCandidateResultOverride,
+  buildSourcePersonRows,
   buildPersonEnrichmentClaimRows,
   buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
@@ -12,6 +13,36 @@ import {
 } from './sync-real-public-data.mjs';
 
 const root = 'votedata/votedata/voteData';
+
+const officialRosterRows = buildSourcePersonRows(
+  {
+    sources: [{ id: 'test-official-roster', name: '測試市政府', url: 'https://example.com/roster' }],
+    people: [
+      {
+        externalId: 'test-current-deputy',
+        sourceId: 'test-official-roster',
+        sourceType: 'official_officeholder',
+        name: '現任副市長',
+        position: '副市長',
+        district: '測試市',
+        sourcePayload: { roleOrigin: 'appointed' },
+      },
+      {
+        externalId: 'test-former-head',
+        sourceId: 'test-official-roster',
+        sourceType: 'official_officeholder',
+        name: '卸任局長',
+        position: '局長',
+        district: '測試市',
+        sourcePayload: { roleOrigin: 'appointed', isCurrent: false },
+      },
+    ],
+  },
+  '2026-08-12T00:00:00.000Z',
+  'test-batch',
+);
+assert.equal(officialRosterRows[0].source_payload.isCurrent, true);
+assert.equal(officialRosterRows[1].source_payload.isCurrent, false);
 
 assert.deepEqual(
   classifyHistoricalCecCandidateEntry(`${root}/1998直轄市議員/區域/elcand.csv`),

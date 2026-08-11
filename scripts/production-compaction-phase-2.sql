@@ -68,6 +68,11 @@ VALUES
         )
     );
 
+-- Persist the small public runtime projections before their source/review rows
+-- are removed by the production-only compaction below.
+SELECT published.refresh_person_demographics();
+SELECT public.refresh_current_office_assignments();
+
 DELETE FROM public.person_claims
 WHERE NOT (
     is_public = TRUE

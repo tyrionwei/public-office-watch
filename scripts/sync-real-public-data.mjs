@@ -2872,6 +2872,11 @@ function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
         sourceId: person.sourceId,
         sourceType,
         ...(person.sourcePayload ?? {}),
+        ...(sourceType === 'official_officeholder' &&
+          person.sourcePayload?.roleOrigin === 'appointed' &&
+          person.sourcePayload?.isCurrent == null
+          ? { isCurrent: true }
+          : {}),
       },
       confidence_suggestion: person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId),
       ingest_batch_key: ingestBatchKey,
@@ -2904,7 +2909,14 @@ function buildSourcePersonRows(seed, startedAt, ingestBatchKey) {
       birth_date_text: person.birthDateText ?? null,
       external_person_id: person.externalPersonId ?? null,
       external_record_id: person.externalRecordId ?? person.sourcePersonKey,
-      source_payload: person.sourcePayload ?? {},
+      source_payload: {
+        ...(person.sourcePayload ?? {}),
+        ...(sourceType === 'official_officeholder' &&
+          person.sourcePayload?.roleOrigin === 'appointed' &&
+          person.sourcePayload?.isCurrent == null
+          ? { isCurrent: true }
+          : {}),
+      },
       confidence_suggestion: person.confidenceSuggestion ?? confidenceForSourceId(person.sourceId),
       ingest_batch_key: ingestBatchKey,
       is_public: person.isPublic ?? false,
@@ -4228,7 +4240,9 @@ async function writeSeed(seed, hash, args) {
     onConflict: 'party_id,company_id,report_year',
   });
 
+  await supabaseRequest(env, 'rpc/refresh_current_office_assignments', { method: 'POST', rows: {} });
   await supabaseRequest(env, 'rpc/refresh_public_people_list_cached', { method: 'POST', rows: {} });
+  await supabaseRequest(env, 'rpc/refresh_person_demographics', { method: 'POST', rows: {} });
 
   if (args.recordRun) {
     await upsertOrThrow(
@@ -4396,6 +4410,7 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
 }
 
 export {
+  buildSourcePersonRows,
   buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,

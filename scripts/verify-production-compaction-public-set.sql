@@ -166,6 +166,35 @@ BEGIN
     IF (SELECT COUNT(*) FROM published.release_state WHERE state_key = 'current') <> 1 THEN
         RAISE EXCEPTION 'published release state is not current';
     END IF;
+
+    IF (SELECT COUNT(*) FROM published.people_directory
+        WHERE list_role = 'legislator' AND list_status = 'current') <> 113 THEN
+        RAISE EXCEPTION 'current legislator runtime snapshot does not contain 113 people';
+    END IF;
+
+    IF (SELECT COUNT(*) FROM published.people_directory
+        WHERE list_role = 'local_deputy' AND list_status = 'current') = 0 THEN
+        RAISE EXCEPTION 'current local deputy runtime snapshot is empty';
+    END IF;
+
+    IF (SELECT COUNT(*) FROM published.people_directory
+        WHERE list_role = 'agency_head' AND list_status = 'current') = 0 THEN
+        RAISE EXCEPTION 'current agency-head runtime snapshot is empty';
+    END IF;
+
+    IF (SELECT COUNT(*) FROM published.person_demographics) < 1000 THEN
+        RAISE EXCEPTION 'published person demographic runtime snapshot is unexpectedly empty';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM published.party_people_statistics('民主進步黨') statistic
+        WHERE statistic.dimension_key = 'age'
+          AND statistic.bucket_key <> 'unknown'
+          AND statistic.people_count > 0
+    ) THEN
+        RAISE EXCEPTION 'party age statistics contain no known age bucket';
+    END IF;
 END
 $$;
 

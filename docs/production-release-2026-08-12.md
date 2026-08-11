@@ -36,14 +36,16 @@
 
 ## 乾淨演練結果
 
-執行順序：正式備份還原 → source bootstrap → Phase 1 → 29 個正式 migration → Phase 2 → 公開集合比對。
+執行順序：正式備份還原 → Phase 1 → 29 個正式 migration → Phase 2 → 公開集合比對。
+
+本次 pending migration 的 UUID 掃描沒有命中任何必要 `source_people`；舊流程額外帶入的 14,354 筆 2024 CEC staging rows 不屬本次前置需求。已用 `SKIP_SOURCE_BOOTSTRAP=1` 從乾淨備份重新演練並通過，因此正式發布不套用 source bootstrap。
 
 - 狀態：`PASS`
 - 套用 migration：29
 - 還原基準：300,469,395 bytes
-- Phase 1 後：314,723,475 bytes
-- Migration 高峰：354,897,043 bytes
-- 最終：334,130,323 bytes（約 318.7 MiB）
+- Phase 1 後：300,469,395 bytes
+- Migration 高峰：340,790,419 bytes
+- 最終：334,228,627 bytes（約 318.7 MiB）
 - 內部警戒線：367,001,600 bytes（350 MiB）
 - 人物、候選人、候選事實、選舉、選區與搜尋文件：全部 `missing=0 / added=0`
 - `published.release_state`：唯一且為 `current`
@@ -53,14 +55,13 @@
 ## 正式執行順序
 
 1. 再次驗證備份 checksum。
-2. 產生並套用 production source bootstrap。
-3. 套用 `scripts/production-compaction-phase-1.sql`。
-4. 依本文件分流清單修復 linked migration ledger。
-5. 執行 `supabase db push --dry-run`，確認只剩 29 筆 production-safe migrations。
-6. 執行正式 `db push`。
-7. 所有 migration 成功後，套用 `scripts/production-compaction-phase-2.sql`。
-8. 核對容量、migration ledger、公開列數與 release state。
-9. 部署 `update-admin` Edge Function 與網站。
-10. 以 anon 權限測試首頁、搜尋、人物、選舉、縣市、政黨、聊天室與更新動態；確認內部資料仍不可讀。
+2. 套用 `scripts/production-compaction-phase-1.sql`；本次明確不套 source bootstrap。
+3. 依本文件分流清單修復 linked migration ledger。
+4. 執行 `supabase db push --dry-run`，確認只剩 29 筆 production-safe migrations。
+5. 執行正式 `db push`。
+6. 所有 migration 成功後，套用 `scripts/production-compaction-phase-2.sql`。
+7. 核對容量、migration ledger、公開列數與 release state。
+8. 部署 `update-admin` Edge Function 與網站。
+9. 以 anon 權限測試首頁、搜尋、人物、選舉、縣市、政黨、聊天室與更新動態；確認內部資料仍不可讀。
 
 任一步驟失敗時停止後續操作並保留現場，不猜測性補 SQL，也不把未執行的 production-safe migration 標成已套用。

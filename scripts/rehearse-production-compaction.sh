@@ -61,10 +61,12 @@ for file in production-compaction-phase-1.sql production-compaction-phase-2.sql 
   [[ -f "$repo_root/scripts/$file" ]] || fail "missing scripts/$file"
 done
 
-FIRST_PENDING_VERSION="$first_pending_version" \
-LAST_PENDING_VERSION="$last_pending_version" \
-  "$repo_root/scripts/build-production-source-bootstrap.sh" >/dev/null
-[[ -f "$bootstrap_sql" ]] || fail "source bootstrap was not generated"
+if [[ "${SKIP_SOURCE_BOOTSTRAP:-0}" != "1" ]]; then
+  FIRST_PENDING_VERSION="$first_pending_version" \
+  LAST_PENDING_VERSION="$last_pending_version" \
+    "$repo_root/scripts/build-production-source-bootstrap.sh" >/dev/null
+  [[ -f "$bootstrap_sql" ]] || fail "source bootstrap was not generated"
+fi
 
 if [[ ! "$first_pending_version" > "202607300028" && ! "$last_pending_version" < "202607300028" ]]; then
   "$repo_root/scripts/build-production-existing-people-bootstrap.sh" >/dev/null
@@ -142,9 +144,11 @@ docker exec -i "$container" \
 
 baseline_bytes="$(database_size)"
 
-docker exec -i "$container" \
-  psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
-  < "$bootstrap_sql" >/dev/null
+if [[ "${SKIP_SOURCE_BOOTSTRAP:-0}" != "1" ]]; then
+  docker exec -i "$container" \
+    psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
+    < "$bootstrap_sql" >/dev/null
+fi
 
 docker exec -i "$container" \
   psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \

@@ -6,6 +6,7 @@ import { validateProductionEnvironment } from './environmentGuards.mjs';
 const pageSize = 1000;
 const sitemapPageLimit = 45_000;
 const sitesFileSizeLimit = 25 * 1024 * 1024;
+const seoCatalogTargetFileSize = 2 * 1024 * 1024;
 
 const sources = [
   {
@@ -179,6 +180,15 @@ export function createSeoCatalog(datasets, generatedAt = new Date().toISOString(
   return { version: 1, generatedAt, pages };
 }
 
+function catalogShardIndex(path, shardCount) {
+  let hash = 2166136261;
+  for (let index = 0; index < path.length; index += 1) {
+    hash ^= path.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0) % shardCount;
+}
+
 export function writeSeoCatalogFiles(catalog, outputPath) {
   const catalogDirectory = resolve(dirname(outputPath), 'seo-catalog');
   mkdirSync(catalogDirectory, { recursive: true });
@@ -186,16 +196,29 @@ export function writeSeoCatalogFiles(catalog, outputPath) {
   const groups = {};
   for (const source of sources) {
     const pages = catalog.pages.filter((page) => page.group === source.key);
-    const fileName = `${source.key}.json`;
-    const contents = `${JSON.stringify({ version: 1, generatedAt: catalog.generatedAt, pages })}\n`;
-    if (Buffer.byteLength(contents) > sitesFileSizeLimit) {
-      throw new Error(`${source.key} SEO catalog exceeds the Sites 25 MiB file limit.`);
+    const estimatedBytes = Buffer.byteLength(JSON.stringify(pages));
+    const shardCount = Math.max(1, Math.ceil(estimatedBytes / seoCatalogTargetFileSize));
+    const shards = Array.from({ length: shardCount }, () => []);
+    for (const page of pages) shards[catalogShardIndex(page.path, shardCount)].push(page);
+
+    const paths = [];
+    for (let index = 0; index < shards.length; index += 1) {
+      const fileName = `${source.key}-${index}.json`;
+      const contents = `${JSON.stringify({
+        version: 1,
+        generatedAt: catalog.generatedAt,
+        pages: shards[index],
+      })}\n`;
+      if (Buffer.byteLength(contents) > sitesFileSizeLimit) {
+        throw new Error(`${source.key} SEO catalog shard exceeds the Sites 25 MiB file limit.`);
+      }
+      writeFileSync(resolve(catalogDirectory, fileName), contents, 'utf8');
+      paths.push(`/seo-catalog/${fileName}`);
     }
-    writeFileSync(resolve(catalogDirectory, fileName), contents, 'utf8');
-    groups[source.key] = { path: `/seo-catalog/${fileName}`, count: pages.length };
+    groups[source.key] = { paths, count: pages.length };
   }
 
-  const manifest = { version: 2, generatedAt: catalog.generatedAt, groups };
+  const manifest = { version: 3, generatedAt: catalog.generatedAt, groups };
   mkdirSync(dirname(outputPath), { recursive: true });
   writeFileSync(outputPath, `${JSON.stringify(manifest)}\n`, 'utf8');
   return manifest;

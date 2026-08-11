@@ -65,10 +65,10 @@ test('writes a lightweight manifest and one bounded file per SEO group', () => {
     }, '2026-08-11T00:00:00.000Z');
     const outputPath = join(directory, 'seo-catalog.json');
     const manifest = writeSeoCatalogFiles(catalog, outputPath);
-    const people = JSON.parse(readFileSync(join(directory, 'seo-catalog', 'people.json'), 'utf8'));
+    const people = JSON.parse(readFileSync(join(directory, 'seo-catalog', 'people-0.json'), 'utf8'));
 
-    assert.equal(manifest.version, 2);
-    assert.deepEqual(manifest.groups.people, { path: '/seo-catalog/people.json', count: 1 });
+    assert.equal(manifest.version, 3);
+    assert.deepEqual(manifest.groups.people, { paths: ['/seo-catalog/people-0.json'], count: 1 });
     assert.equal(people.pages[0].path, '/people/person-1');
     assert.equal(JSON.parse(readFileSync(outputPath, 'utf8')).groups.people.count, 1);
   } finally {

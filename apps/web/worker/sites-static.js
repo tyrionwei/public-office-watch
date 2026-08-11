@@ -4,7 +4,7 @@ const defaultDescription = '查詢臺灣公職人物、政黨、選舉、候選�
 const staticSitemapPaths = ['/', '/people', '/elections', '/parties', '/updates', '/data-guidance', '/about'];
 const dynamicSitemapGroups = ['people', 'parties', 'regions', 'elections', 'races'];
 const emptySeoCatalog = { version: 1, generatedAt: null, pages: [] };
-const emptySeoManifest = { version: 2, generatedAt: null, groups: {} };
+const emptySeoManifest = { version: 3, generatedAt: null, groups: {} };
 
 let cachedSeoManifestPromise = null;
 const cachedSeoCatalogPromises = new Map();
@@ -58,17 +58,18 @@ async function loadSeoCatalog(env, origin) {
     .then(async (response) => {
       if (!response.ok) return emptySeoManifest;
       const value = await response.json();
-      if (!value || value.version !== 2 || !value.groups || typeof value.groups !== 'object') {
+      if (!value || value.version !== 3 || !value.groups || typeof value.groups !== 'object') {
         return emptySeoManifest;
       }
       const groups = Object.fromEntries(Object.entries(value.groups).filter(([group, item]) => (
         dynamicSitemapGroups.includes(group)
         && item
-        && typeof item.path === 'string'
-        && item.path.startsWith('/seo-catalog/')
+        && Array.isArray(item.paths)
+        && item.paths.length > 0
+        && item.paths.every((path) => typeof path === 'string' && path.startsWith('/seo-catalog/'))
       )));
       return {
-        version: 2,
+        version: 3,
         generatedAt: typeof value.generatedAt === 'string' ? value.generatedAt : null,
         groups,
       };
@@ -78,20 +79,39 @@ async function loadSeoCatalog(env, origin) {
   return cachedSeoManifestPromise;
 }
 
-async function loadSeoCatalogGroup(env, origin, group) {
+function catalogShardIndex(path, shardCount) {
+  let hash = 2166136261;
+  for (let index = 0; index < path.length; index += 1) {
+    hash ^= path.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0) % shardCount;
+}
+
+async function loadSeoCatalogGroup(env, origin, group, pathname = null) {
   if (!group || !dynamicSitemapGroups.includes(group)) return emptySeoCatalog;
   const manifest = await loadSeoCatalog(env, origin);
   const entry = manifest.groups[group];
   if (!entry) return emptySeoCatalog;
 
-  if (!cachedSeoCatalogPromises.has(group)) {
-    cachedSeoCatalogPromises.set(group, env.ASSETS
-      .fetch(new Request(new URL(entry.path, origin)))
-      .then(async (response) => (response.ok ? normalizeCatalog(await response.json()) : emptySeoCatalog))
-      .catch(() => emptySeoCatalog));
-  }
+  const paths = pathname
+    ? [entry.paths[catalogShardIndex(pathname, entry.paths.length)]]
+    : entry.paths;
+  const catalogs = await Promise.all(paths.map((path) => {
+    if (!cachedSeoCatalogPromises.has(path)) {
+      cachedSeoCatalogPromises.set(path, env.ASSETS
+        .fetch(new Request(new URL(path, origin)))
+        .then(async (response) => (response.ok ? normalizeCatalog(await response.json()) : emptySeoCatalog))
+        .catch(() => emptySeoCatalog));
+    }
+    return cachedSeoCatalogPromises.get(path);
+  }));
 
-  return cachedSeoCatalogPromises.get(group);
+  return normalizeCatalog({
+    version: 1,
+    generatedAt: manifest.generatedAt,
+    pages: catalogs.flatMap((catalog) => catalog.pages),
+  });
 }
 
 function catalogGroupForPathname(pathname) {
@@ -243,7 +263,7 @@ function sitemapEntries(catalog, group) {
 }
 
 function sitemapIndexXml(origin, catalog = emptySeoCatalog) {
-  const availableGroups = catalog.version === 2
+  const availableGroups = catalog.version === 3
     ? dynamicSitemapGroups.filter((group) => catalog.groups?.[group])
     : dynamicSitemapGroups.filter((group) => catalog.pages.some((page) => page.group === group));
   const groups = ['static', ...availableGroups];
@@ -292,7 +312,7 @@ const worker = {
       const group = catalogGroupForPathname(url.pathname.replace(/\/$/, '') || '/');
       const [indexResponse, catalog] = await Promise.all([
         env.ASSETS.fetch(new Request(new URL('/', request.url), request)),
-        loadSeoCatalogGroup(env, url.origin, group),
+        loadSeoCatalogGroup(env, url.origin, group, url.pathname.replace(/\/$/, '') || '/'),
       ]);
       const html = injectDocumentMetadata(await indexResponse.text(), request.url, catalog);
       const headers = new Headers(indexResponse.headers);

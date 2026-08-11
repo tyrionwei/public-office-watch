@@ -77,11 +77,11 @@ test('publishes a sitemap index with separated public entity maps', () => {
 
 test('publishes sitemap groups from a split catalog manifest', () => {
   const manifest = {
-    version: 2,
+    version: 3,
     generatedAt: '2026-08-11T00:00:00.000Z',
     groups: {
-      people: { path: '/seo-catalog/people.json', count: 1 },
-      races: { path: '/seo-catalog/races.json', count: 1 },
+      people: { paths: ['/seo-catalog/people-0.json'], count: 1 },
+      races: { paths: ['/seo-catalog/races-0.json'], count: 1 },
     },
   };
   const index = sitemapIndexXml('https://watch.example', manifest);

@@ -8,6 +8,8 @@ import type {
   PublicElectionRaceFacet,
   PublicElectionRaceSummary,
   PublicLocalOfficeSummary,
+  PublicLegislatorPartySummary,
+  PublicNationalOfficeHolder,
   PublicParty,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
@@ -23,6 +25,8 @@ import type {
   PublicRace,
 } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
+
+export type { UpcomingRace };
 
 export type HomeTicker = {
   title: string;
@@ -119,6 +123,8 @@ export interface PublicDataProvider {
   loadPersonProfiles(personIds: string[]): Promise<PublicPersonProfile[]>;
   getLocalOfficeSummaryByRegionId(regionId: string): PublicLocalOfficeSummary;
   loadLocalOfficeSummaryByRegionId(regionId: string): Promise<PublicLocalOfficeSummary>;
+  loadNationalOfficeHolders(): Promise<PublicNationalOfficeHolder[]>;
+  loadCurrentLegislatorPartySummary(): Promise<PublicLegislatorPartySummary[]>;
   getCompanies(): PublicCompany[];
   getParties(): PublicParty[];
   getPartyBySlug(partySlug: string): PublicParty | null;

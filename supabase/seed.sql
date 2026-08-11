@@ -10,6 +10,8 @@ GRANT SELECT ON TABLE
   published.elections,
   published.home_region_summary,
   published.home_ticker,
+  published.current_legislator_party_summary,
+  published.national_office_holders,
   published.parties,
   published.party_company_contribution_summaries,
   published.party_finance_summaries,

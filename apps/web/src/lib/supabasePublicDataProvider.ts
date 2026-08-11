@@ -16,6 +16,8 @@ import type {
   PublicPartyLegalStatistics,
   PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
+  PublicLegislatorPartySummary,
+  PublicNationalOfficeHolder,
   PublicPerson,
   PublicPersonClaim,
   PublicPersonFilters,
@@ -1552,6 +1554,49 @@ export const supabasePublicDataProvider: PublicDataProvider = {
 
   loadLocalOfficeSummaryByRegionId(regionId: string) {
     return loadLocalOfficeSummary(regionId);
+  },
+
+  async loadNationalOfficeHolders() {
+    const client = getSupabasePublicClient();
+    if (!client) return [];
+
+    const { data, error } = await client
+      .schema('published')
+      .from('national_office_holders')
+      .select('institution_key,role_key,holder_name,holder_person_id,party_name,tenure_status,source_name,source_url,observed_at,display_order,updated_at')
+      .order('display_order', { ascending: true })
+      .limit(13);
+
+    if (error || !Array.isArray(data) || data.length !== 12) {
+      if (error && import.meta.env.DEV) {
+        console.warn(`Failed to fetch national office holders: ${error.message}`);
+      }
+      return [];
+    }
+
+    return data as PublicNationalOfficeHolder[];
+  },
+
+  async loadCurrentLegislatorPartySummary() {
+    const client = getSupabasePublicClient();
+    if (!client) return [];
+
+    const { data, error } = await client
+      .schema('published')
+      .from('current_legislator_party_summary')
+      .select('party_name,legislator_count')
+      .order('legislator_count', { ascending: false })
+      .order('party_name', { ascending: true })
+      .limit(21);
+
+    if (error || !Array.isArray(data) || data.length > 20) {
+      if (error && import.meta.env.DEV) {
+        console.warn(`Failed to fetch current legislator party summary: ${error.message}`);
+      }
+      return [];
+    }
+
+    return data as PublicLegislatorPartySummary[];
   },
 
   getCompanies() {

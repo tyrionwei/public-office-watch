@@ -110,6 +110,25 @@ test('county highlight panel provides a distinct background for every county cit
   await expectNoHorizontalOverflow(page);
 });
 
+test('homepage defaults to Taipei when no nationwide election is announced', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.locator('[data-region-highlight]')).toHaveAttribute('data-region-highlight', 'county-63000');
+  await expect(page.locator('[data-national-fallback-notice]')).toBeVisible();
+  await expect(page).toHaveURL(/\/$/);
+});
+
+test('explicit nationwide selection remains selected during the election gap', async ({ page }) => {
+  await page.goto('/');
+
+  await page.getByRole('button', { name: /全國總覽/ }).click();
+
+  await expect(page.locator('[data-national-overview]')).toBeVisible();
+  await expect(page.getByText('全國議題關注', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: /全國總覽/ })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page).toHaveURL(/\?region=national$/);
+});
+
 test('homepage region selection survives navigation and browser back', async ({ page }) => {
   await page.goto('/');
 
@@ -132,6 +151,7 @@ test('homepage falls back safely when the region query is unknown', async ({ pag
   await page.goto('/?region=not-a-region');
 
   await expect(page.locator('[data-region-highlight]')).toHaveAttribute('data-region-highlight', 'county-63000');
+  await expect(page.locator('[data-national-fallback-notice]')).toBeVisible();
 });
 
 test('people filters and pagination survive profile navigation and browser back', async ({ page }) => {

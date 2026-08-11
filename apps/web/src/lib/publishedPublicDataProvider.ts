@@ -318,6 +318,14 @@ export function createPublishedPublicDataProvider(
       return summary;
     },
 
+    loadNationalOfficeHolders() {
+      return bridge.loadNationalOfficeHolders();
+    },
+
+    loadCurrentLegislatorPartySummary() {
+      return bridge.loadCurrentLegislatorPartySummary();
+    },
+
     getCompanies(): PublicCompany[] {
       return [];
     },

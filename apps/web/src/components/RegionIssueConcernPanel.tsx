@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useI18n, type TranslationKey } from '../i18n';
 import {
   getRegionIssueParticipantToken,
+  loadNationalIssueParticipation,
   loadRegionIssueParticipation,
   submitRegionIssueParticipation,
   type RegionIssueResult,
@@ -11,6 +12,7 @@ import { PixelFrame } from './PixelFrame';
 type RegionIssueConcernPanelProps = {
   regionId: string | null;
   regionLabel: string;
+  national?: boolean;
 };
 
 const issueTranslationKeys: Record<string, TranslationKey> = {
@@ -28,7 +30,7 @@ function participantCount(issues: RegionIssueResult[]) {
   return issues[0]?.participantCount ?? 0;
 }
 
-export function RegionIssueConcernPanel({ regionId, regionLabel }: RegionIssueConcernPanelProps) {
+export function RegionIssueConcernPanel({ regionId, regionLabel, national = false }: RegionIssueConcernPanelProps) {
   const { t } = useI18n();
   const [issues, setIssues] = useState<RegionIssueResult[]>([]);
   const [selectedIssueIds, setSelectedIssueIds] = useState<string[]>([]);
@@ -38,6 +40,7 @@ export function RegionIssueConcernPanel({ regionId, regionLabel }: RegionIssueCo
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeRegionId, setActiveRegionId] = useState<string | null>(regionId);
 
   useEffect(() => {
     let active = true;
@@ -45,7 +48,7 @@ export function RegionIssueConcernPanel({ regionId, regionLabel }: RegionIssueCo
     setSaved(false);
     setError(null);
 
-    if (!regionId) {
+    if (!regionId && !national) {
       setIssues([]);
       setSelectedIssueIds([]);
       setAvailable(false);
@@ -56,9 +59,13 @@ export function RegionIssueConcernPanel({ regionId, regionLabel }: RegionIssueCo
     }
 
     const participantToken = getRegionIssueParticipantToken();
-    void loadRegionIssueParticipation(regionId, participantToken)
+    const participationRequest = national
+      ? loadNationalIssueParticipation(participantToken)
+      : loadRegionIssueParticipation(regionId as string, participantToken);
+    void participationRequest
       .then((participation) => {
         if (!active) return;
+        setActiveRegionId(participation.regionId);
         setIssues(participation.issues);
         setSelectedIssueIds(participation.selectedIssueIds);
         setHasResponse(participation.hasResponse);
@@ -76,7 +83,7 @@ export function RegionIssueConcernPanel({ regionId, regionLabel }: RegionIssueCo
     return () => {
       active = false;
     };
-  }, [regionId, t]);
+  }, [national, regionId, t]);
 
   const selectedSet = useMemo(() => new Set(selectedIssueIds), [selectedIssueIds]);
   const reachedLimit = selectedIssueIds.length >= 3;
@@ -92,15 +99,17 @@ export function RegionIssueConcernPanel({ regionId, regionLabel }: RegionIssueCo
   }
 
   async function handleSubmit() {
-    if (!regionId || selectedIssueIds.length < 1 || selectedIssueIds.length > 3) return;
+    if (!activeRegionId || selectedIssueIds.length < 1 || selectedIssueIds.length > 3) return;
 
     setSaving(true);
     setSaved(false);
     setError(null);
     try {
       const participantToken = getRegionIssueParticipantToken();
-      await submitRegionIssueParticipation(regionId, participantToken, selectedIssueIds);
-      const participation = await loadRegionIssueParticipation(regionId, participantToken);
+      await submitRegionIssueParticipation(activeRegionId, participantToken, selectedIssueIds);
+      const participation = national
+        ? await loadNationalIssueParticipation(participantToken)
+        : await loadRegionIssueParticipation(activeRegionId, participantToken);
       setIssues(participation.issues);
       setSelectedIssueIds(participation.selectedIssueIds);
       setHasResponse(true);
@@ -115,7 +124,7 @@ export function RegionIssueConcernPanel({ regionId, regionLabel }: RegionIssueCo
 
   return (
     <PixelFrame
-      title={t('homeIssues.title')}
+      title={national ? t('homeIssues.nationalTitle') : t('homeIssues.title')}
       action={(
         <span className="text-[11px] text-slate-400">
           {regionLabel} · {t('homeIssues.participants', { count: participantCount(issues) })}
@@ -124,7 +133,9 @@ export function RegionIssueConcernPanel({ regionId, regionLabel }: RegionIssueCo
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-display text-base text-white">{t('homeIssues.prompt')}</h3>
+          <h3 className="font-display text-base text-white">
+            {national ? t('homeIssues.nationalPrompt') : t('homeIssues.prompt')}
+          </h3>
           <p className="mt-1 text-xs leading-relaxed text-slate-400">{t('homeIssues.voluntaryNote')}</p>
         </div>
         <span className="shrink-0 text-xs text-accent">
@@ -133,7 +144,7 @@ export function RegionIssueConcernPanel({ regionId, regionLabel }: RegionIssueCo
       </div>
 
       {loading ? (
-        <div className="mt-4 grid gap-2" aria-label={t('homeIssues.loading')}>
+        <div className="mt-4 grid gap-2" aria-label={national ? t('homeIssues.nationalLoading') : t('homeIssues.loading')}>
           {Array.from({ length: 4 }, (_, index) => (
             <div key={index} className="h-11 animate-pulse border border-line/50 bg-bg/35" />
           ))}

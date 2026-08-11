@@ -4,15 +4,15 @@ import type { StageRegionNode } from '../types/stageMap';
 
 type TaiwanStageSelectProps = {
   regions: StageRegionNode[];
-  selectedRegionId: string;
-  onSelectRegion: (regionId: string) => void;
+  selectedRegionId: string | null;
+  onSelectRegion: (regionId: string | null) => void;
   hideQuickSelect?: boolean;
 };
 
 type CompactCountyQuickSelectProps = {
   regions: StageRegionNode[];
-  selectedRegionId: string;
-  onSelectRegion: (regionId: string) => void;
+  selectedRegionId: string | null;
+  onSelectRegion: (regionId: string | null) => void;
 };
 
 const LazyTaiwanCountyMap = lazy(() => import('./TaiwanCountyMap').then((module) => ({ default: module.TaiwanCountyMap })));
@@ -77,10 +77,28 @@ export function TaiwanStageSelect({
             </span>
           </div>
 
+          <button
+            type="button"
+            onClick={() => onSelectRegion(null)}
+            aria-pressed={selectedRegionId === null}
+            className={[
+              'pixel-corners mb-4 flex w-full items-center justify-between border px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
+              selectedRegionId === null
+                ? 'border-signal bg-signal/12 text-white shadow-[0_0_20px_rgba(250,204,21,0.1)]'
+                : 'border-line/70 bg-panelAlt/45 text-slate-300 hover:border-signal/60 hover:text-white',
+            ].join(' ')}
+          >
+            <span>
+              <span className="block font-display text-sm uppercase tracking-[0.2em]">{t('stage.nationalOverview')}</span>
+              <span className="mt-1 block text-xs text-slate-400">{t('stage.nationalOverviewHint')}</span>
+            </span>
+            <span className="font-display text-2xl text-signal">TW</span>
+          </button>
+
           <Suspense fallback={<div className="pixel-corners mx-auto aspect-[9/10] w-full max-w-[720px] border border-line/70 bg-panelAlt/35" />}>
             <LazyTaiwanCountyMap
               regions={topLevelRegions}
-              selectedRegionId={selectedRegionId}
+              selectedRegionId={selectedRegionId ?? ''}
               onSelectRegion={onSelectRegion}
             />
           </Suspense>

@@ -15,15 +15,18 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/202608100015_add_election_education_distribution.sql',
   'supabase/migrations/202608100016_add_party_legal_statistics.sql',
   'supabase/migrations/202608100017_add_party_people_statistics.sql',
+  'supabase/migrations/202608110003_add_national_office_holders.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
   'candidates',
+  'current_legislator_party_summary',
   'election_race_facets',
   'election_race_summaries',
   'elections',
   'home_region_summary',
   'home_ticker',
+  'national_office_holders',
   'parties',
   'party_company_contribution_summaries',
   'party_finance_summaries',

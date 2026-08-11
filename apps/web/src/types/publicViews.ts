@@ -536,6 +536,33 @@ export type PublicLocalOfficeSummary = {
   }[];
 };
 
+export type PublicNationalOfficeInstitution =
+  | 'presidency'
+  | 'executive_yuan'
+  | 'legislative_yuan'
+  | 'judicial_yuan'
+  | 'examination_yuan'
+  | 'control_yuan';
+
+export type PublicNationalOfficeHolder = {
+  institution_key: PublicNationalOfficeInstitution;
+  role_key: 'chief' | 'deputy';
+  holder_name: string | null;
+  holder_person_id: string | null;
+  party_name: string | null;
+  tenure_status: 'current' | 'acting' | 'vacant';
+  source_name: string;
+  source_url: string;
+  observed_at: string;
+  display_order: number;
+  updated_at: string;
+};
+
+export type PublicLegislatorPartySummary = {
+  party_name: string;
+  legislator_count: number;
+};
+
 export type PublicPersonTimelineItem = {
   id: string;
   year: number | null;

@@ -12,6 +12,7 @@ export type RegionIssueResult = {
 };
 
 export type RegionIssueParticipation = {
+  regionId: string | null;
   issues: RegionIssueResult[];
   selectedIssueIds: string[];
   hasResponse: boolean;
@@ -66,7 +67,7 @@ export async function loadRegionIssueParticipation(
 ): Promise<RegionIssueParticipation> {
   const client = getSupabasePublicClient();
   if (!client || !regionId || !participantToken) {
-    return { issues: [], selectedIssueIds: [], hasResponse: false, available: false };
+    return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
   }
 
   const [issuesResult, responseResult] = await Promise.all([
@@ -86,7 +87,45 @@ export async function loadRegionIssueParticipation(
 
   const response = (responseResult.data ?? {}) as RegionIssueResponsePayload;
   return {
+    regionId,
     issues: ((issuesResult.data ?? []) as RegionIssueResultRow[]).map(mapIssue),
+    selectedIssueIds: Array.isArray(response.selectedIssueIds) ? response.selectedIssueIds : [],
+    hasResponse: response.hasResponse === true,
+    available: true,
+  };
+}
+
+export async function loadNationalIssueParticipation(
+  participantToken: string,
+): Promise<RegionIssueParticipation> {
+  const client = getSupabasePublicClient();
+  if (!client || !participantToken) {
+    return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
+  }
+
+  const issuesResult = await client
+    .from('public_region_issue_results')
+    .select('issue_id,region_id,region_name,issue_key,display_order,response_count,participant_count,selection_rate')
+    .eq('region_name', '臺灣')
+    .order('display_order', { ascending: true });
+
+  if (issuesResult.error) throw issuesResult.error;
+  const issueRows = (issuesResult.data ?? []) as RegionIssueResultRow[];
+  const regionId = issueRows[0]?.region_id ?? null;
+  if (!regionId) {
+    return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
+  }
+
+  const responseResult = await client.rpc('get_region_issue_response', {
+    p_region_id: regionId,
+    p_participant_token: participantToken,
+  });
+  if (responseResult.error) throw responseResult.error;
+
+  const response = (responseResult.data ?? {}) as RegionIssueResponsePayload;
+  return {
+    regionId,
+    issues: issueRows.map(mapIssue),
     selectedIssueIds: Array.isArray(response.selectedIssueIds) ? response.selectedIssueIds : [],
     hasResponse: response.hasResponse === true,
     available: true,

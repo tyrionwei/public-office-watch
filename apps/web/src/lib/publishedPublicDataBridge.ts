@@ -99,6 +99,8 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadPartyCandidatePage'
   | 'loadPersonProfiles'
   | 'loadLocalOfficeSummaryByRegionId'
+  | 'loadNationalOfficeHolders'
+  | 'loadCurrentLegislatorPartySummary'
   | 'loadPartyOfficers'
   | 'loadPartyPeopleStatistics'
   | 'loadPartyLegalStatistics'
@@ -447,6 +449,14 @@ export function createPublishedPublicDataBridge(
         region_id: region.regionId,
         region_name: region.regionName,
       };
+    },
+
+    loadNationalOfficeHolders() {
+      return adapter.loadNationalOfficeHolders();
+    },
+
+    loadCurrentLegislatorPartySummary() {
+      return adapter.loadCurrentLegislatorPartySummary();
     },
 
     async loadPartyData() {

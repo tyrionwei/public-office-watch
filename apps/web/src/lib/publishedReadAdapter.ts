@@ -11,6 +11,8 @@ import type {
   PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
   PublicPartyElectionPerformance,
+  PublicLegislatorPartySummary,
+  PublicNationalOfficeHolder,
   PublicPersonClaim,
   PublicPersonPartyAffiliation,
   PublicPersonRole,
@@ -41,6 +43,8 @@ export const PERSON_PROFILE_BATCH_LIMIT = 4;
 export const PERSON_CANDIDATE_LIMIT = 100;
 export const PERSON_CLAIM_LIMIT = 400;
 export const LOCAL_OFFICE_PERSON_LIMIT = 200;
+export const NATIONAL_OFFICE_HOLDER_LIMIT = 12;
+export const LEGISLATOR_PARTY_SUMMARY_LIMIT = 20;
 export const RACE_DETAIL_CANDIDATE_LIMIT = 100;
 export const RACE_DETAIL_PARTY_AFFILIATION_LIMIT = 1000;
 export const PARTY_LIMIT = 200;
@@ -165,6 +169,25 @@ export const PEOPLE_DIRECTORY_COLUMNS = [
   'list_is_party_only',
   'list_status_order',
   'list_role_order',
+].join(',');
+
+export const NATIONAL_OFFICE_HOLDER_COLUMNS = [
+  'institution_key',
+  'role_key',
+  'holder_name',
+  'holder_person_id',
+  'party_name',
+  'tenure_status',
+  'source_name',
+  'source_url',
+  'observed_at',
+  'display_order',
+  'updated_at',
+].join(',');
+
+export const LEGISLATOR_PARTY_SUMMARY_COLUMNS = [
+  'party_name',
+  'legislator_count',
 ].join(',');
 
 export const PERSON_PROFILE_COLUMNS = [
@@ -398,6 +421,9 @@ export type PublishedPeopleDirectoryRow = {
   list_role_order: number;
 };
 
+export type PublishedNationalOfficeHolderRow = PublicNationalOfficeHolder;
+export type PublishedLegislatorPartySummaryRow = PublicLegislatorPartySummary;
+
 export type PublishedPersonProfileRow = PublishedPeopleDirectoryRow & {
   education: string | null;
   experience: string | null;
@@ -541,6 +567,8 @@ export type PublishedReadAdapter = {
   ): Promise<PublishedElectionRacePage>;
   loadRaceDetail(raceId: string): Promise<PublishedRaceDetailRows>;
   loadLocalOfficePeople(districtPrefixes: string[]): Promise<PublishedPeopleDirectoryRow[]>;
+  loadNationalOfficeHolders(): Promise<PublishedNationalOfficeHolderRow[]>;
+  loadCurrentLegislatorPartySummary(): Promise<PublishedLegislatorPartySummaryRow[]>;
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
   loadPartyCandidatePage(partyName: string, page: number, pageSize: number): Promise<PublishedPartyCandidatePage>;
   loadPartyData(): Promise<PublishedPartyDataRows>;
@@ -939,6 +967,41 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         response,
         'Published local office people',
         LOCAL_OFFICE_PERSON_LIMIT,
+      );
+    },
+
+    async loadNationalOfficeHolders() {
+      const response = await client
+        .schema('published')
+        .from<PublishedNationalOfficeHolderRow>('national_office_holders')
+        .select(NATIONAL_OFFICE_HOLDER_COLUMNS)
+        .order('display_order', { ascending: true })
+        .limit(NATIONAL_OFFICE_HOLDER_LIMIT + 1);
+
+      const rows = getBoundedRowsOrThrow(
+        response,
+        'Published national office holders',
+        NATIONAL_OFFICE_HOLDER_LIMIT,
+      );
+      if (rows.length !== NATIONAL_OFFICE_HOLDER_LIMIT) {
+        throw new Error('Published national office holders did not return all office slots.');
+      }
+      return rows;
+    },
+
+    async loadCurrentLegislatorPartySummary() {
+      const response = await client
+        .schema('published')
+        .from<PublishedLegislatorPartySummaryRow>('current_legislator_party_summary')
+        .select(LEGISLATOR_PARTY_SUMMARY_COLUMNS)
+        .order('legislator_count', { ascending: false })
+        .order('party_name', { ascending: true })
+        .limit(LEGISLATOR_PARTY_SUMMARY_LIMIT + 1);
+
+      return getBoundedRowsOrThrow(
+        response,
+        'Published current legislator party summary',
+        LEGISLATOR_PARTY_SUMMARY_LIMIT,
       );
     },
 

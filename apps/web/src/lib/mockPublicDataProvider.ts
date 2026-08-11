@@ -326,6 +326,14 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return this.getLocalOfficeSummaryByRegionId(regionId);
   },
 
+  async loadNationalOfficeHolders() {
+    return [];
+  },
+
+  async loadCurrentLegislatorPartySummary() {
+    return [];
+  },
+
   getCompanies() {
     return mockPublicCompanies;
   },

@@ -12,6 +12,10 @@ import {
   HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
   LOCAL_OFFICE_PERSON_LIMIT,
+  LEGISLATOR_PARTY_SUMMARY_COLUMNS,
+  LEGISLATOR_PARTY_SUMMARY_LIMIT,
+  NATIONAL_OFFICE_HOLDER_COLUMNS,
+  NATIONAL_OFFICE_HOLDER_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
   PERSON_PARTY_AFFILIATION_COLUMNS,
   PARTY_COLUMNS,
@@ -824,6 +828,48 @@ test('local office rejects a person sentinel row', async () => {
     adapter.loadLocalOfficePeople(['臺北市']),
     new RegExp(`Published local office people exceeded the ${LOCAL_OFFICE_PERSON_LIMIT}-row`),
   );
+});
+
+test('national office summary requires all twelve ordered slots', async () => {
+  const rows = Array.from({ length: NATIONAL_OFFICE_HOLDER_LIMIT }, (_, index) => ({
+    institution_key: index < 2 ? 'presidency' : 'executive_yuan',
+    role_key: index % 2 === 0 ? 'chief' : 'deputy',
+    display_order: index,
+  }));
+  const fake = createFakeClient({
+    national_office_holders: { data: rows, error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadNationalOfficeHolders(), rows);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['from', 'national_office_holders'],
+    ['select', NATIONAL_OFFICE_HOLDER_COLUMNS],
+    ['order', 'display_order', { ascending: true }],
+    ['limit', NATIONAL_OFFICE_HOLDER_LIMIT + 1],
+  ]);
+});
+
+test('current legislator party summary reads one bounded aggregate', async () => {
+  const rows = [
+    { party_name: '中國國民黨', legislator_count: 52 },
+    { party_name: '民主進步黨', legislator_count: 51 },
+  ];
+  const fake = createFakeClient({
+    current_legislator_party_summary: { data: rows, error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadCurrentLegislatorPartySummary(), rows);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['from', 'current_legislator_party_summary'],
+    ['select', LEGISLATOR_PARTY_SUMMARY_COLUMNS],
+    ['order', 'legislator_count', { ascending: false }],
+    ['order', 'party_name', { ascending: true }],
+    ['limit', LEGISLATOR_PARTY_SUMMARY_LIMIT + 1],
+  ]);
 });
 
 test('party data reads three small published relations with fixed limits', async () => {

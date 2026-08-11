@@ -15,6 +15,8 @@ const readableRelations = [
   'elections',
   'home_region_summary',
   'home_ticker',
+  'current_legislator_party_summary',
+  'national_office_holders',
   'parties',
   'party_company_contribution_summaries',
   'party_finance_summaries',
@@ -30,6 +32,8 @@ const readableRelations = [
 const requiredNonEmptyRelations = new Set([
   'candidates',
   'elections',
+  'current_legislator_party_summary',
+  'national_office_holders',
   'people',
   'races',
   'regions',

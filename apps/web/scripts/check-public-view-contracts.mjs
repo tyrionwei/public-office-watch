@@ -101,7 +101,7 @@ function getContractCheckEnv() {
   const anonKey = getEnvValue('VITE_SUPABASE_ANON_KEY', localEnv);
 
   if (!url || !anonKey) {
-    console.log('Skipping public view contract check: missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY.');
+    console.log('Skipping legacy public view retirement check: missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY.');
     process.exit(0);
   }
 
@@ -121,21 +121,21 @@ async function main() {
 
   let failed = false;
 
-  for (const [viewName, requiredFields] of Object.entries(allowedPublicViews)) {
+  for (const viewName of Object.keys(allowedPublicViews)) {
     try {
-      const { error } = await client.from(viewName).select(requiredFields.join(',')).limit(0);
+      const { error } = await client.from(viewName).select('*').limit(0);
 
-      if (error) {
+      if (!error || error.code !== '42501') {
         failed = true;
-        console.log(`${viewName}: failed ${error.code ?? 'unknown'} ${error.message}`);
+        console.log(`${viewName}: unexpectedly accessible`);
         continue;
       }
 
-      console.log(`${viewName}: ok fields=${requiredFields.length}`);
+      console.log(`${viewName}: retired`);
     } catch (error) {
       failed = true;
       const message = error instanceof Error ? error.message : 'Unknown error';
-      console.log(`${viewName}: failed rowCount=0 runtime ${message}`);
+      console.log(`${viewName}: retirement check failed at runtime: ${message}`);
     }
   }
 
@@ -146,6 +146,6 @@ async function main() {
 
 main().catch((error) => {
   const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`Public view contract check aborted: ${message}`);
+  console.error(`Legacy public view retirement check aborted: ${message}`);
   process.exit(1);
 });

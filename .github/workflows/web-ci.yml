@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   web-checks:
     runs-on: ubuntu-latest
@@ -14,10 +17,12 @@ jobs:
         working-directory: apps/web
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 20
           cache: npm
@@ -35,8 +40,14 @@ jobs:
       - name: Check data boundary
         run: npm run check:data-boundary
 
-      - name: Smoke public views
-        run: npm run smoke:public-views
+      - name: Test browser read contracts
+        run: npm run test:read-contracts
+
+      - name: Check published exposure boundary
+        run: npm run check:published-exposure
 
       - name: Check public view contracts
         run: npm run check:public-view-contracts
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high

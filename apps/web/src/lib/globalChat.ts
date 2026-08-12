@@ -99,12 +99,10 @@ export async function loadChatStatus(): Promise<ChatStatus | null> {
   const client = getChatClient();
   if (!client) return null;
 
-  const { data, error } = await client
-    .from('public_chat_status')
-    .select('is_enabled,updated_at,terms_version')
-    .maybeSingle();
+  const { data, error } = await client.schema('published').rpc('chat_status');
   if (error) throw new ChatApiError('CHAT_STATUS_UNAVAILABLE');
-  return data as ChatStatus | null;
+  const rows = data as ChatStatus[] | null;
+  return rows?.[0] ?? null;
 }
 
 export async function ensureAnonymousChatSession() {
@@ -134,7 +132,7 @@ export async function saveChatProfile(displayName: string, acceptTerms: boolean)
 
 export async function loadChatMessages(before?: Pick<ChatMessage, 'created_at' | 'id'>) {
   const client = requireChatClient();
-  const { data, error } = await client.rpc('get_public_chat_messages', {
+  const { data, error } = await client.schema('published').rpc('chat_messages', {
     p_before_created_at: before?.created_at ?? null,
     p_before_id: before?.id ?? null,
     p_limit: chatPageSize,

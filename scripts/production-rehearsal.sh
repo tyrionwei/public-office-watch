@@ -225,7 +225,6 @@ write_web_environment() {
     printf 'VITE_SUPABASE_URL=http://127.0.0.1:%s\n' "$rehearsal_api_port"
     printf 'VITE_SUPABASE_ANON_KEY=%s\n' "$anon_key"
     printf 'VITE_PUBLIC_DATA_PROVIDER=published\n'
-    printf 'VITE_ENABLE_SUPABASE_PROVIDER=true\n'
     printf 'VITE_ENABLE_PUBLISHED_PROVIDER=true\n'
   } > "$web_env_file"
 }

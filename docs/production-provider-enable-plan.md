@@ -1,57 +1,48 @@
-# Production Provider Enable Plan
+# Cloudflare Pages production enable plan
 
-## 這不是目前已啟用
+## Status
 
-- 目前 production provider 尚未啟用。
-- app safe default 仍是 mock；production 需明確開啟 Supabase provider flag。
-- 真正 production enable 必須獨立 PR。
-- internal review route / API 不是 production enable 的一部分，review 先維持 local-only。
+- Production deployment is not performed by this document.
+- Production must use the reviewed `published` provider. The legacy public-schema provider is retired.
+- Development-only review routes remain excluded from production builds.
 
-## Production enable 前必須完成
+## Cloudflare Pages build
 
-- gitleaks 通過。
-- Web CI 通過。
-- local Supabase smoke 通過。
-- local public view contract check 通過。
-- anon key 權限確認完成。
-- raw / staging / review tables 不可由 anon key 讀。
-- public views 欄位契約與 mapper 對齊。
-- allowed public views 必須與 `apps/web/src/lib/publicViewRegistry.ts` 對齊。
-- production 不得註冊 `/internal/review-queue` 或 dev-only `/internal-api/review-claim`。
-- empty state / fallback 驗證完成。
-- hosting env 只放：
+Configure the Pages project with:
+
+- Root directory: `apps/web`
+- Build command: `npm run check:production-env && npm run build`
+- Output directory: `dist`
+- Production branch: the protected release branch
+
+The production environment may contain only:
+
   - `VITE_SUPABASE_URL`
   - `VITE_SUPABASE_ANON_KEY`
-  - `VITE_PUBLIC_DATA_PROVIDER=supabase`
-  - `VITE_ENABLE_SUPABASE_PROVIDER=true`
-- 不得放：
-  - service role key
-  - `DATABASE_CONNECTION_STRING`
-  - `.env` / `.env.local`
+  - `VITE_SITE_URL=https://<production-domain>`
+  - `VITE_PUBLIC_DATA_PROVIDER=published`
+  - `VITE_ENABLE_PUBLISHED_PROVIDER=true`
 
-## Production enable PR 預期修改
+Never configure a service-role key, database connection string, or copied `.env.local` in Pages.
 
-- hosting env 設定文件
-- deploy target 文件
-- smoke / contract check 結果摘要
-- rollback plan
+## Required checks before release
 
-## Rollback plan
+- `npm test`
+- `npm audit` at the repository root and in `apps/web`
+- `npm --prefix apps/web run check:production-env`
+- `npm --prefix apps/web run check:published-exposure`
+- Local Supabase security advisor reports no warnings
+- Anonymous reads of legacy `public_*` views and RPCs are rejected
+- Raw, staging, review, and service-only objects remain unreadable with the public key
+- Production smoke covers home, People, elections, search, chat reads, feedback, and region issues
+- Preview deployments are protected with Cloudflare Access
+- `/internal/*` is protected with Cloudflare Access and tested with the Supabase magic-link flow
+- The generated `_headers` file is present in `dist`
 
-- 將 `VITE_PUBLIC_DATA_PROVIDER` 改回 `mock`
-- 或將 `VITE_ENABLE_SUPABASE_PROVIDER` 改回 `false`
-- 或移除 Supabase env
-- redeploy
-- 確認頁面回到 mock / safe fallback
+## Rollback
 
-## Release checklist
+Use Cloudflare Pages deployment rollback to restore the immediately previous verified artifact. Do not switch production back to the legacy provider or publish mock data as a rollback.
 
-- build
-- lint
-- data-boundary
-- smoke
-- contract check
-- manual route check
-- no secret in git
-- no raw table access
-- no production internal review route/API
+After rollback, repeat the production smoke suite. Database security migrations are additive and should remain in place unless a separate reviewed database rollback is prepared.
+
+See `docs/cloudflare-production-security.md` for dashboard settings and residual architecture risks.

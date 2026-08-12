@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fetchWithTrustedTwcaChain } from './trusted-official-fetch.mjs';
 
 const RAW_ROOT = 'local-data/raw';
 const FETCHED_AT = new Date().toISOString();
@@ -148,7 +149,7 @@ function rowCount(data) {
 }
 
 async function fetchBuffer(url) {
-  const response = await fetch(url);
+  const response = await fetchWithTrustedTwcaChain(url);
   const body = Buffer.from(await response.arrayBuffer());
   return { response, body };
 }
@@ -309,8 +310,6 @@ async function updateIndex(results) {
 }
 
 async function main() {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
   const sources = [
     ...CEC_2022_NATIONAL_FILES,
     ...CEC_2024_FILES,

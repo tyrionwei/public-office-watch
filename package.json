@@ -190,6 +190,6 @@
   },
   "homepage": "https://github.com/tyrionwei/public-office-watch#readme",
   "devDependencies": {
-    "supabase": "^2.98.2"
+    "supabase": "2.113.0"
   }
 }

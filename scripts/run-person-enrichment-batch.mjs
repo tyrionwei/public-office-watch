@@ -67,8 +67,8 @@ async function countRows(viewName, sourceName) {
   const response = await fetch(url, {
     method: 'HEAD',
     headers: {
-      apikey: localAnonKey,
-      authorization: `Bearer ${localAnonKey}`,
+      apikey: localServiceRoleKey,
+      authorization: `Bearer ${localServiceRoleKey}`,
       prefer: 'count=exact',
     },
     signal: AbortSignal.timeout(30000),
@@ -92,8 +92,8 @@ async function countRowsByClaimType(viewName, sourceName, claimType) {
   const response = await fetch(url, {
     method: 'HEAD',
     headers: {
-      apikey: localAnonKey,
-      authorization: `Bearer ${localAnonKey}`,
+      apikey: localServiceRoleKey,
+      authorization: `Bearer ${localServiceRoleKey}`,
       prefer: 'count=exact',
     },
     signal: AbortSignal.timeout(30000),
@@ -164,7 +164,7 @@ async function main() {
   await run('npm', ['run', 'fetch:official-person-profile-enrichment', '--', '--write'], {
     env: {
       SUPABASE_URL: localSupabaseUrl,
-      SUPABASE_ANON_KEY: localAnonKey,
+      SUPABASE_SERVICE_ROLE_KEY: localServiceRoleKey,
     },
   });
   await run('npm', ['run', 'sync:official-person-profile-enrichment:write'], {
@@ -174,7 +174,7 @@ async function main() {
     },
   });
 
-  await run('npm', ['run', 'fetch:cec-2024-person-profile-enrichment', '--', '--write', '--allow-insecure-tls'], {
+  await run('npm', ['run', 'fetch:cec-2024-person-profile-enrichment', '--', '--write'], {
     env: {
       SUPABASE_URL: localSupabaseUrl,
       SUPABASE_ANON_KEY: localAnonKey,

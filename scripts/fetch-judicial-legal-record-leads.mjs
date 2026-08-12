@@ -185,7 +185,7 @@ async function loadTargetNamesFromSupabase() {
   let offset = 0;
 
   while (true) {
-    const url = new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/public_people`);
+    const url = new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/people`);
     url.searchParams.set('select', 'person_id,name,gender,party,position,district,education,experience');
     url.searchParams.set('order', 'name.asc');
 
@@ -194,13 +194,14 @@ async function loadTargetNamesFromSupabase() {
         apikey: anonKey,
         authorization: `Bearer ${anonKey}`,
         range: `${offset}-${offset + pageSize - 1}`,
+        'accept-profile': 'published',
       },
       signal: AbortSignal.timeout(60000),
     });
     const rows = await response.json();
 
     if (!response.ok || !Array.isArray(rows)) {
-      throw new Error(`Failed to fetch public_people target names: ${rows?.message ?? response.statusText}`);
+      throw new Error(`Failed to fetch published people target names: ${rows?.message ?? response.statusText}`);
     }
 
     targets.push(...rows.map((row) => targetFromRecord({

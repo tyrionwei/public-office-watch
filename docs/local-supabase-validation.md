@@ -34,27 +34,15 @@ cp .env.example .env.local
 - 不得使用 `DATABASE_CONNECTION_STRING`。
 - 不要把 key 貼到 PR、issue 或 commit message。
 
-## Mock mode checks
+## Local published mode checks
 
-當 `VITE_PUBLIC_DATA_PROVIDER=mock` 時執行：
-
-```bash
-npm run build
-npm run lint
-npm run check:data-boundary
-npm run smoke:public-views
-npm run check:public-view-contracts
-```
-
-## Local Supabase mode checks
-
-當 `VITE_PUBLIC_DATA_PROVIDER=supabase` 時執行：
+當 `VITE_PUBLIC_DATA_PROVIDER=published` 且 `VITE_ENABLE_PUBLISHED_PROVIDER=true` 時執行：
 
 ```bash
 npm run build
 npm run lint
 npm run check:data-boundary
-npm run smoke:public-views
+npm run check:published-exposure
 npm run check:public-view-contracts
 npm run dev
 ```

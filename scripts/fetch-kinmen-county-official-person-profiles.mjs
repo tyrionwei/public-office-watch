@@ -1,8 +1,8 @@
 import crypto from 'node:crypto';
-import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { fetchWithTrustedTwcaChain } from './trusted-official-fetch.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultOutputPath = path.join(repoRoot, 'data-sources', 'kinmen-county-official-person-profiles.seed.json');
@@ -158,15 +158,8 @@ function archiveRaw(url, response, bodyText) {
 }
 
 async function fetchText(url) {
-  if (new URL(url).hostname === 'www.kinmen.gov.tw') {
-    const bodyText = execFileSync('curl', ['-k', '-L', '--max-time', '30', '-sS', url], { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 });
-    archiveRaw(url, { status: 200, statusText: 'OK', ok: true, headers: new Map() }, bodyText);
-    return bodyText;
-  }
-
-  const response = await fetch(url, {
+  const response = await fetchWithTrustedTwcaChain(url, {
     headers: { 'user-agent': 'Mozilla/5.0 public-office-watch local data sync' },
-    signal: AbortSignal.timeout(30000),
   });
   if (!response.ok) throw new Error(`${response.status} ${response.statusText}: ${url}`);
 
@@ -189,7 +182,11 @@ function restUrl(viewName) {
 
 async function supabaseJson(url) {
   const response = await fetch(url, {
-    headers: { apikey: anonKey, Authorization: `Bearer ${anonKey}` },
+    headers: {
+      apikey: anonKey,
+      Authorization: `Bearer ${anonKey}`,
+      'accept-profile': 'published',
+    },
     signal: AbortSignal.timeout(30000),
   });
   const body = await response.json();
@@ -698,7 +695,7 @@ async function main() {
 
   const options = parseArgs(process.argv.slice(2));
   const [publicPeople, councilResult, govResult] = await Promise.all([
-    fetchAllRows('public_people_directory', 'person_id,name,gender,party,position,district,education,experience'),
+    fetchAllRows('people', 'person_id,name,gender,party,position,district,education,experience'),
     fetchCouncilProfiles(),
     fetchGovProfiles(),
   ]);

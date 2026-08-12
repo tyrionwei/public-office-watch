@@ -10,9 +10,8 @@ import {
 
 const sharedEnvironment = {
   VITE_SUPABASE_ANON_KEY: 'anon-public-key',
-  VITE_PUBLIC_DATA_PROVIDER: 'supabase',
-  VITE_ENABLE_SUPABASE_PROVIDER: 'true',
-  VITE_ENABLE_PUBLISHED_PROVIDER: 'false',
+  VITE_PUBLIC_DATA_PROVIDER: 'published',
+  VITE_ENABLE_PUBLISHED_PROVIDER: 'true',
 };
 
 function fakeJwt(payload: Record<string, unknown>) {
@@ -49,6 +48,17 @@ test('local published validation requires its explicit flag', () => {
       VITE_ENABLE_PUBLISHED_PROVIDER: 'false',
     }),
     /VITE_ENABLE_PUBLISHED_PROVIDER must be true/,
+  );
+});
+
+test('legacy public-view provider is rejected', () => {
+  assert.throws(
+    () => validateLocalTestEnvironment({
+      ...sharedEnvironment,
+      VITE_SUPABASE_URL: 'http://127.0.0.1:54321',
+      VITE_PUBLIC_DATA_PROVIDER: 'supabase',
+    }),
+    /VITE_PUBLIC_DATA_PROVIDER must be published/,
   );
 });
 
@@ -109,14 +119,14 @@ test('production smoke rejects a local site URL', () => {
 test('local file parsing and explicit environment overrides are deterministic', () => {
   const parsed = parseEnvironmentFile([
     'VITE_SUPABASE_URL=http://127.0.0.1:54321',
-    'VITE_PUBLIC_DATA_PROVIDER="supabase"',
+    'VITE_PUBLIC_DATA_PROVIDER="published"',
   ].join('\n'));
   const merged = mergeLocalEnvironment(parsed, {
     VITE_PUBLIC_DATA_PROVIDER: 'mock',
     VITE_ENABLE_PUBLISHED_PROVIDER: 'false',
   });
 
-  assert.equal(parsed.VITE_PUBLIC_DATA_PROVIDER, 'supabase');
+  assert.equal(parsed.VITE_PUBLIC_DATA_PROVIDER, 'published');
   assert.equal(merged.VITE_PUBLIC_DATA_PROVIDER, 'mock');
   assert.equal(merged.VITE_ENABLE_PUBLISHED_PROVIDER, 'false');
 });

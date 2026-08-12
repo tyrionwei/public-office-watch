@@ -72,11 +72,12 @@ export async function loadRegionIssueParticipation(
 
   const [issuesResult, responseResult] = await Promise.all([
     client
-      .from('public_region_issue_results')
-      .select('issue_id,region_id,region_name,issue_key,display_order,response_count,participant_count,selection_rate')
-      .eq('region_id', regionId)
-      .order('display_order', { ascending: true }),
-    client.rpc('get_region_issue_response', {
+      .schema('published')
+      .rpc('region_issue_results', {
+        p_region_id: regionId,
+        p_region_name: null,
+      }),
+    client.schema('published').rpc('get_region_issue_response', {
       p_region_id: regionId,
       p_participant_token: participantToken,
     }),
@@ -103,11 +104,10 @@ export async function loadNationalIssueParticipation(
     return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
   }
 
-  const issuesResult = await client
-    .from('public_region_issue_results')
-    .select('issue_id,region_id,region_name,issue_key,display_order,response_count,participant_count,selection_rate')
-    .eq('region_name', '臺灣')
-    .order('display_order', { ascending: true });
+  const issuesResult = await client.schema('published').rpc('region_issue_results', {
+    p_region_id: null,
+    p_region_name: '臺灣',
+  });
 
   if (issuesResult.error) throw issuesResult.error;
   const issueRows = (issuesResult.data ?? []) as RegionIssueResultRow[];
@@ -116,7 +116,7 @@ export async function loadNationalIssueParticipation(
     return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
   }
 
-  const responseResult = await client.rpc('get_region_issue_response', {
+  const responseResult = await client.schema('published').rpc('get_region_issue_response', {
     p_region_id: regionId,
     p_participant_token: participantToken,
   });
@@ -140,7 +140,7 @@ export async function submitRegionIssueParticipation(
   const client = getSupabasePublicClient();
   if (!client) throw new Error('Issue participation is unavailable');
 
-  const { error } = await client.rpc('submit_region_issue_response', {
+  const { error } = await client.schema('published').rpc('submit_region_issue_response', {
     p_region_id: regionId,
     p_participant_token: participantToken,
     p_issue_ids: selectedIssueIds,

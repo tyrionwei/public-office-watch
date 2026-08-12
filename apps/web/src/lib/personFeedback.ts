@@ -65,7 +65,7 @@ export async function fetchPersonFeedbackContext(personId: string): Promise<Pers
   const participantToken = getParticipantToken();
   if (!client || !participantToken) return emptyContext();
 
-  const { data, error } = await client.rpc('get_person_feedback_context', {
+  const { data, error } = await client.schema('published').rpc('get_person_feedback_context', {
     p_person_id: personId,
     p_participant_token: participantToken,
   });
@@ -83,7 +83,7 @@ export async function submitPersonFeedback(input: PersonFeedbackInput) {
   const participantToken = getParticipantToken();
   if (!client || !participantToken) throw new Error('Person feedback is unavailable.');
 
-  const { error } = await client.rpc('submit_person_feedback', {
+  const { error } = await client.schema('published').rpc('submit_person_feedback', {
     p_person_id: input.personId,
     p_participant_token: participantToken,
     p_feedback_kind: input.feedbackKind,

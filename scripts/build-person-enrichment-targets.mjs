@@ -34,10 +34,8 @@ function readLocalEnv() {
 
 const localEnv = readLocalEnv();
 const supabaseUrl = process.env.SUPABASE_URL?.trim() || localEnv.SUPABASE_URL || 'http://127.0.0.1:54321';
-const anonKey =
-  process.env.SUPABASE_ANON_KEY?.trim() ||
-  localEnv.SUPABASE_ANON_KEY ||
-  (supabaseUrl.startsWith('http://127.0.0.1:54321') ? 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH' : '');
+const serviceRoleKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || localEnv.SUPABASE_SERVICE_ROLE_KEY;
 
 function parseArgs(argv) {
   const options = {
@@ -107,8 +105,8 @@ function restUrl(pathname) {
 async function supabaseJson(url) {
   const response = await fetch(url, {
     headers: {
-      apikey: anonKey,
-      authorization: `Bearer ${anonKey}`,
+      apikey: serviceRoleKey,
+      authorization: `Bearer ${serviceRoleKey}`,
     },
     signal: AbortSignal.timeout(30000),
   });
@@ -379,8 +377,8 @@ function effectiveElectionYear(person, history) {
 }
 
 async function main() {
-  if (!anonKey) {
-    throw new Error('Set SUPABASE_ANON_KEY for target generation.');
+  if (!serviceRoleKey) {
+    throw new Error('Set SUPABASE_SERVICE_ROLE_KEY for target generation.');
   }
 
   const options = parseArgs(process.argv.slice(2));

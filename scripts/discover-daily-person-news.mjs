@@ -323,16 +323,20 @@ async function fetchAllPublicPeople(config) {
   const rows = [];
   const pageSize = 1000;
   for (let offset = 0; ; offset += pageSize) {
-    const url = new URL(`${config.supabaseUrl.replace(/\/$/, '')}/rest/v1/public_people_directory`);
+    const url = new URL(`${config.supabaseUrl.replace(/\/$/, '')}/rest/v1/people_directory`);
     url.searchParams.set('select', 'person_id,name,party,current_office_label,upcoming_candidate_label,election_year,list_status');
     url.searchParams.set('offset', String(offset));
     url.searchParams.set('limit', String(pageSize));
     const response = await fetch(url, {
-      headers: { apikey: config.apiKey, authorization: `Bearer ${config.apiKey}` },
+      headers: {
+        apikey: config.apiKey,
+        authorization: `Bearer ${config.apiKey}`,
+        'accept-profile': 'published',
+      },
       signal: AbortSignal.timeout(30000),
     });
     const body = await response.json();
-    if (!response.ok) throw new Error(`Failed to fetch public people directory: ${body?.message ?? response.statusText}`);
+    if (!response.ok) throw new Error(`Failed to fetch published people directory: ${body?.message ?? response.statusText}`);
     rows.push(...body);
     if (body.length < pageSize) return rows;
   }

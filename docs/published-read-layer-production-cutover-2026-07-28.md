@@ -1,5 +1,8 @@
 # Published read layer production cutover - 2026-07-28
 
+> Historical record. The legacy Supabase provider rollback described below was retired on 2026-08-12.
+> Current releases and rollbacks must follow `docs/production-provider-enable-plan.md`.
+
 ## Database
 
 - Pre-cutover size: `457,739,411` bytes.

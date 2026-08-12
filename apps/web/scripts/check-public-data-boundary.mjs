@@ -166,8 +166,10 @@ if (publicDataContent.includes('export const publicDataProvider = supabasePublic
 }
 
 const providerFactoryContent = fs.readFileSync(allowedProviderFactoryFile, 'utf8');
-if (!providerFactoryContent.includes('mockPublicDataProvider') || !providerFactoryContent.includes('supabasePublicDataProvider')) {
-  addIssue(issues, 'provider-factory-must-handle-fallback', allowedProviderFactoryFile, 'Provider factory must keep mock fallback and local-only Supabase toggle.');
+if (!providerFactoryContent.includes('mockPublicDataProvider')
+    || !providerFactoryContent.includes('configuredPublishedPublicDataProvider')
+    || providerFactoryContent.includes("import('./supabasePublicDataProvider')")) {
+  addIssue(issues, 'provider-factory-must-handle-fallback', allowedProviderFactoryFile, 'Provider factory must keep the mock fallback and load only the reviewed published provider.');
 }
 
 if (issues.length > 0) {

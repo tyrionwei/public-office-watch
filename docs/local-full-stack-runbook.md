@@ -58,11 +58,12 @@ cp .env.example .env.local
 
 - `VITE_SUPABASE_URL=local Supabase API URL`
 - `VITE_SUPABASE_ANON_KEY=local anon key`
-- `VITE_PUBLIC_DATA_PROVIDER=supabase`
+- `VITE_PUBLIC_DATA_PROVIDER=published`
+- `VITE_ENABLE_PUBLISHED_PROVIDER=true`
 
 然後執行：
 
-- `npm run smoke:public-views`
+- `npm run check:published-exposure`
 - `npm run check:public-view-contracts`
 - `npm run dev`
 

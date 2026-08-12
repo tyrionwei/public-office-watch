@@ -1,0 +1,10 @@
+# These paths can change production trust boundaries or execute with secrets.
+# Enable "Require review from Code Owners" in the main branch ruleset for this
+# file to become an enforced approval boundary.
+/.github/ @tyrionwei
+/supabase/ @tyrionwei
+/scripts/ @tyrionwei
+/src/Importer/ @tyrionwei
+/package.json @tyrionwei
+/package-lock.json @tyrionwei
+/apps/web/package*.json @tyrionwei

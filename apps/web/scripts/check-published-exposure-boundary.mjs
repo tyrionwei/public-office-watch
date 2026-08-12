@@ -17,6 +17,9 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/202608100017_add_party_people_statistics.sql',
   'supabase/migrations/202608110003_add_national_office_holders.sql',
   'supabase/migrations/202608110006_public_update_feed.sql',
+  'supabase/migrations/20260812062319_retire_legacy_public_api_views.sql',
+  'supabase/migrations/20260812065629_publish_region_issue_participation_api.sql',
+  'supabase/migrations/20260812070539_publish_remaining_browser_rpcs.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -41,7 +44,17 @@ const reviewedRelations = [
   'search_results',
 ];
 const directlyQueriedRelations = reviewedRelations.filter((relation) => relation !== 'search_results');
+const reviewedAuxiliaryFunctions = [
+  'chat_messages',
+  'chat_status',
+  'get_region_issue_response',
+  'get_person_feedback_context',
+  'region_issue_results',
+  'submit_person_feedback',
+  'submit_region_issue_response',
+];
 const reviewedFunctions = ['election_education_distribution', 'election_party_performance', 'election_race_page', 'party_legal_statistics', 'party_people_statistics', 'person_claims_for', 'search_public_records'];
+const reviewedGrantedFunctions = [...reviewedAuxiliaryFunctions, ...reviewedFunctions];
 const issues = [];
 
 function read(relativePath) {
@@ -72,10 +85,17 @@ if (!providerFactory.includes("import('./configuredPublishedPublicDataProvider')
 if (!/import\.meta\.env\.VITE_ENABLE_PUBLISHED_PROVIDER\s*===\s*['"]true['"]/.test(providerFactory)) {
   addIssue('published-provider-guard-missing', 'The published provider must require VITE_ENABLE_PUBLISHED_PROVIDER=true.');
 }
+if (providerFactory.includes("import('./supabasePublicDataProvider')")) {
+  addIssue('legacy-public-provider-enabled', 'The runtime factory must not load the legacy public-schema provider.');
+}
 
 const envExample = read('apps/web/.env.example');
-if (/VITE_PUBLIC_DATA_PROVIDER\s*=\s*published/.test(envExample)) {
-  addIssue('published-mode-must-not-be-default', 'The example environment must not select the local-only published provider mode.');
+if (!/VITE_PUBLIC_DATA_PROVIDER\s*=\s*published/.test(envExample)
+    || !/VITE_ENABLE_PUBLISHED_PROVIDER\s*=\s*true/.test(envExample)) {
+  addIssue('published-mode-must-be-default', 'The example environment must use the reviewed published provider.');
+}
+if (/VITE_ENABLE_SUPABASE_PROVIDER/.test(envExample)) {
+  addIssue('legacy-public-provider-flag-forbidden', 'The retired public-schema provider flag must not be present.');
 }
 
 const localSeed = read('supabase/seed.sql');
@@ -90,7 +110,7 @@ for (const relation of reviewedRelations) {
     addIssue('local-relation-grant-missing', `supabase/seed.sql does not grant the reviewed ${relation} relation.`);
   }
 }
-for (const functionName of reviewedFunctions) {
+for (const functionName of reviewedGrantedFunctions) {
   if (!localSeed.includes(`published.${functionName}`)) {
     addIssue('local-function-grant-missing', `supabase/seed.sql does not grant the reviewed ${functionName} function.`);
   }
@@ -113,7 +133,7 @@ for (const relation of reviewedRelations) {
     addIssue('production-relation-grant-missing', `${publicAccessMigration} does not grant the reviewed ${relation} relation.`);
   }
 }
-for (const functionName of reviewedFunctions) {
+for (const functionName of reviewedGrantedFunctions) {
   if (!productionGrant.includes(`published.${functionName}`)) {
     addIssue('production-function-grant-missing', `${publicAccessMigration} does not grant the reviewed ${functionName} function.`);
   }
@@ -196,4 +216,4 @@ if (issues.length > 0) {
   process.exit(1);
 }
 
-console.log(`Published exposure boundary check OK. Production and local browser access are limited to the reviewed relations: ${reviewedRelations.join(', ')}; functions: ${reviewedFunctions.join(', ')}.`);
+console.log(`Published exposure boundary check OK. Production and local browser access are limited to the reviewed relations: ${reviewedRelations.join(', ')}; functions: ${reviewedGrantedFunctions.join(', ')}.`);

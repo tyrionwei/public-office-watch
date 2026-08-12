@@ -217,7 +217,7 @@ async function loadTargetNamesFromSupabase(skippedPath = defaultSkippedPath) {
   let offset = 0;
 
   while (true) {
-    const url = new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/public_people_directory`);
+    const url = new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/people`);
     url.searchParams.set('select', 'person_id,name,gender,party,position,district,education,experience');
     url.searchParams.set('order', 'name.asc,person_id.asc');
 
@@ -226,13 +226,14 @@ async function loadTargetNamesFromSupabase(skippedPath = defaultSkippedPath) {
         apikey: anonKey,
         authorization: `Bearer ${anonKey}`,
         range: `${offset}-${offset + pageSize - 1}`,
+        'accept-profile': 'published',
       },
       signal: AbortSignal.timeout(60000),
     });
     const rows = await response.json();
 
     if (!response.ok || !Array.isArray(rows)) {
-      throw new Error(`Failed to fetch public_people targets: ${rows?.message ?? response.statusText}`);
+      throw new Error(`Failed to fetch published people targets: ${rows?.message ?? response.statusText}`);
     }
 
     people.push(...rows.map((row) => ({

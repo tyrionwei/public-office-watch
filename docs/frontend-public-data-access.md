@@ -61,26 +61,22 @@ npm run smoke:public-views
 - 不得使用 service role key。
 - smoke script 只測試允許的 public views。
 - smoke script 不會印出資料內容。
-- 可搭配 `npm run check:data-boundary` 檢查 page 是否繞過 `publicDataProvider`。
-- CI 應執行 `npm run check:data-boundary`。
-- CI 可執行 `npm run smoke:public-views`，但不得配置 service role key。
-- 可執行 `npm run check:public-view-contracts`，缺 env 時應中性 skip。
+- CI 應執行 `npm run check:data-boundary`、`npm run check:published-exposure` 與 `npm run check:public-view-contracts`。
+- `check:public-view-contracts` 驗證舊 `public_*` 介面無法由匿名角色讀取。
 
 ## Local provider toggle
 
-- 預設仍是 `VITE_PUBLIC_DATA_PROVIDER=mock`。
-- 本機 smoke 時才可在 `.env.local` 設成 `VITE_PUBLIC_DATA_PROVIDER=supabase`。
+- 真實資料模式只允許 `VITE_PUBLIC_DATA_PROVIDER=published`。
+- 必須同時設定 `VITE_ENABLE_PUBLISHED_PROVIDER=true`。
 - page 仍只能透過 `publicDataProvider`。
 - 不得在 page 直接 import Supabase client。
 - `.env.local` 不得 commit。
 
-## Provider 切換規劃
+## Production boundary
 
-- Phase 4N 仍不切換 production / CI 預設 provider。
-- 未來要切換到 Supabase 前，必須先完成 RLS、grants、public views 檢查。
-- 前端只允許讀取 public views。
-- allowed public views 必須與 `apps/web/src/lib/publicViewRegistry.ts` 對齊。
+- 前端資料讀取與公開互動 RPC 必須走審核過的 `published` schema。
+- 舊 `public_*` views 與 public RPC 不得作為 rollback 路徑。
 - production 不得註冊 `/internal/review-queue` 或 dev-only `/internal-api/review-claim`。
+- `/internal/chat-admin` 與 `/internal/update-admin` 上線時應再由 Cloudflare Access 保護。
 - 必須保留 fallback 與 empty state。
-- readiness checklist：`docs/supabase-provider-readiness-checklist.md`
-- pre-production bundle：`docs/pre-production-readiness.md`
+- readiness checklist：`docs/cloudflare-production-security.md`

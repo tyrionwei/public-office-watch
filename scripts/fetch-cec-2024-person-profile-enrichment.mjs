@@ -1,8 +1,8 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
-import https from 'node:https';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { fetchWithTrustedTwcaChain } from './trusted-official-fetch.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultOutputPath = path.join(repoRoot, 'data-sources', 'cec-2024-person-profile-claims.seed.json');
@@ -42,7 +42,6 @@ const anonKey =
 function parseArgs(argv) {
   const options = {
     outputPath: defaultOutputPath,
-    allowInsecureTls: false,
     write: false,
   };
 
@@ -52,11 +51,6 @@ function parseArgs(argv) {
     if (arg === '--output') {
       options.outputPath = path.resolve(argv[index + 1] ?? '');
       index += 1;
-      continue;
-    }
-
-    if (arg === '--allow-insecure-tls') {
-      options.allowInsecureTls = true;
       continue;
     }
 
@@ -116,49 +110,24 @@ function parseRocDate(value) {
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
-function httpsGetText(url, options) {
-  return new Promise((resolve, reject) => {
-    const request = https.get(
-      url,
-      {
-        rejectUnauthorized: !options.allowInsecureTls,
-        timeout: 30000,
-        headers: {
-          accept: 'application/json,text/plain,*/*',
-          'user-agent': 'public-office-watch data fetcher',
-        },
-      },
-      (response) => {
-        if (response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
-          response.resume();
-          resolve(httpsGetText(new URL(response.headers.location, url).toString(), options));
-          return;
-        }
-
-        let body = '';
-        response.setEncoding('utf8');
-        response.on('data', (chunk) => {
-          body += chunk;
-        });
-        response.on('end', () => {
-          if (response.statusCode < 200 || response.statusCode >= 300) {
-            reject(new Error(`GET ${url} failed: ${response.statusCode}`));
-            return;
-          }
-
-          resolve(body);
-        });
-      },
-    );
-
-    request.on('timeout', () => request.destroy(new Error(`GET ${url} timed out`)));
-    request.on('error', reject);
+async function httpsGetText(url) {
+  const response = await fetchWithTrustedTwcaChain(url, {
+    headers: {
+      accept: 'application/json,text/plain,*/*',
+      'user-agent': 'public-office-watch data fetcher',
+    },
   });
+
+  if (!response.ok) {
+    throw new Error(`GET ${url} failed: ${response.status}`);
+  }
+
+  return response.text();
 }
 
-async function fetchOfficialJson(pathname, options, rawSources) {
+async function fetchOfficialJson(pathname, rawSources) {
   const url = `${cecBaseUrl}${pathname}`;
-  const text = await httpsGetText(url, options);
+  const text = await httpsGetText(url);
   rawSources.push({
     url,
     sha256: crypto.createHash('sha256').update(text).digest('hex'),
@@ -176,6 +145,7 @@ async function supabaseJson(url) {
     headers: {
       apikey: anonKey,
       authorization: `Bearer ${anonKey}`,
+      'accept-profile': 'published',
     },
     signal: AbortSignal.timeout(30000),
   });
@@ -428,16 +398,16 @@ function claimRecord({ row, match, claimType, claimValue }) {
   };
 }
 
-async function fetchOfficialCandidateRows(options, rawSources) {
-  const dist = await fetchOfficialJson('/dist/prvCityDept.json', options, rawSources);
+async function fetchOfficialCandidateRows(rawSources) {
+  const dist = await fetchOfficialJson('/dist/prvCityDept.json', rawSources);
   const rows = [];
 
-  rows.push(...flattenPresidentCandidates(await fetchOfficialJson('/cand/P1/00000.json', options, rawSources)));
+  rows.push(...flattenPresidentCandidates(await fetchOfficialJson('/cand/P1/00000.json', rawSources)));
 
   for (const prv of dist.prvs ?? []) {
     rows.push(
       ...flattenLegislatorDistrictCandidates(
-        await fetchOfficialJson(`/cand/L1/${prv.prvCityCode}.json`, options, rawSources),
+        await fetchOfficialJson(`/cand/L1/${prv.prvCityCode}.json`, rawSources),
         prv.prvCityCode,
       ),
     );
@@ -445,7 +415,7 @@ async function fetchOfficialCandidateRows(options, rawSources) {
 
   rows.push(
     ...flattenIndigenousCandidates(
-      await fetchOfficialJson('/cand/L2/00000.json', options, rawSources),
+      await fetchOfficialJson('/cand/L2/00000.json', rawSources),
       'L2',
       '平地原住民立法委員選舉',
       '/cand/L2/00000.json',
@@ -453,13 +423,13 @@ async function fetchOfficialCandidateRows(options, rawSources) {
   );
   rows.push(
     ...flattenIndigenousCandidates(
-      await fetchOfficialJson('/cand/L3/00000.json', options, rawSources),
+      await fetchOfficialJson('/cand/L3/00000.json', rawSources),
       'L3',
       '山地原住民立法委員選舉',
       '/cand/L3/00000.json',
     ),
   );
-  rows.push(...flattenPartyListCandidates(await fetchOfficialJson('/cand/L4/00000.json', options, rawSources)));
+  rows.push(...flattenPartyListCandidates(await fetchOfficialJson('/cand/L4/00000.json', rawSources)));
 
   return rows.filter((row) => row.name && row.party);
 }
@@ -508,13 +478,13 @@ async function main() {
   const options = parseArgs(process.argv.slice(2));
   const rawSources = [];
   const [officialRows, publicCandidates, currentLegislators] = await Promise.all([
-    fetchOfficialCandidateRows(options, rawSources),
+    fetchOfficialCandidateRows(rawSources),
     fetchAllRows(
-      'public_candidates',
+      'candidates',
       'person_id,person_name,person_party,person_position,race_title,election_name,region_name,party,candidate_no',
     ),
     fetchAllRows(
-      'public_people_directory',
+      'people_directory',
       'person_id,name,party,position,current_office_label,district,list_status,election_year',
       1000,
       {

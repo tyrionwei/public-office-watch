@@ -125,6 +125,14 @@ async function main() {
     '--snapshot-dir', path.join(options.outputDir, 'cec-snapshots'),
   ]);
 
+  const referendumReportPath = path.join(options.outputDir, 'cec-referendum-sources.json');
+  await run('cec-referendum-sources', [
+    'scripts/cec-referendum-source-monitor.mjs',
+    ...previousArgs(referendumReportPath),
+    '--output', referendumReportPath,
+    '--snapshot-dir', path.join(options.outputDir, 'cec-referendum-snapshots'),
+  ]);
+
   const partyDir = path.join(options.outputDir, 'party-candidates');
   fs.mkdirSync(partyDir, { recursive: true });
   const livePartyInputs = [];

@@ -36,6 +36,11 @@ import {
   RACE_DETAIL_CANDIDATE_LIMIT,
   RACE_DETAIL_PARTY_AFFILIATION_LIMIT,
   RACE_DETAIL_COLUMNS,
+  RACE_DETAIL_REFERENDUM_OPTION_LIMIT,
+  RACE_DETAIL_REFERENDUM_REGION_LIMIT,
+  REFERENDUM_OPTION_COLUMNS,
+  REFERENDUM_QUESTION_COLUMNS,
+  REFERENDUM_REGION_RESULT_COLUMNS,
   REGION_CHILD_LIMIT,
   REGION_RACE_LIMIT,
   createPublishedReadAdapter,
@@ -714,6 +719,9 @@ test('race detail reads one race then bounded election and candidate rows', asyn
     electionRow: election,
     candidateRows: [candidate],
     partyAffiliationRows: [partyAffiliation],
+    referendumQuestionRow: null,
+    referendumOptionRows: [],
+    referendumRegionResultRows: [],
   });
   assert.deepEqual(fake.calls, [
     ['schema', 'published'],
@@ -732,6 +740,10 @@ test('race detail reads one race then bounded election and candidate rows', asyn
     ['order', 'person_name', { ascending: true }],
     ['order', 'candidate_id', { ascending: true }],
     ['limit', RACE_DETAIL_CANDIDATE_LIMIT + 1],
+    ['from', 'referendum_questions'],
+    ['select', REFERENDUM_QUESTION_COLUMNS],
+    ['eq', 'race_id', 'race-1'],
+    ['limit', 1],
     ['from', 'person_party_affiliations'],
     ['select', PERSON_PARTY_AFFILIATION_COLUMNS],
     ['in', 'person_id', ['person-1']],
@@ -753,8 +765,50 @@ test('race detail stops after a missing race', async () => {
     electionRow: null,
     candidateRows: [],
     partyAffiliationRows: [],
+    referendumQuestionRow: null,
+    referendumOptionRows: [],
+    referendumRegionResultRows: [],
   });
   assert.equal(fake.calls.some((call) => call[0] === 'from' && call[1] === 'candidates'), false);
+});
+
+test('race detail reads a referendum question, two options and bounded region results', async () => {
+  const race = { race_id: 'race-referendum', election_id: 'election-referendum', race_type: 'referendum' };
+  const election = { election_id: 'election-referendum', election_type: 'referendum' };
+  const question = {
+    question_id: 'question-1',
+    race_id: 'race-referendum',
+    election_id: 'election-referendum',
+    proposal_text: '您是否同意測試？',
+  };
+  const options = [
+    { option_id: 'yes', question_id: 'question-1', display_order: 1 },
+    { option_id: 'no', question_id: 'question-1', display_order: 2 },
+  ];
+  const regionResults = [{ result_id: 'result-1', question_id: 'question-1', region_name: '臺北市' }];
+  const fake = createFakeClient({
+    races: { data: [race], error: null, count: null },
+    elections: { data: [election], error: null, count: null },
+    candidates: { data: [], error: null, count: null },
+    referendum_questions: { data: [question], error: null, count: null },
+    referendum_options: { data: options, error: null, count: null },
+    referendum_region_results: { data: regionResults, error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadRaceDetail('race-referendum'), {
+    raceRow: race,
+    electionRow: election,
+    candidateRows: [],
+    partyAffiliationRows: [],
+    referendumQuestionRow: question,
+    referendumOptionRows: options,
+    referendumRegionResultRows: regionResults,
+  });
+  assert.equal(fake.calls.some((call) => call[0] === 'select' && call[1] === REFERENDUM_OPTION_COLUMNS), true);
+  assert.equal(fake.calls.some((call) => call[0] === 'limit' && call[1] === RACE_DETAIL_REFERENDUM_OPTION_LIMIT + 1), true);
+  assert.equal(fake.calls.some((call) => call[0] === 'select' && call[1] === REFERENDUM_REGION_RESULT_COLUMNS), true);
+  assert.equal(fake.calls.some((call) => call[0] === 'limit' && call[1] === RACE_DETAIL_REFERENDUM_REGION_LIMIT + 1), true);
 });
 
 test('race detail rejects a candidate sentinel row', async () => {

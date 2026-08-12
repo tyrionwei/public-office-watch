@@ -651,6 +651,9 @@ test('bridge maps bounded race detail rows to the public provider contract', asy
         electionRow: election,
         candidateRows: candidates as never[],
         partyAffiliationRows: partyAffiliations as never[],
+        referendumQuestionRow: null,
+        referendumOptionRows: [],
+        referendumRegionResultRows: [],
       };
     },
   });
@@ -661,6 +664,9 @@ test('bridge maps bounded race detail rows to the public provider contract', asy
     election,
     candidates,
     partyAffiliations,
+    referendumQuestion: null,
+    referendumOptions: [],
+    referendumRegionResults: [],
   });
 });
 

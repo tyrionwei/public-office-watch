@@ -429,6 +429,9 @@ export function createPublishedPublicDataBridge(
         election: rows.electionRow,
         candidates: rows.candidateRows,
         partyAffiliations: rows.partyAffiliationRows,
+        referendumQuestion: rows.referendumQuestionRow,
+        referendumOptions: rows.referendumOptionRows,
+        referendumRegionResults: rows.referendumRegionResultRows,
       };
     },
 

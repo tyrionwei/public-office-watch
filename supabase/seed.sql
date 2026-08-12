@@ -20,6 +20,9 @@ GRANT SELECT ON TABLE
   published.people_directory,
   published.person_party_affiliations,
   published.races,
+  published.referendum_options,
+  published.referendum_questions,
+  published.referendum_region_results,
   published.regions,
   published.search_results,
   published.update_feed

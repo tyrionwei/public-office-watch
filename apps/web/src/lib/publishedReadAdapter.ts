@@ -18,6 +18,9 @@ import type {
   PublicPersonRole,
   PublicPersonStatus,
   PublicRace,
+  PublicReferendumOption,
+  PublicReferendumQuestion,
+  PublicReferendumRegionResult,
   PublicRegion,
   PublicUpdate,
 } from '../types/publicViews';
@@ -48,6 +51,8 @@ export const NATIONAL_OFFICE_HOLDER_LIMIT = 12;
 export const LEGISLATOR_PARTY_SUMMARY_LIMIT = 20;
 export const RACE_DETAIL_CANDIDATE_LIMIT = 100;
 export const RACE_DETAIL_PARTY_AFFILIATION_LIMIT = 1000;
+export const RACE_DETAIL_REFERENDUM_OPTION_LIMIT = 2;
+export const RACE_DETAIL_REFERENDUM_REGION_LIMIT = 64;
 export const PARTY_LIMIT = 200;
 export const PARTY_FINANCE_LIMIT = 100;
 export const PARTY_COMPANY_CONTRIBUTION_LIMIT = 1000;
@@ -150,6 +155,56 @@ export const RACE_DETAIL_COLUMNS = [
   'status',
   'source_name',
   'source_url',
+].join(',');
+
+export const REFERENDUM_QUESTION_COLUMNS = [
+  'question_id',
+  'race_id',
+  'election_id',
+  'referendum_type',
+  'case_number',
+  'jurisdiction_name',
+  'proposal_text',
+  'result_status',
+  'eligible_voters',
+  'total_votes',
+  'valid_votes',
+  'invalid_votes',
+  'turnout_rate',
+  'approval_rule',
+  'source_name',
+  'source_url',
+  'source_document_url',
+  'updated_at',
+].join(',');
+
+export const REFERENDUM_OPTION_COLUMNS = [
+  'option_id',
+  'question_id',
+  'race_id',
+  'option_code',
+  'label',
+  'vote_count',
+  'vote_rate',
+  'display_order',
+  'updated_at',
+].join(',');
+
+export const REFERENDUM_REGION_RESULT_COLUMNS = [
+  'result_id',
+  'question_id',
+  'race_id',
+  'region_id',
+  'region_name',
+  'region_slug',
+  'eligible_voters',
+  'yes_votes',
+  'no_votes',
+  'invalid_votes',
+  'turnout_rate',
+  'source_name',
+  'source_url',
+  'updated_at',
 ].join(',');
 
 export const PEOPLE_DIRECTORY_COLUMNS = [
@@ -512,6 +567,9 @@ export type PublishedRaceDetailRows = {
   electionRow: PublicElection | null;
   candidateRows: PublicCandidate[];
   partyAffiliationRows: PublicPersonPartyAffiliation[];
+  referendumQuestionRow: PublicReferendumQuestion | null;
+  referendumOptionRows: PublicReferendumOption[];
+  referendumRegionResultRows: PublicReferendumRegionResult[];
 };
 
 export type PublishedPartyDataRows = {
@@ -902,7 +960,15 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
     async loadRaceDetail(rawRaceId) {
       const raceId = rawRaceId.trim();
       if (!raceId) {
-        return { raceRow: null, electionRow: null, candidateRows: [], partyAffiliationRows: [] };
+        return {
+          raceRow: null,
+          electionRow: null,
+          candidateRows: [],
+          partyAffiliationRows: [],
+          referendumQuestionRow: null,
+          referendumOptionRows: [],
+          referendumRegionResultRows: [],
+        };
       }
 
       const published = client.schema('published');
@@ -914,10 +980,18 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       const raceRow = getRowsOrThrow(raceResponse, 'Published race detail')[0] ?? null;
 
       if (!raceRow) {
-        return { raceRow: null, electionRow: null, candidateRows: [], partyAffiliationRows: [] };
+        return {
+          raceRow: null,
+          electionRow: null,
+          candidateRows: [],
+          partyAffiliationRows: [],
+          referendumQuestionRow: null,
+          referendumOptionRows: [],
+          referendumRegionResultRows: [],
+        };
       }
 
-      const [electionResponse, candidateResponse] = await Promise.all([
+      const [electionResponse, candidateResponse, referendumQuestionResponse] = await Promise.all([
         published
           .from<PublicElection>('elections')
           .select(ELECTION_COLUMNS)
@@ -931,6 +1005,11 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           .order('person_name', { ascending: true })
           .order('candidate_id', { ascending: true })
           .limit(RACE_DETAIL_CANDIDATE_LIMIT + 1),
+        published
+          .from<PublicReferendumQuestion>('referendum_questions')
+          .select(REFERENDUM_QUESTION_COLUMNS)
+          .eq('race_id', raceId)
+          .limit(1),
       ]);
 
       const candidateRows = getBoundedRowsOrThrow(
@@ -953,12 +1032,43 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           'Published race party affiliations',
           RACE_DETAIL_PARTY_AFFILIATION_LIMIT,
         );
+      const referendumQuestionRow = getRowsOrThrow(
+        referendumQuestionResponse,
+        'Published referendum question',
+      )[0] ?? null;
+      const [referendumOptionRows, referendumRegionResultRows] = referendumQuestionRow === null
+        ? [[], []]
+        : await Promise.all([
+          getBoundedRowsOrThrow(
+            await published
+              .from<PublicReferendumOption>('referendum_options')
+              .select(REFERENDUM_OPTION_COLUMNS)
+              .eq('question_id', referendumQuestionRow.question_id)
+              .order('display_order', { ascending: true })
+              .limit(RACE_DETAIL_REFERENDUM_OPTION_LIMIT + 1),
+            'Published referendum options',
+            RACE_DETAIL_REFERENDUM_OPTION_LIMIT,
+          ),
+          getBoundedRowsOrThrow(
+            await published
+              .from<PublicReferendumRegionResult>('referendum_region_results')
+              .select(REFERENDUM_REGION_RESULT_COLUMNS)
+              .eq('question_id', referendumQuestionRow.question_id)
+              .order('region_name', { ascending: true })
+              .limit(RACE_DETAIL_REFERENDUM_REGION_LIMIT + 1),
+            'Published referendum region results',
+            RACE_DETAIL_REFERENDUM_REGION_LIMIT,
+          ),
+        ]);
 
       return {
         raceRow,
         electionRow: getRowsOrThrow(electionResponse, 'Published race election')[0] ?? null,
         candidateRows,
         partyAffiliationRows,
+        referendumQuestionRow,
+        referendumOptionRows,
+        referendumRegionResultRows,
       };
     },
 

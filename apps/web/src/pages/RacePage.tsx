@@ -46,6 +46,9 @@ export function RacePage() {
     election: null,
     candidates: [],
     partyAffiliations: [],
+    referendumQuestion: null,
+    referendumOptions: [],
+    referendumRegionResults: [],
   });
   const [loading, setLoading] = useState(true);
   const [comparisonProfiles, setComparisonProfiles] = useState<PublicPersonProfile[]>([]);
@@ -54,7 +57,15 @@ export function RacePage() {
   useEffect(() => {
     let active = true;
     setLoading(true);
-    setDetail({ race: null, election: null, candidates: [], partyAffiliations: [] });
+    setDetail({
+      race: null,
+      election: null,
+      candidates: [],
+      partyAffiliations: [],
+      referendumQuestion: null,
+      referendumOptions: [],
+      referendumRegionResults: [],
+    });
 
     void refreshConfiguredPublicDataProvider()
       .then(() => publicDataProvider.loadRaceDetail(safeRaceId))
@@ -148,6 +159,17 @@ export function RacePage() {
 
   const category = getRaceCategory(race);
   const region = getRaceRegionGroup(race);
+  const isReferendum = race.race_type === 'referendum';
+  const referendumQuestion = detail.referendumQuestion;
+  const referendumOptions = detail.referendumOptions.slice().sort((left, right) => left.display_order - right.display_order);
+  const referendumRegionResults = detail.referendumRegionResults.slice().sort((left, right) => (
+    left.region_name.localeCompare(right.region_name, language)
+  ));
+  const referendumOutcome = referendumQuestion?.result_status === 'passed'
+    ? t('race.referendumPassed')
+    : referendumQuestion?.result_status === 'not_passed'
+      ? t('race.referendumNotPassed')
+      : t('race.referendumPending');
 
   return (
     <AppShell>
@@ -170,14 +192,110 @@ export function RacePage() {
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              <HudStatCard label={t('race.candidates')} value={<span className="font-display text-xl text-white">{candidates.length}</span>} />
-              <HudStatCard label={t('race.elected')} value={<span className="font-display text-xl text-signal">{electedCount}</span>} />
-              <HudStatCard label={t('race.region')} value={<span className="font-display text-xl text-white">{region.label}</span>} />
+              {isReferendum ? (
+                <>
+                  <HudStatCard label={t('race.referendumOutcome')} value={<span className="font-display text-xl text-signal">{referendumOutcome}</span>} />
+                  <HudStatCard label={t('race.referendumTurnout')} value={<span className="font-display text-xl text-white">{formatPercent(referendumQuestion?.turnout_rate ?? null)}</span>} />
+                  <HudStatCard label={t('race.region')} value={<span className="font-display text-xl text-white">{referendumQuestion?.jurisdiction_name ?? region.label}</span>} />
+                </>
+              ) : (
+                <>
+                  <HudStatCard label={t('race.candidates')} value={<span className="font-display text-xl text-white">{candidates.length}</span>} />
+                  <HudStatCard label={t('race.elected')} value={<span className="font-display text-xl text-signal">{electedCount}</span>} />
+                  <HudStatCard label={t('race.region')} value={<span className="font-display text-xl text-white">{region.label}</span>} />
+                </>
+              )}
             </div>
           </section>
         </PixelFrame>
 
-        <SectionPanel title={candidates.length > 0 ? t('race.listTitle') : t('race.listFallbackTitle')} eyebrow={t('race.roster')}>
+        {isReferendum ? (
+          <SectionPanel title={t('race.referendumResult')} eyebrow={t('race.publicData')}>
+            {referendumQuestion ? (
+              <div className="space-y-4">
+                <div className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.referendumProposal')}</p>
+                  <p className="mt-3 text-base leading-7 text-white">{referendumQuestion.proposal_text}</p>
+                </div>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {referendumOptions.map((option) => (
+                    <div key={option.option_id} className="pixel-corners border border-line/70 bg-panelAlt/45 p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="font-display text-2xl text-white">{option.label}</p>
+                        <p className="font-display text-xl text-accent">{formatPercent(option.vote_rate)}</p>
+                      </div>
+                      <p className="mt-3 text-sm text-slate-300">{formatNumber(option.vote_count, language)} {t('race.referendumVotesUnit')}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  <HudStatCard label={t('race.referendumEligibleVoters')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.eligible_voters, language)}</span>} />
+                  <HudStatCard label={t('race.referendumTotalVotes')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.total_votes, language)}</span>} />
+                  <HudStatCard label={t('race.referendumValidVotes')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.valid_votes, language)}</span>} />
+                  <HudStatCard label={t('race.referendumInvalidVotes')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.invalid_votes, language)}</span>} />
+                </div>
+                {referendumQuestion.approval_rule ? (
+                  <div className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm leading-6 text-slate-300">
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.referendumApprovalRule')}</p>
+                    <p className="mt-2">{referendumQuestion.approval_rule}</p>
+                  </div>
+                ) : null}
+                {referendumRegionResults.length > 0 ? (
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap items-end justify-between gap-2">
+                      <h2 className="font-display text-2xl text-white">{t('race.referendumRegionBreakdown')}</h2>
+                      <p className="text-xs text-slate-500">{t('race.referendumRegionCount', { count: referendumRegionResults.length })}</p>
+                    </div>
+                    <div className="overflow-x-auto pixel-corners border border-line/70">
+                      <div className="min-w-[980px]">
+                        <div className="grid grid-cols-[minmax(130px,1fr)_repeat(7,minmax(100px,0.72fr))] gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.12em] text-slate-500">
+                          <span>{t('race.referendumRegion')}</span>
+                          <span className="text-right">{t('race.referendumEligibleVoters')}</span>
+                          <span className="text-right">{t('race.referendumYesVotes')}</span>
+                          <span className="text-right">{t('race.referendumYesRate')}</span>
+                          <span className="text-right">{t('race.referendumNoVotes')}</span>
+                          <span className="text-right">{t('race.referendumNoRate')}</span>
+                          <span className="text-right">{t('race.referendumInvalidVotes')}</span>
+                          <span className="text-right">{t('race.referendumTurnout')}</span>
+                        </div>
+                        <div className="divide-y divide-line/60">
+                          {referendumRegionResults.map((result) => {
+                            const validVotes = result.yes_votes !== null && result.no_votes !== null
+                              ? result.yes_votes + result.no_votes
+                              : null;
+                            const yesRate = validVotes !== null && validVotes > 0 && result.yes_votes !== null
+                              ? result.yes_votes * 100 / validVotes
+                              : null;
+                            const noRate = validVotes !== null && validVotes > 0 && result.no_votes !== null
+                              ? result.no_votes * 100 / validVotes
+                              : null;
+
+                            return (
+                              <div key={result.result_id} className="grid grid-cols-[minmax(130px,1fr)_repeat(7,minmax(100px,0.72fr))] gap-3 px-4 py-3 text-sm text-slate-300">
+                                <a href={result.source_url} className="font-medium text-white hover:text-accent" title={t('race.viewElectionSource')}>{result.region_name}</a>
+                                <span className="text-right tabular-nums">{formatNumber(result.eligible_voters, language)}</span>
+                                <span className="text-right tabular-nums">{formatNumber(result.yes_votes, language)}</span>
+                                <span className="text-right tabular-nums">{formatPercent(yesRate)}</span>
+                                <span className="text-right tabular-nums">{formatNumber(result.no_votes, language)}</span>
+                                <span className="text-right tabular-nums">{formatPercent(noRate)}</span>
+                                <span className="text-right tabular-nums">{formatNumber(result.invalid_votes, language)}</span>
+                                <span className="text-right tabular-nums">{formatPercent(result.turnout_rate)}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <p className="text-sm leading-6 text-slate-300">{t('race.referendumPendingData')}</p>
+            )}
+          </SectionPanel>
+        ) : null}
+
+        {!isReferendum ? <SectionPanel title={candidates.length > 0 ? t('race.listTitle') : t('race.listFallbackTitle')} eyebrow={t('race.roster')}>
           {candidates.length > 0 ? (
             <div className="overflow-hidden pixel-corners border border-line/70">
               <div className="grid gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]">
@@ -260,9 +378,9 @@ export function RacePage() {
               </p>
             </div>
           ) : null}
-        </SectionPanel>
+        </SectionPanel> : null}
 
-        {selectedCandidates.length > 0 ? (
+        {!isReferendum && selectedCandidates.length > 0 ? (
           <CandidateComparisonPanel
             candidates={selectedCandidates}
             profiles={comparisonProfiles}
@@ -276,13 +394,13 @@ export function RacePage() {
           <div className="grid gap-3 text-sm leading-6 text-slate-300 md:grid-cols-2">
             <div className="pixel-corners border border-line/70 bg-bg/35 p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.electionData')}</p>
-              <p className="mt-2">{election?.source_name ?? race.source_name ?? t('race.publicElectionData')}</p>
-              {election?.source_url ? <a href={election.source_url} className="mt-2 inline-block text-xs text-accent hover:text-white">{t('race.viewElectionSource')}</a> : null}
+              <p className="mt-2">{referendumQuestion?.source_name ?? election?.source_name ?? race.source_name ?? t('race.publicElectionData')}</p>
+              {(referendumQuestion?.source_url ?? election?.source_url) ? <a href={referendumQuestion?.source_url ?? election?.source_url ?? undefined} className="mt-2 inline-block text-xs text-accent hover:text-white">{t('race.viewElectionSource')}</a> : null}
             </div>
             <div className="pixel-corners border border-line/70 bg-bg/35 p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.raceData')}</p>
               <p className="mt-2">{race.source_name ?? t('race.publicRaceData')}</p>
-              {race.source_url ? <a href={race.source_url} className="mt-2 inline-block text-xs text-accent hover:text-white">{t('race.viewRaceSource')}</a> : null}
+              {(referendumQuestion?.source_document_url ?? race.source_url) ? <a href={referendumQuestion?.source_document_url ?? race.source_url ?? undefined} className="mt-2 inline-block text-xs text-accent hover:text-white">{t('race.viewRaceSource')}</a> : null}
             </div>
           </div>
         </SectionPanel>

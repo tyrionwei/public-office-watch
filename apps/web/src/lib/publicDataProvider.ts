@@ -23,6 +23,9 @@ import type {
   PublicPersonPartyAffiliation,
   PublicPersonProfile,
   PublicRace,
+  PublicReferendumOption,
+  PublicReferendumQuestion,
+  PublicReferendumRegionResult,
   PublicUpdate,
 } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
@@ -80,6 +83,9 @@ export type PublicRaceDetailData = {
   election: PublicElection | null;
   candidates: PublicCandidate[];
   partyAffiliations: PublicPersonPartyAffiliation[];
+  referendumQuestion: PublicReferendumQuestion | null;
+  referendumOptions: PublicReferendumOption[];
+  referendumRegionResults: PublicReferendumRegionResult[];
 };
 
 export type PublicRaceQueryFilters = {

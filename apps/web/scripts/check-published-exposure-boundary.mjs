@@ -20,6 +20,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260812062319_retire_legacy_public_api_views.sql',
   'supabase/migrations/20260812065629_publish_region_issue_participation_api.sql',
   'supabase/migrations/20260812070539_publish_remaining_browser_rpcs.sql',
+  'supabase/migrations/20260812102110_add_referendum_history.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -39,6 +40,9 @@ const reviewedRelations = [
   'people_directory',
   'person_party_affiliations',
   'races',
+  'referendum_options',
+  'referendum_questions',
+  'referendum_region_results',
   'regions',
   'update_feed',
   'search_results',

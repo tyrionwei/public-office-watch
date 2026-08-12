@@ -225,6 +225,56 @@ export type PublicRace = {
   source_url: string | null;
 };
 
+export type PublicReferendumQuestion = {
+  question_id: string;
+  race_id: string;
+  election_id: string;
+  referendum_type: 'national' | 'constitutional' | 'local';
+  case_number: number;
+  jurisdiction_name: string;
+  proposal_text: string;
+  result_status: 'passed' | 'not_passed' | 'pending' | 'cancelled';
+  eligible_voters: number | null;
+  total_votes: number | null;
+  valid_votes: number | null;
+  invalid_votes: number | null;
+  turnout_rate: number | null;
+  approval_rule: string | null;
+  source_name: string;
+  source_url: string;
+  source_document_url: string | null;
+  updated_at: string;
+};
+
+export type PublicReferendumOption = {
+  option_id: string;
+  question_id: string;
+  race_id: string;
+  option_code: 'yes' | 'no';
+  label: string;
+  vote_count: number | null;
+  vote_rate: number | null;
+  display_order: number;
+  updated_at: string;
+};
+
+export type PublicReferendumRegionResult = {
+  result_id: string;
+  question_id: string;
+  race_id: string;
+  region_id: string;
+  region_name: string;
+  region_slug: string;
+  eligible_voters: number | null;
+  yes_votes: number | null;
+  no_votes: number | null;
+  invalid_votes: number | null;
+  turnout_rate: number | null;
+  source_name: string;
+  source_url: string;
+  updated_at: string;
+};
+
 export type PublicCandidate = {
   candidate_id: string;
   person_id: string;

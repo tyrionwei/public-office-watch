@@ -1430,7 +1430,15 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     const race = raceRows[0] ? mapPublicRaceRow(raceRows[0] as PublicRace) : null;
 
     if (!race) {
-      return { race: null, election: null, candidates: [], partyAffiliations: [] };
+      return {
+        race: null,
+        election: null,
+        candidates: [],
+        partyAffiliations: [],
+        referendumQuestion: null,
+        referendumOptions: [],
+        referendumRegionResults: [],
+      };
     }
 
     const [electionRows, candidateRows] = await Promise.all([
@@ -1451,6 +1459,9 @@ export const supabasePublicDataProvider: PublicDataProvider = {
       partyAffiliations: partyAffiliationRows.map((row) => (
         mapPublicPersonPartyAffiliationRow(row as PublicPersonPartyAffiliation)
       )),
+      referendumQuestion: null,
+      referendumOptions: [],
+      referendumRegionResults: [],
     };
   },
 

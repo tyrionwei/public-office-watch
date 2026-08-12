@@ -9,6 +9,7 @@ function parseArgs(argv) {
     statePath: path.resolve('tmp/daily-person-enrichment-state.json'),
     recordInputPath: null,
     skipInputPath: null,
+    progressInputPath: null,
     limit: 25,
     cooldownDays: 30,
   };
@@ -20,6 +21,7 @@ function parseArgs(argv) {
     else if (arg === '--state') options.statePath = path.resolve(argv[++index] ?? '');
     else if (arg === '--record-input') options.recordInputPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--skip-input') options.skipInputPath = path.resolve(argv[++index] ?? '');
+    else if (arg === '--progress-input') options.progressInputPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--limit') options.limit = Number.parseInt(argv[++index] ?? '', 10);
     else if (arg === '--cooldown-days') options.cooldownDays = Number.parseInt(argv[++index] ?? '', 10);
     else throw new Error(`Unsupported argument: ${arg}`);
@@ -44,8 +46,9 @@ function readState(filePath) {
   if (!fs.existsSync(filePath)) return { schemaVersion: 1, attempts: {} };
   const payload = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   return {
-    schemaVersion: 1,
+    schemaVersion: payload?.schemaVersion ?? 1,
     attempts: payload?.attempts && typeof payload.attempts === 'object' ? payload.attempts : {},
+    lastBatch: payload?.lastBatch ?? null,
   };
 }
 
@@ -66,17 +69,82 @@ function selectDailyTargets(targets, state, now = new Date(), limit = 25, cooldo
   return [...untouched, ...retryable].slice(0, limit);
 }
 
-function recordDailyTargets(state, targets, now = new Date()) {
+function readProgressResults(filePath) {
+  if (!filePath || !fs.existsSync(filePath)) return [];
+  const payload = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return Array.isArray(payload?.lastResults) ? payload.lastResults : [];
+}
+
+function skippedResultStatus(record) {
+  const reason = String(record?.reason ?? '');
+  if ((record?.identityCandidates?.length ?? 0) > 0
+      || reason === 'no confident Wikidata entity match'
+      || reason === 'Wikidata identity candidates require downstream review') {
+    return 'identity_review_required';
+  }
+  if (reason === 'no matching Wikidata identity candidate found') return 'no_candidate_found';
+  return 'source_error';
+}
+
+function readSkippedResults(filePath, targets) {
+  if (!filePath || !fs.existsSync(filePath)) return [];
+  const payload = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const skippedByPersonId = new Map((payload?.skippedTargets ?? [])
+    .map((record) => ({ ...record, target: record?.target ?? record, reason: record?.reason ?? null }))
+    .filter((record) => record.target?.personId)
+    .map((record) => [record.target.personId, record]));
+  return targets.map((target) => {
+    const skipped = skippedByPersonId.get(target.personId);
+    if (!skipped) return { personId: target.personId, name: target.name, status: 'matched_no_claims', claimCount: 0, reason: null };
+    return {
+      personId: target.personId,
+      name: target.name,
+      status: skippedResultStatus(skipped),
+      claimCount: 0,
+      reason: skipped.reason,
+    };
+  });
+}
+
+function recordDailyTargets(state, targets, now = new Date(), results = []) {
   const attemptedAt = now.toISOString();
   const attempts = { ...(state?.attempts ?? {}) };
+  const resultsByPersonId = new Map(results.map((result) => [result.personId, result]));
   for (const target of targets) {
+    const result = resultsByPersonId.get(target.personId);
     attempts[target.personId] = {
       name: target.name,
       attemptedAt,
       missingSignals: Array.isArray(target.missingSignals) ? target.missingSignals : [],
+      researchSignals: Array.isArray(target.researchSignals) ? target.researchSignals : [],
+      outcome: result?.status ?? 'attempted',
+      claimCount: Number(result?.claimCount ?? 0),
+      reason: result?.reason ?? null,
     };
   }
-  return { schemaVersion: 1, updatedAt: attemptedAt, attempts };
+  return {
+    schemaVersion: 2,
+    updatedAt: attemptedAt,
+    lastBatch: {
+      attemptedAt,
+      targetCount: targets.length,
+      firstPersonId: targets[0]?.personId ?? null,
+      firstPersonName: targets[0]?.name ?? null,
+      lastPersonId: targets.at(-1)?.personId ?? null,
+      lastPersonName: targets.at(-1)?.name ?? null,
+      results: targets.map((target) => {
+        const result = resultsByPersonId.get(target.personId);
+        return {
+          personId: target.personId,
+          name: target.name,
+          outcome: result?.status ?? 'attempted',
+          claimCount: Number(result?.claimCount ?? 0),
+          reason: result?.reason ?? null,
+        };
+      }),
+    },
+    attempts,
+  };
 }
 
 function writeJson(filePath, payload) {
@@ -89,12 +157,22 @@ function main() {
   const state = readState(options.statePath);
 
   if (options.recordInputPath) {
-    const skippedIds = new Set(options.skipInputPath && fs.existsSync(options.skipInputPath)
-      ? readTargets(options.skipInputPath).map((target) => target.personId)
-      : []);
-    const targets = readTargets(options.recordInputPath).filter((target) => !skippedIds.has(target.personId));
-    writeJson(options.statePath, recordDailyTargets(state, targets));
-    console.log(JSON.stringify({ status: 'recorded', targetCount: targets.length, skippedCount: skippedIds.size, statePath: options.statePath }, null, 2));
+    const targets = readTargets(options.recordInputPath);
+    const progressResults = readProgressResults(options.progressInputPath);
+    const results = progressResults.length > 0 ? progressResults : readSkippedResults(options.skipInputPath, targets);
+    const nextState = recordDailyTargets(state, targets, new Date(), results);
+    writeJson(options.statePath, nextState);
+    console.log(JSON.stringify({
+      status: 'recorded',
+      targetCount: targets.length,
+      firstPersonName: nextState.lastBatch.firstPersonName,
+      lastPersonName: nextState.lastBatch.lastPersonName,
+      outcomeCounts: nextState.lastBatch.results.reduce((counts, result) => {
+        counts[result.outcome] = (counts[result.outcome] ?? 0) + 1;
+        return counts;
+      }, {}),
+      statePath: options.statePath,
+    }, null, 2));
     return;
   }
 
@@ -111,7 +189,7 @@ function main() {
     status: 'written',
     targetCount: targets.length,
     outputPath: options.outputPath,
-    targets: targets.map(({ personId, name, priorityGroup, missingSignals }) => ({ personId, name, priorityGroup, missingSignals })),
+    targets: targets.map(({ personId, name, priorityGroup, missingSignals, researchSignals }) => ({ personId, name, priorityGroup, missingSignals, researchSignals })),
   }, null, 2));
 }
 
@@ -124,4 +202,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   }
 }
 
-export { parseArgs, recordDailyTargets, selectDailyTargets };
+export { parseArgs, recordDailyTargets, selectDailyTargets, skippedResultStatus };

@@ -89,6 +89,23 @@ test('creates pending leads and downgrades ambiguous same-name matches', () => {
   assert.equal(leads[0].autoPublish, false);
 });
 
+test('keeps event articles whose person is not yet in the directory', () => {
+  const leads = buildEventLeads([{
+    category: manifest.categories[0],
+    items: [{
+      title: '新面孔宣布退黨 - 地方媒體',
+      url: 'https://news.google.com/unmatched',
+      publishedAt: '2026-08-10T08:00:00Z',
+      summary: '',
+      publisherName: '地方媒體',
+    }],
+  }], [], manifest, new Date('2026-08-11T00:00:00Z'));
+  assert.equal(leads.length, 1);
+  assert.equal(leads[0].identityStatus, 'unmatched_person');
+  assert.equal(leads[0].personId, null);
+  assert.equal(leads[0].reviewStatus, 'pending');
+});
+
 test('drops articles outside the lookback window or without event terms', () => {
   const watchlist = normalizeWatchlist([{ person_id: 'person-1', name: '王小明', election_year: 2026 }]);
   const leads = buildEventLeads([{

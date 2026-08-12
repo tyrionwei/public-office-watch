@@ -252,6 +252,10 @@ function missingSignals(person, publicClaimTypes, includeResearchSignals = false
   const claimTypes = publicClaimTypes.get(person.person_id) ?? new Set();
   const missing = [];
 
+  if (isBlank(person.gender) || person.gender === 'unknown') {
+    if (!claimTypes.has('gender')) missing.push('gender');
+  }
+
   if (!claimTypes.has('birth_date')) {
     missing.push('birth_date');
   }
@@ -270,14 +274,14 @@ function missingSignals(person, publicClaimTypes, includeResearchSignals = false
   if (includeResearchSignals && !claimTypes.has('family_relation')) {
     missing.push('family_relation');
   }
-  if (includeResearchSignals && !claimTypes.has('legal_case')) {
-    missing.push('legal_case');
-  }
-
   return missing;
 }
 
-function targetFromPerson(person, missing, group, history) {
+function recurringResearchSignals(includeResearchSignals) {
+  return includeResearchSignals ? ['experience', 'party_affiliation', 'legal_case'] : [];
+}
+
+function targetFromPerson(person, missing, researchSignals, group, history) {
   return {
     personId: person.person_id,
     name: person.name,
@@ -296,6 +300,7 @@ function targetFromPerson(person, missing, group, history) {
     hasElectedHistory: history.hasElectedHistory,
     electionCount: history.electionCount,
     missingSignals: missing,
+    researchSignals,
   };
 }
 
@@ -310,7 +315,7 @@ async function fetchClaimsForPeople(people) {
 
   if (personIds.length > 5000) {
     const allClaims = await fetchAllRows('public_person_claims', 'claim_id,person_id,claim_type', 1000, {
-      claim_type: 'in.(birth_date,external_id,education,experience,family_relation,legal_case)',
+      claim_type: 'in.(gender,birth_date,external_id,education,experience,family_relation,legal_case)',
     });
     return allClaims.filter((claim) => personIdSet.has(claim.person_id));
   }
@@ -318,7 +323,7 @@ async function fetchClaimsForPeople(people) {
   for (let index = 0; index < personIds.length; index += 50) {
     claims.push(...await fetchAllRows('public_person_claims', 'claim_id,person_id,claim_type', 1000, {
       person_id: postgrestIn(personIds.slice(index, index + 50)),
-      claim_type: 'in.(birth_date,external_id,education,experience,family_relation,legal_case)',
+      claim_type: 'in.(gender,birth_date,external_id,education,experience,family_relation,legal_case)',
     }));
   }
 
@@ -401,15 +406,17 @@ async function main() {
   const targets = people
     .map((person) => {
       const missing = missingSignals(person, publicClaimTypes, options.includeResearchSignals);
+      const researchSignals = recurringResearchSignals(options.includeResearchSignals);
       const history = candidateHistories.get(person.person_id) ?? emptyCandidateHistory();
       return {
         person,
         missing,
+        researchSignals,
         history,
         group: priorityGroup(person, history),
       };
     })
-    .filter(({ missing }) => missing.length > 0)
+    .filter(({ missing, researchSignals }) => missing.length > 0 || researchSignals.length > 0)
     .filter(({ group }) => !options.excludeFirstTime2026 || group !== 'first_time_2026_candidate')
     .filter(({ group }) => !options.excludeAdministrativeCurrent || group !== 'administrative_current_official')
     .sort((left, right) =>
@@ -421,7 +428,7 @@ async function main() {
       left.person.name.localeCompare(right.person.name, 'zh-Hant-TW'),
     )
     .slice(0, options.limit)
-    .map(({ person, missing, group, history }) => targetFromPerson(person, missing, group, history));
+    .map(({ person, missing, researchSignals, group, history }) => targetFromPerson(person, missing, researchSignals, group, history));
 
   const output = {
     schemaVersion: 1,
@@ -445,6 +452,7 @@ async function main() {
       priorityGroup: target.priorityGroup,
       priorElectionYears: target.priorElectionYears,
       missingSignals: target.missingSignals,
+      researchSignals: target.researchSignals,
     })),
   }, null, 2));
 }
@@ -465,4 +473,5 @@ export {
   processingPriority,
   priorityGroup,
   priorityRank,
+  recurringResearchSignals,
 };

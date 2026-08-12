@@ -246,6 +246,7 @@ function buildEventLeads(itemsByCategory, watchlist, manifest, now = new Date())
         normalizedTitle.includes(normalizeName(term)) || normalizedSummary.includes(normalizeName(term))
       ));
       if (matchedTerms.length === 0) continue;
+      let matchedKnownPerson = false;
       for (const person of watchlist) {
         const inTitle = normalizedTitle.includes(person.normalizedName);
         if (!inTitle || !directEventMatch(item.title, person.name, matchedTerms, category.key)) continue;
@@ -254,6 +255,7 @@ function buildEventLeads(itemsByCategory, watchlist, manifest, now = new Date())
         const score = sameNameCount > 1
           ? 50
           : Math.min(95, 80 + (trustedPublisher ? 10 : 0) + (matchedTerms.length > 1 ? 5 : 0));
+        matchedKnownPerson = true;
         const leadKey = `daily-news:${hashKey(`${person.personId}|${category.key}|${item.url}`)}`;
         leads.push({
           leadKey,
@@ -274,6 +276,26 @@ function buildEventLeads(itemsByCategory, watchlist, manifest, now = new Date())
           autoPublish: false,
         });
       }
+      if (!matchedKnownPerson) {
+        leads.push({
+          leadKey: `daily-news-unmatched:${hashKey(`${category.key}|${item.url}`)}`,
+          personId: null,
+          personName: null,
+          category: category.key,
+          categoryLabel: category.label,
+          headline: item.title,
+          sourceUrl: item.url,
+          publisherName: item.publisherName || null,
+          publisherUrl: item.publisherUrl || null,
+          publishedAt: Number.isFinite(publishedTime) ? new Date(publishedTime).toISOString() : null,
+          matchedTerms,
+          matchedIn: 'event_terms',
+          matchScore: 0,
+          identityStatus: 'unmatched_person',
+          reviewStatus: 'pending',
+          autoPublish: false,
+        });
+      }
     }
   }
   return Array.from(new Map(leads.map((lead) => [lead.leadKey, lead])).values())
@@ -285,7 +307,8 @@ function groupEventLeads(leads) {
   for (const lead of leads) {
     const date = String(lead.publishedAt ?? '').slice(0, 10) || 'unknown-date';
     const terms = [...lead.matchedTerms].map(normalizeName).sort().join('|');
-    const eventKey = `news-event:${hashKey(`${lead.personId}|${lead.category}|${date}|${terms}`)}`;
+    const identityKey = lead.personId ?? lead.leadKey;
+    const eventKey = `news-event:${hashKey(`${identityKey}|${lead.category}|${date}|${terms}`)}`;
     const group = groups.get(eventKey) ?? {
       eventKey,
       personId: lead.personId,

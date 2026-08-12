@@ -8,6 +8,7 @@ import {
   parseArgs,
   processingPriority,
   priorityGroup,
+  recurringResearchSignals,
 } from './build-person-enrichment-targets.mjs';
 
 const emptyHistory = { years: [], hasElectedHistory: false, electionCount: 0, latestElectionYear: null };
@@ -31,11 +32,17 @@ test('daily options are explicit and keep the default profile report unchanged',
   });
 });
 
-test('research mode adds only missing family and legal signals', () => {
+test('research mode keeps basic gaps separate from recurring research', () => {
   const claims = new Map([['person-1', new Set(['family_relation'])]]);
-  const missing = missingSignals({ person_id: 'person-1', education: '大學', experience: '議員' }, claims, true);
+  const missing = missingSignals({ person_id: 'person-1', gender: 'female', education: '大學', experience: '議員' }, claims, true);
   assert.equal(missing.includes('family_relation'), false);
-  assert.equal(missing.includes('legal_case'), true);
+  assert.equal(missing.includes('legal_case'), false);
+  assert.deepEqual(recurringResearchSignals(true), ['experience', 'party_affiliation', 'legal_case']);
+});
+
+test('detects a missing gender as a basic profile gap', () => {
+  const missing = missingSignals({ person_id: 'person-1', gender: 'unknown', education: '大學', experience: '議員' }, new Map(), false);
+  assert.equal(missing.includes('gender'), true);
 });
 
 test('distinguishes first-time candidates and administrative current officials', () => {

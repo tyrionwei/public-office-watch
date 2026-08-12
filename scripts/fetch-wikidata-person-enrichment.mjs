@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const wikidataApiUrl = 'https://www.wikidata.org/w/api.php';
 const wikidataUserAgent = 'public-office-watch/0.1 (https://github.com/tyrionwei/public-office-watch; person enrichment review-only)';
@@ -24,6 +25,9 @@ const relationLabels = {
 };
 
 let lastWikidataRequestAt = 0;
+const wikidataEntityCache = new Map();
+const minMaxlagRetryMs = 5000;
+const maxRetryDelayMs = 60000;
 
 function parseArgs(argv) {
   const args = {
@@ -36,8 +40,8 @@ function parseArgs(argv) {
     resume: false,
     maxPeople: 25,
     searchLimit: 3,
-    requestDelayMs: 1500,
-    retryCount: 3,
+    requestDelayMs: 2500,
+    retryCount: 5,
     dryRun: false,
   };
 
@@ -175,6 +179,7 @@ function targetFromRecord(record) {
     education: record.education ?? '',
     experience: record.experience ?? '',
     missingSignals: Array.isArray(record.missingSignals) ? record.missingSignals : null,
+    researchSignals: Array.isArray(record.researchSignals) ? record.researchSignals : [],
     rejectedWikidataQids: record.rejectedWikidataQids ?? record.rejected_wikidata_qids ?? [],
   };
 }
@@ -291,6 +296,7 @@ async function wikidataGet(params) {
     headers: {
       'User-Agent': wikidataUserAgent,
       accept: 'application/json',
+      'accept-encoding': 'gzip, deflate',
     },
     signal: AbortSignal.timeout(60000),
   });
@@ -308,9 +314,21 @@ async function wikidataGet(params) {
     const errorInfo = payload.error?.info ?? response.statusText;
     const error = new Error(`Wikidata API failed: ${errorCode}: ${errorInfo}`);
     const retryAfter = Number.parseInt(response.headers.get('retry-after') ?? '', 10);
+    const reportedLag = Number(payload.error?.lag);
+
+    error.wikidataErrorCode = String(errorCode).toLowerCase();
+    error.httpStatus = response.status;
 
     if (Number.isFinite(retryAfter) && retryAfter > 0) {
       error.retryAfterMs = retryAfter * 1000;
+    }
+
+    if (error.wikidataErrorCode === 'maxlag') {
+      error.retryAfterMs = Math.max(
+        error.retryAfterMs ?? 0,
+        Number.isFinite(reportedLag) && reportedLag > 0 ? Math.ceil(reportedLag * 1000) : 0,
+        minMaxlagRetryMs,
+      );
     }
 
     throw error;
@@ -323,6 +341,35 @@ function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
+}
+
+export function isRetryableWikidataError(error) {
+  const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+  const errorCode = String(error?.wikidataErrorCode ?? '').toLowerCase();
+  const status = Number(error?.httpStatus);
+
+  return errorCode === 'maxlag'
+    || errorCode === 'ratelimited'
+    || status === 429
+    || [500, 502, 503, 504].includes(status)
+    || message.includes('too many requests')
+    || message.includes('maxlag')
+    || message.includes('non-json');
+}
+
+export function wikidataRetryDelayMs(error, args, attempt) {
+  const exponentialDelay = Math.min(maxRetryDelayMs, args.requestDelayMs * (2 ** attempt));
+  const serverDelay = Number(error?.retryAfterMs);
+  const maxlagMinimum = String(error?.wikidataErrorCode ?? '').toLowerCase() === 'maxlag'
+    || String(error?.message ?? '').toLowerCase().includes('maxlag')
+    ? minMaxlagRetryMs
+    : 0;
+
+  return Math.max(
+    exponentialDelay,
+    Number.isFinite(serverDelay) && serverDelay > 0 ? serverDelay : 0,
+    maxlagMinimum,
+  );
 }
 
 async function wikidataGetWithRetry(params, args) {
@@ -340,13 +387,14 @@ async function wikidataGetWithRetry(params, args) {
       return await wikidataGet(params);
     } catch (error) {
       lastError = error;
-      const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
 
-      if (!message.includes('too many requests') && !message.includes('maxlag') && !message.includes('non-JSON')) {
+      if (!isRetryableWikidataError(error)) {
         throw error;
       }
 
-      await sleep(error.retryAfterMs ?? args.requestDelayMs * (attempt + 1));
+      if (attempt < args.retryCount) {
+        await sleep(wikidataRetryDelayMs(error, args, attempt));
+      }
     }
   }
 
@@ -368,14 +416,26 @@ async function searchEntity(name, limit, args) {
 
 async function getEntities(ids, args) {
   if (ids.length === 0) return {};
-  const payload = await wikidataGetWithRetry({
-    action: 'wbgetentities',
-    ids: Array.from(new Set(ids)).join('|'),
-    props: 'labels|descriptions|aliases|claims|sitelinks',
-    languages: 'zh-tw|zh-hant|zh|en',
-  }, args);
+  const uniqueIds = Array.from(new Set(ids));
+  const missingIds = uniqueIds.filter((id) => !wikidataEntityCache.has(id));
 
-  return payload.entities ?? {};
+  for (let index = 0; index < missingIds.length; index += 50) {
+    const batchIds = missingIds.slice(index, index + 50);
+    const payload = await wikidataGetWithRetry({
+      action: 'wbgetentities',
+      ids: batchIds.join('|'),
+      props: 'labels|descriptions|aliases|claims|sitelinks',
+      languages: 'zh-tw|zh-hant|zh|en',
+    }, args);
+
+    for (const [id, entity] of Object.entries(payload.entities ?? {})) {
+      wikidataEntityCache.set(id, entity);
+    }
+  }
+
+  return Object.fromEntries(uniqueIds
+    .filter((id) => wikidataEntityCache.has(id))
+    .map((id) => [id, wikidataEntityCache.get(id)]));
 }
 
 function entityIdFromClaim(claim) {
@@ -433,7 +493,7 @@ function entityGender(entity) {
   return genderFromEntityId(claimEntityIds(entity, 'P21')[0]) ?? 'unknown';
 }
 
-function scoreEntityMatch(target, entity, searchResult, relatedEntities = {}) {
+export function scoreEntityMatch(target, entity, searchResult, relatedEntities = {}) {
   const targetName = normalizeName(target.name);
   const labels = [
     getBestMonolingual(entity.labels),
@@ -441,25 +501,23 @@ function scoreEntityMatch(target, entity, searchResult, relatedEntities = {}) {
     ...(Object.values(entity.aliases ?? {}).flatMap((items) => items.map((item) => item.value))),
   ].filter(Boolean).map(normalizeName);
 
-  if (!labels.includes(targetName)) {
-    return { matched: false, score: 0, reasons: ['name did not match'] };
-  }
-
-  const reasons = ['normalized name matched'];
-  let score = 50;
+  const evidence = {
+    normalizedName: labels.includes(targetName),
+    gender: false,
+    publicOfficeContext: false,
+    position: false,
+    education: false,
+    experience: false,
+    districtOrParty: false,
+  };
+  const reasons = [];
+  const hardConflicts = [];
+  let score = evidence.normalizedName ? 50 : 0;
   const targetGender = normalizeGenderValue(target.gender);
   const wikidataGender = entityGender(entity);
 
-  if (targetGender === 'unknown') {
-    return { matched: false, score, reasons: [...reasons, 'target gender missing'] };
-  }
-
-  if (wikidataGender !== targetGender) {
-    return { matched: false, score, reasons: [...reasons, `gender mismatch: target=${targetGender}, wikidata=${wikidataGender}`] };
-  }
-
-  score += 25;
-  reasons.push('gender matched');
+  if (evidence.normalizedName) reasons.push('normalized name matched');
+  else hardConflicts.push('name did not match');
 
   const entityDescription = [
     getBestMonolingual(entity.descriptions),
@@ -474,38 +532,67 @@ function scoreEntityMatch(target, entity, searchResult, relatedEntities = {}) {
   const hasPoliticalDescription =
     /政治|政黨|立法|議員|市長|縣長|總統|候選|minister|politician|legislator|mayor|president/i.test(entityDescription);
 
-  if (!hasPoliticalDescription) {
-    return { matched: false, score, reasons: [...reasons, 'missing political/public-office description'] };
+  if (targetGender === 'unknown') {
+    reasons.push('target gender missing');
+  } else if (wikidataGender === 'unknown') {
+    reasons.push('Wikidata gender missing');
+  } else if (wikidataGender !== targetGender) {
+    hardConflicts.push(`gender mismatch: target=${targetGender}, wikidata=${wikidataGender}`);
+  } else {
+    evidence.gender = true;
+    score += 25;
+    reasons.push('gender matched');
+  }
+
+  evidence.publicOfficeContext = hasPoliticalDescription;
+  if (hasPoliticalDescription) {
+    score += 10;
+    reasons.push('political/public-office context matched');
+  } else {
+    reasons.push('missing political/public-office description');
   }
 
   if (hasTokenOverlap([target.position], wikidataEvidence)) {
+    evidence.position = true;
     score += 10;
     corroboratingSignals.push('position matched');
   }
 
   if (hasTokenOverlap([target.education], educationLabels)) {
+    evidence.education = true;
     score += 10;
     corroboratingSignals.push('education matched');
   }
 
   if (hasTokenOverlap([target.experience], [...positionLabels, ...occupationLabels])) {
+    evidence.experience = true;
     score += 10;
     corroboratingSignals.push('experience matched');
   }
 
   if (hasTokenOverlap([target.district, target.party], [entityDescription])) {
+    evidence.districtOrParty = true;
     score += 5;
     corroboratingSignals.push('district or party hint matched');
   }
 
-  if (corroboratingSignals.length === 0) {
-    return { matched: false, score, reasons: [...reasons, 'missing corroborating identity signal'] };
-  }
+  if (corroboratingSignals.length === 0) reasons.push('missing corroborating identity signal');
+  else reasons.push(...corroboratingSignals);
+
+  const evidenceCount = Object.values(evidence).filter(Boolean).length;
+  const reviewEligible = evidence.normalizedName && hardConflicts.length === 0;
+  const matched = reviewEligible
+    && evidence.publicOfficeContext
+    && corroboratingSignals.length > 0;
 
   return {
-    matched: true,
+    matched,
+    reviewEligible,
     score: Math.min(100, score),
-    reasons: [...reasons, ...corroboratingSignals],
+    evidenceCount,
+    evidence,
+    hardConflicts,
+    reasons,
     gender: wikidataGender,
     corroboratingSignals,
   };
@@ -513,6 +600,24 @@ function scoreEntityMatch(target, entity, searchResult, relatedEntities = {}) {
 
 function sourceUrlFor(qid) {
   return `https://www.wikidata.org/wiki/${qid}`;
+}
+
+function identityCandidateFor(candidate) {
+  return {
+    wikidataQid: candidate.result.id,
+    label: getBestMonolingual(candidate.entity?.labels) ?? candidate.result.label ?? null,
+    description: getBestMonolingual(candidate.entity?.descriptions) ?? candidate.result.description ?? null,
+    sourceUrl: sourceUrlFor(candidate.result.id),
+    score: candidate.match.score,
+    evidenceCount: candidate.match.evidenceCount ?? 0,
+    evidence: candidate.match.evidence ?? {},
+    corroboratingSignals: candidate.match.corroboratingSignals ?? [],
+    hardConflicts: candidate.match.hardConflicts ?? [],
+    reasons: candidate.match.reasons ?? [],
+    reviewEligible: Boolean(candidate.match.reviewEligible),
+    reviewRoute: 'codex_identity_review',
+    manualReviewRequired: false,
+  };
 }
 
 function claimRecord({ target, qid, claimType, claimValue, claimJson = {}, sourceUrl = sourceUrlFor(qid), matchEvidence = null }) {
@@ -563,7 +668,9 @@ function partyAffiliations(entity, relatedEntities) {
 }
 
 function needsClaim(target, claimType) {
-  return !Array.isArray(target.missingSignals) || target.missingSignals.includes(claimType);
+  return !Array.isArray(target.missingSignals)
+    || target.missingSignals.includes(claimType)
+    || target.researchSignals?.includes(claimType);
 }
 
 function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvidence }) {
@@ -694,11 +801,18 @@ function writeSkippedTargets(skippedPath, skippedTargets, resolvedTargets) {
   }
 
   for (const skipped of skippedTargets) {
+    const key = targetKey(skipped.target);
+    const existing = byKey.get(key);
     byKey.set(targetKey(skipped.target), {
       target: skipped.target,
       name: skipped.target.name,
       reason: skipped.reason,
       checkedAt: new Date().toISOString(),
+      reviewStatus: skipped.reviewStatus ?? existing?.reviewStatus ?? 'pending',
+      identityCandidates: skipped.identityCandidates?.length > 0
+        ? skipped.identityCandidates
+        : existing?.identityCandidates ?? [],
+      nextAction: skipped.nextAction ?? existing?.nextAction ?? null,
     });
   }
 
@@ -724,12 +838,25 @@ async function main() {
   const allClaims = [];
   const skipped = [];
   const resolvedTargets = [];
+  const results = [];
 
   for (const target of targets) {
     try {
       const searchResults = await searchEntity(target.name, args.searchLimit, args);
       const entities = await getEntities(searchResults.map((result) => result.id), args);
       const candidates = [];
+      const candidateRelatedIds = searchResults.flatMap((result) => {
+        const entity = entities[result.id];
+        if (!entity) return [];
+        return [
+          ...claimEntityIds(entity, 'P21'),
+          ...claimEntityIds(entity, 'P69'),
+          ...claimEntityIds(entity, 'P39'),
+          ...claimEntityIds(entity, 'P106'),
+          ...claimEntityIds(entity, 'P102'),
+        ];
+      });
+      const candidateRelatedEntities = await getEntities(candidateRelatedIds, args);
 
       for (const result of searchResults) {
         if (target.rejectedWikidataQids?.includes(result.id)) {
@@ -744,16 +871,8 @@ async function main() {
 
         const entity = entities[result.id];
         if (!entity) continue;
-        const relatedIds = [
-          ...claimEntityIds(entity, 'P21'),
-          ...claimEntityIds(entity, 'P69'),
-          ...claimEntityIds(entity, 'P39'),
-          ...claimEntityIds(entity, 'P106'),
-          ...claimEntityIds(entity, 'P102'),
-        ];
-        const relatedEntities = await getEntities(relatedIds, args);
-        const match = scoreEntityMatch(target, entity, result, relatedEntities);
-        candidates.push({ result, entity, relatedEntities, match });
+        const match = scoreEntityMatch(target, entity, result, candidateRelatedEntities);
+        candidates.push({ result, entity, relatedEntities: candidateRelatedEntities, match });
       }
 
       const matched = candidates
@@ -761,7 +880,30 @@ async function main() {
         .sort((left, right) => right.match.score - left.match.score)[0];
 
       if (!matched) {
-        skipped.push({ target, reason: 'no confident Wikidata entity match' });
+        const identityCandidates = candidates
+          .filter((candidate) => candidate.entity && candidate.match.evidence?.normalizedName)
+          .sort((left, right) => right.match.evidenceCount - left.match.evidenceCount || right.match.score - left.match.score)
+          .slice(0, args.searchLimit)
+          .map(identityCandidateFor);
+        const status = identityCandidates.length > 0 ? 'identity_review_required' : 'no_candidate_found';
+        const reason = identityCandidates.length > 0
+          ? 'Wikidata identity candidates require downstream review'
+          : 'no matching Wikidata identity candidate found';
+        skipped.push({
+          target,
+          reason,
+          reviewStatus: 'pending',
+          identityCandidates,
+          nextAction: identityCandidates.length > 0 ? 'review evidence conditions and resolve identity before applying claims' : null,
+        });
+        results.push({
+          personId: target.personId,
+          name: target.name,
+          status,
+          claimCount: 0,
+          identityCandidateCount: identityCandidates.length,
+          reason,
+        });
         continue;
       }
 
@@ -776,7 +918,7 @@ async function main() {
         ...Object.keys(relationProperties).flatMap((property) => claimEntityIds(entity, property)),
       ];
       const relatedEntities = await getEntities(relatedIds, args);
-      allClaims.push(...buildClaimsForTarget({
+      const targetClaims = buildClaimsForTarget({
         target,
         entity,
         qid,
@@ -790,12 +932,28 @@ async function main() {
           wikidataGender: matched.match.gender,
           corroboratingSignals: matched.match.corroboratingSignals,
         },
-      }));
+      });
+      allClaims.push(...targetClaims);
       resolvedTargets.push(target);
+      results.push({
+        personId: target.personId,
+        name: target.name,
+        status: targetClaims.length > 0 ? 'claims_generated' : 'matched_no_claims',
+        claimCount: targetClaims.length,
+        reason: null,
+      });
     } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
       skipped.push({
         target,
-        reason: error instanceof Error ? error.message : String(error),
+        reason,
+      });
+      results.push({
+        personId: target.personId,
+        name: target.name,
+        status: 'source_error',
+        claimCount: 0,
+        reason,
       });
     }
   }
@@ -815,26 +973,38 @@ async function main() {
       lastTargetNames: targets.map((target) => target.name),
       lastNewClaimCount: allClaims.length,
       lastSkippedCount: skipped.length,
+      lastResults: results,
       updatedAt: new Date().toISOString(),
     });
   }
 
+  const sourceErrorCount = results.filter((result) => result.status === 'source_error').length;
+  const noConfidentMatchCount = results.filter((result) => result.status === 'no_confident_match').length;
+  const identityReviewRequiredCount = results.filter((result) => result.status === 'identity_review_required').length;
+  const noCandidateFoundCount = results.filter((result) => result.status === 'no_candidate_found').length;
   console.log(JSON.stringify({
-    status: 'ok',
+    status: sourceErrorCount > 0 ? 'partial' : 'ok',
     targetCount: targets.length,
     targetNames: targets.map((target) => target.name),
     offset,
     nextOffset: offset + targets.length,
     newClaimCount: allClaims.length,
     skippedCount: skipped.length,
+    sourceErrorCount,
+    noConfidentMatchCount,
+    identityReviewRequiredCount,
+    noCandidateFoundCount,
+    results,
     outputPath: args.outputPath,
     skippedOutputPath: args.skippedOutputPath,
     dryRun: args.dryRun,
   }, null, 2));
 }
 
-main().catch((error) => {
-  const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`wikidata person enrichment fetch failed: ${message}`);
-  process.exit(1);
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`wikidata person enrichment fetch failed: ${message}`);
+    process.exit(1);
+  });
+}

@@ -1,7 +1,10 @@
 # Public Office Watch — 2026 Product Roadmap
 
-Last updated: 2026-07-15
+Last updated: 2026-08-12
 Status: Approved planning baseline
+
+Current implementation audit and prioritized backlog:
+[`project-inventory-and-backlog-2026-08-12.md`](./project-inventory-and-backlog-2026-08-12.md)
 
 ## 1. Product objective
 
@@ -190,3 +193,14 @@ Crypto contributions are valued in TWD at the time received.
 Do not publish individual names, wallet addresses, individual amounts or
 the monetary support associated with a particular political figure or
 improvement suggestion.
+
+## 13. Current priority additions
+
+The 2026-08-12 implementation audit adds these items to the delivery list:
+
+1. Keep the completed Windows daily and weekly collection schedules producing local artifacts before review.
+2. Keep the GitHub workflow manual and dry-run only; production Supabase writes require a separate reviewed process.
+3. Reconcile 2026 party nominees with CEC registration, qualification and ballot-number data.
+4. Monitor official local-government rosters for replacements and departures.
+5. Import historical CEC referendum data, including national cases 1–21,
+   the separately numbered 2022 constitutional referendum, and six documented local referendums.

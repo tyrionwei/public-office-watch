@@ -10,6 +10,15 @@
 6. 公開資訊觀測站
 7. 司法院裁判書查詢系統
 
+### 公民投票
+
+- 中選會選舉資料庫－公投：https://db.cec.gov.tw/Referendum
+- 中選會公投結果列表：https://web.cec.gov.tw/referendum/article/list/3863?page=1
+- 中選會全國性公民投票計票結果開放資料：https://data.cec.gov.tw/?dir=%E5%85%A8%E5%9C%8B%E6%80%A7%E5%85%AC%E6%B0%91%E6%8A%95%E7%A5%A8%E8%A8%88%E7%A5%A8%E7%B5%90%E6%9E%9C
+- 中選會地方性公民投票結果：https://web.cec.gov.tw/referendum/article/32310
+- 2022 憲法修正案公民複決必須使用獨立類型與外部編號，不得和全國性公投第 1 案合併。
+- 公投同意／不同意是選票選項，不得為沿用候選人模型而建立虛構人物。
+
 ## 必須保留連結的高風險來源
 
 ### 政治獻金

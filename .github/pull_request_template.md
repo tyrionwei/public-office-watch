@@ -1,42 +1,41 @@
 # Pull Request
 
-## 本次變更類型
-- [ ] schema hardening
-- [ ] RLS hardening
-- [ ] Importer validation
-- [ ] CI / workflow
-- [ ] samples / docs
-- [ ] other
+## 變更範圍
 
-## 是否抓取真實資料
-- [x] 否
-- [ ] 是（若勾選，請說明原因）
+- [ ] Web／公開讀取層
+- [ ] 資料蒐集／審核流程
+- [ ] Supabase schema／RLS／公開 view
+- [ ] CI／排程／部署邊界
+- [ ] 文件／資料來源
+- [ ] 其他
 
-## 是否包含敏感資料
-- [ ] 無
-- [ ] 有，已說明並處理
+## 資料與發布邊界
 
-## 是否包含 verified / is_public=true
-- [x] 否
-- [ ] 是（需說明原因，正常情況不應出現）
+- [ ] 沒有提交 secrets、真實 `.env`、logs、`tmp`、原始下載或私人待審資料
+- [ ] 新增的公開資料有來源，且已明確通過發布審核
+- [ ] 同名人物沒有在證據不足時自動合併
+- [ ] 家族、黨籍異動、候選狀態與司法資料沒有繞過人工／既有安全閘門
+- [ ] 本次變更不會由 CI 或排程自動寫正式 Supabase
+- [ ] 不適用（請在下方說明）
 
-## 公開倉庫安全檢查
-- [ ] 沒有提交密鑰、權杖、真實 `.env`、私有資料或含敏感資訊的紀錄檔
-- [ ] 沒有依賴隱藏網址、前端判斷或原始碼保密來保護管理功能
-- [ ] 新增或修改的 Supabase 表、view、RPC 已檢查 grants、RLS 與匿名存取
-- [ ] 新增的寫入端點已有伺服器端授權、輸入限制與防濫用措施
-- [ ] 修改 `.github/`、`supabase/`、同步腳本或相依套件時，已由責任人審核
-- [ ] CI 與錯誤輸出不會印出 secrets、token、完整連線字串或不必要的個資
-- [ ] 不適用（請在人工審核注意事項說明）
+## Supabase／安全檢查
 
-## dry-run 結果
-- `dotnet restore`：
-- `dotnet build`：
-- `Importer dry-run samples/sample-changes.json`：
-- `Importer dry-run data-updates latest changes.json`：
+- [ ] 新增或修改的表、view、RPC、function、Realtime 或 Storage 已檢查 grants、RLS 與匿名存取
+- [ ] 前端只使用 publishable／anon key，沒有 service role key
+- [ ] `SECURITY DEFINER`、公開寫入或管理端點已完成額外授權與防濫用檢查
+- [ ] 修改 `.github/`、`supabase/`、`scripts/` 或相依套件時已安排責任人審核
+- [ ] 不適用
+
+## 驗證結果
+
+- `npm run check`：
+- 其他針對性測試：
+- Local Supabase／migration 驗證（如適用）：
 
 ## 人工審核注意事項
-- 
+
+-
 
 ## 尚未完成事項
-- 
+
+-

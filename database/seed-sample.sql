@@ -1,2 +1,0 @@
--- Sample seed placeholders for local testing
--- Intentionally minimal in phase 1.

@@ -198,7 +198,7 @@ improvement suggestion.
 
 The 2026-08-12 implementation audit adds these items to the delivery list:
 
-1. Keep the completed Windows daily and weekly collection schedules producing local artifacts before review.
+1. Keep the Codex App daily and weekly local collection schedules producing review-only artifacts before the 21:30 review.
 2. Keep the GitHub workflow manual and dry-run only; production Supabase writes require a separate reviewed process.
 3. Reconcile 2026 party nominees with CEC registration, qualification and ballot-number data.
 4. Monitor official local-government rosters for replacements and departures.

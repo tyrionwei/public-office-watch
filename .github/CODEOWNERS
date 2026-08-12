@@ -4,7 +4,6 @@
 /.github/ @tyrionwei
 /supabase/ @tyrionwei
 /scripts/ @tyrionwei
-/src/Importer/ @tyrionwei
 /package.json @tyrionwei
 /package-lock.json @tyrionwei
 /apps/web/package*.json @tyrionwei

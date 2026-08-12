@@ -75,7 +75,8 @@ Current state:
 
 Next parser notes:
 
-- Download official archives to `tmp/`.
+- Preserve official archives under `local-data/raw/` with fetch time and SHA-256; use `tmp/` only for disposable extraction output.
+- When a mutable upstream archive changes, keep both the previous and new snapshot before generating a diff.
 - Extract official county/city code, name, and geometry.
 - Keep geometry simplification output separate from source provenance.
 - Use official code as the stable external ID when possible.
@@ -104,7 +105,7 @@ Current state:
 
 Fetch method:
 
-1. Download the official CEC `votedata.zip` archive.
+1. Download the official CEC `votedata.zip` archive into a dated directory under `local-data/raw/national/election/database/`; record its fetch time and SHA-256, and do not overwrite a previous snapshot when the hash changes.
 2. Decode ZIP entry names as Big5/CP950.
 3. Read `elpaty.csv` for party code labels.
 4. Read `elcand.csv` for candidate number, name, party code, elected marker, and vice-president marker.
@@ -114,6 +115,8 @@ Fetch method:
 
 Next parser notes:
 
+- Treat `votedata.zip` as a mutable official source: check it monthly, and weekly during election or by-election periods.
+- Preserve election bulletin PDFs with source URL, fetch time, hash, page number and parser version; historical platform extraction is a separate one-time backfill, not part of the daily 25-person queue.
 - Prefer official export/download endpoints over browser scraping.
 - Separate election event metadata from race rows and candidate rows.
 - Candidate ingestion should populate `people` first, then `candidates`.

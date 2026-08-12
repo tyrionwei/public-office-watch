@@ -84,7 +84,7 @@ Public Office Watch（公職資料觀測站）是一個以台灣選舉為入口�
 
 ## 本機啟動
 
-需求：Node.js 20 以上與 npm。
+需求：Node.js 22（或 Node.js 20.19 以上）與 npm。
 
 ```bash
 npm install

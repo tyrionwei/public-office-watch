@@ -76,7 +76,7 @@ gitleaks detect --source . --redact --verbose
 
 ## 補充原則
 
-- 不要加入任何真實政治人物資料
+- 可提交有合法公開來源且通過既有審核的必要結構化資料；不得提交私人待審產物、未整理原始下載或無來源的敏感資訊
 - 不要提交 production Supabase credentials
 - 不要提交 production API keys
 - 不要把 local 測試連線字串當成 production 設定

@@ -7,7 +7,7 @@ updates:
       day: monday
       time: "02:00"
       timezone: Asia/Taipei
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
 
   - package-ecosystem: npm
     directory: /apps/web
@@ -16,7 +16,7 @@ updates:
       day: monday
       time: "02:15"
       timezone: Asia/Taipei
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
 
   - package-ecosystem: nuget
     directory: /src/Importer
@@ -25,7 +25,7 @@ updates:
       day: monday
       time: "02:30"
       timezone: Asia/Taipei
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
 
   - package-ecosystem: github-actions
     directory: /
@@ -34,4 +34,4 @@ updates:
       day: monday
       time: "02:45"
       timezone: Asia/Taipei
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0

@@ -44,6 +44,8 @@ assert_source_environment() {
 
 write_rehearsal_config() {
   mkdir -p "$(dirname "$rehearsal_config")"
+  mkdir -p "$workdir/supabase/functions"
+  cp -a "$repo_root/supabase/functions/." "$workdir/supabase/functions/"
 
   awk '
     /^\[/ { section = $0 }
@@ -192,8 +194,12 @@ copy_runtime_data() {
   copy_table party_annual_finance_filings 'is_public = TRUE'
   copy_table party_finance_summaries 'is_public = TRUE'
   copy_table party_company_contribution_summaries 'is_public = TRUE'
+  copy_table national_office_assignments
   copy_table current_office_exclusions
   copy_table region_issues 'is_public = TRUE'
+  copy_table referendum_questions 'is_public = TRUE'
+  copy_table referendum_options 'is_public = TRUE'
+  copy_table referendum_region_results 'is_public = TRUE'
   copy_table chat_settings
 }
 

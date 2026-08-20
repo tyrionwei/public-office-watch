@@ -27,6 +27,9 @@ const readableRelations = [
   'person_party_affiliations',
   'races',
   'regions',
+  'referendum_options',
+  'referendum_questions',
+  'referendum_region_results',
   'search_results',
 ];
 
@@ -38,6 +41,9 @@ const requiredNonEmptyRelations = new Set([
   'people',
   'races',
   'regions',
+  'referendum_options',
+  'referendum_questions',
+  'referendum_region_results',
   'search_results',
 ]);
 

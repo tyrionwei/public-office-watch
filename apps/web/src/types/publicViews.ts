@@ -517,6 +517,20 @@ export type PublicPartyFinanceSummary = {
   updated_at: string;
 };
 
+export type PublicPartyAnnualFinanceFiling = {
+  party_id: string;
+  party_name: string;
+  report_year: number;
+  filing_status: 'filed' | 'correction_required' | 'not_filed' | 'unknown';
+  ratification_status: 'ratified' | 'not_ratified' | 'unknown';
+  assembly_approval_status: 'approved' | 'not_approved' | 'unknown';
+  detail_url: string;
+  report_pdf_url: string | null;
+  source_name: string;
+  source_url: string;
+  updated_at: string;
+};
+
 export type PublicPartyCompanyContributionSummary = {
   party_id: string;
   company_id: string;

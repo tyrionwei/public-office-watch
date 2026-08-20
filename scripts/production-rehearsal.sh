@@ -189,6 +189,7 @@ copy_runtime_data() {
   copy_table person_party_events \
     "is_public = TRUE AND review_status = 'verified'"
 
+  copy_table party_annual_finance_filings 'is_public = TRUE'
   copy_table party_finance_summaries 'is_public = TRUE'
   copy_table party_company_contribution_summaries 'is_public = TRUE'
   copy_table current_office_exclusions

@@ -29,6 +29,12 @@
 - 公開 UI 必須至少保留 `sourceName` 與 `sourceUrl`，讓使用者能回到來源平台查核。
 - 不公開個人捐贈明細；只公開政黨年度摘要與具統一編號的公司層級彙總。
 
+### 政黨年度財務
+
+- 內政部政黨資訊網查財報：https://party.moi.gov.tw/PartyFinancialChecklist.aspx?n=16101&sms=13073
+- 每年 7 月中旬與 8 月底保存申報、追認、黨員代表大會通過狀態與官方 PDF 連結；不得把這份黨務財報混入監察院政治獻金摘要。
+- 官方 PDF 多為掃描影像，金額須經 OCR 與人工覆核後才可進入資料庫或公開層。
+
 ### 司法 / 犯罪紀錄
 
 - 司法院裁判書開放資料 API：https://opendata.judicial.gov.tw/api/

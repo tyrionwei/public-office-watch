@@ -723,12 +723,14 @@ test('bridge does not query local offices when the region cannot be resolved', a
 
 test('bridge maps the bounded party data family', async () => {
   const party = { party_id: 'party-1', name: '測試政黨' };
+  const annualFinance = { party_id: 'party-1', report_year: 2025 };
   const finance = { party_id: 'party-1', report_year: 2024 };
   const contribution = { party_id: 'party-1', company_id: 'company-1' };
   const adapter = createAdapter({
     async loadPartyData() {
       return {
         partyRows: [party] as never[],
+        annualFinanceFilingRows: [annualFinance] as never[],
         financeRows: [finance] as never[],
         companyContributionRows: [contribution] as never[],
       };
@@ -738,6 +740,7 @@ test('bridge maps the bounded party data family', async () => {
 
   assert.deepEqual(await bridge.loadPartyData(), {
     parties: [party],
+    annualFinanceFilings: [annualFinance],
     financeSummaries: [finance],
     companyContributionSummaries: [contribution],
   });

@@ -72,6 +72,14 @@
       "notes": "同步政黨層級年度收入支出摘要與公司層級營利事業捐贈彙總；不公開 incomes/expenditures 原始交易列或個人捐贈明細。"
     },
     {
+      "id": "moi-party-annual-finance-checklist",
+      "type": "party-annual-finance",
+      "name": "內政部政黨資訊網：政黨年度財務申報",
+      "url": "https://party.moi.gov.tw/PartyFinancialChecklist.aspx?n=16101&sms=13073",
+      "refreshCadence": "annual",
+      "notes": "只監測年度申報、追認、黨員代表大會通過狀態與官方財務報表 PDF；掃描 PDF 金額須經 OCR 人工覆核，不與監察院政治獻金摘要混用。"
+    },
+    {
       "id": "judicial-yuan-court-open-data-api",
       "type": "legal-record-lead",
       "name": "司法院裁判書開放資料 API",

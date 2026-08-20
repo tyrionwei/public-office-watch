@@ -476,6 +476,7 @@ export function PartyPage() {
   const candidates = usePartyCandidatePage(party?.name ?? null, candidateRequestedPage);
   const peopleStatistics = usePartyPeopleStatistics(party?.name ?? null);
   const legalStatistics = usePartyLegalStatistics(party?.name ?? null);
+  const annualFinanceFilings = party ? publicDataProvider.getPartyAnnualFinanceFilings(party.party_id) : [];
   const financeSummaries = party ? publicDataProvider.getPartyFinanceSummaries(party.party_id) : [];
   const companySummaries = party ? publicDataProvider.getPartyCompanyContributionSummaries(party.party_id) : [];
   const sortedCompanySummaries = companySummaries.slice().sort((left, right) =>
@@ -488,6 +489,7 @@ export function PartyPage() {
     units.set(unit, [...(units.get(unit) ?? []), officer]);
     return units;
   }, new Map<string, PartyOfficerGroup[]>()));
+  const latestAnnualFinance = annualFinanceFilings.slice().sort((left, right) => right.report_year - left.report_year)[0];
   const latestFinance = financeSummaries.slice().sort((left, right) => right.report_year - left.report_year)[0];
   const hasRegistryProfile = party ? [
     party.registry_no,
@@ -870,6 +872,58 @@ export function PartyPage() {
                     latestFinance.source_name ?? t('partyDetail.sourceAwaiting')
                   )}
                   {t('partyDetail.financeBoundary')}
+                </p>
+              </SectionPanel>
+            ) : null}
+
+            {latestAnnualFinance ? (
+              <SectionPanel
+                title={t('partyDetail.annualFinanceTitle', { year: latestAnnualFinance.report_year })}
+                eyebrow={t('partyDetail.annualFinanceEyebrow')}
+              >
+                <div className="grid gap-3 md:grid-cols-3">
+                  {[
+                    [
+                      t('partyDetail.annualFinanceFilingLabel'),
+                      t(`partyDetail.annualFinanceFiling.${latestAnnualFinance.filing_status}`),
+                    ],
+                    [
+                      t('partyDetail.annualFinanceRatificationLabel'),
+                      t(`partyDetail.annualFinanceRatification.${latestAnnualFinance.ratification_status}`),
+                    ],
+                    [
+                      t('partyDetail.annualFinanceAssemblyLabel'),
+                      t(`partyDetail.annualFinanceAssembly.${latestAnnualFinance.assembly_approval_status}`),
+                    ],
+                  ].map(([label, value]) => (
+                    <div key={label} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</p>
+                      <p className="mt-2 font-display text-lg text-white">{value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <a
+                    href={latestAnnualFinance.report_pdf_url ?? latestAnnualFinance.detail_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="pixel-corners border border-accent/60 bg-accent/10 px-4 py-2 text-sm text-accent transition hover:bg-accent/20 hover:text-white"
+                  >
+                    {latestAnnualFinance.report_pdf_url
+                      ? t('partyDetail.annualFinanceReportLink')
+                      : t('partyDetail.annualFinanceDetailLink')}
+                  </a>
+                  <a
+                    href={latestAnnualFinance.source_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-slate-500 underline decoration-line underline-offset-4 hover:text-white"
+                  >
+                    {latestAnnualFinance.source_name}
+                  </a>
+                </div>
+                <p className="mt-4 border-t border-line/60 pt-4 text-xs leading-6 text-slate-500">
+                  {t('partyDetail.annualFinanceBoundary')}
                 </p>
               </SectionPanel>
             ) : null}

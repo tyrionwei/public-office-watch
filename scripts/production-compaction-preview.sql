@@ -170,6 +170,15 @@ metrics AS (
     UNION ALL
 
     SELECT
+        105,
+        'party_annual_finance_filings',
+        COUNT(*)::BIGINT,
+        COUNT(*) FILTER (WHERE is_public = TRUE)::BIGINT
+    FROM public.party_annual_finance_filings
+
+    UNION ALL
+
+    SELECT
         110,
         'party_finance_summaries',
         COUNT(*)::BIGINT,

@@ -18,6 +18,8 @@ import {
   NATIONAL_OFFICE_HOLDER_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
   PERSON_PARTY_AFFILIATION_COLUMNS,
+  PARTY_ANNUAL_FINANCE_COLUMNS,
+  PARTY_ANNUAL_FINANCE_LIMIT,
   PARTY_COLUMNS,
   PARTY_COMPANY_CONTRIBUTION_COLUMNS,
   PARTY_COMPANY_CONTRIBUTION_LIMIT,
@@ -952,12 +954,14 @@ test('public update feed reads only the newest bounded published rows', async ()
   ]);
 });
 
-test('party data reads three small published relations with fixed limits', async () => {
+test('party data reads four small published relations with fixed limits', async () => {
   const party = { party_id: 'party-1', name: '測試政黨' };
+  const annualFinance = { party_id: 'party-1', report_year: 2025 };
   const finance = { party_id: 'party-1', report_year: 2024 };
   const contribution = { party_id: 'party-1', company_id: 'company-1' };
   const fake = createFakeClient({
     parties: { data: [party], error: null, count: null },
+    party_annual_finance_filings: { data: [annualFinance], error: null, count: null },
     party_finance_summaries: { data: [finance], error: null, count: null },
     party_company_contribution_summaries: { data: [contribution], error: null, count: null },
   });
@@ -965,21 +969,25 @@ test('party data reads three small published relations with fixed limits', async
 
   assert.deepEqual(await adapter.loadPartyData(), {
     partyRows: [party],
+    annualFinanceFilingRows: [annualFinance],
     financeRows: [finance],
     companyContributionRows: [contribution],
   });
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
     ['from', 'parties'],
+    ['from', 'party_annual_finance_filings'],
     ['from', 'party_finance_summaries'],
     ['from', 'party_company_contribution_summaries'],
   ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'select'), [
     ['select', PARTY_COLUMNS],
+    ['select', PARTY_ANNUAL_FINANCE_COLUMNS],
     ['select', PARTY_FINANCE_COLUMNS],
     ['select', PARTY_COMPANY_CONTRIBUTION_COLUMNS],
   ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
     ['limit', PARTY_LIMIT + 1],
+    ['limit', PARTY_ANNUAL_FINANCE_LIMIT + 1],
     ['limit', PARTY_FINANCE_LIMIT + 1],
     ['limit', PARTY_COMPANY_CONTRIBUTION_LIMIT + 1],
   ]);

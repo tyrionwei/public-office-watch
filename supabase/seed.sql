@@ -13,6 +13,7 @@ GRANT SELECT ON TABLE
   published.current_legislator_party_summary,
   published.national_office_holders,
   published.parties,
+  published.party_annual_finance_filings,
   published.party_company_contribution_summaries,
   published.party_finance_summaries,
   published.party_officers,

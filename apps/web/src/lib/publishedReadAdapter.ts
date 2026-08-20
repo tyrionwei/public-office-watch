@@ -5,6 +5,7 @@ import type {
   PublicElectionRaceSummary,
   PublicCandidate,
   PublicParty,
+  PublicPartyAnnualFinanceFiling,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPartyLegalStatistics,
@@ -54,6 +55,7 @@ export const RACE_DETAIL_PARTY_AFFILIATION_LIMIT = 1000;
 export const RACE_DETAIL_REFERENDUM_OPTION_LIMIT = 2;
 export const RACE_DETAIL_REFERENDUM_REGION_LIMIT = 64;
 export const PARTY_LIMIT = 200;
+export const PARTY_ANNUAL_FINANCE_LIMIT = 200;
 export const PARTY_FINANCE_LIMIT = 100;
 export const PARTY_COMPANY_CONTRIBUTION_LIMIT = 1000;
 export const PARTY_OFFICER_LIMIT = 200;
@@ -344,6 +346,20 @@ export const PARTY_COLUMNS = [
   'updated_at',
 ].join(',');
 
+export const PARTY_ANNUAL_FINANCE_COLUMNS = [
+  'party_id',
+  'party_name',
+  'report_year',
+  'filing_status',
+  'ratification_status',
+  'assembly_approval_status',
+  'detail_url',
+  'report_pdf_url',
+  'source_name',
+  'source_url',
+  'updated_at',
+].join(',');
+
 export const PARTY_FINANCE_COLUMNS = [
   'party_id',
   'party_name',
@@ -574,6 +590,7 @@ export type PublishedRaceDetailRows = {
 
 export type PublishedPartyDataRows = {
   partyRows: PublicParty[];
+  annualFinanceFilingRows: PublicPartyAnnualFinanceFiling[];
   financeRows: PublicPartyFinanceSummary[];
   companyContributionRows: PublicPartyCompanyContributionSummary[];
 };
@@ -1147,13 +1164,19 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
 
     async loadPartyData() {
       const published = client.schema('published');
-      const [partyResponse, financeResponse, companyContributionResponse] = await Promise.all([
+      const [partyResponse, annualFinanceResponse, financeResponse, companyContributionResponse] = await Promise.all([
         published
           .from<PublicParty>('parties')
           .select(PARTY_COLUMNS)
           .order('name', { ascending: true })
           .order('party_id', { ascending: true })
           .limit(PARTY_LIMIT + 1),
+        published
+          .from<PublicPartyAnnualFinanceFiling>('party_annual_finance_filings')
+          .select(PARTY_ANNUAL_FINANCE_COLUMNS)
+          .order('party_id', { ascending: true })
+          .order('report_year', { ascending: false })
+          .limit(PARTY_ANNUAL_FINANCE_LIMIT + 1),
         published
           .from<PublicPartyFinanceSummary>('party_finance_summaries')
           .select(PARTY_FINANCE_COLUMNS)
@@ -1175,6 +1198,11 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           partyResponse,
           'Published parties',
           PARTY_LIMIT,
+        ),
+        annualFinanceFilingRows: getBoundedRowsOrThrow(
+          annualFinanceResponse,
+          'Published party annual finance filings',
+          PARTY_ANNUAL_FINANCE_LIMIT,
         ),
         financeRows: getBoundedRowsOrThrow(
           financeResponse,

@@ -22,6 +22,7 @@ import type {
   PublicPersonFilters,
   PublicPersonListItem,
   PublicParty,
+  PublicPartyAnnualFinanceFiling,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPersonRole,
@@ -83,6 +84,7 @@ export type PublishedRegionPageData = {
 
 export type PublishedPartyData = {
   parties: PublicParty[];
+  annualFinanceFilings: PublicPartyAnnualFinanceFiling[];
   financeSummaries: PublicPartyFinanceSummary[];
   companyContributionSummaries: PublicPartyCompanyContributionSummary[];
 };
@@ -471,6 +473,7 @@ export function createPublishedPublicDataBridge(
       const rows = await adapter.loadPartyData();
       return {
         parties: rows.partyRows,
+        annualFinanceFilings: rows.annualFinanceFilingRows,
         financeSummaries: rows.financeRows,
         companyContributionSummaries: rows.companyContributionRows,
       };

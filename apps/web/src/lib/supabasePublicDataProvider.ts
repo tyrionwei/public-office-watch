@@ -1651,6 +1651,10 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     return loadPartyOfficersByPartyId(partyId);
   },
 
+  getPartyAnnualFinanceFilings() {
+    return [];
+  },
+
   getPartyFinanceSummaries(partyId: string) {
     void ensurePartyDataset();
     return getSnapshot()?.indexes.partyFinanceSummariesByPartyId.get(partyId) ?? [];

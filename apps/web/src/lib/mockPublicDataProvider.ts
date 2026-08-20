@@ -415,6 +415,10 @@ export const mockPublicDataProvider: PublicDataProvider = {
     );
   },
 
+  getPartyAnnualFinanceFilings() {
+    return [];
+  },
+
   getPartyFinanceSummaries(partyId: string) {
     return mockPublicPartyFinanceSummaries.filter((summary) => summary.party_id === partyId);
   },

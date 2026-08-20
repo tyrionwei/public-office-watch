@@ -7,6 +7,7 @@ import type {
   PublicElectionRaceFacet,
   PublicLocalOfficeSummary,
   PublicParty,
+  PublicPartyAnnualFinanceFiling,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPerson,
@@ -73,6 +74,7 @@ export function createPublishedPublicDataProvider(
   let homeData = emptyHomePageData;
   let partyData: PublishedPartyData = {
     parties: [],
+    annualFinanceFilings: [],
     financeSummaries: [],
     companyContributionSummaries: [],
   };
@@ -352,6 +354,10 @@ export function createPublishedPublicDataProvider(
 
     loadPartyLegalStatistics(partyName: string) {
       return bridge.loadPartyLegalStatistics(partyName);
+    },
+
+    getPartyAnnualFinanceFilings(partyId: string): PublicPartyAnnualFinanceFiling[] {
+      return partyData.annualFinanceFilings.filter((filing) => filing.party_id === partyId);
     },
 
     getPartyFinanceSummaries(partyId: string): PublicPartyFinanceSummary[] {

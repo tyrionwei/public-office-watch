@@ -18,6 +18,7 @@ const readableRelations = [
   'current_legislator_party_summary',
   'national_office_holders',
   'parties',
+  'party_annual_finance_filings',
   'party_company_contribution_summaries',
   'party_finance_summaries',
   'party_officers',

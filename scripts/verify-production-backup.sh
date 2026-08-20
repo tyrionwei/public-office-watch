@@ -119,6 +119,26 @@ SQL
 )
 
 expected_counts=(46306 46008 65136 59361 3139 1)
+expected_counts_file="$backup_dir/expected-counts.txt"
+if [[ -f "$expected_counts_file" ]]; then
+  expected_keys=(
+    source_people
+    person_identity_matches
+    candidate_status_history
+    person_claims
+    person_party_affiliations
+    release_state
+  )
+  mapfile -t expected_lines < "$expected_counts_file"
+  (( ${#expected_lines[@]} == ${#expected_keys[@]} )) \
+    || fail "expected counts file has an unexpected number of rows"
+  expected_counts=()
+  for index in "${!expected_keys[@]}"; do
+    [[ "${expected_lines[$index]}" =~ ^${expected_keys[$index]}=([0-9]+)$ ]] \
+      || fail "invalid expected count for ${expected_keys[$index]}"
+    expected_counts+=("${BASH_REMATCH[1]}")
+  done
+fi
 [[ "${restored_counts[*]}" == "${expected_counts[*]}" ]] \
   || fail "restored counts differ: ${restored_counts[*]}"
 

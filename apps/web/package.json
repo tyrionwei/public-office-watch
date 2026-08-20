@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm run check:local-test-env && vite",
     "dev:rehearsal": "vite --mode rehearsal",
     "build:sites": "node scripts/check-environment.mjs production && node scripts/prepare-sites-build.mjs --clean && tsc -b && vite build --outDir dist/client && node scripts/generate-seo-catalog.mjs dist/client/seo-catalog.json && node scripts/prepare-sites-build.mjs",
     "build": "tsc -b && vite build",

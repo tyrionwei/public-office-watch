@@ -76,3 +76,12 @@ export function buildPartyCandidateReviewWrite(
     },
   };
 }
+
+export function buildIdentityClaimLinkPatch(personId: string, reviewedAt: string) {
+  if (!personId.trim()) throw new Error('Identity review requires a person id.');
+
+  return {
+    person_id: personId,
+    updated_at: reviewedAt,
+  };
+}

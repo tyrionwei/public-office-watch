@@ -13,8 +13,12 @@ function looksLikeServiceRole(value: string) {
 export function getPublicDataProviderMode(): PublicDataProviderMode {
   const rawMode = import.meta.env.VITE_PUBLIC_DATA_PROVIDER;
 
-  if (rawMode === 'published') {
+  if (rawMode === 'published' || rawMode === 'mock') {
     return rawMode;
+  }
+
+  if (rawMode) {
+    throw new Error(`Unsupported VITE_PUBLIC_DATA_PROVIDER: ${rawMode}. Use published or mock.`);
   }
 
   return 'mock';

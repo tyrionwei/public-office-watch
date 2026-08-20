@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  buildIdentityClaimLinkPatch,
   buildPartyCandidateReviewWrite,
   parsePartyCandidateReviewSource,
 } from '../build/internalPartyCandidateReview.ts';
@@ -32,6 +33,18 @@ test('builds a private candidate write for an approved party candidate identity'
 
 test('leaves non-party review sources on the existing review path', () => {
   assert.equal(parsePartyCandidateReviewSource({ ...source, source_person_key: 'wikidata:Q1' }), null);
+});
+
+test('links ordinary source claims without approving or publishing their content', () => {
+  const patch = buildIdentityClaimLinkPatch('person-1', '2026-08-14T09:00:00.000Z');
+
+  assert.deepEqual(patch, {
+    person_id: 'person-1',
+    updated_at: '2026-08-14T09:00:00.000Z',
+  });
+  assert.equal('review_status' in patch, false);
+  assert.equal('visibility' in patch, false);
+  assert.equal('is_public' in patch, false);
 });
 
 test('rejects incomplete party candidate payloads', () => {

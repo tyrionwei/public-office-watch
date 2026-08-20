@@ -1,8 +1,8 @@
-import { getSupabasePublicClient } from './supabasePublicClient';
-
 export type ReviewClaim = {
   claim_id: string;
   person_id: string | null;
+  source_person_id: string | null;
+  candidate_id: string | null;
   person_name: string | null;
   person_party: string | null;
   person_position: string | null;
@@ -115,6 +115,7 @@ type ReviewClaimFilters = {
   sourceName?: string;
   claimType?: string;
   reviewStatus?: 'pending' | 'needs_more_evidence' | '';
+  personName?: string;
 };
 
 type ReviewClaimResult = {
@@ -156,6 +157,11 @@ type PublicCandidateReviewSummary = {
 type ReviewAction = 'approve' | 'reject';
 type IdentityReviewAction = 'approve' | 'reject' | 'create';
 
+type ReviewClaimActionOptions = {
+  platformText?: string;
+  claimValue?: string;
+};
+
 function objectValue(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : null;
 }
@@ -163,36 +169,22 @@ function objectValue(value: unknown): Record<string, unknown> | null {
 async function fetchPersonReviewContexts(
   personIds: string[],
 ): Promise<{ peopleById: Map<string, PersonReviewContext>; error: string | null }> {
-  const client = getSupabasePublicClient();
-  if (!client || personIds.length === 0) {
+  if (personIds.length === 0) {
     return { peopleById: new Map(), error: null };
   }
 
-  const [peopleResult, birthDatesResult, candidatesResult] = await Promise.all([
-    client
-      .from('public_people')
-      .select(
-        'person_id,name,alias,gender,party,position,district,education,experience,current_office_label,upcoming_candidate_label',
-      )
-      .in('person_id', personIds),
-    client
-      .from('public_person_claims')
-      .select('person_id,claim_value')
-      .in('person_id', personIds)
-      .eq('claim_type', 'birth_date'),
-    client
-      .from('public_candidates')
-      .select(
-        'candidate_id,person_id,election_year,election_name,race_title,region_name,party,candidate_no,election_result',
-      )
-      .in('person_id', personIds)
-      .order('election_year', { ascending: false, nullsFirst: false }),
-  ]);
-
-  const error = peopleResult.error ?? birthDatesResult.error ?? candidatesResult.error;
-  if (error) {
-    return { peopleById: new Map(), error: error.message };
+  const response = await fetch('/internal-api/review-person-contexts', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ personIds }),
+  });
+  const body = await response.json().catch(() => null);
+  if (!response.ok) {
+    return { peopleById: new Map(), error: body?.error ?? response.statusText };
   }
+  const peopleResult = { data: body?.people ?? [] };
+  const birthDatesResult = { data: body?.birthDates ?? [] };
+  const candidatesResult = { data: body?.candidates ?? [] };
 
   const birthDatesByPerson = new Map<string, string>();
   for (const row of birthDatesResult.data ?? []) {
@@ -242,38 +234,19 @@ async function fetchPersonReviewContexts(
 }
 
 export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Promise<ReviewClaimResult> {
-  const client = getSupabasePublicClient();
-  if (!client) {
-    return { claims: [], error: 'Supabase public env not configured.' };
+  const params = new URLSearchParams();
+  if (filters.sourceName) params.set('sourceName', filters.sourceName);
+  if (filters.claimType) params.set('claimType', filters.claimType);
+  if (filters.reviewStatus) params.set('reviewStatus', filters.reviewStatus);
+  if (filters.personName) params.set('personName', filters.personName);
+
+  const response = await fetch(`/internal-api/review-claims?${params.toString()}`);
+  const body = await response.json().catch(() => null);
+  if (!response.ok) {
+    return { claims: [], error: body?.error ?? response.statusText };
   }
 
-  let query = client
-    .from('person_claim_review_queue')
-    .select(
-      'claim_id,person_id,raw_name,claim_type,claim_value,claim_json,confidence_level,review_score,review_status,visibility,source_name,source_url,scoring_reasons,updated_at',
-    )
-    .order('review_score', { ascending: false })
-    .order('updated_at', { ascending: false })
-    .limit(200);
-
-  if (filters.sourceName) {
-    query = query.eq('source_name', filters.sourceName);
-  }
-
-  if (filters.claimType) {
-    query = query.eq('claim_type', filters.claimType);
-  }
-
-  if (filters.reviewStatus) {
-    query = query.eq('review_status', filters.reviewStatus);
-  }
-
-  const { data, error } = await query;
-  if (error) {
-    return { claims: [], error: error.message };
-  }
-
-  const rows = (data ?? []) as Omit<ReviewClaim, 'person_name' | 'person_party' | 'person_position' | 'person_district' | 'person_context'>[];
+  const rows = (body?.claims ?? []) as Omit<ReviewClaim, 'person_name' | 'person_party' | 'person_position' | 'person_district' | 'person_context'>[];
   const personIds = Array.from(new Set(rows.map((claim) => claim.person_id).filter((id): id is string => Boolean(id))));
   const contextResult = await fetchPersonReviewContexts(personIds);
   if (contextResult.error) {
@@ -307,26 +280,15 @@ export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Pr
 }
 
 export async function fetchInternalIdentityReviewItems(): Promise<IdentityReviewResult> {
-  const client = getSupabasePublicClient();
-  if (!client) {
-    return { items: [], error: 'Supabase public env not configured.' };
+  const response = await fetch('/internal-api/review-identities');
+  const body = await response.json().catch(() => null);
+  if (!response.ok) {
+    return { items: [], error: body?.error ?? response.statusText };
   }
-
-  const { data, error } = await client
-    .from('person_identity_review_queue')
-    .select(
-      'source_person_id,source_person_key,source_type,source_name,source_url,raw_name,gender,party,position,district,election_year,birth_date_text,confidence_suggestion,candidate_count,best_match_score,review_status,candidates,updated_at',
-    )
-    .order('best_match_score', { ascending: false })
-    .order('updated_at', { ascending: false })
-    .limit(200);
-
-  if (error) {
-    return { items: [], error: error.message };
-  }
+  const data = (body?.items ?? []) as IdentityReviewItem[];
 
   const candidatePersonIds = Array.from(new Set(
-    (data ?? []).flatMap((item) =>
+    data.flatMap((item) =>
       Array.isArray(item.candidates)
         ? item.candidates
           .map((candidate) => objectValue(candidate)?.personId)
@@ -340,7 +302,7 @@ export async function fetchInternalIdentityReviewItems(): Promise<IdentityReview
   }
 
   return {
-    items: (data ?? []).map((item) => ({
+    items: data.map((item) => ({
       ...(item as Omit<IdentityReviewItem, 'candidates'>),
       candidates: Array.isArray(item.candidates)
         ? item.candidates.map((candidate) => {
@@ -356,21 +318,42 @@ export async function fetchInternalIdentityReviewItems(): Promise<IdentityReview
   };
 }
 
-export async function reviewInternalClaim(claimId: string, action: ReviewAction): Promise<{ relatedUpdated: number; relatedClaimIds: string[]; error: string | null }> {
+export async function reviewInternalClaim(
+  claimId: string,
+  action: ReviewAction,
+  options: ReviewClaimActionOptions = {},
+): Promise<{
+  relatedUpdated: number;
+  relatedClaimIds: string[];
+  claimValueChanged: boolean;
+  personFieldUpdated: boolean;
+  personFieldPreserved: boolean;
+  error: string | null;
+}> {
   const response = await fetch('/internal-api/review-claim', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ claimId, action }),
+    body: JSON.stringify({ claimId, action, ...options }),
   });
   const body = await response.json().catch(() => null);
 
   if (!response.ok) {
-    return { relatedUpdated: 0, relatedClaimIds: [], error: body?.error ?? response.statusText };
+    return {
+      relatedUpdated: 0,
+      relatedClaimIds: [],
+      claimValueChanged: false,
+      personFieldUpdated: false,
+      personFieldPreserved: false,
+      error: body?.error ?? response.statusText,
+    };
   }
 
   return {
     relatedUpdated: Number(body?.relatedUpdated ?? 0),
     relatedClaimIds: Array.isArray(body?.relatedClaimIds) ? body.relatedClaimIds.map(String) : [],
+    claimValueChanged: body?.claimValueChanged === true,
+    personFieldUpdated: body?.personFieldUpdated === true,
+    personFieldPreserved: body?.personFieldPreserved === true,
     error: null,
   };
 }

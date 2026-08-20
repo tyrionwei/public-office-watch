@@ -5,7 +5,7 @@
 - Store local-only frontend values in `apps/web/.env.local`.
 - `VITE_SUPABASE_URL` must use `localhost`, `127.0.0.1`, or `::1`.
 - Use the local Supabase public key, `VITE_PUBLIC_DATA_PROVIDER=published`, and `VITE_ENABLE_PUBLISHED_PROVIDER=true`.
-- `npm --prefix apps/web run test:browser` runs the local environment guard before Playwright.
+- `npm --prefix apps/web run dev` and `npm --prefix apps/web run test:browser` run the local environment guard first; invalid or legacy provider modes stop instead of silently showing mock data.
 - An explicit production environment override causes the local guard to fail.
 
 ## Production Cloudflare Pages builds

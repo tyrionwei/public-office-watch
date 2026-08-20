@@ -30,3 +30,16 @@ declare const fetch: (url: string, init?: unknown) => Promise<{
   statusText: string;
   text(): Promise<string>;
 }>;
+
+declare class URLSearchParams {
+  constructor(init?: string | Record<string, string>);
+  get(name: string): string | null;
+  set(name: string, value: string): void;
+  toString(): string;
+}
+declare class URL {
+  constructor(input: string, base?: string);
+  protocol: string;
+  hostname: string;
+  searchParams: URLSearchParams;
+}

@@ -4,14 +4,31 @@ import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { sites } from './build/sites-vite-plugin';
 import {
+  buildIdentityClaimLinkPatch,
   buildPartyCandidateReviewWrite,
   parsePartyCandidateReviewSource,
 } from './build/internalPartyCandidateReview';
+import {
+  buildEditableProfileClaimRevision,
+  canUpdateProfileField,
+  claimApprovalBlockReason,
+  isEditableProfileClaimType,
+} from './build/internalClaimReview';
+import { buildPlatformApprovalPatch } from './build/internalPlatformReview';
+import {
+  buildReviewCanonicalPersonQuery,
+  buildReviewPersonContextQueries,
+  canonicalPersonIdForReview,
+  mapReviewBirthDates,
+  mapReviewCandidates,
+  mapReviewPeople,
+} from './build/internalReviewPersonContext';
 
 type EnvMap = Record<string, string>;
 type JsonObject = Record<string, unknown>;
 type DevRequest = {
   method?: string;
+  url?: string;
   on(event: 'data', listener: (chunk: Uint8Array | string) => void): void;
   on(event: 'end', listener: () => void): void;
   on(event: 'error', listener: (error: Error) => void): void;
@@ -29,6 +46,7 @@ type RestInit = {
 type InternalClaim = {
   id: string;
   person_id: string | null;
+  candidate_id: string | null;
   claim_type: string;
   claim_value: string | null;
   claim_json: JsonObject | null;
@@ -330,10 +348,131 @@ async function rejectRelatedWikidataClaims(claim: InternalClaim, now: string) {
   return targets.map((target) => target.id);
 }
 
+async function fetchReviewPersonContextRows(personIds: string[]) {
+  const people = [];
+  const birthDates = [];
+  const candidates = [];
+
+  for (let index = 0; index < personIds.length; index += 100) {
+    const batch = personIds.slice(index, index + 100);
+    const canonicalRows = await supabaseRest(buildReviewCanonicalPersonQuery(batch));
+    const contextIds = Array.from(new Set([
+      ...batch,
+      ...canonicalRows.map((row: { canonical_person_id: string }) => row.canonical_person_id),
+    ]));
+    const queries = buildReviewPersonContextQueries(contextIds);
+    const [peopleBatch, birthDatesBatch, genderClaimsBatch, candidatesBatch] = await Promise.all([
+      supabaseRest(queries.people),
+      supabaseRest(queries.birthDates),
+      supabaseRest(queries.genders),
+      supabaseRest(queries.candidates),
+    ]);
+    people.push(...mapReviewPeople(peopleBatch, batch, canonicalRows, genderClaimsBatch));
+    birthDates.push(...mapReviewBirthDates(birthDatesBatch, batch, canonicalRows));
+    candidates.push(...mapReviewCandidates(candidatesBatch, batch, canonicalRows));
+  }
+
+  return { people, birthDates, candidates };
+}
+
 function internalReviewApiPlugin(): Plugin {
   return {
     name: 'internal-review-api',
     configureServer(server) {
+      server.middlewares.use('/internal-api/review-claims', async (request, response) => {
+        const devRequest = request as DevRequest;
+        if (devRequest.method !== 'GET') {
+          jsonResponse(response, 405, { error: 'Method not allowed.' });
+          return;
+        }
+
+        try {
+          const requestUrl = new URL(devRequest.url ?? '/', 'http://localhost');
+          const sourceName = requestUrl.searchParams.get('sourceName')?.trim();
+          const claimType = requestUrl.searchParams.get('claimType')?.trim();
+          const reviewStatus = requestUrl.searchParams.get('reviewStatus')?.trim();
+          const personName = requestUrl.searchParams
+            .get('personName')
+            ?.trim()
+            .replace(/[*,().]/g, '')
+            .slice(0, 50);
+          const allowedStatuses = new Set(['pending', 'needs_more_evidence']);
+
+          if (reviewStatus && !allowedStatuses.has(reviewStatus)) {
+            jsonResponse(response, 400, { error: 'Unsupported review status.' });
+            return;
+          }
+
+          const params = new URLSearchParams({
+            select: 'claim_id,person_id,source_person_id,candidate_id,raw_name,claim_type,claim_value,claim_json,confidence_level,review_score,review_status,visibility,source_name,source_url,scoring_reasons,updated_at',
+            order: 'review_score.desc,updated_at.desc',
+            limit: claimType === 'platform' ? '500' : '200',
+          });
+          if (sourceName) params.set('source_name', `eq.${sourceName}`);
+          if (claimType) params.set('claim_type', `eq.${claimType}`);
+          if (reviewStatus) params.set('review_status', `eq.${reviewStatus}`);
+
+          const claims = await supabaseRest(`person_claim_review_queue?${params.toString()}`) as { claim_id: string }[];
+          if (!personName) {
+            jsonResponse(response, 200, { claims });
+            return;
+          }
+
+          const personParams = new URLSearchParams(params.toString());
+          personParams.set('canonical_person_name', `ilike.*${personName}*`);
+          personParams.set('limit', '50');
+          const personClaims = await supabaseRest(
+            `person_claim_review_queue?${personParams.toString()}`,
+          ) as { claim_id: string }[];
+          const claimsById = new Map(claims.map((claim) => [claim.claim_id, claim]));
+          for (const claim of personClaims) claimsById.set(claim.claim_id, claim);
+
+          jsonResponse(response, 200, { claims: Array.from(claimsById.values()) });
+        } catch (error) {
+          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+        }
+      });
+
+      server.middlewares.use('/internal-api/review-person-contexts', async (request, response) => {
+        const devRequest = request as DevRequest;
+        if (devRequest.method !== 'POST') {
+          jsonResponse(response, 405, { error: 'Method not allowed.' });
+          return;
+        }
+
+        try {
+          const body = await readJsonBody(devRequest) as { personIds?: unknown };
+          const personIds = Array.isArray(body.personIds)
+            ? Array.from(new Set(body.personIds.filter((id): id is string => typeof id === 'string' && /^[0-9a-f-]{36}$/i.test(id))))
+            : [];
+          if (personIds.length > 500) {
+            jsonResponse(response, 400, { error: 'At most 500 person ids are allowed.' });
+            return;
+          }
+
+          jsonResponse(response, 200, await fetchReviewPersonContextRows(personIds));
+        } catch (error) {
+          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+        }
+      });
+
+      server.middlewares.use('/internal-api/review-identities', async (request, response) => {
+        const devRequest = request as DevRequest;
+        if (devRequest.method !== 'GET') {
+          jsonResponse(response, 405, { error: 'Method not allowed.' });
+          return;
+        }
+
+        try {
+          const items = await supabaseRest(
+            'person_identity_review_queue?select=source_person_id,source_person_key,source_type,source_name,source_url,raw_name,gender,party,position,district,election_year,birth_date_text,confidence_suggestion,candidate_count,best_match_score,review_status,candidates,updated_at&order=best_match_score.desc,updated_at.desc&limit=200',
+          );
+          jsonResponse(response, 200, { items });
+        } catch (error) {
+          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+        }
+      });
+
       server.middlewares.use('/internal-api/review-claim', async (request, response) => {
         const devRequest = request as DevRequest;
         if (devRequest.method !== 'POST') {
@@ -342,7 +481,12 @@ function internalReviewApiPlugin(): Plugin {
         }
 
         try {
-          const body = await readJsonBody(devRequest) as { claimId?: string; action?: string };
+          const body = await readJsonBody(devRequest) as {
+            claimId?: string;
+            action?: string;
+            platformText?: string;
+            claimValue?: string;
+          };
           const claimId = body.claimId?.trim();
           const action = body.action;
 
@@ -352,7 +496,7 @@ function internalReviewApiPlugin(): Plugin {
           }
 
           const claims = await supabaseRest(
-            `person_claims?select=id,person_id,claim_type,claim_value,claim_json,source_name,source_url,scoring_reasons&id=eq.${encodeURIComponent(claimId)}&limit=1`,
+            `person_claims?select=id,person_id,candidate_id,claim_type,claim_value,claim_json,source_name,source_url,scoring_reasons&id=eq.${encodeURIComponent(claimId)}&limit=1`,
           ) as InternalClaim[];
           const claim = claims[0];
 
@@ -361,26 +505,66 @@ function internalReviewApiPlugin(): Plugin {
             return;
           }
 
-          const people = claim.person_id
+          if (action === 'approve') {
+            const blockReason = claimApprovalBlockReason(claim);
+            if (blockReason) {
+              jsonResponse(response, 409, { error: blockReason });
+              return;
+            }
+          }
+
+          const canonicalRows = claim.person_id
+            ? await supabaseRest(buildReviewCanonicalPersonQuery([claim.person_id]))
+            : [];
+          const reviewPersonId = claim.person_id
+            ? canonicalPersonIdForReview(claim.person_id, canonicalRows)
+            : null;
+          const people = reviewPersonId
             ? await supabaseRest(
-              `people?select=id,name,gender,party,position,district,education,experience&id=eq.${encodeURIComponent(claim.person_id)}&limit=1`,
+              `people?select=id,name,gender,party,position,district,education,experience&id=eq.${encodeURIComponent(reviewPersonId)}&limit=1`,
             ) as PersonRow[]
             : [];
           const person = people[0] ?? null;
           const now = new Date().toISOString();
           const scoringReasons = Array.isArray(claim.scoring_reasons) ? claim.scoring_reasons : [];
+          let profileRevision = null;
+          try {
+            profileRevision = action === 'approve'
+              ? buildEditableProfileClaimRevision(claim, body.claimValue, now)
+              : null;
+          } catch (error) {
+            jsonResponse(response, 400, {
+              error: error instanceof Error ? error.message : '學歷或經歷內容格式不正確。',
+            });
+            return;
+          }
+          const claimForRelatedReview = profileRevision ? { ...claim, claim_value: profileRevision.value, claim_json: profileRevision.claimJson } : claim;
           const decisionReason = {
             version: 'internal-review-ui-v1',
             decision: action,
             reviewedAt: now,
           };
-          const patch = action === 'approve'
+          const patch = action === 'approve' && claim.claim_type === 'platform'
+            ? buildPlatformApprovalPatch(claim, body.platformText ?? '', now)
+            : action === 'approve'
             ? {
                 review_status: 'verified',
                 visibility: 'public',
                 is_public: true,
                 auto_reviewed_at: now,
-                scoring_reasons: [...scoringReasons, decisionReason],
+                ...(profileRevision ? {
+                  claim_value: profileRevision.value,
+                  claim_json: profileRevision.claimJson,
+                } : {}),
+                scoring_reasons: [
+                  ...scoringReasons,
+                  ...(profileRevision?.changed ? [{
+                    version: 'internal-review-ui-profile-edit-v1',
+                    reason: 'reviewer corrected profile text before approval',
+                    reviewedAt: now,
+                  }] : []),
+                  decisionReason,
+                ],
                 updated_at: now,
               }
             : {
@@ -401,15 +585,46 @@ function internalReviewApiPlugin(): Plugin {
             body: JSON.stringify(patch),
           });
 
+          let personFieldUpdated = false;
+          let personFieldPreserved = false;
+          if (action === 'approve' && profileRevision && person && isEditableProfileClaimType(claim.claim_type)) {
+            const profileField = claim.claim_type as 'education' | 'experience';
+            if (canUpdateProfileField(person[profileField], claim.claim_value)) {
+              await supabaseRest(`people?id=eq.${encodeURIComponent(person.id)}`, {
+                method: 'PATCH',
+                headers: { prefer: 'return=minimal' },
+                body: JSON.stringify({ [profileField]: profileRevision.value, updated_at: now }),
+              });
+              personFieldUpdated = true;
+            } else {
+              personFieldPreserved = true;
+            }
+          }
+
           const relatedClaimIds = action === 'approve'
-            ? await approveRelatedWikidataClaims(claim, now)
+            ? await approveRelatedWikidataClaims(claimForRelatedReview, now)
             : await rejectRelatedWikidataClaims(claim, now);
+
+          if (personFieldUpdated) {
+            await supabaseRest('rpc/refresh_public_people_list_cached', {
+              method: 'POST',
+              body: JSON.stringify({}),
+            });
+          }
 
           if (action === 'reject') {
             writeSkippedRetryTarget(claim, person);
           }
 
-          jsonResponse(response, 200, { status: 'ok', action, relatedUpdated: relatedClaimIds.length, relatedClaimIds });
+          jsonResponse(response, 200, {
+            status: 'ok',
+            action,
+            relatedUpdated: relatedClaimIds.length,
+            relatedClaimIds,
+            claimValueChanged: profileRevision?.changed === true,
+            personFieldUpdated,
+            personFieldPreserved,
+          });
         } catch (error) {
           jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
@@ -648,7 +863,7 @@ function internalReviewApiPlugin(): Plugin {
               await supabaseRest('person_claims?source_person_id=eq.' + encodeURIComponent(sourcePersonId), {
                 method: 'PATCH',
                 headers: { prefer: 'return=minimal' },
-                body: JSON.stringify({ person_id: candidatePerson.id, review_status: 'verified', visibility: 'public', is_public: true, updated_at: now }),
+                body: JSON.stringify(buildIdentityClaimLinkPatch(candidatePerson.id, now)),
               });
             }
           }

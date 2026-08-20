@@ -25,6 +25,7 @@ const claimTypeLabels: Record<string, string> = {
   legal_case: '司法紀錄',
   external_id: '外部 ID',
   party_affiliation: '黨籍',
+  platform: '政見',
 };
 
 const reviewStatusLabels: Record<string, string> = {
@@ -62,12 +63,30 @@ const scoringReasonLabels: Record<string, string> = {
   'sensitive claim requires stronger evidence': '敏感資料，需要更強證據',
 };
 
+const reviewAuditReasonLabels: Record<string, string> = {
+  hold_implausible_birth_year: '公報生日辨識結果不合理',
+  hold_conflict: '與既有公開資料衝突',
+  hold_text_quality: '公報文字辨識品質不足',
+  manual_text_review: '公報文字需要人工核對',
+  two_pass_ocr_disagreement: '兩次文字辨識結果不一致',
+  second_ocr_missing: '第二次文字辨識沒有結果',
+  identity_name_malformed: '人物姓名欄疑似錯配',
+};
+
 function recordValue(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : null;
 }
 
 function textValue(value: unknown) {
   return typeof value === 'string' && value.trim() ? value.trim() : null;
+}
+
+function reviewAuditReasons(claimJson: Record<string, unknown> | undefined) {
+  const audit = recordValue(claimJson?.reviewAudit);
+  const reasonCodes = Array.isArray(audit?.reasonCodes) ? audit.reasonCodes : [];
+  return reasonCodes
+    .filter((reason): reason is string => typeof reason === 'string' && reason.trim().length > 0)
+    .map((reason) => reviewAuditReasonLabels[reason] ?? reason);
 }
 
 function includesQuery(values: unknown[], query: string) {
@@ -240,6 +259,10 @@ function displayClaimType(value: string) {
   return claimTypeLabels[value] ?? value;
 }
 
+function isEditableProfileClaim(claimType: string) {
+  return claimType === 'education' || claimType === 'experience';
+}
+
 function claimTypeTone(value: string) {
   if (value === 'family_relation' || value === 'legal_case') return 'border-rose-400/50 bg-rose-500/10 text-rose-300';
   if (value === 'gender' || value === 'external_id') return 'border-signal/50 bg-signal/10 text-signal';
@@ -259,23 +282,32 @@ export function InternalReviewQueuePage() {
   const [query, setQuery] = useState('');
   const [actionClaimId, setActionClaimId] = useState<string | null>(null);
   const [actionIdentityKey, setActionIdentityKey] = useState<string | null>(null);
+  const [claimValueDrafts, setClaimValueDrafts] = useState<Record<string, string>>({});
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLocalReviewEnabled()) return;
 
+    let cancelled = false;
     setLoading(true);
-    void fetchInternalReviewClaims({ sourceName, claimType, reviewStatus }).then((result) => {
-      if (result.error) {
-        setError(result.error);
-        setClaims([]);
-      } else {
-        setError(null);
-        setClaims(result.claims);
-      }
-      setLoading(false);
-    });
-  }, [claimType, reviewStatus, sourceName]);
+    const timeoutId = window.setTimeout(() => {
+      void fetchInternalReviewClaims({ sourceName, claimType, reviewStatus, personName: query.trim() }).then((result) => {
+        if (cancelled) return;
+        if (result.error) {
+          setError(result.error);
+          setClaims([]);
+        } else {
+          setError(null);
+          setClaims(result.claims);
+        }
+        setLoading(false);
+      });
+    }, query.trim() ? 250 : 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, [claimType, query, reviewStatus, sourceName]);
 
   useEffect(() => {
     if (!isLocalReviewEnabled()) return;
@@ -363,6 +395,13 @@ export function InternalReviewQueuePage() {
     return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
   }, [claims]);
 
+  const identityItemsBySourcePersonId = useMemo(
+    () => new Map(
+      identityItems.map((item) => [item.source_person_id, item]),
+    ),
+    [identityItems],
+  );
+
   if (!isLocalReviewEnabled()) {
     return (
       <AppShell>
@@ -390,6 +429,14 @@ export function InternalReviewQueuePage() {
     }
 
     if (action !== 'reject') {
+      const refreshedClaims = await fetchInternalReviewClaims({ sourceName, claimType, reviewStatus, personName: query.trim() });
+      if (refreshedClaims.error) {
+        setError(refreshedClaims.error);
+      } else {
+        setError(null);
+        setClaims(refreshedClaims.claims);
+      }
+
       setIdentityItems((current) => current.filter((entry) => entry.source_person_id !== item.source_person_id));
       setActionMessage(action === 'create' ? '已建立並確認新人物：' + item.raw_name : '已確認身分：' + item.raw_name);
     } else {
@@ -414,7 +461,13 @@ export function InternalReviewQueuePage() {
     setActionClaimId(claim.claim_id);
     setActionMessage(null);
 
-    const result = await reviewInternalClaim(claim.claim_id, action);
+    const editableProfileClaim = isEditableProfileClaim(claim.claim_type);
+    const editedValue = claimValueDrafts[claim.claim_id] ?? claim.claim_value ?? '';
+    const result = await reviewInternalClaim(
+      claim.claim_id,
+      action,
+      action === 'approve' && editableProfileClaim ? { claimValue: editedValue } : {},
+    );
     if (result.error) {
       setActionMessage(result.error);
       setActionClaimId(null);
@@ -423,11 +476,22 @@ export function InternalReviewQueuePage() {
 
     const reviewedClaimIds = new Set([claim.claim_id, ...result.relatedClaimIds]);
     setClaims((current) => current.filter((item) => !reviewedClaimIds.has(item.claim_id)));
+    setClaimValueDrafts((current) => {
+      const next = { ...current };
+      delete next[claim.claim_id];
+      return next;
+    });
     const approveCascadeText = result.relatedUpdated > 0 ? `，同步通過 ${result.relatedUpdated} 筆低敏感欄位` : '';
     const rejectCascadeText = result.relatedUpdated > 0 ? `，同步標記 ${result.relatedUpdated} 筆同 QID 資料` : '';
+    const editText = result.claimValueChanged ? '，已套用文字修正' : '';
+    const personFieldText = result.personFieldUpdated
+      ? '，已更新人物主欄位'
+      : result.personFieldPreserved
+        ? '，人物主欄位保留較新的既有資料'
+        : '';
     setActionMessage(
       action === 'approve'
-        ? `已通過：${claim.person_name ?? claim.claim_value}${approveCascadeText}`
+        ? `已通過：${claim.person_name ?? claim.claim_value}${editText}${personFieldText}${approveCascadeText}`
         : `已標記錯誤：${claim.person_name ?? claim.claim_value}${rejectCascadeText}`,
     );
     setActionClaimId(null);
@@ -456,6 +520,7 @@ export function InternalReviewQueuePage() {
                   <option value="">全部來源</option>
                   <option value="Wikidata 人物補充資料">Wikidata</option>
                   <option value="VoteTW">VoteTW</option>
+                  <option value="中央選舉委員會：2022年縣市議員選舉公報 OCR">中選會 2022 縣市議員公報</option>
                 </select>
               </label>
               <label className="grid gap-1 text-xs text-slate-500">
@@ -650,6 +715,18 @@ export function InternalReviewQueuePage() {
           <div className="grid gap-4">
             {filteredClaims.map((claim) => {
               const metadata = claimReviewMetadata(claim);
+              const auditReasons = reviewAuditReasons(claim.claim_json);
+              const identityReviewItem = claim.source_person_id
+                ? identityItemsBySourcePersonId.get(claim.source_person_id)
+                : null;
+              const matchedElection = claim.person_context?.elections.find(
+                (election) => election.candidateId === claim.candidate_id,
+              );
+              const matchedElectionLabel = matchedElection
+                ? `${matchedElection.electionYear ?? '年份未明'} · ${matchedElection.raceTitle || matchedElection.electionName} · ${electionResultLabels[matchedElection.electionResult] ?? matchedElection.electionResult}`
+                : null;
+              const editableProfileClaim = isEditableProfileClaim(claim.claim_type);
+              const editedClaimValue = claimValueDrafts[claim.claim_id] ?? claim.claim_value ?? '';
               return (
                 <article key={claim.claim_id} className="pixel-corners border border-line/70 bg-bg/35 p-4 sm:p-5">
                   <header className="flex flex-col gap-3 border-b border-line/60 pb-4 lg:flex-row lg:items-center lg:justify-between">
@@ -673,9 +750,44 @@ export function InternalReviewQueuePage() {
                     <section className="min-w-0 xl:border-l xl:border-line/60 xl:pl-6">
                       <p className="text-xs tracking-[0.14em] text-rose-300">待審內容</p>
                       <h3 className="mt-2 text-lg font-semibold text-white">{displayClaimType(claim.claim_type)}</h3>
-                      <p className="mt-3 whitespace-pre-line break-words border-l-2 border-rose-400/60 pl-4 text-base leading-7 text-slate-200">
-                        {claim.claim_value ?? '未提供內容'}
-                      </p>
+                      {editableProfileClaim ? (
+                        <label className="mt-3 block border-l-2 border-rose-400/60 pl-4">
+                          <span className="text-xs text-slate-400">可修正格式或錯字，通過時會保存此版本</span>
+                          <textarea
+                            value={editedClaimValue}
+                            onChange={(event) => setClaimValueDrafts((current) => ({
+                              ...current,
+                              [claim.claim_id]: event.target.value,
+                            }))}
+                            maxLength={20_000}
+                            rows={claim.claim_type === 'experience' ? 8 : 5}
+                            className="mt-2 w-full resize-y border border-line/80 bg-bg/80 px-3 py-2 text-base leading-7 text-slate-100 outline-none focus:border-accent"
+                          />
+                        </label>
+                      ) : (
+                        <p className="mt-3 whitespace-pre-line break-words border-l-2 border-rose-400/60 pl-4 text-base leading-7 text-slate-200">
+                          {claim.claim_value ?? '未提供內容'}
+                        </p>
+                      )}
+                      {auditReasons.length > 0 ? (
+                        <div className="mt-4 border-l-2 border-amber-400/70 pl-4 text-sm leading-6 text-amber-200">
+                          <p>保留待審原因</p>
+                          <ul className="mt-1 list-disc pl-5">
+                            {auditReasons.map((reason) => <li key={reason}>{reason}</li>)}
+                          </ul>
+                        </div>
+                      ) : null}
+                      {!claim.person_id ? (
+                        <p className="mt-4 border-l-2 border-amber-400/70 pl-4 text-sm leading-6 text-amber-200">
+                          尚未完成人物身分比對，不能公開。
+                          {identityReviewItem ? ` 上方身分比對審核有 ${identityReviewItem.candidate_count} 位同名候選人物。` : ' 請先建立或確認人物連結。'}
+                        </p>
+                      ) : null}
+                      {claim.claim_type === 'platform' && !claim.candidate_id ? (
+                        <p className="mt-4 border-l-2 border-amber-400/70 pl-4 text-sm leading-6 text-amber-200">
+                          尚未對應到確切參選紀錄，需先完成選舉配對才能公開。
+                        </p>
+                      ) : null}
 
                       <dl className="mt-5 grid gap-3 border-t border-line/50 pt-4 sm:grid-cols-2 2xl:grid-cols-3">
                         <DetailField label="來源頁人物" value={metadata.sourceName} />
@@ -684,6 +796,7 @@ export function InternalReviewQueuePage() {
                         <DetailField label="同名來源資料數" value={metadata.sameNameProfileCount} />
                         <DetailField label="來源段落" value={metadata.sectionTitles.join('、') || null} />
                         <DetailField label="資料來源" value={claim.source_name} />
+                        {claim.claim_type === 'platform' ? <DetailField label="對應參選紀錄" value={matchedElectionLabel} /> : null}
                       </dl>
 
                       {claim.scoring_reasons.length > 0 ? (
@@ -708,11 +821,22 @@ export function InternalReviewQueuePage() {
                         <div className="flex flex-wrap gap-2">
                           <button
                             type="button"
-                            disabled={actionClaimId === claim.claim_id}
+                            disabled={
+                              actionClaimId === claim.claim_id
+                              || !claim.person_id
+                              || (claim.claim_type === 'platform' && !claim.candidate_id)
+                              || (editableProfileClaim && !editedClaimValue.trim())
+                            }
                             onClick={() => void handleReviewAction(claim, 'approve')}
                             className="pixel-corners border border-signal/70 bg-signal/15 px-4 py-2 text-sm text-signal hover:bg-signal/25 disabled:cursor-wait disabled:opacity-60"
                           >
-                            通過並公開
+                            {!claim.person_id
+                              ? '先完成人物比對'
+                              : claim.claim_type === 'platform'
+                                ? '確認人物與選舉後公開'
+                                : editableProfileClaim
+                                  ? '儲存修正並公開'
+                                  : '通過並公開'}
                           </button>
                           <button
                             type="button"

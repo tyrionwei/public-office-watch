@@ -33,7 +33,7 @@ const autoReviewVersion = 'auto-verified-external-id-or-identity-match-v3';
 const wikidataSourceName = 'Wikidata 人物補充資料';
 const voteTwSourceName = 'VoteTW';
 const voteTwSourceId = 'votetw-person-enrichment';
-const blockedClaimTypes = new Set(['legal_case', 'family_relation']);
+const blockedClaimTypes = new Set(['legal_case', 'family_relation', 'candidacy']);
 const wikidataFallbackOnlyClaimTypes = new Set(['education', 'experience']);
 const wikidataExternalIdUnlockedClaimTypes = new Set([
   'external_id',
@@ -53,7 +53,6 @@ const voteTwAutoClaimTypes = new Set([
   'education',
   'experience',
   'party_affiliation',
-  'platform',
 ]);
 
 function parseArgs(argv) {
@@ -365,9 +364,13 @@ function explainWikidataPartyAffiliationEligibility(claim, verifiedExternalIdKey
   return { eligible: false, reason: 'wikidata-party-affiliation-undated-conflict' };
 }
 
-function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys, currentPartyByPersonId) {
+export function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys, currentPartyByPersonId) {
   if (blockedClaimTypes.has(claim.claim_type)) {
     return { eligible: false, reason: 'blocked-sensitive-claim-type' };
+  }
+
+  if (claim.claim_type === 'platform') {
+    return { eligible: false, reason: 'platform-requires-scoped-content-review' };
   }
 
   if (Number(claim.review_score) < options.minScore) {
@@ -579,8 +582,11 @@ async function main() {
   }, null, 2));
 }
 
-main().catch((error) => {
-  const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`auto review failed: ${message}`);
-  process.exit(1);
-});
+const isMainModule = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMainModule) {
+  main().catch((error) => {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`auto review failed: ${message}`);
+    process.exit(1);
+  });
+}

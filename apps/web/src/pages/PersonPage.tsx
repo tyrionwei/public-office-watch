@@ -11,6 +11,7 @@ import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
+import { platformClaimsForCandidate } from '../lib/candidatePlatform';
 import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
 import { peoplePath } from '../routes/routePaths';
@@ -101,6 +102,13 @@ function claimJsonString(claim: PublicPersonClaim, key: string) {
   return typeof value === 'string' && value.trim() ? value.trim() : null;
 }
 
+function claimElectionRaceId(claim: PublicPersonClaim) {
+  const electionContext = claim.claim_json.electionContext;
+  if (!electionContext || typeof electionContext !== 'object' || Array.isArray(electionContext)) return null;
+  const raceId = (electionContext as Record<string, unknown>).raceId;
+  return typeof raceId === 'string' && raceId.trim() ? raceId.trim() : null;
+}
+
 function platformTextForClaim(claim: PublicPersonClaim) {
   return claimJsonString(claim, 'platformText') ?? claim.claim_value?.trim() ?? null;
 }
@@ -115,7 +123,12 @@ function formatVoteRate(value: number | null) {
   return percentage.toFixed(2).replace(/\.00$/, '') + '%';
 }
 
-function candidateDetailRows(candidate: PublicCandidate, t: ReturnType<typeof useI18n>['t'], locale: string) {
+function candidateDetailRows(
+  candidate: PublicCandidate,
+  t: ReturnType<typeof useI18n>['t'],
+  locale: string,
+  replacementElected: boolean,
+) {
   const rows: Array<[string, string]> = [];
   const voteCount = formatVoteCount(candidate.vote_count, locale);
   const voteRate = formatVoteRate(candidate.vote_rate);
@@ -124,6 +137,9 @@ function candidateDetailRows(candidate: PublicCandidate, t: ReturnType<typeof us
   rows.push([t('person.party'), normalizePartyLabel(candidate.party)]);
   if (candidate.election_result === 'elected' || candidate.election_result === 'not_elected') {
     rows.push([t('person.electionResult'), translateElectionResult(candidate.election_result, t)]);
+  }
+  if (replacementElected) {
+    rows.push([t('person.laterElectionStatus'), t('person.replacementElected')]);
   }
   if (candidate.candidate_no !== null) rows.push([t('race.number'), String(candidate.candidate_no)]);
   if (voteCount) rows.push([t('race.votes'), voteCount]);
@@ -309,6 +325,11 @@ function PlatformClaimCard({ claim }: { claim: PublicPersonClaim }) {
       <div className="mt-3 max-h-72 overflow-auto whitespace-pre-line pr-2 text-sm leading-6 text-slate-200">
         {platformText ?? t('person.noContent')}
       </div>
+      {claim.source_url ? (
+        <a href={claim.source_url} target="_blank" rel="noreferrer" className="mt-3 block truncate text-xs text-accent hover:text-white">
+          {claim.source_name?.trim() || t('person.publicSource')}
+        </a>
+      ) : null}
     </article>
   );
 }
@@ -360,7 +381,6 @@ export function PersonPage() {
     ? primaryPhotoUrl ?? pickDefaultCandidateSprite(person.name, person.gender, birthDateClaim?.claim_value)
     : xiezhiMascotSprite;
   const usesMascotFallback = Boolean(person && !primaryPhotoUrl && portraitSrc === xiezhiMascotSprite);
-  const platformClaims = profile ? claimsByType(profile.public_claims, 'platform') : [];
   const financeClaims = profile ? claimsByType(profile.public_claims, 'finance_summary') : [];
   const legalClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'legal_case')) : [];
   const familyClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'family_relation')) : [];
@@ -389,7 +409,6 @@ export function PersonPage() {
       ].filter((fact): fact is [string, string] => fact !== null)
     : [];
   const supplementarySectionCount = [
-    platformClaims.length,
     financeClaims.length,
     legalClaims.length,
     familyClaims.length,
@@ -483,7 +502,19 @@ export function PersonPage() {
             <SectionPanel title={t('person.candidaciesTitle')} eyebrow={t('person.candidaciesEyebrow')}>
               {profile.candidate_records.length > 0 ? (
                 <div className="grid gap-3 md:grid-cols-2">
-                  {profile.candidate_records.map((candidate) => (
+                  {profile.candidate_records.map((candidate) => {
+                    const candidatePlatforms = platformClaimsForCandidate(
+                      profile.public_claims, candidate.candidate_id, candidate.race_id,
+                    );
+                    const replacementElected = profile.public_claims.some((claim) => (
+                      claim.claim_type === 'office'
+                      && (
+                        claim.candidate_id === candidate.candidate_id
+                        || claimElectionRaceId(claim) === candidate.race_id
+                      )
+                      && claim.claim_json.event === 'succession'
+                    ));
+                    return (
                     <article key={candidate.candidate_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
@@ -495,15 +526,26 @@ export function PersonPage() {
                         </span>
                       </div>
                       <dl className="mt-3 space-y-2 text-sm">
-                        {candidateDetailRows(candidate, t, language).map(([label, value]) => (
+                        {candidateDetailRows(candidate, t, language, replacementElected).map(([label, value]) => (
                           <div key={label} className="flex justify-between gap-3">
                             <dt className="text-slate-500">{label}</dt>
                             <dd className="text-right text-slate-200">{value}</dd>
                           </div>
                         ))}
                       </dl>
+                      {candidatePlatforms.length > 0 ? (
+                        <div className="mt-4 border-t border-line/60 pt-4">
+                          <p className="mb-3 text-xs uppercase tracking-[0.2em] text-slate-500">{t('person.platformTitle')}</p>
+                          <div className="grid gap-3">
+                            {candidatePlatforms.map((claim) => (
+                              <PlatformClaimCard key={claim.claim_id} claim={claim} />
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
                     </article>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <EmptyInfo>{t('person.noCandidacies')}</EmptyInfo>
@@ -572,15 +614,6 @@ export function PersonPage() {
 
             {supplementarySectionCount > 0 ? (
               <div className={supplementarySectionCount > 1 ? 'grid gap-4 lg:grid-cols-2' : 'grid gap-4'}>
-                {platformClaims.length > 0 ? (
-                  <SectionPanel title={t('person.platformTitle')} eyebrow={t('person.platformEyebrow')}>
-                    <div className="grid gap-3">
-                      {platformClaims.map((claim) => (
-                        <PlatformClaimCard key={claim.claim_id} claim={claim} />
-                      ))}
-                    </div>
-                  </SectionPanel>
-                ) : null}
                 {financeClaims.length > 0 ? (
                   <SectionPanel title={t('person.financeTitle')} eyebrow={t('person.financeEyebrow')}>
                     <ClaimGrid claims={financeClaims} />

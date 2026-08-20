@@ -2,6 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "skipLibCheck": true,
+    "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "lib": ["ES2022"],
@@ -13,6 +14,9 @@
     "vite.config.ts",
     "vite.node.d.ts",
     "build/sites-vite-plugin.ts",
-    "build/internalPartyCandidateReview.ts"
+    "build/internalClaimReview.ts",
+    "build/internalPartyCandidateReview.ts",
+    "build/internalReviewPersonContext.ts",
+    "build/internalPlatformReview.ts"
   ]
 }

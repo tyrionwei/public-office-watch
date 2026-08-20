@@ -3,9 +3,10 @@ import test from 'node:test';
 import { platformClaimsForCandidate } from '../src/lib/candidatePlatform.ts';
 import type { PublicPersonClaim } from '../src/types/publicViews.ts';
 
-function platformClaim(claimId: string, electionContext?: Record<string, string>): PublicPersonClaim {
+function platformClaim(claimId: string, electionContext?: Record<string, string>, candidateId?: string): PublicPersonClaim {
   return {
     claim_id: claimId,
+    candidate_id: candidateId,
     person_id: 'person-1',
     claim_type: 'platform',
     claim_value: claimId,
@@ -26,11 +27,12 @@ test('returns only platform claims linked to the current candidacy or race', () 
     platformClaim('race-only-match', { raceId: 'race-1' }),
     platformClaim('other-election', { candidateId: 'candidate-3', raceId: 'race-2' }),
     platformClaim('legacy-unscoped'),
+    platformClaim('direct-candidate-match', undefined, 'candidate-1'),
   ];
 
   assert.deepEqual(
     platformClaimsForCandidate(claims, 'candidate-1', 'race-1').map((claim) => claim.claim_id),
-    ['candidate-match', 'race-only-match'],
+    ['candidate-match', 'race-only-match', 'direct-candidate-match'],
   );
 });
 

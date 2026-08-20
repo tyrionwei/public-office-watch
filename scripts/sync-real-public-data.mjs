@@ -3411,6 +3411,17 @@ function yearFromDateText(value) {
   return year ? Number.parseInt(year, 10) : null;
 }
 
+function electionYearFromPartyClaim(claimJson, normalizedParty) {
+  const records = Array.isArray(claimJson?.electionRecords) ? claimJson.electionRecords : [];
+  const years = records
+    .filter((record) => normalizePartyAffiliationName(record?.party) === normalizedParty)
+    .map((record) => String(record?.election ?? '').match(/(?:19|20)\d{2}/)?.[0])
+    .filter(Boolean)
+    .map((year) => Number.parseInt(year, 10));
+
+  return years.length > 0 ? Math.max(...years) : null;
+}
+
 function buildPersonPartyAffiliationRows(seed, sourcePersonByKey, personByExternalId, sourcePeople, startedAt) {
   const rows = [];
   const sourcePeopleByKey = new Map(sourcePeople.map((sourcePerson) => [sourcePerson.source_person_key, sourcePerson]));
@@ -3531,13 +3542,22 @@ function buildEnrichmentPartyAffiliationRows(personClaimRows, startedAt) {
     const claimJson = claim.claim_json ?? {};
     const startDate = sqlDateFromSourceDate(claimJson.startDate);
     const endDate = sqlDateFromSourceDate(claimJson.endDate);
-    if (!startDate && !endDate) continue;
 
     const partyName = normalizePartyName(claim.claim_value);
     const normalizedParty = normalizePartyAffiliationName(partyName);
     if (!partyName || !normalizedParty) continue;
 
-    const observedYear = yearFromDateText(startDate ?? endDate) ?? Number.parseInt(startedAt.slice(0, 4), 10);
+    const sourceId = claimJson.sourceId ?? 'person-enrichment';
+    const explicitDate = Boolean(startDate || endDate);
+    const cecClaimYear = String(claim.source_name ?? '').startsWith('中央選舉委員會')
+      ? Number.parseInt(String(claim.claim_key).match(/(?:19|20)\d{2}/)?.[0] ?? '', 10) || null
+      : null;
+    const observedYear = yearFromDateText(startDate ?? endDate)
+      ?? electionYearFromPartyClaim(claimJson, normalizedParty)
+      ?? cecClaimYear;
+    const isVerifiedPublic = claim.review_status === 'verified'
+      && claim.visibility === 'public'
+      && claim.is_public === true;
 
     rows.push({
       person_id: claim.person_id,
@@ -3546,23 +3566,23 @@ function buildEnrichmentPartyAffiliationRows(personClaimRows, startedAt) {
       affiliation_key: partyClaimAffiliationKey(claim.person_id, claim.claim_key),
       party_name: partyName,
       normalized_party: normalizedParty,
-      role_context: 'wiki_record',
+      role_context: String(sourceId).startsWith('official-cec-') ? 'official_record' : 'wiki_record',
       observed_year: observedYear,
       observed_date: startDate ?? endDate,
       start_date: startDate,
       end_date: endDate,
-      is_current: !endDate,
+      is_current: Boolean(startDate) && !endDate,
       confidence_level: claim.confidence_level ?? 'C',
-      review_status: 'pending',
+      review_status: isVerifiedPublic ? 'verified' : 'pending',
       source_name: claim.source_name,
       source_url: claim.source_url,
       source_payload: {
         ...claimJson,
-        sourceId: claimJson.sourceId ?? 'wikidata-person-enrichment',
+        sourceId,
         sourceClaimKey: claim.claim_key,
-        precedence: 'wiki-secondary-explicit-date',
+        precedence: explicitDate ? 'wiki-secondary-explicit-date' : 'reviewed-claim-without-explicit-date',
       },
-      is_public: false,
+      is_public: isVerifiedPublic,
       updated_at: startedAt,
     });
   }
@@ -4411,6 +4431,7 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
 
 export {
   buildSourcePersonRows,
+  buildEnrichmentPartyAffiliationRows,
   buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,

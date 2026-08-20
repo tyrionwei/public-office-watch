@@ -23,6 +23,7 @@ export function platformClaimsForCandidate(
 ) {
   return claims.filter((claim) => {
     if (claim.claim_type !== 'platform') return false;
+    if (claim.candidate_id) return claim.candidate_id === candidateId;
     const context = electionContext(claim);
     if (!context) return false;
     if (context.candidateId) return context.candidateId === candidateId;

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   applyReviewedCandidateResultOverride,
+  buildEnrichmentPartyAffiliationRows,
   buildSourcePersonRows,
   buildPersonEnrichmentClaimRows,
   buildLegalRecordLeadRows,
@@ -11,6 +12,52 @@ import {
   isHistoricalCecNationalResult,
   scoreClaim,
 } from './sync-real-public-data.mjs';
+
+const [reviewedVoteTwAffiliation] = buildEnrichmentPartyAffiliationRows([{
+  claim_key: 'votetw-person-enrichment:test:party_affiliation:1',
+  person_id: '00000000-0000-0000-0000-000000000001',
+  claim_type: 'party_affiliation',
+  claim_value: '民主進步黨',
+  claim_json: {
+    sourceId: 'votetw-person-enrichment',
+    electionRecords: [{ party: '民主進步黨', election: '2022年測試選舉' }],
+  },
+  confidence_level: 'B',
+  review_status: 'verified',
+  visibility: 'public',
+  is_public: true,
+  source_name: 'VoteTW',
+  source_url: 'https://example.com/votetw',
+}], '2026-08-14T00:00:00.000Z');
+assert.equal(reviewedVoteTwAffiliation.observed_year, 2022);
+assert.equal(reviewedVoteTwAffiliation.is_current, false);
+assert.equal(reviewedVoteTwAffiliation.review_status, 'verified');
+assert.equal(reviewedVoteTwAffiliation.is_public, true);
+assert.equal(reviewedVoteTwAffiliation.source_payload.precedence, 'reviewed-claim-without-explicit-date');
+
+const [pendingDatedAffiliation] = buildEnrichmentPartyAffiliationRows([{
+  claim_key: 'wikidata:test:party_affiliation:1',
+  person_id: '00000000-0000-0000-0000-000000000001',
+  claim_type: 'party_affiliation',
+  claim_value: '中國國民黨',
+  claim_json: {
+    sourceId: 'wikidata-person-enrichment',
+    startDate: '+2020-01-01T00:00:00Z',
+    endDate: null,
+  },
+  confidence_level: 'C',
+  review_status: 'pending',
+  visibility: 'private',
+  is_public: false,
+  source_name: 'Wikidata 人物補充資料',
+  source_url: 'https://www.wikidata.org/wiki/Q1',
+}], '2026-08-14T00:00:00.000Z');
+assert.equal(pendingDatedAffiliation.observed_year, 2020);
+assert.equal(pendingDatedAffiliation.start_date, '2020-01-01');
+assert.equal(pendingDatedAffiliation.is_current, true);
+assert.equal(pendingDatedAffiliation.review_status, 'pending');
+assert.equal(pendingDatedAffiliation.is_public, false);
+assert.equal(pendingDatedAffiliation.source_payload.precedence, 'wiki-secondary-explicit-date');
 
 const root = 'votedata/votedata/voteData';
 

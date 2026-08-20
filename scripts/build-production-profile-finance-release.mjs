@@ -15,6 +15,7 @@ const releaseClaimPrefixes = [
   'official-profile:cec-2024-',
 ];
 const retainedClaimTypes = ['birth_date', 'gender', 'education', 'experience', 'platform'];
+const releaseBatchSize = 200;
 const retiredClaimKeys = [
   'cec-platform:2022:votetw-candidate-2dc25cd451b5d2ac',
   'cec-platform:2022:votetw-candidate-597a55452c5fe998',
@@ -162,10 +163,16 @@ function tempTable(name, group, rows, delimiter) {
   const declaration = columns[group]
     .map(([column, type]) => `${column} ${type}`)
     .join(', ');
-  return `CREATE TEMP TABLE ${name} ON COMMIT DROP AS
+  const inserts = [];
+  for (let offset = 0; offset < rows.length; offset += releaseBatchSize) {
+    inserts.push(`INSERT INTO ${name}
 SELECT *
-FROM jsonb_to_recordset(${sqlJson(rows, delimiter)})
-AS row(${declaration});`;
+FROM jsonb_to_recordset(${sqlJson(rows.slice(offset, offset + releaseBatchSize), delimiter)})
+AS row(${declaration});`);
+  }
+  return `CREATE TEMP TABLE ${name} (${declaration}) ON COMMIT DROP;
+
+${inserts.join('\n\n')}`;
 }
 
 function keyTable(name, rows, declaration, delimiter) {

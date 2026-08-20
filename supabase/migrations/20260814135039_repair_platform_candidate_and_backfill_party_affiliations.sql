@@ -1,5 +1,8 @@
 BEGIN;
 
+SET LOCAL lock_timeout = '5s';
+SET LOCAL statement_timeout = '15min';
+
 CREATE TEMP TABLE _platform_candidate_rebind_20260814 ON COMMIT DROP AS
 WITH source_claims AS (
     SELECT

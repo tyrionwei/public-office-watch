@@ -263,6 +263,10 @@ function isEditableProfileClaim(claimType: string) {
   return claimType === 'education' || claimType === 'experience';
 }
 
+function isEditableReviewClaim(claimType: string) {
+  return isEditableProfileClaim(claimType) || claimType === 'platform';
+}
+
 function claimTypeTone(value: string) {
   if (value === 'family_relation' || value === 'legal_case') return 'border-rose-400/50 bg-rose-500/10 text-rose-300';
   if (value === 'gender' || value === 'external_id') return 'border-signal/50 bg-signal/10 text-signal';
@@ -466,7 +470,11 @@ export function InternalReviewQueuePage() {
     const result = await reviewInternalClaim(
       claim.claim_id,
       action,
-      action === 'approve' && editableProfileClaim ? { claimValue: editedValue } : {},
+      action === 'approve' && claim.claim_type === 'platform'
+        ? { platformText: editedValue }
+        : action === 'approve' && editableProfileClaim
+          ? { claimValue: editedValue }
+          : {},
     );
     if (result.error) {
       setActionMessage(result.error);
@@ -726,6 +734,7 @@ export function InternalReviewQueuePage() {
                 ? `${matchedElection.electionYear ?? '年份未明'} · ${matchedElection.raceTitle || matchedElection.electionName} · ${electionResultLabels[matchedElection.electionResult] ?? matchedElection.electionResult}`
                 : null;
               const editableProfileClaim = isEditableProfileClaim(claim.claim_type);
+              const editableReviewClaim = isEditableReviewClaim(claim.claim_type);
               const editedClaimValue = claimValueDrafts[claim.claim_id] ?? claim.claim_value ?? '';
               return (
                 <article key={claim.claim_id} className="pixel-corners border border-line/70 bg-bg/35 p-4 sm:p-5">
@@ -750,7 +759,7 @@ export function InternalReviewQueuePage() {
                     <section className="min-w-0 xl:border-l xl:border-line/60 xl:pl-6">
                       <p className="text-xs tracking-[0.14em] text-rose-300">待審內容</p>
                       <h3 className="mt-2 text-lg font-semibold text-white">{displayClaimType(claim.claim_type)}</h3>
-                      {editableProfileClaim ? (
+                      {editableReviewClaim ? (
                         <label className="mt-3 block border-l-2 border-rose-400/60 pl-4">
                           <span className="text-xs text-slate-400">可修正格式或錯字，通過時會保存此版本</span>
                           <textarea
@@ -760,7 +769,7 @@ export function InternalReviewQueuePage() {
                               [claim.claim_id]: event.target.value,
                             }))}
                             maxLength={20_000}
-                            rows={claim.claim_type === 'experience' ? 8 : 5}
+                            rows={claim.claim_type === 'platform' ? 12 : claim.claim_type === 'experience' ? 8 : 5}
                             className="mt-2 w-full resize-y border border-line/80 bg-bg/80 px-3 py-2 text-base leading-7 text-slate-100 outline-none focus:border-accent"
                           />
                         </label>
@@ -825,7 +834,7 @@ export function InternalReviewQueuePage() {
                               actionClaimId === claim.claim_id
                               || !claim.person_id
                               || (claim.claim_type === 'platform' && !claim.candidate_id)
-                              || (editableProfileClaim && !editedClaimValue.trim())
+                              || (editableReviewClaim && !editedClaimValue.trim())
                             }
                             onClick={() => void handleReviewAction(claim, 'approve')}
                             className="pixel-corners border border-signal/70 bg-signal/15 px-4 py-2 text-sm text-signal hover:bg-signal/25 disabled:cursor-wait disabled:opacity-60"
@@ -833,7 +842,7 @@ export function InternalReviewQueuePage() {
                             {!claim.person_id
                               ? '先完成人物比對'
                               : claim.claim_type === 'platform'
-                                ? '確認人物與選舉後公開'
+                                ? '儲存修正並公開'
                                 : editableProfileClaim
                                   ? '儲存修正並公開'
                                   : '通過並公開'}

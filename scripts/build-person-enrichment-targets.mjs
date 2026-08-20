@@ -42,6 +42,7 @@ function parseArgs(argv) {
     outputPath: defaultOutputPath,
     limit: 500,
     includeResearchSignals: false,
+    ongoingResearchOnly: false,
     excludeFirstTime2026: false,
     excludeAdministrativeCurrent: false,
     includeGrassrootsLast: false,
@@ -65,6 +66,11 @@ function parseArgs(argv) {
 
     if (arg === '--include-research-signals') {
       options.includeResearchSignals = true;
+      continue;
+    }
+
+    if (arg === '--ongoing-research-only') {
+      options.ongoingResearchOnly = true;
       continue;
     }
 
@@ -281,6 +287,10 @@ function recurringResearchSignals(includeResearchSignals) {
   return includeResearchSignals ? ['experience', 'party_affiliation', 'legal_case'] : [];
 }
 
+function ongoingResearchSignals(ongoingResearchOnly) {
+  return ongoingResearchOnly ? ['family_relation', 'party_affiliation', 'legal_case'] : [];
+}
+
 function targetFromPerson(person, missing, researchSignals, group, history) {
   return {
     personId: person.person_id,
@@ -405,8 +415,12 @@ async function main() {
   const publicClaimTypes = claimTypesByPerson(publicClaims);
   const targets = people
     .map((person) => {
-      const missing = missingSignals(person, publicClaimTypes, options.includeResearchSignals);
-      const researchSignals = recurringResearchSignals(options.includeResearchSignals);
+      const missing = options.ongoingResearchOnly
+        ? []
+        : missingSignals(person, publicClaimTypes, options.includeResearchSignals);
+      const researchSignals = options.ongoingResearchOnly
+        ? ongoingResearchSignals(true)
+        : recurringResearchSignals(options.includeResearchSignals);
       const history = candidateHistories.get(person.person_id) ?? emptyCandidateHistory();
       return {
         person,
@@ -474,4 +488,5 @@ export {
   priorityGroup,
   priorityRank,
   recurringResearchSignals,
+  ongoingResearchSignals,
 };

@@ -6,6 +6,7 @@ import {
   isGrassrootsPerson,
   missingSignals,
   parseArgs,
+  ongoingResearchSignals,
   processingPriority,
   priorityGroup,
   recurringResearchSignals,
@@ -25,11 +26,18 @@ test('daily options are explicit and keep the default profile report unchanged',
     outputPath: parseArgs([]).outputPath,
     limit: 500,
     includeResearchSignals: true,
+    ongoingResearchOnly: false,
     excludeFirstTime2026: true,
     excludeAdministrativeCurrent: true,
     includeGrassrootsLast: true,
     includeFormer: true,
   });
+});
+
+test('ongoing daily research excludes profile fields', () => {
+  const options = parseArgs(['--ongoing-research-only']);
+  assert.equal(options.ongoingResearchOnly, true);
+  assert.deepEqual(ongoingResearchSignals(true), ['family_relation', 'party_affiliation', 'legal_case']);
 });
 
 test('research mode keeps basic gaps separate from recurring research', () => {

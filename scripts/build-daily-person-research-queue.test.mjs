@@ -9,16 +9,14 @@ const target = {
   position: '立法委員',
   district: '測試選區',
   priorElectionYears: [2024, 2020],
-  missingSignals: ['gender', 'family_relation'],
-  researchSignals: ['experience', 'party_affiliation', 'legal_case'],
+  missingSignals: [],
+  researchSignals: ['family_relation', 'party_affiliation', 'legal_case'],
 };
 
-test('builds historical basic, experience, party, family, and legal search plans', () => {
+test('builds only family, party, and legal plans for ongoing daily research', () => {
   const plans = buildSearchPlans(target);
   assert.deepEqual(plans.map((plan) => plan.key), [
-    'basic_profile',
     'family_relation',
-    'experience_history',
     'party_affiliation_history',
     'legal_record_clues',
   ]);

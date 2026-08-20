@@ -24,7 +24,7 @@ function buildSearchPlans(target) {
   const name = quotedName(target.name);
   const identity = [name, target.position, target.district].filter(Boolean).join(' ');
   const missing = new Set(target.missingSignals ?? []);
-  const research = new Set([...(target.researchSignals ?? []), 'experience', 'party_affiliation', 'legal_case']);
+  const research = new Set(target.researchSignals ?? []);
   const plans = [];
   const basicFields = [
     ['birth_date', '生日'],
@@ -41,7 +41,7 @@ function buildSearchPlans(target) {
       sourcePriority: ['official_profile', 'election_authority', 'official_biography', 'wikidata_fallback'],
     });
   }
-  if (missing.has('family_relation')) {
+  if (missing.has('family_relation') || research.has('family_relation')) {
     plans.push({
       key: 'family_relation',
       query: `${identity} 配偶 父親 母親 子女 家族關係`,

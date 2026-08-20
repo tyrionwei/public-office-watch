@@ -1,6 +1,6 @@
-# 每日人物資料補齊
+# 每日人物持續研究
 
-每日批次依固定順序一次處理 25 位人物，目標是逐步補齊公開履歷，並建立政治家族與司法紀錄的待審線索。批次不會直接寫入正式 Supabase，也不會自動公開敏感資料。
+每日批次依固定順序一次處理 25 位人物，目標是持續追蹤家族關係、黨籍異動與司法線索。批次不會直接寫入正式 Supabase，也不會自動公開敏感資料。
 
 ## 選取順序
 
@@ -19,7 +19,9 @@
 
 尚未處理過的人會優先於冷卻期已結束的舊對象。每次實際嘗試的 25 人都會進入 30 天冷卻，即使來源暫時失敗或無法可靠配對，也會保存結果並繼續下一批，避免每日卡在同一批人物。等所有尚未處理者輪過後，冷卻期已結束的人才會再次進入清單。
 
-基本缺口包含生日、性別、學歷與家族關係；Wikidata 外部 ID 另作身分配對依據。經歷、黨籍歷史與司法線索屬持續研究項目，即使已有部分資料仍會保留在每次人物研究範圍。司法裁判搜尋仍須先有案件線索並完成身分核對，不會只憑姓名掃描與合併。
+生日、性別、學歷、一般經歷與外部 ID 不再列入每日搜尋；這些欄位改由最近一次已完成身分對應的中選會正式選舉公報補齊。較舊公報只補歷史選舉脈絡，不得壓過較新的公報；生日與性別僅比對、去重，真正衝突才進待審；公報政黨只代表該次選舉，不覆蓋後續黨籍異動。
+
+每日 25 人只持續研究家族關係、黨籍異動與司法線索。司法裁判搜尋仍須先有案件線索並完成身分核對，不會只憑姓名掃描與合併。
 
 Wikidata 身分配對不強制要求性別。姓名、政治／公職脈絡與職位、經歷、學歷、黨籍或地區等條件會逐項記錄；強證據候選可產生一般待審 claims，較弱候選則以 `identity_review_required` 保留 QID、命中條件數與衝突，交由後續程序判斷，仍無法判斷時才人工審核。
 
@@ -31,7 +33,7 @@ Wikidata 身分配對不強制要求性別。姓名、政治／公職脈絡與�
 npm run monitor:daily
 ```
 
-只執行每日 25 人補齊：
+只執行每日 25 人持續研究：
 
 ```bash
 npm run run:daily-person-enrichment
@@ -41,9 +43,9 @@ npm run run:daily-person-enrichment
 
 - `daily-person-enrichment-pool.json`：依優先級排序的候選池。
 - `daily-person-enrichment-targets.json`：當日 25 人清單。
-- `daily-person-research-queue.json`：交給每日 Codex 審核的跨年份基本資料、家族、經歷、黨籍與司法線索搜尋計畫；不包含歷屆政見。
+- `daily-person-research-queue.json`：交給每日 Codex 審核的跨年份家族、黨籍異動與司法線索搜尋計畫；不包含基本資料、一般經歷或歷屆政見。
 - `daily-person-legal-news.json`：逐一搜尋當日 25 人、沒有當日時間限制的司法新聞線索；包含每人成功、無線索或來源錯誤狀態。
-- `daily-person-enrichment-claims.json`：Wikidata 產生的待審履歷與家族線索。
+- `daily-person-enrichment-claims.json`：Wikidata 產生的家族與黨籍待審線索；不產生日、性別、學歷或一般經歷 claims。
 - `daily-person-enrichment-skipped.json`：未形成 claims 的人物，以及待程序審核的 Wikidata 身分候選、證據條件與衝突。
 - `daily-person-enrichment-state.json`：每人最近處理日期、30 天冷卻、上一批起訖人物與逐人結果。
 - `daily-person-enrichment-progress.json`：本次 25 人的來源結果、claim 數與失敗原因。
@@ -68,7 +70,7 @@ npm run fetch:daily-person-legal-leads
 
 ## 發布邊界
 
-- 學歷、經歷與基本欄位仍依來源等級和身分分數進入既有審核流程。
+- 每日批次不搜尋或更新生日、性別、學歷、一般經歷與外部 ID。
 - Wikidata 家族關係永遠不自動公開。
 - 新聞與司法搜尋結果永遠不自動建立公開犯罪紀錄。
 - 每日批次沒有正式資料庫寫入參數。

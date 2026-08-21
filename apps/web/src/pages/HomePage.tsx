@@ -1,17 +1,14 @@
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
-import { LocalOfficeSummaryPanel } from '../components/LocalOfficeSummaryPanel';
-import { NationalOfficeSummaryPanel } from '../components/NationalOfficeSummaryPanel';
-import { NationalOverviewHud } from '../components/NationalOverviewHud';
-import { PollComparisonPanel } from '../components/PollComparisonPanel';
+import { HomeElectionSpotlight } from '../components/HomeElectionSpotlight';
+import { PartySeatDistributionPanel } from '../components/PartySeatDistributionPanel';
 import { RegionIssueConcernPanel } from '../components/RegionIssueConcernPanel';
-import { SelectedRegionHud } from '../components/SelectedRegionHud';
 import { TaiwanStageSelect } from '../components/TaiwanStageSelect';
-import { UpcomingElectionCards } from '../components/UpcomingElectionCards';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import type { UpcomingRace } from '../lib/publicDataProvider';
+import { normalizeTaiwanText } from '../lib/taiwanText';
 
 const NATIONAL_REGION_QUERY = 'national';
 const DEFAULT_FALLBACK_REGION_ID = 'taipei-city';
@@ -20,7 +17,10 @@ function isNationalRace(race: UpcomingRace) {
   const regionKey = `${race.regionId ?? ''} ${race.region ?? ''}`.toLowerCase();
   return race.raceType === 'president'
     || race.raceType === 'vice_president'
+    || race.raceType === 'legislator'
+    || race.raceType === 'legislative_district'
     || race.raceType === 'party_list_legislator'
+    || race.raceType === 'indigenous'
     || race.raceType === 'referendum'
     || /taiwan|nationwide|全國|臺灣|台灣/.test(regionKey);
 }
@@ -61,17 +61,10 @@ export function HomePage() {
     hasUpcomingNationalRace,
   );
   const isNationalView = selectedRegionId === null;
-  const isAutomaticRegionFallback = selectedRegionId === DEFAULT_FALLBACK_REGION_ID
-    && requestedRegionId !== DEFAULT_FALLBACK_REGION_ID
-    && requestedRegionId !== NATIONAL_REGION_QUERY
-    && !hasUpcomingNationalRace;
   const [relatedRaces, setRelatedRaces] = useState(() => selectedRegionId
     ? publicDataProvider.getRelatedRacesByRegionId(selectedRegionId).filter((race) => race.status !== 'completed')
     : nationalRaces);
   const [, startTransition] = useTransition();
-
-  const pollComparison = publicDataProvider.getPollComparisonByElectionId(relatedRaces[0]?.electionId ?? '');
-
   useEffect(() => {
     let active = true;
     if (!selectedRegionId) {
@@ -102,8 +95,10 @@ export function HomePage() {
   }, [selectedRegionId]);
 
   const selectedRegionNode = selectedRegionId ? publicDataProvider.getStageRegion(selectedRegionId) : null;
-
   const selectedRegionSummary = selectedRegionId ? publicDataProvider.getRegionSummary(selectedRegionId) : null;
+  const selectedRegionLabel = isNationalView
+    ? t('national.taiwan')
+    : normalizeTaiwanText(selectedRegionSummary?.label ?? selectedRegionNode?.label ?? t('home.unspecifiedRegion'));
 
   const handleSelectRegion = useCallback((regionId: string | null) => {
     if (regionId === selectedRegionId && searchParams.get('region') === regionId) {
@@ -114,57 +109,45 @@ export function HomePage() {
       const nextParams = new URLSearchParams(searchParams);
       if (regionId) nextParams.set('region', regionId);
       else nextParams.set('region', NATIONAL_REGION_QUERY);
+      nextParams.delete('homeContent');
+      nextParams.delete('candidateCategory');
+      nextParams.delete('candidateDistrict');
+      nextParams.delete('candidateIndex');
       setSearchParams(nextParams);
     });
   }, [searchParams, selectedRegionId, setSearchParams, startTransition]);
 
   return (
     <AppShell ticker={homeData.ticker}>
-      <div className="grid gap-3 xl:grid-cols-[minmax(460px,1.08fr)_minmax(360px,0.78fr)_minmax(340px,0.72fr)]">
-        <section className="min-w-0 space-y-3">
-          <div className="min-w-0">
-            <TaiwanStageSelect
-              regions={homeData.stageRegions}
-              selectedRegionId={selectedRegionId}
-              onSelectRegion={handleSelectRegion}
-              hideQuickSelect
-            />
-          </div>
+      <div className="grid gap-3 xl:min-h-[880px] xl:grid-cols-[minmax(420px,0.95fr)_minmax(480px,1.08fr)_minmax(300px,0.75fr)] xl:items-stretch">
+        <section className="min-w-0 xl:h-full">
+          <TaiwanStageSelect
+            regions={homeData.stageRegions}
+            selectedRegionId={selectedRegionId}
+            onSelectRegion={handleSelectRegion}
+          />
         </section>
 
-        <section className="min-w-0 space-y-3">
-          {isAutomaticRegionFallback ? (
-            <p
-              className="pixel-corners border border-accent/35 bg-accent/10 px-3 py-2 text-xs leading-relaxed text-slate-300"
-              data-national-fallback-notice
-            >
-              {t('home.nationalElectionFallback')}
-            </p>
-          ) : null}
-          {isNationalView ? (
-            <NationalOverviewHud races={relatedRaces} />
-          ) : selectedRegionNode && selectedRegionSummary ? (
-            <SelectedRegionHud races={relatedRaces} regionNode={selectedRegionNode} regionSummary={selectedRegionSummary} />
-          ) : null}
-          {pollComparison ? <PollComparisonPanel comparison={pollComparison} /> : null}
-          <UpcomingElectionCards
+        <section className="min-w-0 xl:h-full">
+          <HomeElectionSpotlight
             races={relatedRaces}
-            selectedRegionId={selectedRegionId ?? 'taiwan'}
-            selectedRegionLabel={isNationalView ? t('national.taiwan') : selectedRegionSummary?.label ?? selectedRegionNode?.label ?? t('home.unspecifiedRegion')}
-            selectedPublicRegionId={selectedRegionNode?.publicRegionId ?? null}
-            compact
-          />
-          <RegionIssueConcernPanel
-            regionId={isNationalView ? null : selectedRegionNode?.publicRegionId ?? null}
-            regionLabel={isNationalView
-              ? t('national.taiwan')
-              : selectedRegionSummary?.label ?? selectedRegionNode?.label ?? t('home.unspecifiedRegion')}
+            regionNode={selectedRegionNode}
+            regionSummary={selectedRegionSummary}
             national={isNationalView}
           />
         </section>
 
-        <section className="min-w-0">
-          {isNationalView ? <NationalOfficeSummaryPanel /> : <LocalOfficeSummaryPanel regionId={selectedRegionId} />}
+        <section className="min-w-0 space-y-3 xl:grid xl:h-full xl:grid-rows-[400px_minmax(0,1fr)] xl:gap-3 xl:space-y-0">
+          <PartySeatDistributionPanel
+            regionId={selectedRegionId}
+            regionLabel={selectedRegionLabel}
+            national={isNationalView}
+          />
+          <RegionIssueConcernPanel
+            regionId={isNationalView ? null : selectedRegionNode?.publicRegionId ?? null}
+            regionLabel={selectedRegionLabel}
+            national={isNationalView}
+          />
         </section>
       </div>
     </AppShell>

@@ -12,9 +12,12 @@ function getRegionIdByCountyCode(regions: StageRegionNode[], countyCode: string)
   return regions.find((region) => region.stageLabel === countyCode)?.id ?? `county-${countyCode}`;
 }
 
-const mainIslandTopDownXScale = 0.88;
+const mainIslandTopDownXScale = 0.93;
+const mainIslandTopDownYScale = 1.05;
 const mainIslandLabelXScale = 1 / mainIslandTopDownXScale;
+const mainIslandLabelYScale = 1 / mainIslandTopDownYScale;
 const mainIslandDisplayCenterX = 170;
+const mainIslandDisplayCenterY = 260;
 const offshoreIslandLimitByCode: Record<string, number> = {
   '09007': 2,
 };
@@ -139,18 +142,10 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
 
   return (
     <div className="pixel-corners min-w-0 border border-line/70 bg-[linear-gradient(180deg,rgba(4,23,52,0.96),rgba(4,16,38,0.94)_58%,rgba(3,10,24,0.96))] p-3">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div>
-          <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">{t('map.title')}</p>
-        </div>
-        <span className="rounded-sm border border-line/70 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-          {t('map.summary')}
-        </span>
-      </div>
 
-      <div className="relative mx-auto aspect-[9/10] w-full max-w-[720px] min-w-0 overflow-hidden rounded-sm bg-[#0b5f91] bg-[url('/assets/map/pixel-ocean-panel-bg-preview.webp')] bg-cover bg-center bg-no-repeat p-2 shadow-[inset_0_0_36px_rgba(2,8,23,0.55)] [image-rendering:pixelated]">
-        <div className="relative grid h-full min-h-0 min-w-0 grid-cols-[clamp(104px,26%,156px)_minmax(0,1fr)] gap-2 2xl:gap-3">
-          <div className="relative z-20 grid h-full min-h-0 grid-rows-3 gap-2">
+      <div className="relative mx-auto aspect-[9/11] w-full max-w-[720px] min-w-0 overflow-hidden rounded-sm bg-[#0b5f91] bg-[url('/assets/map/pixel-ocean-panel-bg-preview.webp')] bg-cover bg-center bg-no-repeat p-2 shadow-[inset_0_0_36px_rgba(2,8,23,0.55)] [image-rendering:pixelated] xl:h-full xl:min-h-[620px] xl:aspect-auto">
+        <div data-county-map-layout className="relative grid h-full min-h-0 min-w-0 grid-cols-[clamp(94px,22%,132px)_minmax(0,1fr)] gap-2 2xl:gap-3">
+          <div data-offshore-rail className="relative z-20 flex h-full min-h-0 flex-col justify-center gap-2">
             {offshoreCounties.map((county) => {
               const regionId = getRegionIdByCountyCode(regions, county.code);
               const selected = selectedRegionId === regionId;
@@ -163,14 +158,14 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                   aria-current={selected ? 'true' : undefined}
                   aria-label={t('map.selectCounty', { name: county.name })}
                   className={[
-                    'pixel-corners relative flex min-h-0 flex-col overflow-hidden border bg-slate-950/12 p-1.5 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
+                    'pixel-corners relative flex h-[clamp(120px,22%,150px)] min-h-0 shrink-0 flex-col overflow-hidden border bg-slate-950/12 p-1.5 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
                     selected
                       ? 'border-yellow-300 text-white shadow-[0_0_18px_rgba(250,204,21,0.18)]'
                       : 'border-white/20 text-slate-200 hover:border-accent/55',
                   ].join(' ')}
                 >
                   <span className="relative z-10 mb-1 block rounded-sm border border-bg/60 bg-bg/75 px-1.5 py-0.5 text-center font-display text-[12px] leading-tight text-white [text-shadow:1px_1px_0_#06101f,-1px_1px_0_#06101f,1px_-1px_0_#06101f,-1px_-1px_0_#06101f]">
-                    {county.name.replace('臺', '台')}
+                    {county.name}
                   </span>
                   <div className="relative z-10 min-h-0 flex-1 overflow-hidden rounded-sm bg-slate-950/12 p-1">
                     <svg
@@ -196,6 +191,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
 
           <div className="relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden">
             <svg
+              data-main-island-map
               viewBox={mainIslandViewBox ?? undefined}
               preserveAspectRatio="xMidYMid meet"
               className="relative z-20 block h-full min-h-0 w-full max-w-full drop-shadow-[0_18px_18px_rgba(0,0,0,0.28)]"
@@ -204,7 +200,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
             >
               <title>{t('map.outlineTitle')}</title>
               <g
-                transform={`translate(${mainIslandDisplayCenterX} 0) scale(${mainIslandTopDownXScale} 1) translate(-${mainIslandDisplayCenterX} 0)`}
+                transform={`translate(${mainIslandDisplayCenterX} ${mainIslandDisplayCenterY}) scale(${mainIslandTopDownXScale} ${mainIslandTopDownYScale}) translate(-${mainIslandDisplayCenterX} -${mainIslandDisplayCenterY})`}
               >
                 {mainIslandCounties.map((county) => {
                   const regionId = getRegionIdByCountyCode(regions, county.code);
@@ -246,7 +242,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                       key={`${county.code}-label`}
                       x={county.displayCentroid.x}
                       y={county.displayCentroid.y}
-                      transform={`translate(${county.displayCentroid.x} ${county.displayCentroid.y}) scale(${mainIslandLabelXScale} 1) translate(-${county.displayCentroid.x} -${county.displayCentroid.y})`}
+                      transform={`translate(${county.displayCentroid.x} ${county.displayCentroid.y}) scale(${mainIslandLabelXScale} ${mainIslandLabelYScale}) translate(-${county.displayCentroid.x} -${county.displayCentroid.y})`}
                       textAnchor="middle"
                       dominantBaseline="middle"
                       className="pointer-events-none select-none font-display"
@@ -256,7 +252,7 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                       paintOrder="stroke"
                       fontSize={selected ? 12 : 10}
                     >
-                      {county.name.replace('臺', '台')}
+                      {county.name}
                     </text>
                   );
                 })}

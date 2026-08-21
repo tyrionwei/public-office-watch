@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { BgmProvider } from './components/BgmProvider';
 import { GlobalChatWidget } from './components/GlobalChatWidget';
 import { LanguageProvider, useI18n } from './i18n';
 import { RouteMetadata } from './components/RouteMetadata';
@@ -141,14 +140,10 @@ function App() {
   return (
     <BrowserRouter>
       <LanguageProvider>
-        <BgmProvider>
-          <>
-            <AppRoutes
-              publicDataStatus={publicDataStatus}
-              onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
-            />
-          </>
-        </BgmProvider>
+        <AppRoutes
+          publicDataStatus={publicDataStatus}
+          onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
+        />
       </LanguageProvider>
     </BrowserRouter>
   );

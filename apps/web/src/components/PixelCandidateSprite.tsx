@@ -1,6 +1,6 @@
 import { pickDefaultCandidateSprite, unknownCandidateSprite, xiezhiMascotSprite } from '../data/defaultCharacterAssets';
 import { useI18n } from '../i18n';
-import type { PartyThemeKey } from '../styles/partyThemes';
+import { partyTheme, type PartyThemeKey } from '../styles/partyThemes';
 
 type PixelCandidateSpriteProps = {
   displayName: string;
@@ -8,6 +8,9 @@ type PixelCandidateSpriteProps = {
   partyLabel: string;
   variant: string;
   align?: 'left' | 'right';
+  gender?: string | null;
+  birthDate?: string | null;
+  useDemographicSprite?: boolean;
 };
 
 export function PixelCandidateSprite({
@@ -16,10 +19,16 @@ export function PixelCandidateSprite({
   partyLabel,
   variant,
   align = 'left',
+  gender,
+  birthDate,
+  useDemographicSprite = false,
 }: PixelCandidateSpriteProps) {
   const { t } = useI18n();
-  const spriteSrc = partyKey === 'unknown' ? unknownCandidateSprite : pickDefaultCandidateSprite(`${displayName}-${variant}`);
+  const spriteSrc = useDemographicSprite
+    ? pickDefaultCandidateSprite(`${displayName}-${variant}`, gender, birthDate)
+    : partyKey === 'unknown' ? unknownCandidateSprite : pickDefaultCandidateSprite(`${displayName}-${variant}`);
   const usesMascot = spriteSrc === xiezhiMascotSprite;
+  const theme = partyTheme[partyKey];
 
   return (
     <div className={`flex ${align === 'right' ? 'justify-end' : 'justify-start'}`}>
@@ -37,7 +46,19 @@ export function PixelCandidateSprite({
         </div>
         <div className="min-w-0">
           <p className="font-display text-sm text-white">{displayName}</p>
-          <p className="mt-1 text-xs text-slate-400">{partyLabel}</p>
+          <p
+            className="mt-1 inline-flex rounded-sm border px-1.5 py-0.5 text-[10px] font-medium"
+            data-candidate-party-label
+            data-party-theme={partyKey}
+            style={{
+              borderColor: theme.accent,
+              backgroundColor: `${theme.primary}38`,
+              color: theme.accent,
+              boxShadow: `inset 0 0 0 1px ${theme.primary}55`,
+            }}
+          >
+            {partyLabel}
+          </p>
           {usesMascot ? <p className="mt-1 text-[10px] text-cyan-200/75">{t('person.mascotFallbackLabel')}</p> : null}
         </div>
       </div>

@@ -125,6 +125,7 @@ export function RegionIssueConcernPanel({ regionId, regionLabel, national = fals
   return (
     <PixelFrame
       title={national ? t('homeIssues.nationalTitle') : t('homeIssues.title')}
+      className="xl:h-full"
       action={(
         <span className="text-[11px] text-slate-400">
           {regionLabel} · {t('homeIssues.participants', { count: participantCount(issues) })}

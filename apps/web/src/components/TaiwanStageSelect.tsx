@@ -1,21 +1,83 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
+import { compareElectionRegionLabels } from '../data/electionLabels';
 import { useI18n } from '../i18n';
+import { isCurrentCountyName, normalizeTaiwanText, toCurrentCountyName } from '../lib/taiwanText';
 import type { StageRegionNode } from '../types/stageMap';
 
 type TaiwanStageSelectProps = {
   regions: StageRegionNode[];
   selectedRegionId: string | null;
   onSelectRegion: (regionId: string | null) => void;
-  hideQuickSelect?: boolean;
 };
 
-type CompactCountyQuickSelectProps = {
-  regions: StageRegionNode[];
-  selectedRegionId: string | null;
-  onSelectRegion: (regionId: string | null) => void;
-};
+type CompactCountyQuickSelectProps = TaiwanStageSelectProps;
+
+const primaryRegionLabels = new Set([
+  '臺北市',
+  '新北市',
+  '桃園市',
+  '臺中市',
+  '臺南市',
+  '高雄市',
+]);
+
+function isPrimaryRegion(region: StageRegionNode) {
+  return primaryRegionLabels.has(toCurrentCountyName(region.label));
+}
+function isCurrentCountyRecord(region: StageRegionNode) {
+  return normalizeTaiwanText(region.label) === toCurrentCountyName(region.label);
+}
+
+function getCurrentCountyRegions(regions: StageRegionNode[], selectedRegionId: string | null) {
+  const regionMap = new Map<string, StageRegionNode>();
+  for (const region of regions.filter((item) => item.level === 'county_city')) {
+    const key = toCurrentCountyName(region.label);
+    if (!isCurrentCountyName(key)) continue;
+    const current = regionMap.get(key);
+    if (!current
+      || (!isCurrentCountyRecord(current) && isCurrentCountyRecord(region))
+      || (region.id === selectedRegionId && current.id !== selectedRegionId)) {
+      regionMap.set(key, region);
+    }
+  }
+
+  return Array.from(regionMap.values()).sort((left, right) => compareElectionRegionLabels(
+    toCurrentCountyName(left.label),
+    toCurrentCountyName(right.label),
+  ));
+}
 
 const LazyTaiwanCountyMap = lazy(() => import('./TaiwanCountyMap').then((module) => ({ default: module.TaiwanCountyMap })));
+
+function RegionButton({
+  label,
+  selected,
+  onClick,
+  solidSelected = false,
+}: {
+  label: string;
+  selected: boolean;
+  onClick: () => void;
+  solidSelected?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className={[
+        'pixel-corners min-w-fit border px-2.5 py-2 text-left font-display text-[11px] tracking-[0.08em] transition focus:outline-none focus:ring-2 focus:ring-accent/35 sm:w-full sm:min-w-0',
+        selected
+          ? solidSelected
+            ? 'border-signal bg-signal text-[#041126] shadow-[0_0_16px_rgba(250,204,21,0.2)]'
+            : 'border-signal bg-signal/15 text-signal shadow-[0_0_16px_rgba(250,204,21,0.14)]'
+          : 'border-line/80 bg-bg/80 text-slate-200 hover:border-accent/60 hover:text-white',
+      ].join(' ')}
+    >
+      {label}
+    </button>
+  );
+}
 
 export function CompactCountyQuickSelect({
   regions,
@@ -23,37 +85,74 @@ export function CompactCountyQuickSelect({
   onSelectRegion,
 }: CompactCountyQuickSelectProps) {
   const { t } = useI18n();
-  const topLevelRegions = regions.filter((region) => region.level === 'county_city');
+  const topLevelRegions = getCurrentCountyRegions(regions, selectedRegionId);
+  const primaryRegions = topLevelRegions.filter(isPrimaryRegion);
+  const additionalRegions = topLevelRegions.filter((region) => !isPrimaryRegion(region));
+  const selectedAdditionalRegion = additionalRegions.find((region) => region.id === selectedRegionId);
+  const moreCountiesRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    function closeOnOutsidePointer(event: PointerEvent) {
+      const details = moreCountiesRef.current;
+      if (details?.open && event.target instanceof Node && !details.contains(event.target)) {
+        details.open = false;
+      }
+    }
+
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    return () => document.removeEventListener('pointerdown', closeOnOutsidePointer);
+  }, []);
+
+  function selectAdditionalRegion(regionId: string) {
+    onSelectRegion(regionId);
+    if (moreCountiesRef.current) moreCountiesRef.current.open = false;
+  }
 
   return (
-    <div className="pixel-corners border border-line/70 bg-panelAlt/35 px-3 py-3">
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <p className="font-display text-[11px] uppercase tracking-[0.22em] text-accent">{t('stage.quickSelect')}</p>
-        <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{t('stage.backupList')}</span>
+    <nav aria-label={t('stage.quickSelect')} className="relative min-w-0">
+      <p className="mb-2 hidden font-display text-[10px] uppercase tracking-[0.18em] text-accent sm:block">
+        {t('stage.quickSelect')}
+      </p>
+      <div className="flex gap-1.5 overflow-x-auto pb-1 sm:grid sm:overflow-visible sm:pb-0">
+        <RegionButton
+          label={t('stage.nationalOverview')}
+          selected={selectedRegionId === null}
+          onClick={() => onSelectRegion(null)}
+        />
+        {primaryRegions.map((region) => (
+          <RegionButton
+            key={region.id}
+            label={toCurrentCountyName(region.label)}
+            selected={selectedRegionId === region.id}
+            onClick={() => onSelectRegion(region.id)}
+          />
+        ))}
+        {selectedAdditionalRegion ? (
+          <RegionButton
+            label={toCurrentCountyName(selectedAdditionalRegion.label)}
+            selected
+            onClick={() => onSelectRegion(selectedAdditionalRegion.id)}
+          />
+        ) : null}
+        <details ref={moreCountiesRef} className="group relative min-w-fit sm:w-full">
+          <summary className="pixel-corners flex cursor-pointer list-none items-center justify-between gap-2 border border-line/80 bg-bg/80 px-2.5 py-2 font-display text-[11px] tracking-[0.08em] text-slate-200 transition hover:border-accent/60 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/35">
+            <span>{t('stage.moreCounties')}</span>
+            <span aria-hidden="true" className="transition group-open:rotate-90">›</span>
+          </summary>
+          <div className="pixel-corners absolute left-0 top-full z-50 mt-2 grid max-h-[min(520px,calc(100vh-10rem))] w-[min(300px,calc(100vw-2rem))] grid-cols-2 gap-1.5 overflow-y-auto border border-line/90 bg-[#071329]/98 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.55)] sm:left-full sm:top-1/2 sm:ml-2 sm:mt-0 sm:-translate-y-1/2">
+            {additionalRegions.map((region) => (
+              <RegionButton
+                key={region.id}
+                label={toCurrentCountyName(region.label)}
+                selected={selectedRegionId === region.id}
+                onClick={() => selectAdditionalRegion(region.id)}
+                solidSelected
+              />
+            ))}
+          </div>
+        </details>
       </div>
-      <div className="flex flex-wrap gap-2">
-        {topLevelRegions.map((region) => {
-          const selected = selectedRegionId === region.id;
-          return (
-            <button
-              key={region.id}
-              type="button"
-              onClick={() => onSelectRegion(region.id)}
-              aria-current={selected ? 'true' : undefined}
-              className={[
-                'pixel-corners inline-flex items-center gap-2 border px-3 py-1.5 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
-                selected
-                  ? 'border-accent bg-accent/14 text-white shadow-[0_0_18px_rgba(103,232,249,0.14)]'
-                  : 'border-line bg-panelAlt/70 text-slate-200 hover:border-accent/55',
-              ].join(' ')}
-            >
-              <span className="font-display text-[11px] uppercase tracking-[0.14em]">{region.label}</span>
-              <span className="text-[10px] uppercase tracking-[0.16em] text-slate-500">{region.stageLabel}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+    </nav>
   );
 }
 
@@ -61,58 +160,33 @@ export function TaiwanStageSelect({
   regions,
   selectedRegionId,
   onSelectRegion,
-  hideQuickSelect = false,
 }: TaiwanStageSelectProps) {
   const { t } = useI18n();
-  const topLevelRegions = regions.filter((region) => region.level === 'county_city');
+  const topLevelRegions = getCurrentCountyRegions(regions, selectedRegionId);
+
   return (
-    <div className="h-full min-w-0 space-y-4">
-        <div className="pixel-corners min-w-0 border border-line/70 bg-[linear-gradient(180deg,rgba(7,22,45,0.96),rgba(8,27,52,0.94)_55%,rgba(7,18,38,0.96))] p-3 sm:p-4">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div>
-              <p className="font-display text-sm uppercase tracking-[0.24em] text-slate-200">{t('stage.countyGuide')}</p>
-            </div>
-            <span className="rounded-sm border border-signal/30 bg-signal/10 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-signal">
-              {t('stage.countyLevel')}
-            </span>
-          </div>
+    <div className="pixel-corners min-w-0 border border-line/70 bg-[linear-gradient(180deg,rgba(7,22,45,0.96),rgba(8,27,52,0.94)_55%,rgba(7,18,38,0.96))] p-3 sm:p-4 xl:flex xl:h-full xl:flex-col">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="font-display text-sm uppercase tracking-[0.22em] text-slate-200">{t('stage.countyGuide')}</p>
+        <span className="rounded-sm border border-signal/30 bg-signal/10 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-signal">
+          {t('map.summary')}
+        </span>
+      </div>
 
-          <button
-            type="button"
-            onClick={() => onSelectRegion(null)}
-            aria-pressed={selectedRegionId === null}
-            className={[
-              'pixel-corners mb-4 flex w-full items-center justify-between border px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
-              selectedRegionId === null
-                ? 'border-signal bg-signal/12 text-white shadow-[0_0_20px_rgba(250,204,21,0.1)]'
-                : 'border-line/70 bg-panelAlt/45 text-slate-300 hover:border-signal/60 hover:text-white',
-            ].join(' ')}
-          >
-            <span>
-              <span className="block font-display text-sm uppercase tracking-[0.2em]">{t('stage.nationalOverview')}</span>
-              <span className="mt-1 block text-xs text-slate-400">{t('stage.nationalOverviewHint')}</span>
-            </span>
-            <span className="font-display text-2xl text-signal">TW</span>
-          </button>
-
-          <Suspense fallback={<div className="pixel-corners mx-auto aspect-[9/10] w-full max-w-[720px] border border-line/70 bg-panelAlt/35" />}>
-            <LazyTaiwanCountyMap
-              regions={topLevelRegions}
-              selectedRegionId={selectedRegionId ?? ''}
-              onSelectRegion={onSelectRegion}
-            />
-          </Suspense>
-
-          {!hideQuickSelect ? (
-            <div className="mt-5">
-              <CompactCountyQuickSelect
-                regions={regions}
-                selectedRegionId={selectedRegionId}
-                onSelectRegion={onSelectRegion}
-              />
-            </div>
-          ) : null}
-        </div>
+      <div className="grid min-w-0 gap-3 sm:grid-cols-[88px_minmax(0,1fr)] xl:flex-1">
+        <CompactCountyQuickSelect
+          regions={regions}
+          selectedRegionId={selectedRegionId}
+          onSelectRegion={onSelectRegion}
+        />
+        <Suspense fallback={<div className="pixel-corners mx-auto aspect-[9/11] w-full border border-line/70 bg-panelAlt/35 xl:h-full xl:min-h-[620px] xl:aspect-auto" />}>
+          <LazyTaiwanCountyMap
+            regions={topLevelRegions}
+            selectedRegionId={selectedRegionId ?? ''}
+            onSelectRegion={onSelectRegion}
+          />
+        </Suspense>
+      </div>
     </div>
   );
 }

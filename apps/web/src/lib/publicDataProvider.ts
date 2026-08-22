@@ -56,6 +56,7 @@ export type PublicSearchResult = {
   label: string;
   title: string;
   subtitle: string;
+  party?: string | null;
   href: string | null;
 };
 

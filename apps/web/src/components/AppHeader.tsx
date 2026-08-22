@@ -51,6 +51,9 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
               <p className="mt-1 font-display text-[10px] uppercase tracking-[0.2em] text-accent">
                 {t('brand.subtitle')}
               </p>
+              <p data-site-identity className="mt-1 text-[10px] leading-tight text-slate-500">
+                {t('brand.identity')}
+              </p>
             </div>
           </div>
 

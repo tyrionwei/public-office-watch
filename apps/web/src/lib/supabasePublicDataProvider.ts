@@ -1758,6 +1758,7 @@ export const supabasePublicDataProvider: PublicDataProvider = {
           label: '人物',
           title: person.name,
           subtitle: [person.party, person.position, person.district].filter(Boolean).join(' · ') || '公開人物資料',
+          party: person.party,
           href: personPath(person.person_id),
         })),
       ...snapshot.companies

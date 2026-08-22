@@ -531,6 +531,7 @@ export type PublishedSearchResultRow = {
   entity_id: string;
   title: string;
   normalized_search_text: string;
+  party_name: string | null;
   href: string | null;
 };
 

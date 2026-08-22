@@ -206,7 +206,7 @@ test('party candidate page reads the active published candidate view with stable
 });
 
 test('search calls the ranked published search function with a bounded limit', async () => {
-  const row = { document_key: 'region:tp', entity_type: 'region', entity_id: 'tp', title: '臺北市' };
+  const row = { document_key: 'region:tp', entity_type: 'region', entity_id: 'tp', title: '臺北市', normalized_search_text: '台北市', party_name: null, href: '/regions/tp' };
   const fake = createFakeClient({
     'rpc:search_public_records': { data: [row], error: null, count: null },
   });

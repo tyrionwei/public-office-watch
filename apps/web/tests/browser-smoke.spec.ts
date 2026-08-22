@@ -39,6 +39,9 @@ test('language toggle switches the public shell copy without resizing the contro
 
   await expect(page.getByRole('heading', { name: '公職資料觀測站' })).toBeVisible();
   await expect(page.getByPlaceholder('搜尋人物、公司、政黨、選舉、地區')).toBeVisible();
+  const siteIdentity = page.locator('[data-site-identity]');
+  await expect(siteIdentity).toHaveText('民間公共資料整理平台・非政府機關');
+  await expect(siteIdentity).toHaveCSS('font-size', '10px');
 
   const languageToggleSelector = '[aria-label="切換語言"], [aria-label="Switch language"]';
   const languageToggle = page.locator(languageToggleSelector).first();
@@ -54,6 +57,7 @@ test('language toggle switches the public shell copy without resizing the contro
 
   await expect(page.getByRole('link', { name: '⌂ Home' })).toBeVisible();
   await expect(page.getByPlaceholder('Search people, companies, parties, elections, regions')).toBeVisible();
+  await expect(siteIdentity).toHaveText('Independent public-data platform · Not a government agency');
 
   const afterToggle = await getBox(page, languageToggleSelector);
 
@@ -70,6 +74,29 @@ test('desktop public pages do not introduce horizontal overflow in English', asy
     await page.getByRole('button', { name: 'EN', exact: true }).click();
     await expectNoHorizontalOverflow(page);
   }
+});
+
+test('focused global search offers examples and person results include party context', async ({ page }) => {
+  await page.goto('/');
+
+  const searchInput = page.getByPlaceholder('搜尋人物、公司、政黨、選舉、地區');
+  await searchInput.focus();
+  const examples = page.getByTestId('global-search-examples');
+  await expect(examples).toBeVisible();
+  await expect(examples.getByRole('button')).toHaveText(['蔣萬安', '民主進步黨', '臺北市長', '臺北市']);
+
+  await examples.getByRole('button', { name: '蔣萬安', exact: true }).click();
+  const results = page.getByTestId('global-search-results');
+  await expect(results.getByText('蔣萬安', { exact: true })).toBeVisible();
+  await expect(results.locator('[data-search-party-label]').filter({ hasText: '中國國民黨' })).toBeVisible();
+});
+
+test('party contribution summaries spell out their source level', async ({ page }) => {
+  await page.goto('/parties/kmt');
+
+  const sourceLevels = page.locator('[data-party-source-level]');
+  await expect(sourceLevels.first()).toHaveText('來源層級 A｜官方結構化資料');
+  expect(await sourceLevels.count()).toBeGreaterThan(0);
 });
 
 test('homepage stays within the viewport at responsive widths', async ({ page }) => {

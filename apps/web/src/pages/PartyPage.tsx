@@ -37,6 +37,12 @@ const PARTY_OFFICER_PAGE_SIZE = 8;
 const CONTRIBUTION_PAGE_SIZE = 10;
 const emptyPeoplePage: PublicPersonListPage = { items: [], total: 0 };
 const emptyCandidatePage: PublicCandidateListPage = { items: [], total: 0 };
+const sourceLevelDescriptionKeys = {
+  A: 'partyDetail.sourceLevelA',
+  B: 'partyDetail.sourceLevelB',
+  C: 'partyDetail.sourceLevelC',
+  D: 'partyDetail.sourceLevelD',
+} as const;
 
 function CompanyDirectorNames({ companyId, names }: { companyId: string; names: string[] }) {
   const { t } = useI18n();
@@ -952,8 +958,10 @@ export function PartyPage() {
                             <h3 className="font-display text-lg text-white">{summary.company_name}</h3>
                             <p className="mt-1 text-sm text-slate-400">{t('partyDetail.yearSummary', { year: summary.report_year })}</p>
                           </div>
-                          <span className="rounded-sm border border-signal/50 bg-signal/10 px-2 py-1 text-xs text-signal">
-                            {summary.confidence_level}
+                          <span data-party-source-level className="rounded-sm border border-signal/50 bg-signal/10 px-2 py-1 text-xs text-signal">
+                            {t('partyDetail.sourceLevelLabel', { level: summary.confidence_level })}
+                            {'｜'}
+                            {t(sourceLevelDescriptionKeys[summary.confidence_level])}
                           </span>
                         </div>
                         <dl className="mt-4 grid gap-2 text-sm text-slate-300">

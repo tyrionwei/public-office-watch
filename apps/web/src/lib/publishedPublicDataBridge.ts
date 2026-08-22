@@ -219,6 +219,7 @@ function mapSearchRow(row: PublishedSearchResultRow): PublicSearchResult {
     label: searchLabels[row.entity_type],
     title: row.title,
     subtitle: searchSubtitles[row.entity_type],
+    party: row.entity_type === 'person' ? row.party_name : null,
     href: row.href,
   };
 }

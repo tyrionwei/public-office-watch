@@ -207,6 +207,7 @@ test('bridge maps compact search rows to existing frontend result types', async 
           entity_id: 'person-1',
           title: '測試人物',
           normalized_search_text: '測試人物',
+          party_name: '測試政黨',
           href: '/people/person-1',
         },
         {
@@ -215,6 +216,7 @@ test('bridge maps compact search rows to existing frontend result types', async 
           entity_id: 'region-taipei',
           title: '臺北市',
           normalized_search_text: '台北市',
+          party_name: null,
           href: '/regions/region-taipei',
         },
       ];
@@ -229,6 +231,7 @@ test('bridge maps compact search rows to existing frontend result types', async 
       label: '人物',
       title: '測試人物',
       subtitle: '公開人物資料',
+      party: '測試政黨',
       href: '/people/person-1',
     },
     {
@@ -237,6 +240,7 @@ test('bridge maps compact search rows to existing frontend result types', async 
       label: '地區',
       title: '臺北市',
       subtitle: '公開區域導覽',
+      party: null,
       href: '/regions/region-taipei',
     },
   ]);

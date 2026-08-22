@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
+import { toPartyThemeKey } from '../lib/personData';
 import { publicDataProvider } from '../lib/publicData';
 import type { PublicSearchResult } from '../lib/publicDataProvider';
+import { partyTheme } from '../styles/partyThemes';
 
 const resultTypeOrder: PublicSearchResult['type'][] = ['party', 'election', 'region', 'person', 'company'];
 const resultTypeLabelKeys: Record<PublicSearchResult['type'], 'search.type.party' | 'search.type.election' | 'search.type.region' | 'search.type.person' | 'search.type.company'> = {
@@ -12,6 +14,13 @@ const resultTypeLabelKeys: Record<PublicSearchResult['type'], 'search.type.party
   person: 'search.type.person',
   company: 'search.type.company',
 };
+
+const searchExampleKeys = [
+  'search.example.person',
+  'search.example.party',
+  'search.example.election',
+  'search.example.region',
+] as const;
 
 export function GlobalSearch() {
   const { t } = useI18n();
@@ -51,7 +60,7 @@ export function GlobalSearch() {
     };
   }, [query]);
 
-  const showPanel = isFocused && query.trim().length > 0;
+  const showPanel = isFocused;
 
   const groupedResults = useMemo(
     () =>
@@ -87,7 +96,24 @@ export function GlobalSearch() {
 
       {showPanel ? (
         <div data-testid="global-search-results" className="pixel-corners absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[420px] overflow-auto border border-accent/60 bg-[#030817] p-3 shadow-[0_20px_48px_rgba(0,0,0,0.82)]">
-          {query.trim().length < 2 ? (
+          {query.trim().length === 0 ? (
+            <div data-testid="global-search-examples" className="px-2 py-2">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">{t('search.examplesTitle')}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {searchExampleKeys.map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => setQuery(t(key))}
+                    className="pixel-corners border border-line/70 bg-bg/45 px-2.5 py-1.5 text-xs text-slate-300 transition hover:border-accent/60 hover:bg-accent/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/25"
+                  >
+                    {t(key)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : query.trim().length < 2 ? (
             <p className="px-2 py-3 text-xs text-slate-400">{t('search.minChars')}</p>
           ) : loading ? (
             <p className="px-2 py-3 text-xs text-slate-400">{t('search.loading')}</p>
@@ -132,10 +158,26 @@ export function GlobalSearch() {
 }
 
 function SearchResultContent({ result, note }: { result: PublicSearchResult; note?: string }) {
+  const theme = result.party ? partyTheme[toPartyThemeKey(result.party)] : null;
+
   return (
     <div className="flex items-start justify-between gap-3">
       <div className="min-w-0">
         <p className="truncate font-display text-sm text-white">{result.title}</p>
+        {result.party && theme ? (
+          <span
+            data-search-party-label
+            className="mt-1 inline-flex rounded-sm border px-1.5 py-0.5 text-[10px] font-medium"
+            style={{
+              borderColor: theme.accent,
+              backgroundColor: `${theme.primary}38`,
+              color: theme.accent,
+              boxShadow: `inset 0 0 0 1px ${theme.primary}55`,
+            }}
+          >
+            {result.party}
+          </span>
+        ) : null}
         <p className="mt-1 line-clamp-2 text-xs text-slate-400">{result.subtitle}</p>
       </div>
       <span className="shrink-0 text-[10px] uppercase tracking-[0.18em] text-accent">{note ?? result.label}</span>

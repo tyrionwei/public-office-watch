@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
+import { ElectionBreadcrumbs } from '../components/ElectionBreadcrumbs';
 import { ElectionPartyPerformanceChart } from '../components/ElectionPartyPerformanceChart';
 import { ElectionEducationDistributionChart } from '../components/ElectionEducationDistributionChart';
 import { HudStatCard } from '../components/HudStatCard';
@@ -286,10 +287,21 @@ export function ElectionEventPage() {
     : t('event.allRegions');
   const regionCount = regionOptions.length;
   const categorySummary = categoryOptions.map((option) => option.label).join(language === 'en' ? ', ' : '、');
+  const eventTitle = translateElectionEventTitle(event, t);
+  const regionBreadcrumbPath = selectedRegion
+    ? `${electionEventPath(event.key)}?${new URLSearchParams({ region: selectedRegion }).toString()}`
+    : null;
 
   return (
     <AppShell>
       <div className="space-y-4">
+        <ElectionBreadcrumbs
+          items={[
+            { label: eventTitle, to: electionEventPath(event.key) },
+            ...(selectedRegion ? [{ label: selectedRegionLabel, to: regionBreadcrumbPath ?? undefined }] : []),
+            { label: selectedCategoryLabel },
+          ]}
+        />
         <PixelFrame
           title={t('event.overview')}
           action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('event.backYears')}</Link>}
@@ -297,7 +309,7 @@ export function ElectionEventPage() {
           <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.34fr)]">
             <div className="min-w-0">
               <p className="text-xs uppercase tracking-[0.22em] text-accent">{event.votingDate ?? t('event.voteDatePending')}</p>
-              <h1 className="mt-2 font-display text-4xl text-white">{translateElectionEventTitle(event, t)}</h1>
+              <h1 className="mt-2 font-display text-4xl text-white">{eventTitle}</h1>
               <p className="mt-3 text-sm leading-6 text-slate-300">
                 {t('event.description', { categories: categorySummary, regions: regionCount })}
               </p>

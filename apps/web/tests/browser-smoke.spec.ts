@@ -68,12 +68,69 @@ test('language toggle switches the public shell copy without resizing the contro
   await expectNoHorizontalOverflow(page);
 });
 
+test('chat launcher introduces itself once without exposing chat messages', async ({ page }) => {
+  const storageKey = 'public-office-watch-chat-nudge-seen-at-v1';
+
+  await page.setViewportSize({ width: 375, height: 780 });
+  await page.clock.install({ time: new Date('2026-08-22T12:00:00+08:00') });
+  await page.goto('/');
+  await page.evaluate((key) => window.localStorage.removeItem(key), storageKey);
+  await page.reload();
+
+  const launcher = page.locator('[data-chat-launcher]');
+  const nudge = page.locator('[data-chat-nudge]');
+  await expect(launcher).toBeVisible();
+  await expect(nudge).toHaveCount(0);
+
+  await page.clock.fastForward(5_000);
+  await expect(nudge).toBeVisible();
+  await expect(nudge.getByText('全站聊天室', { exact: true })).toBeVisible();
+  await expect(nudge.getByText('聊選舉、人物與地方議題', { exact: true })).toBeVisible();
+  await expect(nudge.getByRole('button', { name: '開啟聊天' })).toBeVisible();
+
+  const nudgeBox = await nudge.boundingBox();
+  expect(nudgeBox).not.toBeNull();
+  expect(nudgeBox!.x).toBeGreaterThanOrEqual(0);
+  expect(nudgeBox!.x + nudgeBox!.width).toBeLessThanOrEqual(375);
+  expect(nudgeBox!.y).toBeGreaterThanOrEqual(0);
+  expect(nudgeBox!.y + nudgeBox!.height).toBeLessThanOrEqual(780);
+
+  await launcher.hover();
+  await page.clock.fastForward(6_000);
+  await expect(nudge).toBeVisible();
+  await page.mouse.move(8, 8);
+  await page.clock.fastForward(6_000);
+  await expect(nudge).toHaveCount(0);
+
+  await page.evaluate((key) => window.localStorage.removeItem(key), storageKey);
+  await page.reload();
+  await expect(launcher).toBeVisible();
+  await page.clock.fastForward(5_000);
+  await expect(nudge).toBeVisible();
+  await nudge.getByRole('button', { name: '關閉聊天室提示' }).click();
+  await expect(nudge).toHaveCount(0);
+  const seenAt = await page.evaluate((key) => window.localStorage.getItem(key), storageKey);
+  expect(Number(seenAt)).toBeGreaterThan(0);
+
+  await page.reload();
+  await expect(launcher).toBeVisible();
+  await page.clock.fastForward(5_000);
+  await expect(nudge).toHaveCount(0);
+});
 test('desktop public pages do not introduce horizontal overflow in English', async ({ page }) => {
   for (const path of ['/', '/people']) {
     await page.goto(path);
     await page.getByRole('button', { name: 'EN', exact: true }).click();
     await expectNoHorizontalOverflow(page);
   }
+});
+
+test('update log is clearly presented as reviewed site data rather than political news', async ({ page }) => {
+  await page.goto('/updates');
+
+  await expect(page.getByRole('link', { name: '↻ 資料更新紀錄' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '公開資料更新紀錄' })).toBeVisible();
+  await expect(page.getByText('這裡記錄本站新增與修正的資料，不是政治新聞，也不會直接公開尚未審核的自動蒐集結果。')).toBeVisible();
 });
 
 test('focused global search offers examples and person results include party context', async ({ page }) => {
@@ -89,6 +146,12 @@ test('focused global search offers examples and person results include party con
   const results = page.getByTestId('global-search-results');
   await expect(results.getByText('蔣萬安', { exact: true })).toBeVisible();
   await expect(results.locator('[data-search-party-label]').filter({ hasText: '中國國民黨' })).toBeVisible();
+
+  await searchInput.fill('');
+  await expect(examples).toBeVisible();
+  await examples.getByRole('button', { name: '臺北市長', exact: true }).click();
+  await expect(results.getByText('2022年臺北市市長選舉', { exact: true })).toBeVisible();
+  await expect(results.getByText('蔣萬安', { exact: true })).toBeVisible();
 });
 
 test('party contribution summaries spell out their source level', async ({ page }) => {
@@ -127,6 +190,49 @@ test('people page loads public people results', async ({ page }) => {
   expect(await profileLinks.count()).toBeGreaterThan(0);
   expect(candidateRequestCount).toBe(0);
 });
+
+test('person page leads with data status and keeps sensitive source context beside the claim', async ({ page }) => {
+  await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
+
+  await expect(page.getByRole('heading', { name: '王世堅', exact: true })).toBeVisible();
+  const dataSummary = page.locator('[data-person-data-summary]');
+  await expect(dataSummary).toBeVisible();
+  await expect(dataSummary.getByText('最後更新', { exact: true })).toBeVisible();
+  await expect(dataSummary.getByText('已引用來源', { exact: true })).toBeVisible();
+  await expect(dataSummary.getByText('僅顯示已審核公開資料', { exact: true })).toBeVisible();
+  const candidacyCards = page.locator('[data-candidacy-card]');
+  expect(await candidacyCards.count()).toBeGreaterThanOrEqual(2);
+  const firstPlatformBox = await candidacyCards.nth(0).locator('[data-candidacy-platform]').boundingBox();
+  const secondPlatformBox = await candidacyCards.nth(1).locator('[data-candidacy-platform]').boundingBox();
+  expect(firstPlatformBox).not.toBeNull();
+  expect(secondPlatformBox).not.toBeNull();
+  expect(Math.abs(firstPlatformBox!.y - secondPlatformBox!.y)).toBeLessThanOrEqual(1);
+
+  const sensitiveSource = page.locator('[data-sensitive-source]').first();
+  await expect(sensitiveSource).toBeVisible();
+  await expect(sensitiveSource.getByText('來源名稱', { exact: true })).toBeVisible();
+  await expect(sensitiveSource.getByText('資料日期', { exact: true })).toBeVisible();
+  await expect(sensitiveSource.getByText('案件／文件狀態', { exact: true })).toBeVisible();
+  await expect(sensitiveSource.getByText('本站整理時間', { exact: true })).toBeVisible();
+  await expect(sensitiveSource.getByRole('link', { name: /查看原始資料/ })).toBeVisible();
+
+  await sensitiveSource.getByRole('button', { name: /提出更正/ }).click();
+  const feedbackPanel = page.locator('#person-feedback');
+  await expect(feedbackPanel.getByRole('button', { name: '回報問題' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(feedbackPanel.locator('select').first()).toHaveValue('legal');
+});
+
+test('person load failures are visually distinct from uncollected data', async ({ page }) => {
+  await page.route(/\/rest\/v1\/rpc\/person_claims_for(?:\?|$)/, async (route) => {
+    await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ message: 'test failure' }) });
+  });
+
+  await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
+
+  await expect(page.locator('[data-data-state="loadError"]')).toContainText('人物資料載入失敗');
+  await expect(page.locator('[data-data-state="uncollected"]')).toHaveCount(0);
+});
+
 
 test('county highlight panel provides a distinct background for every county city', async ({ page }) => {
   await page.goto('/');
@@ -439,6 +545,10 @@ test('homepage region selection survives navigation and browser back', async ({ 
 
   await page.locator('a[href="/people"]').first().click();
   await expect(page).toHaveURL(/\/people$/);
+  await expect(page.locator('[data-current-region]')).toContainText('目前地區：臺中市');
+  await expect(page.locator('[data-current-region]')).toContainText('變更');
+  await page.reload();
+  await expect(page.locator('[data-current-region]')).toContainText('目前地區：臺中市');
   await page.goBack();
 
   await expect(page).toHaveURL(/\?region=taichung-city$/);
@@ -529,6 +639,7 @@ test('elections page groups elections into events and opens race detail', async 
   await expect(page.getByRole('heading', { name: '大選總覽' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '項目分類' })).toBeVisible();
   await expect(page.getByText('縣市 / 區域')).toBeVisible();
+  await expect(page.locator('[data-election-breadcrumb]')).toBeVisible();
 
   const categoryLink = page.locator('main a[href*="category="]').first();
   await expect(categoryLink).toBeVisible();
@@ -542,6 +653,8 @@ test('elections page groups elections into events and opens race detail', async 
     await raceLinks.first().click();
     await expect(page.getByRole('heading', { name: '選區項目細節' })).toBeVisible();
     await expect(page.getByText('候選名冊')).toBeVisible();
+    await expect(page.locator('[data-election-breadcrumb] li')).toHaveCount(4);
+    await expect(page.locator('[data-election-breadcrumb] [aria-current="page"]')).toBeVisible();
     await page.goBack();
     await expect(page).toHaveURL(filteredEventUrl);
   }

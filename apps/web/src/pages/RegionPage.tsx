@@ -9,6 +9,7 @@ import { compareUpcomingRacesForDisplay } from '../data/upcomingRaceSort';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { electionsPath, homePath, peoplePath, racePath, regionPath } from '../routes/routePaths';
+import { useSelectedRegion } from '../selectedRegion';
 
 function getRegionHighlightKey(level: string) {
   if (level === 'county_city') return 'regionPage.countyHighlight' as const;
@@ -18,6 +19,7 @@ function getRegionHighlightKey(level: string) {
 
 export function RegionPage() {
   const { t } = useI18n();
+  const { setSelectedRegionId } = useSelectedRegion();
   const { regionId } = useParams();
   const safeRegionId = regionId ?? '';
   const regionNode = publicDataProvider.getStageRegion(safeRegionId);
@@ -33,6 +35,10 @@ export function RegionPage() {
   );
   const publicRegionId = regionNode?.publicRegionId ?? safeRegionId;
   const highlightImage = highlight ? getRegionHighlightImageSources(highlight.image) : null;
+
+  useEffect(() => {
+    if (regionNode?.level === 'county_city') setSelectedRegionId(regionNode.id);
+  }, [regionNode?.id, regionNode?.level, setSelectedRegionId]);
 
   useEffect(() => {
     let active = true;

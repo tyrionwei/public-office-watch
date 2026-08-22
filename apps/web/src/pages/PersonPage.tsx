@@ -12,6 +12,7 @@ import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { platformClaimsForCandidate } from '../lib/candidatePlatform';
+import type { FeedbackSectionKey } from '../lib/personFeedback';
 import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
 import { peoplePath } from '../routes/routePaths';
@@ -84,17 +85,14 @@ type SourceRecord = {
 
 function collectProfileSources(fallbackName: string, ...groups: SourceRecord[][]) {
   const sources = new Map<string, { name: string; url: string }>();
-  const sourceUrls = new Set<string>();
   groups.flat().forEach((record) => {
     if (!record.source_url) return;
     const name = record.source_name?.trim() || fallbackName;
     const url = record.source_url.trim();
-    const key = name.toLowerCase();
-    if (!url || sources.has(key) || sourceUrls.has(url)) return;
-    sources.set(key, { name, url });
-    sourceUrls.add(url);
+    if (!url || sources.has(url)) return;
+    sources.set(url, { name, url });
   });
-  return Array.from(sources.values()).slice(0, 12);
+  return Array.from(sources.values());
 }
 
 function claimJsonString(claim: PublicPersonClaim, key: string) {
@@ -150,14 +148,71 @@ function candidateDetailRows(
 function sensitivePublicClaims(claims: PublicPersonClaim[]) {
   return claims.filter((claim) => claim.review_score >= 70 && ['A', 'B'].includes(claim.confidence_level));
 }
+type DataStateKind = 'notApplicable' | 'uncollected' | 'noPublicData' | 'pending' | 'loadError';
 
-function EmptyInfo({ children }: { children: string }) {
+const dataStateLabelKeys: Record<DataStateKind, TranslationKey> = {
+  notApplicable: 'person.dataState.notApplicable',
+  uncollected: 'person.dataState.uncollected',
+  noPublicData: 'person.dataState.noPublicData',
+  pending: 'person.dataState.pending',
+  loadError: 'person.dataState.loadError',
+};
+
+const dataStateStyles: Record<DataStateKind, string> = {
+  notApplicable: 'border-slate-500/45 bg-slate-500/8 text-slate-300',
+  uncollected: 'border-amber-300/40 bg-amber-300/8 text-amber-100',
+  noPublicData: 'border-cyan-300/40 bg-cyan-300/8 text-cyan-100',
+  pending: 'border-violet-300/45 bg-violet-300/10 text-violet-100',
+  loadError: 'border-rose-300/55 bg-rose-400/10 text-rose-100',
+};
+
+function DataStateNotice({ kind, children }: { kind: DataStateKind; children: string }) {
+  const { t } = useI18n();
   return (
-    <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-5 text-sm text-slate-300">
-      {children}
+    <div
+      data-data-state={kind}
+      role={kind === 'loadError' ? 'alert' : undefined}
+      className={`pixel-corners border px-4 py-4 text-sm ${dataStateStyles[kind]}`}
+    >
+      <span className="mr-2 inline-block border border-current/40 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]">
+        {t(dataStateLabelKeys[kind])}
+      </span>
+      <span className="leading-6">{children}</span>
     </div>
   );
 }
+
+function latestUpdatedValue(values: Array<string | null | undefined>) {
+  let latestValue: string | null = null;
+  let latestTime = Number.NEGATIVE_INFINITY;
+  values.forEach((value) => {
+    if (!value) return;
+    const time = new Date(value).getTime();
+    if (Number.isNaN(time) || time <= latestTime) return;
+    latestTime = time;
+    latestValue = value;
+  });
+  return latestValue;
+}
+
+const sensitiveStatusLabelKeys: Record<string, TranslationKey> = {
+  criminal_judgment_final: 'person.source.status.finalJudgment',
+  historical_criminal_judgment_final: 'person.source.status.finalJudgment',
+  criminal_judgment_non_final: 'person.source.status.nonFinalJudgment',
+  criminal_judgment_first_instance: 'person.source.status.nonFinalJudgment',
+  criminal_judgment_appellate_non_final: 'person.source.status.nonFinalJudgment',
+  criminal_judgment: 'person.source.status.judgment',
+  election_recount_pending: 'person.source.status.recountPending',
+  legal_record_unspecified: 'person.source.status.unspecifiedLegal',
+};
+
+function sensitiveClaimStatusKey(claim: PublicPersonClaim): TranslationKey {
+  if (claim.claim_type === 'family_relation') return 'person.source.status.verifiedPublic';
+  const caseStage = claimJsonString(claim, 'caseStage');
+  if (!caseStage) return 'person.source.status.verifiedPublic';
+  return sensitiveStatusLabelKeys[caseStage] ?? 'person.source.status.verifiedPublic';
+}
+
 
 function visibleProfileClaims(claims: PublicPersonClaim[]) {
   const seen = new Set<string>();
@@ -195,22 +250,68 @@ function claimsByType(claims: PublicPersonClaim[], claimType: PublicPersonClaim[
   return claims.filter((claim) => claim.claim_type === claimType);
 }
 
-function ClaimCard({ claim }: { claim: PublicPersonClaim }) {
-  const { t } = useI18n();
+function ClaimCard({
+  claim,
+  correctionSection,
+  onRequestCorrection,
+}: {
+  claim: PublicPersonClaim;
+  correctionSection?: Extract<FeedbackSectionKey, 'finance' | 'legal' | 'family'>;
+  onRequestCorrection?: (section: FeedbackSectionKey) => void;
+}) {
+  const { language, t } = useI18n();
+  const showSourceDetails = Boolean(correctionSection);
+  const documentStatus = correctionSection === 'legal' || correctionSection === 'family'
+    ? t(sensitiveClaimStatusKey(claim))
+    : t('person.source.status.verifiedPublic');
 
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
       <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
         {t(claimTypeLabels[claim.claim_type])}
       </p>
-      <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value}</h3>
-      {claim.claim_type === 'legal_case' && claim.source_url ? (
-        <a
-          href={claim.source_url}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-3 inline-block text-xs text-accent hover:text-white"
-        >
+      <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value ?? t('person.noContent')}</h3>
+      {showSourceDetails ? (
+        <div data-sensitive-source className="mt-4 border-t border-line/60 pt-4">
+          <dl className="grid gap-2 text-xs sm:grid-cols-2">
+            <div>
+              <dt className="text-slate-500">{t('person.source.name')}</dt>
+              <dd className="mt-1 text-slate-200">{claim.source_name?.trim() || t('person.publicSource')}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">{t('person.source.date')}</dt>
+              <dd className="mt-1 text-slate-200">{formatUpdatedAt(claim.observed_at, language, t('person.source.notRecorded'))}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">{t('person.source.documentStatus')}</dt>
+              <dd className="mt-1 text-slate-200">{documentStatus}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">{t('person.source.organizedAt')}</dt>
+              <dd className="mt-1 text-slate-200">{formatUpdatedAt(claim.updated_at, language, t('person.source.notRecorded'))}</dd>
+            </div>
+          </dl>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            {claim.source_url ? (
+              <a href={claim.source_url} target="_blank" rel="noreferrer" className="text-xs text-accent hover:text-white">
+                {t('person.source.originalLink')} ↗
+              </a>
+            ) : (
+              <span className="text-xs text-slate-500">{t('person.source.noOriginalLink')}</span>
+            )}
+            {correctionSection && onRequestCorrection ? (
+              <button
+                type="button"
+                onClick={() => onRequestCorrection(correctionSection)}
+                className="text-xs text-signal hover:text-white"
+              >
+                {t('person.source.requestCorrection')} →
+              </button>
+            ) : null}
+          </div>
+        </div>
+      ) : claim.source_url ? (
+        <a href={claim.source_url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-xs text-accent hover:text-white">
           {claim.source_name?.trim() || t('person.publicSource')} ↗
         </a>
       ) : null}
@@ -222,7 +323,7 @@ function TimelineList({ items }: { items: PublicPersonTimelineItem[] }) {
   const { t } = useI18n();
 
   if (items.length === 0) {
-    return <EmptyInfo>{t('person.timeline.empty')}</EmptyInfo>;
+    return <DataStateNotice kind="uncollected">{t('person.timeline.empty')}</DataStateNotice>;
   }
 
   return (
@@ -248,7 +349,7 @@ function PartyAffiliationList({ affiliations, currentParty }: { affiliations: Pu
   const { t } = useI18n();
 
   if (affiliations.length === 0) {
-    return <EmptyInfo>{t('person.affiliation.empty')}</EmptyInfo>;
+    return <DataStateNotice kind="uncollected">{t('person.affiliation.empty')}</DataStateNotice>;
   }
 
   const normalizedCurrentParty = currentParty ? normalizePartyLabel(currentParty) : null;
@@ -305,11 +406,24 @@ function PartyOfficeList({ affiliations }: { affiliations: PublicPersonPartyAffi
   );
 }
 
-function ClaimGrid({ claims }: { claims: PublicPersonClaim[] }) {
+function ClaimGrid({
+  claims,
+  correctionSection,
+  onRequestCorrection,
+}: {
+  claims: PublicPersonClaim[];
+  correctionSection: Extract<FeedbackSectionKey, 'finance' | 'legal' | 'family'>;
+  onRequestCorrection: (section: FeedbackSectionKey) => void;
+}) {
   return (
     <div className="grid gap-3">
       {claims.map((claim) => (
-        <ClaimCard key={claim.claim_id} claim={claim} />
+        <ClaimCard
+          key={claim.claim_id}
+          claim={claim}
+          correctionSection={correctionSection}
+          onRequestCorrection={onRequestCorrection}
+        />
       ))}
     </div>
   );
@@ -340,6 +454,7 @@ export function PersonPage() {
   const safePersonId = personId ?? '';
   const [loadedPersonId, setLoadedPersonId] = useState<string | null>(null);
   const [failedPersonId, setFailedPersonId] = useState<string | null>(null);
+  const [feedbackRequest, setFeedbackRequest] = useState<{ section: FeedbackSectionKey; version: number } | null>(null);
   const loading = loadedPersonId !== safePersonId;
 
   useEffect(() => {
@@ -382,14 +497,22 @@ export function PersonPage() {
     : xiezhiMascotSprite;
   const usesMascotFallback = Boolean(person && !primaryPhotoUrl && portraitSrc === xiezhiMascotSprite);
   const financeClaims = profile ? claimsByType(profile.public_claims, 'finance_summary') : [];
-  const legalClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'legal_case')) : [];
-  const familyClaims = profile ? sensitivePublicClaims(claimsByType(profile.public_claims, 'family_relation')) : [];
+  const rawLegalClaims = profile ? claimsByType(profile.public_claims, 'legal_case') : [];
+  const rawFamilyClaims = profile ? claimsByType(profile.public_claims, 'family_relation') : [];
+  const legalClaims = sensitivePublicClaims(rawLegalClaims);
+  const familyClaims = sensitivePublicClaims(rawFamilyClaims);
   const displayPosition = person ? getPersonDisplayPosition(person) : t('person.publicRecord');
   const profilePosition = person ? getPersonDisplayPosition(person, t('person.toBeAdded')) : t('person.toBeAdded');
   const educationItems = person ? educationProfileItems(person.education) : [];
   const experienceItems = person ? experienceProfileItems(person.experience, displayPosition) : [];
-  const profileSources = profile
-    ? collectProfileSources(t('person.publicSource'), profile.candidate_records, profile.party_affiliations, profile.public_claims)
+  const profileSources = profile && person
+    ? collectProfileSources(
+        t('person.publicSource'),
+        [{ source_name: person.photo_source_name, source_url: person.photo_source_url }],
+        profile.candidate_records,
+        profile.party_affiliations,
+        profile.public_claims,
+      )
     : [];
   const identityRecords = profile
     ? profile.identity_records.filter((identity, index, records) => {
@@ -408,11 +531,46 @@ export function PersonPage() {
         person.region_name || person.district ? [t('person.location'), person.region_name ?? person.district ?? ''] : null,
       ].filter((fact): fact is [string, string] => fact !== null)
     : [];
-  const supplementarySectionCount = [
-    financeClaims.length,
-    legalClaims.length,
-    familyClaims.length,
-  ].filter(Boolean).length;
+  const visibleProfileSources = profileSources.slice(0, 12);
+  const latestProfileUpdate = profile && person
+    ? latestUpdatedValue([
+        person.updated_at,
+        ...profile.candidate_records.flatMap((candidate) => [candidate.candidate_updated_at, candidate.status_updated_at]),
+        ...profile.party_affiliations.map((affiliation) => affiliation.updated_at),
+        ...profile.public_claims.map((claim) => claim.updated_at),
+      ])
+    : null;
+  const platformClaims = profile ? claimsByType(profile.public_claims, 'platform') : [];
+  const sectionStates: Array<{ label: string; status: 'complete' | 'uncollected' | 'pending' }> = [
+    {
+      label: t('person.currentPosition'),
+      status: person && (person.current_office_label || person.position || person.upcoming_candidate_label) ? 'complete' : 'uncollected',
+    },
+    { label: t('person.party'), status: person?.party ? 'complete' : 'uncollected' },
+    { label: t('person.candidaciesTitle'), status: profile?.candidate_records.length ? 'complete' : 'uncollected' },
+    { label: t('person.timelineTitle'), status: profile?.timeline_records.length ? 'complete' : 'uncollected' },
+    { label: t('person.affiliationsTitle'), status: partyAffiliations.length ? 'complete' : 'uncollected' },
+    { label: t('person.education'), status: educationItems.length ? 'complete' : 'uncollected' },
+    { label: t('person.experience'), status: experienceItems.length ? 'complete' : 'uncollected' },
+    { label: t('person.platformTitle'), status: platformClaims.length ? 'complete' : 'uncollected' },
+    { label: t('person.financeTitle'), status: financeClaims.length ? 'complete' : 'uncollected' },
+    {
+      label: t('person.legalTitle'),
+      status: legalClaims.length ? 'complete' : rawLegalClaims.length ? 'pending' : 'uncollected',
+    },
+    {
+      label: t('person.familyTitle'),
+      status: familyClaims.length ? 'complete' : rawFamilyClaims.length ? 'pending' : 'uncollected',
+    },
+  ];
+  const completedSections = sectionStates.filter((section) => section.status === 'complete').map((section) => section.label);
+  const uncollectedSections = sectionStates.filter((section) => section.status === 'uncollected').map((section) => section.label);
+  const pendingSections = sectionStates.filter((section) => section.status === 'pending').map((section) => section.label);
+  const sectionListSeparator = language === 'en' ? ', ' : '、';
+
+  function handleRequestCorrection(section: FeedbackSectionKey) {
+    setFeedbackRequest((current) => ({ section, version: (current?.version ?? 0) + 1 }));
+  }
 
   return (
     <AppShell>
@@ -465,12 +623,59 @@ export function PersonPage() {
                   />
                   <HudStatCard label={t('person.region')} value={person.region_name ?? person.district ?? t('person.unspecified')} />
                   <HudStatCard label={t('person.status')} value={<span className={person.status === 'current' ? 'text-signal' : 'text-white'}>{t(person.status === 'current' ? 'people.status.current' : person.status === 'candidate' ? 'people.status.candidate' : person.status === 'former' ? 'people.status.former' : 'people.status.other')}</span>} />
-                  <HudStatCard label={t('person.updated')} value={formatUpdatedAt(person.updated_at, language, t('person.awaitingSync'))} />
+                  <HudStatCard label={t('person.updated')} value={formatUpdatedAt(latestProfileUpdate, language, t('person.awaitingSync'))} />
                 </div>
               </div>
             </section>
 
-            <PersonFeedbackPanel personId={person.person_id} personName={person.name} />
+            <SectionPanel title={t('person.dataSummary.title')} eyebrow={t('person.dataSummary.eyebrow')}>
+              <div data-person-data-summary className="space-y-4">
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  <HudStatCard
+                    label={t('person.dataSummary.lastUpdated')}
+                    value={formatUpdatedAt(latestProfileUpdate, language, t('person.awaitingSync'))}
+                  />
+                  <HudStatCard
+                    label={t('person.dataSummary.sourceCount')}
+                    value={t('person.dataSummary.sourceCountValue', { count: profileSources.length })}
+                  />
+                  <HudStatCard
+                    label={t('person.dataSummary.reviewState')}
+                    value={<span className="text-signal">{t('person.dataSummary.reviewedOnly')}</span>}
+                  />
+                </div>
+                <div className="grid gap-3 lg:grid-cols-3">
+                  <article className="pixel-corners border border-signal/35 bg-signal/5 p-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-signal">{t('person.dataSummary.completed')}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-200">
+                      {completedSections.join(sectionListSeparator) || t('person.dataSummary.none')}
+                    </p>
+                  </article>
+                  <article className="pixel-corners border border-amber-300/35 bg-amber-300/5 p-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">{t('person.dataSummary.uncollected')}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-200">
+                      {uncollectedSections.join(sectionListSeparator) || t('person.dataSummary.none')}
+                    </p>
+                  </article>
+                  <article className="pixel-corners border border-violet-300/35 bg-violet-300/5 p-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-200">{t('person.dataSummary.pending')}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-200">
+                      {pendingSections.join(sectionListSeparator) || t('person.dataSummary.none')}
+                    </p>
+                  </article>
+                </div>
+                <p className="border-l-2 border-accent/60 pl-3 text-xs leading-5 text-slate-400">
+                  {t('person.dataSummary.reviewPolicy')}
+                </p>
+              </div>
+            </SectionPanel>
+
+            <PersonFeedbackPanel
+              personId={person.person_id}
+              personName={person.name}
+              requestedSection={feedbackRequest?.section}
+              requestVersion={feedbackRequest?.version}
+            />
 
             <SectionPanel title={t('person.basicTitle')} eyebrow={t('person.basicEyebrow')}>
               <dl className="grid gap-3 sm:grid-cols-2">
@@ -515,7 +720,11 @@ export function PersonPage() {
                       && claim.claim_json.event === 'succession'
                     ));
                     return (
-                    <article key={candidate.candidate_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+                    <article
+                      key={candidate.candidate_id}
+                      className="pixel-corners flex h-full flex-col border border-line/70 bg-bg/35 p-4"
+                      data-candidacy-card
+                    >
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{getCandidateElectionLabel(candidate)}</p>
@@ -533,22 +742,26 @@ export function PersonPage() {
                           </div>
                         ))}
                       </dl>
-                      {candidatePlatforms.length > 0 ? (
-                        <div className="mt-4 border-t border-line/60 pt-4">
-                          <p className="mb-3 text-xs uppercase tracking-[0.2em] text-slate-500">{t('person.platformTitle')}</p>
-                          <div className="grid gap-3">
-                            {candidatePlatforms.map((claim) => (
-                              <PlatformClaimCard key={claim.claim_id} claim={claim} />
-                            ))}
+                      <div className="mt-auto pt-4" data-candidacy-platform>
+                        {candidatePlatforms.length > 0 ? (
+                          <div className="border-t border-line/60 pt-4">
+                            <p className="mb-3 text-xs uppercase tracking-[0.2em] text-slate-500">{t('person.platformTitle')}</p>
+                            <div className="grid gap-3">
+                              {candidatePlatforms.map((claim) => (
+                                <PlatformClaimCard key={claim.claim_id} claim={claim} />
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      ) : null}
+                        ) : (
+                          <DataStateNotice kind="uncollected">{t('person.platform.empty')}</DataStateNotice>
+                        )}
+                      </div>
                     </article>
                     );
                   })}
                 </div>
               ) : (
-                <EmptyInfo>{t('person.noCandidacies')}</EmptyInfo>
+                <DataStateNotice kind="uncollected">{t('person.noCandidacies')}</DataStateNotice>
               )}
             </SectionPanel>
 
@@ -558,79 +771,75 @@ export function PersonPage() {
               </SectionPanel>
             ) : null}
 
-            {profile.timeline_records.length > 0 || partyAffiliations.length > 0 ? (
-              <div className={
-                profile.timeline_records.length > 0 && partyAffiliations.length > 0
-                  ? 'grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]'
-                  : 'grid gap-4'
-              }>
-                {profile.timeline_records.length > 0 ? (
-                  <SectionPanel title={t('person.timelineTitle')} eyebrow={t('person.timelineEyebrow')}>
-                    <TimelineList items={profile.timeline_records} />
-                  </SectionPanel>
-                ) : null}
-                {partyAffiliations.length > 0 ? (
-                  <SectionPanel title={t('person.affiliationsTitle')} eyebrow={t('person.affiliationsEyebrow')}>
-                    <PartyAffiliationList affiliations={partyAffiliations} currentParty={person.party} />
-                  </SectionPanel>
-                ) : null}
-              </div>
-            ) : null}
-
-            {educationItems.length > 0 || experienceItems.length > 0 ? (
-              <SectionPanel title={t('person.resumeTitle')} eyebrow={t('person.resumeEyebrow')}>
-                <div className={
-                  educationItems.length > 0 && experienceItems.length > 0
-                    ? 'grid gap-4 lg:grid-cols-2'
-                    : 'grid gap-4'
-                }>
-                  {educationItems.length > 0 ? (
-                    <div>
-                      <h3 className="mb-3 text-sm font-semibold text-white">{t('person.education')}</h3>
-                      <ul className="space-y-2 text-sm text-slate-300">
-                        {educationItems.map((item) => (
-                          <li key={item} className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2">
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
-                  {experienceItems.length > 0 ? (
-                    <div>
-                      <h3 className="mb-3 text-sm font-semibold text-white">{t('person.experience')}</h3>
-                      <ul className="space-y-2 text-sm text-slate-300">
-                        {experienceItems.map((item) => (
-                          <li key={item} className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2">
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
-                </div>
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
+              <SectionPanel title={t('person.timelineTitle')} eyebrow={t('person.timelineEyebrow')}>
+                <TimelineList items={profile.timeline_records} />
               </SectionPanel>
-            ) : null}
+              <SectionPanel title={t('person.affiliationsTitle')} eyebrow={t('person.affiliationsEyebrow')}>
+                <PartyAffiliationList affiliations={partyAffiliations} currentParty={person.party} />
+              </SectionPanel>
+            </div>
 
-            {supplementarySectionCount > 0 ? (
-              <div className={supplementarySectionCount > 1 ? 'grid gap-4 lg:grid-cols-2' : 'grid gap-4'}>
-                {financeClaims.length > 0 ? (
-                  <SectionPanel title={t('person.financeTitle')} eyebrow={t('person.financeEyebrow')}>
-                    <ClaimGrid claims={financeClaims} />
-                  </SectionPanel>
-                ) : null}
-                {legalClaims.length > 0 ? (
-                  <SectionPanel title={t('person.legalTitle')} eyebrow={t('person.reviewedEyebrow')}>
-                    <ClaimGrid claims={legalClaims} />
-                  </SectionPanel>
-                ) : null}
-                {familyClaims.length > 0 ? (
-                  <SectionPanel title={t('person.familyTitle')} eyebrow={t('person.reviewedEyebrow')}>
-                    <ClaimGrid claims={familyClaims} />
-                  </SectionPanel>
-                ) : null}
+            <SectionPanel title={t('person.resumeTitle')} eyebrow={t('person.resumeEyebrow')}>
+              <div className="grid gap-4 lg:grid-cols-2">
+                <div>
+                  <h3 className="mb-3 text-sm font-semibold text-white">{t('person.education')}</h3>
+                  {educationItems.length > 0 ? (
+                    <ul className="space-y-2 text-sm text-slate-300">
+                      {educationItems.map((item) => (
+                        <li key={item} className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <DataStateNotice kind="uncollected">{t('person.resume.educationEmpty')}</DataStateNotice>
+                  )}
+                </div>
+                <div>
+                  <h3 className="mb-3 text-sm font-semibold text-white">{t('person.experience')}</h3>
+                  {experienceItems.length > 0 ? (
+                    <ul className="space-y-2 text-sm text-slate-300">
+                      {experienceItems.map((item) => (
+                        <li key={item} className="pixel-corners border border-line/70 bg-bg/35 px-3 py-2">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <DataStateNotice kind="uncollected">{t('person.resume.experienceEmpty')}</DataStateNotice>
+                  )}
+                </div>
               </div>
-            ) : null}
+            </SectionPanel>
+
+            <div className="grid gap-4 xl:grid-cols-3">
+              <SectionPanel title={t('person.financeTitle')} eyebrow={t('person.financeEyebrow')}>
+                {financeClaims.length > 0 ? (
+                  <ClaimGrid claims={financeClaims} correctionSection="finance" onRequestCorrection={handleRequestCorrection} />
+                ) : (
+                  <DataStateNotice kind="uncollected">{t('person.finance.empty')}</DataStateNotice>
+                )}
+              </SectionPanel>
+              <SectionPanel title={t('person.legalTitle')} eyebrow={t('person.reviewedEyebrow')}>
+                {legalClaims.length > 0 ? (
+                  <ClaimGrid claims={legalClaims} correctionSection="legal" onRequestCorrection={handleRequestCorrection} />
+                ) : rawLegalClaims.length > 0 ? (
+                  <DataStateNotice kind="pending">{t('person.legal.pending')}</DataStateNotice>
+                ) : (
+                  <DataStateNotice kind="uncollected">{t('person.legal.empty')}</DataStateNotice>
+                )}
+              </SectionPanel>
+              <SectionPanel title={t('person.familyTitle')} eyebrow={t('person.reviewedEyebrow')}>
+                {familyClaims.length > 0 ? (
+                  <ClaimGrid claims={familyClaims} correctionSection="family" onRequestCorrection={handleRequestCorrection} />
+                ) : rawFamilyClaims.length > 0 ? (
+                  <DataStateNotice kind="pending">{t('person.family.pending')}</DataStateNotice>
+                ) : (
+                  <DataStateNotice kind="uncollected">{t('person.family.empty')}</DataStateNotice>
+                )}
+              </SectionPanel>
+            </div>
 
             {publicClaims.length > 0 ? (
               <SectionPanel title={t('person.leadsTitle')} eyebrow={t('person.leadsEyebrow')}>
@@ -642,33 +851,42 @@ export function PersonPage() {
               </SectionPanel>
             ) : null}
 
-            {profileSources.length > 0 ? (
-              <SectionPanel title={t('person.sourcesTitle')} eyebrow={t('person.sourcesEyebrow')}>
-                <ul className="grid gap-2 md:grid-cols-2">
-                  {profileSources.map((source) => (
-                    <li key={source.url}>
-                      <a
-                        href={source.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="pixel-corners block border border-line/70 bg-bg/35 px-3 py-2 text-sm text-accent hover:text-white"
-                      >
-                        {source.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </SectionPanel>
-            ) : null}
+            <SectionPanel title={t('person.sourcesTitle')} eyebrow={t('person.sourcesEyebrow')}>
+              {profileSources.length > 0 ? (
+                <>
+                  {profileSources.length > visibleProfileSources.length ? (
+                    <p className="mb-3 text-xs text-slate-500">
+                      {t('person.sourcesShowing', { shown: visibleProfileSources.length, total: profileSources.length })}
+                    </p>
+                  ) : null}
+                  <ul className="grid gap-2 md:grid-cols-2">
+                    {visibleProfileSources.map((source) => (
+                      <li key={source.url}>
+                        <a
+                          href={source.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="pixel-corners block border border-line/70 bg-bg/35 px-3 py-2 text-sm text-accent hover:text-white"
+                        >
+                          {source.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <DataStateNotice kind="uncollected">{t('person.sourcesEmpty')}</DataStateNotice>
+              )}
+            </SectionPanel>
           </div>
         ) : loading ? (
-          <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center text-sm text-slate-300">
+          <div data-data-state="loading" aria-live="polite" className="pixel-corners border border-accent/45 bg-accent/8 px-4 py-8 text-center text-sm text-cyan-100">
             {t('person.loading')}
           </div>
+        ) : failedPersonId === safePersonId ? (
+          <DataStateNotice kind="loadError">{t('person.loadError')}</DataStateNotice>
         ) : (
-          <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center text-sm text-slate-300">
-            {failedPersonId === safePersonId ? t('person.loadError') : t('person.notFound')}
-          </div>
+          <DataStateNotice kind="noPublicData">{t('person.notFound')}</DataStateNotice>
         )}
       </PixelFrame>
     </AppShell>

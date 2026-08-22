@@ -33,12 +33,37 @@ import {
   type ChatRealtimeChannel,
   type ChatStatus,
 } from '../lib/globalChat';
+const chatNudgeStorageKey = 'public-office-watch-chat-nudge-seen-at-v1';
+const chatNudgeDelayMs = 5_000;
+const chatNudgeDurationMs = 6_000;
+const chatNudgeSuppressionMs = 7 * 24 * 60 * 60 * 1_000;
+
+function wasChatNudgeSeenRecently() {
+  try {
+    const seenAt = Number(window.localStorage.getItem(chatNudgeStorageKey));
+    return seenAt > 0 && Date.now() - seenAt < chatNudgeSuppressionMs;
+  } catch {
+    return false;
+  }
+}
+
+function rememberChatNudge() {
+  try {
+    window.localStorage.setItem(chatNudgeStorageKey, String(Date.now()));
+  } catch {
+    // The nudge can still work for this visit when storage is unavailable.
+  }
+}
 
 const copy = {
   'zh-TW': {
     launcher: '開啟全站即時討論',
     tooltip: '即時討論',
     title: '全站即時討論',
+    nudgeTitle: '全站聊天室',
+    nudgeBody: '聊選舉、人物與地方議題',
+    nudgeOpen: '開啟聊天',
+    nudgeClose: '關閉聊天室提示',
     close: '關閉聊天室',
     minimize: '縮小聊天室',
     loading: '正在讀取最近訊息…',
@@ -85,6 +110,10 @@ const copy = {
     launcher: 'Open site-wide live chat',
     tooltip: 'Live chat',
     title: 'Site-wide live chat',
+    nudgeTitle: 'Site-wide chat',
+    nudgeBody: 'Discuss elections, people, and local issues',
+    nudgeOpen: 'Open chat',
+    nudgeClose: 'Dismiss chat tip',
     close: 'Close chat',
     minimize: 'Minimize chat',
     loading: 'Loading recent messages…',
@@ -173,6 +202,8 @@ export function GlobalChatWidget() {
   const text = copy[language];
   const [status, setStatus] = useState<ChatStatus | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isNudgeVisible, setIsNudgeVisible] = useState(false);
+  const [isNudgePaused, setIsNudgePaused] = useState(false);
   const [isPanelEngaged, setIsPanelEngaged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
@@ -219,6 +250,20 @@ export function GlobalChatWidget() {
       });
     return () => { active = false; };
   }, []);
+  useEffect(() => {
+    if (!status || isOpen || wasChatNudgeSeenRecently()) return undefined;
+    const timer = window.setTimeout(() => setIsNudgeVisible(true), chatNudgeDelayMs);
+    return () => window.clearTimeout(timer);
+  }, [isOpen, status]);
+
+  useEffect(() => {
+    if (!isNudgeVisible || isNudgePaused || isOpen) return undefined;
+    const timer = window.setTimeout(() => {
+      rememberChatNudge();
+      setIsNudgeVisible(false);
+    }, chatNudgeDurationMs);
+    return () => window.clearTimeout(timer);
+  }, [isNudgePaused, isNudgeVisible, isOpen]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -524,7 +569,13 @@ export function GlobalChatWidget() {
     window.setTimeout(() => setHighlightedMessageId(null), 1600);
   }
 
+  function dismissChatNudge() {
+    rememberChatNudge();
+    setIsNudgeVisible(false);
+  }
+
   async function openChat() {
+    dismissChatNudge();
     try {
       const currentStatus = await loadChatStatus();
       if (!currentStatus?.is_enabled) {
@@ -544,18 +595,51 @@ export function GlobalChatWidget() {
   return (
     <>
       {!isOpen ? (
-        <button
-          type="button"
-          onClick={() => void openChat()}
-          aria-label={text.launcher}
-          title={text.tooltip}
-          className="group fixed bottom-5 right-4 z-[70] grid h-12 w-12 place-items-center border-2 border-cyan-300/80 bg-[#07101f] text-cyan-200 shadow-[4px_4px_0_rgba(34,211,238,0.2)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:text-white sm:right-5"
+        <div
+          className="fixed bottom-5 right-4 z-[70] sm:right-5"
+          onPointerEnter={() => setIsNudgePaused(true)}
+          onPointerLeave={() => setIsNudgePaused(false)}
+          onFocusCapture={() => setIsNudgePaused(true)}
+          onBlurCapture={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsNudgePaused(false);
+          }}
+          data-chat-launcher
         >
-          <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap border border-cyan-300/40 bg-[#07101f] px-2 py-1 text-[11px] text-cyan-100 opacity-0 shadow-[3px_3px_0_rgba(34,211,238,0.14)] transition-opacity group-hover:opacity-100 md:block">
-            {text.tooltip}
-          </span>
-          <PixelChatIcon />
-        </button>
+          {isNudgeVisible ? (
+            <aside
+              className="pixel-corners absolute bottom-full right-0 mb-3 w-[min(18rem,calc(100vw-2rem))] border border-cyan-300/60 bg-[#07101f] p-4 pr-10 text-left shadow-[5px_5px_0_rgba(34,211,238,0.16)]"
+              aria-live="polite"
+              data-chat-nudge
+            >
+              <button
+                type="button"
+                onClick={dismissChatNudge}
+                aria-label={text.nudgeClose}
+                className="absolute right-2 top-2 grid h-7 w-7 place-items-center border border-line text-sm text-slate-400 hover:border-cyan-300/60 hover:text-white"
+              >
+                ×
+              </button>
+              <p className="font-display text-sm tracking-[0.12em] text-cyan-100">{text.nudgeTitle}</p>
+              <p className="mt-2 text-xs leading-5 text-slate-300">{text.nudgeBody}</p>
+              <button
+                type="button"
+                onClick={() => void openChat()}
+                className="mt-3 border border-cyan-300/60 bg-cyan-300/[0.08] px-3 py-2 text-xs font-semibold text-cyan-100 transition hover:border-cyan-200 hover:bg-cyan-300/[0.14] hover:text-white"
+              >
+                {text.nudgeOpen}
+              </button>
+            </aside>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => void openChat()}
+            aria-label={text.launcher}
+            title={text.tooltip}
+            className="grid h-12 w-12 place-items-center border-2 border-cyan-300/80 bg-[#07101f] text-cyan-200 shadow-[4px_4px_0_rgba(34,211,238,0.2)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:text-white"
+          >
+            <PixelChatIcon />
+          </button>
+        </div>
       ) : null}
 
       {isOpen ? <button type="button" aria-label={text.close} onClick={() => { setIsOpen(false); setIsPanelEngaged(false); }} className="fixed inset-0 z-[71] bg-black/65 md:hidden" /> : null}

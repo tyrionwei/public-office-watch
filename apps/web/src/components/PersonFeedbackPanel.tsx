@@ -36,7 +36,17 @@ const problemTypeLabels: Record<ProblemType, TranslationKey> = {
 
 type FeedbackMode = 'supplement' | 'problem';
 
-export function PersonFeedbackPanel({ personId, personName }: { personId: string; personName: string }) {
+export function PersonFeedbackPanel({
+  personId,
+  personName,
+  requestedSection,
+  requestVersion,
+}: {
+  personId: string;
+  personName: string;
+  requestedSection?: FeedbackSectionKey | null;
+  requestVersion?: number;
+}) {
   const { t } = useI18n();
   const [context, setContext] = useState<PersonFeedbackContext>({ priorities: [], ownSubmissions: [] });
   const [mode, setMode] = useState<FeedbackMode | null>(null);
@@ -95,6 +105,15 @@ export function PersonFeedbackPanel({ personId, personName }: { personId: string
   const evidenceUrlValid = !evidenceUrl.trim() || /^https?:\/\//i.test(evidenceUrl.trim());
   const canSubmit = mode === 'supplement' || (problemMessageValid && evidenceUrlValid);
 
+  useEffect(() => {
+    if (!requestedSection) return;
+    setMode('problem');
+    setSectionKey(requestedSection);
+    setNotice(null);
+    setError(null);
+    document.getElementById('person-feedback')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [requestedSection, requestVersion]);
+
   async function handleSubmit() {
     if (!canSubmit || saving) return;
     setSaving(true);
@@ -125,7 +144,8 @@ export function PersonFeedbackPanel({ personId, personName }: { personId: string
   }
 
   return (
-    <SectionPanel title={t('personFeedback.title')} eyebrow={t('personFeedback.eyebrow')}>
+    <div id="person-feedback" className="scroll-mt-4">
+      <SectionPanel title={t('personFeedback.title')} eyebrow={t('personFeedback.eyebrow')}>
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line/70 pb-4">
           <p className="max-w-3xl text-sm leading-6 text-slate-300">
@@ -269,6 +289,7 @@ export function PersonFeedbackPanel({ personId, personName }: { personId: string
         {notice ? <p className="text-sm text-signal">{notice}</p> : null}
         {error ? <p className="text-sm text-rose-300">{error}</p> : null}
       </div>
-    </SectionPanel>
+      </SectionPanel>
+    </div>
   );
 }

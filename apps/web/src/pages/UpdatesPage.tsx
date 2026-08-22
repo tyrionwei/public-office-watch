@@ -62,7 +62,6 @@ export function UpdatesPage() {
             <p className="text-xs uppercase tracking-[0.22em] text-accent">{t('updates.eyebrow')}</p>
             <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">{t('updates.heading')}</h2>
             <p className="mt-3 text-sm leading-6 text-slate-300">{t('updates.description')}</p>
-            <p className="mt-2 text-xs leading-5 text-slate-500">{t('updates.scopeNote')}</p>
           </div>
         </PixelFrame>
 

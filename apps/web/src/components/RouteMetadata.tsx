@@ -167,10 +167,10 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
         : '比較臺灣政黨、現任人員、候選人、政治獻金與公開資料統計。',
     },
     '/updates': {
-      title: isEnglish ? 'Public updates' : '公開更新動態',
+      title: isEnglish ? 'Public data update log' : '公開資料更新紀錄',
       description: isEnglish
-        ? 'Review recent, verified additions and corrections to Public Office Watch public data.'
-        : '查看公職資料觀測站最近已審核並公開的資料新增、修正與功能更新。',
+        ? 'Review data added and corrected by Public Office Watch. This is not political news, and unreviewed automated results are not published directly.'
+        : '查看公職資料觀測站新增與修正的資料；這不是政治新聞，也不會直接公開尚未審核的自動蒐集結果。',
     },
     '/data-guidance': {
       title: isEnglish ? 'Data guidance' : '資料說明',

@@ -9,6 +9,7 @@ import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import type { UpcomingRace } from '../lib/publicDataProvider';
 import { normalizeTaiwanText } from '../lib/taiwanText';
+import { useSelectedRegion } from '../selectedRegion';
 
 const NATIONAL_REGION_QUERY = 'national';
 const DEFAULT_FALLBACK_REGION_ID = 'taipei-city';
@@ -47,6 +48,7 @@ function getSelectedStageRegionId(
 
 export function HomePage() {
   const { t } = useI18n();
+  const { selectedRegionId: storedRegionId, setSelectedRegionId } = useSelectedRegion();
   const [searchParams, setSearchParams] = useSearchParams();
   const homeData = publicDataProvider.getHomePageData();
   const requestedRegionId = searchParams.get('region');
@@ -57,7 +59,7 @@ export function HomePage() {
   const hasUpcomingNationalRace = nationalRaces.length > 0;
   const selectedRegionId = getSelectedStageRegionId(
     homeData.stageRegions,
-    requestedRegionId,
+    requestedRegionId ?? storedRegionId,
     hasUpcomingNationalRace,
   );
   const isNationalView = selectedRegionId === null;
@@ -100,11 +102,18 @@ export function HomePage() {
     ? t('national.taiwan')
     : normalizeTaiwanText(selectedRegionSummary?.label ?? selectedRegionNode?.label ?? t('home.unspecifiedRegion'));
 
+  useEffect(() => {
+    const nextStoredRegionId = selectedRegionId ?? NATIONAL_REGION_QUERY;
+    if (storedRegionId !== nextStoredRegionId) setSelectedRegionId(nextStoredRegionId);
+  }, [selectedRegionId, setSelectedRegionId, storedRegionId]);
+
   const handleSelectRegion = useCallback((regionId: string | null) => {
     if (regionId === selectedRegionId && searchParams.get('region') === regionId) {
       return;
     }
 
+    const nextRegionId = regionId ?? NATIONAL_REGION_QUERY;
+    setSelectedRegionId(nextRegionId);
     startTransition(() => {
       const nextParams = new URLSearchParams(searchParams);
       if (regionId) nextParams.set('region', regionId);
@@ -115,7 +124,7 @@ export function HomePage() {
       nextParams.delete('candidateIndex');
       setSearchParams(nextParams);
     });
-  }, [searchParams, selectedRegionId, setSearchParams, startTransition]);
+  }, [searchParams, selectedRegionId, setSearchParams, setSelectedRegionId, startTransition]);
 
   return (
     <AppShell ticker={homeData.ticker}>

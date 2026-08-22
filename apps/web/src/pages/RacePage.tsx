@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { CandidateComparisonPanel } from '../components/CandidateComparisonPanel';
+import { ElectionBreadcrumbs } from '../components/ElectionBreadcrumbs';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
@@ -159,6 +160,14 @@ export function RacePage() {
 
   const category = getRaceCategory(race);
   const region = getRaceRegionGroup(race);
+  const eventTitle = event ? translateElectionEventTitle(event, t) : election?.name ?? race.election_name;
+  const eventRootPath = event ? electionEventPath(event.key) : electionsPath();
+  const eventRegionPath = event
+    ? `${eventRootPath}?${new URLSearchParams({ region: region.key }).toString()}`
+    : eventRootPath;
+  const eventCategoryPath = event
+    ? `${eventRootPath}?${new URLSearchParams({ category: category.key, region: region.key }).toString()}`
+    : eventRootPath;
   const isReferendum = race.race_type === 'referendum';
   const referendumQuestion = detail.referendumQuestion;
   const referendumOptions = detail.referendumOptions.slice().sort((left, right) => left.display_order - right.display_order);
@@ -174,6 +183,14 @@ export function RacePage() {
   return (
     <AppShell>
       <div className="space-y-4">
+        <ElectionBreadcrumbs
+          items={[
+            { label: eventTitle, to: eventRootPath },
+            { label: region.label, to: eventRegionPath },
+            { label: translateRaceCategory(category.key, t), to: eventCategoryPath },
+            { label: race.title },
+          ]}
+        />
         <PixelFrame
           title={t('race.detailTitle')}
           action={<Link to={backPath} className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('race.backOverview')}</Link>}
@@ -183,7 +200,7 @@ export function RacePage() {
               <p className="text-xs uppercase tracking-[0.22em] text-accent">{race.voting_date ?? election?.voting_date ?? t('race.voteDatePending')}</p>
               <h1 className="mt-2 font-display text-4xl text-white">{race.title}</h1>
               <p className="mt-3 text-sm leading-6 text-slate-300">
-                {event ? translateElectionEventTitle(event, t) : election?.name ?? race.election_name} · {translateRaceCategory(category.key, t)} · {region.label}
+                {eventTitle} · {translateRaceCategory(category.key, t)} · {region.label}
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
                 <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{translateRaceType(race.race_type, t)}</span>

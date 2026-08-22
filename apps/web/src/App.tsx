@@ -5,6 +5,7 @@ import { LanguageProvider, useI18n } from './i18n';
 import { RouteMetadata } from './components/RouteMetadata';
 import { publicDataReadyEvent, refreshConfiguredPublicDataProvider } from './lib/publicDataProviderFactory';
 import { aboutPath, dataGuidancePath, electionsPath, homePath, internalChatAdminPath, internalDataProgressPath, internalReviewQueuePath, internalUpdateAdminPath, partiesPath, peoplePath, updatesPath } from './routes/routePaths';
+import { SelectedRegionProvider } from './selectedRegion';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })));
 const PeoplePage = lazy(() => import('./pages/PeoplePage').then((module) => ({ default: module.PeoplePage })));
@@ -140,10 +141,12 @@ function App() {
   return (
     <BrowserRouter>
       <LanguageProvider>
-        <AppRoutes
-          publicDataStatus={publicDataStatus}
-          onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
-        />
+        <SelectedRegionProvider>
+          <AppRoutes
+            publicDataStatus={publicDataStatus}
+            onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
+          />
+        </SelectedRegionProvider>
       </LanguageProvider>
     </BrowserRouter>
   );

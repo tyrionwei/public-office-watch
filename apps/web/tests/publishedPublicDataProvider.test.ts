@@ -41,6 +41,19 @@ const person: PublicPersonListItem = {
 
 function createBridge(overrides: Partial<PublishedPublicDataBridge> = {}) {
   return {
+    async loadRegionDirectory() {
+      return [{
+        id: 'taipei',
+        label: 'Taipei',
+        level: 'county_city',
+        parentId: null,
+        publicRegionId: 'region-taipei',
+        displayOrder: 1,
+        stageLabel: 'TPE',
+        isPlaceholder: false,
+        note: 'published region',
+      }];
+    },
     async loadHomePageData() {
       return {
         ticker: { title: '2026 地方選舉', date: '2026-11-28', electionId: 'election-1' },
@@ -113,6 +126,9 @@ function createBridge(overrides: Partial<PublishedPublicDataBridge> = {}) {
         financeSummaries: [],
         companyContributionSummaries: [],
       };
+    },
+    async loadPartyDirectory() {
+      return (await this.loadPartyData()).parties;
     },
     async loadElectionIndex() {
       return { elections: [], raceSummaries: [] };
@@ -267,4 +283,50 @@ test('published provider keeps the last complete snapshot when refresh fails and
   fail = false;
   await assembly.refresh();
   assert.equal(assembly.provider.getHomeTicker().electionId, 'election-1');
+});
+
+test('published provider keeps home content when the region directory fails', async () => {
+  const bridge = createBridge({
+    async loadRegionDirectory() {
+      throw new Error('region failed');
+    },
+  });
+  const assembly = createPublishedPublicDataProvider(bridge);
+
+  const home = await assembly.provider.loadHomePageData();
+
+  assert.equal(home.ticker.electionId, 'election-1');
+  assert.equal(home.stageRegions[0]?.publicRegionId, 'region-taipei');
+});
+test('published provider de-duplicates identical page requests for the session cache window', async () => {
+  let peopleCalls = 0;
+  let partyCalls = 0;
+  const bridge = createBridge({
+    async loadPeoplePage() {
+      peopleCalls += 1;
+      return { items: [person], total: 1 };
+    },
+    async loadPartyDirectory() {
+      partyCalls += 1;
+      return [];
+    },
+  });
+  const assembly = createPublishedPublicDataProvider(bridge);
+
+  const [first, second] = await Promise.all([
+    assembly.provider.loadPeoplePage({ party: 'test-party' }, 1, 20),
+    assembly.provider.loadPeoplePage({ party: 'test-party' }, 1, 20),
+  ]);
+  const third = await assembly.provider.loadPeoplePage({ party: 'test-party' }, 1, 20);
+  await Promise.all([
+    assembly.provider.loadPartyDirectory(),
+    assembly.provider.loadPartyDirectory(),
+  ]);
+  await assembly.provider.loadPartyDirectory();
+
+  assert.equal(peopleCalls, 1);
+  assert.equal(partyCalls, 1);
+  assert.equal(first.total, 1);
+  assert.equal(second.total, 1);
+  assert.equal(third.total, 1);
 });

@@ -22,7 +22,7 @@ import {
   PARTY_ANNUAL_FINANCE_LIMIT,
   PARTY_COLUMNS,
   PARTY_COMPANY_CONTRIBUTION_COLUMNS,
-  PARTY_COMPANY_CONTRIBUTION_LIMIT,
+  PARTY_COMPANY_CONTRIBUTION_PAGE_SIZE,
   PARTY_FINANCE_COLUMNS,
   PARTY_FINANCE_LIMIT,
   PARTY_LIMIT,
@@ -238,7 +238,7 @@ test('adapter surfaces database errors', async () => {
   await assert.rejects(() => adapter.search('台北'), /Published search query failed: permission denied/);
 });
 
-test('home reads four published surfaces with fixed limits and deterministic order', async () => {
+test('home and region directory reads stay independently bounded', async () => {
   const ticker = { election_id: 'election-1', election_name: '測試選舉' };
   const regionSummary = { region_id: 'region-taipei', region_name: '臺北市' };
   const region = { region_id: 'region-taipei', name: '臺北市', slug: 'taipei' };
@@ -254,24 +254,24 @@ test('home reads four published surfaces with fixed limits and deterministic ord
   assert.deepEqual(await adapter.loadHomePage(), {
     tickerRows: [ticker],
     regionSummaryRows: [regionSummary],
-    regionRows: [region],
     raceRows: [race],
   });
+  assert.deepEqual(await adapter.loadRegionDirectory(), [region]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
     ['from', 'home_ticker'],
     ['from', 'home_region_summary'],
-    ['from', 'regions'],
     ['from', 'races'],
+    ['from', 'regions'],
   ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
     ['limit', 1],
     ['limit', HOME_REGION_LIMIT],
-    ['limit', HOME_REGION_LIMIT],
     ['limit', HOME_RACE_LIMIT],
+    ['limit', HOME_REGION_LIMIT],
   ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'in'), [
-    ['in', 'region_type', ['country', 'municipality', 'county', 'city']],
     ['in', 'status', ['announced', 'upcoming', 'registration_open', 'candidates_announced', 'voting']],
+    ['in', 'region_type', ['country', 'municipality', 'county', 'city']],
   ]);
 });
 
@@ -954,64 +954,72 @@ test('public update feed reads only the newest bounded published rows', async ()
   ]);
 });
 
-test('party data reads four small published relations with fixed limits', async () => {
-  const party = { party_id: 'party-1', name: '測試政黨' };
-  const annualFinance = { party_id: 'party-1', report_year: 2025 };
-  const finance = { party_id: 'party-1', report_year: 2024 };
-  const contribution = { party_id: 'party-1', company_id: 'company-1' };
+
+test('party directory is a separate long-lived reference query', async () => {
+  const party = { party_id: 'party-1', name: 'Test Party' };
   const fake = createFakeClient({
     parties: { data: [party], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadPartyDirectory(), [party]);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['from', 'parties'],
+    ['select', PARTY_COLUMNS],
+    ['order', 'name', { ascending: true }],
+    ['order', 'party_id', { ascending: true }],
+    ['limit', PARTY_LIMIT + 1],
+  ]);
+});
+test('party finance data excludes company contribution details', async () => {
+  const annualFinance = { party_id: 'party-1', report_year: 2025 };
+  const finance = { party_id: 'party-1', report_year: 2024 };
+  const fake = createFakeClient({
     party_annual_finance_filings: { data: [annualFinance], error: null, count: null },
     party_finance_summaries: { data: [finance], error: null, count: null },
-    party_company_contribution_summaries: { data: [contribution], error: null, count: null },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
   assert.deepEqual(await adapter.loadPartyData(), {
-    partyRows: [party],
+    partyRows: [],
     annualFinanceFilingRows: [annualFinance],
     financeRows: [finance],
-    companyContributionRows: [contribution],
   });
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
-    ['from', 'parties'],
     ['from', 'party_annual_finance_filings'],
     ['from', 'party_finance_summaries'],
-    ['from', 'party_company_contribution_summaries'],
   ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'select'), [
-    ['select', PARTY_COLUMNS],
     ['select', PARTY_ANNUAL_FINANCE_COLUMNS],
     ['select', PARTY_FINANCE_COLUMNS],
-    ['select', PARTY_COMPANY_CONTRIBUTION_COLUMNS],
   ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
-    ['limit', PARTY_LIMIT + 1],
     ['limit', PARTY_ANNUAL_FINANCE_LIMIT + 1],
     ['limit', PARTY_FINANCE_LIMIT + 1],
-    ['limit', PARTY_COMPANY_CONTRIBUTION_LIMIT + 1],
   ]);
 });
 
-test('party data rejects a company-contribution sentinel row', async () => {
+test('party company contributions use server pagination and an exact total', async () => {
+  const contribution = { party_id: 'party-1', company_id: 'company-1' };
   const fake = createFakeClient({
-    parties: { data: [], error: null, count: null },
-    party_finance_summaries: { data: [], error: null, count: null },
     party_company_contribution_summaries: {
-      data: Array.from({ length: PARTY_COMPANY_CONTRIBUTION_LIMIT + 1 }, (_, index) => ({
-        party_id: 'party-1',
-        company_id: `company-${index}`,
-      })),
+      data: [contribution],
       error: null,
-      count: null,
+      count: 120,
     },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
-  await assert.rejects(
-    adapter.loadPartyData(),
-    new RegExp(`Published party company contributions exceeded the ${PARTY_COMPANY_CONTRIBUTION_LIMIT}-row`),
-  );
+  assert.deepEqual(await adapter.loadPartyCompanyContributionPage(' party-1 ', 2, 200), {
+    rows: [contribution],
+    total: 120,
+  });
+  assert.deepEqual(fake.calls.filter((call) => ['select', 'eq', 'range'].includes(call[0])), [
+    ['select', PARTY_COMPANY_CONTRIBUTION_COLUMNS, { count: 'exact' }],
+    ['eq', 'party_id', 'party-1'],
+    ['range', PARTY_COMPANY_CONTRIBUTION_PAGE_SIZE, PARTY_COMPANY_CONTRIBUTION_PAGE_SIZE * 2 - 1],
+  ]);
 });
 
 test('party officers read one deterministic bounded roster', async () => {

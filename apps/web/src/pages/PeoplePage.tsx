@@ -180,6 +180,14 @@ export function PeoplePage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [requestVersion, setRequestVersion] = useState(0);
+  const [, setReferenceVersion] = useState(0);
+
+  useEffect(() => {
+    void Promise.allSettled([
+      publicDataProvider.loadRegionDirectory(),
+      publicDataProvider.loadPartyDirectory(),
+    ]).then(() => setReferenceVersion((value) => value + 1));
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -190,6 +198,7 @@ export function PeoplePage() {
     const requestFilters = { party, query, regionId, role, status };
 
     void refreshConfiguredPublicDataProvider()
+      .then(() => regionId ? publicDataProvider.loadRegionDirectory() : undefined)
       .then(() => publicDataProvider.loadPeoplePage(requestFilters, requestedPage, PAGE_SIZE))
       .then((nextPage) => {
         if (active) {

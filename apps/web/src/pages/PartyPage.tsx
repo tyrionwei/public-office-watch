@@ -11,7 +11,7 @@ import { SectionPanel } from '../components/SectionPanel';
 import { translateCandidateStatus } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
-import type { PublicCandidateListPage, PublicPersonListPage } from '../lib/publicDataProvider';
+import type { PublicCandidateListPage, PublicPartyCompanyContributionPage, PublicPersonListPage } from '../lib/publicDataProvider';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { dataGuidancePath, partiesPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
@@ -37,6 +37,7 @@ const PARTY_OFFICER_PAGE_SIZE = 8;
 const CONTRIBUTION_PAGE_SIZE = 10;
 const emptyPeoplePage: PublicPersonListPage = { items: [], total: 0 };
 const emptyCandidatePage: PublicCandidateListPage = { items: [], total: 0 };
+const emptyContributionPage: PublicPartyCompanyContributionPage = { items: [], total: 0 };
 const sourceLevelDescriptionKeys = {
   A: 'partyDetail.sourceLevelA',
   B: 'partyDetail.sourceLevelB',
@@ -468,15 +469,56 @@ function SectionPagination({
   );
 }
 
+function usePartyCompanyContributions(partyId: string | null, page: number) {
+  const [result, setResult] = useState({
+    current: emptyContributionPage,
+    top: emptyContributionPage,
+  });
+
+  useEffect(() => {
+    let active = true;
+    if (!partyId) {
+      setResult({ current: emptyContributionPage, top: emptyContributionPage });
+      return () => { active = false; };
+    }
+
+    void Promise.all([
+      publicDataProvider.loadPartyCompanyContributionPage(partyId, page, CONTRIBUTION_PAGE_SIZE),
+      publicDataProvider.loadPartyCompanyContributionPage(partyId, 1, CONTRIBUTION_PAGE_SIZE),
+    ]).then(([current, top]) => {
+      if (active) setResult({ current, top });
+    }).catch((error: unknown) => {
+      if (import.meta.env.DEV) console.warn('Failed to load party company contributions', error);
+    });
+
+    return () => { active = false; };
+  }, [page, partyId]);
+
+  return result;
+}
+
 export function PartyPage() {
   const { language, t } = useI18n();
   const { partySlug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [, setDataVersion] = useState(0);
+  const [partyDataReady, setPartyDataReady] = useState(false);
+  useEffect(() => {
+    setPartyDataReady(false);
+    void Promise.allSettled([
+      publicDataProvider.loadPartyDirectory(),
+      publicDataProvider.loadPartyFinanceData(),
+    ]).then(() => {
+      setDataVersion((value) => value + 1);
+      setPartyDataReady(true);
+    });
+  }, [partySlug]);
   const party = publicDataProvider.getPartyBySlug(partySlug ?? '');
   const officeholderRequestedPage = getSectionPage(searchParams, 'officePage');
   const candidateRequestedPage = getSectionPage(searchParams, 'candidatePage');
   const officerRequestedPage = getSectionPage(searchParams, 'officerPage');
   const contributionRequestedPage = getSectionPage(searchParams, 'contributionPage');
+  const companyContributions = usePartyCompanyContributions(party?.party_id ?? null, contributionRequestedPage);
   const partyOfficers = usePartyOfficers(party?.party_id ?? null);
   const officeholders = usePartyPeoplePage(party?.name ?? null, 'current', officeholderRequestedPage);
   const candidates = usePartyCandidatePage(party?.name ?? null, candidateRequestedPage);
@@ -484,8 +526,8 @@ export function PartyPage() {
   const legalStatistics = usePartyLegalStatistics(party?.name ?? null);
   const annualFinanceFilings = party ? publicDataProvider.getPartyAnnualFinanceFilings(party.party_id) : [];
   const financeSummaries = party ? publicDataProvider.getPartyFinanceSummaries(party.party_id) : [];
-  const companySummaries = party ? publicDataProvider.getPartyCompanyContributionSummaries(party.party_id) : [];
-  const sortedCompanySummaries = companySummaries.slice().sort((left, right) =>
+  const companySummaries = companyContributions.current.items;
+  const sortedCompanySummaries = companyContributions.top.items.slice().sort((left, right) =>
     right.amount_total - left.amount_total || left.company_name.localeCompare(right.company_name, 'zh-Hant-TW'));
   const groupedPartyOfficers = useMemo(() => groupPartyOfficers(partyOfficers.officers), [partyOfficers.officers]);
   const primaryPartyOfficers = groupedPartyOfficers.filter((officer) => officer.role_tier === 'primary');
@@ -515,7 +557,7 @@ export function PartyPage() {
   const officeholderPageCount = Math.max(1, Math.ceil(officeholders.total / PARTY_PEOPLE_PAGE_SIZE));
   const candidatePageCount = Math.max(1, Math.ceil(candidates.total / PARTY_PEOPLE_PAGE_SIZE));
   const officerPageCount = Math.max(1, Math.ceil(primaryPartyOfficers.length / PARTY_OFFICER_PAGE_SIZE));
-  const contributionPageCount = Math.max(1, Math.ceil(sortedCompanySummaries.length / CONTRIBUTION_PAGE_SIZE));
+  const contributionPageCount = Math.max(1, Math.ceil(companyContributions.current.total / CONTRIBUTION_PAGE_SIZE));
   const officerPage = Math.min(officerRequestedPage, officerPageCount);
   const officeholderPage = Math.min(officeholderRequestedPage, officeholderPageCount);
   const candidatePage = Math.min(candidateRequestedPage, candidatePageCount);
@@ -524,10 +566,7 @@ export function PartyPage() {
     (officerPage - 1) * PARTY_OFFICER_PAGE_SIZE,
     officerPage * PARTY_OFFICER_PAGE_SIZE,
   );
-  const visibleCompanySummaries = sortedCompanySummaries.slice(
-    (contributionPage - 1) * CONTRIBUTION_PAGE_SIZE,
-    contributionPage * CONTRIBUTION_PAGE_SIZE,
-  );
+  const visibleCompanySummaries = companySummaries;
   const updateSectionPage = (
     key: 'officerPage' | 'officePage' | 'candidatePage' | 'contributionPage',
     page: number,
@@ -594,7 +633,7 @@ export function PartyPage() {
                   label={t('partyDetail.balance')}
                   value={<span className="font-display text-xl text-white">{latestFinance ? currency(latestFinance.balance_amount) : t('parties.awaitingData')}</span>}
                 />
-                <HudStatCard label={t('parties.companySummaries')} value={t('partyDetail.reviewedCount', { count: companySummaries.length })} />
+                <HudStatCard label={t('parties.companySummaries')} value={t('partyDetail.reviewedCount', { count: companyContributions.current.total })} />
                 <HudStatCard label={t('parties.chairperson')} value={party.chairperson_name ?? t('parties.registryPending')} />
                 <HudStatCard label={t('parties.founded')} value={party.founded_date_text ?? t('parties.registryPending')} />
               </dl>
@@ -935,7 +974,7 @@ export function PartyPage() {
             ) : null}
 
             <SectionPanel title={t('partyDetail.companyTitle')} eyebrow={t('partyDetail.companyEyebrow')}>
-              {companySummaries.length > 0 ? (
+              {companyContributions.current.total > 0 ? (
                 <>
                   <div className="mb-5 pixel-corners border border-line/70 bg-[linear-gradient(135deg,rgba(8,17,35,0.92),rgba(15,24,46,0.72))] p-4 sm:p-5">
                     <div className="mb-4 border-b border-line/60 pb-3">
@@ -1017,7 +1056,7 @@ export function PartyPage() {
                   </div>
                   <SectionPagination
                     currentPage={contributionPage}
-                    total={companySummaries.length}
+                    total={companyContributions.current.total}
                     pageSize={CONTRIBUTION_PAGE_SIZE}
                     onChange={(page) => updateSectionPage('contributionPage', page, contributionPageCount)}
                   />
@@ -1027,11 +1066,13 @@ export function PartyPage() {
               )}
             </SectionPanel>
           </div>
-        ) : (
+        ) : partyDataReady ? (
           <div className="space-y-3 text-sm text-slate-300">
             <h2 className="font-display text-2xl text-white">{t('partyDetail.notFound')}</h2>
             <p>{t('partyDetail.notFoundBody')}</p>
           </div>
+        ) : (
+          <div className="py-8 text-sm text-slate-400">{t('app.loading')}</div>
         )}
       </PixelFrame>
     </AppShell>

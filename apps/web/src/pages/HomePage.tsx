@@ -50,16 +50,30 @@ export function HomePage() {
   const { t } = useI18n();
   const { selectedRegionId: storedRegionId, setSelectedRegionId } = useSelectedRegion();
   const [searchParams, setSearchParams] = useSearchParams();
-  const homeData = publicDataProvider.getHomePageData();
+  const [homeData, setHomeData] = useState(() => publicDataProvider.getHomePageData());
+  useEffect(() => {
+    let active = true;
+    void publicDataProvider.loadHomePageData()
+      .then((data) => {
+        if (active) setHomeData(data);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) console.warn('Failed to load home data', error);
+      });
+    return () => { active = false; };
+  }, []);
   const requestedRegionId = searchParams.get('region');
   const nationalRaces = publicDataProvider
     .getUpcomingRaces()
     .filter(isNationalRace)
     .filter((race) => race.status !== 'completed');
   const hasUpcomingNationalRace = nationalRaces.length > 0;
+  const rememberedRegionId = storedRegionId === NATIONAL_REGION_QUERY && !hasUpcomingNationalRace
+    ? null
+    : storedRegionId;
   const selectedRegionId = getSelectedStageRegionId(
     homeData.stageRegions,
-    requestedRegionId ?? storedRegionId,
+    requestedRegionId ?? rememberedRegionId,
     hasUpcomingNationalRace,
   );
   const isNationalView = selectedRegionId === null;
@@ -103,9 +117,10 @@ export function HomePage() {
     : normalizeTaiwanText(selectedRegionSummary?.label ?? selectedRegionNode?.label ?? t('home.unspecifiedRegion'));
 
   useEffect(() => {
+    if (homeData.stageRegions.length === 0) return;
     const nextStoredRegionId = selectedRegionId ?? NATIONAL_REGION_QUERY;
     if (storedRegionId !== nextStoredRegionId) setSelectedRegionId(nextStoredRegionId);
-  }, [selectedRegionId, setSelectedRegionId, storedRegionId]);
+  }, [homeData.stageRegions.length, selectedRegionId, setSelectedRegionId, storedRegionId]);
 
   const handleSelectRegion = useCallback((regionId: string | null) => {
     if (regionId === selectedRegionId && searchParams.get('region') === regionId) {

@@ -57,7 +57,7 @@ export const RACE_DETAIL_REFERENDUM_REGION_LIMIT = 64;
 export const PARTY_LIMIT = 200;
 export const PARTY_ANNUAL_FINANCE_LIMIT = 200;
 export const PARTY_FINANCE_LIMIT = 100;
-export const PARTY_COMPANY_CONTRIBUTION_LIMIT = 1000;
+export const PARTY_COMPANY_CONTRIBUTION_PAGE_SIZE = 50;
 export const PARTY_OFFICER_LIMIT = 200;
 export const PARTY_PEOPLE_STATISTICS_LIMIT = 19;
 export const PERSON_PARTY_AFFILIATION_LIMIT = 100;
@@ -558,8 +558,13 @@ export type PublishedPartyCandidatePage = {
 export type PublishedHomePageRows = {
   tickerRows: PublishedHomeTickerRow[];
   regionSummaryRows: PublishedRegionSummaryRow[];
-  regionRows: PublishedRegionRow[];
+  regionRows?: PublishedRegionRow[];
   raceRows: PublishedRaceRow[];
+};
+
+export type PublishedPartyCompanyContributionPage = {
+  rows: PublicPartyCompanyContributionSummary[];
+  total: number;
 };
 
 export type PublishedRegionPageRows = {
@@ -593,7 +598,7 @@ export type PublishedPartyDataRows = {
   partyRows: PublicParty[];
   annualFinanceFilingRows: PublicPartyAnnualFinanceFiling[];
   financeRows: PublicPartyFinanceSummary[];
-  companyContributionRows: PublicPartyCompanyContributionSummary[];
+  companyContributionRows?: PublicPartyCompanyContributionSummary[];
 };
 
 export type PublishedPersonProfileRows = {
@@ -637,6 +642,7 @@ export interface PublishedSchemaClient {
 
 export type PublishedReadAdapter = {
   loadHomePage(): Promise<PublishedHomePageRows>;
+  loadRegionDirectory(): Promise<PublishedRegionRow[]>;
   loadRegionPage(regionSlug: string): Promise<PublishedRegionPageRows>;
   loadElectionIndex(): Promise<PublishedElectionIndexRows>;
   loadElectionRaceFacets(electionIds: string[]): Promise<PublishedElectionRaceFacetRow[]>;
@@ -665,6 +671,8 @@ export type PublishedReadAdapter = {
   loadPeoplePage(request: PublishedPeoplePageRequest): Promise<PublishedPeoplePage>;
   loadPartyCandidatePage(partyName: string, page: number, pageSize: number): Promise<PublishedPartyCandidatePage>;
   loadPartyData(): Promise<PublishedPartyDataRows>;
+  loadPartyDirectory(): Promise<PublicParty[]>;
+  loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number): Promise<PublishedPartyCompanyContributionPage>;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
   loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
   loadPartyLegalStatistics(partyName: string): Promise<PublicPartyLegalStatistics>;
@@ -730,7 +738,7 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
   return {
     async loadHomePage() {
       const published = client.schema('published');
-      const [tickerResponse, regionSummaryResponse, regionResponse, raceResponse] = await Promise.all([
+      const [tickerResponse, regionSummaryResponse, raceResponse] = await Promise.all([
         published
           .from<PublishedHomeTickerRow>('home_ticker')
           .select(HOME_TICKER_COLUMNS)
@@ -741,14 +749,6 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           .from<PublishedRegionSummaryRow>('home_region_summary')
           .select(HOME_REGION_SUMMARY_COLUMNS)
           .order('region_name', { ascending: true })
-          .order('region_id', { ascending: true })
-          .limit(HOME_REGION_LIMIT),
-        published
-          .from<PublishedRegionRow>('regions')
-          .select(REGION_COLUMNS)
-          .in('region_type', ['country', 'municipality', 'county', 'city'])
-          .order('display_order', { ascending: true })
-          .order('name', { ascending: true })
           .order('region_id', { ascending: true })
           .limit(HOME_REGION_LIMIT),
         published
@@ -764,9 +764,22 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       return {
         tickerRows: getRowsOrThrow(tickerResponse, 'Published home ticker'),
         regionSummaryRows: getRowsOrThrow(regionSummaryResponse, 'Published home region summary'),
-        regionRows: getRowsOrThrow(regionResponse, 'Published home regions'),
         raceRows: getRowsOrThrow(raceResponse, 'Published home races'),
       };
+    },
+
+    async loadRegionDirectory() {
+      const response = await client
+        .schema('published')
+        .from<PublishedRegionRow>('regions')
+        .select(REGION_COLUMNS)
+        .in('region_type', ['country', 'municipality', 'county', 'city'])
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true })
+        .order('region_id', { ascending: true })
+        .limit(HOME_REGION_LIMIT);
+
+      return getRowsOrThrow(response, 'Published region directory');
     },
 
     async loadRegionPage(rawRegionSlug) {
@@ -1165,13 +1178,7 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
 
     async loadPartyData() {
       const published = client.schema('published');
-      const [partyResponse, annualFinanceResponse, financeResponse, companyContributionResponse] = await Promise.all([
-        published
-          .from<PublicParty>('parties')
-          .select(PARTY_COLUMNS)
-          .order('name', { ascending: true })
-          .order('party_id', { ascending: true })
-          .limit(PARTY_LIMIT + 1),
+      const [annualFinanceResponse, financeResponse] = await Promise.all([
         published
           .from<PublicPartyAnnualFinanceFiling>('party_annual_finance_filings')
           .select(PARTY_ANNUAL_FINANCE_COLUMNS)
@@ -1184,22 +1191,10 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           .order('party_id', { ascending: true })
           .order('report_year', { ascending: false })
           .limit(PARTY_FINANCE_LIMIT + 1),
-        published
-          .from<PublicPartyCompanyContributionSummary>('party_company_contribution_summaries')
-          .select(PARTY_COMPANY_CONTRIBUTION_COLUMNS)
-          .order('party_id', { ascending: true })
-          .order('amount_total', { ascending: false })
-          .order('company_name', { ascending: true })
-          .order('company_id', { ascending: true })
-          .limit(PARTY_COMPANY_CONTRIBUTION_LIMIT + 1),
       ]);
 
       return {
-        partyRows: getBoundedRowsOrThrow(
-          partyResponse,
-          'Published parties',
-          PARTY_LIMIT,
-        ),
+        partyRows: [],
         annualFinanceFilingRows: getBoundedRowsOrThrow(
           annualFinanceResponse,
           'Published party annual finance filings',
@@ -1210,11 +1205,40 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           'Published party finance summaries',
           PARTY_FINANCE_LIMIT,
         ),
-        companyContributionRows: getBoundedRowsOrThrow(
-          companyContributionResponse,
-          'Published party company contributions',
-          PARTY_COMPANY_CONTRIBUTION_LIMIT,
-        ),
+      };
+    },
+
+    async loadPartyDirectory() {
+      const response = await client
+        .schema('published')
+        .from<PublicParty>('parties')
+        .select(PARTY_COLUMNS)
+        .order('name', { ascending: true })
+        .order('party_id', { ascending: true })
+        .limit(PARTY_LIMIT + 1);
+
+      return getBoundedRowsOrThrow(response, 'Published parties', PARTY_LIMIT);
+    },
+
+    async loadPartyCompanyContributionPage(rawPartyId, page, pageSize) {
+      const partyId = rawPartyId.trim();
+      if (!partyId) return { rows: [], total: 0 };
+      const normalizedSize = Math.max(1, Math.min(Math.trunc(pageSize), PARTY_COMPANY_CONTRIBUTION_PAGE_SIZE));
+      const normalizedPage = Math.max(1, Math.trunc(page));
+      const from = (normalizedPage - 1) * normalizedSize;
+      const response = await client
+        .schema('published')
+        .from<PublicPartyCompanyContributionSummary>('party_company_contribution_summaries')
+        .select(PARTY_COMPANY_CONTRIBUTION_COLUMNS, { count: 'exact' })
+        .eq('party_id', partyId)
+        .order('amount_total', { ascending: false })
+        .order('company_name', { ascending: true })
+        .order('company_id', { ascending: true })
+        .range(from, from + normalizedSize - 1);
+
+      return {
+        rows: getRowsOrThrow(response, 'Published party company contributions'),
+        total: response.count ?? 0,
       };
     },
 

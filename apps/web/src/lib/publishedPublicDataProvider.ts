@@ -26,6 +26,7 @@ import type {
   PublicRaceDetailData,
   PublicRaceListPage,
   PublicRaceQueryFilters,
+  PublicPartyCompanyContributionPage,
 } from './publicDataProvider';
 import type { PublishedPartyData, PublishedPublicDataBridge } from './publishedPublicDataBridge.ts';
 
@@ -68,6 +69,28 @@ function isNationalRace(race: UpcomingRace) {
   );
 }
 
+const referenceDataStaleTimeMs = 30 * 60 * 1000;
+const pageDataStaleTimeMs = 5 * 60 * 1000;
+
+type CachedRequest = {
+  expiresAt: number;
+  promise: Promise<unknown>;
+};
+
+function createRequestCache() {
+  const requests = new Map<string, CachedRequest>();
+  return function cached<T>(key: string, staleTime: number, load: () => Promise<T>) {
+    const current = requests.get(key);
+    if (current && current.expiresAt > Date.now()) return current.promise as Promise<T>;
+    const promise = load().catch((error: unknown) => {
+      if (requests.get(key)?.promise === promise) requests.delete(key);
+      throw error;
+    });
+    requests.set(key, { expiresAt: Date.now() + staleTime, promise });
+    return promise;
+  };
+}
+
 export function createPublishedPublicDataProvider(
   bridge: PublishedPublicDataBridge,
 ): PublishedProviderAssembly {
@@ -86,6 +109,7 @@ export function createPublishedPublicDataProvider(
   const localOfficeSummaries = new Map<string, PublicLocalOfficeSummary>();
   const loadedRaceRegionIds = new Set<string>();
   const raceRegionPromises = new Map<string, Promise<UpcomingRace[]>>();
+  const cached = createRequestCache();
   let refreshPromise: Promise<void> | null = null;
 
   function getStageRegion(regionId: string) {
@@ -147,6 +171,45 @@ export function createPublishedPublicDataProvider(
   }
 
   const provider: PublicDataProvider = {
+    async loadRegionDirectory() {
+      const regions = await cached('region-directory', referenceDataStaleTimeMs, () =>
+        bridge.loadRegionDirectory());
+      homeData = { ...homeData, stageRegions: regions };
+      return regions;
+    },
+
+    async loadHomePageData() {
+      const [homeResult, directoryResult] = await Promise.allSettled([
+        cached('home-page', pageDataStaleTimeMs, () => bridge.loadHomePageData()),
+        provider.loadRegionDirectory(),
+      ]);
+      if (homeResult.status === 'rejected') throw homeResult.reason;
+      const nextHomeData = homeResult.value;
+      const directoryRegions = directoryResult.status === 'fulfilled'
+        ? directoryResult.value
+        : homeData.stageRegions;
+      const stageRegions = nextHomeData.stageRegions.length > 0
+        ? nextHomeData.stageRegions
+        : directoryRegions;
+      homeData = { ...nextHomeData, stageRegions };
+      return homeData;
+    },
+
+    async loadPartyDirectory() {
+      const parties = await cached('party-directory', referenceDataStaleTimeMs, () => bridge.loadPartyDirectory());
+      partyData = { ...partyData, parties };
+      return parties;
+    },
+
+    async loadPartyFinanceData() {
+      const nextPartyData = await cached('party-finance', pageDataStaleTimeMs, () => bridge.loadPartyData());
+      partyData = {
+        ...nextPartyData,
+        parties: partyData.parties,
+        companyContributionSummaries: partyData.companyContributionSummaries,
+      };
+    },
+
     getHomeTicker() {
       return homeData.ticker;
     },
@@ -214,13 +277,13 @@ export function createPublishedPublicDataProvider(
     },
 
     async loadElectionIndex(): Promise<PublicElectionIndexData> {
-      const result = await bridge.loadElectionIndex();
+      const result = await cached('election-index', referenceDataStaleTimeMs, () => bridge.loadElectionIndex());
       elections = result.elections;
       return result;
     },
 
     loadElectionRaceFacets(electionIds: string[]): Promise<PublicElectionRaceFacet[]> {
-      return bridge.loadElectionRaceFacets(electionIds);
+      return cached(`election-facets:${electionIds.join(',')}`, pageDataStaleTimeMs, () => bridge.loadElectionRaceFacets(electionIds));
     },
 
     loadElectionEducationDistribution(eventKey, electionIds, filters = {}) {
@@ -246,19 +309,15 @@ export function createPublishedPublicDataProvider(
       page: number,
       pageSize: number,
     ): Promise<PublicRaceListPage> {
-      const result = await bridge.loadElectionRacePage(
-        eventKey,
-        electionIds,
-        filters,
-        page,
-        pageSize,
-      );
+      const key = `election-races:${eventKey}:${electionIds.join(',')}:${JSON.stringify(filters)}:${page}:${pageSize}`;
+      const result = await cached(key, pageDataStaleTimeMs, () =>
+        bridge.loadElectionRacePage(eventKey, electionIds, filters, page, pageSize));
       races = mergeByKey(races, result.items, (race) => race.race_id);
       return result;
     },
 
     async loadRaceDetail(raceId: string): Promise<PublicRaceDetailData> {
-      const result = await bridge.loadRaceDetail(raceId);
+      const result = await cached(`race-detail:${raceId}`, pageDataStaleTimeMs, () => bridge.loadRaceDetail(raceId));
       if (result.race) races = mergeByKey(races, [result.race], (race) => race.race_id);
       if (result.election) {
         elections = mergeByKey(elections, [result.election], (election) => election.election_id);
@@ -284,7 +343,8 @@ export function createPublishedPublicDataProvider(
       page: number,
       pageSize: number,
     ): Promise<PublicPersonListPage> {
-      const result = await bridge.loadPeoplePage(filters, page, pageSize);
+      const key = `people:${JSON.stringify(filters)}:${page}:${pageSize}`;
+      const result = await cached(key, pageDataStaleTimeMs, () => bridge.loadPeoplePage(filters, page, pageSize));
       people = mergeByKey(people, result.items, (person) => person.person_id);
       return result;
     },
@@ -304,7 +364,9 @@ export function createPublishedPublicDataProvider(
     },
 
     async loadPersonProfiles(personIds: string[]) {
-      const profiles = await bridge.loadPersonProfiles(personIds);
+      const normalizedIds = Array.from(new Set(personIds)).sort();
+      const profiles = await cached(`profiles:${normalizedIds.join(',')}`, pageDataStaleTimeMs, () =>
+        bridge.loadPersonProfiles(normalizedIds));
       for (const profile of profiles) profilesById.set(profile.person.person_id, profile);
       people = mergeByKey(people, profiles.map((profile) => profile.person), (person) => person.person_id);
       return profiles;
@@ -315,17 +377,18 @@ export function createPublishedPublicDataProvider(
     },
 
     async loadLocalOfficeSummaryByRegionId(regionId: string) {
-      const summary = await bridge.loadLocalOfficeSummaryByRegionId(regionId);
+      const summary = await cached(`local-office:${regionId}`, pageDataStaleTimeMs, () =>
+        bridge.loadLocalOfficeSummaryByRegionId(regionId));
       localOfficeSummaries.set(regionId, summary);
       return summary;
     },
 
     loadNationalOfficeHolders() {
-      return bridge.loadNationalOfficeHolders();
+      return cached('national-office-holders', pageDataStaleTimeMs, () => bridge.loadNationalOfficeHolders());
     },
 
     loadCurrentLegislatorPartySummary() {
-      return bridge.loadCurrentLegislatorPartySummary();
+      return cached('legislator-party-summary', pageDataStaleTimeMs, () => bridge.loadCurrentLegislatorPartySummary());
     },
 
     loadPublicUpdates(limit) {
@@ -345,15 +408,15 @@ export function createPublishedPublicDataProvider(
     },
 
     loadPartyOfficers(partyId: string) {
-      return bridge.loadPartyOfficers(partyId);
+      return cached(`party-officers:${partyId}`, pageDataStaleTimeMs, () => bridge.loadPartyOfficers(partyId));
     },
 
     loadPartyPeopleStatistics(partyName: string) {
-      return bridge.loadPartyPeopleStatistics(partyName);
+      return cached(`party-people:${partyName}`, pageDataStaleTimeMs, () => bridge.loadPartyPeopleStatistics(partyName));
     },
 
     loadPartyLegalStatistics(partyName: string) {
-      return bridge.loadPartyLegalStatistics(partyName);
+      return cached(`party-legal:${partyName}`, pageDataStaleTimeMs, () => bridge.loadPartyLegalStatistics(partyName));
     },
 
     getPartyAnnualFinanceFilings(partyId: string): PublicPartyAnnualFinanceFiling[] {
@@ -370,6 +433,14 @@ export function createPublishedPublicDataProvider(
       return partyData.companyContributionSummaries.filter((summary) => summary.party_id === partyId);
     },
 
+    async loadPartyCompanyContributionPage(
+      partyId: string,
+      page: number,
+      pageSize: number,
+    ): Promise<PublicPartyCompanyContributionPage> {
+      return cached(`party-company:${partyId}:${page}:${pageSize}`, pageDataStaleTimeMs, () => bridge.loadPartyCompanyContributionPage(partyId, page, pageSize));
+    },
+
     searchPublicRecords(query: string) {
       return bridge.searchPublicRecords(query);
     },
@@ -379,13 +450,11 @@ export function createPublishedPublicDataProvider(
     provider,
     refresh() {
       refreshPromise ??= Promise.all([
-        bridge.loadHomePageData(),
-        bridge.loadPartyData(),
+        provider.loadHomePageData(),
+        provider.loadPartyDirectory(),
+        provider.loadPartyFinanceData(),
       ])
-        .then(([nextHomeData, nextPartyData]) => {
-          homeData = nextHomeData;
-          partyData = nextPartyData;
-        })
+        .then(() => undefined)
         .finally(() => {
           refreshPromise = null;
         });

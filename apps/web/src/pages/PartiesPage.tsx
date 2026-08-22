@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
@@ -18,6 +19,31 @@ function formatCurrency(value: number, locale: string) {
 
 export function PartiesPage() {
   const { language, t } = useI18n();
+  const [, setDataVersion] = useState(0);
+  const [companyCounts, setCompanyCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    let active = true;
+    void Promise.allSettled([
+      publicDataProvider.loadPartyDirectory(),
+      publicDataProvider.loadPartyFinanceData(),
+    ]).then(async () => {
+      if (!active) return;
+      setDataVersion((value) => value + 1);
+      const trackedParties = publicDataProvider.getParties().filter((party) =>
+        publicDataProvider.getPartyFinanceSummaries(party.party_id).length > 0);
+      const entries = await Promise.all(trackedParties.map(async (party) => {
+        const page = await publicDataProvider.loadPartyCompanyContributionPage(party.party_id, 1, 1)
+          .catch(() => ({ items: [], total: 0 }));
+        return [party.party_id, page.total] as const;
+      }));
+      if (active) setCompanyCounts(Object.fromEntries(entries));
+    }).catch((error: unknown) => {
+      if (import.meta.env.DEV) console.warn('Failed to load party overview', error);
+    });
+    return () => { active = false; };
+  }, []);
+
   const parties = publicDataProvider.getParties();
   const summaries = parties
     .map((party) => {
@@ -25,11 +51,9 @@ export function PartiesPage() {
         .getPartyFinanceSummaries(party.party_id)
         .slice()
         .sort((left, right) => right.report_year - left.report_year)[0];
-      const companySummaries = publicDataProvider.getPartyCompanyContributionSummaries(party.party_id);
-
-      return { party, latestFinance, companySummaries };
+      return { party, latestFinance, companyCount: companyCounts[party.party_id] ?? 0 };
     })
-    .filter((item) => item.latestFinance || item.companySummaries.length > 0)
+    .filter((item) => item.latestFinance || item.companyCount > 0)
     .sort((left, right) => (right.latestFinance?.income_total ?? 0) - (left.latestFinance?.income_total ?? 0));
 
   const totalIncome = summaries.reduce((sum, item) => sum + (item.latestFinance?.income_total ?? 0), 0);
@@ -37,7 +61,7 @@ export function PartiesPage() {
     (sum, item) => sum + (item.latestFinance?.business_donation_total ?? 0),
     0,
   );
-  const companyRelationCount = summaries.reduce((sum, item) => sum + item.companySummaries.length, 0);
+  const companyRelationCount = summaries.reduce((sum, item) => sum + item.companyCount, 0);
   const trackedPartyIds = new Set(summaries.map((item) => item.party.party_id));
   const sortedParties = parties
     .slice()
@@ -65,7 +89,7 @@ export function PartiesPage() {
 
         <SectionPanel title={t('parties.trackedTitle')} eyebrow={t('parties.trackedEyebrow')}>
           <div className="grid gap-3 lg:grid-cols-3">
-            {summaries.map(({ party, latestFinance, companySummaries }) => {
+            {summaries.map(({ party, latestFinance, companyCount }) => {
               const theme = partyTheme[party.theme_key];
               return (
                 <Link
@@ -110,7 +134,7 @@ export function PartiesPage() {
                     </div>
                     <div className="flex justify-between gap-3">
                       <dt className="text-slate-500">{t('parties.companySummaries')}</dt>
-                      <dd>{t('parties.recordCount', { count: companySummaries.length })}</dd>
+                      <dd>{t('parties.recordCount', { count: companyCount })}</dd>
                     </div>
                   </dl>
                 </Link>

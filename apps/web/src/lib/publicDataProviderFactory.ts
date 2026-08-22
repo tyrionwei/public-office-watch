@@ -35,9 +35,8 @@ export function refreshConfiguredPublicDataProvider(): Promise<PublicDataProvide
   }
 
   configuredProviderPromise ??= import('./configuredPublishedPublicDataProvider')
-    .then(async (module) => {
+    .then((module) => {
       const assembly = module.getConfiguredPublishedPublicDataProvider();
-      await assembly.refresh();
       activePublicDataProvider = assembly.provider;
       return activePublicDataProvider;
     })

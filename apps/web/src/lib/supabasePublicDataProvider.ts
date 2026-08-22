@@ -1202,6 +1202,14 @@ function isNationalUpcomingRace(race: UpcomingRace) {
 }
 
 export const supabasePublicDataProvider: PublicDataProvider = {
+  async loadHomePageData() {
+    return this.getHomePageData();
+  },
+
+  async loadRegionDirectory() {
+    return this.getStageRegions();
+  },
+
   getHomeTicker() {
     return getSnapshot()?.homeTicker ?? emptyHomeTicker;
   },
@@ -1642,6 +1650,15 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     return getSnapshot()?.parties ?? [];
   },
 
+  async loadPartyDirectory() {
+    await ensurePartyDataset();
+    return this.getParties();
+  },
+
+  async loadPartyFinanceData() {
+    await ensurePartyDataset();
+  },
+
   getPartyBySlug(partySlug: string) {
     void ensurePartyDataset();
     return getSnapshot()?.indexes.partyBySlug.get(partySlug) ?? null;
@@ -1663,6 +1680,18 @@ export const supabasePublicDataProvider: PublicDataProvider = {
   getPartyCompanyContributionSummaries(partyId: string) {
     void ensurePartyDataset();
     return getSnapshot()?.indexes.partyCompanyContributionSummariesByPartyId.get(partyId) ?? [];
+  },
+
+  async loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number) {
+    await ensurePartyDataset();
+    const rows = this.getPartyCompanyContributionSummaries(partyId)
+      .slice()
+      .sort((left, right) => right.amount_total - left.amount_total);
+    const from = (Math.max(1, page) - 1) * pageSize;
+    return {
+      items: rows.slice(from, from + pageSize),
+      total: rows.length,
+    };
   },
 
   async searchPublicRecords(query: string) {

@@ -110,8 +110,11 @@ export type PublishedPublicDataBridge = Pick<
   | 'searchPublicRecords'
 > & {
   loadHomePageData(): Promise<HomePageData>;
+  loadRegionDirectory(): Promise<StageRegionNode[]>;
   loadRegionPageData(regionSlug: string): Promise<PublishedRegionPageData>;
+  loadPartyDirectory(): Promise<PublicParty[]>;
   loadPartyData(): Promise<PublishedPartyData>;
+  loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number): Promise<{ items: PublicPartyCompanyContributionSummary[]; total: number }>;
 };
 
 const publishedDataPrinciples = [
@@ -348,13 +351,13 @@ export function createPublishedPublicDataBridge(
   return {
     async loadHomePageData() {
       const rows = await adapter.loadHomePage();
-      const regionById = new Map(rows.regionRows.map((region) => [region.region_id, region]));
-      const stageRegions = rows.regionRows.map((region, index) => {
+      const regionRows = rows.regionRows ?? [];
+      const regionById = new Map(regionRows.map((region) => [region.region_id, region]));
+      const stageRegions = regionRows.map((region, index) => {
         const parent = region.parent_region_id ? regionById.get(region.parent_region_id) : null;
         return mapRegionNode(region, index, parent?.slug ?? null);
       });
-      rememberRegions(stageRegions);
-
+      if (stageRegions.length > 0) rememberRegions(stageRegions);
       return {
         ticker: mapTicker(rows.tickerRows[0]),
         regions: rows.regionSummaryRows.map(mapRegionCard),
@@ -363,6 +366,17 @@ export function createPublishedPublicDataBridge(
         upcomingRaces: rows.raceRows.map(mapRace),
         dataPrinciples: publishedDataPrinciples,
       };
+    },
+
+    async loadRegionDirectory() {
+      const rows = await adapter.loadRegionDirectory();
+      const regionById = new Map(rows.map((region) => [region.region_id, region]));
+      const regions = rows.map((region, index) => {
+        const parent = region.parent_region_id ? regionById.get(region.parent_region_id) : null;
+        return mapRegionNode(region, index, parent?.slug ?? null);
+      });
+      rememberRegions(regions);
+      return regions;
     },
 
     async loadRegionPageData(regionSlug) {
@@ -476,7 +490,19 @@ export function createPublishedPublicDataBridge(
         parties: rows.partyRows,
         annualFinanceFilings: rows.annualFinanceFilingRows,
         financeSummaries: rows.financeRows,
-        companyContributionSummaries: rows.companyContributionRows,
+        companyContributionSummaries: rows.companyContributionRows ?? [],
+      };
+    },
+
+    loadPartyDirectory() {
+      return adapter.loadPartyDirectory();
+    },
+
+    async loadPartyCompanyContributionPage(partyId, page, pageSize) {
+      const result = await adapter.loadPartyCompanyContributionPage(partyId, page, pageSize);
+      return {
+        items: result.rows,
+        total: result.total,
       };
     },
 

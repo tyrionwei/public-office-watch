@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -68,6 +69,7 @@ const copy = {
     minimize: '縮小聊天室',
     loading: '正在讀取最近訊息…',
     empty: '目前還沒有訊息。',
+    postingUnavailable: '目前可瀏覽訊息；發言功能暫時無法使用。',
     earliest: '已到最早訊息',
     loadError: '聊天室暫時無法使用，請稍後再試。',
     reconnecting: '即時連線重新建立中…',
@@ -118,6 +120,7 @@ const copy = {
     minimize: 'Minimize chat',
     loading: 'Loading recent messages…',
     empty: 'No messages yet.',
+    postingUnavailable: 'Messages are available to read, but posting is temporarily unavailable.',
     earliest: 'You have reached the first message',
     loadError: 'Chat is temporarily unavailable. Please try again later.',
     reconnecting: 'Reconnecting live updates…',
@@ -200,12 +203,14 @@ function visibleMessageBody(message: ChatMessage, text: ChatCopy) {
 export function GlobalChatWidget() {
   const { language } = useI18n();
   const text = copy[language];
-  const [status, setStatus] = useState<ChatStatus | null>(null);
+  const [status, setStatus] = useState<ChatStatus | null | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [isNudgeVisible, setIsNudgeVisible] = useState(false);
   const [isNudgePaused, setIsNudgePaused] = useState(false);
   const [isPanelEngaged, setIsPanelEngaged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [messageLoadFailed, setMessageLoadFailed] = useState(false);
+  const [postingUnavailable, setPostingUnavailable] = useState(false);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -225,6 +230,8 @@ export function GlobalChatWidget() {
   const panelRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const channelRef = useRef<ChatRealtimeChannel | null>(null);
+  const statusRef = useRef<ChatStatus | null | undefined>(undefined);
+  const statusRequestRef = useRef<Promise<ChatStatus | null> | null>(null);
   const preserveHeightRef = useRef<number | null>(null);
   const scrollToBottomRef = useRef(false);
   const nameCooldownUntil = profile
@@ -239,22 +246,35 @@ export function GlobalChatWidget() {
     .filter((value) => value > Date.now())
     .sort((left, right) => left - right)[0] ?? 0, [messages]);
 
-  useEffect(() => {
-    let active = true;
-    void loadChatStatus()
+  const ensureChatStatus = useCallback(() => {
+    if (statusRef.current !== undefined) return Promise.resolve(statusRef.current);
+    statusRequestRef.current ??= loadChatStatus()
+      .then((value) => value?.is_enabled ? value : null)
+      .catch(() => null)
       .then((value) => {
-        if (active) setStatus(value?.is_enabled ? value : null);
+        statusRef.current = value;
+        setStatus(value);
+        return value;
       })
-      .catch(() => {
-        if (active) setStatus(null);
+      .finally(() => {
+        statusRequestRef.current = null;
       });
-    return () => { active = false; };
+    return statusRequestRef.current;
   }, []);
+
   useEffect(() => {
-    if (!status || isOpen || wasChatNudgeSeenRecently()) return undefined;
-    const timer = window.setTimeout(() => setIsNudgeVisible(true), chatNudgeDelayMs);
-    return () => window.clearTimeout(timer);
-  }, [isOpen, status]);
+    if (isOpen || wasChatNudgeSeenRecently()) return undefined;
+    let active = true;
+    const timer = window.setTimeout(() => {
+      void ensureChatStatus().then((value) => {
+        if (active && value) setIsNudgeVisible(true);
+      });
+    }, chatNudgeDelayMs);
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [ensureChatStatus, isOpen]);
 
   useEffect(() => {
     if (!isNudgeVisible || isNudgePaused || isOpen) return undefined;
@@ -295,6 +315,8 @@ export function GlobalChatWidget() {
     if (!isOpen || !status) return undefined;
     let cancelled = false;
     setIsLoading(true);
+    setMessageLoadFailed(false);
+    setPostingUnavailable(false);
     setError(null);
     setMessages([]);
     setReplyTo(null);
@@ -377,38 +399,55 @@ export function GlobalChatWidget() {
       }
     };
 
+    void loadChatMessages()
+      .then((page) => {
+        if (cancelled) return;
+        setHasMore(page.length === chatPageSize);
+        scrollToBottomRef.current = true;
+        setMessages((current) => mergeChatMessages(current, page));
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setMessageLoadFailed(true);
+          setError(text.loadError);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
     void (async () => {
       try {
         await ensureAnonymousChatSession();
-        const channel = await subscribeToChatMessages(
-          receiveMessage,
-          setRealtimeStatus,
-          removeMessage,
-          receiveChatStatus,
-          receiveProfileModeration,
-        );
-        if (cancelled) {
-          await unsubscribeFromChat(channel);
+        const [profileResult, channelResult] = await Promise.allSettled([
+          loadChatProfile(),
+          subscribeToChatMessages(
+            receiveMessage,
+            setRealtimeStatus,
+            removeMessage,
+            receiveChatStatus,
+            receiveProfileModeration,
+          ),
+        ]);
+        if (channelResult.status === 'fulfilled') {
+          if (cancelled) {
+            await unsubscribeFromChat(channelResult.value);
+          } else {
+            channelRef.current = channelResult.value;
+          }
+        }
+        if (cancelled) return;
+        if (profileResult.status === 'rejected') {
+          setPostingUnavailable(true);
           return;
         }
-        channelRef.current = channel;
-
-        const [loadedProfile, page] = await Promise.all([
-          loadChatProfile(),
-          loadChatMessages(),
-        ]);
-        if (cancelled) return;
+        const loadedProfile = profileResult.value;
         setProfile(loadedProfile);
         setDisplayName(loadedProfile?.current_display_name ?? '');
         setIsEditingName(!loadedProfile || loadedProfile.terms_version !== status.terms_version);
         setAcceptedTerms(false);
-        setHasMore(page.length === chatPageSize);
-        scrollToBottomRef.current = true;
-        setMessages((current) => mergeChatMessages(current, page));
-      } catch (caught) {
-        if (!cancelled) setError(errorMessage(caught, text));
-      } finally {
-        if (!cancelled) setIsLoading(false);
+      } catch {
+        if (!cancelled) setPostingUnavailable(true);
       }
     })();
 
@@ -576,28 +615,23 @@ export function GlobalChatWidget() {
 
   async function openChat() {
     dismissChatNudge();
-    try {
-      const currentStatus = await loadChatStatus();
-      if (!currentStatus?.is_enabled) {
-        setStatus(null);
-        return;
-      }
-      setStatus(currentStatus);
-      setIsPanelEngaged(false);
-      setIsOpen(true);
-    } catch {
-      setStatus(null);
-    }
+    const currentStatus = await ensureChatStatus();
+    if (!currentStatus) return;
+    setIsPanelEngaged(false);
+    setIsOpen(true);
   }
 
-  if (!status) return null;
+  if (status === null) return null;
 
   return (
     <>
       {!isOpen ? (
         <div
           className="fixed bottom-5 right-4 z-[70] sm:right-5"
-          onPointerEnter={() => setIsNudgePaused(true)}
+          onPointerEnter={() => {
+            setIsNudgePaused(true);
+            void ensureChatStatus();
+          }}
           onPointerLeave={() => setIsNudgePaused(false)}
           onFocusCapture={() => setIsNudgePaused(true)}
           onBlurCapture={(event) => {
@@ -679,7 +713,7 @@ export function GlobalChatWidget() {
             {isLoadingOlder ? <p className="py-2 text-center text-[11px] text-slate-500">{text.loading}</p> : null}
             {!hasMore && messages.length > 0 ? <p className="py-2 text-center text-[11px] text-slate-500">{text.earliest}</p> : null}
             {isLoading && messages.length === 0 ? <p className="py-8 text-center text-xs text-slate-400">{text.loading}</p> : null}
-            {!isLoading && messages.length === 0 ? (
+            {!isLoading && !messageLoadFailed && messages.length === 0 ? (
               <div className="flex flex-col items-center py-6 text-center">
                 <img
                   src={xiezhiMascotPoses.play}
@@ -733,10 +767,12 @@ export function GlobalChatWidget() {
           </div>
 
           <footer className="border-t border-cyan-300/20 bg-[#050b16] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
-            {realtimeStatus !== 'SUBSCRIBED' && !isLoading ? <p className="mb-2 text-[10px] text-amber-200/80">{text.reconnecting}</p> : null}
+            {realtimeStatus !== 'SUBSCRIBED' && !isLoading && !postingUnavailable ? <p className="mb-2 text-[10px] text-amber-200/80">{text.reconnecting}</p> : null}
             {error ? <p role="alert" className="mb-2 border-l-2 border-pink-400 bg-pink-400/10 px-2 py-1 text-[11px] text-pink-100">{error}</p> : null}
 
-            {profileBanned || profileMuted ? (
+            {postingUnavailable ? (
+              <p className="border border-amber-300/30 bg-amber-300/[0.06] px-3 py-2 text-xs leading-5 text-amber-100">{text.postingUnavailable}</p>
+            ) : profileBanned || profileMuted ? (
               <div className="border border-amber-300/30 bg-amber-300/[0.06] px-3 py-2 text-xs leading-5 text-amber-100">
                 {profileBanned
                   ? text.banned

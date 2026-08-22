@@ -70,6 +70,11 @@ export type PublicCandidateListPage = {
   total: number;
 };
 
+export type PublicPartyCompanyContributionPage = {
+  items: PublicPartyCompanyContributionSummary[];
+  total: number;
+};
+
 export type PublicRaceListPage = {
   items: PublicRace[];
   total: number;
@@ -96,6 +101,8 @@ export type PublicRaceQueryFilters = {
 };
 
 export interface PublicDataProvider {
+  loadHomePageData(): Promise<HomePageData>;
+  loadRegionDirectory(): Promise<StageRegionNode[]>;
   getHomeTicker(): HomeTicker;
   getHomePageData(): HomePageData;
   getRegionElectionSummaries(): RegionCard[];
@@ -137,6 +144,8 @@ export interface PublicDataProvider {
   loadPublicUpdates(limit?: number): Promise<PublicUpdate[]>;
   getCompanies(): PublicCompany[];
   getParties(): PublicParty[];
+  loadPartyDirectory(): Promise<PublicParty[]>;
+  loadPartyFinanceData(): Promise<void>;
   getPartyBySlug(partySlug: string): PublicParty | null;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
   loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
@@ -144,5 +153,6 @@ export interface PublicDataProvider {
   getPartyAnnualFinanceFilings(partyId: string): PublicPartyAnnualFinanceFiling[];
   getPartyFinanceSummaries(partyId: string): PublicPartyFinanceSummary[];
   getPartyCompanyContributionSummaries(partyId: string): PublicPartyCompanyContributionSummary[];
+  loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number): Promise<PublicPartyCompanyContributionPage>;
   searchPublicRecords(query: string): Promise<PublicSearchResult[]>;
 }

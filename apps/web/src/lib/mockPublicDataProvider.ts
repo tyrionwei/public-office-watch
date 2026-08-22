@@ -117,6 +117,14 @@ function takeResults(results: PublicSearchResult[]) {
 }
 
 export const mockPublicDataProvider: PublicDataProvider = {
+  async loadHomePageData() {
+    return this.getHomePageData();
+  },
+
+  async loadRegionDirectory() {
+    return taiwanStageRegionNodes;
+  },
+
   getHomeTicker() {
     return nextEvent;
   },
@@ -391,6 +399,14 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return mockPublicParties;
   },
 
+  async loadPartyDirectory() {
+    return mockPublicParties;
+  },
+
+  async loadPartyFinanceData() {
+    return undefined;
+  },
+
   getPartyBySlug(partySlug: string) {
     return mockPublicParties.find((party) => party.slug === partySlug) ?? null;
   },
@@ -425,6 +441,17 @@ export const mockPublicDataProvider: PublicDataProvider = {
 
   getPartyCompanyContributionSummaries(partyId: string) {
     return mockPublicPartyCompanyContributionSummaries.filter((summary) => summary.party_id === partyId);
+  },
+
+  async loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number) {
+    const rows = this.getPartyCompanyContributionSummaries(partyId)
+      .slice()
+      .sort((left, right) => right.amount_total - left.amount_total);
+    const from = (Math.max(1, page) - 1) * pageSize;
+    return {
+      items: rows.slice(from, from + pageSize),
+      total: rows.length,
+    };
   },
 
   async searchPublicRecords(query: string) {

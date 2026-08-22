@@ -191,6 +191,40 @@ test('people page loads public people results', async ({ page }) => {
   expect(candidateRequestCount).toBe(0);
 });
 
+
+test('person and election routes do not preload unrelated party finance or chat data', async ({ page }) => {
+  const apiRequests: string[] = [];
+  await page.clock.install({ time: new Date('2026-08-22T12:00:00+08:00') });
+  page.on('request', (request) => {
+    const url = new URL(request.url());
+    if (url.pathname.includes('/rest/v1/') || url.pathname.includes('/functions/v1/')) {
+      apiRequests.push(url.pathname);
+    }
+  });
+
+  await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
+  await expect(page.locator('main')).toBeVisible();
+  await page.waitForLoadState('networkidle');
+
+  expect(apiRequests.some((path) => path.includes('party_company_contribution'))).toBe(false);
+  expect(apiRequests.some((path) => path.includes('party_finance'))).toBe(false);
+  expect(apiRequests.some((path) => path.includes('party_annual_finance'))).toBe(false);
+  expect(apiRequests.some((path) => path.includes('chat_status'))).toBe(false);
+
+  await page.goto('/elections');
+  const eventLink = page.locator('main a[href^="/elections/events/"]').first();
+  await expect(eventLink).toBeVisible();
+  apiRequests.length = 0;
+  await eventLink.click();
+  await expect(page).toHaveURL(/\/elections\/events\//);
+  await expect(page.locator('main')).toBeVisible();
+  await page.waitForLoadState('networkidle');
+
+  expect(apiRequests.some((path) => path.includes('party_company_contribution'))).toBe(false);
+  expect(apiRequests.some((path) => path.includes('party_finance'))).toBe(false);
+  expect(apiRequests.some((path) => path.includes('party_annual_finance'))).toBe(false);
+  expect(apiRequests.some((path) => path.includes('chat_status'))).toBe(false);
+});
 test('person page leads with data status and keeps sensitive source context beside the claim', async ({ page }) => {
   await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
 
@@ -265,6 +299,35 @@ test('homepage defaults to Taipei when no nationwide election is announced', asy
   await expect(page).toHaveURL(/\/$/);
 });
 
+test('homepage ignores a remembered nationwide view during an election gap', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => window.localStorage.setItem('public-office-watch.selected-region', 'national'));
+  await page.reload();
+
+  await expect(page.locator('[data-region-highlight]')).toHaveAttribute('data-region-highlight', 'county-63000');
+  await expect(page).toHaveURL(/\/$/);
+});
+
+test('chat messages do not wait for the posting profile endpoint', async ({ page }) => {
+  await page.route('**/rest/v1/rpc/chat_messages', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: '[]',
+  }));
+  await page.route('**/functions/v1/chat-api', (route) => route.fulfill({
+    status: 500,
+    contentType: 'application/json',
+    body: JSON.stringify({ error: 'CHAT_SERVER_ERROR' }),
+  }));
+  await page.goto('/');
+
+  await page.locator('[data-chat-launcher]').click();
+
+  await expect(page.getByText('目前還沒有訊息。', { exact: true })).toBeVisible();
+  await expect(page.getByText('目前可瀏覽訊息；發言功能暫時無法使用。', { exact: true })).toBeVisible();
+  await expect(page.getByText('正在讀取最近訊息…', { exact: true })).toHaveCount(0);
+  await expect(page.getByText('操作未完成，請稍後再試。', { exact: true })).toHaveCount(0);
+});
 test('explicit nationwide selection remains selected during the election gap', async ({ page }) => {
   await page.goto('/');
 

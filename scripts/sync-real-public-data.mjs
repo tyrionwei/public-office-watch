@@ -14,6 +14,7 @@ const defaultPersonEnrichmentClaimsPath = path.join(repoRoot, 'data-sources', 'p
 const defaultPersonEnrichmentSkippedPath = path.join(repoRoot, 'data-sources', 'person-enrichment-skipped.json');
 const defaultPersonSourcePeoplePath = path.join(repoRoot, 'data-sources', 'person-source-people.seed.json');
 const defaultElectionHistoryPath = path.join(repoRoot, 'data-sources', 'votetw-election-history.seed.json');
+const defaultPlannedLocalRaceOverridesPath = path.join(repoRoot, 'data-sources', 'cec-2026-local-election-districts.json');
 const defaultDarkGuideFamilyReportPath = path.join(repoRoot, 'data-sources', 'tnl-dark-guide', 'family-people-report.json');
 
 function darkGuideFamilyReferenceNames(report) {
@@ -772,7 +773,47 @@ function toPlannedLocalRaceExternalId(sourceRace) {
   return `planned-2026-local-from-${sourceRace.externalId}`;
 }
 
-function enrichSeedWithPlannedLocalElections(seed) {
+function loadPlannedLocalRaceOverrides(filePath = defaultPlannedLocalRaceOverridesPath) {
+  const data = readOptionalJson(filePath, null);
+
+  if (!data || !Array.isArray(data.districts)) {
+    throw new Error(`Missing official 2026 local election district data: ${filePath}`);
+  }
+
+  for (const district of data.districts) {
+    if (
+      !district.regionName ||
+      !/^第\d+選舉區$/.test(district.district) ||
+      !district.scope ||
+      !Number.isInteger(district.seatCount) ||
+      !Number.isInteger(district.reservedWomenSeatCount) ||
+      !Number.isInteger(district.campaignExpenseLimit)
+    ) {
+      throw new Error(`Invalid official 2026 local election district row: ${JSON.stringify(district)}`);
+    }
+  }
+
+  return data;
+}
+
+function districtNumber(value) {
+  return Number(String(value ?? '').match(/第(\d+)選舉區/)?.[1] ?? 0);
+}
+
+function councilorDistrictKind(value) {
+  const text = String(value ?? '');
+  if (text.includes('plain-indigenous') || text.includes('平地原住民')) return 'plain-indigenous';
+  if (text.includes('mountain-indigenous') || text.includes('山地原住民')) return 'mountain-indigenous';
+  return 'regional';
+}
+
+function toOfficialCouncilorTitle(district) {
+  const kind = councilorDistrictKind(district.scope);
+  const kindLabel = kind === 'plain-indigenous' ? '平地原住民' : kind === 'mountain-indigenous' ? '山地原住民' : '';
+  return `${district.regionName}${district.district}${kindLabel}議員選舉`;
+}
+
+function enrichSeedWithPlannedLocalElections(seed, officialDistrictData = loadPlannedLocalRaceOverrides()) {
   const baseRaces = (seed.races ?? [])
     .filter((race) => {
       return (
@@ -784,7 +825,7 @@ function enrichSeedWithPlannedLocalElections(seed) {
     })
     .sort((left, right) => left.externalId.localeCompare(right.externalId));
 
-  const plannedRaces = baseRaces.map((race) => ({
+  const derivedPlannedRaces = baseRaces.map((race) => ({
     externalId: toPlannedLocalRaceExternalId(race),
     electionExternalId: plannedLocalElection.externalId,
     regionExternalId: race.regionExternalId,
@@ -794,6 +835,68 @@ function enrichSeedWithPlannedLocalElections(seed) {
     status: 'announced',
     sourceId: plannedLocalElection.sourceId,
   }));
+  const regionByName = new Map((seed.regions ?? []).map((region) => [region.name, region]));
+  const officialDistrictsByRegion = new Map();
+
+  for (const district of officialDistrictData.districts) {
+    const rows = officialDistrictsByRegion.get(district.regionName) ?? [];
+    rows.push(district);
+    officialDistrictsByRegion.set(district.regionName, rows);
+  }
+
+  const overriddenRegionExternalIds = new Set();
+  const officialPlannedRaces = [];
+
+  for (const [regionName, districts] of officialDistrictsByRegion) {
+    const region = regionByName.get(regionName);
+    if (!region?.externalId || !region.officialCode) {
+      throw new Error(`Official 2026 district references an unknown region: ${regionName}`);
+    }
+
+    overriddenRegionExternalIds.add(region.externalId);
+    const reusableBaseRacesByKind = new Map();
+
+    for (const race of baseRaces.filter((item) => item.regionExternalId === region.externalId && item.raceType.endsWith('_councilor'))) {
+      const kind = councilorDistrictKind(race.externalId);
+      const rows = reusableBaseRacesByKind.get(kind) ?? [];
+      rows.push(race);
+      reusableBaseRacesByKind.set(kind, rows);
+    }
+
+    for (const rows of reusableBaseRacesByKind.values()) {
+      rows.sort((left, right) => districtNumber(left.title) - districtNumber(right.title));
+    }
+
+    for (const district of districts.slice().sort((left, right) => districtNumber(left.district) - districtNumber(right.district))) {
+      const kind = councilorDistrictKind(district.scope);
+      const sourceRace = reusableBaseRacesByKind.get(kind)?.shift();
+      const officialDistrictNumber = districtNumber(district.district);
+
+      officialPlannedRaces.push({
+        externalId: sourceRace
+          ? toPlannedLocalRaceExternalId(sourceRace)
+          : `planned-2026-local-official-${region.officialCode}-${String(officialDistrictNumber).padStart(2, '0')}`,
+        electionExternalId: plannedLocalElection.externalId,
+        regionExternalId: region.externalId,
+        raceType: toLocalCouncilorRaceType(region),
+        title: toOfficialCouncilorTitle(district),
+        votingDate: plannedLocalElection.votingDate,
+        status: 'announced',
+        sourceId: plannedLocalElection.sourceId,
+        districtScope: district.scope,
+        seatCount: district.seatCount,
+        reservedWomenSeatCount: district.reservedWomenSeatCount,
+        campaignExpenseLimit: district.campaignExpenseLimit,
+      });
+    }
+  }
+
+  const plannedRaces = [
+    ...derivedPlannedRaces.filter((race) => {
+      return !(overriddenRegionExternalIds.has(race.regionExternalId) && race.raceType.endsWith('_councilor'));
+    }),
+    ...officialPlannedRaces,
+  ];
 
   return {
     seed: {
@@ -802,11 +905,12 @@ function enrichSeedWithPlannedLocalElections(seed) {
       races: mergeByExternalId([seed.races, plannedRaces]),
     },
     plannedLocalElections: {
-      status: plannedRaces.length > 0 ? 'ok' : 'fallback',
+      status: baseRaces.length > 0 ? 'ok' : 'fallback',
       count: plannedRaces.length,
       baseElectionExternalId: 'cec-2022-local-public-officials',
       votingDate: plannedLocalElection.votingDate,
-      scope: 'planned 2026 mayor and councilor race shells copied from completed 2022 local race districts',
+      officialDistrictCount: officialPlannedRaces.length,
+      scope: 'planned 2026 mayor and councilor races, with official CEC metadata overriding the five changed councilor district regions',
     },
   };
 }
@@ -2492,7 +2596,7 @@ function getSupabaseEnv() {
   return { url: url.replace(/\/$/, ''), serviceKey };
 }
 
-async function supabaseRequest(env, table, { method = 'GET', rows, onConflict, select, range, filters } = {}) {
+async function supabaseRequest(env, table, { method = 'GET', rows, onConflict, select, range, filters, schema } = {}) {
   const url = new URL(`${env.url}/rest/v1/${table}`);
 
   if (onConflict) {
@@ -2514,6 +2618,10 @@ async function supabaseRequest(env, table, { method = 'GET', rows, onConflict, s
 
   if (range) {
     headers.range = `${range.from}-${range.to}`;
+  }
+
+  if (schema) {
+    headers[method === 'GET' ? 'accept-profile' : 'content-profile'] = schema;
   }
 
   if (method !== 'GET') {
@@ -3968,6 +4076,10 @@ async function writeSeed(seed, hash, args) {
       title: normalizeElectionDistrict(race.title),
       voting_date: race.votingDate,
       status: race.status,
+      district_scope: race.districtScope ?? null,
+      seat_count: race.seatCount ?? null,
+      reserved_women_seat_count: race.reservedWomenSeatCount ?? null,
+      campaign_expense_limit: race.campaignExpenseLimit ?? null,
       source_name: source.name,
       source_url: source.url,
       is_public: true,
@@ -3976,6 +4088,28 @@ async function writeSeed(seed, hash, args) {
   });
 
   await upsertOrThrow(env, 'races', raceRows, { onConflict: 'external_id' });
+
+  const plannedLocalElectionId = electionByExternalId.get(plannedLocalElection.externalId)?.id;
+  if (plannedLocalElectionId) {
+    const currentPlannedRaceIds = new Set(
+      raceRows
+        .filter((race) => race.election_id === plannedLocalElectionId)
+        .map((race) => race.external_id),
+    );
+    const storedPlannedRaces = await selectAllOrThrow(
+      env,
+      'races',
+      'id,external_id,is_public',
+      1000,
+      { election_id: `eq.${plannedLocalElectionId}` },
+    );
+
+    for (const race of storedPlannedRaces) {
+      if (race.is_public && !currentPlannedRaceIds.has(race.external_id)) {
+        await supabasePatch(env, 'races', { id: race.id }, { is_public: false, updated_at: startedAt });
+      }
+    }
+  }
 
   const raceRefresh = await selectAllOrThrow(env, 'races', 'id,external_id,status');
   const raceByExternalId = new Map(raceRefresh.map((race) => [race.external_id, race]));
@@ -4262,7 +4396,11 @@ async function writeSeed(seed, hash, args) {
 
   await supabaseRequest(env, 'rpc/refresh_current_office_assignments', { method: 'POST', rows: {} });
   await supabaseRequest(env, 'rpc/refresh_public_people_list_cached', { method: 'POST', rows: {} });
-  await supabaseRequest(env, 'rpc/refresh_person_demographics', { method: 'POST', rows: {} });
+  await supabaseRequest(env, 'rpc/refresh_person_demographics', {
+    method: 'POST',
+    rows: {},
+    schema: 'published',
+  });
 
   if (args.recordRun) {
     await upsertOrThrow(
@@ -4435,5 +4573,8 @@ export {
   buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,
+  enrichSeedWithPlannedLocalElections,
+  loadPlannedLocalRaceOverrides,
   scoreClaim,
+  supabaseRequest,
 };

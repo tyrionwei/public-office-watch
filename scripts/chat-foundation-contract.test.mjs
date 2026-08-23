@@ -159,7 +159,7 @@ test('the global widget survives route changes and follows the agreed quiet UI',
   assert.match(widget, /type="checkbox"/);
   assert.match(widget, /characterCount >= 40/);
   assert.match(widget, /h-\[82dvh\][\s\S]+md:w-\[400px\]/);
-  assert.match(widget, /group-hover:opacity-100/);
+  assert.match(widget, /md:hover:opacity-100/);
   assert.match(widget, /md:opacity-60/);
   assert.match(widget, /text\.minimize/);
   assert.doesNotMatch(widget, /text\.subtitle/);
@@ -229,5 +229,5 @@ test('emergency shutdown and message removal are pushed to active private chat c
   assert.match(chatClient, /event: 'message_removed'/);
   assert.match(chatClient, /event: 'status_changed'/);
   assert.match(widget, /setMessages\(\(current\) => current\s*\.map/);
-  assert.match(widget, /const currentStatus = await loadChatStatus\(\)/);
+  assert.match(widget, /const currentStatus = await ensureChatStatus\(\)/);
 });

@@ -36,6 +36,7 @@ const blockedTermAllowlist = {
     path.join(srcRoot, 'pages', 'ElectionPage.tsx'),
     path.join(srcRoot, 'pages', 'InternalDataProgressPage.tsx'),
     path.join(srcRoot, 'pages', 'InternalReviewQueuePage.tsx'),
+    path.join(srcRoot, 'pages', 'PersonPage.tsx'),
     path.join(srcRoot, 'pages', 'PartyPage.tsx'),
     path.join(srcRoot, 'lib', 'internalDataProgress.ts'),
     path.join(srcRoot, 'lib', 'internalReviewData.ts'),
@@ -46,6 +47,8 @@ const blockedTermAllowlist = {
     path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
   ]),
   rejected: new Set([
+    path.join(srcRoot, 'components', 'GlobalChatWidget.tsx'),
+    path.join(srcRoot, 'lib', 'publishedPublicDataProvider.ts'),
     path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
     path.join(srcRoot, 'lib', 'internalReviewData.ts'),
     path.join(srcRoot, 'lib', 'publicUpdateAdmin.ts'),

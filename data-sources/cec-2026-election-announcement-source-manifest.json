@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "electionYear": 2026,
+  "rules": {
+    "termGroups": [
+      [
+        "115年",
+        "2026"
+      ],
+      [
+        "選舉種類",
+        "選舉區之劃分",
+        "選舉公告",
+        "候選人登記日期及必備事項",
+        "受理候選人登記",
+        "候選人登記概況",
+        "候選人登記名冊",
+        "候選人名單",
+        "資格審定",
+        "資格審查",
+        "姓名號次",
+        "選舉公報"
+      ]
+    ]
+  },
+  "sources": [
+    {
+      "key": "cec-central-election-announcements",
+      "name": "中央選舉委員會公告",
+      "url": "https://web.cec.gov.tw/central/article/list/144?page=1"
+    },
+    {
+      "key": "cec-central-home",
+      "name": "中央選舉委員會公告訊息",
+      "url": "https://web.cec.gov.tw/central?Menu_id=-4"
+    }
+  ]
+}

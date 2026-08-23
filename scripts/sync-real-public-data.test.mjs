@@ -11,7 +11,25 @@ import {
   isHistoricalCecAggregateResultRow,
   isHistoricalCecNationalResult,
   scoreClaim,
+  supabaseRequest,
 } from './sync-real-public-data.mjs';
+
+const originalFetch = globalThis.fetch;
+let publishedRpcRequest;
+globalThis.fetch = async (_url, options) => {
+  publishedRpcRequest = options;
+  return new Response('[]', { status: 200, headers: { 'content-type': 'application/json' } });
+};
+try {
+  await supabaseRequest(
+    { url: 'https://example.test', serviceKey: 'test-key' },
+    'rpc/refresh_person_demographics',
+    { method: 'POST', rows: {}, schema: 'published' },
+  );
+} finally {
+  globalThis.fetch = originalFetch;
+}
+assert.equal(publishedRpcRequest.headers['content-profile'], 'published');
 
 const [reviewedVoteTwAffiliation] = buildEnrichmentPartyAffiliationRows([{
   claim_key: 'votetw-person-enrichment:test:party_affiliation:1',

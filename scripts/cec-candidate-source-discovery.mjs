@@ -11,6 +11,7 @@ function parseArgs(argv) {
     previousPath: null,
     outputPath: null,
     snapshotDir: null,
+    statePath: null,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -19,11 +20,16 @@ function parseArgs(argv) {
     else if (arg === '--previous') options.previousPath = argv[++index] ?? null;
     else if (arg === '--output') options.outputPath = argv[++index] ?? null;
     else if (arg === '--snapshot-dir') options.snapshotDir = argv[++index] ?? null;
+    else if (arg === '--state') {
+      options.statePath = argv[++index] ?? null;
+      options.previousPath = options.statePath;
+      options.outputPath = options.statePath;
+    }
     else throw new Error(`Unsupported argument: ${arg}`);
   }
 
   if (!options.manifestPath) throw new Error('--manifest requires a file path');
-  if (options.previousPath && !fs.existsSync(path.resolve(options.previousPath))) {
+  if (options.previousPath && !options.statePath && !fs.existsSync(path.resolve(options.previousPath))) {
     throw new Error(`Previous report not found: ${path.resolve(options.previousPath)}`);
   }
   return options;
@@ -55,9 +61,12 @@ function validateManifest(raw) {
   const yearTerms = Array.isArray(rules.yearTerms) ? rules.yearTerms.map(String) : [];
   const candidateTerms = Array.isArray(rules.candidateTerms) ? rules.candidateTerms.map(String) : [];
   const artifactTerms = Array.isArray(rules.artifactTerms) ? rules.artifactTerms.map(String) : [];
-  if (yearTerms.length === 0) errors.push('rules.yearTerms must contain at least one term');
-  if (candidateTerms.length === 0) errors.push('rules.candidateTerms must contain at least one term');
-  if (artifactTerms.length === 0) errors.push('rules.artifactTerms must contain at least one term');
+  const termGroups = Array.isArray(rules.termGroups)
+    ? rules.termGroups.map((group) => Array.isArray(group) ? group.map(String) : [])
+    : [yearTerms, candidateTerms, artifactTerms];
+  if (termGroups.length === 0 || termGroups.some((group) => group.length === 0)) {
+    errors.push('rules must define non-empty termGroups or year/candidate/artifact terms');
+  }
 
   const rawSources = Array.isArray(raw?.sources) ? raw.sources : [];
   if (rawSources.length === 0) errors.push('sources must contain at least one source');
@@ -73,7 +82,12 @@ function validateManifest(raw) {
   });
 
   if (errors.length > 0) throw new Error(`Invalid CEC source manifest:\n- ${errors.join('\n- ')}`);
-  return { schemaVersion: 1, electionYear, rules: { yearTerms, candidateTerms, artifactTerms }, sources };
+  return {
+    schemaVersion: 1,
+    electionYear,
+    rules: { yearTerms, candidateTerms, artifactTerms, termGroups },
+    sources,
+  };
 }
 
 function decodeHtml(value) {
@@ -94,13 +108,20 @@ function termMatches(value, terms) {
 
 function discoveryMatches(text, url, rules) {
   const searchable = `${decodeHtml(text)} ${decodeURIComponent(url)}`;
-  return termMatches(searchable, rules.yearTerms)
-    && termMatches(searchable, rules.candidateTerms)
-    && termMatches(searchable, rules.artifactTerms);
+  const termGroups = Array.isArray(rules.termGroups)
+    ? rules.termGroups
+    : [rules.yearTerms, rules.candidateTerms, rules.artifactTerms];
+  return termGroups.every((terms) => termMatches(searchable, terms));
 }
 
 function extractCandidateLinks(html, baseUrl, rules) {
   const links = new Map();
+  const addSyntheticDiscovery = (title) => {
+    if (!discoveryMatches(title, baseUrl, rules)) return;
+    const itemUrl = new URL(baseUrl);
+    itemUrl.hash = `item-${crypto.createHash('sha256').update(title).digest('hex').slice(0, 16)}`;
+    links.set(itemUrl.toString(), { title, url: itemUrl.toString() });
+  };
   const anchorPattern = /<a\b([^>]*?)href\s*=\s*(["'])(.*?)\2([^>]*)>([\s\S]*?)<\/a>/gi;
   for (const match of html.matchAll(anchorPattern)) {
     let url;
@@ -115,6 +136,26 @@ function extractCandidateLinks(html, baseUrl, rules) {
     const text = decodeHtml(match[5]);
     if (!discoveryMatches(text, normalizedUrl, rules)) continue;
     links.set(normalizedUrl, { title: text || normalizedUrl, url: normalizedUrl });
+  }
+  const listItemPattern = /<li\b[^>]*class\s*=\s*(["'])[^"']*\barticleItem\b[^"']*\1[^>]*>([\s\S]*?)<\/li>/gi;
+  for (const match of html.matchAll(listItemPattern)) addSyntheticDiscovery(decodeHtml(match[2]));
+
+  const nuxtDataMatch = html.match(/<script\b[^>]*id\s*=\s*(["'])__NUXT_DATA__\1[^>]*>([\s\S]*?)<\/script>/i);
+  if (nuxtDataMatch) {
+    try {
+      const pending = [JSON.parse(nuxtDataMatch[2])];
+      while (pending.length > 0) {
+        const value = pending.pop();
+        if (Array.isArray(value)) pending.push(...value);
+        else if (value && typeof value === 'object') pending.push(...Object.values(value));
+        else if (typeof value === 'string') {
+          const title = decodeHtml(value);
+          if (title.length >= 10 && !title.startsWith('<')) addSyntheticDiscovery(title);
+        }
+      }
+    } catch {
+      // A malformed framework payload must not hide valid server-rendered links.
+    }
   }
   return Array.from(links.values()).sort((left, right) => left.url.localeCompare(right.url));
 }
@@ -131,9 +172,14 @@ function compareDiscoveries(current, previous = null) {
     const currentUrls = new Set(source.discoveries.map((item) => item.url));
     return {
       ...source,
-      changed: before?.contentHash !== source.contentHash,
-      newDiscoveries: source.discoveries.filter((item) => !beforeUrls.has(item.url)),
-      removedDiscoveries: (before?.discoveries ?? []).filter((item) => !currentUrls.has(item.url)),
+      baseline: before == null,
+      changed: before != null && before.contentHash !== source.contentHash,
+      newDiscoveries: before == null
+        ? []
+        : source.discoveries.filter((item) => !beforeUrls.has(item.url)),
+      removedDiscoveries: before == null
+        ? []
+        : (before.discoveries ?? []).filter((item) => !currentUrls.has(item.url)),
     };
   });
 }
@@ -182,7 +228,7 @@ async function main() {
   const options = parseArgs(process.argv.slice(2));
   const manifestPath = path.resolve(options.manifestPath);
   const manifest = validateManifest(JSON.parse(fs.readFileSync(manifestPath, 'utf8')));
-  const previous = options.previousPath
+  const previous = options.previousPath && fs.existsSync(path.resolve(options.previousPath))
     ? JSON.parse(fs.readFileSync(path.resolve(options.previousPath), 'utf8'))
     : null;
   const fetchedAt = new Date().toISOString();
@@ -231,4 +277,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { compareDiscoveries, discoveryMatches, extractCandidateLinks, isCecUrl, validateManifest };
+export { compareDiscoveries, discoveryMatches, extractCandidateLinks, isCecUrl, parseArgs, validateManifest };

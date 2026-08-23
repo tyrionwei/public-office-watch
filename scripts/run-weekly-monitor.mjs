@@ -125,6 +125,15 @@ async function main() {
     '--snapshot-dir', path.join(options.outputDir, 'cec-snapshots'),
   ]);
 
+  const cecElectionReportPath = path.join(options.outputDir, 'cec-election-announcements.json');
+  await run('cec-election-announcements', [
+    'scripts/cec-candidate-source-discovery.mjs',
+    '--manifest', 'data-sources/cec-2026-election-announcement-source-manifest.json',
+    ...previousArgs(cecElectionReportPath),
+    '--output', cecElectionReportPath,
+    '--snapshot-dir', path.join(options.outputDir, 'cec-election-announcement-snapshots'),
+  ]);
+
   const referendumReportPath = path.join(options.outputDir, 'cec-referendum-sources.json');
   await run('cec-referendum-sources', [
     'scripts/cec-referendum-source-monitor.mjs',

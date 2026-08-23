@@ -1,0 +1,395 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "cec-2026-local-election-calendar",
+  "announcementNumber": "中選務字第1153150253號",
+  "publishedAt": "2026-08-20",
+  "votingDate": "2026-11-28",
+  "votingStartTime": "08:00",
+  "votingEndTime": "16:00",
+  "districts": [
+    {
+      "regionName": "新竹縣",
+      "district": "第1選舉區",
+      "scope": "竹北市尚義里、崇義里、新港里、大義里、白地里、大眉里、麻園里、溪州里、新庄里、聯興里、泰和里、新社里、新國里、竹義里、新崙里",
+      "seatCount": 4,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6338000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第2選舉區",
+      "scope": "竹北市竹北里、竹仁里、福德里、北崙里、中崙里、文化里、興安里、斗崙里、北興里、十興里、鹿場里、東興里、中興里、東平里、東海里、隘口里",
+      "seatCount": 9,
+      "reservedWomenSeatCount": 2,
+      "campaignExpenseLimit": 6362000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第3選舉區",
+      "scope": "湖口鄉",
+      "seatCount": 5,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6351000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第4選舉區",
+      "scope": "新豐鄉",
+      "seatCount": 3,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6413000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第5選舉區",
+      "scope": "關西鎮",
+      "seatCount": 2,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6282000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第6選舉區",
+      "scope": "新埔鎮",
+      "seatCount": 2,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6346000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第7選舉區",
+      "scope": "橫山鄉、尖石鄉",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6266000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第8選舉區",
+      "scope": "芎林鄉",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6420000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第9選舉區",
+      "scope": "竹東鎮、五峰鄉",
+      "seatCount": 5,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6392000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第10選舉區",
+      "scope": "寶山鄉",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6303000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第11選舉區",
+      "scope": "北埔鄉、峨眉鄉",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6275000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第12選舉區",
+      "scope": "新竹縣之平地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6079000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第13選舉區",
+      "scope": "尖石鄉及竹北市、湖口鄉、新豐鄉、關西鎮、新埔鎮、橫山鄉之山地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6244000
+    },
+    {
+      "regionName": "新竹縣",
+      "district": "第14選舉區",
+      "scope": "五峰鄉及芎林鄉、竹東鎮、寶山鄉、北埔鄉、峨眉鄉之山地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6177000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第1選舉區",
+      "scope": "彰化市、花壇鄉、芬園鄉",
+      "seatCount": 12,
+      "reservedWomenSeatCount": 3,
+      "campaignExpenseLimit": 6493000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第2選舉區",
+      "scope": "鹿港鎮、福興鄉、秀水鄉",
+      "seatCount": 7,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6486000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第3選舉區",
+      "scope": "和美鎮、伸港鄉、線西鄉",
+      "seatCount": 6,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6487000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第4選舉區",
+      "scope": "員林市、大村鄉、永靖鄉",
+      "seatCount": 9,
+      "reservedWomenSeatCount": 2,
+      "campaignExpenseLimit": 6452000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第5選舉區",
+      "scope": "溪湖鎮、埔鹽鄉、埔心鄉",
+      "seatCount": 5,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6483000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第6選舉區",
+      "scope": "田中鎮、社頭鄉、二水鄉",
+      "seatCount": 4,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6478000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第7選舉區",
+      "scope": "北斗鎮、田尾鄉、埤頭鄉、溪州鄉",
+      "seatCount": 5,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6472000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第8選舉區",
+      "scope": "二林鎮、大城鄉、芳苑鄉、竹塘鄉",
+      "seatCount": 5,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6434000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第9選舉區",
+      "scope": "彰化縣之平地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6078000
+    },
+    {
+      "regionName": "彰化縣",
+      "district": "第10選舉區",
+      "scope": "彰化縣之山地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6083000
+    },
+    {
+      "regionName": "雲林縣",
+      "district": "第1選舉區",
+      "scope": "斗六市、莿桐鄉、林內鄉",
+      "seatCount": 10,
+      "reservedWomenSeatCount": 2,
+      "campaignExpenseLimit": 6318000
+    },
+    {
+      "regionName": "雲林縣",
+      "district": "第2選舉區",
+      "scope": "斗南鎮、古坑鄉、大埤鄉",
+      "seatCount": 6,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6312000
+    },
+    {
+      "regionName": "雲林縣",
+      "district": "第3選舉區",
+      "scope": "虎尾鎮、土庫鎮、褒忠鄉、元長鄉",
+      "seatCount": 9,
+      "reservedWomenSeatCount": 2,
+      "campaignExpenseLimit": 6307000
+    },
+    {
+      "regionName": "雲林縣",
+      "district": "第4選舉區",
+      "scope": "西螺鎮、二崙鄉、崙背鄉",
+      "seatCount": 6,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6314000
+    },
+    {
+      "regionName": "雲林縣",
+      "district": "第5選舉區",
+      "scope": "臺西鄉、麥寮鄉、東勢鄉、四湖鄉",
+      "seatCount": 7,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6303000
+    },
+    {
+      "regionName": "雲林縣",
+      "district": "第6選舉區",
+      "scope": "北港鎮、口湖鄉、水林鄉",
+      "seatCount": 5,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6344000
+    },
+    {
+      "regionName": "雲林縣",
+      "district": "第7選舉區",
+      "scope": "雲林縣之平地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6040000
+    },
+    {
+      "regionName": "雲林縣",
+      "district": "第8選舉區",
+      "scope": "雲林縣之山地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6040000
+    },
+    {
+      "regionName": "基隆市",
+      "district": "第1選舉區",
+      "scope": "中正區",
+      "seatCount": 4,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6250000
+    },
+    {
+      "regionName": "基隆市",
+      "district": "第2選舉區",
+      "scope": "信義區",
+      "seatCount": 5,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6216000
+    },
+    {
+      "regionName": "基隆市",
+      "district": "第3選舉區",
+      "scope": "仁愛區",
+      "seatCount": 3,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6274000
+    },
+    {
+      "regionName": "基隆市",
+      "district": "第4選舉區",
+      "scope": "中山區",
+      "seatCount": 4,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6235000
+    },
+    {
+      "regionName": "基隆市",
+      "district": "第5選舉區",
+      "scope": "安樂區",
+      "seatCount": 7,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6235000
+    },
+    {
+      "regionName": "基隆市",
+      "district": "第6選舉區",
+      "scope": "暖暖區",
+      "seatCount": 3,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6263000
+    },
+    {
+      "regionName": "基隆市",
+      "district": "第7選舉區",
+      "scope": "七堵區",
+      "seatCount": 4,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6263000
+    },
+    {
+      "regionName": "基隆市",
+      "district": "第8選舉區",
+      "scope": "基隆市之平地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6180000
+    },
+    {
+      "regionName": "基隆市",
+      "district": "第9選舉區",
+      "scope": "基隆市之山地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6041000
+    },
+    {
+      "regionName": "新竹市",
+      "district": "第1選舉區",
+      "scope": "東門里、榮光里、成功里、育賢里、中正里、親仁里、文華里、復中里、三民里、公園里、東園里、東山里、東勢里、光復里、前溪里、水源里、千甲里、綠水里、埔頂里、仙宮里、龍山里、新莊里、關新里、仙水里、金山里、建功里、光明里、立功里、軍功里、武功里、豐功里、科園里、關東里、建華里、錦華里、復興里",
+      "seatCount": 12,
+      "reservedWomenSeatCount": 3,
+      "campaignExpenseLimit": 6296000
+    },
+    {
+      "regionName": "新竹市",
+      "district": "第2選舉區",
+      "scope": "南門里、關帝里、南市里、福德里、振興里、新興里、竹蓮里、南大里、寺前里、下竹里、頂竹里、光鎮里、高峰里、柴橋里、新光里、湖濱里、明湖里",
+      "seatCount": 4,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6268000
+    },
+    {
+      "regionName": "新竹市",
+      "district": "第3選舉區",
+      "scope": "客雅里、中雅里、育英里、曲溪里、西雅里、南勢里、大鵬里、西門里、仁德里、潛園里、中央里、崇禮里、石坊里、興南里、台溪里",
+      "seatCount": 2,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6342000
+    },
+    {
+      "regionName": "新竹市",
+      "district": "第4選舉區",
+      "scope": "北門里、中興里、大同里、中山里、長和里、新民里、民富里、水田里、文雅里、光田里、士林里、福林里、古賢里、湳雅里、舊社里、武陵里、南寮里、舊港里、康樂里、港北里、中寮里、海濱里、磐石里、新雅里、光華里、金華里、境福里、金竹里、湳中里、金雅里",
+      "seatCount": 9,
+      "reservedWomenSeatCount": 2,
+      "campaignExpenseLimit": 6280000
+    },
+    {
+      "regionName": "新竹市",
+      "district": "第5選舉區",
+      "scope": "頂埔里、中埔里、埔前里、牛埔里、樹下里、浸水里、虎林里、虎山里、港南里、大庄里、美山里、朝山里、東香里、香山里、香村里、海山里、鹽水里、內湖里、南港里、中隘里、南隘里、大湖里、茄苳里、頂福里",
+      "seatCount": 6,
+      "reservedWomenSeatCount": 1,
+      "campaignExpenseLimit": 6274000
+    },
+    {
+      "regionName": "新竹市",
+      "district": "第6選舉區",
+      "scope": "新竹市之平地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6056000
+    },
+    {
+      "regionName": "新竹市",
+      "district": "第7選舉區",
+      "scope": "新竹市之山地原住民",
+      "seatCount": 1,
+      "reservedWomenSeatCount": 0,
+      "campaignExpenseLimit": 6063000
+    }
+  ]
+}

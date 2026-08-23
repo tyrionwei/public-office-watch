@@ -6,6 +6,7 @@ import {
   discoveryMatches,
   extractCandidateLinks,
   isCecUrl,
+  parseArgs,
   validateManifest,
 } from './cec-candidate-source-discovery.mjs';
 
@@ -25,6 +26,17 @@ test('requires year, candidate, and artifact signals', () => {
   assert.equal(discoveryMatches('115年候選人登記概況', 'https://web.cec.gov.tw/a', rules), true);
   assert.equal(discoveryMatches('115年候選人保證金', 'https://web.cec.gov.tw/a', rules), false);
   assert.equal(discoveryMatches('111年候選人名單', 'https://web.cec.gov.tw/a', rules), false);
+});
+
+test('supports grouped rules for election announcements without a candidate term', () => {
+  const announcementRules = {
+    termGroups: [
+      ['115年', '2026'],
+      ['選舉種類', '選舉公告', '候選人登記日期及必備事項'],
+    ],
+  };
+  assert.equal(discoveryMatches('公告115年地方選舉之選舉種類與投票日期', 'https://web.cec.gov.tw/a', announcementRules), true);
+  assert.equal(discoveryMatches('115年媒體政策及業務宣導', 'https://web.cec.gov.tw/a', announcementRules), false);
 });
 
 test('extracts matching CEC links and ignores external or unrelated links', () => {
@@ -58,6 +70,29 @@ test('reports content and discovery changes against the prior run', () => {
   assert.deepEqual(result.removedDiscoveries.map((item) => item.title), ['removed']);
 });
 
+test('treats a missing state file as a baseline and can discover Nuxt payload titles', () => {
+  const state = parseArgs(['--state', 'tmp/missing-cec-state.json']);
+  assert.equal(state.previousPath, 'tmp/missing-cec-state.json');
+  assert.equal(state.outputPath, 'tmp/missing-cec-state.json');
+
+  const announcementRules = {
+    termGroups: [['115年'], ['選舉公告']],
+  };
+  const html = `<script id="__NUXT_DATA__">${JSON.stringify([
+    '115年山地原住民區長、村里長之選舉公告',
+    '115年媒體政策及業務宣導',
+  ])}</script>`;
+  const discoveries = extractCandidateLinks(html, 'https://web.cec.gov.tw/central/article/list/144?page=1', announcementRules);
+  assert.equal(discoveries.length, 1);
+  assert.equal(discoveries[0].title, '115年山地原住民區長、村里長之選舉公告');
+  assert.match(discoveries[0].url, /#item-[a-f0-9]{16}$/);
+
+  const [baseline] = compareDiscoveries([{ key: 'central', contentHash: 'current', discoveries }]);
+  assert.equal(baseline.baseline, true);
+  assert.equal(baseline.changed, false);
+  assert.deepEqual(baseline.newDiscoveries, []);
+});
+
 test('rejects manifests that include non-CEC sources', () => {
   assert.throws(() => validateManifest({
     schemaVersion: 1,
@@ -65,4 +100,14 @@ test('rejects manifests that include non-CEC sources', () => {
     rules,
     sources: [{ key: 'bad', name: 'bad', url: 'https://example.com' }],
   }), /must be an HTTPS cec.gov.tw URL/);
+});
+
+test('validates a generic grouped election announcement manifest', () => {
+  const manifest = validateManifest({
+    schemaVersion: 1,
+    electionYear: 2026,
+    rules: { termGroups: [['115年', '2026'], ['選舉公告', '候選人登記日期及必備事項']] },
+    sources: [{ key: 'central', name: '中央公告', url: 'https://web.cec.gov.tw/central/article/list/144?page=1' }],
+  });
+  assert.equal(manifest.rules.termGroups.length, 2);
 });

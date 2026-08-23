@@ -34,6 +34,8 @@ tmp/weekly-monitor/
 - `summary.json`：各步驟成功或需注意的摘要。
 - `logs/`：每個步驟的完整輸出，供失敗時追查。
 - `cec-candidate-sources.json`：中選會候選人來源發現結果。
+- `cec-election-announcements.json`：中選會 115 年地方選舉公告、候選人登記、資格審定、號次與選舉公報等里程碑；每日監測也使用同一份規則與可續用的 state 檔。
+- `cec-election-announcement-snapshots/`：中選會選舉公告頁面的本機快照，供比對公告內容與附件。
 - `cec-referendum-sources.json`：中選會公投官方頁面的內容雜湊、新增連結與移除連結；首次執行只建立基線，不把歷史連結誤報為新增。
 - `cec-referendum-snapshots/`：依內容雜湊保存的本機 HTML 快照，供人工比對。
 - `party-candidates/`：本週政黨候選人來源快照。

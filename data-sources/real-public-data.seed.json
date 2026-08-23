@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "real-public-data-foundation",
-  "updatedAt": "2026-05-19",
+  "updatedAt": "2026-08-23",
   "sources": [
     {
       "id": "data-gov-tw-county-boundary-7442",
@@ -31,10 +31,18 @@
     {
       "id": "cec-2026-local-election-calendar",
       "type": "election-metadata",
-      "name": "中央選舉委員會：115年地方公職人員選舉時程",
-      "url": "https://www.cec.gov.tw/",
+      "name": "中央選舉委員會公告：115年地方公職人員選舉",
+      "url": "https://gazette.nat.gov.tw/egFront/eguploadpubWrapper?file=%2FEG_FileManager%2Feguploadpub%2Feg032154%2Fch02%2Ftype3%2Fgov15%2Fnum2%2FEg.htm&metaid=167808",
       "refreshCadence": "weekly",
-      "notes": "用於 2026 地方公職選舉殼層資料；正式公告選區與候選人前，選區結構先沿用 2022 已完成地方公職選舉。"
+      "notes": "用於 2026 地方公職選舉事件及市長、縣市長、議員選區；五個變更選區縣市的範圍、席次與競選經費以中選務字第1153150253號公告為準。"
+    },
+    {
+      "id": "cec-2026-local-grassroots-election-announcement",
+      "type": "election-metadata",
+      "name": "中央選舉委員會：115年基層地方公職人員選舉公告",
+      "url": "https://web.cec.gov.tw/central/article/list/144?page=1",
+      "refreshCadence": "daily",
+      "notes": "保留山地原住民區長、區民代表、鄉鎮市長、鄉鎮市民代表及村里長選舉的正式來源；目前不建立首頁村里長候選人物資料。"
     },
     {
       "id": "ly-current-legislators",

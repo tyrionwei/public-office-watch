@@ -128,12 +128,14 @@ Next parser notes:
 - Add a dedicated party-list ballot-choice model before showing `不分區政黨` rows as election choices.
 - Gender code mapping: `1` is stored as `male`, `2` as `female`, anything else as `unknown`.
 
-## Implemented: Planned 2026 Local Race Shells
+## Implemented: Planned 2026 Local Races
 
 Source:
 
-- CEC public site: `https://www.cec.gov.tw/`
+- Formal CEC election announcement: `中選務字第1153150253號`, published on `2026-08-20`
+- CEC announcement discovery: `https://web.cec.gov.tw/central/article/list/144?page=1`
 - Derived base: `cec-2022-local-public-officials`
+- Official changed-district data: `data-sources/cec-2026-local-election-districts.json`
 - Current script: `scripts/sync-real-public-data.mjs`
 - Target tables: `elections`, `races`
 - Target public views: `public_elections`, `public_races`, `public_region_election_summary`, `public_home_election_ticker`
@@ -141,16 +143,19 @@ Source:
 Current state:
 
 - The sync creates `115年地方公職人員選舉` as a planned 2026 local election event.
-- Mayor and councilor race shells are copied from completed 2022 local race districts.
+- Mayor races and unchanged councilor regions are copied from completed 2022 local race districts.
+- 新竹縣、彰化縣、雲林縣、基隆市、新竹市 use the official 2026 district scope, seat count, reserved women seats, and campaign expense limit.
 - Included race types are `municipality_mayor`, `county_mayor`, `city_councilor`, and `county_councilor`.
-- Voting date is currently stored as `2026-11-28`.
+- Voting is stored as `2026-11-28`, from `08:00` to `16:00` in the source record.
 - These rows are election/race shells only. Do not create future candidates from 2022 candidate data.
+- The grassroots local election announcement is retained as a formal source, but it does not create village-chief candidates on the homepage.
+- Daily discovery watches the `2026-08-27` registration-requirements announcement and the `2026-08-31` through `2026-09-04` registration window.
 
 Reasoning:
 
-- CEC may publish candidate and final district details later than the product needs an upcoming election surface.
+- CEC publishes later candidate and ballot milestones separately, so the daily monitor reports new official documents for review instead of ingesting them automatically.
 - Local mayor and councilor district structures usually remain stable enough to use the completed 2022 structure as a default shell.
-- When official 2026 race metadata is available, reconcile or replace these rows by stable `external_id`.
+- Official district overrides reuse stable `external_id` values when the district kind still matches; only added districts receive new IDs, and obsolete planned rows are archived from public views.
 
 Public cleanup:
 

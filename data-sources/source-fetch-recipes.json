@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastUpdated": "2026-05-21",
+  "lastUpdated": "2026-08-23",
   "purpose": "Machine-readable notes for repeatable public data ingestion jobs. Keep this in sync with docs/public-data-fetch-recipes.md and data-sources/real-public-data.seed.json.",
   "sharedRules": {
     "httpTimeoutMs": 30000,
@@ -20,25 +20,43 @@
     {
       "id": "cec-2026-local-election-calendar",
       "status": "implemented",
-      "sourceUrl": "https://www.cec.gov.tw/",
-      "cadence": "weekly",
-      "format": "derived-race-shells",
+      "sourceUrl": "https://gazette.nat.gov.tw/egFront/eguploadpubWrapper?file=%2FEG_FileManager%2Feguploadpub%2Feg032154%2Fch02%2Ftype3%2Fgov15%2Fnum2%2FEg.htm&metaid=167808",
+      "cadence": "daily",
+      "format": "official-announcement-plus-derived-race-shells",
       "parser": "enrichSeedWithPlannedLocalElections in scripts/sync-real-public-data.mjs",
       "targetTables": ["elections", "races"],
       "targetPublicViews": ["public_elections", "public_races", "public_region_election_summary", "public_home_election_ticker"],
-      "currentUse": "Creates 115年地方公職人員選舉 and 2026 mayor/councilor race shells so upcoming-election UI does not depend on old sample rows.",
+      "currentUse": "Creates 115年地方公職人員選舉 and 2026 mayor/councilor races. Five changed councilor district regions use the 2026-08-20 official announcement metadata.",
       "derivation": {
         "baseElectionExternalId": "cec-2022-local-public-officials",
         "includedRaceTypes": ["municipality_mayor", "county_mayor", "city_councilor", "county_councilor"],
         "votingDate": "2026-11-28",
         "status": "announced",
-        "primaryKey": "external_id = planned-2026-local-from-${sourceRace.externalId}"
+        "primaryKey": "Reuse external_id = planned-2026-local-from-${sourceRace.externalId} when the district kind still matches; create planned-2026-local-official-${officialCode}-${districtNo} only for added districts.",
+        "officialOverrideFile": "data-sources/cec-2026-local-election-districts.json",
+        "officialOverrideRegions": ["新竹縣", "彰化縣", "雲林縣", "基隆市", "新竹市"]
       },
-      "knownBoundary": "This is planned election/race structure only. Do not create future candidates from historical candidates.",
+      "knownBoundary": "Do not create future candidates from historical candidates. The separate grassroots announcement remains source inventory only and does not add village-chief candidates to the homepage.",
+      "monitorMilestones": [
+        { "date": "2026-08-27", "item": "候選人登記日期及必備事項公告" },
+        { "startDate": "2026-08-31", "endDate": "2026-09-04", "item": "受理候選人登記" }
+      ],
       "nextParserNotes": [
-        "When CEC publishes final 2026 race metadata, replace or reconcile these planned shell rows by stable external_id.",
+        "Continue daily announcement discovery through candidate registration and review newly discovered official documents before ingestion.",
         "Township, village, and representative races stay out of this slice until the UI needs them."
       ]
+    },
+    {
+      "id": "cec-2026-local-grassroots-election-announcement",
+      "status": "monitored",
+      "sourceUrl": "https://web.cec.gov.tw/central/article/list/144?page=1",
+      "cadence": "daily",
+      "format": "official-announcement",
+      "parser": "cec-candidate-source-discovery.mjs",
+      "targetTables": [],
+      "targetPublicViews": [],
+      "currentUse": "Retains the formal grassroots local election announcement as a reviewed source without creating homepage village-chief candidates.",
+      "knownBoundary": "Source inventory and discovery only until the product explicitly needs township, representative, or village-chief records."
     },
     {
       "id": "moi-party-registry",

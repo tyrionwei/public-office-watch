@@ -6,25 +6,13 @@ import { PartySeatDistributionPanel } from '../components/PartySeatDistributionP
 import { RegionIssueConcernPanel } from '../components/RegionIssueConcernPanel';
 import { TaiwanStageSelect } from '../components/TaiwanStageSelect';
 import { useI18n } from '../i18n';
+import { selectHomeRelatedRaces } from '../lib/homeRaceSelection';
 import { publicDataProvider } from '../lib/publicData';
-import type { UpcomingRace } from '../lib/publicDataProvider';
 import { normalizeTaiwanText } from '../lib/taiwanText';
 import { useSelectedRegion } from '../selectedRegion';
 
 const NATIONAL_REGION_QUERY = 'national';
 const DEFAULT_FALLBACK_REGION_ID = 'taipei-city';
-
-function isNationalRace(race: UpcomingRace) {
-  const regionKey = `${race.regionId ?? ''} ${race.region ?? ''}`.toLowerCase();
-  return race.raceType === 'president'
-    || race.raceType === 'vice_president'
-    || race.raceType === 'legislator'
-    || race.raceType === 'legislative_district'
-    || race.raceType === 'party_list_legislator'
-    || race.raceType === 'indigenous'
-    || race.raceType === 'referendum'
-    || /taiwan|nationwide|全國|臺灣|台灣/.test(regionKey);
-}
 
 function getSelectedStageRegionId(
   regions: { id: string }[],
@@ -63,10 +51,7 @@ export function HomePage() {
     return () => { active = false; };
   }, []);
   const requestedRegionId = searchParams.get('region');
-  const nationalRaces = publicDataProvider
-    .getUpcomingRaces()
-    .filter(isNationalRace)
-    .filter((race) => race.status !== 'completed');
+  const nationalRaces = selectHomeRelatedRaces(homeData, null);
   const hasUpcomingNationalRace = nationalRaces.length > 0;
   const rememberedRegionId = storedRegionId === NATIONAL_REGION_QUERY && !hasUpcomingNationalRace
     ? null
@@ -77,25 +62,18 @@ export function HomePage() {
     hasUpcomingNationalRace,
   );
   const isNationalView = selectedRegionId === null;
-  const [relatedRaces, setRelatedRaces] = useState(() => selectedRegionId
-    ? publicDataProvider.getRelatedRacesByRegionId(selectedRegionId).filter((race) => race.status !== 'completed')
-    : nationalRaces);
+  const [relatedRaces, setRelatedRaces] = useState(() => (
+    selectHomeRelatedRaces(homeData, selectedRegionId)
+  ));
   const [, startTransition] = useTransition();
   useEffect(() => {
     let active = true;
+    setRelatedRaces(selectHomeRelatedRaces(homeData, selectedRegionId));
     if (!selectedRegionId) {
-      setRelatedRaces(publicDataProvider
-        .getUpcomingRaces()
-        .filter(isNationalRace)
-        .filter((race) => race.status !== 'completed'));
       return () => {
         active = false;
       };
     }
-
-    setRelatedRaces(publicDataProvider
-      .getRelatedRacesByRegionId(selectedRegionId)
-      .filter((race) => race.status !== 'completed'));
 
     void publicDataProvider.loadRelatedRacesByRegionId(selectedRegionId)
       .then((races) => {
@@ -108,7 +86,7 @@ export function HomePage() {
     return () => {
       active = false;
     };
-  }, [selectedRegionId]);
+  }, [homeData, selectedRegionId]);
 
   const selectedRegionNode = selectedRegionId ? publicDataProvider.getStageRegion(selectedRegionId) : null;
   const selectedRegionSummary = selectedRegionId ? publicDataProvider.getRegionSummary(selectedRegionId) : null;

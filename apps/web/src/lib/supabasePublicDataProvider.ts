@@ -728,6 +728,7 @@ function electionRacePageCacheKey(
     eventKey,
     [...(filters.raceTypes ?? [])].sort(),
     filters.regionKey ?? '',
+    filters.query?.trim() ?? '',
     page,
     pageSize,
   ]);
@@ -784,6 +785,7 @@ async function fetchElectionRacePage(
   let query = view.select('*', { count: 'exact' }).eq('event_key', eventKey);
   if (filters.raceTypes?.length) query = query.in('race_type', filters.raceTypes);
   if (filters.regionKey) query = query.eq('region_key', filters.regionKey);
+  if (filters.query?.trim()) query = query.ilike('title', `%${filters.query.trim().slice(0, 100)}%`);
 
   const pageRange = toPublicPageRange(page, pageSize);
   const { data, error, count } = await query

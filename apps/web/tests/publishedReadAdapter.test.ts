@@ -609,7 +609,7 @@ test('election race page uses one bounded RPC with normalized filters', async ()
   const result = await adapter.loadElectionRacePage(
     ' 2022-2022-11-26-local ',
     ['election-2', 'election-1', 'election-2'],
-    { raceTypes: ['village_chief', 'village_chief'], regionKey: ' 新北市 ' },
+    { raceTypes: ['village_chief', 'village_chief'], regionKey: ' 新北市 ', query: ' 臺北\t信義區 ' },
     2,
     200,
   );
@@ -622,6 +622,7 @@ test('election race page uses one bounded RPC with normalized filters', async ()
       p_election_ids: ['election-2', 'election-1'],
       p_race_types: ['village_chief'],
       p_region_key: '新北市',
+      p_query: '台北 信義區',
       p_page: 2,
       p_page_size: ELECTION_RACE_PAGE_SIZE,
     }],

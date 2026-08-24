@@ -98,6 +98,7 @@ export type PublicRaceDetailData = {
 export type PublicRaceQueryFilters = {
   raceTypes?: PublicRace['race_type'][];
   regionKey?: string;
+  query?: string;
 };
 
 export interface PublicDataProvider {

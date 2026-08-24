@@ -95,6 +95,10 @@ export function ElectionEventPage() {
   const [racesLoading, setRacesLoading] = useState(false);
   const [partyPerformance, setPartyPerformance] = useState<PublicPartyElectionPerformance[]>([]);
   const [partyPerformanceLoading, setPartyPerformanceLoading] = useState(false);
+  const selectedQuery = (searchParams.get('q') ?? '').trim().slice(0, 100);
+  const [queryInput, setQueryInput] = useState(selectedQuery);
+
+  useEffect(() => setQueryInput(selectedQuery), [selectedQuery]);
 
   useEffect(() => {
     let active = true;
@@ -170,7 +174,7 @@ export function ElectionEventPage() {
     void publicDataProvider.loadElectionRacePage(
       event.key,
       event.elections.map((election) => election.election_id),
-      { raceTypes: selectedRaceTypes, regionKey: selectedRegion || undefined },
+      { raceTypes: selectedRaceTypes, regionKey: selectedRegion || undefined, query: selectedQuery || undefined },
       requestedPage,
       PAGE_SIZE,
     )
@@ -187,7 +191,7 @@ export function ElectionEventPage() {
     return () => {
       active = false;
     };
-  }, [event, requestedPage, selectedCategory, selectedRaceTypes, selectedRegion]);
+  }, [event, requestedPage, selectedCategory, selectedQuery, selectedRaceTypes, selectedRegion]);
 
   useEffect(() => {
     let active = true;
@@ -281,6 +285,20 @@ export function ElectionEventPage() {
 
     setSearchParams(nextParams);
   };
+  const applyQuery = (rawQuery: string) => {
+    const nextParams = new URLSearchParams(searchParams);
+    const query = rawQuery.trim().slice(0, 100);
+
+    if (query) {
+      nextParams.set('q', query);
+    } else {
+      nextParams.delete('q');
+    }
+
+    nextParams.delete('page');
+    setSearchParams(nextParams);
+  };
+
   const selectedCategoryLabel = selectedCategoryOption?.label ?? t('event.selectCategory');
   const selectedRegionLabel = selectedRegion
     ? regionOptions.find((option) => option.key === selectedRegion)?.label ?? selectedRegion
@@ -389,6 +407,35 @@ export function ElectionEventPage() {
 
 
             <SectionPanel title={t('event.raceItems')} eyebrow={`${selectedCategoryLabel} / ${selectedRegionLabel}`}>
+            <form
+              className="mb-4 pixel-corners border border-line/70 bg-bg/35 p-3"
+              onSubmit={(submitEvent) => {
+                submitEvent.preventDefault();
+                applyQuery(queryInput);
+              }}
+            >
+              <label htmlFor="election-race-search" className="mb-2 block text-xs uppercase tracking-[0.16em] text-slate-400">{t('event.raceSearchLabel')}</label>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <input
+                  id="election-race-search"
+                  type="search"
+                  value={queryInput}
+                  onChange={(inputEvent) => setQueryInput(inputEvent.target.value)}
+                  maxLength={100}
+                  placeholder={t('event.raceSearchPlaceholder')}
+                  className="min-w-0 flex-1 pixel-corners border border-line/70 bg-panelAlt/55 px-3 py-2 text-sm text-white outline-none placeholder:text-slate-600 focus:border-accent"
+                />
+                <button
+                  type="submit"
+                  className="pixel-corners border border-accent bg-accent/20 px-4 py-2 text-sm text-white transition hover:bg-accent/30"
+                >
+                  {t('event.raceSearchSubmit')}
+                </button>
+                {selectedQuery ? (
+                  <button type="button" onClick={() => { setQueryInput(''); applyQuery(''); }} className="pixel-corners border border-line/70 bg-bg/35 px-4 py-2 text-sm text-slate-300 transition hover:border-accent/55 hover:text-white">{t('event.raceSearchClear')}</button>
+                ) : null}
+              </div>
+            </form>
             {!selectedCategory ? (
               <p className="text-sm text-slate-400">{t('event.noPublicRaces')}</p>
             ) : racesLoading ? (

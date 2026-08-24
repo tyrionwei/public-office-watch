@@ -152,5 +152,6 @@ ON CONFLICT (external_id) DO UPDATE SET
   seat_count = EXCLUDED.seat_count,
   updated_at = now();
 
+SELECT published.promote(NULL);
 COMMIT;
 

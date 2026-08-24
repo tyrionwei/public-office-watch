@@ -659,7 +659,7 @@ export type PublishedReadAdapter = {
   loadElectionRacePage(
     eventKey: string,
     electionIds: string[],
-    filters: { raceTypes?: PublicRace['race_type'][]; regionKey?: string },
+    filters: { raceTypes?: PublicRace['race_type'][]; regionKey?: string; query?: string },
     page: number,
     pageSize: number,
   ): Promise<PublishedElectionRacePage>;
@@ -966,6 +966,7 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       const normalizedPage = Math.floor(range.from / normalizedPageSize) + 1;
       const raceTypes = Array.from(new Set(filters.raceTypes ?? []));
       const regionKey = filters.regionKey?.trim() || null;
+      const query = normalizePublishedSearchQuery(filters.query ?? '').slice(0, 100) || null;
       const response = await client
         .schema('published')
         .rpc<PublishedElectionRacePage>('election_race_page', {
@@ -973,6 +974,7 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           p_election_ids: electionIds,
           p_race_types: raceTypes.length > 0 ? raceTypes : null,
           p_region_key: regionKey,
+          p_query: query,
           p_page: normalizedPage,
           p_page_size: normalizedPageSize,
         });

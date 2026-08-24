@@ -680,6 +680,24 @@ test('people page distinguishes a load failure and retries', async ({ page }) =>
 });
 
 
+test('2026 election page searches township and village names across the full race set', async ({ page }) => {
+  await page.goto('/elections/events/2026-2026-11-28-local?category=village_chief&region=%E5%8D%97%E6%8A%95%E7%B8%A3');
+
+  const searchInput = page.getByLabel('搜尋鄉鎮市區、村里或選區名稱');
+  await expect(searchInput).toBeVisible();
+  await searchInput.fill('中寮鄉永福村');
+  await page.getByRole('button', { name: '搜尋', exact: true }).click();
+
+  await expect(page).toHaveURL(/q=%E4%B8%AD%E5%AF%AE%E9%84%89%E6%B0%B8%E7%A6%8F%E6%9D%91/);
+  await expect(page.getByText('南投縣中寮鄉永福村村長選舉', { exact: true })).toBeVisible();
+  await expect(page.getByText('顯示第 1-1 項，共 1 個選區。', { exact: true })).toBeVisible();
+
+  await page.getByRole('button', { name: '清除', exact: true }).click();
+  await expect(searchInput).toHaveValue('');
+  await expect(page).not.toHaveURL(/[?&]q=/);
+  await expectNoHorizontalOverflow(page);
+});
+
 test('elections page groups elections into events and opens race detail', async ({ page }) => {
   await page.goto('/elections');
 

@@ -18,6 +18,7 @@ import { compareRacesForDisplay } from '../data/electionLabels';
 import { electionPath, partyPath, personPath, regionPath } from '../routes/routePaths';
 import { buildElectionEducationDistribution, buildPartyElectionPerformance } from './electionStatistics.ts';
 import { buildPartyLegalStatistics } from './legalStatistics.ts';
+import { normalizePublishedSearchQuery } from './publicReadContracts.ts';
 import { buildPartyPeopleStatistics } from './partyPeopleStatistics.ts';
 import { buildLocalOfficeSummary, buildPersonListItems, buildPersonProfile, filterPersonListItems } from './personData';
 import { assertPublicViewName, allowedPublicViews } from './publicViewRegistry';
@@ -267,10 +268,17 @@ export const mockPublicDataProvider: PublicDataProvider = {
   async loadRacesByElectionIds(electionIds, filters = {}) {
     const selectedIds = new Set(electionIds);
     const selectedRaceTypes = new Set(filters.raceTypes ?? []);
+    const query = normalizePublishedSearchQuery(filters.query ?? '').replace(/\s/g, '');
     return mockPublicRaces.filter((race) => {
       if (!selectedIds.has(race.election_id)) return false;
       if (selectedRaceTypes.size > 0 && !selectedRaceTypes.has(race.race_type)) return false;
       if (filters.regionKey && getRaceRegionGroup(race).key !== filters.regionKey) return false;
+      if (query) {
+        const searchText = normalizePublishedSearchQuery(
+          `${race.region_name ?? ''} ${race.title}`,
+        ).replace(/\s/g, '');
+        if (!searchText.includes(query)) return false;
+      }
       return true;
     });
   },

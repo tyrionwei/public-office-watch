@@ -51,7 +51,7 @@ export function buildPlatformApprovalPatch(claim: PlatformClaim, platformText: s
     throw new Error('這筆政見尚未配對到確切參選紀錄，不能公開。');
   }
 
-  const isCecSource = /^中央選舉委員會：\d{4}年選舉公報$/u.test(claim.source_name ?? '')
+  const isCecSource = /^中央選舉委員會：\d{4}年(?:[^：\r\n]{1,40})?選舉公報$/u.test(claim.source_name ?? '')
     && sourceUrl.protocol === 'https:' && cecHosts.has(sourceUrl.hostname);
   const expectedCouncilHost = claim.source_name ? councilHosts[claim.source_name] : null;
   const isCouncilSource = Boolean(expectedCouncilHost)

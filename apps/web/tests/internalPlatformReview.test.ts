@@ -52,6 +52,16 @@ test('publishes a current CEC bulletin platform for an exact 2024 candidacy', ()
   assert.equal(patch.is_public, true);
 });
 
+test('publishes a locality-specific CEC bulletin from an official CEC host', () => {
+  const patch = buildPlatformApprovalPatch(claim({
+    source_name: '中央選舉委員會：2022年古坑鄉鄉長選舉公報',
+    source_url: 'https://eebulletin.cec.gov.tw/111/source.pdf',
+  }), '推動公共托育並改善地方交通建設', '2026-08-24T00:00:00Z');
+
+  assert.equal(patch.claim_value, '推動公共托育並改善地方交通建設');
+  assert.equal(patch.is_public, true);
+});
+
 test('does not trust a non-CEC host with a CEC-looking source name', () => {
   assert.throws(() => buildPlatformApprovalPatch(claim({
     source_name: '中央選舉委員會：2024年選舉公報',

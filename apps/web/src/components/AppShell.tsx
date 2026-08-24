@@ -1,6 +1,5 @@
 import type { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 import { AppHeader } from './AppHeader';
-import { CurrentRegionControl } from './CurrentRegionControl';
 import { LanguageToggle } from './LanguageToggle';
 import { NextEventTicker } from './NextEventTicker';
 
@@ -14,7 +13,6 @@ export function AppShell({ headerRight, ticker, children }: AppShellProps) {
     <div className="grid gap-2">
       {headerRight}
       <div className="flex items-stretch justify-end gap-2">
-        <CurrentRegionControl />
         <LanguageToggle />
       </div>
     </div>

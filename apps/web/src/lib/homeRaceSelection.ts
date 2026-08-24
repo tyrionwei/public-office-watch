@@ -12,6 +12,12 @@ function isNationalRace(race: UpcomingRace) {
     || /taiwan|nationwide|全國|臺灣|台灣/.test(regionKey);
 }
 
+function isLocalChiefRace(race: UpcomingRace) {
+  return race.raceType === 'municipality_mayor'
+    || race.raceType === 'county_mayor'
+    || race.raceType === 'local_chief';
+}
+
 export function selectHomeRelatedRaces(
   homeData: Pick<HomePageData, 'stageRegions' | 'upcomingRaces'>,
   selectedRegionId: string | null,
@@ -28,5 +34,7 @@ export function selectHomeRelatedRaces(
     region?.publicRegionId,
   ].filter((key): key is string => Boolean(key)));
 
-  return upcomingRaces.filter((race) => regionKeys.has(race.regionId) || isNationalRace(race));
+  return upcomingRaces
+    .filter((race) => regionKeys.has(race.regionId) || isNationalRace(race))
+    .sort((left, right) => Number(isLocalChiefRace(right)) - Number(isLocalChiefRace(left)));
 }

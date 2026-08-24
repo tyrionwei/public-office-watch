@@ -37,6 +37,13 @@ const taipeiMayorRace = {
   partyLabel: '未知',
 };
 
+const taipeiCouncilorRace = {
+  ...taipeiMayorRace,
+  id: 'race-taipei-councilor-1',
+  title: '臺北市第1選舉區議員選舉',
+  raceType: 'city_councilor',
+};
+
 test('reselects home races when an initially empty snapshot finishes loading', () => {
   assert.deepEqual(selectHomeRelatedRaces(homeData([]), 'taipei-city'), []);
   assert.deepEqual(
@@ -47,4 +54,11 @@ test('reselects home races when an initially empty snapshot finishes loading', (
 
 test('keeps completed races out of the restored home spotlight', () => {
   assert.deepEqual(selectHomeRelatedRaces(homeData([{ ...taipeiMayorRace, status: 'completed' }]), 'taipei-city'), []);
+});
+
+test('prefers the local chief race when published title order lists a councilor race first', () => {
+  assert.deepEqual(
+    selectHomeRelatedRaces(homeData([taipeiCouncilorRace, taipeiMayorRace]), 'taipei-city'),
+    [taipeiMayorRace, taipeiCouncilorRace],
+  );
 });

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "party": "中國國民黨",
+  "reviewedBy": "evidence-reviewed:2026-08-24-kmt-incumbent-mayors",
+  "decisions": [
+    {
+      "sourceCandidateKey": "kmt-2026-mayor-63000-934f5be8b4e7",
+      "personName": "蔣萬安",
+      "decision": "use_existing",
+      "personId": "a4a44dff-efa9-45cc-8371-cbaa4cf6772d",
+      "reason": "國民黨正式徵召連任公告載明為台北市長，與本機既有台北市長及歷屆選舉紀錄一致",
+      "reviewedAt": "2026-08-24T19:09:29+08:00"
+    },
+    {
+      "sourceCandidateKey": "kmt-2026-mayor-68000-76e386902347",
+      "personName": "張善政",
+      "decision": "use_existing",
+      "personId": "c30e7ac5-0838-407c-9fb7-20a750a1388f",
+      "reason": "國民黨正式徵召連任公告載明為桃園市長，與本機既有桃園市長及歷屆選舉紀錄一致",
+      "reviewedAt": "2026-08-24T19:09:29+08:00"
+    },
+    {
+      "sourceCandidateKey": "kmt-2026-mayor-10017-85a08e16c4d6",
+      "personName": "謝國樑",
+      "decision": "use_existing",
+      "personId": "889ac819-8f59-409b-aa0a-d3339ac713b4",
+      "reason": "國民黨正式徵召連任公告載明為基隆市長，與本機既有基隆市長及歷屆選舉紀錄一致",
+      "reviewedAt": "2026-08-24T19:09:29+08:00"
+    },
+    {
+      "sourceCandidateKey": "kmt-2026-mayor-10008-a7497262ed2e",
+      "personName": "許淑華",
+      "decision": "use_existing",
+      "personId": "9c21c186-06fa-4616-858e-79f24c8d11fb",
+      "reason": "國民黨正式徵召連任公告載明為南投縣長，與本機既有南投縣長及歷屆選舉紀錄一致",
+      "reviewedAt": "2026-08-24T19:09:29+08:00"
+    },
+    {
+      "sourceCandidateKey": "kmt-2026-mayor-10005-46f5402f21fb",
+      "personName": "鍾東錦",
+      "decision": "use_existing",
+      "personId": "84e77ee0-ab1f-4c49-8e91-0b93758a01af",
+      "reason": "國民黨正式徵召連任公告載明為苗栗縣長，選用同名且同地區的 2022 中選會苗栗縣長人物紀錄",
+      "reviewedAt": "2026-08-24T19:09:29+08:00"
+    },
+    {
+      "sourceCandidateKey": "kmt-2026-mayor-09007-0fec374990d2",
+      "personName": "王忠銘",
+      "decision": "use_existing",
+      "personId": "e98d6971-8a74-4ad8-b1b0-01b55518a112",
+      "reason": "國民黨正式徵召連任公告載明為連江縣長，與本機既有連江縣長及歷屆選舉紀錄一致",
+      "reviewedAt": "2026-08-24T19:09:29+08:00"
+    }
+  ]
+}

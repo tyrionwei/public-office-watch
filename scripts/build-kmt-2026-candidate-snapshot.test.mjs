@@ -31,6 +31,43 @@ test('parses candidate-first wording and strips official titles', () => {
   ]);
 });
 
+test('parses a final batch of incumbent mayors formally nominated for reelection', () => {
+  const parsed = parseAnnouncementPage(page(`
+    <p>今日中常會完成最後一波縣市長提名作業，正式徵召尋求連任的台北市長蔣萬安、桃園市長張善政、基隆市長謝國樑、南投縣長許淑華、苗栗縣長鍾東錦及連江縣長王忠銘。</p>
+  `, '2026-07-22'), 'https://www.kmt.org.tw/2026/07/final.html');
+  assert.deepEqual(parsed.records.map((record) => [record.regionName, record.personName]), [
+    ['台北市', '蔣萬安'],
+    ['桃園市', '張善政'],
+    ['基隆市', '謝國樑'],
+    ['南投縣', '許淑華'],
+    ['苗栗縣', '鍾東錦'],
+    ['連江縣', '王忠銘'],
+  ]);
+  assert.ok(parsed.records.every((record) => record.isIncumbent === true));
+  assert.ok(parsed.records.every((record) => record.incumbencyEvidence.includes('正式徵召尋求連任')));
+  assert.ok(parsed.records.every((record) => record.incumbencySourceUrl === 'https://www.kmt.org.tw/2026/07/final.html'));
+});
+
+test('removes an earlier nominee superseded by an official joint primary result', async () => {
+  const urls = [
+    'https://www.kmt.org.tw/nomination',
+    'https://www.kmt.org.tw/coordination',
+  ];
+  const pages = new Map([
+    [urls[0], page('<p>中常會通過徵召案：嘉義市徵召翁壽良同志參選，台南市徵召謝龍介同志參選。</p>', '2026-03-11')],
+    [urls[1], page(`
+      <p>兩黨依據2026年中國國民黨與台灣民眾黨聯合治理暨地方選舉合作協議，公布嘉義市長初選民調結果，由台灣民眾黨嘉義市長參選人張啓楷勝出。</p>
+      <p>中國國民黨嘉義市長參選人翁壽良恭喜張啓楷民調勝出。</p>
+    `, '2026-04-07')],
+  ]);
+  const fetchImpl = async (url) => ({ ok: true, text: async () => pages.get(url).padEnd(600, ' ') });
+  const snapshot = await buildSnapshot(urls, {
+    fetchImpl,
+    retrievedAt: '2026-08-24T00:00:00.000Z',
+  });
+  assert.deepEqual(snapshot.records.map((record) => [record.regionName, record.personName]), [['台南市', '謝龍介']]);
+});
+
 test('rejects pages that only discuss a primary or pending nomination', () => {
   assert.throws(() => parseAnnouncementPage(page(`
     <p>新竹縣已展開初選，民調勝出者仍須呈報中常會通過。</p>

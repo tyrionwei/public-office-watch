@@ -154,4 +154,3 @@ ON CONFLICT (external_id) DO UPDATE SET
 
 SELECT published.promote(NULL);
 COMMIT;
-

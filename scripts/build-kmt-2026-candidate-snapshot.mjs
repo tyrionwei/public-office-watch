@@ -10,7 +10,9 @@ const defaultAnnouncementUrls = [
   'https://www.kmt.org.tw/2026/03/blog-post_4.html',
   'https://www.kmt.org.tw/2026/03/blog-post_78.html',
   'https://www.kmt.org.tw/2026/04/blog-post_1.html',
+  'https://www.kmt.org.tw/2026/04/blog-post_42.html',
   'https://www.kmt.org.tw/2026/05/blog-post_299.html',
+  'https://www.kmt.org.tw/2026/07/725_01955410286.html',
 ];
 const municipalityNames = new Set(['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市']);
 const regionCodes = new Map([
@@ -105,15 +107,18 @@ function nameHash(name) {
 function parseAnnouncementPage(html, sourceUrl) {
   const text = htmlToText(html);
   const sentences = text.split(/[。]/).filter((sentence) => (
-    sentence.includes('通過') && /徵召|提名|核定/.test(sentence) && sentence.includes('參選')
+    (sentence.includes('通過') && /徵召|提名|核定/.test(sentence) && sentence.includes('參選'))
+    || sentence.includes('正式徵召尋求連任')
   ));
   const records = [];
+  const supersededRecords = [];
   const seen = new Set();
   const regionFirst = new RegExp(`(${regionPattern})(?:選舉)?(?:徵召|提名|核定)([^，、。：]{2,14}?)(?:同志)?參選`, 'g');
   const candidateFirst = new RegExp(`(?:徵召|提名|核定|[，、](?:徵召|提名|核定)?)([^，、。：]{2,14}?)參選(${regionPattern})長`, 'g');
+  const incumbentBatch = new RegExp(`(${regionPattern})長([\\p{Script=Han}·]{2,6})(?=[、及，。]|$)`, 'gu');
   const announcedAt = publicationDate(html);
 
-  function add(rawRegion, rawName) {
+  function add(rawRegion, rawName, incumbencyEvidence = null) {
     const regionName = normalizeRegion(rawRegion);
     const personName = cleanCandidateName(rawName);
     if (!regionCodes.has(regionName) || !/^[\p{Script=Han}·]{2,6}$/u.test(personName)) return;
@@ -130,17 +135,38 @@ function parseAnnouncementPage(html, sourceUrl) {
       nominationAnnouncedAt: announcedAt,
       profileUrl: sourceUrl,
       photoUrl: null,
+      ...(incumbencyEvidence ? {
+        isIncumbent: true,
+        incumbencyEvidence,
+        incumbencySourceUrl: sourceUrl,
+      } : {}),
     });
   }
 
   for (const sentence of sentences) {
     for (const match of sentence.matchAll(regionFirst)) add(match[1], match[2]);
     for (const match of sentence.matchAll(candidateFirst)) add(match[2], match[1]);
+    if (sentence.includes('正式徵召尋求連任')) {
+      for (const match of sentence.matchAll(incumbentBatch)) {
+        add(match[1], match[2], '國民黨公告載明為現任縣市長並正式徵召尋求連任');
+      }
+    }
   }
-  if (records.length === 0) {
-    throw new Error(`No explicit KMT nomination decision found in ${sourceUrl}`);
+
+  if (text.includes('聯合治理暨地方選舉合作協議') && text.includes('民調結果') && text.includes('勝出')) {
+    const supersededPattern = new RegExp(`中國國民黨(${regionPattern})長參選人([\\p{Script=Han}·]{2,6})(?=恭喜|表示|說|、|，|。|\\s|$)`, 'gu');
+    for (const match of text.matchAll(supersededPattern)) {
+      const regionName = normalizeRegion(match[1]);
+      const personName = cleanCandidateName(match[2]);
+      if (!regionCodes.has(regionName) || !/^[\p{Script=Han}·]{2,6}$/u.test(personName)) continue;
+      supersededRecords.push({ regionName, personName, supersededAt: announcedAt, sourceUrl });
+    }
   }
-  return { title: titleFromHtml(html), announcedAt, records };
+
+  if (records.length === 0 && supersededRecords.length === 0) {
+    throw new Error(`No explicit KMT nomination decision or supersession found in ${sourceUrl}`);
+  }
+  return { title: titleFromHtml(html), announcedAt, records, supersededRecords };
 }
 
 async function fetchText(url, fetchImpl = fetch) {
@@ -160,6 +186,12 @@ async function buildSnapshot(urls = defaultAnnouncementUrls, options = {}) {
   const byRegion = new Map();
   for (const url of urls) {
     const parsed = parseAnnouncementPage(await fetchText(url, options.fetchImpl), url);
+    for (const superseded of parsed.supersededRecords) {
+      const existing = byRegion.get(superseded.regionName);
+      if (existing?.personName === superseded.personName) {
+        byRegion.delete(superseded.regionName);
+      }
+    }
     for (const record of parsed.records) {
       const existing = byRegion.get(record.regionName);
       if (existing && existing.personName !== record.personName) {

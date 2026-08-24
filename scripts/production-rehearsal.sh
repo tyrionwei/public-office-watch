@@ -155,10 +155,11 @@ mirror_frontend_table_access() {
 copy_table() {
   local table="$1"
   local predicate="${2:-TRUE}"
+  local projection="${3:-*}"
   local source_sql
   local target_sql
 
-  source_sql="COPY (SELECT * FROM public.${table} WHERE ${predicate}) TO STDOUT WITH (FORMAT csv)"
+  source_sql="COPY (SELECT ${projection} FROM public.${table} WHERE ${predicate}) TO STDOUT WITH (FORMAT csv)"
   target_sql="SET session_replication_role = replica; COPY public.${table} FROM STDIN WITH (FORMAT csv);"
 
   printf 'copying %-38s' "$table"
@@ -179,7 +180,9 @@ copy_runtime_data() {
   copy_table people
   copy_table candidates
   copy_table companies 'is_public = TRUE'
-  copy_table person_merge_decisions
+  # The publication layer needs the merge graph, not its private review evidence.
+  copy_table person_merge_decisions TRUE \
+    "id, duplicate_person_id, canonical_person_id, status, confidence_level, reason, '{}'::JSONB, reviewed_by, reviewed_at, created_at, updated_at"
   copy_table election_merge_decisions
   copy_table race_merge_decisions
 
@@ -190,8 +193,10 @@ copy_runtime_data() {
     "is_public = TRUE AND verification_status = 'verified'"
   copy_table person_company_relations \
     "is_public = TRUE AND verification_status = 'verified'"
+  # Public affiliation projections omit the private source payload.
   copy_table person_party_affiliations \
-    "is_public = TRUE AND review_status = 'verified'"
+    "is_public = TRUE AND review_status = 'verified'" \
+    "id, affiliation_key, person_id, source_person_id, source_claim_key, party_name, normalized_party, role_context, observed_year, observed_date, start_date, end_date, is_current, confidence_level, review_status, source_name, source_url, '{}'::JSONB, is_public, created_at, updated_at, role_title, organization_unit, display_order, role_tier"
   copy_table person_party_events \
     "is_public = TRUE AND review_status = 'verified'"
 

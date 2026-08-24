@@ -44,6 +44,13 @@ test('keeps candidate finance summaries in production-shaped rehearsal data', ()
   assert.match(rehearsalScript, /claim_type IN \([^)]*'finance_summary'/u);
 });
 
+test('omits private audit payloads from the production-shaped rehearsal copy', () => {
+  const rehearsalScript = fs.readFileSync(path.join(repoRoot, 'scripts', 'production-rehearsal.sh'), 'utf8');
+  assert.match(rehearsalScript, /copy_table person_merge_decisions TRUE[\s\S]*'\{\}'::JSONB/u);
+  assert.match(rehearsalScript, /copy_table person_party_affiliations[\s\S]*'\{\}'::JSONB/u);
+  assert.match(rehearsalScript, /local projection="\$\{3:-\*\}"/u);
+});
+
 test('rejects count drift, ambiguity and privacy-boundary drift', () => {
   const countDrift = loadSnapshot();
   countDrift.rows.pop();

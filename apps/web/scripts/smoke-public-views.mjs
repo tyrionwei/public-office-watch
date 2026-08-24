@@ -3,178 +3,169 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 
-const allowedPublicViews = [
-  'public_people_list_cached',
-  'public_companies',
-  'public_relation_details',
-  'public_regions',
-  'public_elections',
-  'public_races',
-  'public_candidates',
-  'public_home_election_ticker',
-  'public_region_election_summary',
-  'public_person_primary_photos',
-  'public_person_identity_sources',
-  'public_person_claims',
-  'public_person_party_affiliations',
-  'public_person_party_events',
-  'public_party_officers',
-  'public_people_directory',
-  'public_parties',
-  'public_party_finance_summaries',
-  'public_party_company_contribution_summaries',
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const webRoot = path.resolve(scriptDir, '..');
+const envPath = path.join(webRoot, '.env.local');
+
+const readableRelations = [
+  'active_party_candidates',
+  'candidates',
+  'current_legislator_party_summary',
+  'election_race_facets',
+  'election_race_summaries',
+  'elections',
+  'home_region_summary',
+  'home_ticker',
+  'national_office_holders',
+  'parties',
+  'party_annual_finance_filings',
+  'party_company_contribution_summaries',
+  'party_finance_summaries',
+  'party_officers',
+  'people',
+  'people_directory',
+  'person_party_affiliations',
+  'races',
+  'referendum_options',
+  'referendum_questions',
+  'referendum_region_results',
+  'regions',
+  'search_results',
+  'update_feed',
 ];
 
-const blockedTerms = [
-  'relation_candidates',
-  'raw_source_records',
-  'source_documents',
-  'person_media',
-  'pending',
-  'rejected',
-];
+const requiredNonEmptyRelations = new Set([
+  'candidates',
+  'elections',
+  'people',
+  'races',
+  'regions',
+  'search_results',
+]);
 
-function parseEnvFile(content) {
-  const env = {};
-
-  for (const rawLine of content.split(/\r?\n/)) {
-    const line = rawLine.trim();
-    if (!line || line.startsWith('#')) {
-      continue;
-    }
-
-    const separatorIndex = line.indexOf('=');
-    if (separatorIndex === -1) {
-      continue;
-    }
-
-    const key = line.slice(0, separatorIndex).trim();
-    const value = line.slice(separatorIndex + 1).trim().replace(/^['"]|['"]$/g, '');
-    env[key] = value;
-  }
-
-  return env;
+function parseEnv(content) {
+  return Object.fromEntries(content
+    .split(/\r?\n/u)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#') && line.includes('='))
+    .map((line) => {
+      const separator = line.indexOf('=');
+      return [
+        line.slice(0, separator).trim(),
+        line.slice(separator + 1).trim().replace(/^['"]|['"]$/gu, ''),
+      ];
+    }));
 }
 
-function loadLocalEnv() {
-  const currentDir = path.dirname(fileURLToPath(import.meta.url));
-  const webRoot = path.resolve(currentDir, '..');
-  const envLocalPath = path.join(webRoot, '.env.local');
-
-  if (!fs.existsSync(envLocalPath)) {
-    return {};
-  }
-
-  return parseEnvFile(fs.readFileSync(envLocalPath, 'utf8'));
+function fail(message) {
+  throw new Error(`Published local smoke failed: ${message}`);
 }
 
-function getEnvValue(name, localEnv) {
-  return process.env[name]?.trim() || localEnv[name]?.trim() || '';
+function keyRole(value) {
+  const payload = value.split('.')[1];
+  if (!payload) return null;
+  try {
+    return JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')).role ?? null;
+  } catch {
+    return null;
+  }
 }
 
-function looksLikeServiceRole(value) {
-  const normalized = value.toLowerCase();
-  return normalized.includes('service_role') || normalized.includes('service-role');
-}
-
-function getSmokeEnv() {
-  const localEnv = loadLocalEnv();
-  const url = getEnvValue('VITE_SUPABASE_URL', localEnv);
-  const anonKey = getEnvValue('VITE_SUPABASE_ANON_KEY', localEnv);
-
-  if (!url || !anonKey) {
-    console.log('Skipping smoke test: missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY.');
-    process.exit(0);
-  }
-
-  if (looksLikeServiceRole(anonKey)) {
-    console.error('Invalid frontend Supabase key configuration. Smoke test requires an anon public key.');
-    process.exit(1);
-  }
-
-  return { url, anonKey };
-}
-
-function assertAllowedViewName(viewName) {
-  if (blockedTerms.includes(viewName)) {
-    throw new Error(`Blocked internal data source: ${viewName}`);
-  }
-
-  if (!allowedPublicViews.includes(viewName)) {
-    throw new Error(`Unsupported public view: ${viewName}`);
-  }
+function electionCategory(electionType) {
+  if (['presidential', 'president', 'legislative', 'legislator'].includes(electionType)) return 'national';
+  if (['local', 'local_chief', 'councilor', 'township_representative', 'village_chief'].includes(electionType)) return 'local';
+  if (electionType === 'referendum') return 'referendum';
+  if (electionType === 'recall') return 'recall';
+  if (electionType === 'by_election') return 'by_election';
+  return 'other';
 }
 
 async function main() {
-  const { url, anonKey } = getSmokeEnv();
+  if (!fs.existsSync(envPath)) fail(`missing ${envPath}`);
+  const env = parseEnv(fs.readFileSync(envPath, 'utf8'));
+  const url = env.VITE_SUPABASE_URL;
+  const anonKey = env.VITE_SUPABASE_ANON_KEY;
+
+  if (url !== 'http://127.0.0.1:54321') fail('URL is not the full local Supabase API');
+  if (env.VITE_PUBLIC_DATA_PROVIDER !== 'published') fail('published provider is not selected');
+  if (env.VITE_ENABLE_PUBLISHED_PROVIDER !== 'true') fail('published provider is not enabled');
+  if (!anonKey) fail('missing local anon key');
+  if (keyRole(anonKey) === 'service_role') fail('frontend key is a service-role credential');
+
   const client = createClient(url, anonKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
+    auth: { persistSession: false, autoRefreshToken: false },
   });
-  const [raceAnchorResponse, personAnchorResponse] = await Promise.all([
-    client.from('public_races').select('race_id').limit(1),
-    client
-      .from('public_people_list_cached')
-      .select('person_id')
-      .eq('list_is_grassroots', false)
-      .limit(1),
-  ]);
-  const anchorRaceId = raceAnchorResponse.data?.[0]?.race_id;
-  const anchorPersonId = personAnchorResponse.data?.[0]?.person_id;
+  const published = client.schema('published');
 
-  if (raceAnchorResponse.error || !anchorRaceId) {
-    throw raceAnchorResponse.error ?? new Error('Public races does not contain an anchor race.');
-  }
-  if (personAnchorResponse.error || !anchorPersonId) {
-    throw personAnchorResponse.error ?? new Error('Public people does not contain an anchor person.');
-  }
-
-  const failedViews = [];
-  const personScopedViews = new Set([
-    'public_relation_details',
-    'public_person_primary_photos',
-    'public_person_identity_sources',
-    'public_person_claims',
-    'public_person_party_affiliations',
-    'public_person_party_events',
-  ]);
-
-  for (const viewName of allowedPublicViews) {
-    assertAllowedViewName(viewName);
-
-    try {
-      let request = client.from(viewName).select('*');
-      if (viewName === 'public_candidates') {
-        request = request.eq('race_id', anchorRaceId);
-      }
-      if (personScopedViews.has(viewName)) {
-        request = request.eq('person_id', anchorPersonId);
-      }
-      const { data, error } = await request.limit(1);
-
-      if (error) {
-        failedViews.push(viewName);
-        console.error(`${viewName}: error ${error.code ?? 'unknown'} ${error.message}`);
-        continue;
-      }
-
-      console.log(`${viewName}: ok rowCount=${Array.isArray(data) ? data.length : 0}`);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      failedViews.push(viewName);
-      console.error(`${viewName}: error runtime ${message}`);
+  for (const relation of readableRelations) {
+    const { data, error } = await published.from(relation).select('*').limit(1);
+    if (error) fail(`${relation} is not readable: ${error.message}`);
+    if (requiredNonEmptyRelations.has(relation) && data.length === 0) {
+      fail(`${relation} is unexpectedly empty`);
     }
   }
 
-  if (failedViews.length > 0) {
-    throw new Error(`Public view smoke failed: ${failedViews.join(', ')}`);
+  const personResponse = await published
+    .from('people')
+    .select('person_id,name')
+    .eq('name', '蔣萬安')
+    .limit(1);
+  const person = personResponse.data?.[0];
+  if (personResponse.error || !person) fail(`recognizable person is unavailable: ${personResponse.error?.message ?? 'missing row'}`);
+
+  const claimsResponse = await published.rpc('person_claims_for', { p_person_ids: [person.person_id] });
+  if (claimsResponse.error) fail(`person_claims_for is unavailable: ${claimsResponse.error.message}`);
+  if (!claimsResponse.data?.some((claim) => claim.claim_type === 'finance_summary')) {
+    fail('person_claims_for did not return the reviewed candidate finance summary');
   }
+
+  const searchResponse = await published.rpc('search_public_records', { p_query: '蔣萬安', p_limit: 3 });
+  if (searchResponse.error) fail(`search_public_records is unavailable: ${searchResponse.error.message}`);
+  if (!searchResponse.data?.some((row) => row.title === '蔣萬安')) {
+    fail('published search did not return the recognizable person');
+  }
+
+  const electionResponse = await published
+    .from('elections')
+    .select('election_id,name,year,election_type,voting_date')
+    .eq('year', 2022)
+    .ilike('name', '%市長%')
+    .not('voting_date', 'is', null)
+    .order('election_id', { ascending: true })
+    .limit(1);
+  const election = electionResponse.data?.[0];
+  if (electionResponse.error || !election) fail(`election race search anchor is unavailable: ${electionResponse.error?.message ?? 'missing row'}`);
+  const eventKey = `${election.voting_date.slice(0, 4)}-${election.voting_date}-${electionCategory(election.election_type)}`;
+  const racePageResponse = await published.rpc('election_race_page', {
+    p_event_key: eventKey,
+    p_election_ids: [election.election_id],
+    p_race_types: null,
+    p_region_key: null,
+    p_query: null,
+    p_page: 1,
+    p_page_size: 1,
+  });
+  if (racePageResponse.error) fail(`election_race_page is unavailable: ${racePageResponse.error.message}`);
+  if (!racePageResponse.data?.[0] || Number(racePageResponse.data[0].total) < 1) {
+    fail('election_race_page returned no reviewed races');
+  }
+
+  const releaseState = await published.from('release_state').select('*').limit(1);
+  if (!releaseState.error) fail('anon can read internal published.release_state');
+
+  const promote = await published.rpc('promote', { p_source_sync_run_id: null });
+  if (!promote.error) fail('anon can execute published.promote');
+
+  const identityMatches = await client.from('person_identity_matches').select('*').limit(1);
+  if (!identityMatches.error) fail('anon can read internal person_identity_matches');
+
+  const retiredPublicView = await client.from('public_races').select('*').limit(1);
+  if (!retiredPublicView.error) fail('anon can still read retired public.public_races');
+
+  console.log(`Published local smoke OK: ${readableRelations.length} reviewed relations and the person, finance, search, and election RPC paths work; internal and retired public data remain blocked.`);
 }
 
 main().catch((error) => {
-  const message = error instanceof Error ? error.message : 'Unknown error';
-  console.error(`Smoke test aborted: ${message}`);
+  console.error(error instanceof Error ? error.message : error);
   process.exit(1);
 });

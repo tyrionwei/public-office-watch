@@ -24,6 +24,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260820113507_add_party_annual_finance_reports.sql',
   'supabase/migrations/20260822042405_add_published_search_subtitles.sql',
   'supabase/migrations/20260822063207_normalize_published_search_office_aliases.sql',
+  'supabase/migrations/20260824063832_add_election_race_search.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',

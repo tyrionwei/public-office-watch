@@ -36,6 +36,10 @@ const personFeedbackSource = readFileSync(
   new URL('../src/lib/personFeedback.ts', import.meta.url),
   'utf8',
 );
+const publicSmokeSource = readFileSync(
+  new URL('../scripts/smoke-public-views.mjs', import.meta.url),
+  'utf8',
+);
 
 const maintenanceFunctions = [
   'process_high_confidence_identity_reviews',
@@ -146,6 +150,14 @@ test('legacy public views are removed from browser roles', () => {
   for (const name of [...internalViews, ...publicReadViews, 'public_people_list_cached']) {
     assert.match(revokeBlock, new RegExp(`public\\.${name}(?:,|\\s)`, 'u'));
   }
+});
+
+test('local public smoke follows the reviewed published API', () => {
+  assert.match(publicSmokeSource, /client\.schema\('published'\)/u);
+  assert.match(publicSmokeSource, /rpc\('person_claims_for'/u);
+  assert.match(publicSmokeSource, /rpc\('search_public_records'/u);
+  assert.match(publicSmokeSource, /rpc\('election_race_page'/u);
+  assert.doesNotMatch(publicSmokeSource, /allowedPublicViews|client\.from\(viewName\)/u);
 });
 
 test('new public objects are private by default', () => {

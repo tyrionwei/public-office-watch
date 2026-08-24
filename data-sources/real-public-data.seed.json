@@ -40,9 +40,9 @@
       "id": "cec-2026-local-grassroots-election-announcement",
       "type": "election-metadata",
       "name": "中央選舉委員會：115年基層地方公職人員選舉公告",
-      "url": "https://web.cec.gov.tw/central/article/list/144?page=1",
+      "url": "https://web.cec.gov.tw/central/article/63644",
       "refreshCadence": "daily",
-      "notes": "保留山地原住民區長、區民代表、鄉鎮市長、鄉鎮市民代表及村里長選舉的正式來源；目前不建立首頁村里長候選人物資料。"
+      "notes": "彙整中選會與22個地方選舉委員會於115年8月20日發布的正式公告；本機已建立204個鄉鎮市及原民區長、681個代表選區與7,753個村里長選區。代表選區範圍、席次、婦女保障名額與各選區競選經費仍待逐欄結構化。"
     },
     {
       "id": "ly-current-legislators",

@@ -74,7 +74,7 @@ write_rehearsal_config() {
       gsub(/port = 54321$/, "port = 55321")
       gsub(/port = 54322$/, "port = 55322")
       gsub(/port = 54323$/, "port = 55323")
-      gsub(/port = 54324$/, "port = 55324")
+      gsub(/port = 54324$/, "port = 55325")
       gsub(/port = 54327$/, "port = 55327")
       gsub(/port = 54329$/, "port = 55329")
       gsub(/inspector_port = 8083$/, "inspector_port = 8183")
@@ -185,7 +185,7 @@ copy_runtime_data() {
 
   # Only approved claims that the public person profile still needs at runtime.
   copy_table person_claims \
-    "is_public = TRUE AND visibility = 'public' AND review_status = 'verified' AND claim_type IN ('education','experience','platform','family_relation','legal_case','office')"
+    "is_public = TRUE AND visibility = 'public' AND review_status = 'verified' AND claim_type IN ('education','experience','platform','family_relation','legal_case','office','finance_summary')"
   copy_table person_media \
     "is_public = TRUE AND verification_status = 'verified'"
   copy_table person_company_relations \

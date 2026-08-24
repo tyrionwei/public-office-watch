@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 1,
+  "party": "台灣民眾黨",
+  "reviewedBy": "codex-assisted-official-source-and-cec-review:2026-08-24",
+  "decisions": [
+    {
+      "sourceCandidateKey": "tpp-2026-township_mayor-218",
+      "personName": "邱臣遠",
+      "decision": "use_existing",
+      "personId": "daca03da-e612-400a-92e0-c0e389b7c691",
+      "reason": "官方候選人經歷明列第十屆立法委員、新竹市副市長暨代理市長，與既有台灣民眾黨邱臣遠人物一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_mayor-239",
+      "personName": "陳德福",
+      "decision": "create_new",
+      "reason": "既有同名人物僅有新竹縣議員與南投縣村長候選紀錄，均與官方頁所列原民行政及高雄桃源區經歷不符。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_mayor-245",
+      "personName": "林瑞祥",
+      "decision": "use_existing",
+      "personId": "04ef36cd-a2c4-4cbe-8dfe-050387260c65",
+      "reason": "既有人物具有台灣民眾黨及南投縣仁愛鄉歷屆參選紀錄，排除其他縣市同名人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_mayor-255",
+      "personName": "戴于文",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-184",
+      "personName": "王竟倫",
+      "decision": "use_existing",
+      "personId": "e32b8286-1fec-466b-a398-bfba0d719a39",
+      "reason": "既有 2022 年苗栗縣竹南鎮第一選區同名參選紀錄，選區完全一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-217",
+      "personName": "郭泰安",
+      "decision": "use_existing",
+      "personId": "fd1f3a75-a7a7-481c-b02b-ba24cf46d67f",
+      "reason": "既有 2022 年台灣民眾黨屏東市第四選區同名參選紀錄，政黨與選區均一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-219",
+      "personName": "邱郁文",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-220",
+      "personName": "張仕穎",
+      "decision": "use_existing",
+      "personId": "92fdc00c-517b-46f0-97aa-f92b76aa9f35",
+      "reason": "既有人物為台灣民眾黨資料中的彰化縣員林市同名里長，姓名、政黨與地方脈絡一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-221",
+      "personName": "張嘉龍",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-222",
+      "personName": "吳俊民",
+      "decision": "use_existing",
+      "personId": "2ad9625b-a132-4d56-a6a0-2618e1b00723",
+      "reason": "中選會資料為 2022 年新竹縣竹東鎮第四選區當選，與本次連任標註及選區一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-223",
+      "personName": "吳燕瑩",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-224",
+      "personName": "李心然",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-225",
+      "personName": "林瑞德",
+      "decision": "create_new",
+      "reason": "既有同名人物為台中市霧峰區民進黨里長候選人；官方頁所列新竹市議員服務處經歷顯示不是同一人。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-226",
+      "personName": "劉文軒",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-227",
+      "personName": "鍾嘉祐",
+      "decision": "use_existing",
+      "personId": "4f298ea7-2508-4fe5-b56a-5e1945c387fd",
+      "reason": "中選會資料為 2022 年新竹縣寶山鄉第一選區當選，與本次連任標註及選區一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-228",
+      "personName": "林亞軒",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-229",
+      "personName": "郭凱倫",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-230",
+      "personName": "董立凱",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-231",
+      "personName": "薛方壹",
+      "decision": "use_existing",
+      "personId": "683f0bf7-7294-4e71-a69d-79f395980796",
+      "reason": "既有 2022 年台灣民眾黨彰化市第一選區同名參選紀錄，政黨與選區均一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-232",
+      "personName": "張惟荏",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-233",
+      "personName": "陳冠豪",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-234",
+      "personName": "徐尙裕",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-235",
+      "personName": "許泰祥",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-236",
+      "personName": "林耀宗",
+      "decision": "use_existing",
+      "personId": "0631b7eb-bf8c-480f-96ae-98d8a5dee316",
+      "reason": "中選會資料為 2022 年屏東縣潮州鎮第一選區當選，與本次連任標註及選區一致，排除高雄同名人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-240",
+      "personName": "沈俊志",
+      "decision": "use_existing",
+      "personId": "cf05a1f6-0d10-4d31-b073-88b1bb0d274f",
+      "reason": "既有同名人物曾於宜蘭縣蘇澳鎮參選里長，姓名與鄉鎮地理脈絡一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-246",
+      "personName": "繆宗翰",
+      "decision": "use_existing",
+      "personId": "b4595907-451e-46fb-8e78-7e50863dfbe9",
+      "reason": "中選會資料為 2022 年苗栗縣通霄鎮第一選區當選，與本次連任標註及選區一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-247",
+      "personName": "徐筱啡",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-248",
+      "personName": "梁智宣",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-249",
+      "personName": "卓孝明",
+      "decision": "use_existing",
+      "personId": "5b3da56a-633c-4c7f-83eb-a2442f75f3d7",
+      "reason": "既有 2022 年花蓮縣卓溪鄉第一選區同名參選紀錄，選區完全一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-250",
+      "personName": "楊靖妍",
+      "decision": "use_existing",
+      "personId": "d65b9b18-cb66-473b-bd07-c70544c5b41f",
+      "reason": "中選會資料為 2022 年花蓮縣吉安鄉第三選區當選，與本次連任標註及選區一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-251",
+      "personName": "陳咸均",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-252",
+      "personName": "陳政慈",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-253",
+      "personName": "汪松威",
+      "decision": "use_existing",
+      "personId": "2d44c2ff-0b2d-4768-b91e-6a11c8c4410c",
+      "reason": "既有 2022 年金門縣金城鎮同名代表參選紀錄，選區完全一致；政黨變動不影響同一人物判定。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-254",
+      "personName": "翁明惠",
+      "decision": "use_existing",
+      "personId": "e3e27877-5354-4bc6-bcf8-46f4d8c30c12",
+      "reason": "中選會資料為 2022 年金門縣金寧鄉同名代表當選，與本次連任標註及選區一致；優先連到最近一屆紀錄。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-township_representative_district-263",
+      "personName": "黃怡雯",
+      "decision": "use_existing",
+      "personId": "45f51cce-30ae-47de-a559-69dd4418521a",
+      "reason": "中選會資料為 2022 年彰化縣福興鄉第三選區當選，與官方現任頁及本次連任標註一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-village_chief-238",
+      "personName": "吳森源",
+      "decision": "use_existing",
+      "personId": "2bd3ff85-1db3-4a00-b9dc-3a4cc5ca9e83",
+      "reason": "既有 2022 年台灣民眾黨臺南市安平區華平里同名參選紀錄，政黨與選區均一致，排除彰化同名人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-village_chief-241",
+      "personName": "王慧娟",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-village_chief-244",
+      "personName": "蔡頴德",
+      "decision": "use_existing",
+      "personId": "54135f90-eeaa-45d8-9f8f-2a601887012a",
+      "reason": "中選會資料為 2022 年新竹市北區客雅里里長當選，與本次連任標註及選區一致。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-village_chief-259",
+      "personName": "許宇騰",
+      "decision": "create_new",
+      "reason": "資料庫無同名既有人物，依台灣民眾黨官方候選人頁建立新人物。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-village_chief-260",
+      "personName": "李孟哲",
+      "decision": "create_new",
+      "reason": "既有同名人物為 2014 年嘉義市台聯黨議員候選人，與本次臺北市文山區里長候選人缺乏地理、政黨或經歷連結。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    }
+  ]
+}

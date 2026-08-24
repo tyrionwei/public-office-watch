@@ -6,7 +6,8 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source_config="$repo_root/supabase/config.toml"
 workdir="$repo_root/tmp/production-rehearsal"
 rehearsal_config="$workdir/supabase/config.toml"
-bootstrap_migration="$workdir/supabase/migrations/00000000000000_bootstrap_published.sql"
+rehearsal_migration_dir="$workdir/supabase/migrations"
+bootstrap_migration="$rehearsal_migration_dir/00000000000000_bootstrap_published.sql"
 schema_dump="$workdir/schema.sql"
 roles_dump="$workdir/roles.sql"
 table_access_dump="$workdir/table-access.sql"
@@ -44,6 +45,9 @@ assert_source_environment() {
 
 write_rehearsal_config() {
   mkdir -p "$(dirname "$rehearsal_config")"
+  [[ "$rehearsal_migration_dir" == "$repo_root/tmp/production-rehearsal/supabase/migrations" ]] || fail "refusing to clear an unexpected rehearsal migration directory"
+  mkdir -p "$rehearsal_migration_dir"
+  find "$rehearsal_migration_dir" -maxdepth 1 -type f -name '*.sql' -delete
   mkdir -p "$workdir/supabase/functions"
   cp -a "$repo_root/supabase/functions/." "$workdir/supabase/functions/"
 

@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import {
   buildProfileClaimRows,
   planReviewedPartyCandidatePublication,
+  scopeDatasetToParty,
 } from './preview-publish-reviewed-party-candidates.mjs';
 
 function validDataset() {
@@ -94,6 +95,27 @@ test('plans one reviewed nominee and preserves one rejected source as audit hist
     expectedCount: 1,
     expectedExcludedCount: 1,
   });
+
+  assert.equal(plan.blocking.length, 0);
+  assert.equal(plan.eligible.length, 1);
+  assert.equal(plan.excluded.length, 1);
+});
+
+test('scopes publication checks to the selected party', () => {
+  const dataset = validDataset();
+  dataset.sources.push({
+    id: 'source-unrelated-blocker',
+    source_person_key: 'party-candidate:tpp-unreviewed',
+    raw_name: '未完成他黨候選人',
+    party: '台灣民眾黨',
+    is_public: false,
+    source_payload: { targetRace: { id: 'race-unrelated' } },
+  });
+
+  const plan = planReviewedPartyCandidatePublication(
+    scopeDatasetToParty(dataset, '民主進步黨'),
+    { expectedCount: 1, expectedExcludedCount: 1 },
+  );
 
   assert.equal(plan.blocking.length, 0);
   assert.equal(plan.eligible.length, 1);

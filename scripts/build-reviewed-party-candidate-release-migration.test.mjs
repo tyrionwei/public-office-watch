@@ -29,6 +29,7 @@ function fixture() {
     id: `claim-${type}`, claim_key: `${sourceValid.source_person_key}:${type}`,
     source_person_id: sourceValid.id, person_id: 'person-valid', claim_type: type,
     review_status: 'verified', visibility: 'public', is_public: true,
+    candidate_id: type === 'platform' ? 'candidate-valid' : null,
   }));
   return {
     sources: [sourceValid, sourceRejected],
@@ -44,7 +45,7 @@ function fixture() {
     }],
     canonicalMap: [{ person_id: 'person-valid', canonical_person_id: 'person-valid' }],
     people: [
-      { id: 'person-valid', external_id: `internal-review-source-${sourceValid.id}`, is_public: true },
+      { id: 'person-valid', external_id: 'party-candidate-person:dpp-valid', is_public: true },
       { id: 'person-other', external_id: 'existing-person', is_public: true },
     ],
     races: [{ id: 'race-valid', is_public: true }],
@@ -77,11 +78,18 @@ test('builds a guarded release payload with explicit new and prerequisite people
   assert.deepEqual(release.requiredExistingPersonIds, ['person-other']);
   assert.equal(release.claims.length, 5);
 
-  const sql = buildMigration(release);
+  const sql = buildMigration(release, fixtureExpected);
   assert.match(sql, /missing % prerequisite people/);
   assert.match(sql, /new-person identifier conflict/);
   assert.match(sql, /Rejected party candidate source still has a candidate row/);
+  assert.match(sql, /auto_reviewed_at, candidate_id/);
   assert.doesNotMatch(sql, /published\.promote|REFRESH MATERIALIZED VIEW/);
+});
+
+test('continues to recognize legacy internal-review source people', () => {
+  const dataset = fixture();
+  dataset.people[0].external_id = `internal-review-source-${dataset.sources[0].id}`;
+  assert.doesNotThrow(() => buildReleaseDataset(dataset, { expected: fixtureExpected }));
 });
 
 test('blocks generation when the reviewed new-person boundary drifts', () => {

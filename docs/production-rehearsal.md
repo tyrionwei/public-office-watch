@@ -35,6 +35,8 @@
 
 完整本機 Supabase 必須先保持啟動。
 
+每次重建都會先清除被 Git 忽略的 rehearsal 工作目錄裡殘留的 migrations，只留下啟動用的 `published` bootstrap；實際 schema 會從完整本機資料庫重新匯出，避免從空庫誤重播依賴歷史種子資料的 migration。
+
 ```bash
 npm run rehearsal:rebuild
 ```

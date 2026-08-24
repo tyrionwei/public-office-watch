@@ -6,6 +6,9 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const localHostnames = new Set(['127.0.0.1', 'localhost', '::1']);
 const expectedCandidateCount = 317;
 const expectedExcludedSourceCount = 1;
+const partyPublicationExpectations = new Map([
+  ['台灣民眾黨', { candidates: 105, excludedSources: 0 }],
+]);
 const profileFields = ['education', 'experience', 'platform'];
 
 function readLocalEnv() {
@@ -27,12 +30,24 @@ function readLocalEnv() {
 }
 
 function parseArgs(argv) {
-  for (const arg of argv) {
-    if (arg !== '--write') {
-      throw new Error('Usage: node scripts/preview-publish-reviewed-party-candidates.mjs [--write]');
+  let write = false;
+  let party = null;
+  for (let index = 0; index < argv.length; index += 1) {
+    if (argv[index] === '--write') {
+      write = true;
+      continue;
     }
+    if (argv[index] === '--party' && argv[index + 1]) {
+      party = argv[index + 1];
+      index += 1;
+      continue;
+    }
+    throw new Error('Usage: node scripts/preview-publish-reviewed-party-candidates.mjs [--write] [--party <name>]');
   }
-  return { write: argv.includes('--write') };
+  if (party && !partyPublicationExpectations.has(party)) {
+    throw new Error(`No reviewed publication expectations are configured for party: ${party}`);
+  }
+  return { write, party };
 }
 
 function objectValue(value) {
@@ -46,6 +61,14 @@ function groupBy(rows, key) {
     grouped.set(value, [...(grouped.get(value) ?? []), row]);
   }
   return grouped;
+}
+
+function scopeDatasetToParty(dataset, party) {
+  if (!party) return dataset;
+  return {
+    ...dataset,
+    sources: dataset.sources.filter((source) => source.party === party),
+  };
 }
 
 function countByParty(items) {
@@ -407,8 +430,14 @@ async function main() {
     throw new Error('Reviewed party candidate preview publication is local-only');
   }
 
-  const dataset = await loadDataset(config);
-  const plan = planReviewedPartyCandidatePublication(dataset);
+  const expectations = options.party
+    ? partyPublicationExpectations.get(options.party)
+    : { candidates: expectedCandidateCount, excludedSources: expectedExcludedSourceCount };
+  const dataset = scopeDatasetToParty(await loadDataset(config), options.party);
+  const plan = planReviewedPartyCandidatePublication(dataset, {
+    expectedCount: expectations.candidates,
+    expectedExcludedCount: expectations.excludedSources,
+  });
   if (plan.blocking.length > 0) {
     console.log(JSON.stringify({ status: 'blocked', blocking: plan.blocking }, null, 2));
     process.exitCode = 1;
@@ -422,6 +451,7 @@ async function main() {
   console.log(JSON.stringify({
     status: 'ok',
     mode: options.write ? 'write' : 'dry-run',
+    party: options.party,
     eligibleCandidateCount: plan.eligible.length,
     excludedSourceCount: plan.excluded.length,
     candidatesByParty: countByParty(plan.eligible),
@@ -443,4 +473,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { buildProfileClaimRows, planReviewedPartyCandidatePublication };
+export {
+  buildProfileClaimRows,
+  partyPublicationExpectations,
+  planReviewedPartyCandidatePublication,
+  scopeDatasetToParty,
+};

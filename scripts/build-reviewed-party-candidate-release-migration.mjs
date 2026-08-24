@@ -1,7 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { planReviewedPartyCandidatePublication } from './preview-publish-reviewed-party-candidates.mjs';
+import {
+  planReviewedPartyCandidatePublication,
+  scopeDatasetToParty,
+} from './preview-publish-reviewed-party-candidates.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const localHostnames = new Set(['127.0.0.1', 'localhost', '::1']);
@@ -16,6 +19,19 @@ const expected = {
   profileClaims: 204,
   profileClaimsByType: { education: 65, experience: 69, platform: 70 },
 };
+const partyReleaseExpectations = new Map([
+  ['台灣民眾黨', {
+    sources: 105,
+    candidates: 105,
+    excludedSources: 0,
+    newPeople: 52,
+    requiredExistingPeople: 58,
+    identityMatches: 110,
+    candidacyClaims: 105,
+    profileClaims: 124,
+    profileClaimsByType: { education: 39, experience: 48, platform: 37 },
+  }],
+]);
 const defaultOutput = path.join(
   repoRoot,
   'supabase',
@@ -52,7 +68,7 @@ const columns = {
     ['review_status', 'text'], ['visibility', 'text'], ['source_name', 'text'], ['source_url', 'text'],
     ['observed_at', 'timestamptz'], ['is_public', 'boolean'], ['created_at', 'timestamptz'],
     ['updated_at', 'timestamptz'], ['review_score', 'numeric'], ['scoring_version', 'text'],
-    ['scoring_reasons', 'jsonb'], ['auto_reviewed_at', 'timestamptz'],
+    ['scoring_reasons', 'jsonb'], ['auto_reviewed_at', 'timestamptz'], ['candidate_id', 'uuid'],
   ],
   candidates: [
     ['id', 'uuid'], ['person_id', 'uuid'], ['race_id', 'uuid'], ['party', 'text'], ['candidate_no', 'text'],
@@ -83,15 +99,24 @@ function readLocalEnv() {
 
 function parseArgs(argv) {
   let output = defaultOutput;
+  let party = null;
   for (let index = 0; index < argv.length; index += 1) {
     if (argv[index] === '--output' && argv[index + 1]) {
       output = path.resolve(repoRoot, argv[index + 1]);
       index += 1;
-    } else {
-      throw new Error('Usage: node scripts/build-reviewed-party-candidate-release-migration.mjs [--output <path>]');
+      continue;
     }
+    if (argv[index] === '--party' && argv[index + 1]) {
+      party = argv[index + 1];
+      index += 1;
+      continue;
+    }
+    throw new Error('Usage: node scripts/build-reviewed-party-candidate-release-migration.mjs [--output <path>] [--party <name>]');
   }
-  return { output };
+  if (party && !partyReleaseExpectations.has(party)) {
+    throw new Error(`No reviewed release expectations are configured for party: ${party}`);
+  }
+  return { output, party };
 }
 
 function assertLocalSupabase(url) {
@@ -201,6 +226,14 @@ function assertEqual(actual, wanted, label) {
   if (actual !== wanted) throw new Error(`${label}: expected ${wanted}, found ${actual}`);
 }
 
+function isSourceScopedPerson(person, source) {
+  const partyCandidatePersonId = source.source_person_key.startsWith('party-candidate:')
+    ? `party-candidate-person:${source.source_person_key.slice('party-candidate:'.length)}`
+    : null;
+  return person?.external_id === `internal-review-source-${source.id}`
+    || (partyCandidatePersonId && person?.external_id === partyCandidatePersonId);
+}
+
 function buildReleaseDataset(dataset, options = {}) {
   const expectedCounts = options.expected ?? expected;
   const plan = planReviewedPartyCandidatePublication(dataset, {
@@ -216,7 +249,7 @@ function buildReleaseDataset(dataset, options = {}) {
   const sourceById = new Map(dataset.sources.map((row) => [row.id, row]));
   const newPeople = plan.eligible.flatMap((item) => {
     const person = peopleById.get(item.candidate.person_id);
-    return person?.external_id === `internal-review-source-${item.source.id}` ? [person] : [];
+    return isSourceScopedPerson(person, item.source) ? [person] : [];
   });
   const newPersonIds = new Set(newPeople.map((row) => row.id));
   const referencedPersonIds = new Set([
@@ -299,7 +332,7 @@ ON CONFLICT (${conflictTarget}) DO UPDATE SET
     ${updateSql};`;
 }
 
-function buildMigration(release) {
+function buildMigration(release, expectedCounts = expected) {
   const sourceUpdates = columns.sourcePeople.map(([name]) => name)
     .filter((name) => !['id', 'source_person_key', 'created_at'].includes(name));
   const matchUpdates = columns.matches.map(([name]) => name)
@@ -308,7 +341,7 @@ function buildMigration(release) {
     .filter((name) => !['id', 'claim_key', 'created_at'].includes(name));
   const candidateUpdates = columns.candidates.map(([name]) => name)
     .filter((name) => !['id', 'external_id', 'created_at'].includes(name));
-  const expectedProfileSql = Object.entries(expected.profileClaimsByType)
+  const expectedProfileSql = Object.entries(expectedCounts.profileClaimsByType)
     .map(([type, count]) => `('${type}', ${count})`)
     .join(', ');
 
@@ -340,13 +373,13 @@ DECLARE
     missing_people INTEGER;
     missing_races INTEGER;
 BEGIN
-    IF (SELECT COUNT(*) FROM _party_release_sources) <> ${expected.sources}
-       OR (SELECT COUNT(*) FROM _party_release_people) <> ${expected.newPeople}
-       OR (SELECT COUNT(*) FROM _party_release_matches) <> ${expected.identityMatches}
-       OR (SELECT COUNT(*) FROM _party_release_claims WHERE claim_type = 'candidacy') <> ${expected.candidacyClaims}
-       OR (SELECT COUNT(*) FROM _party_release_claims WHERE claim_type IN ('education', 'experience', 'platform')) <> ${expected.profileClaims}
-       OR (SELECT COUNT(*) FROM _party_release_candidates) <> ${expected.candidates}
-       OR (SELECT COUNT(*) FROM _party_release_required_people) <> ${expected.requiredExistingPeople} THEN
+    IF (SELECT COUNT(*) FROM _party_release_sources) <> ${expectedCounts.sources}
+       OR (SELECT COUNT(*) FROM _party_release_people) <> ${expectedCounts.newPeople}
+       OR (SELECT COUNT(*) FROM _party_release_matches) <> ${expectedCounts.identityMatches}
+       OR (SELECT COUNT(*) FROM _party_release_claims WHERE claim_type = 'candidacy') <> ${expectedCounts.candidacyClaims}
+       OR (SELECT COUNT(*) FROM _party_release_claims WHERE claim_type IN ('education', 'experience', 'platform')) <> ${expectedCounts.profileClaims}
+       OR (SELECT COUNT(*) FROM _party_release_candidates) <> ${expectedCounts.candidates}
+       OR (SELECT COUNT(*) FROM _party_release_required_people) <> ${expectedCounts.requiredExistingPeople} THEN
         RAISE EXCEPTION 'Reviewed party candidate release payload count drift';
     END IF;
 
@@ -416,12 +449,12 @@ DO $$
 BEGIN
     IF (SELECT COUNT(*) FROM candidates candidate JOIN _party_release_candidates release ON release.id = candidate.id
         WHERE candidate.is_public = TRUE AND candidate.candidacy_status = 'party_nominee'
-          AND candidate.registration_status = 'unknown' AND candidate.election_result = 'pending') <> ${expected.candidates} THEN
+          AND candidate.registration_status = 'unknown' AND candidate.election_result = 'pending') <> ${expectedCounts.candidates} THEN
         RAISE EXCEPTION 'Reviewed party candidate final candidate verification failed';
     END IF;
 
-    IF (SELECT COUNT(*) FROM source_people source JOIN _party_release_sources release ON release.id = source.id WHERE source.is_public = TRUE) <> ${expected.candidates}
-       OR (SELECT COUNT(*) FROM source_people source JOIN _party_release_sources release ON release.id = source.id WHERE source.is_public = FALSE) <> ${expected.excludedSources} THEN
+    IF (SELECT COUNT(*) FROM source_people source JOIN _party_release_sources release ON release.id = source.id WHERE source.is_public = TRUE) <> ${expectedCounts.candidates}
+       OR (SELECT COUNT(*) FROM source_people source JOIN _party_release_sources release ON release.id = source.id WHERE source.is_public = FALSE) <> ${expectedCounts.excludedSources} THEN
         RAISE EXCEPTION 'Reviewed party candidate final source visibility verification failed';
     END IF;
 
@@ -451,11 +484,14 @@ async function main() {
   };
   assertLocalSupabase(config.supabaseUrl);
   if (!config.serviceRoleKey) throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
-  const release = buildReleaseDataset(await loadDataset(config));
+  const expectedCounts = options.party ? partyReleaseExpectations.get(options.party) : expected;
+  const dataset = scopeDatasetToParty(await loadDataset(config), options.party);
+  const release = buildReleaseDataset(dataset, { expected: expectedCounts });
   fs.mkdirSync(path.dirname(options.output), { recursive: true });
-  fs.writeFileSync(options.output, buildMigration(release));
+  fs.writeFileSync(options.output, buildMigration(release, expectedCounts));
   console.log(JSON.stringify({
     status: 'ok',
+    party: options.party,
     output: path.relative(repoRoot, options.output),
     sourceCount: release.sources.length,
     candidateCount: release.candidates.length,
@@ -475,4 +511,11 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { assertLocalSupabase, buildMigration, buildReleaseDataset, expected };
+export {
+  assertLocalSupabase,
+  buildMigration,
+  buildReleaseDataset,
+  expected,
+  isSourceScopedPerson,
+  partyReleaseExpectations,
+};

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "party": "台灣民眾黨",
+  "reviewedBy": "codex-assisted-race-reconciliation:2026-08-24",
+  "decisions": [
+    {
+      "sourceCandidateKey": "tpp-2026-county_councilor-212",
+      "personName": "高采翎",
+      "decision": "use_existing",
+      "personId": "fb45d423-0fb7-48b9-bb6f-7792ecdfcb9b",
+      "reason": "保留既有 canonical 人物，將候選人由舊私人重複選區改連至同名同標題的公開 2026 彰化縣第十選區。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    },
+    {
+      "sourceCandidateKey": "tpp-2026-city_councilor-243",
+      "personName": "趙若芸",
+      "decision": "use_existing",
+      "personId": "b2c0170a-b659-406f-9d66-23a9e453ee88",
+      "reason": "保留既有 canonical 人物，將候選人由舊私人重複選區改連至同名同標題的公開 2026 新竹市第七選區。",
+      "reviewedAt": "2026-08-24T16:00:00+08:00"
+    }
+  ]
+}

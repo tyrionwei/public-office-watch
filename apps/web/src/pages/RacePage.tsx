@@ -369,9 +369,16 @@ export function RacePage() {
                           </p>
                         ) : null}
                       </div>
-                      <p className={isCandidateElected(candidate) ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
-                        {translateCandidateStatus(candidate, t)}
-                      </p>
+                      <div>
+                        <p className={isCandidateElected(candidate) ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
+                          {translateCandidateStatus(candidate, t)}
+                        </p>
+                        {candidate.is_incumbent ? (
+                          <span className="mt-1 inline-block border border-amber-300/50 bg-amber-300/10 px-2 py-0.5 text-[11px] text-amber-200" data-incumbent-badge>
+                            {t('race.incumbent')}
+                          </span>
+                        ) : null}
+                      </div>
                       <p className="text-sm text-slate-300">{formatNumber(candidate.vote_count, language)}</p>
                       <p className="text-sm text-slate-300">{formatPercent(candidate.vote_rate)}</p>
                     </>

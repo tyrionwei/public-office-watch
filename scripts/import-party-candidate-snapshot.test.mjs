@@ -196,6 +196,55 @@ test('matches councilor districts without guessing a different district', () => 
   assert.equal(plan.newPersonReview.length, 1);
 });
 
+test('matches a township representative race by county, locality, and district', () => {
+  const input = snapshot({
+    records: [{
+      sourceCandidateKey: 'dpp-2026-zhudong-4-example',
+      personName: '測試代表',
+      candidacyStatus: 'party_nominee',
+      raceType: 'township_representative_district',
+      regionName: '新竹縣',
+      localityName: '竹東鎮',
+      districtName: '第四選區',
+      villageName: null,
+      isIncumbent: true,
+      incumbencyEvidence: '中選會：111年鄉鎮市民代表選舉 - 區域當選',
+      incumbencySourceUrl: 'https://db.cec.gov.tw/query/example',
+    }],
+  });
+  const plan = planPartyCandidateImport(input, {
+    elections: [{ id: 'election-1', external_id: 'planned-2026-local-public-officials' }],
+    regions: [
+      { id: 'race-3-region', name: '新竹縣竹東鎮第3選舉區鎮民代表選舉' },
+      { id: 'race-4-region', name: '新竹縣竹東鎮第4選舉區鎮民代表選舉' },
+    ],
+    races: [
+      { id: 'race-3', election_id: 'election-1', region_id: 'race-3-region', race_type: 'township_representative_district', title: '新竹縣竹東鎮第3選舉區鎮民代表選舉', is_public: true },
+      { id: 'race-4', election_id: 'election-1', region_id: 'race-4-region', race_type: 'township_representative_district', title: '新竹縣竹東鎮第4選舉區鎮民代表選舉', is_public: true },
+    ],
+    people: [],
+    candidates: [],
+  });
+
+  assert.equal(plan.blocking.length, 0);
+  assert.equal(plan.matched[0].race.id, 'race-4');
+  assert.equal(plan.matched[0].record.isIncumbent, true);
+});
+
+test('requires incumbency evidence and a source URL for incumbents', () => {
+  assert.throws(() => snapshot({
+    records: [{
+      sourceCandidateKey: 'dpp-2026-incumbent-example',
+      personName: '測試人物',
+      candidacyStatus: 'party_nominee',
+      raceType: 'county_mayor',
+      regionName: '新竹縣',
+      districtName: null,
+      isIncumbent: true,
+    }],
+  }), /incumbencyEvidence is required/);
+});
+
 test('blocks records when the target race is missing', () => {
   const plan = planPartyCandidateImport(snapshot(), {
     elections: [{ id: 'election-1', external_id: 'planned-2026-local-public-officials' }],

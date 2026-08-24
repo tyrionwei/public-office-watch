@@ -28,15 +28,26 @@ function positionFor(record) {
   if (record.raceType === 'municipality_mayor') return '直轄市長候選人';
   if (record.raceType === 'county_mayor') return '縣市長候選人';
   if (record.raceType === 'city_councilor') return '直轄市議員候選人';
-  return '縣市議員候選人';
+  if (record.raceType === 'county_councilor') return '縣市議員候選人';
+  if (record.raceType === 'township_mayor') return '鄉鎮市區長候選人';
+  if (record.raceType === 'township_representative_district') return '鄉鎮市區民代表候選人';
+  return '村里長候選人';
 }
 
 function normalizedRoleFor(record) {
+  if (record.raceType === 'township_mayor') return 'township_chief';
+  if (record.raceType === 'township_representative_district') return 'township_representative';
+  if (record.raceType === 'village_chief') return 'local_chief';
   return record.raceType.endsWith('_mayor') ? 'mayor' : 'councilor';
 }
 
 function districtFor(record) {
-  return record.districtName ? `${record.regionName}${record.districtName}` : record.regionName;
+  return [
+    record.regionName,
+    record.localityName,
+    record.villageName,
+    record.districtName,
+  ].filter(Boolean).join('');
 }
 
 function confidenceFor(identityResolution) {
@@ -81,11 +92,18 @@ function buildStagingRows(snapshot, plan, observedAt = new Date().toISOString())
       experience: record.experience,
       platform: record.platform,
       socialLinks: record.socialLinks,
+      locationEvidence: record.locationEvidence,
+      locationEvidenceUrl: record.locationEvidenceUrl,
+      isIncumbent: record.isIncumbent,
+      incumbencyEvidence: record.incumbencyEvidence,
+      incumbencySourceUrl: record.incumbencySourceUrl,
       targetRace: {
         id: race.id,
         title: race.title,
         raceType: record.raceType,
         regionName: record.regionName,
+        localityName: record.localityName,
+        villageName: record.villageName,
         districtName: record.districtName,
       },
       identitySuggestion: {
@@ -425,6 +443,7 @@ async function applyReviewedPartyCandidates(config, snapshot, plan, review) {
       registration_status: 'unknown',
       candidacy_status: 'party_nominee',
       election_result: 'pending',
+      is_incumbent: item.record.isIncumbent,
       status_updated_at: decision.reviewedAt,
       source_name: snapshot.source.name,
       source_url: item.record.profileUrl ?? snapshot.source.url,

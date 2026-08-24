@@ -16,8 +16,13 @@ const allowedRaceTypes = new Set([
   'county_mayor',
   'city_councilor',
   'county_councilor',
+  'township_mayor',
+  'township_representative_district',
+  'village_chief',
 ]);
-const mayorRaceTypes = new Set(['municipality_mayor', 'county_mayor']);
+const topLevelMayorRaceTypes = new Set(['municipality_mayor', 'county_mayor']);
+const mayorRaceTypes = new Set([...topLevelMayorRaceTypes, 'township_mayor']);
+const councilorRaceTypes = new Set(['city_councilor', 'county_councilor']);
 const partySourceDomains = new Map([
   ['民主進步黨', ['dpp.org.tw']],
   ['中國國民黨', ['kmt.org.tw']],
@@ -106,6 +111,20 @@ function optionalUrl(value, field, errors) {
     errors.push(`${field} must be a valid URL`);
   }
   return normalized;
+}
+
+function optionalText(value) {
+  const normalized = String(value ?? '').replace(/\s+/g, ' ').trim();
+  return normalized || null;
+}
+
+function optionalBoolean(value, field, errors) {
+  if (value == null) return null;
+  if (typeof value !== 'boolean') {
+    errors.push(`${field} must be a boolean`);
+    return null;
+  }
+  return value;
 }
 
 function optionalTextArray(value, field, errors) {
@@ -201,15 +220,41 @@ function validateSnapshot(snapshot) {
     }
 
     const regionName = requireText(record?.regionName, `${prefix}.regionName`, errors);
+    const localityName = optionalText(record?.localityName);
+    const villageName = optionalText(record?.villageName);
     const districtName = normalizeElectionDistrict(record?.districtName) || null;
-    if (raceType && !mayorRaceTypes.has(raceType) && !districtName) {
-      errors.push(`${prefix}.districtName is required for councilor races`);
+    if (councilorRaceTypes.has(raceType) && !districtName) {
+      errors.push(`${prefix}.districtName is required for district races`);
     }
-    if (mayorRaceTypes.has(raceType) && districtName) {
-      errors.push(`${prefix}.districtName must be null for mayor races`);
+    if ((mayorRaceTypes.has(raceType) || raceType === 'village_chief') && districtName) {
+      errors.push(`${prefix}.districtName must be null for mayor and village races`);
+    }
+    if (['township_mayor', 'township_representative_district'].includes(raceType) && !localityName) {
+      errors.push(`${prefix}.localityName is required for township races`);
+    }
+    if (raceType === 'village_chief' && !villageName) {
+      errors.push(`${prefix}.villageName is required for village chief races`);
     }
     if (Object.hasOwn(record ?? {}, 'candidateNo')) {
       errors.push(`${prefix}.candidateNo must not come from a party source`);
+    }
+    const locationEvidence = optionalText(record?.locationEvidence);
+    const locationEvidenceUrl = optionalUrl(
+      record?.locationEvidenceUrl, `${prefix}.locationEvidenceUrl`, errors,
+    );
+    if (Boolean(locationEvidence) !== Boolean(locationEvidenceUrl)) {
+      errors.push(`${prefix}.locationEvidence and locationEvidenceUrl must be provided together`);
+    }
+    const isIncumbent = optionalBoolean(record?.isIncumbent, `${prefix}.isIncumbent`, errors);
+    const incumbencyEvidence = optionalText(record?.incumbencyEvidence);
+    const incumbencySourceUrl = optionalUrl(
+      record?.incumbencySourceUrl, `${prefix}.incumbencySourceUrl`, errors,
+    );
+    if (isIncumbent === true && !incumbencyEvidence) {
+      errors.push(`${prefix}.incumbencyEvidence is required when isIncumbent is true`);
+    }
+    if (isIncumbent === true && !incumbencySourceUrl) {
+      errors.push(`${prefix}.incumbencySourceUrl is required when isIncumbent is true`);
     }
 
     return {
@@ -218,6 +263,8 @@ function validateSnapshot(snapshot) {
       candidacyStatus,
       raceType,
       regionName,
+      localityName,
+      villageName,
       districtName,
       nominationAnnouncedAt: optionalDate(record?.nominationAnnouncedAt, `${prefix}.nominationAnnouncedAt`, errors),
       profileUrl: optionalUrl(record?.profileUrl, `${prefix}.profileUrl`, errors),
@@ -226,6 +273,11 @@ function validateSnapshot(snapshot) {
       experience: optionalTextArray(record?.experience, `${prefix}.experience`, errors),
       platform: optionalTextArray(record?.platform, `${prefix}.platform`, errors),
       socialLinks: optionalUrlArray(record?.socialLinks, `${prefix}.socialLinks`, errors),
+      locationEvidence,
+      locationEvidenceUrl,
+      isIncumbent,
+      incumbencyEvidence,
+      incumbencySourceUrl,
     };
   });
 
@@ -283,6 +335,23 @@ function sameDistrict(left, right) {
     && leftDescriptor.subtype === rightDescriptor.subtype;
 }
 
+function raceLocationMatches(record, race, region) {
+  const title = normalizeText(race.title);
+  const includes = (value) => !value || title.includes(normalizeText(value));
+  if (topLevelMayorRaceTypes.has(record.raceType)) {
+    return normalizeText(region?.name) === normalizeText(record.regionName);
+  }
+  if (councilorRaceTypes.has(record.raceType)) {
+    return normalizeText(region?.name) === normalizeText(record.regionName)
+      && sameDistrict(record.districtName, race.title);
+  }
+  if (!includes(record.regionName) || !includes(record.localityName) || !includes(record.villageName)) {
+    return false;
+  }
+  return record.raceType !== 'township_representative_district' || !record.districtName
+    || sameDistrict(record.districtName, race.title);
+}
+
 function canonicalIdentityGroups(snapshot, record, people, state, regionsById) {
   const canonicalByPersonId = new Map(
     (state.canonicalMap ?? []).map((row) => [row.person_id, row.canonical_person_id]),
@@ -317,29 +386,23 @@ function canonicalIdentityGroups(snapshot, record, people, state, regionsById) {
     }
 
     const personDistrict = normalizeText(person.district);
-    const sameRegionFromProfile = personDistrict.includes(normalizeText(record.regionName));
-    if (mayorRaceTypes.has(record.raceType) && sameRegionFromProfile) {
-      group.geographyMatch = true;
-    }
-    if (
-      !mayorRaceTypes.has(record.raceType)
-      && String(person.position ?? '').includes('議員')
-      && sameRegionFromProfile
-      && sameDistrict(record.districtName, person.district)
-    ) {
-      group.geographyMatch = true;
+    const profileParts = [record.regionName, record.localityName, record.villageName].filter(Boolean);
+    const profileGeographyMatch = profileParts.every((part) => personDistrict.includes(normalizeText(part)));
+    if (profileGeographyMatch) {
+      if (mayorRaceTypes.has(record.raceType) || record.raceType === 'village_chief') {
+        group.geographyMatch = true;
+      } else if (
+        (councilorRaceTypes.has(record.raceType) || record.raceType === 'township_representative_district')
+        && sameDistrict(record.districtName, person.district)
+      ) {
+        group.geographyMatch = true;
+      }
     }
 
     for (const candidate of personCandidates) {
       const historyRace = historyRacesById.get(candidate.race_id);
       const historyRegion = historyRace ? regionsById.get(historyRace.region_id) : null;
-      if (!historyRace || normalizeText(historyRegion?.name) !== normalizeText(record.regionName)) continue;
-      if (mayorRaceTypes.has(record.raceType)) {
-        group.geographyMatch = true;
-      } else if (
-        ['city_councilor', 'county_councilor'].includes(historyRace.race_type)
-        && sameDistrict(record.districtName, historyRace.title)
-      ) {
+      if (historyRace?.race_type === record.raceType && raceLocationMatches(record, historyRace, historyRegion)) {
         group.geographyMatch = true;
       }
     }
@@ -381,9 +444,7 @@ function planPartyCandidateImport(snapshot, state) {
     if (!targetElection) continue;
     const raceMatches = state.races.filter((race) => {
       if (race.election_id !== targetElection.id || race.race_type !== record.raceType || race.is_public !== true) return false;
-      const region = regionsById.get(race.region_id);
-      if (!region || normalizeText(region.name) !== normalizeText(record.regionName)) return false;
-      return mayorRaceTypes.has(record.raceType) || sameDistrict(record.districtName, race.title);
+      return raceLocationMatches(record, race, regionsById.get(race.region_id));
     });
 
     if (raceMatches.length !== 1) {
@@ -392,6 +453,8 @@ function planPartyCandidateImport(snapshot, state) {
         reason: raceMatches.length === 0 ? 'race_not_found' : 'race_ambiguous',
         raceType: record.raceType,
         regionName: record.regionName,
+        localityName: record.localityName,
+        villageName: record.villageName,
         districtName: record.districtName,
         matchCount: raceMatches.length,
       });

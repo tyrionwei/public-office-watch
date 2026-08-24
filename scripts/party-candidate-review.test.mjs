@@ -17,6 +17,9 @@ const record = {
   nominationAnnouncedAt: '2026-07-01',
   profileUrl: 'https://teamtaiwan.dpp.org.tw/test',
   photoUrl: null,
+  isIncumbent: true,
+  incumbencyEvidence: '中選會：111年直轄市長選舉 - 當選',
+  incumbencySourceUrl: 'https://db.cec.gov.tw/query/example',
 };
 
 const snapshot = {
@@ -56,6 +59,9 @@ test('builds private pending source records and a non-confirming identity sugges
   assert.equal(rows.sourcePeople[0].source_type, 'official_site');
   assert.equal(rows.sourcePeople[0].source_person_key, 'party-candidate:dpp-2026-taipei-mayor-test');
   assert.equal(rows.sourcePeople[0].source_payload.identitySuggestion.resolution, 'high_confidence_match');
+  assert.equal(rows.sourcePeople[0].source_payload.isIncumbent, true);
+  assert.match(rows.sourcePeople[0].source_payload.incumbencyEvidence, /當選/);
+  assert.match(rows.sourcePeople[0].source_payload.incumbencySourceUrl, /^https:\/\/db\.cec\.gov\.tw\//);
   assert.equal(rows.claims[0].claim_type, 'candidacy');
   assert.equal(rows.claims[0].review_status, undefined);
   assert.equal(rows.suggestions[0].match_status, 'probable_match');

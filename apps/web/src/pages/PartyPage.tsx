@@ -390,9 +390,16 @@ function CandidateMiniCard({ candidate }: { candidate: PublicCandidate }) {
       to={personPath(candidate.person_id)}
       className="block pixel-corners border border-line/70 bg-bg/35 p-4 transition hover:border-accent/70 hover:bg-accent/5"
     >
-      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-        {translateCandidateStatus(candidate, t)}
-      </p>
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+          {translateCandidateStatus(candidate, t)}
+        </p>
+        {candidate.is_incumbent ? (
+          <span className="border border-amber-300/50 bg-amber-300/10 px-2 py-0.5 text-[11px] text-amber-200" data-incumbent-badge>
+            {t('race.incumbent')}
+          </span>
+        ) : null}
+      </div>
       <h3 className="mt-2 font-display text-lg text-white">{candidate.person_name}</h3>
       <p className="mt-2 text-sm text-slate-400">{candidate.race_title}</p>
     </Link>

@@ -264,6 +264,12 @@ test('published provider loads races for a region omitted from the bounded home 
   assert.equal(first[0]?.id, 'race-region-1');
   assert.equal(second[0]?.id, 'race-region-1');
   assert.equal(assembly.provider.getRelatedRacesByRegionId('taipei')[0]?.id, 'race-region-1');
+
+  await assembly.provider.loadHomePageData();
+  const restored = await assembly.provider.loadRelatedRacesByRegionId('taipei');
+
+  assert.equal(regionCalls, 1);
+  assert.equal(restored[0]?.id, 'race-region-1');
 });
 
 test('published provider keeps the last complete snapshot when refresh fails and can retry', async () => {

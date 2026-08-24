@@ -107,7 +107,7 @@ export function createPublishedPublicDataProvider(
   let people: PublicPersonListItem[] = [];
   const profilesById = new Map<string, PublicPersonProfile>();
   const localOfficeSummaries = new Map<string, PublicLocalOfficeSummary>();
-  const loadedRaceRegionIds = new Set<string>();
+  const regionRacesByRegionId = new Map<string, UpcomingRace[]>();
   const raceRegionPromises = new Map<string, Promise<UpcomingRace[]>>();
   const cached = createRequestCache();
   let refreshPromise: Promise<void> | null = null;
@@ -140,7 +140,7 @@ export function createPublishedPublicDataProvider(
     const region = getStageRegion(regionId);
     const regionKey = region?.id ?? regionId;
 
-    if (loadedRaceRegionIds.has(regionKey)) {
+    if (regionRacesByRegionId.has(regionKey)) {
       return getRelatedRaces(regionId);
     }
 
@@ -148,11 +148,11 @@ export function createPublishedPublicDataProvider(
     if (!inFlightRequest) {
       inFlightRequest = bridge.loadRegionPageData(regionKey)
         .then((result) => {
+          regionRacesByRegionId.set(regionKey, result.relatedRaces);
           homeData = {
             ...homeData,
             upcomingRaces: mergeByKey(homeData.upcomingRaces, result.relatedRaces, (race) => race.id),
           };
-          loadedRaceRegionIds.add(regionKey);
           return getRelatedRaces(regionId);
         })
         .finally(() => {
@@ -191,7 +191,13 @@ export function createPublishedPublicDataProvider(
       const stageRegions = nextHomeData.stageRegions.length > 0
         ? nextHomeData.stageRegions
         : directoryRegions;
-      homeData = { ...nextHomeData, stageRegions };
+      const loadedRegionRaces = Array.from(regionRacesByRegionId.values())
+        .flat();
+      homeData = {
+        ...nextHomeData,
+        stageRegions,
+        upcomingRaces: mergeByKey(nextHomeData.upcomingRaces, loadedRegionRaces, (race) => race.id),
+      };
       return homeData;
     },
 

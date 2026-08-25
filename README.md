@@ -4,6 +4,10 @@ Public Office Watch（公職資料觀測站）是一個以台灣選舉為入口�
 
 專案將分散於中選會、政府機關與其他公開來源的資料，整理為可搜尋、可比較、保留來源且能逐步審核的結構化資訊。網站仍在持續補資料與校正階段，不將來源不足或尚未確認的內容包裝成確定事實。
 
+- 原始碼：[GitHub](https://github.com/tyrionwei/public-office-watch)
+- 問題與建議：[Issues](https://github.com/tyrionwei/public-office-watch/issues)
+- 預定正式網域：`pow4vote.org`（完成 Cloudflare 驗證與切換前，現行正式站仍保留）
+
 ## 主要瀏覽流程
 
 1. 從首頁查看全國摘要，或從地圖選擇縣市。
@@ -82,6 +86,14 @@ Public Office Watch（公職資料觀測站）是一個以台灣選舉為入口�
 
 本站使用 A／B／C／D 表示資料來源與比對狀態：A 為官方結構化資料，B 為可交叉確認的官方或高可信來源，C 為仍需人工確認的可信第三方資料，D 為來源不足或尚未完成比對的內部線索。分級不代表對人物或政黨的價值判斷。
 
+## 開源、貢獻與 Codex 維護流程
+
+本專案以 ISC License 公開原始碼，由核心維護者持續維護。歡迎透過 GitHub Issues 回報錯誤、補充可查核來源或提出功能建議，也可提交 Pull Request；涉及人物身分、選舉結果、政治獻金或其他敏感公開資料的變更，仍須依本站資料原則完成人工審核。
+
+Codex 用於本專案的核心維護工作，包括理解程式與資料流程、實作與修正介面、補充測試、同步文件、檢查資料公開邊界，以及準備建置與發布。Codex 不會自動核准人物資料，也不會把未審核線索直接發布到正式資料庫；AI 協助的變更仍須通過相同的測試、來源檢查與人工確認。
+
+本專案預計申請 [Codex for Open Source](https://developers.openai.com/community/codex-for-oss)，以支援公共資料專案的日常維護、審查、品質檢查與發布流程。此說明不代表本專案已獲 OpenAI 接受、贊助或背書。
+
 ## 本機啟動
 
 需求：Node.js 22（或 Node.js 20.19 以上）與 npm。
@@ -104,9 +116,22 @@ npm run check
 
 此指令會執行前端 lint、正式建置、公開資料邊界與公開 view contract 檢查。
 
+## Cloudflare 部署準備
+
+預定託管架構為 Cloudflare Workers + Static Assets，沿用現有邊緣 Worker 提供安全標頭、SPA 路由、頁面 metadata、`robots.txt` 與 sitemap。正式資料仍只透過 Supabase 的 `published` schema 與前端公開金鑰讀取；Cloudflare 前端不可持有 service role key。
+
+在不連接 Cloudflare 帳號、不發布 Worker 的情況下，可執行本機建置與 Wrangler dry run：
+
+```bash
+npm --prefix apps/web run check:cloudflare
+```
+
+正式建置使用 `npm --prefix apps/web run build:cloudflare`，並要求非本機 HTTPS Supabase URL、`published` provider 與公開前端金鑰。網域 `pow4vote.org`、正式 Worker 及 DNS 會在預覽與 smoke test 通過後才綁定；切換前保留現行 Codex Sites 作為回退來源。
+
 ## 專案結構
 
 - `apps/web/`：React、TypeScript 與 Vite 前端
+- `apps/web/worker/` 與 `apps/web/wrangler.jsonc`：Cloudflare Worker、Static Assets 與邊緣路由設定
 - `supabase/`：資料庫 migration、公開 view 與相關設定
 - `scripts/`：公開資料抓取、正規化、合併、同步與品質報告工具
 - `data-sources/`：可追溯的資料來源清單與必要 seed；大型合併產物由腳本在本機產生
@@ -117,3 +142,7 @@ npm run check
 ## 專案狀態
 
 目前已具備全國與縣市導覽、選舉總覽與詳細頁、人物搜尋與詳細頁、候選人政見、政黨統計與政治獻金摘要、公開更新動態、全站聊天室，以及中英文介面。後續工作仍包含人物與歷史資料補齊、來源審核、2026 正式候選人同步、政見履行情況追蹤與效能持續改善。
+
+## 授權
+
+程式碼依 [ISC License](LICENSE) 授權。資料與第三方來源仍受各原始來源的授權、使用條款與適用法規約束；程式碼授權不會改變來源資料本身的權利狀態。

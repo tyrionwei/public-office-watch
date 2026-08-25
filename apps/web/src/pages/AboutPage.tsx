@@ -94,6 +94,32 @@ export function AboutPage() {
           </div>
         </SectionPanel>
 
+        <SectionPanel title={t('about.openSourceTitle')} eyebrow={t('about.openSourceEyebrow')}>
+          <p className="max-w-4xl text-sm leading-6 text-slate-300">{t('about.openSourceDescription')}</p>
+          <div className="mt-4 grid gap-3 lg:grid-cols-3">
+            <a
+              href="https://github.com/tyrionwei/public-office-watch"
+              target="_blank"
+              rel="noreferrer"
+              className="pixel-corners border border-accent/45 bg-accent/8 p-5 text-sm text-white transition hover:border-accent hover:text-accent"
+            >
+              <span className="block font-display text-base">{t('about.openSourceCodeTitle')}</span>
+              <span className="mt-2 block leading-6 text-slate-300">{t('about.openSourceCodeDescription')}</span>
+              <span className="mt-4 inline-flex border border-accent/45 bg-bg/45 px-3 py-2 text-xs text-accent">
+                {t('about.openSourceCodeAction')}
+              </span>
+            </a>
+            <article className="pixel-corners border border-line/70 bg-bg/35 p-5">
+              <h3 className="font-display text-base text-white">{t('about.openSourceCodexTitle')}</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-300">{t('about.openSourceCodexDescription')}</p>
+            </article>
+            <article className="pixel-corners border border-line/70 bg-bg/35 p-5">
+              <h3 className="font-display text-base text-white">{t('about.openSourceReviewTitle')}</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-300">{t('about.openSourceReviewDescription')}</p>
+            </article>
+          </div>
+        </SectionPanel>
+
         <div id="roadmap" className="scroll-mt-6">
           <SectionPanel title={t('about.roadmapTitle')} eyebrow={t('about.roadmapEyebrow')}>
             <p className="max-w-4xl text-sm leading-6 text-slate-300">{t('about.roadmapDescription')}</p>

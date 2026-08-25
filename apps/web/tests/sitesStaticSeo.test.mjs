@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  addSecurityHeaders,
   documentMetadata,
   injectDocumentMetadata,
   robotsText,
@@ -58,6 +59,20 @@ test('covers election detail routes and marks private or unknown routes as noind
     injectDocumentMetadata(baseHtml, 'https://watch.example/internal/chat-admin', catalog),
     /name="robots" content="noindex,nofollow"/,
   );
+});
+
+test('forces private cache and crawler headers on internal routes', () => {
+  const response = addSecurityHeaders(new Response('private', {
+    headers: { 'cache-control': 'public, max-age=0' },
+  }), '/internal/review-queue');
+  const publicResponse = addSecurityHeaders(new Response('public', {
+    headers: { 'cache-control': 'public, max-age=0' },
+  }), '/about');
+
+  assert.equal(response.headers.get('cache-control'), 'no-store');
+  assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow');
+  assert.equal(publicResponse.headers.get('cache-control'), 'public, max-age=0');
+  assert.equal(publicResponse.headers.get('x-robots-tag'), null);
 });
 
 test('publishes a sitemap index with separated public entity maps', () => {

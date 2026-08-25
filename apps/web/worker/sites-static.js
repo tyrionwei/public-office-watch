@@ -9,12 +9,16 @@ const emptySeoManifest = { version: 3, generatedAt: null, groups: {} };
 let cachedSeoManifestPromise = null;
 const cachedSeoCatalogPromises = new Map();
 
-function addSecurityHeaders(response) {
+function addSecurityHeaders(response, pathname = '') {
   const headers = new Headers(response.headers);
   headers.set('permissions-policy', 'camera=(), geolocation=(), microphone=()');
   headers.set('referrer-policy', 'strict-origin-when-cross-origin');
   headers.set('x-content-type-options', 'nosniff');
   headers.set('x-frame-options', 'DENY');
+  if (pathname.startsWith('/internal/')) {
+    headers.set('cache-control', 'no-store');
+    headers.set('x-robots-tag', 'noindex, nofollow');
+  }
 
   return new Response(response.body, {
     status: response.status,
@@ -321,16 +325,17 @@ const worker = {
         status: indexResponse.status,
         statusText: indexResponse.statusText,
         headers,
-      }));
+      }), url.pathname);
     }
 
     const assetResponse = await env.ASSETS.fetch(request);
-    return addSecurityHeaders(assetResponse);
+    return addSecurityHeaders(assetResponse, url.pathname);
   },
 };
 
 export default worker;
 export {
+  addSecurityHeaders,
   documentMetadata,
   injectDocumentMetadata,
   robotsText,

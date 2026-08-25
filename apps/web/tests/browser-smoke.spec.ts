@@ -451,7 +451,8 @@ test('homepage election links and candidate categories use county filters and di
 
   const candidateFrame = page.getByRole('heading', { name: '臺北市參選人物', exact: true }).locator('xpath=ancestor::section[1]');
   const candidateTabs = candidateFrame.locator('[data-candidate-category-tabs]');
-  await expect(candidateTabs.getByRole('button', { name: /市長 \(\d+\)/ })).toBeVisible();
+  const mayorTab = candidateTabs.getByRole('button', { name: /市長 \(\d+\)/ });
+  await expect(mayorTab).toBeVisible();
   const councilorTab = candidateTabs.getByRole('button', { name: /市議員 \(\d+\)/ });
   await expect(councilorTab).toBeVisible();
   const councilorCountText = await councilorTab.textContent();
@@ -508,6 +509,13 @@ test('homepage election links and candidate categories use county filters and di
   await expect(page).toHaveURL(/candidateDistrict=/);
   expect(Array.from(new Set(selectedDistrictContexts))).toEqual(['第二選區']);
   await expect(candidateFrame.locator('[data-candidate-order-note]')).toContainText('依選區順序顯示');
+
+  await mayorTab.click();
+  await expect(mayorTab).toHaveAttribute('aria-pressed', 'true');
+  await expect(councilorTab).toHaveAttribute('aria-pressed', 'false');
+  await expect(candidateFrame.getByLabel('選擇市議員選區')).toHaveCount(0);
+  await expect(page).toHaveURL(/candidateCategory=local_chief/);
+  await expect(page).not.toHaveURL(/candidateDistrict=/);
 
   const candidateCardCount = await candidateFrame.locator('a[href^="/people/"]').count();
   expect(candidateCardCount).toBeGreaterThan(0);

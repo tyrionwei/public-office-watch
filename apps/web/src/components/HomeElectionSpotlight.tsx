@@ -427,7 +427,6 @@ export function HomeElectionSpotlight({
 
 
   const selectCandidateCategory = (group: ElectionCategoryGroup) => {
-    setActiveRaceId(group.races[0]?.id ?? '');
     setActiveCandidateIndex(0);
     updateHomeParams({
       homeContent: national ? 'candidates' : null,

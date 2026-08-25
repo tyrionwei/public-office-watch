@@ -149,7 +149,7 @@ function PersonOfficeGroupCard({
   const panelId = `${title}-other-office-people`;
   const panel = isOpen ? (
     <div ref={panelRef} className="fixed z-[100]" style={{ left: panelPosition.left, top: panelPosition.top, width: panelPosition.width }}>
-      <div className="pixel-corners border border-accent/45 bg-panel/95 p-3 shadow-[0_16px_0_rgba(0,0,0,0.28)] backdrop-blur-sm">
+      <div className="pixel-corners border border-accent/45 bg-panel/95 p-3 shadow-[0_16px_0_rgba(0,0,0,0.28)]">
         <div className="mb-3 flex items-center justify-between gap-3">
           <p className="text-xs uppercase tracking-[0.2em] text-accent">{t('office.otherTitle', { title })}</p>
           <button

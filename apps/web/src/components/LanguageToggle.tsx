@@ -11,7 +11,7 @@ export function LanguageToggle() {
 
   return (
     <div
-      className="pixel-corners flex shrink-0 items-center gap-1 border border-line/80 bg-bg/55 p-1 shadow-[inset_0_0_18px_rgba(114,232,255,0.06)] backdrop-blur-sm"
+      className="pixel-corners flex shrink-0 items-center gap-1 border border-line/80 bg-bg/55 p-1 shadow-[inset_0_0_18px_rgba(114,232,255,0.06)]"
       aria-label={t('language.aria')}
     >
       {languageOptions.map((option) => {

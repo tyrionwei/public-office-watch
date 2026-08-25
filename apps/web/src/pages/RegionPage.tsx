@@ -97,15 +97,15 @@ export function RegionPage() {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="border-l-2 border-signal bg-bg/60 px-3 py-2 backdrop-blur-sm">
+                <div className="border-l-2 border-signal bg-bg/60 px-3 py-2">
                   <p className="text-[11px] text-slate-500">{t('regionPage.nearestElection')}</p>
                   <p className="mt-1 line-clamp-2 text-sm text-white">{regionSummary.nearestElectionName}</p>
                 </div>
-                <div className="border-l-2 border-accent bg-bg/60 px-3 py-2 backdrop-blur-sm">
+                <div className="border-l-2 border-accent bg-bg/60 px-3 py-2">
                   <p className="text-[11px] text-slate-500">{t('regionPage.voteDate')}</p>
                   <p className="mt-1 font-display text-sm text-accent">{regionSummary.nearestElectionDate}</p>
                 </div>
-                <div className="border-l-2 border-cyan-300 bg-bg/60 px-3 py-2 backdrop-blur-sm">
+                <div className="border-l-2 border-cyan-300 bg-bg/60 px-3 py-2">
                   <p className="text-[11px] text-slate-500">{t('regionPage.publicRaces')}</p>
                   <p className="mt-1 font-display text-sm text-white">{t('regionPage.raceCount', { count: regionSummary.upcomingRaceCount })}</p>
                 </div>

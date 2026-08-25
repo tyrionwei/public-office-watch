@@ -23,7 +23,7 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
 
   return (
     <header className="relative z-50 px-3 py-3 sm:px-4">
-      <div className="pixel-corners pointer-events-none absolute inset-0 border border-line/80 bg-[#071126]/90 shadow-pixel backdrop-blur-sm" />
+      <div className="pixel-corners pointer-events-none absolute inset-0 border border-line/80 bg-[#071126]/90 shadow-pixel" />
       <div className="pixel-corners pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(114,232,255,0.08),transparent_35%,rgba(244,211,94,0.08))]" />
 
       <div className="relative">

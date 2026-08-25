@@ -10,7 +10,7 @@ export function PixelFrame({ title, action, className = '', children }: PixelFra
   return (
     <section
       className={[
-        'pixel-corners relative overflow-hidden border border-line/80 bg-panel/90 p-4 shadow-pixel backdrop-blur-sm sm:p-5',
+        'pixel-corners relative overflow-hidden border border-line/80 bg-panel/90 p-4 shadow-pixel sm:p-5',
         'before:pointer-events-none before:absolute before:inset-[1px] before:border before:border-white/5 before:content-[""]',
         className,
       ].join(' ')}

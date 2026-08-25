@@ -33,6 +33,36 @@ SELECT value::UUID FROM jsonb_array_elements_text($party_release$["018f2626-aaa0
 
 DO $$
 DECLARE
+    local_person_id CONSTANT UUID := '910cbcb1-6891-4fc0-8e7f-95a554318d8c';
+    stable_external_id CONSTANT TEXT := 'cec-historical-person-33ac9d9656f5a063';
+    target_person_id UUID;
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM people WHERE id = local_person_id) THEN
+        SELECT id INTO STRICT target_person_id
+        FROM people
+        WHERE external_id = stable_external_id;
+
+        UPDATE _party_release_matches
+        SET person_id = target_person_id,
+            evidence_json = replace(evidence_json::TEXT, local_person_id::TEXT, target_person_id::TEXT)::JSONB
+        WHERE person_id = local_person_id;
+
+        UPDATE _party_release_sources
+        SET source_payload = replace(source_payload::TEXT, local_person_id::TEXT, target_person_id::TEXT)::JSONB
+        WHERE source_payload::TEXT LIKE '%' || local_person_id::TEXT || '%';
+
+        UPDATE _party_release_claims
+        SET claim_json = replace(claim_json::TEXT, local_person_id::TEXT, target_person_id::TEXT)::JSONB
+        WHERE claim_json::TEXT LIKE '%' || local_person_id::TEXT || '%';
+
+        DELETE FROM _party_release_required_people WHERE id = local_person_id;
+        INSERT INTO _party_release_required_people (id) VALUES (target_person_id);
+    END IF;
+END
+$$;
+
+DO $$
+DECLARE
     missing_people INTEGER;
     missing_races INTEGER;
 BEGIN

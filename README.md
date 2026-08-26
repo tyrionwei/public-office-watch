@@ -6,7 +6,7 @@ Public Office Watch（公職資料觀測站）是一個以台灣選舉為入口�
 
 - 原始碼：[GitHub](https://github.com/tyrionwei/public-office-watch)
 - 問題與建議：[Issues](https://github.com/tyrionwei/public-office-watch/issues)
-- 預定正式網域：`pow4vote.org`（完成 Cloudflare 驗證與切換前，現行正式站仍保留）
+- 正式網站：[pow4vote.org](https://pow4vote.org)（Cloudflare Workers + Static Assets）
 
 ## 主要瀏覽流程
 
@@ -116,9 +116,9 @@ npm run check
 
 此指令會執行前端 lint、正式建置、公開資料邊界與公開 view contract 檢查。
 
-## Cloudflare 部署準備
+## Cloudflare 正式部署
 
-預定託管架構為 Cloudflare Workers + Static Assets，沿用現有邊緣 Worker 提供安全標頭、SPA 路由、頁面 metadata、`robots.txt` 與 sitemap。正式資料仍只透過 Supabase 的 `published` schema 與前端公開金鑰讀取；Cloudflare 前端不可持有 service role key。
+正式網站託管於 Cloudflare Workers + Static Assets，`https://pow4vote.org` 是目前的正式入口。邊緣 Worker 提供安全標頭、SPA 路由、頁面 metadata、`robots.txt` 與 sitemap；靜態前端再以公開金鑰直接讀取 Supabase 的 `published` schema。Cloudflare 前端不可持有 service role key，Codex Sites 已不在目前的正式發布流程內。
 
 在不連接 Cloudflare 帳號、不發布 Worker 的情況下，可執行本機建置與 Wrangler dry run：
 
@@ -126,7 +126,7 @@ npm run check
 npm --prefix apps/web run check:cloudflare
 ```
 
-正式建置使用 `npm --prefix apps/web run build:cloudflare`，並要求非本機 HTTPS Supabase URL、`published` provider 與公開前端金鑰。網域 `pow4vote.org`、正式 Worker 及 DNS 會在預覽與 smoke test 通過後才綁定；切換前保留現行 Codex Sites 作為回退來源。
+正式建置使用 `npm --prefix apps/web run build:cloudflare`，並要求非本機 HTTPS Supabase URL、`published` provider 與公開前端金鑰。通過完整檢查、Wrangler dry run 與 production smoke 後，由維護者在 `apps/web` 目錄執行 `npx wrangler deploy` 發布 `public-office-watch` Worker。`pow4vote.org` 的自訂網域與 DNS 由 Cloudflare 管理；`wrangler.jsonc` 已關閉 `workers.dev` 與 preview URL，正式流量只使用自訂網域。
 
 ## 專案結構
 

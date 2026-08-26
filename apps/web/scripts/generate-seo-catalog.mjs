@@ -196,7 +196,6 @@ function electionEventPages(rows) {
       title,
       `查看${title}的選區、候選人、政黨表現與公開資料。`,
       compactRecord({ '@type': 'Event', name: title, startDate: votingDate || undefined }),
-      votingDate,
     );
   }).filter(Boolean);
 }

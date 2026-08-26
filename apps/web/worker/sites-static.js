@@ -309,24 +309,26 @@ function textResponse(body, contentType) {
 const worker = {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const isGetOrHead = request.method === 'GET' || request.method === 'HEAD';
+    const responseBody = (body) => (request.method === 'HEAD' ? null : body);
 
-    if (request.method === 'GET' && url.pathname === '/robots.txt') {
-      return textResponse(robotsText(canonicalSiteOrigin), 'text/plain; charset=utf-8');
+    if (isGetOrHead && url.pathname === '/robots.txt') {
+      return textResponse(responseBody(robotsText(canonicalSiteOrigin)), 'text/plain; charset=utf-8');
     }
-    if (request.method === 'GET' && url.pathname === '/sitemap.xml') {
-      const manifest = await loadSeoCatalog(env, url.origin);
-      return textResponse(sitemapIndexXml(canonicalSiteOrigin, manifest), 'application/xml; charset=utf-8');
+    if (isGetOrHead && url.pathname === '/sitemap.xml') {
+      const manifest = request.method === 'HEAD' ? emptySeoManifest : await loadSeoCatalog(env, url.origin);
+      return textResponse(responseBody(sitemapIndexXml(canonicalSiteOrigin, manifest)), 'application/xml; charset=utf-8');
     }
     const sitemapMatch = url.pathname.match(/^\/sitemaps\/([a-z]+)\.xml$/);
-    if (request.method === 'GET' && sitemapMatch) {
+    if (isGetOrHead && sitemapMatch) {
       const group = sitemapMatch[1];
       if (group !== 'static' && !dynamicSitemapGroups.includes(group)) {
         return addSecurityHeaders(new Response('Not found', { status: 404 }));
       }
-      const catalog = group === 'static'
+      const catalog = group === 'static' || request.method === 'HEAD'
         ? emptySeoCatalog
         : await loadSeoCatalogGroup(env, url.origin, group);
-      return textResponse(sitemapXml(canonicalSiteOrigin, sitemapEntries(catalog, group)), 'application/xml; charset=utf-8');
+      return textResponse(responseBody(sitemapXml(canonicalSiteOrigin, sitemapEntries(catalog, group))), 'application/xml; charset=utf-8');
     }
     if (isDocumentRoute(request)) {
       const group = catalogGroupForPathname(url.pathname.replace(/\/$/, '') || '/');

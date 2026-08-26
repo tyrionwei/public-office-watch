@@ -31,7 +31,9 @@ test('creates deduplicated public entity metadata from published rows', () => {
   assert.equal(catalog.pages.find((page) => page.group === 'people').path, '/people/person%2F1');
   assert.match(catalog.pages.find((page) => page.group === 'people').description, /測試黨、市議員/);
   assert.equal(catalog.pages.find((page) => page.group === 'elections').structuredData['@type'], 'Event');
-  assert.equal(catalog.pages.find((page) => page.group === 'events').path, '/elections/events/2026-2026-11-28-local');
+  const eventPage = catalog.pages.find((page) => page.group === 'events');
+  assert.equal(eventPage.path, '/elections/events/2026-2026-11-28-local');
+  assert.equal(eventPage.lastModified, undefined);
   assert.equal(catalog.pages.some((page) => page.path === '/regions/test-village'), false);
 });
 

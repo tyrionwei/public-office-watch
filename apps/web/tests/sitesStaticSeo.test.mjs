@@ -155,3 +155,19 @@ test('publishes sitemap groups from a split catalog manifest', () => {
   assert.match(index, /sitemaps\/races\.xml/);
   assert.doesNotMatch(index, /sitemaps\/elections\.xml/);
 });
+
+test('serves metadata endpoint HEAD requests with the same content types as GET', async () => {
+  const env = { ASSETS: { fetch: async () => new Response('Not expected') } };
+  const cases = [
+    ['/robots.txt', 'text/plain; charset=utf-8'],
+    ['/sitemap.xml', 'application/xml; charset=utf-8'],
+    ['/sitemaps/people.xml', 'application/xml; charset=utf-8'],
+  ];
+
+  for (const [pathname, contentType] of cases) {
+    const response = await worker.fetch(new Request(`https://pow4vote.org${pathname}`, { method: 'HEAD' }), env);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('content-type'), contentType);
+    assert.equal(await response.text(), '');
+  }
+});

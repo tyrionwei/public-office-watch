@@ -182,6 +182,7 @@ export function HomeElectionSpotlight({
   const [activeRaceId, setActiveRaceId] = useState(races[0]?.id ?? '');
   const [candidates, setCandidates] = useState<PublicCandidate[]>([]);
   const [candidatesLoading, setCandidatesLoading] = useState(false);
+  const [candidateLoadError, setCandidateLoadError] = useState(false);
   const [candidateCounts, setCandidateCounts] = useState<Record<string, number>>({});
   const [candidateDemographics, setCandidateDemographics] = useState<Map<string, CandidateDemographics>>(new Map());
   const requestedCandidateIndex = Number.parseInt(searchParams.get('candidateIndex') ?? '0', 10);
@@ -325,6 +326,7 @@ export function HomeElectionSpotlight({
     let active = true;
     setCandidates([]);
     setCandidateDemographics(new Map());
+    setCandidateLoadError(false);
 
     if (displayedCategoryRaces.length === 0) {
       setCandidatesLoading(false);
@@ -363,6 +365,7 @@ export function HomeElectionSpotlight({
         setActiveCandidateIndex(Math.min(restoredCandidateIndexRef.current, Math.max(sortedCandidates.length - 1, 0)));
       })
       .catch((error: unknown) => {
+        if (active) setCandidateLoadError(true);
         if (import.meta.env.DEV) console.warn('Failed to load home candidate carousel', error);
       })
       .finally(() => {
@@ -656,6 +659,11 @@ export function HomeElectionSpotlight({
           )
         ) : candidatesLoading ? (
           <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center text-sm text-slate-400">{t('homeSpotlight.loadingCandidates')}</div>
+        ) : candidateLoadError ? (
+          <div className="pixel-corners border border-red-400/60 bg-red-950/30 px-4 py-8 text-center" data-candidate-load-error role="status">
+            <p className="font-display text-base text-white">{t('homeSpotlight.candidateLoadError')}</p>
+            <p className="mt-2 text-xs text-slate-400">{t('homeSpotlight.candidateLoadErrorHint')}</p>
+          </div>
         ) : candidates.length > 0 ? (
           <div
             className="relative"

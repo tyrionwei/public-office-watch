@@ -26,6 +26,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260822063207_normalize_published_search_office_aliases.sql',
   'supabase/migrations/20260824063832_add_election_race_search.sql',
   'supabase/migrations/20260825194609_home_candidate_summaries_and_function_security.sql',
+  'supabase/migrations/20260826105941_fix_home_candidate_summary_query.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -54,7 +55,8 @@ const reviewedRelations = [
   'update_feed',
   'search_results',
 ];
-const directlyQueriedRelations = reviewedRelations.filter((relation) => relation !== 'search_results');
+const indirectlyQueriedRelations = new Set(['home_candidate_summaries', 'search_results']);
+const directlyQueriedRelations = reviewedRelations.filter((relation) => !indirectlyQueriedRelations.has(relation));
 const reviewedAuxiliaryFunctions = [
   'chat_messages',
   'chat_status',
@@ -64,7 +66,7 @@ const reviewedAuxiliaryFunctions = [
   'submit_person_feedback',
   'submit_region_issue_response',
 ];
-const reviewedFunctions = ['election_education_distribution', 'election_party_performance', 'election_race_page', 'party_legal_statistics', 'party_people_statistics', 'person_claims_for', 'search_public_records'];
+const reviewedFunctions = ['election_education_distribution', 'election_party_performance', 'election_race_page', 'home_candidate_summaries_for', 'party_legal_statistics', 'party_people_statistics', 'person_claims_for', 'search_public_records'];
 const reviewedGrantedFunctions = [...reviewedAuxiliaryFunctions, ...reviewedFunctions];
 const issues = [];
 

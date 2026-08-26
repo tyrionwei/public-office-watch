@@ -74,6 +74,9 @@ GRANT EXECUTE ON FUNCTION published.election_party_performance(
   TEXT
 ) TO anon, authenticated;
 
+GRANT EXECUTE ON FUNCTION published.home_candidate_summaries_for(UUID[])
+TO anon, authenticated;
+
 GRANT EXECUTE ON FUNCTION published.person_claims_for(UUID[])
 TO anon, authenticated;
 

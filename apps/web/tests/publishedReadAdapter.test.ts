@@ -10,7 +10,6 @@ import {
   ELECTION_RACE_PAGE_ELECTION_LIMIT,
   ELECTION_RACE_PAGE_SIZE,
   HOME_CANDIDATE_RACE_LIMIT,
-  HOME_CANDIDATE_SUMMARY_COLUMNS,
   HOME_CANDIDATE_SUMMARY_LIMIT,
   HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
@@ -288,22 +287,27 @@ test('home candidate summaries use one bounded query for all displayed races', a
     birth_date: '1980-01-01',
   };
   const fake = createFakeClient({
-    home_candidate_summaries: { data: [row], error: null, count: null },
+    'rpc:home_candidate_summaries_for': { data: [row], error: null, count: null },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
   assert.deepEqual(await adapter.loadHomeCandidateSummaries(['race-2', 'race-1', 'race-1']), [row]);
   assert.deepEqual(fake.calls, [
     ['schema', 'published'],
-    ['from', 'home_candidate_summaries'],
-    ['select', `${PERSON_CANDIDATE_COLUMNS},${HOME_CANDIDATE_SUMMARY_COLUMNS}`],
-    ['in', 'race_id', ['race-2', 'race-1']],
-    ['order', 'race_id', { ascending: true }],
-    ['order', 'candidate_no', { ascending: true, nullsFirst: false }],
-    ['order', 'person_name', { ascending: true }],
-    ['order', 'candidate_id', { ascending: true }],
-    ['limit', HOME_CANDIDATE_SUMMARY_LIMIT + 1],
+    ['rpc', 'home_candidate_summaries_for', { p_race_ids: ['race-2', 'race-1'] }],
   ]);
+
+  const oversizedFake = createFakeClient({
+    'rpc:home_candidate_summaries_for': {
+      data: Array.from({ length: HOME_CANDIDATE_SUMMARY_LIMIT + 1 }, () => row),
+      error: null,
+      count: null,
+    },
+  });
+  await assert.rejects(
+    () => createPublishedReadAdapter(oversizedFake.client).loadHomeCandidateSummaries(['race-1']),
+    /exceeded the 400-row batch limit/,
+  );
   await assert.rejects(
     () => adapter.loadHomeCandidateSummaries(Array.from({ length: HOME_CANDIDATE_RACE_LIMIT + 1 }, (_, index) => `race-${index}`)),
     /accept at most 24 race ids/,

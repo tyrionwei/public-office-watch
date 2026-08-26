@@ -51,7 +51,10 @@ export function HomePage() {
     void publicDataProvider.loadRelatedRacesByRegionId(selectedRegionId)
       .then((races) => {
         if (active) {
-          setRelatedRaces(races.filter((race) => race.status !== 'completed'));
+          setRelatedRaces(selectHomeRelatedRaces({
+            stageRegions: homeData.stageRegions,
+            upcomingRaces: races,
+          }, selectedRegionId));
         }
       })
       .catch(() => undefined);

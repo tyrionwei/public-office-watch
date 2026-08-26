@@ -267,6 +267,32 @@ test('person load failures are visually distinct from uncollected data', async (
   await expect(page.locator('[data-data-state="uncollected"]')).toHaveCount(0);
 });
 
+test('home candidate load failures are distinct from an empty roster', async ({ page }) => {
+  await page.route(/\/rest\/v1\/rpc\/home_candidate_summaries_for(?:\?|$)/, async (route) => {
+    await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ message: 'test failure' }) });
+  });
+
+  await page.goto('/');
+  await page.locator('[aria-label="選取 臺北市"]').first().click();
+
+  await expect(page.locator('[data-candidate-load-error]')).toContainText('參選人物載入失敗');
+  await expect(page.getByText('目前沒有參選人物資料', { exact: true })).toHaveCount(0);
+});
+
+test('selecting another county city resets the candidate category to mayor', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[aria-label="選取 臺北市"]').first().click();
+
+  const activeCandidateTab = page.locator('[data-candidate-category-tabs] button[aria-pressed="true"]');
+  await page.locator('[data-candidate-category-tabs]').getByRole('button', { name: /市議員/ }).click();
+  await expect(activeCandidateTab).toContainText('市議員');
+
+  await page.locator('[aria-label="選取 新北市"]').first().click();
+
+  await expect(activeCandidateTab).toContainText('市長');
+  await expect(page).not.toHaveURL(/candidateCategory=/);
+});
+
 
 test('county highlight panel provides a distinct background for every county city', async ({ page }) => {
   await page.goto('/');

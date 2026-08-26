@@ -1017,16 +1017,9 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       const raceIds = normalizeHomeCandidateRaceIds(rawRaceIds);
       if (raceIds.length === 0) return [];
 
-      const response = await client
-        .schema('published')
-        .from<PublishedHomeCandidateSummaryRow>('home_candidate_summaries')
-        .select(`${PERSON_CANDIDATE_COLUMNS},${HOME_CANDIDATE_SUMMARY_COLUMNS}`)
-        .in('race_id', raceIds)
-        .order('race_id', { ascending: true })
-        .order('candidate_no', { ascending: true, nullsFirst: false })
-        .order('person_name', { ascending: true })
-        .order('candidate_id', { ascending: true })
-        .limit(HOME_CANDIDATE_SUMMARY_LIMIT + 1);
+      const response = await client.schema('published').rpc<PublishedHomeCandidateSummaryRow>('home_candidate_summaries_for', {
+        p_race_ids: raceIds,
+      });
 
       return getBoundedRowsOrThrow(
         response,

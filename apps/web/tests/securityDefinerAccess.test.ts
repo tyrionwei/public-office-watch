@@ -12,6 +12,10 @@ const homeCandidateSecurityMigration = readFileSync(
   new URL('../../../supabase/migrations/20260825194609_home_candidate_summaries_and_function_security.sql', import.meta.url),
   'utf8',
 );
+const homeCandidateQueryMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260826105941_fix_home_candidate_summary_query.sql', import.meta.url),
+  'utf8',
+);
 
 const retirementMigration = readFileSync(
   new URL('../../../supabase/migrations/20260812062319_retire_legacy_public_api_views.sql', import.meta.url),
@@ -196,6 +200,21 @@ test('party normalization functions use invoker rights and homepage summaries st
   assert.match(homeCandidateSecurityMigration, /canonical_party_key\(p_name TEXT\)[\s\S]*SECURITY INVOKER/u);
   assert.match(homeCandidateSecurityMigration, /published\.home_candidate_summaries[\s\S]*security_invoker = false/u);
   assert.match(homeCandidateSecurityMigration, /GRANT SELECT ON published\.home_candidate_summaries TO anon, authenticated, service_role, admin_role;/u);
+});
+
+test('home candidate summary RPC bounds privileged reads before demographic joins', () => {
+  assert.match(homeCandidateQueryMigration, /FUNCTION published\.home_candidate_summaries_for\(p_race_ids UUID\[\]\)/u);
+  assert.match(homeCandidateQueryMigration, /SECURITY DEFINER[\s\S]*SET search_path = ''/u);
+  assert.match(homeCandidateQueryMigration, /IF v_race_count > 24[\s\S]*LIMIT 401/u);
+  assert.match(homeCandidateQueryMigration, /requested_candidates AS MATERIALIZED/u);
+  assert.match(
+    homeCandidateQueryMigration,
+    /REVOKE ALL ON FUNCTION published\.home_candidate_summaries_for\(UUID\[\]\)\s+FROM PUBLIC, anon, authenticated;/u,
+  );
+  assert.match(
+    homeCandidateQueryMigration,
+    /GRANT EXECUTE ON FUNCTION published\.home_candidate_summaries_for\(UUID\[\]\)\s+TO anon, authenticated, service_role, admin_role;/u,
+  );
 });
 
 test('region issue participation uses only the reviewed published API', () => {

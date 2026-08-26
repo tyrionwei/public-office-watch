@@ -21,21 +21,13 @@
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
     "run_worker_first": [
-      "/",
-      "/people",
-      "/people/*",
-      "/elections",
-      "/elections/*",
-      "/parties",
-      "/parties/*",
-      "/regions/*",
-      "/updates",
-      "/data-guidance",
-      "/about",
-      "/internal/*",
-      "/robots.txt",
-      "/sitemap.xml",
-      "/sitemaps/*"
+      "/*",
+      "!/assets/*",
+      "!/seo-catalog/*",
+      "!/seo-catalog.json",
+      "!/og.png",
+      "!/site.webmanifest",
+      "!/index.html"
     ]
   }
 }

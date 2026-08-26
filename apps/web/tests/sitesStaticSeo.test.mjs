@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import {
+import worker, {
   addSecurityHeaders,
   documentMetadata,
   documentResponseStatus,
@@ -9,6 +10,8 @@ import {
   sitemapIndexXml,
   sitemapXml,
 } from '../worker/sites-static.js';
+
+const wranglerConfig = JSON.parse(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
 
 const baseHtml = `<!doctype html><html><head>
   <title>Old title</title>
@@ -45,6 +48,33 @@ const catalog = {
     },
   ],
 };
+
+test('routes every document path through the Worker while bypassing static assets', () => {
+  assert.deepEqual(wranglerConfig.assets.run_worker_first, [
+    '/*',
+    '!/assets/*',
+    '!/seo-catalog/*',
+    '!/seo-catalog.json',
+    '!/og.png',
+    '!/site.webmanifest',
+    '!/index.html',
+  ]);
+});
+
+test('returns a real 404 document for a generic unknown route', async () => {
+  const response = await worker.fetch(new Request('https://pow4vote.org/not-a-real-route', {
+    headers: { accept: 'text/html' },
+  }), {
+    ASSETS: {
+      fetch: async () => new Response(baseHtml, {
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      }),
+    },
+  });
+
+  assert.equal(response.status, 404);
+  assert.match(await response.text(), /<title>找不到頁面｜公職資料觀測站<\/title>/);
+});
 
 test('injects exact catalog metadata and absolute social URLs', () => {
   const html = injectDocumentMetadata(baseHtml, 'https://preview.example/people/person-1?tab=history', catalog);

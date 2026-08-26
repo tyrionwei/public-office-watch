@@ -637,6 +637,7 @@ export interface PublishedQueryBuilder<Row> extends PromiseLike<PublishedQueryRe
   like(column: string, pattern: string): PublishedQueryBuilder<Row>;
   in(column: string, values: readonly unknown[]): PublishedQueryBuilder<Row>;
   or(filters: string): PublishedQueryBuilder<Row>;
+  not(column: string, operator: string, value: unknown): PublishedQueryBuilder<Row>;
   order(column: string, options: { ascending: boolean; nullsFirst?: boolean }): PublishedQueryBuilder<Row>;
   range(from: number, to: number): PublishedQueryBuilder<Row>;
   limit(count: number): PublishedQueryBuilder<Row>;
@@ -1365,7 +1366,11 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         query = query.or(request.districtPrefixes.map((prefix) => `district.ilike.${prefix}%`).join(','));
       }
       if (request.role) query = query.eq('list_role', request.role);
-      if (request.status) query = query.eq('list_status', request.status);
+      if (request.status === 'candidate') {
+        query = query.not('upcoming_candidate_label', 'is', null);
+      } else if (request.status) {
+        query = query.eq('list_status', request.status);
+      }
 
       const response = await query
         .order('list_status_order', { ascending: true })

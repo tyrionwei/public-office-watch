@@ -104,6 +104,10 @@ function createFakeClient(responses: Record<string, FakeResponse | FakeResponse[
               calls.push(['or', ...args]);
               return query;
             },
+            not(...args: unknown[]) {
+              calls.push(['not', ...args]);
+              return query;
+            },
             order(...args: unknown[]) {
               calls.push(['order', ...args]);
               return query;
@@ -181,6 +185,21 @@ test('people directory applies published filters without hiding party officers',
     ['eq', 'list_status', 'current'],
   ]);
   assert.equal(fake.calls.some((call) => call[0] === 'eq' && call[1] === 'list_is_party_only'), false);
+});
+
+test('candidate status includes current officeholders who are also upcoming candidates', async () => {
+  const fake = createFakeClient({
+    people_directory: { data: [], error: null, count: 0 },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await adapter.loadPeoplePage({
+    page: 1,
+    status: 'candidate',
+  });
+
+  assert.equal(fake.calls.some((call) => call[0] === 'eq' && call[1] === 'list_status'), false);
+  assert.equal(fake.calls.some((call) => call[0] === 'not' && call[1] === 'upcoming_candidate_label' && call[2] === 'is' && call[3] === null), true);
 });
 
 test('party candidate page reads the active published candidate view with stable pagination', async () => {

@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   extractDistrictNumbers,
   isOfficialBulletinUrl,
+  isScopeTarget,
   matchBulletinCandidates,
   parseArgs,
   parseOfficialPdfLinks,
@@ -92,6 +93,30 @@ test('arguments require an explicit verified scope', () => {
     parseArgs(['--scope', '2022-councilor', '--include-existing-platforms']).includeExistingPlatforms,
     true,
   );
+  assert.equal(
+    parseArgs(['--scope', '2022-councilor', '--include-non-elected']).includeNonElected,
+    true,
+  );
+});
+
+test('non-elected representative candidates are included only when explicitly requested', () => {
+  const councilor = {
+    election_year: 2022,
+    election_result: 'not_elected',
+    is_elected: false,
+    race_title: '臺北市第1選舉區議員選舉',
+  };
+  const legislator = {
+    election_year: 2024,
+    election_result: 'not_elected',
+    election_name: '第11屆立法委員選舉',
+    is_elected: false,
+  };
+
+  assert.equal(isScopeTarget('2022-councilor', councilor), false);
+  assert.equal(isScopeTarget('2022-councilor', councilor, { includeNonElected: true }), true);
+  assert.equal(isScopeTarget('2024-legislator', legislator), false);
+  assert.equal(isScopeTarget('2024-legislator', legislator, { includeNonElected: true }), true);
 });
 
 test('known official split and duplicate layouts select the candidate-bearing bulletin', () => {

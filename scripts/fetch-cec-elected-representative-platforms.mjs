@@ -41,6 +41,7 @@ function parseArgs(argv) {
     cacheDir: null,
     download: false,
     includeExistingPlatforms: false,
+    includeNonElected: false,
     targetPersonIdsPath: null,
   };
   for (let index = 0; index < argv.length; index += 1) {
@@ -51,6 +52,7 @@ function parseArgs(argv) {
     else if (arg === '--cache-dir') options.cacheDir = path.resolve(argv[++index] ?? '');
     else if (arg === '--download') options.download = true;
     else if (arg === '--include-existing-platforms') options.includeExistingPlatforms = true;
+    else if (arg === '--include-non-elected') options.includeNonElected = true;
     else if (arg === '--target-person-ids') options.targetPersonIdsPath = path.resolve(argv[++index] ?? '');
     else throw new Error(`Unsupported argument: ${arg}`);
   }
@@ -283,8 +285,9 @@ async function fetchAllRows(config, table, select, params = {}, profile = 'publi
   }
 }
 
-function isScopeTarget(scope, row) {
-  if (row.is_elected !== true || row.election_result !== 'elected') return false;
+function isScopeTarget(scope, row, options = {}) {
+  if (!options.includeNonElected
+    && (row.is_elected !== true || row.election_result !== 'elected')) return false;
   if (scope === '2022-councilor') {
     return row.election_year === 2022 && normalizeText(row.race_title).includes('議員選舉');
   }
@@ -318,7 +321,7 @@ async function fetchTargets(config, scope, options = {}) {
     });
   }
   return candidates
-    .filter((row) => isScopeTarget(scope, row))
+    .filter((row) => isScopeTarget(scope, row, options))
     .filter((row) => options.includeExistingPlatforms || !existingCandidateIds.has(row.candidate_id))
     .filter((row) => !targetPersonIds || targetPersonIds.has(row.person_id))
     .map((row) => ({ ...row, raceCandidates: raceCandidates.get(row.race_id) ?? [] }));
@@ -511,6 +514,7 @@ async function main() {
   const targetPersonIds = readTargetPersonIds(options.targetPersonIdsPath);
   const targets = await fetchTargets(config, options.scope, {
     includeExistingPlatforms: options.includeExistingPlatforms,
+    includeNonElected: options.includeNonElected,
     targetPersonIds,
   });
   const entries = [];
@@ -549,7 +553,7 @@ async function main() {
     },
     scope: {
       name: options.scope,
-      electedOnly: true,
+      electedOnly: !options.includeNonElected,
       missingOnly: !options.includeExistingPlatforms,
       targetPersonCount: targetPersonIds?.size ?? null,
     },
@@ -582,6 +586,7 @@ export {
   expandDistrictExpression,
   extractDistrictNumbers,
   isOfficialBulletinUrl,
+  isScopeTarget,
   matchBulletinCandidates,
   normalizeText,
   parseArgs,

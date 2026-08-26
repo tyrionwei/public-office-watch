@@ -529,8 +529,8 @@ function claimFor(entry, claimType, claimValue, extraction) {
       publicationGate: {
         status: 'passed',
         reason: extraction.locator === 'candidate_number_and_race'
-          ? 'Official CEC bulletin matched to the exact elected candidate record through the candidate number and race'
-          : 'Official CEC bulletin matched to the exact elected candidate record through the candidate name and race',
+          ? 'Official CEC bulletin matched to the exact candidate record through the candidate number and race'
+          : 'Official CEC bulletin matched to the exact candidate record through the candidate name and race',
       },
     },
     confidenceLevel: 'A',
@@ -608,7 +608,7 @@ function main() {
     schemaVersion: 1,
     name: 'cec-2022-councilor-bulletin-profile-claims',
     updatedAt: new Date().toISOString().slice(0, 10),
-    notes: 'Official CEC 2022 elected councilor bulletin profiles. Education and experience are canonical only when no newer official bulletin exists; birth date and gender require deduplication; party is election-time context only.',
+    notes: 'Official CEC 2022 councilor candidate bulletin profiles. Education and experience are canonical only when no newer official bulletin exists; birth date and gender require deduplication; party is election-time context only.',
     sources: [{ id: sourceId, name: sourceName, url: sourceUrl, confidenceLevel: 'A' }],
     summary,
     personClaims: selectedClaims,

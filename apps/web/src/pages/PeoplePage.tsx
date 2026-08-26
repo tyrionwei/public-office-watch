@@ -381,7 +381,10 @@ export function PeoplePage() {
                       <p className="min-w-0 truncate text-sm text-slate-300"><span className="mr-2 text-[10px] text-slate-500 lg:hidden">{t('people.role')}</span>{person.role_label}</p>
                       <p className="min-w-0 truncate text-sm text-slate-300"><span className="mr-2 text-[10px] text-slate-500 lg:hidden">{t('people.region')}</span>{person.region_name ?? person.district ?? t('people.noRegion')}</p>
                       <p className={person.status === 'current' ? 'text-sm text-signal' : 'text-sm text-slate-400'}>
-                        <span className="mr-2 text-[10px] text-slate-500 lg:hidden">{t('people.status')}</span>{person.status_label}
+                        <span className="mr-2 text-[10px] text-slate-500 lg:hidden">{t('people.status')}</span>
+                        {person.current_office_label && person.upcoming_candidate_label
+                          ? t('people.status.currentCandidate')
+                          : person.status_label}
                       </p>
                     </Link>
                   );

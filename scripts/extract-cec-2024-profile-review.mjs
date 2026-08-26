@@ -158,7 +158,7 @@ function claimFor(entry, claimType, claimValue, extraction) {
       sourceDocument: { sha256: entry.sourceDocument.sha256, page: extraction.page },
       publicationGate: {
         status: 'passed',
-        reason: 'Official CEC bulletin matched to the exact elected candidate record',
+        reason: 'Official CEC bulletin matched to the exact candidate record',
       },
     },
     confidenceLevel: 'A',
@@ -212,7 +212,7 @@ function main() {
     schemaVersion: 1,
     name: 'cec-2024-bulletin-profile-claims',
     updatedAt: new Date().toISOString().slice(0, 10),
-    notes: 'Official CEC 2024 elected-candidate bulletin education and experience. Candidate-provided and CEC-published.',
+    notes: 'Official CEC 2024 candidate bulletin education and experience. Candidate-provided and CEC-published.',
     sources: [{ id: sourceId, name: sourceName, url: sourceUrl, confidenceLevel: 'A' }],
     summary,
     personClaims: claims,

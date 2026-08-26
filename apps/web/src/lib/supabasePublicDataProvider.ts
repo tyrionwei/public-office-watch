@@ -622,7 +622,11 @@ async function fetchPeoplePage(
   }
 
   if (filters.role) query = query.eq('list_role', filters.role);
-  if (filters.status) query = query.eq('list_status', filters.status);
+  if (filters.status === 'candidate') {
+    query = query.not('upcoming_candidate_label', 'is', null);
+  } else if (filters.status) {
+    query = query.eq('list_status', filters.status);
+  }
 
   const pageRange = toPublicPageRange(page, pageSize);
   const { data, error, count } = await query

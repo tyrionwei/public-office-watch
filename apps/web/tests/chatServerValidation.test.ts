@@ -5,8 +5,11 @@ import {
   countVisibleCharacters,
   encryptIp,
   generatePublicCode,
+  getChatCorsHeaders,
   getTrustedClientIp,
   hmacSha256Hex,
+  isChatOriginAllowed,
+  parseAllowedChatOrigins,
   validateDisplayName,
   validateMessageBody,
   validateReplyId,
@@ -67,9 +70,20 @@ test('display names and replies use the agreed public contract', () => {
   );
 });
 
+test('chat CORS reflects only exact allowed origins', () => {
+  const origins = parseAllowedChatOrigins('https://preview.example,not-a-url');
+  assert.equal(isChatOriginAllowed('https://pow4vote.org', origins), true);
+  assert.equal(isChatOriginAllowed('https://preview.example/path', origins), true);
+  assert.equal(isChatOriginAllowed('https://evil.example', origins), false);
+  assert.equal(isChatOriginAllowed(null, origins), true);
+  assert.equal(getChatCorsHeaders('https://pow4vote.org', origins)['Access-Control-Allow-Origin'], 'https://pow4vote.org');
+  assert.equal(getChatCorsHeaders('https://evil.example', origins)['Access-Control-Allow-Origin'], undefined);
+});
+
 test('IP security helpers use trusted headers, stable HMAC and randomized AES-GCM', async () => {
   const headers = new Headers({
-    'x-forwarded-for': '::ffff:203.0.113.5, 10.0.0.1',
+    'cf-connecting-ip': '::ffff:203.0.113.5',
+    'x-forwarded-for': '198.51.100.8, 10.0.0.1',
   });
   assert.equal(getTrustedClientIp(headers), '203.0.113.5');
 

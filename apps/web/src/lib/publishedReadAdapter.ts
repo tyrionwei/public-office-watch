@@ -35,6 +35,8 @@ import {
 
 export const HOME_REGION_LIMIT = 32;
 export const HOME_RACE_LIMIT = 24;
+export const HOME_CANDIDATE_RACE_LIMIT = 24;
+export const HOME_CANDIDATE_SUMMARY_LIMIT = 400;
 export const REGION_CHILD_LIMIT = 64;
 export const REGION_RACE_LIMIT = 24;
 export const ELECTION_INDEX_LIMIT = 500;
@@ -295,6 +297,11 @@ export const PERSON_PROFILE_COLUMNS = [
   'primary_region_name',
 ].join(',');
 
+export const HOME_CANDIDATE_SUMMARY_COLUMNS = [
+  'gender',
+  'birth_date',
+].join(',');
+
 export const PERSON_CANDIDATE_COLUMNS = [
   'candidate_id',
   'person_id',
@@ -508,6 +515,11 @@ export type PublishedPeopleDirectoryRow = {
   list_role_order: number;
 };
 
+export type PublishedHomeCandidateSummaryRow = PublicCandidate & {
+  gender: PublishedPeopleDirectoryRow['gender'];
+  birth_date: string | null;
+};
+
 export type PublishedNationalOfficeHolderRow = PublicNationalOfficeHolder;
 export type PublishedLegislatorPartySummaryRow = PublicLegislatorPartySummary;
 
@@ -664,6 +676,7 @@ export type PublishedReadAdapter = {
     pageSize: number,
   ): Promise<PublishedElectionRacePage>;
   loadRaceDetail(raceId: string): Promise<PublishedRaceDetailRows>;
+  loadHomeCandidateSummaries(raceIds: string[]): Promise<PublishedHomeCandidateSummaryRow[]>;
   loadLocalOfficePeople(districtPrefixes: string[]): Promise<PublishedPeopleDirectoryRow[]>;
   loadNationalOfficeHolders(): Promise<PublishedNationalOfficeHolderRow[]>;
   loadCurrentLegislatorPartySummary(): Promise<PublishedLegislatorPartySummaryRow[]>;
@@ -712,6 +725,16 @@ function normalizePersonIds(personIds: string[]) {
   ));
   if (normalized.length > PERSON_PROFILE_BATCH_LIMIT) {
     throw new Error(`Published person profiles accept at most ${PERSON_PROFILE_BATCH_LIMIT} person ids.`);
+  }
+  return normalized;
+}
+
+function normalizeHomeCandidateRaceIds(raceIds: string[]) {
+  const normalized = Array.from(new Set(
+    raceIds.map((raceId) => raceId.trim()).filter(Boolean),
+  ));
+  if (normalized.length > HOME_CANDIDATE_RACE_LIMIT) {
+    throw new Error(`Published home candidate summaries accept at most ${HOME_CANDIDATE_RACE_LIMIT} race ids.`);
   }
   return normalized;
 }
@@ -988,6 +1011,28 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       }
 
       return { items: result.items, total: Number(result.total) };
+    },
+
+    async loadHomeCandidateSummaries(rawRaceIds) {
+      const raceIds = normalizeHomeCandidateRaceIds(rawRaceIds);
+      if (raceIds.length === 0) return [];
+
+      const response = await client
+        .schema('published')
+        .from<PublishedHomeCandidateSummaryRow>('home_candidate_summaries')
+        .select(`${PERSON_CANDIDATE_COLUMNS},${HOME_CANDIDATE_SUMMARY_COLUMNS}`)
+        .in('race_id', raceIds)
+        .order('race_id', { ascending: true })
+        .order('candidate_no', { ascending: true, nullsFirst: false })
+        .order('person_name', { ascending: true })
+        .order('candidate_id', { ascending: true })
+        .limit(HOME_CANDIDATE_SUMMARY_LIMIT + 1);
+
+      return getBoundedRowsOrThrow(
+        response,
+        'Published home candidate summaries',
+        HOME_CANDIDATE_SUMMARY_LIMIT,
+      );
     },
 
     async loadRaceDetail(rawRaceId) {

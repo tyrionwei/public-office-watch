@@ -18,16 +18,21 @@ test('creates deduplicated public entity metadata from published rows', () => {
       { person_id: 'person/1', name: '重複資料' },
     ],
     parties: [{ party_id: 'party-1', name: '測試黨', slug: 'test-party' }],
-    regions: [{ region_id: 'region-1', name: '臺北市', slug: 'taipei' }],
-    elections: [{ election_id: 'election-1', name: '2026 地方選舉', voting_date: '2026-11-28' }],
+    regions: [
+      { region_id: 'region-1', name: '臺北市', slug: 'taipei', region_type: 'municipality' },
+      { region_id: 'region-2', name: '測試里', slug: 'test-village', region_type: 'village' },
+    ],
+    elections: [{ election_id: 'election-1', name: '2026 地方選舉', year: 2026, election_type: 'local', voting_date: '2026-11-28' }],
     races: [{ race_id: 'race-1', title: '臺北市長', election_name: '2026 地方選舉', region_name: '臺北市' }],
   }, '2026-08-11T00:00:00.000Z');
 
   assert.equal(catalog.version, 1);
-  assert.equal(catalog.pages.length, 5);
+  assert.equal(catalog.pages.length, 6);
   assert.equal(catalog.pages.find((page) => page.group === 'people').path, '/people/person%2F1');
   assert.match(catalog.pages.find((page) => page.group === 'people').description, /測試黨、市議員/);
   assert.equal(catalog.pages.find((page) => page.group === 'elections').structuredData['@type'], 'Event');
+  assert.equal(catalog.pages.find((page) => page.group === 'events').path, '/elections/events/2026-2026-11-28-local');
+  assert.equal(catalog.pages.some((page) => page.path === '/regions/test-village'), false);
 });
 
 test('reads the published schema with the anon credential and bounded pages', async () => {
@@ -38,6 +43,7 @@ test('reads the published schema with the anon credential and bounded pages', as
     relation: 'parties',
     columns: 'party_id,name',
     orderColumn: 'party_id',
+    filters: { region_type: 'in.(country,municipality,county,city)' },
     fetchImpl: async (url, options) => {
       requests.push({ url: url.toString(), options });
       return new Response([{ party_id: 'party-1', name: '測試黨' }].length
@@ -49,6 +55,7 @@ test('reads the published schema with the anon credential and bounded pages', as
   assert.equal(rows.length, 1);
   assert.equal(requests.length, 1);
   assert.match(requests[0].url, /rest\/v1\/parties/);
+  assert.match(requests[0].url, /region_type=in\.%28country%2Cmunicipality%2Ccounty%2Ccity%29/);
   assert.equal(requests[0].options.headers['accept-profile'], 'published');
   assert.equal(requests[0].options.headers.authorization, 'Bearer anon-key');
 });
@@ -71,6 +78,7 @@ test('writes a lightweight manifest and one bounded file per SEO group', () => {
     assert.deepEqual(manifest.groups.people, { paths: ['/seo-catalog/people-0.json'], count: 1 });
     assert.equal(people.pages[0].path, '/people/person-1');
     assert.equal(JSON.parse(readFileSync(outputPath, 'utf8')).groups.people.count, 1);
+    assert.deepEqual(manifest.groups.events, { paths: ['/seo-catalog/events-0.json'], count: 0 });
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }

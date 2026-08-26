@@ -1,8 +1,15 @@
 const siteName = '公職資料觀測站';
 const englishSiteName = 'Public Office Watch';
 const defaultDescription = '查詢臺灣公職人物、政黨、選舉、候選人政見、政治獻金與公開資料來源。';
+const canonicalSiteOrigin = 'https://pow4vote.org';
 const staticSitemapPaths = ['/', '/people', '/elections', '/parties', '/updates', '/data-guidance', '/about'];
-const dynamicSitemapGroups = ['people', 'parties', 'regions', 'elections', 'races'];
+const dynamicSitemapGroups = ['people', 'parties', 'regions', 'elections', 'events', 'races'];
+const internalDocumentPaths = new Set([
+  '/internal/chat-admin',
+  '/internal/data-progress',
+  '/internal/review-queue',
+  '/internal/update-admin',
+]);
 const emptySeoCatalog = { version: 1, generatedAt: null, pages: [] };
 const emptySeoManifest = { version: 3, generatedAt: null, groups: {} };
 
@@ -123,6 +130,7 @@ function catalogGroupForPathname(pathname) {
   if (/^\/parties\/[^/]+$/.test(pathname)) return 'parties';
   if (/^\/regions\/[^/]+$/.test(pathname)) return 'regions';
   if (/^\/elections\/races\/[^/]+$/.test(pathname)) return 'races';
+  if (/^\/elections\/events\/[^/]+$/.test(pathname)) return 'events';
   if (/^\/elections\/[^/]+$/.test(pathname)) return 'elections';
   return null;
 }
@@ -162,7 +170,7 @@ function documentMetadata(pathname, catalog = emptySeoCatalog) {
     return { title: '選區與候選人', description: '查看選區候選人、政黨、得票結果與政見比較。', noIndex: hasCatalog };
   }
   if (/^\/elections\/events\/[^/]+$/.test(pathname)) {
-    return { title: '選舉事件', description: '查看選舉事件、選區、候選人、政黨表現與公開資料。' };
+    return { title: '選舉事件', description: '查看選舉事件、選區、候選人、政黨表現與公開資料。', noIndex: hasCatalog };
   }
   if (/^\/elections\/[^/]+$/.test(pathname)) {
     return { title: '選舉資料', description: '查看候選人、選區、得票結果與公開選舉資料來源。', noIndex: hasCatalog };
@@ -206,12 +214,20 @@ function stripManagedMetadata(html) {
     .replace(/<script\s+id=["']public-office-watch-server-structured-data["'][^>]*>[\s\S]*?<\/script>\s*/gi, '');
 }
 
-function injectDocumentMetadata(html, requestUrl, catalog = emptySeoCatalog) {
+function documentResponseStatus(pathname, catalog = emptySeoCatalog) {
+  if (staticSitemapPaths.includes(pathname) || internalDocumentPaths.has(pathname)) return 200;
+  const group = catalogGroupForPathname(pathname);
+  if (!group) return 404;
+  const hasCatalog = Array.isArray(catalog.pages) && catalog.pages.length > 0;
+  return hasCatalog && !getCatalogPage(pathname, catalog) ? 404 : 200;
+}
+
+function injectDocumentMetadata(html, requestUrl, catalog = emptySeoCatalog, siteOrigin = canonicalSiteOrigin) {
   const url = new URL(requestUrl);
   const pathname = url.pathname.replace(/\/$/, '') || '/';
   const metadata = documentMetadata(pathname, catalog);
-  const canonicalUrl = new URL(pathname, url.origin).toString();
-  const imageUrl = new URL('/og.png', url.origin).toString();
+  const canonicalUrl = new URL(pathname, siteOrigin).toString();
+  const imageUrl = new URL('/og.png', siteOrigin).toString();
   const fullTitle = metadata.home
     ? `${siteName}｜${englishSiteName}`
     : `${metadata.title}｜${siteName}`;
@@ -223,7 +239,7 @@ function injectDocumentMetadata(html, requestUrl, catalog = emptySeoCatalog) {
       name: siteName,
       alternateName: englishSiteName,
     }),
-    url: metadata.home ? new URL('/', url.origin).toString() : canonicalUrl,
+    url: metadata.home ? new URL('/', siteOrigin).toString() : canonicalUrl,
   }).replaceAll('<', '\\u003c');
   const tags = `
     <title>${escapeAttribute(fullTitle)}</title>
@@ -295,11 +311,11 @@ const worker = {
     const url = new URL(request.url);
 
     if (request.method === 'GET' && url.pathname === '/robots.txt') {
-      return textResponse(robotsText(url.origin), 'text/plain; charset=utf-8');
+      return textResponse(robotsText(canonicalSiteOrigin), 'text/plain; charset=utf-8');
     }
     if (request.method === 'GET' && url.pathname === '/sitemap.xml') {
       const manifest = await loadSeoCatalog(env, url.origin);
-      return textResponse(sitemapIndexXml(url.origin, manifest), 'application/xml; charset=utf-8');
+      return textResponse(sitemapIndexXml(canonicalSiteOrigin, manifest), 'application/xml; charset=utf-8');
     }
     const sitemapMatch = url.pathname.match(/^\/sitemaps\/([a-z]+)\.xml$/);
     if (request.method === 'GET' && sitemapMatch) {
@@ -310,7 +326,7 @@ const worker = {
       const catalog = group === 'static'
         ? emptySeoCatalog
         : await loadSeoCatalogGroup(env, url.origin, group);
-      return textResponse(sitemapXml(url.origin, sitemapEntries(catalog, group)), 'application/xml; charset=utf-8');
+      return textResponse(sitemapXml(canonicalSiteOrigin, sitemapEntries(catalog, group)), 'application/xml; charset=utf-8');
     }
     if (isDocumentRoute(request)) {
       const group = catalogGroupForPathname(url.pathname.replace(/\/$/, '') || '/');
@@ -318,12 +334,12 @@ const worker = {
         env.ASSETS.fetch(new Request(new URL('/', request.url), request)),
         loadSeoCatalogGroup(env, url.origin, group, url.pathname.replace(/\/$/, '') || '/'),
       ]);
-      const html = injectDocumentMetadata(await indexResponse.text(), request.url, catalog);
+      const pathname = url.pathname.replace(/\/$/, '') || '/';
+      const html = injectDocumentMetadata(await indexResponse.text(), request.url, catalog, canonicalSiteOrigin);
       const headers = new Headers(indexResponse.headers);
       headers.set('content-type', 'text/html; charset=utf-8');
       return addSecurityHeaders(new Response(html, {
-        status: indexResponse.status,
-        statusText: indexResponse.statusText,
+        status: documentResponseStatus(pathname, catalog),
         headers,
       }), url.pathname);
     }
@@ -337,6 +353,7 @@ export default worker;
 export {
   addSecurityHeaders,
   documentMetadata,
+  documentResponseStatus,
   injectDocumentMetadata,
   robotsText,
   sitemapIndexXml,

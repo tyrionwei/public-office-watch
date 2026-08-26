@@ -335,41 +335,32 @@ export function HomeElectionSpotlight({
 
     setCandidatesLoading(true);
     void refreshConfiguredPublicDataProvider()
-      .then(async () => {
-        const candidateGroups: PublicCandidate[][] = [];
+      .then(() => publicDataProvider.loadHomeCandidateSummaries(
+        displayedCategoryRaces.map((race) => race.id),
+      ))
+      .then((summaries) => {
+        if (!active) return;
+        const raceOrder = new Map(displayedCategoryRaces.map((race, index) => [race.id, index]));
         const seenCandidateIds = new Set<string>();
-
-        for (const race of displayedCategoryRaces) {
-          const detail = await publicDataProvider.loadRaceDetail(race.id);
-          const raceCandidates = detail.candidates
-            .slice()
-            .sort((left, right) => compareCandidates(left, right, language))
-            .filter((candidate) => {
-              if (seenCandidateIds.has(candidate.candidate_id)) return false;
-              seenCandidateIds.add(candidate.candidate_id);
-              return true;
-            });
-          candidateGroups.push(raceCandidates);
-        }
-
-        return candidateGroups.flat();
-      })
-      .then(async (sortedCandidates) => {
-        if (!active) return;
+        const sortedSummaries = summaries
+          .slice()
+          .sort((left, right) => (
+            (raceOrder.get(left.candidate.race_id) ?? Number.MAX_SAFE_INTEGER)
+            - (raceOrder.get(right.candidate.race_id) ?? Number.MAX_SAFE_INTEGER)
+            || compareCandidates(left.candidate, right.candidate, language)
+          ))
+          .filter((summary) => {
+            if (seenCandidateIds.has(summary.candidate.candidate_id)) return false;
+            seenCandidateIds.add(summary.candidate.candidate_id);
+            return true;
+          });
+        const sortedCandidates = sortedSummaries.map((summary) => summary.candidate);
         setCandidates(sortedCandidates);
-
-        setActiveCandidateIndex(Math.min(restoredCandidateIndexRef.current, Math.max(sortedCandidates.length - 1, 0)));
-        const personIds = Array.from(new Set(sortedCandidates.map((candidate) => candidate.person_id).filter(Boolean)));
-        if (personIds.length === 0) return;
-        const profiles = await publicDataProvider.loadPersonProfiles(personIds);
-        if (!active) return;
-        setCandidateDemographics(new Map(profiles.map((profile) => [
-          profile.person.person_id,
-          {
-            gender: profile.person.gender,
-            birthDate: profile.public_claims.find((claim) => claim.claim_type === 'birth_date')?.claim_value ?? null,
-          },
+        setCandidateDemographics(new Map(sortedSummaries.map((summary) => [
+          summary.candidate.person_id,
+          { gender: summary.gender, birthDate: summary.birthDate },
         ])));
+        setActiveCandidateIndex(Math.min(restoredCandidateIndexRef.current, Math.max(sortedCandidates.length - 1, 0)));
       })
       .catch((error: unknown) => {
         if (import.meta.env.DEV) console.warn('Failed to load home candidate carousel', error);
@@ -556,7 +547,7 @@ export function HomeElectionSpotlight({
             data-candidate-view-all
             className="shrink-0 font-display text-[10px] text-slate-300 transition hover:text-signal focus:outline-none focus:ring-2 focus:ring-signal/35"
           >
-            {language === 'en' ? `View all ${displayedCandidateCount} candidates ›` : `查看全部 ${displayedCandidateCount} 位人選 ›`}
+            {t('homeSpotlight.recordedCandidates', { count: displayedCandidateCount })}
           </Link>
         ) : undefined}
         className="xl:h-full"
@@ -626,6 +617,11 @@ export function HomeElectionSpotlight({
               </select>
             ) : null}
           </div>
+        ) : null}
+        {!showReferendumContent && candidateCategoryGroups.length > 0 ? (
+          <p className="mb-3 text-[10px] leading-5 text-slate-500" data-candidate-roster-disclaimer>
+            {t('homeSpotlight.candidateRosterDisclaimer')}
+          </p>
         ) : null}
         {showReferendumContent ? (
           referendumRaces.length > 0 ? (

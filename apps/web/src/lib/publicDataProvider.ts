@@ -48,6 +48,12 @@ export type HomePageData = {
   dataPrinciples: string[];
 };
 
+export type HomeCandidateSummary = {
+  candidate: PublicCandidate;
+  gender: PublicPerson['gender'];
+  birthDate: string | null;
+};
+
 export type PublicSearchResultType = 'person' | 'company' | 'party' | 'election' | 'region';
 
 export type PublicSearchResult = {
@@ -130,6 +136,7 @@ export interface PublicDataProvider {
   loadRacesByElectionIds(electionIds: string[], filters?: PublicRaceQueryFilters): Promise<PublicRace[]>;
   loadElectionRacePage(eventKey: string, electionIds: string[], filters: PublicRaceQueryFilters, page: number, pageSize: number): Promise<PublicRaceListPage>;
   loadRaceDetail(raceId: string): Promise<PublicRaceDetailData>;
+  loadHomeCandidateSummaries(raceIds: string[]): Promise<HomeCandidateSummary[]>;
   getPollComparisonByElectionId(electionId: string): PollComparison | null;
   getPeople(): PublicPerson[];
   getPeopleByFilters(filters?: PublicPersonFilters): PublicPersonListItem[];

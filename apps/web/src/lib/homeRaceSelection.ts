@@ -18,6 +18,13 @@ function isLocalChiefRace(race: UpcomingRace) {
     || race.raceType === 'local_chief';
 }
 
+export function selectHomeRegionId(regions: { id: string }[], requestedRegionId: string | null) {
+  if (requestedRegionId === 'national') return null;
+  return requestedRegionId && regions.some((region) => region.id === requestedRegionId)
+    ? requestedRegionId
+    : null;
+}
+
 export function selectHomeRelatedRaces(
   homeData: Pick<HomePageData, 'stageRegions' | 'upcomingRaces'>,
   selectedRegionId: string | null,

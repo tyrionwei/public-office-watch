@@ -13,6 +13,7 @@ const readableRelations = [
   'election_race_facets',
   'election_race_summaries',
   'elections',
+  'home_candidate_summaries',
   'home_region_summary',
   'home_ticker',
   'current_legislator_party_summary',

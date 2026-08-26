@@ -25,6 +25,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260822042405_add_published_search_subtitles.sql',
   'supabase/migrations/20260822063207_normalize_published_search_office_aliases.sql',
   'supabase/migrations/20260824063832_add_election_race_search.sql',
+  'supabase/migrations/20260825194609_home_candidate_summaries_and_function_security.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -33,6 +34,7 @@ const reviewedRelations = [
   'election_race_facets',
   'election_race_summaries',
   'elections',
+  'home_candidate_summaries',
   'home_region_summary',
   'home_ticker',
   'national_office_holders',

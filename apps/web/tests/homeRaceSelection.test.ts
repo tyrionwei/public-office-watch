@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { selectHomeRelatedRaces } from '../src/lib/homeRaceSelection.ts';
+import { selectHomeRegionId, selectHomeRelatedRaces } from '../src/lib/homeRaceSelection.ts';
 import type { HomePageData } from '../src/lib/publicDataProvider.ts';
 
 function homeData(upcomingRaces: HomePageData['upcomingRaces']): HomePageData {
@@ -43,6 +43,14 @@ const taipeiCouncilorRace = {
   title: '臺北市第1選舉區議員選舉',
   raceType: 'city_councilor',
 };
+
+test('defaults to nationwide instead of silently selecting Taipei', () => {
+  const regions = homeData([]).stageRegions;
+  assert.equal(selectHomeRegionId(regions, null), null);
+  assert.equal(selectHomeRegionId(regions, 'national'), null);
+  assert.equal(selectHomeRegionId(regions, 'missing'), null);
+  assert.equal(selectHomeRegionId(regions, 'taipei-city'), 'taipei-city');
+});
 
 test('reselects home races when an initially empty snapshot finishes loading', () => {
   assert.deepEqual(selectHomeRelatedRaces(homeData([]), 'taipei-city'), []);

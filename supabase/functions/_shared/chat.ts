@@ -2,6 +2,13 @@ const PUBLIC_CODE_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 const URL_OR_EMAIL_PATTERN = /(?:https?:\/\/|www\.|(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+(?:com|net|org|tw|io|me|co|cc|app|dev|info|biz)(?:\b|\/)|[^\s@]+@[^\s@]+\.[^\s@]+)/iu;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+const DEFAULT_CHAT_ORIGINS = [
+  'https://pow4vote.org',
+  'https://public-office-watch-tw.xiaosha0112.chatgpt.site',
+  'http://127.0.0.1:5173',
+  'http://localhost:5173',
+];
+
 export type ValidationResult =
   | { ok: true; value: string }
   | { ok: false; code: string };
@@ -55,11 +62,43 @@ export function generatePublicCode(randomBytes = crypto.getRandomValues(new Uint
   ).join('');
 }
 
+export function parseAllowedChatOrigins(value: string | null | undefined) {
+  const configured = value?.split(',').map((origin) => origin.trim()).filter(Boolean) ?? [];
+  return Array.from(new Set([...DEFAULT_CHAT_ORIGINS, ...configured].map((origin) => {
+    try {
+      return new URL(origin).origin;
+    } catch {
+      return '';
+    }
+  }).filter(Boolean)));
+}
+
+export function isChatOriginAllowed(origin: string | null, allowedOrigins: string[]) {
+  if (!origin) return true;
+  try {
+    return allowedOrigins.includes(new URL(origin).origin);
+  } catch {
+    return false;
+  }
+}
+
+export function getChatCorsHeaders(origin: string | null, allowedOrigins: string[]) {
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    Vary: 'Origin',
+  };
+  if (origin && isChatOriginAllowed(origin, allowedOrigins)) {
+    headers['Access-Control-Allow-Origin'] = new URL(origin).origin;
+  }
+  return headers;
+}
+
 export function getTrustedClientIp(headers: Headers) {
   const forwarded = headers.get('x-forwarded-for')?.split(',')[0]?.trim();
-  const candidate = forwarded
-    || headers.get('cf-connecting-ip')?.trim()
-    || headers.get('x-real-ip')?.trim();
+  const candidate = headers.get('cf-connecting-ip')?.trim()
+    || headers.get('x-real-ip')?.trim()
+    || forwarded;
 
   if (!candidate || /[\r\n]/u.test(candidate)) {
     return null;

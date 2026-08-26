@@ -3,30 +3,16 @@ import { createClient } from 'npm:@supabase/supabase-js@2.105.4';
 import {
   encryptIp,
   generatePublicCode,
+  getChatCorsHeaders,
   getTrustedClientIp,
   hmacSha256Hex,
+  isChatOriginAllowed,
+  parseAllowedChatOrigins,
   sha256Hex,
   validateDisplayName,
   validateMessageBody,
   validateReplyId,
 } from '../_shared/chat.ts';
-
-const corsHeaders = {
-  'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Origin': '*',
-};
-
-function jsonResponse(status: number, payload: unknown, extraHeaders: HeadersInit = {}) {
-  return new Response(JSON.stringify(payload), {
-    status,
-    headers: {
-      ...corsHeaders,
-      ...extraHeaders,
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-  });
-}
 
 function requireEnvironment(name: string) {
   const value = Deno.env.get(name);
@@ -53,6 +39,24 @@ function databaseErrorCode(error: { message?: string } | null) {
 }
 
 Deno.serve(async (request) => {
+  const requestOrigin = request.headers.get('Origin');
+  const allowedOrigins = parseAllowedChatOrigins(Deno.env.get('CHAT_ALLOWED_ORIGINS'));
+  const corsHeaders = getChatCorsHeaders(requestOrigin, allowedOrigins);
+  const jsonResponse = (status: number, payload: unknown, extraHeaders: HeadersInit = {}) => (
+    new Response(JSON.stringify(payload), {
+      status,
+      headers: {
+        ...corsHeaders,
+        ...extraHeaders,
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+    })
+  );
+
+  if (!isChatOriginAllowed(requestOrigin, allowedOrigins)) {
+    return jsonResponse(403, { error: 'CHAT_ORIGIN_NOT_ALLOWED' });
+  }
+
   if (request.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }

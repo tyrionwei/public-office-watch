@@ -9,6 +9,9 @@ import {
   ELECTION_PARTY_PERFORMANCE_LIMIT,
   ELECTION_RACE_PAGE_ELECTION_LIMIT,
   ELECTION_RACE_PAGE_SIZE,
+  HOME_CANDIDATE_RACE_LIMIT,
+  HOME_CANDIDATE_SUMMARY_COLUMNS,
+  HOME_CANDIDATE_SUMMARY_LIMIT,
   HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
   LOCAL_OFFICE_PERSON_LIMIT,
@@ -273,6 +276,38 @@ test('home and region directory reads stay independently bounded', async () => {
     ['in', 'status', ['announced', 'upcoming', 'registration_open', 'candidates_announced', 'voting']],
     ['in', 'region_type', ['country', 'municipality', 'county', 'city']],
   ]);
+});
+
+test('home candidate summaries use one bounded query for all displayed races', async () => {
+  const row = {
+    candidate_id: 'candidate-1',
+    race_id: 'race-1',
+    person_id: 'person-1',
+    person_name: '測試候選人',
+    gender: 'female',
+    birth_date: '1980-01-01',
+  };
+  const fake = createFakeClient({
+    home_candidate_summaries: { data: [row], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadHomeCandidateSummaries(['race-2', 'race-1', 'race-1']), [row]);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['from', 'home_candidate_summaries'],
+    ['select', `${PERSON_CANDIDATE_COLUMNS},${HOME_CANDIDATE_SUMMARY_COLUMNS}`],
+    ['in', 'race_id', ['race-2', 'race-1']],
+    ['order', 'race_id', { ascending: true }],
+    ['order', 'candidate_no', { ascending: true, nullsFirst: false }],
+    ['order', 'person_name', { ascending: true }],
+    ['order', 'candidate_id', { ascending: true }],
+    ['limit', HOME_CANDIDATE_SUMMARY_LIMIT + 1],
+  ]);
+  await assert.rejects(
+    () => adapter.loadHomeCandidateSummaries(Array.from({ length: HOME_CANDIDATE_RACE_LIMIT + 1 }, (_, index) => `race-${index}`)),
+    /accept at most 24 race ids/,
+  );
 });
 
 test('region page resolves one slug and bounds direct children and related races', async () => {

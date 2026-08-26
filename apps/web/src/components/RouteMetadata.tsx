@@ -1,18 +1,21 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { buildElectionEvents, getElectionEventByKey } from '../data/electionEvents';
 import { translateElectionEventTitle } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
+import { publicDataReadyEvent } from '../lib/publicDataProviderFactory';
 
 const siteName = '公職資料觀測站';
 const englishSiteName = 'Public Office Watch';
+const fallbackSiteUrl = 'https://pow4vote.org';
 
 type RouteMetadataValue = {
   title: string;
   description: string;
   type?: 'website' | 'profile';
   noIndex?: boolean;
+  unresolved?: boolean;
   structuredData?: Record<string, unknown>;
 };
 
@@ -68,7 +71,7 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
       title: name,
       description: detailDescription(language, name, 'person'),
       type: 'profile',
-      noIndex: !person,
+      unresolved: !person,
       structuredData: person ? {
         '@context': 'https://schema.org',
         '@type': 'Person',
@@ -85,7 +88,7 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
     return {
       title: name,
       description: detailDescription(language, name, 'party'),
-      noIndex: !party,
+      unresolved: !party,
       structuredData: party ? {
         '@context': 'https://schema.org',
         '@type': 'Organization',
@@ -100,7 +103,7 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
     return {
       title: name,
       description: detailDescription(language, name, 'region'),
-      noIndex: !summary,
+      unresolved: !summary,
     };
   }
 
@@ -110,7 +113,7 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
     return {
       title: name,
       description: detailDescription(language, name, 'race'),
-      noIndex: !race,
+      unresolved: !race,
     };
   }
 
@@ -121,7 +124,7 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
     return {
       title: name,
       description: detailDescription(language, name, 'event'),
-      noIndex: !event,
+      unresolved: !event,
     };
   }
 
@@ -131,7 +134,7 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
     return {
       title: name,
       description: detailDescription(language, name, 'election'),
-      noIndex: !election,
+      unresolved: !election,
       structuredData: election ? {
         '@context': 'https://schema.org',
         '@type': 'Event',
@@ -230,18 +233,31 @@ function setStructuredData(value: Record<string, unknown> | undefined, url: stri
 export function RouteMetadata() {
   const location = useLocation();
   const { language, t } = useI18n();
+  const [publicDataVersion, setPublicDataVersion] = useState(0);
+
+  useEffect(() => {
+    const handlePublicDataReady = () => setPublicDataVersion((version) => version + 1);
+    window.addEventListener(publicDataReadyEvent, handlePublicDataReady);
+    return () => window.removeEventListener(publicDataReadyEvent, handlePublicDataReady);
+  }, []);
 
   useEffect(() => {
     const metadata = routeMetadata(location.pathname, language, t);
     const isHome = location.pathname === '/';
     const fullTitle = isHome ? `${siteName}｜${englishSiteName}` : `${metadata.title}｜${siteName}`;
     const configuredSiteUrl = import.meta.env.VITE_SITE_URL?.trim();
-    const siteUrl = configuredSiteUrl ? new URL(configuredSiteUrl).origin : window.location.origin;
+    const siteUrl = configuredSiteUrl ? new URL(configuredSiteUrl).origin : fallbackSiteUrl;
     const canonicalUrl = new URL(location.pathname, siteUrl).toString();
     const imageUrl = new URL('/og.png', siteUrl).toString();
+    const existingCanonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
+    const preserveServerMetadata = metadata.unresolved
+      && existingCanonical
+      && new URL(existingCanonical, window.location.href).pathname === location.pathname;
+
+    document.documentElement.lang = language === 'en' ? 'en' : 'zh-Hant';
+    if (preserveServerMetadata) return;
 
     document.title = fullTitle;
-    document.documentElement.lang = language === 'en' ? 'en' : 'zh-Hant';
     ensureCanonical(canonicalUrl);
     ensureMeta('meta[name="description"]', { name: 'description', content: metadata.description });
     ensureMeta('meta[name="robots"]', {
@@ -261,7 +277,7 @@ export function RouteMetadata() {
     ensureMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: metadata.description });
     ensureMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: imageUrl });
     setStructuredData(metadata.structuredData, canonicalUrl);
-  }, [language, location.pathname, t]);
+  }, [language, location.pathname, publicDataVersion, t]);
 
   return null;
 }

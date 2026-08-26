@@ -27,6 +27,9 @@ export function RegionPage() {
   const regionCard = publicDataProvider.getRegionCardByStageRegionId(safeRegionId);
   const childRegions = regionNode ? publicDataProvider.getChildStageRegions(regionNode.id) : [];
   const [relatedRaces, setRelatedRaces] = useState(() => publicDataProvider.getRelatedRacesByRegionId(safeRegionId));
+  const [loadStatus, setLoadStatus] = useState<'loading' | 'loaded' | 'notFound'>(() => (
+    regionNode && regionSummary ? 'loaded' : 'loading'
+  ));
   const sortedRelatedRaces = relatedRaces.slice().sort(compareUpcomingRacesForDisplay);
   const highlight = getRegionHighlightBackground(
     regionNode?.id,
@@ -42,24 +45,33 @@ export function RegionPage() {
 
   useEffect(() => {
     let active = true;
+    setLoadStatus(regionNode && regionSummary ? 'loaded' : 'loading');
     setRelatedRaces(publicDataProvider.getRelatedRacesByRegionId(safeRegionId));
 
     void publicDataProvider.loadRelatedRacesByRegionId(safeRegionId)
       .then((races) => {
         if (active) {
           setRelatedRaces(races);
+          setLoadStatus(
+            publicDataProvider.getStageRegion(safeRegionId)
+            && publicDataProvider.getRegionSummary(safeRegionId)
+              ? 'loaded'
+              : 'notFound',
+          );
         }
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (active) setLoadStatus('notFound');
+      });
 
     return () => {
       active = false;
     };
-  }, [safeRegionId]);
+  }, [regionNode, regionSummary, safeRegionId]);
 
   return (
     <AppShell>
-      {regionNode && regionSummary ? (
+      {regionNode && regionSummary && loadStatus === 'loaded' ? (
         <div className="space-y-5">
           <header
             className="pixel-corners relative min-h-[330px] overflow-hidden border border-line/80 bg-panel"
@@ -180,6 +192,11 @@ export function RegionPage() {
             </aside>
           </div>
         </div>
+      ) : loadStatus === 'loading' ? (
+        <section className="border border-line/70 bg-panel p-6 text-sm text-slate-300" aria-live="polite">
+          <h1 className="font-display text-2xl text-white">{t('regionPage.loading')}</h1>
+          <p className="mt-3">{t('regionPage.loadingBody')}</p>
+        </section>
       ) : (
         <section className="border border-line/70 bg-panel p-6 text-sm text-slate-300">
           <h1 className="font-display text-2xl text-white">{t('regionPage.notFound')}</h1>

@@ -9,6 +9,7 @@ import type {
   PublicSearchResultType,
 } from './publicDataProvider';
 import type {
+  PublishedHomeCandidateSummaryRow,
   PublishedHomeTickerRow,
   PublishedPeopleDirectoryRow,
   PublishedPersonProfileRow,
@@ -97,6 +98,7 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadElectionPartyPerformance'
   | 'loadElectionRacePage'
   | 'loadRaceDetail'
+  | 'loadHomeCandidateSummaries'
   | 'loadPeoplePage'
   | 'loadPartyCandidatePage'
   | 'loadPersonProfiles'
@@ -436,6 +438,14 @@ export function createPublishedPublicDataBridge(
 
     loadElectionRacePage(eventKey, electionIds, filters, page, pageSize) {
       return adapter.loadElectionRacePage(eventKey, electionIds, filters, page, pageSize);
+    },
+
+    async loadHomeCandidateSummaries(raceIds) {
+      const rows = await adapter.loadHomeCandidateSummaries(raceIds);
+      return rows.map((row: PublishedHomeCandidateSummaryRow) => {
+        const { gender, birth_date: birthDate, ...candidate } = row;
+        return { candidate, gender, birthDate };
+      });
     },
 
     async loadRaceDetail(raceId) {

@@ -8,6 +8,11 @@ const accessMigration = readFileSync(
   'utf8',
 );
 
+const homeCandidateSecurityMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260825194609_home_candidate_summaries_and_function_security.sql', import.meta.url),
+  'utf8',
+);
+
 const retirementMigration = readFileSync(
   new URL('../../../supabase/migrations/20260812062319_retire_legacy_public_api_views.sql', import.meta.url),
   'utf8',
@@ -184,6 +189,13 @@ test('dynamic chat status is exposed only through the published RPC', () => {
   );
   assert.match(globalChatSource, /client\.schema\('published'\)\.rpc\('chat_status'\)/u);
   assert.doesNotMatch(globalChatSource, /from\('public_chat_status'\)/u);
+});
+
+test('party normalization functions use invoker rights and homepage summaries stay bounded', () => {
+  assert.match(homeCandidateSecurityMigration, /canonical_party_name\(p_name TEXT\)[\s\S]*SECURITY INVOKER/u);
+  assert.match(homeCandidateSecurityMigration, /canonical_party_key\(p_name TEXT\)[\s\S]*SECURITY INVOKER/u);
+  assert.match(homeCandidateSecurityMigration, /published\.home_candidate_summaries[\s\S]*security_invoker = false/u);
+  assert.match(homeCandidateSecurityMigration, /GRANT SELECT ON published\.home_candidate_summaries TO anon, authenticated, service_role, admin_role;/u);
 });
 
 test('region issue participation uses only the reviewed published API', () => {

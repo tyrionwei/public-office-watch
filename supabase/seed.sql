@@ -8,6 +8,7 @@ GRANT SELECT ON TABLE
   published.election_race_facets,
   published.election_race_summaries,
   published.elections,
+  published.home_candidate_summaries,
   published.home_region_summary,
   published.home_ticker,
   published.current_legislator_party_summary,

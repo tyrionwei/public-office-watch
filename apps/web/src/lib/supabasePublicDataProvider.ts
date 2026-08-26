@@ -1434,6 +1434,35 @@ export const supabasePublicDataProvider: PublicDataProvider = {
     return loadCachedElectionRacePage(eventKey, filters, page, pageSize);
   },
 
+  async loadHomeCandidateSummaries(raceIds: string[]) {
+    await refreshSupabasePublicDataSnapshot();
+    const normalizedIds = Array.from(new Set(raceIds.map((raceId) => raceId.trim()).filter(Boolean)));
+    if (normalizedIds.length === 0) return [];
+
+    const candidateRows = await fetchRows('public_candidates', (query) => query.in('race_id', normalizedIds));
+    const candidates = candidateRows.map((row) => mapPublicCandidateRow(row as PublicCandidate));
+    const personIds = Array.from(new Set(candidates.map((candidate) => candidate.person_id).filter(Boolean)));
+    const [personRows, claimRows] = await Promise.all([
+      personIds.length > 0 ? fetchRows('public_people', (query) => query.in('person_id', personIds)) : [],
+      personIds.length > 0
+        ? fetchRows('public_person_claims', (query) => query.in('person_id', personIds).eq('claim_type', 'birth_date'))
+        : [],
+    ]);
+    const peopleById = new Map(personRows.map((row) => {
+      const person = mapPublicPersonRow(row as PublicPerson);
+      return [person.person_id, person] as const;
+    }));
+
+    return candidates.map((candidate) => ({
+      candidate,
+      gender: peopleById.get(candidate.person_id)?.gender ?? null,
+      birthDate: (claimRows.find((row) => (
+        (row as PublicPersonClaim).person_id === candidate.person_id
+        && (row as PublicPersonClaim).claim_type === 'birth_date'
+      )) as PublicPersonClaim | undefined)?.claim_value ?? null,
+    }));
+  },
+
   async loadRaceDetail(raceId: string): Promise<PublicRaceDetailData> {
     await refreshSupabasePublicDataSnapshot();
     const raceRows = await fetchRows('public_races', (query) => query.eq('race_id', raceId));

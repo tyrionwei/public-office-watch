@@ -6,33 +6,12 @@ import { PartySeatDistributionPanel } from '../components/PartySeatDistributionP
 import { RegionIssueConcernPanel } from '../components/RegionIssueConcernPanel';
 import { TaiwanStageSelect } from '../components/TaiwanStageSelect';
 import { useI18n } from '../i18n';
-import { selectHomeRelatedRaces } from '../lib/homeRaceSelection';
+import { selectHomeRegionId, selectHomeRelatedRaces } from '../lib/homeRaceSelection';
 import { publicDataProvider } from '../lib/publicData';
 import { normalizeTaiwanText } from '../lib/taiwanText';
 import { useSelectedRegion } from '../selectedRegion';
 
 const NATIONAL_REGION_QUERY = 'national';
-const DEFAULT_FALLBACK_REGION_ID = 'taipei-city';
-
-function getSelectedStageRegionId(
-  regions: { id: string }[],
-  requestedRegionId: string | null,
-  hasUpcomingNationalRace: boolean,
-) {
-  if (requestedRegionId === NATIONAL_REGION_QUERY) {
-    return null;
-  }
-
-  if (requestedRegionId && regions.some((region) => region.id === requestedRegionId)) {
-    return requestedRegionId;
-  }
-
-  if (!hasUpcomingNationalRace && regions.some((region) => region.id === DEFAULT_FALLBACK_REGION_ID)) {
-    return DEFAULT_FALLBACK_REGION_ID;
-  }
-
-  return null;
-}
 
 export function HomePage() {
   const { t } = useI18n();
@@ -51,15 +30,9 @@ export function HomePage() {
     return () => { active = false; };
   }, []);
   const requestedRegionId = searchParams.get('region');
-  const nationalRaces = selectHomeRelatedRaces(homeData, null);
-  const hasUpcomingNationalRace = nationalRaces.length > 0;
-  const rememberedRegionId = storedRegionId === NATIONAL_REGION_QUERY && !hasUpcomingNationalRace
-    ? null
-    : storedRegionId;
-  const selectedRegionId = getSelectedStageRegionId(
+  const selectedRegionId = selectHomeRegionId(
     homeData.stageRegions,
-    requestedRegionId ?? rememberedRegionId,
-    hasUpcomingNationalRace,
+    requestedRegionId ?? storedRegionId,
   );
   const isNationalView = selectedRegionId === null;
   const [relatedRaces, setRelatedRaces] = useState(() => (

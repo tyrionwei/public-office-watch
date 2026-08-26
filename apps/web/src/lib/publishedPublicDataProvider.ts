@@ -30,6 +30,8 @@ import type {
 } from './publicDataProvider';
 import type { PublishedPartyData, PublishedPublicDataBridge } from './publishedPublicDataBridge.ts';
 
+const publicDataReadyEvent = 'public-data-ready';
+
 const emptyHomeTicker: HomeTicker = {
   title: '公開選舉資料待載入',
   date: '待公告',
@@ -91,6 +93,10 @@ function createRequestCache() {
   };
 }
 
+function notifyPublicDataReady() {
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(publicDataReadyEvent));
+}
+
 export function createPublishedPublicDataProvider(
   bridge: PublishedPublicDataBridge,
 ): PublishedProviderAssembly {
@@ -148,11 +154,26 @@ export function createPublishedPublicDataProvider(
     if (!inFlightRequest) {
       inFlightRequest = bridge.loadRegionPageData(regionKey)
         .then((result) => {
-          regionRacesByRegionId.set(regionKey, result.relatedRaces);
+          const loadedRegionKey = result.region?.id ?? regionKey;
+          regionRacesByRegionId.set(loadedRegionKey, result.relatedRaces);
           homeData = {
             ...homeData,
+            stageRegions: mergeByKey(
+              homeData.stageRegions,
+              [result.region, ...result.childRegions].filter(
+                (item): item is NonNullable<typeof result.region> => item !== null,
+              ),
+              (item) => item.id,
+            ),
+            stageRegionSummaries: result.summary
+              ? mergeByKey(homeData.stageRegionSummaries, [result.summary], (item) => item.regionId)
+              : homeData.stageRegionSummaries,
+            regions: result.card
+              ? mergeByKey(homeData.regions, [result.card], (item) => item.id)
+              : homeData.regions,
             upcomingRaces: mergeByKey(homeData.upcomingRaces, result.relatedRaces, (race) => race.id),
           };
+          notifyPublicDataReady();
           return getRelatedRaces(regionId);
         })
         .finally(() => {
@@ -175,6 +196,7 @@ export function createPublishedPublicDataProvider(
       const regions = await cached('region-directory', referenceDataStaleTimeMs, () =>
         bridge.loadRegionDirectory());
       homeData = { ...homeData, stageRegions: regions };
+      notifyPublicDataReady();
       return regions;
     },
 
@@ -204,6 +226,7 @@ export function createPublishedPublicDataProvider(
     async loadPartyDirectory() {
       const parties = await cached('party-directory', referenceDataStaleTimeMs, () => bridge.loadPartyDirectory());
       partyData = { ...partyData, parties };
+      notifyPublicDataReady();
       return parties;
     },
 
@@ -285,6 +308,7 @@ export function createPublishedPublicDataProvider(
     async loadElectionIndex(): Promise<PublicElectionIndexData> {
       const result = await cached('election-index', referenceDataStaleTimeMs, () => bridge.loadElectionIndex());
       elections = result.elections;
+      notifyPublicDataReady();
       return result;
     },
 
@@ -319,6 +343,7 @@ export function createPublishedPublicDataProvider(
       const result = await cached(key, pageDataStaleTimeMs, () =>
         bridge.loadElectionRacePage(eventKey, electionIds, filters, page, pageSize));
       races = mergeByKey(races, result.items, (race) => race.race_id);
+      notifyPublicDataReady();
       return result;
     },
 
@@ -329,7 +354,16 @@ export function createPublishedPublicDataProvider(
         elections = mergeByKey(elections, [result.election], (election) => election.election_id);
       }
       candidates = mergeByKey(candidates, result.candidates, (candidate) => candidate.candidate_id);
+      notifyPublicDataReady();
       return result;
+    },
+
+    async loadHomeCandidateSummaries(raceIds: string[]) {
+      const normalizedIds = Array.from(new Set(raceIds.map((raceId) => raceId.trim()).filter(Boolean))).sort();
+      const summaries = await cached(`home-candidates:${normalizedIds.join(',')}`, pageDataStaleTimeMs, () =>
+        bridge.loadHomeCandidateSummaries(normalizedIds));
+      candidates = mergeByKey(candidates, summaries.map((summary) => summary.candidate), (candidate) => candidate.candidate_id);
+      return summaries;
     },
 
     getPollComparisonByElectionId(): PollComparison | null {
@@ -352,6 +386,7 @@ export function createPublishedPublicDataProvider(
       const key = `people:${JSON.stringify(filters)}:${page}:${pageSize}`;
       const result = await cached(key, pageDataStaleTimeMs, () => bridge.loadPeoplePage(filters, page, pageSize));
       people = mergeByKey(people, result.items, (person) => person.person_id);
+      notifyPublicDataReady();
       return result;
     },
 
@@ -375,6 +410,7 @@ export function createPublishedPublicDataProvider(
         bridge.loadPersonProfiles(normalizedIds));
       for (const profile of profiles) profilesById.set(profile.person.person_id, profile);
       people = mergeByKey(people, profiles.map((profile) => profile.person), (person) => person.person_id);
+      notifyPublicDataReady();
       return profiles;
     },
 

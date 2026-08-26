@@ -148,6 +148,9 @@ function createBridge(overrides: Partial<PublishedPublicDataBridge> = {}) {
     async loadRaceDetail() {
       return { race: null, election: null, candidates: [], partyAffiliations: [] };
     },
+    async loadHomeCandidateSummaries() {
+      return [];
+    },
     async loadPeoplePage() {
       return { items: [person], total: 1 };
     },
@@ -270,6 +273,30 @@ test('published provider loads races for a region omitted from the bounded home 
 
   assert.equal(regionCalls, 1);
   assert.equal(restored[0]?.id, 'race-region-1');
+});
+
+test('published provider hydrates a region opened directly before the home snapshot loads', async () => {
+  const bridge = createBridge({
+    async loadRegionPageData() {
+      const home = await createBridge().loadHomePageData();
+      return {
+        region: home.stageRegions[0],
+        summary: home.stageRegionSummaries[0],
+        card: home.regions[0],
+        childRegions: [],
+        relatedRaces: home.upcomingRaces,
+      };
+    },
+  });
+  const assembly = createPublishedPublicDataProvider(bridge);
+
+  assert.equal(assembly.provider.getStageRegion('taipei'), null);
+  await assembly.provider.loadRelatedRacesByRegionId('taipei');
+
+  assert.equal(assembly.provider.getStageRegion('taipei')?.label, '臺北市');
+  assert.equal(assembly.provider.getRegionSummary('taipei')?.nearestElectionDate, '2026-11-28');
+  assert.equal(assembly.provider.getRegionCardByStageRegionId('taipei')?.name, '臺北市');
+  assert.equal(assembly.provider.getRelatedRacesByRegionId('taipei')[0]?.id, 'race-1');
 });
 
 test('published provider keeps the last complete snapshot when refresh fails and can retry', async () => {

@@ -7,6 +7,7 @@ const pageSize = 1000;
 const sitemapPageLimit = 45_000;
 const sitesFileSizeLimit = 25 * 1024 * 1024;
 const seoCatalogTargetFileSize = 2 * 1024 * 1024;
+const indexableRegionTypes = new Set(['country', 'municipality', 'county', 'city']);
 
 const sources = [
   {
@@ -26,6 +27,7 @@ const sources = [
     relation: 'regions',
     columns: 'region_id,name,slug,region_type',
     orderColumn: 'region_id',
+    filters: { region_type: 'in.(country,municipality,county,city)' },
   },
   {
     key: 'elections',
@@ -40,6 +42,8 @@ const sources = [
     orderColumn: 'race_id',
   },
 ];
+
+const catalogGroupKeys = [...sources.map((source) => source.key), 'events'];
 
 function cleanText(value) {
   return typeof value === 'string' ? value.trim() : '';
@@ -109,6 +113,7 @@ function partyPage(row) {
 }
 
 function regionPage(row) {
+  if (!indexableRegionTypes.has(cleanText(row.region_type))) return null;
   const slug = encodePathSegment(row.slug);
   const name = cleanText(row.name);
   if (!slug || !name) return null;
@@ -119,6 +124,81 @@ function regionPage(row) {
     `查看${name}的公職人員、選舉、候選人與地方議題資料。`,
     { '@type': 'AdministrativeArea', name },
   );
+}
+
+function getElectionYear(row) {
+  const votingYear = Number.parseInt(cleanText(row.voting_date).slice(0, 4), 10);
+  if (Number.isFinite(votingYear)) return votingYear;
+  const year = Number(row.year);
+  return Number.isFinite(year) ? year : null;
+}
+
+function getElectionFamily(row) {
+  const type = cleanText(row.election_type);
+  if (['presidential', 'president', 'legislative', 'legislator'].includes(type)) return 'national';
+  if (['local', 'local_chief', 'councilor', 'township_representative', 'village_chief'].includes(type)) return 'local';
+  if (type === 'referendum') return 'referendum';
+  if (type === 'recall') return 'recall';
+  if (type === 'by_election') return 'by_election';
+  return 'other';
+}
+
+function getLegacyLocalKind(row) {
+  if (row.election_type === 'councilor') return 'councilor';
+  if (row.election_type === 'township_representative') return 'township-representative';
+  if (row.election_type === 'village_chief') return 'village-chief';
+  return ['local', 'local_chief'].includes(row.election_type) ? null : cleanText(row.election_type);
+}
+
+function getElectionEventTitle(year, family, rows) {
+  const yearLabel = year ?? '未定年份';
+  const types = new Set(rows.map((row) => cleanText(row.election_type)));
+  if (family === 'national') {
+    const hasPresident = types.has('presidential') || types.has('president');
+    const hasLegislator = types.has('legislative') || types.has('legislator');
+    if (hasPresident && hasLegislator) return `${yearLabel} 總統副總統及立法委員選舉`;
+    if (hasPresident) return `${yearLabel} 總統副總統選舉`;
+    if (hasLegislator) return `${yearLabel} 立法委員選舉`;
+  }
+  if (family === 'local') {
+    if (year !== null && year < 2014 && rows.length === 1) return cleanText(rows[0].name);
+    return `${yearLabel} 地方公職人員選舉 / 九合一大選`;
+  }
+  if (family === 'referendum') return `${yearLabel} 公民投票`;
+  if (family === 'recall') return `${yearLabel} 罷免投票`;
+  if (family === 'by_election') return `${yearLabel} 補選`;
+  return rows.length === 1 ? cleanText(rows[0].name) : `${yearLabel} 選舉事件`;
+}
+
+function electionEventPages(rows) {
+  const groups = new Map();
+  for (const row of rows) {
+    const year = getElectionYear(row);
+    const votingDate = cleanText(row.voting_date) || null;
+    const family = getElectionFamily(row);
+    const discriminator = family === 'local' && year !== null && year < 2014
+      ? getLegacyLocalKind(row)
+      : null;
+    const key = `${year ?? 'unknown'}-${votingDate ?? 'undated'}-${family}${discriminator ? `-${discriminator}` : ''}`;
+    const group = groups.get(key) ?? [];
+    group.push(row);
+    groups.set(key, group);
+  }
+
+  return Array.from(groups.entries()).map(([key, group]) => {
+    const year = getElectionYear(group[0]);
+    const family = getElectionFamily(group[0]);
+    const title = getElectionEventTitle(year, family, group);
+    const votingDate = cleanText(group[0].voting_date);
+    return makePage(
+      'events',
+      `/elections/events/${encodePathSegment(key)}`,
+      title,
+      `查看${title}的選區、候選人、政黨表現與公開資料。`,
+      compactRecord({ '@type': 'Event', name: title, startDate: votingDate || undefined }),
+      votingDate,
+    );
+  }).filter(Boolean);
 }
 
 function electionPage(row) {
@@ -168,9 +248,12 @@ export function createSeoCatalog(datasets, generatedAt = new Date().toISOString(
       if (page && !pageByPath.has(page.path)) pageByPath.set(page.path, page);
     }
   }
+  for (const page of electionEventPages(Array.isArray(datasets.elections) ? datasets.elections : [])) {
+    if (!pageByPath.has(page.path)) pageByPath.set(page.path, page);
+  }
 
   const pages = Array.from(pageByPath.values()).sort((left, right) => left.path.localeCompare(right.path, 'zh-TW'));
-  for (const group of sources.map((source) => source.key)) {
+  for (const group of catalogGroupKeys) {
     const count = pages.filter((page) => page.group === group).length;
     if (count > sitemapPageLimit) {
       throw new Error(`${group} SEO pages exceed the ${sitemapPageLimit}-page sitemap safety limit.`);
@@ -194,8 +277,8 @@ export function writeSeoCatalogFiles(catalog, outputPath) {
   mkdirSync(catalogDirectory, { recursive: true });
 
   const groups = {};
-  for (const source of sources) {
-    const pages = catalog.pages.filter((page) => page.group === source.key);
+  for (const group of catalogGroupKeys) {
+    const pages = catalog.pages.filter((page) => page.group === group);
     const estimatedBytes = Buffer.byteLength(JSON.stringify(pages));
     const shardCount = Math.max(1, Math.ceil(estimatedBytes / seoCatalogTargetFileSize));
     const shards = Array.from({ length: shardCount }, () => []);
@@ -203,19 +286,19 @@ export function writeSeoCatalogFiles(catalog, outputPath) {
 
     const paths = [];
     for (let index = 0; index < shards.length; index += 1) {
-      const fileName = `${source.key}-${index}.json`;
+      const fileName = `${group}-${index}.json`;
       const contents = `${JSON.stringify({
         version: 1,
         generatedAt: catalog.generatedAt,
         pages: shards[index],
       })}\n`;
       if (Buffer.byteLength(contents) > sitesFileSizeLimit) {
-        throw new Error(`${source.key} SEO catalog shard exceeds the Sites 25 MiB file limit.`);
+        throw new Error(`${group} SEO catalog shard exceeds the Sites 25 MiB file limit.`);
       }
       writeFileSync(resolve(catalogDirectory, fileName), contents, 'utf8');
       paths.push(`/seo-catalog/${fileName}`);
     }
-    groups[source.key] = { paths, count: pages.length };
+    groups[group] = { paths, count: pages.length };
   }
 
   const manifest = { version: 3, generatedAt: catalog.generatedAt, groups };
@@ -230,6 +313,7 @@ export async function fetchPublishedRows({
   relation,
   columns,
   orderColumn,
+  filters = {},
   fetchImpl = fetch,
 }) {
   const rows = [];
@@ -240,6 +324,7 @@ export async function fetchPublishedRows({
     url.searchParams.set('order', `${orderColumn}.asc`);
     url.searchParams.set('limit', String(pageSize));
     url.searchParams.set('offset', String(offset));
+    for (const [column, filter] of Object.entries(filters)) url.searchParams.set(column, filter);
 
     const response = await fetchImpl(url, {
       headers: {
@@ -274,6 +359,7 @@ async function main() {
     relation: source.relation,
     columns: source.columns,
     orderColumn: source.orderColumn,
+    filters: source.filters,
   })));
   const datasets = Object.fromEntries(sources.map((source, index) => [source.key, results[index]]));
   const catalog = createSeoCatalog(datasets);

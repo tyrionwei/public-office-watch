@@ -5,7 +5,11 @@ import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { PersonFeedbackPanel } from '../components/PersonFeedbackPanel';
 import { SectionPanel } from '../components/SectionPanel';
-import { pickDefaultCandidateSprite, xiezhiMascotSprite } from '../data/defaultCharacterAssets';
+import {
+  pickDefaultCandidateSprite,
+  pickPersonCandidateSprite,
+  xiezhiMascotSprite,
+} from '../data/defaultCharacterAssets';
 import { translateCandidacyStatus, translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
@@ -492,8 +496,9 @@ export function PersonPage() {
   const publicClaims = profile ? visibleProfileClaims(profile.public_claims) : [];
   const birthDateClaim = profile ? claimsByType(profile.public_claims, 'birth_date')[0] ?? null : null;
   const primaryPhotoUrl = person?.primary_photo_thumbnail_url ?? person?.primary_photo_url ?? null;
+  const personSprite = person ? pickPersonCandidateSprite(person.person_id) : null;
   const portraitSrc = person
-    ? primaryPhotoUrl ?? pickDefaultCandidateSprite(person.name, person.gender, birthDateClaim?.claim_value)
+    ? personSprite ?? primaryPhotoUrl ?? pickDefaultCandidateSprite(person.name, person.gender, birthDateClaim?.claim_value)
     : xiezhiMascotSprite;
   const usesMascotFallback = Boolean(person && !primaryPhotoUrl && portraitSrc === xiezhiMascotSprite);
   const financeClaims = profile ? claimsByType(profile.public_claims, 'finance_summary') : [];
@@ -589,7 +594,7 @@ export function PersonPage() {
                 <div className="pixel-corners relative flex min-h-[220px] items-end justify-center border border-line/70 bg-bg/40 p-4">
                   <img
                     src={portraitSrc}
-                    alt={primaryPhotoUrl ? person.name : usesMascotFallback ? t('person.mascotFallbackLabel') : ''}
+                    alt={personSprite || primaryPhotoUrl ? person.name : usesMascotFallback ? t('person.mascotFallbackLabel') : ''}
                     className="max-h-[190px] w-auto object-contain object-bottom [image-rendering:pixelated]"
                   />
                   {usesMascotFallback ? (

@@ -6,6 +6,8 @@ import {
   defaultFemaleCandidateSprites,
   defaultMaleCandidateSprites,
   pickDefaultCandidateSprite,
+  pickPersonCandidateSprite,
+  personCandidateSprites,
   xiezhiMascotSprite,
 } from '../src/data/defaultCharacterAssets.ts';
 
@@ -44,4 +46,23 @@ test('falls back to the Xiezhi mascot when gender or exact birth date is unavail
   assert.equal(pickDefaultCandidateSprite('person-c', 'female', null, referenceDate), xiezhiMascotSprite);
   assert.equal(pickDefaultCandidateSprite('person-d', 'male', '1980', referenceDate), xiezhiMascotSprite);
   assert.equal(pickDefaultCandidateSprite('person-e', 'male', 'not-a-date', referenceDate), xiezhiMascotSprite);
+});
+
+test('uses canonical person IDs for configured candidate sprites', () => {
+  assert.equal(Object.keys(personCandidateSprites).length, 39);
+  for (const [personId, spritePath] of Object.entries(personCandidateSprites)) {
+    assert.match(personId, /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+    assert.equal(spritePath, `/assets/characters/candidates/${personId}.png`);
+  }
+
+  assert.equal(
+    pickPersonCandidateSprite('A4A44DFF-EFA9-45CC-8371-CBAA4CF6772D'),
+    '/assets/characters/candidates/a4a44dff-efa9-45cc-8371-cbaa4cf6772d.png',
+  );
+  assert.equal(
+    pickPersonCandidateSprite('20915299-0469-47b7-ae81-cf499a806a1a'),
+    '/assets/characters/candidates/20915299-0469-47b7-ae81-cf499a806a1a.png',
+  );
+  assert.equal(pickPersonCandidateSprite('b81440cf-865f-419a-96a0-c362a4e7eaba'), null);
+  assert.equal(pickPersonCandidateSprite(null), null);
 });

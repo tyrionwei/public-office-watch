@@ -675,6 +675,7 @@ export function HomeElectionSpotlight({
                   <>
                     <PixelCandidateSprite
                       displayName={candidate.person_name}
+                      personId={candidate.person_id}
                       partyKey={themeKey}
                       gender={demographics?.gender}
                       birthDate={demographics?.birthDate}

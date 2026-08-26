@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import {
   addSecurityHeaders,
@@ -45,6 +46,12 @@ const catalog = {
     },
   ],
 };
+
+test('runs the Worker before static assets so document metadata and statuses are applied', () => {
+  const wranglerConfig = JSON.parse(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
+
+  assert.equal(wranglerConfig.assets.run_worker_first, true);
+});
 
 test('injects exact catalog metadata and absolute social URLs', () => {
   const html = injectDocumentMetadata(baseHtml, 'https://preview.example/people/person-1?tab=history', catalog);

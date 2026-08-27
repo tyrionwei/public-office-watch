@@ -30,6 +30,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260827035539_add_home_page_payload_rpc.sql',
   'supabase/migrations/20260827042424_add_route_page_payload_rpcs.sql',
   'supabase/migrations/20260827052016_narrow_published_frontend_access.sql',
+  'supabase/migrations/20260827090000_add_seo_catalog_page_rpc.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -68,6 +69,7 @@ const reviewedAuxiliaryFunctions = [
   'get_region_issue_response',
   'get_person_feedback_context',
   'region_issue_results',
+  'seo_catalog_page',
   'submit_person_feedback',
   'submit_region_issue_response',
 ];

@@ -37,29 +37,31 @@ test('creates deduplicated public entity metadata from published rows', () => {
   assert.equal(catalog.pages.some((page) => page.path === '/regions/test-village'), false);
 });
 
-test('reads the published schema with the anon credential and bounded pages', async () => {
+test('reads the bounded SEO RPC with the anon credential', async () => {
   const requests = [];
   const rows = await fetchPublishedRows({
     supabaseUrl: 'https://database.example',
     anonKey: 'anon-key',
     relation: 'parties',
-    columns: 'party_id,name',
-    orderColumn: 'party_id',
-    filters: { region_type: 'in.(country,municipality,county,city)' },
     fetchImpl: async (url, options) => {
       requests.push({ url: url.toString(), options });
-      return new Response([{ party_id: 'party-1', name: '測試黨' }].length
-        ? JSON.stringify([{ party_id: 'party-1', name: '測試黨' }])
-        : '[]', { status: 200, headers: { 'content-type': 'application/json' } });
+      return new Response(JSON.stringify([{
+        items: [{ party_id: 'party-1', name: '測試黨' }],
+      }]), { status: 200, headers: { 'content-type': 'application/json' } });
     },
   });
 
   assert.equal(rows.length, 1);
   assert.equal(requests.length, 1);
-  assert.match(requests[0].url, /rest\/v1\/parties/);
-  assert.match(requests[0].url, /region_type=in\.%28country%2Cmunicipality%2Ccounty%2Ccity%29/);
-  assert.equal(requests[0].options.headers['accept-profile'], 'published');
+  assert.match(requests[0].url, /rest\/v1\/rpc\/seo_catalog_page/);
+  assert.equal(requests[0].options.method, 'POST');
+  assert.equal(requests[0].options.headers['content-profile'], 'published');
   assert.equal(requests[0].options.headers.authorization, 'Bearer anon-key');
+  assert.deepEqual(JSON.parse(requests[0].options.body), {
+    p_dataset: 'parties',
+    p_offset: 0,
+    p_page_size: 1000,
+  });
 });
 
 test('writes a lightweight manifest and one bounded file per SEO group', () => {

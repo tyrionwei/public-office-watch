@@ -310,39 +310,39 @@ export async function fetchPublishedRows({
   supabaseUrl,
   anonKey,
   relation,
-  columns,
-  orderColumn,
-  filters = {},
   fetchImpl = fetch,
 }) {
   const rows = [];
 
   for (let offset = 0; ; offset += pageSize) {
-    const url = new URL(`/rest/v1/${relation}`, supabaseUrl);
-    url.searchParams.set('select', columns);
-    url.searchParams.set('order', `${orderColumn}.asc`);
-    url.searchParams.set('limit', String(pageSize));
-    url.searchParams.set('offset', String(offset));
-    for (const [column, filter] of Object.entries(filters)) url.searchParams.set(column, filter);
-
+    const url = new URL('/rest/v1/rpc/seo_catalog_page', supabaseUrl);
     const response = await fetchImpl(url, {
+      method: 'POST',
       headers: {
         apikey: anonKey,
         authorization: `Bearer ${anonKey}`,
-        'accept-profile': 'published',
+        'content-profile': 'published',
+        'content-type': 'application/json',
       },
+      body: JSON.stringify({
+        p_dataset: relation,
+        p_offset: offset,
+        p_page_size: pageSize,
+      }),
     });
     if (!response.ok) {
-      throw new Error(`Published ${relation} SEO query failed (${response.status}).`);
+      throw new Error(`Published ${relation} SEO RPC failed (${response.status}).`);
     }
 
-    const page = await response.json();
-    if (!Array.isArray(page)) throw new Error(`Published ${relation} SEO query returned invalid data.`);
+    const result = await response.json();
+    const page = Array.isArray(result) ? result[0]?.items : null;
+    if (!Array.isArray(page)) {
+      throw new Error(`Published ${relation} SEO RPC returned invalid data.`);
+    }
     rows.push(...page);
     if (page.length < pageSize) return rows;
   }
 }
-
 async function main() {
   validateProductionEnvironment(process.env);
   if (process.env.VITE_PUBLIC_DATA_PROVIDER !== 'published') {

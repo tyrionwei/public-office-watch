@@ -258,6 +258,41 @@ test('detail routes use bounded page payloads without duplicate feedback reads',
   expect(apiRequests).toEqual(['rpc/region_page_for']);
 });
 
+test('participation reuses one server-issued anonymous session across public flows', async ({ page }) => {
+  let anonymousSignupCount = 0;
+  const participationRequests: Array<{ name: string; body: Record<string, unknown> }> = [];
+
+  page.on('request', (request) => {
+    const url = new URL(request.url());
+    if (url.pathname.endsWith('/auth/v1/signup')) {
+      anonymousSignupCount += 1;
+      return;
+    }
+
+    const name = url.pathname.match(/\/rest\/v1\/rpc\/(get_region_issue_response|get_person_feedback_context)$/u)?.[1];
+    if (name) {
+      participationRequests.push({
+        name,
+        body: request.postDataJSON() as Record<string, unknown>,
+      });
+    }
+  });
+
+  await page.goto('/?region=taipei-city');
+  await page.waitForLoadState('networkidle');
+  expect(participationRequests.some(({ name }) => name === 'get_region_issue_response')).toBe(true);
+
+  await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
+  await expect(page.getByRole('heading', { name: '王世堅', exact: true })).toBeVisible();
+  await page.waitForLoadState('networkidle');
+
+  expect(anonymousSignupCount).toBe(1);
+  expect(participationRequests.some(({ name }) => name === 'get_person_feedback_context')).toBe(true);
+  for (const { body } of participationRequests) {
+    expect(body).not.toHaveProperty('p_participant_token');
+  }
+});
+
 test('people page loads public people results', async ({ page }) => {
   let candidateRequestCount = 0;
   page.on('request', (request) => {
@@ -464,6 +499,58 @@ test('explicit nationwide selection remains selected during the election gap', a
   await expect(page.getByText('目前沒有已公告的全國投票項目', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: /全國總覽/ })).toHaveAttribute('aria-pressed', 'true');
   await expect(page).toHaveURL(/\?region=national$/);
+});
+
+test('first issue write obtains Turnstile clearance and uses the participation proxy', async ({ page }) => {
+  let challengeCalls = 0;
+  let submitCalls = 0;
+  await page.addInitScript(() => {
+    window.localStorage.removeItem('public-office-watch-participation-clearance-v1');
+    Object.defineProperty(window, 'turnstile', {
+      configurable: true,
+      value: {
+        render(_container: HTMLElement, options: { callback(token: string): void }) {
+          queueMicrotask(() => options.callback('browser-smoke-turnstile-token'));
+          return 'browser-smoke-widget';
+        },
+        remove() {},
+      },
+    });
+  });
+  await page.route('**/api/participation/challenge', async (route) => {
+    challengeCalls += 1;
+    expect(route.request().postDataJSON()).toEqual({ token: 'browser-smoke-turnstile-token' });
+    await route.fulfill({ status: 204 });
+  });
+  await page.route('**/api/participation/submit', async (route) => {
+    submitCalls += 1;
+    const authorization = await route.request().headerValue('authorization');
+    expect(authorization).toMatch(/^Bearer .+/u);
+    const body = route.request().postDataJSON() as {
+      action?: string;
+      regionId?: string;
+      issueIds?: string[];
+    };
+    expect(body.action).toBe('region-issue');
+    expect(body.regionId).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(body.issueIds?.length).toBeGreaterThan(0);
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ responseStatus: 'accepted' }),
+    });
+  });
+
+  await page.goto('/?region=national');
+  const issueFrame = page.getByRole('heading', { name: '全國議題關注' }).locator('xpath=ancestor::section[1]');
+  await expect(issueFrame.locator('input[type="checkbox"]').first()).toBeVisible();
+  if (await issueFrame.locator('input[type="checkbox"]:checked').count() === 0) {
+    await issueFrame.locator('input[type="checkbox"]').first().check();
+  }
+  await issueFrame.getByRole('button', { name: /送出選擇|更新選擇/ }).click();
+  await expect(issueFrame.getByText('已更新你的選擇。', { exact: true })).toBeVisible();
+  expect(challengeCalls).toBe(1);
+  expect(submitCalls).toBe(1);
 });
 
 test('homepage quick select exposes the six municipalities and seat links carry people filters', async ({ page }) => {

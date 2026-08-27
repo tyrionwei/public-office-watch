@@ -3,6 +3,7 @@ import path from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { sites } from './build/sites-vite-plugin';
+import { participationDevProxyPlugin } from './build/participationDevProxy';
 import {
   buildIdentityClaimLinkPatch,
   buildPartyCandidateReviewWrite,
@@ -878,5 +879,5 @@ function internalReviewApiPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), sites(), internalReviewApiPlugin()],
+  plugins: [react(), sites(), participationDevProxyPlugin(), internalReviewApiPlugin()],
 });

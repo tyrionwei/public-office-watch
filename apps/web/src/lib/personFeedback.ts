@@ -1,4 +1,8 @@
-import { getSupabasePublicClient } from './supabasePublicClient';
+import {
+  ensureAnonymousParticipationSession,
+  getSupabaseParticipationClient,
+} from './supabasePublicClient';
+import { submitParticipationRequest } from './participationSecurity';
 
 export const feedbackSectionKeys = [
   'basic',
@@ -43,36 +47,23 @@ type PersonFeedbackInput = {
   evidenceUrl?: string;
 };
 
-const participantStorageKey = 'public-office-watch:person-feedback-participant';
 const feedbackContextRequests = new Map<string, Promise<PersonFeedbackContext>>();
-
-function getParticipantToken() {
-  if (typeof window === 'undefined') return null;
-
-  const existing = window.localStorage.getItem(participantStorageKey);
-  if (existing) return existing;
-
-  const token = window.crypto.randomUUID();
-  window.localStorage.setItem(participantStorageKey, token);
-  return token;
-}
 
 function emptyContext(): PersonFeedbackContext {
   return { priorities: [], ownSubmissions: [] };
 }
 
 export async function fetchPersonFeedbackContext(personId: string): Promise<PersonFeedbackContext> {
-  const client = getSupabasePublicClient();
-  const participantToken = getParticipantToken();
-  if (!client || !participantToken) return emptyContext();
+  const client = getSupabaseParticipationClient();
+  if (!client) return emptyContext();
+  const session = await ensureAnonymousParticipationSession();
 
-  const requestKey = `${personId}:${participantToken}`;
+  const requestKey = `${personId}:${session.user.id}`;
   const existingRequest = feedbackContextRequests.get(requestKey);
   if (existingRequest) return existingRequest;
 
   const request = Promise.resolve(client.schema('published').rpc('get_person_feedback_context', {
     p_person_id: personId,
-    p_participant_token: participantToken,
   })).then(({ data, error }) => {
     if (error) throw error;
     const context = data && typeof data === 'object' ? data as Partial<PersonFeedbackContext> : {};
@@ -89,20 +80,19 @@ export async function fetchPersonFeedbackContext(personId: string): Promise<Pers
 }
 
 export async function submitPersonFeedback(input: PersonFeedbackInput) {
-  const client = getSupabasePublicClient();
-  const participantToken = getParticipantToken();
-  if (!client || !participantToken) throw new Error('Person feedback is unavailable.');
+  const client = getSupabaseParticipationClient();
+  if (!client) throw new Error('Person feedback is unavailable.');
+  const session = await ensureAnonymousParticipationSession();
 
-  const { error } = await client.schema('published').rpc('submit_person_feedback', {
-    p_person_id: input.personId,
-    p_participant_token: participantToken,
-    p_feedback_kind: input.feedbackKind,
-    p_section_key: input.sectionKey,
-    p_problem_type: input.problemType ?? null,
-    p_message: input.message ?? null,
-    p_evidence_url: input.evidenceUrl ?? null,
+  await submitParticipationRequest(session, {
+    action: 'person-feedback',
+    personId: input.personId,
+    feedbackKind: input.feedbackKind,
+    sectionKey: input.sectionKey,
+    problemType: input.problemType,
+    message: input.message,
+    evidenceUrl: input.evidenceUrl,
   });
 
-  if (error) throw error;
   return fetchPersonFeedbackContext(input.personId);
 }

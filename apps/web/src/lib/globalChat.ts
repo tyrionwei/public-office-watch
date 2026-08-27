@@ -1,5 +1,6 @@
 import {
   getSupabaseChatClient,
+  ensureAnonymousParticipationSession,
   type PublicRealtimeChannel,
 } from './supabasePublicClient.ts';
 
@@ -106,14 +107,11 @@ export async function loadChatStatus(): Promise<ChatStatus | null> {
 }
 
 export async function ensureAnonymousChatSession() {
-  const client = requireChatClient();
-  const { data: current, error: sessionError } = await client.auth.getSession();
-  if (sessionError) throw new ChatApiError('CHAT_AUTH_FAILED');
-  if (current.session) return current.session;
-
-  const { data, error } = await client.auth.signInAnonymously();
-  if (error || !data.session) throw new ChatApiError('CHAT_AUTH_FAILED');
-  return data.session;
+  try {
+    return await ensureAnonymousParticipationSession();
+  } catch {
+    throw new ChatApiError('CHAT_AUTH_FAILED');
+  }
 }
 
 export async function loadChatProfile() {

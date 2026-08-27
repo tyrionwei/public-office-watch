@@ -1,4 +1,8 @@
-import { getSupabasePublicClient } from './supabasePublicClient';
+import {
+  ensureAnonymousParticipationSession,
+  getSupabaseParticipationClient,
+} from './supabasePublicClient';
+import { submitParticipationRequest } from './participationSecurity';
 
 export type RegionIssueResult = {
   issueId: string;
@@ -35,19 +39,6 @@ type RegionIssueResponsePayload = {
   selectedIssueIds?: string[];
 };
 
-const participantStorageKey = 'public-office-watch:region-issue-participant';
-
-export function getRegionIssueParticipantToken() {
-  if (typeof window === 'undefined') return '';
-
-  const existing = window.localStorage.getItem(participantStorageKey);
-  if (existing) return existing;
-
-  const token = window.crypto.randomUUID();
-  window.localStorage.setItem(participantStorageKey, token);
-  return token;
-}
-
 function mapIssue(row: RegionIssueResultRow): RegionIssueResult {
   return {
     issueId: row.issue_id,
@@ -63,12 +54,12 @@ function mapIssue(row: RegionIssueResultRow): RegionIssueResult {
 
 export async function loadRegionIssueParticipation(
   regionId: string,
-  participantToken: string,
 ): Promise<RegionIssueParticipation> {
-  const client = getSupabasePublicClient();
-  if (!client || !regionId || !participantToken) {
+  const client = getSupabaseParticipationClient();
+  if (!client || !regionId) {
     return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
   }
+  await ensureAnonymousParticipationSession();
 
   const [issuesResult, responseResult] = await Promise.all([
     client
@@ -79,7 +70,6 @@ export async function loadRegionIssueParticipation(
       }),
     client.schema('published').rpc('get_region_issue_response', {
       p_region_id: regionId,
-      p_participant_token: participantToken,
     }),
   ]);
 
@@ -96,13 +86,12 @@ export async function loadRegionIssueParticipation(
   };
 }
 
-export async function loadNationalIssueParticipation(
-  participantToken: string,
-): Promise<RegionIssueParticipation> {
-  const client = getSupabasePublicClient();
-  if (!client || !participantToken) {
+export async function loadNationalIssueParticipation(): Promise<RegionIssueParticipation> {
+  const client = getSupabaseParticipationClient();
+  if (!client) {
     return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
   }
+  await ensureAnonymousParticipationSession();
 
   const issuesResult = await client.schema('published').rpc('region_issue_results', {
     p_region_id: null,
@@ -118,7 +107,6 @@ export async function loadNationalIssueParticipation(
 
   const responseResult = await client.schema('published').rpc('get_region_issue_response', {
     p_region_id: regionId,
-    p_participant_token: participantToken,
   });
   if (responseResult.error) throw responseResult.error;
 
@@ -134,17 +122,15 @@ export async function loadNationalIssueParticipation(
 
 export async function submitRegionIssueParticipation(
   regionId: string,
-  participantToken: string,
   selectedIssueIds: string[],
 ) {
-  const client = getSupabasePublicClient();
+  const client = getSupabaseParticipationClient();
   if (!client) throw new Error('Issue participation is unavailable');
+  const session = await ensureAnonymousParticipationSession();
 
-  const { error } = await client.schema('published').rpc('submit_region_issue_response', {
-    p_region_id: regionId,
-    p_participant_token: participantToken,
-    p_issue_ids: selectedIssueIds,
+  await submitParticipationRequest(session, {
+    action: 'region-issue',
+    regionId,
+    issueIds: selectedIssueIds,
   });
-
-  if (error) throw error;
 }

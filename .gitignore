@@ -29,6 +29,7 @@ local-data/
 logs/
 tmp/
 apps/web/.env.rehearsal.local
+apps/web/.dev.vars
 supabase/.branches/
 supabase/.temp/
 supabase/snippets/

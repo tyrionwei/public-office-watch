@@ -13,13 +13,14 @@ declare module 'node:fs' {
 declare module 'node:path' {
   const path: {
     resolve(...segments: string[]): string;
+    join(...segments: string[]): string;
   };
   export default path;
 }
 
 declare const Buffer: {
-  from(value: Uint8Array | string): Uint8Array;
-  concat(values: Uint8Array[]): { toString(encoding: string): string };
+  from(value: ArrayBuffer | Uint8Array | string): Uint8Array;
+  concat(values: Uint8Array[]): Uint8Array & { toString(encoding: string): string };
 };
 declare const __dirname: string;
 declare const process: {

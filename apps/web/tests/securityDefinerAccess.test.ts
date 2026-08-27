@@ -44,6 +44,26 @@ const browserRpcMigration = readFileSync(
   new URL('../../../supabase/migrations/20260812070539_publish_remaining_browser_rpcs.sql', import.meta.url),
   'utf8',
 );
+const anonymousParticipationMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260827094616_use_server_issued_anonymous_participant.sql', import.meta.url),
+  'utf8',
+);
+const participationProxyMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260827102924_require_participation_write_proxy.sql', import.meta.url),
+  'utf8',
+);
+const participationProxyGrantMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260827105521_grant_proxy_guarded_participation_wrappers.sql', import.meta.url),
+  'utf8',
+);
+const participationSecuritySource = readFileSync(
+  new URL('../src/lib/participationSecurity.ts', import.meta.url),
+  'utf8',
+);
+const participationWorkerSource = readFileSync(
+  new URL('../worker/participation.ts', import.meta.url),
+  'utf8',
+);
 const globalChatSource = readFileSync(
   new URL('../src/lib/globalChat.ts', import.meta.url),
   'utf8',
@@ -58,6 +78,10 @@ const cloudflareHeaders = readFileSync(
 );
 const personFeedbackSource = readFileSync(
   new URL('../src/lib/personFeedback.ts', import.meta.url),
+  'utf8',
+);
+const supabasePublicClientSource = readFileSync(
+  new URL('../src/lib/supabasePublicClient.ts', import.meta.url),
   'utf8',
 );
 const publicSmokeSource = readFileSync(
@@ -312,10 +336,12 @@ test('route page payloads stay bounded and explicitly granted through published'
 });
 
 test('region issue participation uses only the reviewed published API', () => {
-  for (const name of ['region_issue_results', 'get_region_issue_response', 'submit_region_issue_response']) {
+  for (const name of ['region_issue_results', 'get_region_issue_response']) {
     assert.match(regionIssueMigration, new RegExp(`CREATE OR REPLACE FUNCTION published\\.${name}\\(`, 'u'));
     assert.match(regionIssueSource, new RegExp(`schema\\('published'\\)\\.rpc\\('${name}'`, 'u'));
   }
+  assert.doesNotMatch(regionIssueSource, /rpc\('submit_region_issue_response'/u);
+  assert.match(regionIssueSource, /submitParticipationRequest/u);
   assert.doesNotMatch(regionIssueSource, /from\('public_region_issue_results'\)/u);
   for (const revokePattern of [
     /REVOKE ALL ON FUNCTION public\.get_region_issue_response\(UUID, TEXT\)\s+FROM PUBLIC, anon, authenticated;/u,
@@ -328,12 +354,45 @@ test('region issue participation uses only the reviewed published API', () => {
   }
 });
 
+test('anonymous participation identity is issued by Supabase Auth and enforced by RPCs', () => {
+  assert.match(supabasePublicClientSource, /auth\.signInAnonymously\(\)/u);
+  assert.match(supabasePublicClientSource, /anonymousParticipationSessionPromise/u);
+  assert.match(supabasePublicClientSource, /getSupabaseParticipationClient/u);
+
+  for (const source of [regionIssueSource, personFeedbackSource]) {
+    assert.doesNotMatch(source, /randomUUID|participantStorageKey|p_participant_token/u);
+    assert.match(source, /ensureAnonymousParticipationSession/u);
+  }
+
+  assert.equal((anonymousParticipationMigration.match(/participant_id := auth\.uid\(\);/gu) ?? []).length, 4);
+  assert.equal((anonymousParticipationMigration.match(/IF participant_id IS NULL THEN/gu) ?? []).length, 4);
+
+  for (const signature of [
+    'published.get_region_issue_response(UUID, TEXT)',
+    'published.submit_region_issue_response(UUID, TEXT, UUID[])',
+    'published.get_person_feedback_context(UUID, TEXT)',
+    'published.submit_person_feedback(UUID, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT)',
+  ]) {
+    assert.ok(anonymousParticipationMigration.includes(`DROP FUNCTION ${signature};`));
+  }
+
+  for (const signature of [
+    'published.get_region_issue_response(UUID)',
+    'published.submit_region_issue_response(UUID, UUID[])',
+    'published.get_person_feedback_context(UUID)',
+    'published.submit_person_feedback(UUID, TEXT, TEXT, TEXT, TEXT, TEXT)',
+  ]) {
+    assert.ok(anonymousParticipationMigration.includes(`GRANT EXECUTE ON FUNCTION ${signature}\nTO authenticated;`));
+    assert.ok(!anonymousParticipationMigration.includes(`GRANT EXECUTE ON FUNCTION ${signature}\nTO anon`));
+  }
+});
+
 test('remaining browser RPCs use only the reviewed published API', () => {
   assert.match(globalChatSource, /schema\('published'\)\.rpc\('chat_messages'/u);
   assert.doesNotMatch(globalChatSource, /client\.rpc\('get_public_chat_messages'/u);
-  for (const name of ['get_person_feedback_context', 'submit_person_feedback']) {
-    assert.match(personFeedbackSource, new RegExp(`schema\\('published'\\)\\.rpc\\('${name}'`, 'u'));
-  }
+  assert.match(personFeedbackSource, /schema\('published'\)\.rpc\('get_person_feedback_context'/u);
+  assert.doesNotMatch(personFeedbackSource, /rpc\('submit_person_feedback'/u);
+  assert.match(personFeedbackSource, /submitParticipationRequest/u);
   for (const signature of [
     /public\.get_public_chat_messages\(TIMESTAMPTZ, UUID, INTEGER\)/u,
     /public\.get_person_feedback_context\(UUID, TEXT\)/u,
@@ -347,6 +406,42 @@ test('remaining browser RPCs use only the reviewed published API', () => {
     /public\.normalize_election_district_label\(TEXT\)/u,
   ]) {
     assert.match(browserRpcMigration, helper);
+  }
+});
+
+
+test('participation writes require Turnstile clearance, rate limits, and a Cloudflare proxy proof', () => {
+  assert.match(participationSecuritySource, /challenges\.cloudflare\.com\/turnstile/u);
+  assert.match(participationSecuritySource, /appearance: 'interaction-only'/u);
+  assert.match(participationSecuritySource, /PARTICIPATION_CHALLENGE_REQUIRED/u);
+  assert.match(participationWorkerSource, /\/auth\/v1\/user/u);
+  assert.match(participationWorkerSource, /PARTICIPATION_USER_RATE_LIMITER\.limit/u);
+  assert.match(participationWorkerSource, /PARTICIPATION_IP_RATE_LIMITER\.limit/u);
+  assert.match(participationWorkerSource, /PARTICIPATION_IP_HMAC_KEY/u);
+  assert.match(participationWorkerSource, /HttpOnly; SameSite=Strict/u);
+  assert.match(participationWorkerSource, /x-participation-proxy-signature/u);
+  assert.doesNotMatch(participationWorkerSource, /SERVICE_ROLE/u);
+
+  assert.match(participationProxyMigration, /participant_id := auth\.uid\(\)/u);
+  assert.match(participationProxyMigration, /current_setting\('request\.headers'/u);
+  assert.match(participationProxyMigration, /vault\.decrypted_secrets/u);
+  assert.match(participationProxyMigration, /extensions\.hmac/u);
+  assert.match(participationProxyMigration, /> 60/u);
+  for (const name of [
+    'submit_region_issue_response_proxied_internal',
+    'submit_person_feedback_proxied_internal',
+  ]) {
+    assert.match(participationProxyMigration, new RegExp(`REVOKE ALL ON FUNCTION public\\.${name}`, 'u'));
+  }
+  for (const signature of [
+    'public.submit_region_issue_response(UUID, UUID[])',
+    'public.submit_person_feedback(UUID, TEXT, TEXT, TEXT, TEXT, TEXT)',
+  ]) {
+    assert.ok(
+      participationProxyGrantMigration.includes(
+        `GRANT EXECUTE ON FUNCTION ${signature}\nTO authenticated;`,
+      ),
+    );
   }
 });
 

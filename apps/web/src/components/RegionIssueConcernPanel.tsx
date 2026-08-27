@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useI18n, type TranslationKey } from '../i18n';
 import {
-  getRegionIssueParticipantToken,
   loadNationalIssueParticipation,
   loadRegionIssueParticipation,
   submitRegionIssueParticipation,
@@ -58,10 +57,9 @@ export function RegionIssueConcernPanel({ regionId, regionLabel, national = fals
       };
     }
 
-    const participantToken = getRegionIssueParticipantToken();
     const participationRequest = national
-      ? loadNationalIssueParticipation(participantToken)
-      : loadRegionIssueParticipation(regionId as string, participantToken);
+      ? loadNationalIssueParticipation()
+      : loadRegionIssueParticipation(regionId as string);
     void participationRequest
       .then((participation) => {
         if (!active) return;
@@ -105,11 +103,10 @@ export function RegionIssueConcernPanel({ regionId, regionLabel, national = fals
     setSaved(false);
     setError(null);
     try {
-      const participantToken = getRegionIssueParticipantToken();
-      await submitRegionIssueParticipation(activeRegionId, participantToken, selectedIssueIds);
+      await submitRegionIssueParticipation(activeRegionId, selectedIssueIds);
       const participation = national
-        ? await loadNationalIssueParticipation(participantToken)
-        : await loadRegionIssueParticipation(activeRegionId, participantToken);
+        ? await loadNationalIssueParticipation()
+        : await loadRegionIssueParticipation(activeRegionId);
       setIssues(participation.issues);
       setSelectedIssueIds(participation.selectedIssueIds);
       setHasResponse(true);

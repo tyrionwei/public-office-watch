@@ -1,9 +1,10 @@
-import { createClient, type RealtimeChannel, type SupabaseClient } from '@supabase/supabase-js';
+import { createClient, type RealtimeChannel, type Session, type SupabaseClient } from '@supabase/supabase-js';
 import { getSupabasePublicEnv } from './supabaseEnv.ts';
 
 let cachedClient: SupabaseClient | null | undefined;
 let cachedChatClient: SupabaseClient | null | undefined;
 let cachedChatAdminClient: SupabaseClient | null | undefined;
+let anonymousParticipationSessionPromise: Promise<Session> | null = null;
 
 export type PublicRealtimeChannel = RealtimeChannel;
 
@@ -55,6 +56,33 @@ export function getSupabaseChatClient(): SupabaseClient | null {
   });
 
   return cachedChatClient;
+}
+
+export function getSupabaseParticipationClient(): SupabaseClient | null {
+  return getSupabaseChatClient();
+}
+
+export async function ensureAnonymousParticipationSession(): Promise<Session> {
+  const client = getSupabaseParticipationClient();
+  if (!client) throw new Error('Anonymous participation is unavailable');
+
+  const { data: current, error: sessionError } = await client.auth.getSession();
+  if (sessionError) throw sessionError;
+  if (current.session) return current.session;
+
+  if (!anonymousParticipationSessionPromise) {
+    anonymousParticipationSessionPromise = client.auth.signInAnonymously()
+      .then(({ data, error }) => {
+        if (error) throw error;
+        if (!data.session) throw new Error('Anonymous participation session was not created');
+        return data.session;
+      })
+      .finally(() => {
+        anonymousParticipationSessionPromise = null;
+      });
+  }
+
+  return anonymousParticipationSessionPromise;
 }
 
 export function getSupabaseChatAdminClient(): SupabaseClient | null {

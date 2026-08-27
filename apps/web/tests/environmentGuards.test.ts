@@ -10,6 +10,7 @@ import {
 
 const sharedEnvironment = {
   VITE_SUPABASE_ANON_KEY: 'anon-public-key',
+  VITE_TURNSTILE_SITE_KEY: 'turnstile-site-key',
   VITE_PUBLIC_DATA_PROVIDER: 'published',
   VITE_ENABLE_PUBLISHED_PROVIDER: 'true',
 };
@@ -91,6 +92,17 @@ test('production builds allow the published provider only behind its explicit fl
       VITE_ENABLE_PUBLISHED_PROVIDER: 'false',
     }),
     /VITE_ENABLE_PUBLISHED_PROVIDER must be true/,
+  );
+});
+
+test('frontend environments require a Turnstile site key', () => {
+  assert.throws(
+    () => validateProductionEnvironment({
+      ...sharedEnvironment,
+      VITE_SUPABASE_URL: 'https://project.supabase.co',
+      VITE_TURNSTILE_SITE_KEY: '',
+    }),
+    /VITE_TURNSTILE_SITE_KEY is required/,
   );
 });
 

@@ -1,3 +1,5 @@
+import { handleParticipationRequest } from './participation.ts';
+
 const siteName = '公職資料觀測站';
 const englishSiteName = 'Public Office Watch';
 const defaultDescription = '查詢臺灣公職人物、政黨、選舉、候選人政見、政治獻金與公開資料來源。';
@@ -312,6 +314,10 @@ const worker = {
     const url = new URL(request.url);
     const isGetOrHead = request.method === 'GET' || request.method === 'HEAD';
     const responseBody = (body) => (request.method === 'HEAD' ? null : body);
+
+    if (url.pathname.startsWith('/api/participation/')) {
+      return addSecurityHeaders(await handleParticipationRequest(request, env), url.pathname);
+    }
 
     if (isGetOrHead && url.pathname === '/robots.txt') {
       return textResponse(responseBody(robotsText(canonicalSiteOrigin)), 'text/plain; charset=utf-8');

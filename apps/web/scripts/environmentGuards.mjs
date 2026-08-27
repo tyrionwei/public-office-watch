@@ -1,6 +1,7 @@
 const frontendEnvironmentKeys = [
   'VITE_SUPABASE_URL',
   'VITE_SUPABASE_ANON_KEY',
+  'VITE_TURNSTILE_SITE_KEY',
   'VITE_PUBLIC_DATA_PROVIDER',
   'VITE_ENABLE_PUBLISHED_PROVIDER',
 ];
@@ -61,6 +62,7 @@ function validateSharedFrontendEnvironment(environment) {
     throw new Error('Frontend Supabase credentials must not use a service role key.');
   }
 
+  requireValue(environment, 'VITE_TURNSTILE_SITE_KEY');
   return parseUrl(requireValue(environment, 'VITE_SUPABASE_URL'), 'VITE_SUPABASE_URL');
 }
 

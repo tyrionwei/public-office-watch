@@ -266,7 +266,9 @@ test('public participation reads do not create an anonymous session', async ({ p
       return;
     }
 
-    const name = url.pathname.match(/\/rest\/v1\/rpc\/(get_region_issue_response|get_person_feedback_context)$/u)?.[1];
+    const name = url.pathname.match(
+      /\/rest\/v1\/rpc\/(get_region_issue_response|person_feedback_priorities|get_person_feedback_own_submissions)$/u,
+    )?.[1];
     if (name) {
       participationRequests.push({
         name,
@@ -284,7 +286,8 @@ test('public participation reads do not create an anonymous session', async ({ p
 
   expect(anonymousSignupCount).toBe(0);
   expect(participationRequests.some(({ name }) => name === 'get_region_issue_response')).toBe(false);
-  expect(participationRequests.some(({ name }) => name === 'get_person_feedback_context')).toBe(false);
+  expect(participationRequests.some(({ name }) => name === 'person_feedback_priorities')).toBe(true);
+  expect(participationRequests.some(({ name }) => name === 'get_person_feedback_own_submissions')).toBe(false);
   for (const { body } of participationRequests) {
     expect(body).not.toHaveProperty('p_participant_token');
   }

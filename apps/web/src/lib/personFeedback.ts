@@ -60,21 +60,30 @@ function emptyContext(): PersonFeedbackContext {
 export async function fetchPersonFeedbackContext(personId: string): Promise<PersonFeedbackContext> {
   const client = getSupabaseParticipationClient();
   if (!client) return emptyContext();
-  const session = await getExistingParticipationSession();
-  if (!session) return emptyContext();
+  const session = await getExistingParticipationSession().catch(() => null);
 
-  const requestKey = `${personId}:${session.user.id}`;
+  const requestKey = `${personId}:${session?.user.id ?? 'public'}`;
   const existingRequest = feedbackContextRequests.get(requestKey);
   if (existingRequest) return existingRequest;
 
-  const request = Promise.resolve(client.schema('published').rpc('get_person_feedback_context', {
-    p_person_id: personId,
-  })).then(({ data, error }) => {
-    if (error) throw error;
-    const context = data && typeof data === 'object' ? data as Partial<PersonFeedbackContext> : {};
+  const prioritiesRequest = Promise.resolve(
+    client.schema('published').rpc('person_feedback_priorities', { p_person_id: personId }),
+  );
+  const ownSubmissionsRequest = session
+    ? Promise.resolve(client.schema('published').rpc('get_person_feedback_own_submissions', {
+        p_person_id: personId,
+      }))
+    : Promise.resolve({ data: [], error: null });
+
+  const request = Promise.all([prioritiesRequest, ownSubmissionsRequest]).then(([
+    prioritiesResult,
+    ownSubmissionsResult,
+  ]) => {
+    if (prioritiesResult.error) throw prioritiesResult.error;
+    if (ownSubmissionsResult.error) throw ownSubmissionsResult.error;
     return {
-      priorities: Array.isArray(context.priorities) ? context.priorities : [],
-      ownSubmissions: Array.isArray(context.ownSubmissions) ? context.ownSubmissions : [],
+      priorities: Array.isArray(prioritiesResult.data) ? prioritiesResult.data : [],
+      ownSubmissions: Array.isArray(ownSubmissionsResult.data) ? ownSubmissionsResult.data : [],
     };
   }).finally(() => {
     feedbackContextRequests.delete(requestKey);

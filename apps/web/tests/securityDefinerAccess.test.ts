@@ -56,6 +56,10 @@ const participationProxyGrantMigration = readFileSync(
   new URL('../../../supabase/migrations/20260827105521_grant_proxy_guarded_participation_wrappers.sql', import.meta.url),
   'utf8',
 );
+const publicFeedbackAndChatRealtimeMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260827170729_split_public_feedback_and_chat_realtime_reads.sql', import.meta.url),
+  'utf8',
+);
 const participationSecuritySource = readFileSync(
   new URL('../src/lib/participationSecurity.ts', import.meta.url),
   'utf8',
@@ -392,7 +396,9 @@ test('anonymous participation identity is issued by Supabase Auth and enforced b
 test('remaining browser RPCs use only the reviewed published API', () => {
   assert.match(globalChatSource, /schema\('published'\)\.rpc\('chat_messages'/u);
   assert.doesNotMatch(globalChatSource, /client\.rpc\('get_public_chat_messages'/u);
-  assert.match(personFeedbackSource, /schema\('published'\)\.rpc\('get_person_feedback_context'/u);
+  assert.match(personFeedbackSource, /schema\('published'\)\.rpc\('person_feedback_priorities'/u);
+  assert.match(personFeedbackSource, /schema\('published'\)\.rpc\('get_person_feedback_own_submissions'/u);
+  assert.doesNotMatch(personFeedbackSource, /rpc\('get_person_feedback_context'/u);
   assert.doesNotMatch(personFeedbackSource, /rpc\('submit_person_feedback'/u);
   assert.match(personFeedbackSource, /submitParticipationRequest/u);
   for (const signature of [
@@ -409,6 +415,24 @@ test('remaining browser RPCs use only the reviewed published API', () => {
   ]) {
     assert.match(browserRpcMigration, helper);
   }
+});
+
+test('public feedback priorities do not require a participant session', () => {
+  assert.match(
+    publicFeedbackAndChatRealtimeMigration,
+    /GRANT EXECUTE ON FUNCTION published\.person_feedback_priorities\(UUID\)\s+TO anon, authenticated;/u,
+  );
+  assert.match(
+    publicFeedbackAndChatRealtimeMigration,
+    /GRANT EXECUTE ON FUNCTION published\.get_person_feedback_own_submissions\(UUID\)\s+TO authenticated;/u,
+  );
+  assert.doesNotMatch(
+    publicFeedbackAndChatRealtimeMigration,
+    /GRANT EXECUTE ON FUNCTION published\.get_person_feedback_own_submissions\(UUID\)\s+TO anon/u,
+  );
+  assert.match(personFeedbackSource, /rpc\('person_feedback_priorities'/u);
+  assert.match(personFeedbackSource, /rpc\('get_person_feedback_own_submissions'/u);
+  assert.doesNotMatch(personFeedbackSource, /rpc\('get_person_feedback_context'/u);
 });
 
 

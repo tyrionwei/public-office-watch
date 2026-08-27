@@ -421,18 +421,8 @@ export function GlobalChatWidget() {
     void (async () => {
       try {
         const existingSession = await getExistingChatSession();
-        if (!existingSession) {
-          if (!cancelled) {
-            setProfile(null);
-            setDisplayName('');
-            setIsEditingName(true);
-            setAcceptedTerms(false);
-            setRealtimeStatus('CLOSED');
-          }
-          return;
-        }
         const [profileResult, channelResult] = await Promise.allSettled([
-          loadChatProfile(),
+          existingSession ? loadChatProfile() : Promise.resolve(null),
           subscribeToChatMessages(
             receiveMessage,
             setRealtimeStatus,

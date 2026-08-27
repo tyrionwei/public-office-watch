@@ -20,11 +20,17 @@ TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION published.chat_messages(TIMESTAMPTZ, UUID, INTEGER)
 TO anon, authenticated;
 
-GRANT EXECUTE ON FUNCTION published.get_person_feedback_context(UUID, TEXT)
+GRANT EXECUTE ON FUNCTION published.person_feedback_priorities(UUID)
 TO anon, authenticated;
 
-GRANT EXECUTE ON FUNCTION published.submit_person_feedback(UUID, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT)
-TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION published.get_person_feedback_own_submissions(UUID)
+TO authenticated;
+
+GRANT EXECUTE ON FUNCTION published.get_person_feedback_context(UUID)
+TO authenticated;
+
+GRANT EXECUTE ON FUNCTION published.submit_person_feedback(UUID, TEXT, TEXT, TEXT, TEXT, TEXT)
+TO authenticated;
 
 GRANT EXECUTE ON FUNCTION published.chat_status()
 TO anon, authenticated;
@@ -32,11 +38,11 @@ TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION published.region_issue_results(UUID, TEXT)
 TO anon, authenticated;
 
-GRANT EXECUTE ON FUNCTION published.get_region_issue_response(UUID, TEXT)
-TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION published.get_region_issue_response(UUID)
+TO authenticated;
 
-GRANT EXECUTE ON FUNCTION published.submit_region_issue_response(UUID, TEXT, UUID[])
-TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION published.submit_region_issue_response(UUID, UUID[])
+TO authenticated;
 
 GRANT EXECUTE ON FUNCTION published.election_race_page(
   TEXT,

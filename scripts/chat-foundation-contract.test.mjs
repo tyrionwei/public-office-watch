@@ -31,6 +31,10 @@ const nameCooldownMigration = readFileSync(
   new URL('../supabase/migrations/202607290007_chat_profile_name_cooldown.sql', import.meta.url),
   'utf8',
 );
+const publicFeedbackAndChatRealtimeMigration = readFileSync(
+  new URL('../supabase/migrations/20260827170729_split_public_feedback_and_chat_realtime_reads.sql', import.meta.url),
+  'utf8',
+);
 const app = readFileSync(
   new URL('../apps/web/src/App.tsx', import.meta.url),
   'utf8',
@@ -151,6 +155,20 @@ test('realtime broadcasts only the public message shape on a private channel', (
   assert.match(interfaceMigration, /TO authenticated\s+USING/);
   assert.match(chatClient, /channel\('global-chat', \{ config: \{ private: true \} \}\)/);
   assert.match(chatClient, /removeChannel\(channel\)/);
+});
+
+test('anonymous chat viewers can receive but cannot send realtime broadcasts', () => {
+  assert.match(
+    publicFeedbackAndChatRealtimeMigration,
+    /CREATE POLICY "anonymous users can receive global chat broadcasts"[\s\S]+FOR SELECT[\s\S]+TO anon[\s\S]+realtime\.topic\(\)[\s\S]+global-chat/u,
+  );
+  assert.doesNotMatch(publicFeedbackAndChatRealtimeMigration, /FOR INSERT/u);
+
+  const subscriptionSource = chatClient.match(
+    /export async function subscribeToChatMessages[\s\S]+?(?=export async function unsubscribeFromChat)/u,
+  )?.[0] ?? '';
+  assert.match(subscriptionSource, /getExistingParticipationSession/u);
+  assert.doesNotMatch(subscriptionSource, /ensureAnonymousChatSession/u);
 });
 
 test('the global widget survives route changes and follows the agreed quiet UI', () => {

@@ -172,8 +172,8 @@ export async function subscribeToChatMessages(
   onProfileModerationChanged: (moderation: ChatProfileModeration) => void,
 ): Promise<ChatRealtimeChannel> {
   const client = requireChatClient();
-  const session = await ensureAnonymousChatSession();
-  await client.realtime.setAuth(session.access_token);
+  const session = await getExistingParticipationSession().catch(() => null);
+  if (session) await client.realtime.setAuth(session.access_token);
 
   const channel = client
     .channel('global-chat', { config: { private: true } })

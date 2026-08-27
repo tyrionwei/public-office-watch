@@ -46,6 +46,41 @@ function localPost(path: string, body: unknown, headers: Record<string, string> 
   });
 }
 
+test('local public feedback priorities do not create a participant session', {
+  skip: process.env.RUN_LOCAL_PARTICIPATION_E2E !== '1',
+}, async () => {
+  const webRoot = resolve(import.meta.dirname, '..');
+  const values = {
+    ...parseEnvironment(readFileSync(resolve(webRoot, '.env.local'), 'utf8')),
+    ...parseEnvironment(readFileSync(resolve(webRoot, '.dev.vars'), 'utf8')),
+  };
+  const anonymousClient = createClient(
+    requireValue(values, 'SUPABASE_URL'),
+    requireValue(values, 'SUPABASE_ANON_KEY'),
+    { auth: { autoRefreshToken: false, detectSessionInUrl: false, persistSession: false } },
+  );
+  const personId = 'd888dcb7-abda-48fd-8cd0-b973e0cf43e0';
+
+  const before = await anonymousClient.auth.getSession();
+  assert.ifError(before.error);
+  assert.equal(before.data.session, null);
+
+  const priorities = await anonymousClient
+    .schema('published')
+    .rpc('person_feedback_priorities', { p_person_id: personId });
+  assert.ifError(priorities.error);
+  assert.ok(Array.isArray(priorities.data));
+
+  const ownSubmissions = await anonymousClient
+    .schema('published')
+    .rpc('get_person_feedback_own_submissions', { p_person_id: personId });
+  assert.ok(ownSubmissions.error);
+
+  const after = await anonymousClient.auth.getSession();
+  assert.ifError(after.error);
+  assert.equal(after.data.session, null);
+});
+
 test('local Worker writes through the signed Supabase participation RPC', {
   skip: process.env.RUN_LOCAL_PARTICIPATION_E2E !== '1',
 }, async () => {

@@ -31,6 +31,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260827042424_add_route_page_payload_rpcs.sql',
   'supabase/migrations/20260827052016_narrow_published_frontend_access.sql',
   'supabase/migrations/20260827090000_add_seo_catalog_page_rpc.sql',
+  'supabase/migrations/20260827094616_use_server_issued_anonymous_participant.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',

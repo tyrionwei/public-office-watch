@@ -355,13 +355,15 @@ test('region issue participation uses only the reviewed published API', () => {
 });
 
 test('anonymous participation identity is issued by Supabase Auth and enforced by RPCs', () => {
-  assert.match(supabasePublicClientSource, /auth\.signInAnonymously\(\)/u);
+  assert.match(supabasePublicClientSource, /auth\.signInAnonymously\(\{[\s\S]*captchaToken/u);
   assert.match(supabasePublicClientSource, /anonymousParticipationSessionPromise/u);
   assert.match(supabasePublicClientSource, /getSupabaseParticipationClient/u);
+  assert.match(supabasePublicClientSource, /getExistingParticipationSession/u);
 
   for (const source of [regionIssueSource, personFeedbackSource]) {
     assert.doesNotMatch(source, /randomUUID|participantStorageKey|p_participant_token/u);
     assert.match(source, /ensureAnonymousParticipationSession/u);
+    assert.match(source, /getExistingParticipationSession/u);
   }
 
   assert.equal((anonymousParticipationMigration.match(/participant_id := auth\.uid\(\);/gu) ?? []).length, 4);

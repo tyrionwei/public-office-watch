@@ -81,7 +81,7 @@ Deno.serve(async (request) => {
     });
     const { data: authData, error: authError } = await authClient.auth.getUser();
 
-    if (authError || !authData.user) {
+    if (authError || !authData.user || authData.user.is_anonymous !== true) {
       return jsonResponse(401, { error: 'CHAT_UNAUTHENTICATED' });
     }
 

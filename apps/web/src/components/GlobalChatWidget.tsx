@@ -19,6 +19,7 @@ import {
   ensureAnonymousChatSession,
   formatChatDate,
   formatChatTimestamp,
+  getExistingChatSession,
   limitChatInput,
   loadChatMessages,
   loadChatProfile,
@@ -224,6 +225,7 @@ export function GlobalChatWidget() {
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [realtimeStatus, setRealtimeStatus] = useState('CLOSED');
+  const [chatSessionRevision, setChatSessionRevision] = useState(0);
   const [cooldownUntil, setCooldownUntil] = useState(0);
   const [clock, setClock] = useState(Date.now());
   const [highlightedMessageId, setHighlightedMessageId] = useState<string | null>(null);
@@ -418,7 +420,17 @@ export function GlobalChatWidget() {
 
     void (async () => {
       try {
-        await ensureAnonymousChatSession();
+        const existingSession = await getExistingChatSession();
+        if (!existingSession) {
+          if (!cancelled) {
+            setProfile(null);
+            setDisplayName('');
+            setIsEditingName(true);
+            setAcceptedTerms(false);
+            setRealtimeStatus('CLOSED');
+          }
+          return;
+        }
         const [profileResult, channelResult] = await Promise.allSettled([
           loadChatProfile(),
           subscribeToChatMessages(
@@ -458,7 +470,7 @@ export function GlobalChatWidget() {
       setRealtimeStatus('CLOSED');
       void unsubscribeFromChat(channel);
     };
-  }, [isOpen, status, text]);
+  }, [chatSessionRevision, isOpen, status, text]);
 
   useEffect(() => {
     if (Math.max(cooldownUntil, nameCooldownUntil, profileMuteUntil) <= Date.now()) return undefined;
@@ -548,11 +560,13 @@ export function GlobalChatWidget() {
     }
     setIsSavingProfile(true);
     try {
+      await ensureAnonymousChatSession();
       const saved = await saveChatProfile(displayName, needsTerms && acceptedTerms);
       setProfile(saved);
       setDisplayName(saved.current_display_name);
       setAcceptedTerms(false);
       setIsEditingName(false);
+      setChatSessionRevision((current) => current + 1);
     } catch (caught) {
       setError(errorMessage(caught, text));
     } finally {

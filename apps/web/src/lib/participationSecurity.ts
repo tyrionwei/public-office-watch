@@ -1,5 +1,3 @@
-import type { Session } from '@supabase/supabase-js';
-
 const turnstileScriptUrl = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 const clearanceMarkerKey = 'public-office-watch-participation-clearance-v1';
 const clearanceMarkerLifetimeMs = 29 * 24 * 60 * 60 * 1000;
@@ -35,6 +33,10 @@ type ParticipationPayload =
     evidenceUrl?: string;
   };
 
+type ParticipationSession = {
+  access_token: string;
+};
+
 let turnstileScriptPromise: Promise<TurnstileApi> | null = null;
 let clearancePromise: Promise<void> | null = null;
 
@@ -67,7 +69,7 @@ function loadTurnstile() {
   return turnstileScriptPromise;
 }
 
-async function createTurnstileToken() {
+export async function createParticipationCaptchaToken() {
   const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim();
   if (!siteKey) throw new Error('Turnstile is unavailable');
 
@@ -113,11 +115,11 @@ function clearClearanceMarker() {
   window.localStorage.removeItem(clearanceMarkerKey);
 }
 
-async function ensureParticipationClearance() {
+export async function ensureParticipationClearance() {
   if (hasClearanceMarker()) return;
   if (clearancePromise) return clearancePromise;
 
-  clearancePromise = createTurnstileToken()
+  clearancePromise = createParticipationCaptchaToken()
     .then(async (token) => {
       const response = await fetch('/api/participation/challenge', {
         method: 'POST',
@@ -125,7 +127,7 @@ async function ensureParticipationClearance() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ token }),
       });
-      if (!response.ok) throw new Error('Security verification was rejected');
+      if (!response.ok) throw new Error('Security verification did not pass');
       window.localStorage.setItem(
         clearanceMarkerKey,
         String(Date.now() + clearanceMarkerLifetimeMs),
@@ -138,7 +140,7 @@ async function ensureParticipationClearance() {
   return clearancePromise;
 }
 
-async function sendParticipationRequest(session: Session, payload: ParticipationPayload) {
+async function sendParticipationRequest(session: ParticipationSession, payload: ParticipationPayload) {
   return fetch('/api/participation/submit', {
     method: 'POST',
     credentials: 'same-origin',
@@ -151,7 +153,7 @@ async function sendParticipationRequest(session: Session, payload: Participation
 }
 
 export async function submitParticipationRequest(
-  session: Session,
+  session: ParticipationSession,
   payload: ParticipationPayload,
 ) {
   await ensureParticipationClearance();

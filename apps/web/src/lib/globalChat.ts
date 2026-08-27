@@ -1,8 +1,10 @@
 import {
   getSupabaseChatClient,
   ensureAnonymousParticipationSession,
+  getExistingParticipationSession,
   type PublicRealtimeChannel,
 } from './supabasePublicClient.ts';
+import { createParticipationCaptchaToken } from './participationSecurity.ts';
 
 export const chatPageSize = 50;
 export const chatCooldownSeconds = 8;
@@ -106,9 +108,19 @@ export async function loadChatStatus(): Promise<ChatStatus | null> {
   return rows?.[0] ?? null;
 }
 
+export async function getExistingChatSession() {
+  try {
+    return await getExistingParticipationSession();
+  } catch {
+    throw new ChatApiError('CHAT_AUTH_FAILED');
+  }
+}
+
 export async function ensureAnonymousChatSession() {
   try {
-    return await ensureAnonymousParticipationSession();
+    const existingSession = await getExistingParticipationSession();
+    if (existingSession) return existingSession;
+    return await ensureAnonymousParticipationSession(await createParticipationCaptchaToken());
   } catch {
     throw new ChatApiError('CHAT_AUTH_FAILED');
   }

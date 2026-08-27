@@ -221,7 +221,7 @@ test('homepage uses one scoped payload and stays populated after client-side nav
   expect(apiRequests.some((path) => path.endsWith('/rest/v1/rpc/home_page_for'))).toBe(false);
 });
 
-test('detail routes use bounded page payloads without duplicate feedback reads', async ({ page }) => {
+test('detail routes use bounded page payloads without eager feedback reads', async ({ page }) => {
   const apiRequests: string[] = [];
   page.on('request', (request) => {
     const url = new URL(request.url());
@@ -233,10 +233,7 @@ test('detail routes use bounded page payloads without duplicate feedback reads',
   await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
   await expect(page.getByRole('heading', { name: '王世堅', exact: true })).toBeVisible();
   await page.waitForLoadState('networkidle');
-  expect(apiRequests).toEqual([
-    'rpc/person_profiles_for',
-    'rpc/get_person_feedback_context',
-  ]);
+  expect(apiRequests).toEqual(['rpc/person_profiles_for']);
 
   apiRequests.length = 0;
   await page.goto('/elections/events/2026-2026-11-28-local');
@@ -258,7 +255,7 @@ test('detail routes use bounded page payloads without duplicate feedback reads',
   expect(apiRequests).toEqual(['rpc/region_page_for']);
 });
 
-test('participation reuses one server-issued anonymous session across public flows', async ({ page }) => {
+test('public participation reads do not create an anonymous session', async ({ page }) => {
   let anonymousSignupCount = 0;
   const participationRequests: Array<{ name: string; body: Record<string, unknown> }> = [];
 
@@ -280,14 +277,14 @@ test('participation reuses one server-issued anonymous session across public flo
 
   await page.goto('/?region=taipei-city');
   await page.waitForLoadState('networkidle');
-  expect(participationRequests.some(({ name }) => name === 'get_region_issue_response')).toBe(true);
 
   await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
   await expect(page.getByRole('heading', { name: '王世堅', exact: true })).toBeVisible();
   await page.waitForLoadState('networkidle');
 
-  expect(anonymousSignupCount).toBe(1);
-  expect(participationRequests.some(({ name }) => name === 'get_person_feedback_context')).toBe(true);
+  expect(anonymousSignupCount).toBe(0);
+  expect(participationRequests.some(({ name }) => name === 'get_region_issue_response')).toBe(false);
+  expect(participationRequests.some(({ name }) => name === 'get_person_feedback_context')).toBe(false);
   for (const { body } of participationRequests) {
     expect(body).not.toHaveProperty('p_participant_token');
   }
@@ -420,14 +417,14 @@ test('selecting another county city resets the candidate category to mayor', asy
 
 test('county highlight panel provides a distinct background for every county city', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('[data-national-overview]')).toBeVisible();
+  await expect(page.locator('main nav').first().locator('button').nth(1)).toBeVisible();
 
   const highlightPanel = page.locator('[data-region-highlight]');
 
   for (const county of countyHighlightTargets) {
     const countyControl = page.locator('[aria-label="選取 ' + county.label + '"]').first();
-    await countyControl.evaluate((element) => {
-      element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-    });
+    await countyControl.press('Enter');
     await expect(highlightPanel).toHaveAttribute('data-region-highlight', county.id);
     await expect(countyControl).toHaveAttribute('aria-pressed', 'true');
 
@@ -458,7 +455,11 @@ test('homepage restores a remembered nationwide view', async ({ page }) => {
   await expect(page).toHaveURL(/\/$/);
 });
 
-test('chat messages do not wait for the posting profile endpoint', async ({ page }) => {
+test('opening chat stays read-only until name and rules are accepted', async ({ page }) => {
+  let anonymousSignupCount = 0;
+  page.on('request', (request) => {
+    if (new URL(request.url()).pathname.endsWith('/auth/v1/signup')) anonymousSignupCount += 1;
+  });
   await page.route('**/rest/v1/rpc/chat_messages', (route) => route.fulfill({
     status: 200,
     contentType: 'application/json',
@@ -474,9 +475,67 @@ test('chat messages do not wait for the posting profile endpoint', async ({ page
   await page.locator('[data-chat-launcher]').click();
 
   await expect(page.getByText('目前還沒有訊息。', { exact: true })).toBeVisible();
-  await expect(page.getByText('目前可瀏覽訊息；發言功能暫時無法使用。', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: '開始聊天', exact: true })).toBeVisible();
+  expect(anonymousSignupCount).toBe(0);
   await expect(page.getByText('正在讀取最近訊息…', { exact: true })).toHaveCount(0);
   await expect(page.getByText('操作未完成，請稍後再試。', { exact: true })).toHaveCount(0);
+});
+
+test('chat creates a CAPTCHA-protected anonymous session only after consent', async ({ page }) => {
+  const signupBodies: Record<string, unknown>[] = [];
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'turnstile', {
+      configurable: true,
+      value: {
+        render(_container: HTMLElement, options: { callback(token: string): void }) {
+          queueMicrotask(() => options.callback('chat-consent-turnstile-token'));
+          return 'chat-consent-widget';
+        },
+        remove() {},
+      },
+    });
+  });
+  page.on('request', (request) => {
+    if (new URL(request.url()).pathname.endsWith('/auth/v1/signup')) {
+      signupBodies.push(request.postDataJSON() as Record<string, unknown>);
+    }
+  });
+  await page.route('**/rest/v1/rpc/chat_messages', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: '[]',
+  }));
+  await page.route('**/functions/v1/chat-api', async (route) => {
+    const body = route.request().postDataJSON() as { action?: string; displayName?: string };
+    expect(['set-profile', 'get-profile']).toContain(body.action);
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        profile: {
+          public_code: 'TEST01',
+          current_display_name: body.displayName ?? '測試使用者',
+          terms_version: '2026-07-29-v1',
+          terms_accepted_at: '2026-08-27T12:00:00.000Z',
+          display_name_updated_at: '2026-08-27T12:00:00.000Z',
+          status: 'active',
+          muted_until: null,
+        },
+      }),
+    });
+  });
+
+  await page.goto('/');
+  await page.locator('[data-chat-launcher]').click();
+  await page.getByRole('textbox', { name: '設定聊天名稱' }).fill('測試使用者');
+  await page.getByRole('checkbox', { name: /我了解發言將公開顯示/ }).check();
+  expect(signupBodies).toHaveLength(0);
+  await page.getByRole('button', { name: '開始聊天', exact: true }).click();
+
+  await expect.poll(() => signupBodies.length).toBe(1);
+  expect(signupBodies[0]).toMatchObject({
+    gotrue_meta_security: { captcha_token: 'chat-consent-turnstile-token' },
+  });
 });
 test('explicit nationwide selection remains selected during the election gap', async ({ page }) => {
   await page.goto('/');

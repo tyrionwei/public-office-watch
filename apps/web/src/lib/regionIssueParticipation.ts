@@ -1,8 +1,12 @@
 import {
   ensureAnonymousParticipationSession,
+  getExistingParticipationSession,
   getSupabaseParticipationClient,
 } from './supabasePublicClient';
-import { submitParticipationRequest } from './participationSecurity';
+import {
+  createParticipationCaptchaToken,
+  submitParticipationRequest,
+} from './participationSecurity';
 
 export type RegionIssueResult = {
   issueId: string;
@@ -59,24 +63,25 @@ export async function loadRegionIssueParticipation(
   if (!client || !regionId) {
     return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
   }
-  await ensureAnonymousParticipationSession();
-
-  const [issuesResult, responseResult] = await Promise.all([
+  const [issuesResult, session] = await Promise.all([
     client
       .schema('published')
       .rpc('region_issue_results', {
         p_region_id: regionId,
         p_region_name: null,
       }),
-    client.schema('published').rpc('get_region_issue_response', {
-      p_region_id: regionId,
-    }),
+    getExistingParticipationSession(),
   ]);
 
   if (issuesResult.error) throw issuesResult.error;
-  if (responseResult.error) throw responseResult.error;
+  const responseResult = session
+    ? await client.schema('published').rpc('get_region_issue_response', {
+      p_region_id: regionId,
+    })
+    : null;
+  if (responseResult?.error) throw responseResult.error;
 
-  const response = (responseResult.data ?? {}) as RegionIssueResponsePayload;
+  const response = (responseResult?.data ?? {}) as RegionIssueResponsePayload;
   return {
     regionId,
     issues: ((issuesResult.data ?? []) as RegionIssueResultRow[]).map(mapIssue),
@@ -91,12 +96,13 @@ export async function loadNationalIssueParticipation(): Promise<RegionIssueParti
   if (!client) {
     return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
   }
-  await ensureAnonymousParticipationSession();
-
-  const issuesResult = await client.schema('published').rpc('region_issue_results', {
-    p_region_id: null,
-    p_region_name: '臺灣',
-  });
+  const [issuesResult, session] = await Promise.all([
+    client.schema('published').rpc('region_issue_results', {
+      p_region_id: null,
+      p_region_name: '臺灣',
+    }),
+    getExistingParticipationSession(),
+  ]);
 
   if (issuesResult.error) throw issuesResult.error;
   const issueRows = (issuesResult.data ?? []) as RegionIssueResultRow[];
@@ -105,12 +111,14 @@ export async function loadNationalIssueParticipation(): Promise<RegionIssueParti
     return { regionId: null, issues: [], selectedIssueIds: [], hasResponse: false, available: false };
   }
 
-  const responseResult = await client.schema('published').rpc('get_region_issue_response', {
-    p_region_id: regionId,
-  });
-  if (responseResult.error) throw responseResult.error;
+  const responseResult = session
+    ? await client.schema('published').rpc('get_region_issue_response', {
+      p_region_id: regionId,
+    })
+    : null;
+  if (responseResult?.error) throw responseResult.error;
 
-  const response = (responseResult.data ?? {}) as RegionIssueResponsePayload;
+  const response = (responseResult?.data ?? {}) as RegionIssueResponsePayload;
   return {
     regionId,
     issues: issueRows.map(mapIssue),
@@ -126,7 +134,8 @@ export async function submitRegionIssueParticipation(
 ) {
   const client = getSupabaseParticipationClient();
   if (!client) throw new Error('Issue participation is unavailable');
-  const session = await ensureAnonymousParticipationSession();
+  const session = await getExistingParticipationSession()
+    ?? await ensureAnonymousParticipationSession(await createParticipationCaptchaToken());
 
   await submitParticipationRequest(session, {
     action: 'region-issue',

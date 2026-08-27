@@ -1,8 +1,12 @@
 import {
   ensureAnonymousParticipationSession,
+  getExistingParticipationSession,
   getSupabaseParticipationClient,
 } from './supabasePublicClient';
-import { submitParticipationRequest } from './participationSecurity';
+import {
+  createParticipationCaptchaToken,
+  submitParticipationRequest,
+} from './participationSecurity';
 
 export const feedbackSectionKeys = [
   'basic',
@@ -56,7 +60,8 @@ function emptyContext(): PersonFeedbackContext {
 export async function fetchPersonFeedbackContext(personId: string): Promise<PersonFeedbackContext> {
   const client = getSupabaseParticipationClient();
   if (!client) return emptyContext();
-  const session = await ensureAnonymousParticipationSession();
+  const session = await getExistingParticipationSession();
+  if (!session) return emptyContext();
 
   const requestKey = `${personId}:${session.user.id}`;
   const existingRequest = feedbackContextRequests.get(requestKey);
@@ -82,7 +87,8 @@ export async function fetchPersonFeedbackContext(personId: string): Promise<Pers
 export async function submitPersonFeedback(input: PersonFeedbackInput) {
   const client = getSupabaseParticipationClient();
   if (!client) throw new Error('Person feedback is unavailable.');
-  const session = await ensureAnonymousParticipationSession();
+  const session = await getExistingParticipationSession()
+    ?? await ensureAnonymousParticipationSession(await createParticipationCaptchaToken());
 
   await submitParticipationRequest(session, {
     action: 'person-feedback',

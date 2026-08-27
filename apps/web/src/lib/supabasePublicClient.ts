@@ -62,16 +62,27 @@ export function getSupabaseParticipationClient(): SupabaseClient | null {
   return getSupabaseChatClient();
 }
 
-export async function ensureAnonymousParticipationSession(): Promise<Session> {
+export async function getExistingParticipationSession(): Promise<Session | null> {
   const client = getSupabaseParticipationClient();
   if (!client) throw new Error('Anonymous participation is unavailable');
 
   const { data: current, error: sessionError } = await client.auth.getSession();
   if (sessionError) throw sessionError;
-  if (current.session) return current.session;
+  return current.session;
+}
+
+export async function ensureAnonymousParticipationSession(captchaToken: string): Promise<Session> {
+  const client = getSupabaseParticipationClient();
+  if (!client) throw new Error('Anonymous participation is unavailable');
+
+  const currentSession = await getExistingParticipationSession();
+  if (currentSession) return currentSession;
+  if (!captchaToken.trim()) throw new Error('Anonymous participation requires CAPTCHA verification');
 
   if (!anonymousParticipationSessionPromise) {
-    anonymousParticipationSessionPromise = client.auth.signInAnonymously()
+    anonymousParticipationSessionPromise = client.auth.signInAnonymously({
+      options: { captchaToken },
+    })
       .then(({ data, error }) => {
         if (error) throw error;
         if (!data.session) throw new Error('Anonymous participation session was not created');

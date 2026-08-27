@@ -118,6 +118,12 @@ npm run check
 
 ## Cloudflare 正式部署
 
+匿名參與功能上線前，必須先在 Supabase Auth 啟用 Cloudflare Turnstile CAPTCHA，並在 Worker 設定 SUPABASE_URL、SUPABASE_ANON_KEY、TURNSTILE_SECRET_KEY、PARTICIPATION_CLEARANCE_KEY、PARTICIPATION_PROXY_HMAC_KEY 與 PARTICIPATION_IP_HMAC_KEY。Supabase Vault 內名為 participation_proxy_hmac_key 的值必須與 Worker 的 PARTICIPATION_PROXY_HMAC_KEY 完全相同；只核對是否存在與是否一致，不可把密鑰印到紀錄。
+
+Supabase 不會自動清除匿名使用者。正式上線後須監控匿名註冊速率與 auth.users 成長量，並依參與紀錄及稽核保存需求另訂清除政策；未確認關聯資料保留與刪除影響前，不可直接批次刪除匿名使用者。
+
+20260827094616_use_server_issued_anonymous_participant.sql 與 20260827102924_require_participation_write_proxy.sql 會更換 RPC 參數並強制寫入經過 Worker，因此 migration 與 Worker／前端必須在同一發布窗口依序更新，完成後立即測試「匿名註冊、議題送出、人物回報」三條路徑。舊版瀏覽器產生的參與者雜湊無法安全對應到新的 Supabase 使用者；既有統計會保留，但舊訪客首次使用新版時可能被視為新的參與者。發布前須接受並記錄這項一次性統計偏差，不可嘗試反推或合併舊身分。
+
 正式網站託管於 Cloudflare Workers + Static Assets，`https://pow4vote.org` 是目前的正式入口。邊緣 Worker 提供安全標頭、SPA 路由、頁面 metadata、`robots.txt` 與 sitemap；靜態前端再以公開金鑰直接讀取 Supabase 的 `published` schema。Cloudflare 前端不可持有 service role key，Codex Sites 已不在目前的正式發布流程內。
 
 在不連接 Cloudflare 帳號、不發布 Worker 的情況下，可執行本機建置與 Wrangler dry run：

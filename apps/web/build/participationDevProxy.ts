@@ -89,26 +89,26 @@ async function writeWebResponse(response: Response, target: DevResponse) {
 
 export function participationDevProxyPlugin(): Plugin {
   const webRoot = path.resolve(__dirname, '..');
-  const values = {
-    ...parseEnvFile(path.join(webRoot, '.env.local')),
-    ...parseEnvFile(path.join(webRoot, '.dev.vars')),
-    ...process.env,
-  };
-  const env = {
-    SUPABASE_URL: requireValue(values, 'SUPABASE_URL'),
-    SUPABASE_ANON_KEY: requireValue(values, 'SUPABASE_ANON_KEY'),
-    TURNSTILE_SECRET_KEY: requireValue(values, 'TURNSTILE_SECRET_KEY'),
-    PARTICIPATION_CLEARANCE_KEY: requireValue(values, 'PARTICIPATION_CLEARANCE_KEY'),
-    PARTICIPATION_PROXY_HMAC_KEY: requireValue(values, 'PARTICIPATION_PROXY_HMAC_KEY'),
-    PARTICIPATION_IP_HMAC_KEY: requireValue(values, 'PARTICIPATION_IP_HMAC_KEY'),
-    PARTICIPATION_USER_RATE_LIMITER: new LocalRateLimiter(12),
-    PARTICIPATION_IP_RATE_LIMITER: new LocalRateLimiter(120),
-  };
 
   return {
     name: 'participation-dev-proxy',
     apply: 'serve',
     configureServer(server) {
+      const values = {
+        ...parseEnvFile(path.join(webRoot, '.env.local')),
+        ...parseEnvFile(path.join(webRoot, '.dev.vars')),
+        ...process.env,
+      };
+      const env = {
+        SUPABASE_URL: requireValue(values, 'SUPABASE_URL'),
+        SUPABASE_ANON_KEY: requireValue(values, 'SUPABASE_ANON_KEY'),
+        TURNSTILE_SECRET_KEY: requireValue(values, 'TURNSTILE_SECRET_KEY'),
+        PARTICIPATION_CLEARANCE_KEY: requireValue(values, 'PARTICIPATION_CLEARANCE_KEY'),
+        PARTICIPATION_PROXY_HMAC_KEY: requireValue(values, 'PARTICIPATION_PROXY_HMAC_KEY'),
+        PARTICIPATION_IP_HMAC_KEY: requireValue(values, 'PARTICIPATION_IP_HMAC_KEY'),
+        PARTICIPATION_USER_RATE_LIMITER: new LocalRateLimiter(12),
+        PARTICIPATION_IP_RATE_LIMITER: new LocalRateLimiter(120),
+      };
       server.middlewares.use(async (request, response, next) => {
         if (!(request as DevRequest).url?.startsWith('/api/participation/')) {
           next();

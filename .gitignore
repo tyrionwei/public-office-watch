@@ -24,6 +24,8 @@ Thumbs.db
 *.sqlite
 *.db
 *.tsbuildinfo
+__pycache__/
+*.py[cod]
 gitleaks-report.json
 local-data/
 logs/

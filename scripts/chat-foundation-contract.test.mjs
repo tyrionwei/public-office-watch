@@ -119,6 +119,7 @@ test('chat write functions are service-only', () => {
 
 test('the edge function authenticates users and keeps IP secrets server-side', () => {
   assert.match(edgeFunction, /authClient\.auth\.getUser\(\)/);
+  assert.match(edgeFunction, /authData\.user\.is_anonymous !== true/);
   assert.match(edgeFunction, /getTrustedClientIp\(request\.headers\)/);
   assert.match(edgeFunction, /CHAT_IP_HMAC_KEY/);
   assert.match(edgeFunction, /CHAT_IP_ENCRYPTION_KEY/);

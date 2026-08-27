@@ -1,0 +1,20 @@
+title = "Public Office Watch Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+
+  [[rules.allowlists]]
+  description = "Candidate reconciliation keys are public identifiers, not credentials."
+  condition = "AND"
+  regexTarget = "match"
+  regexes = [
+    '''(?i)\b(?:sourceCandidateKey|source_key|target_key)["']?\s*[:=]\s*["'][A-Za-z0-9][A-Za-z0-9._:/-]{8,127}["']''',
+  ]
+  paths = [
+    '''^data-sources/.+\.json$''',
+    '''^supabase/migrations/[0-9]+_[a-z0-9_]+\.sql$''',
+    '''^scripts/party-candidate-review\.test\.mjs$''',
+  ]

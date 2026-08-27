@@ -5,14 +5,12 @@ import { buildElectionEventKey } from '../data/electionEvents';
 import { getRaceCategoryByType, getRaceStatusLabel } from '../data/electionLabels';
 import { getRegionHighlightBackground, getRegionHighlightImageSources } from '../data/regionHighlights';
 import { useI18n } from '../i18n';
-import { publicDataProvider } from '../lib/publicData';
-import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
-import type { UpcomingRace } from '../lib/publicDataProvider';
+import type { HomeCandidateSummary, UpcomingRace } from '../lib/publicDataProvider';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { normalizeTaiwanText } from '../lib/taiwanText';
 import { electionEventPath, personPath, racePath, regionPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicCandidate, PublicPerson } from '../types/publicViews';
+import type { PublicCandidate } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import { PixelCandidateSprite } from './PixelCandidateSprite';
 import { PixelFrame } from './PixelFrame';
@@ -22,6 +20,9 @@ type HomeElectionSpotlightProps = {
   regionNode: StageRegionNode | null;
   regionSummary: StageRegionSummary | null;
   national: boolean;
+  candidateSummaries: HomeCandidateSummary[];
+  candidatesLoading: boolean;
+  candidateLoadError: boolean;
 };
 
 function getCandidateNumber(candidate: PublicCandidate) {
@@ -168,30 +169,26 @@ function getCandidateRaceContext(candidate: PublicCandidate, categoryKey: string
   return null;
 }
 
-type CandidateDemographics = Pick<PublicPerson, 'gender'> & { birthDate: string | null };
+type CandidateDemographics = Pick<HomeCandidateSummary, 'gender' | 'birthDate' | 'ageGroup'>;
 
 export function HomeElectionSpotlight({
   races,
   regionNode,
   regionSummary,
   national,
+  candidateSummaries,
+  candidatesLoading,
+  candidateLoadError,
 }: HomeElectionSpotlightProps) {
   const { language, t } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
   const regionLabel = normalizeTaiwanText(national ? t('national.taiwan') : regionSummary?.label ?? regionNode?.label ?? t('home.unspecifiedRegion'));
   const [activeRaceId, setActiveRaceId] = useState(races[0]?.id ?? '');
-  const [candidates, setCandidates] = useState<PublicCandidate[]>([]);
-  const [candidatesLoading, setCandidatesLoading] = useState(false);
-  const [candidateLoadError, setCandidateLoadError] = useState(false);
-  const [candidateCounts, setCandidateCounts] = useState<Record<string, number>>({});
-  const [candidateDemographics, setCandidateDemographics] = useState<Map<string, CandidateDemographics>>(new Map());
   const requestedCandidateIndex = Number.parseInt(searchParams.get('candidateIndex') ?? '0', 10);
   const restoredCandidateIndex = Number.isFinite(requestedCandidateIndex) && requestedCandidateIndex >= 0
     ? requestedCandidateIndex
     : 0;
   const [activeCandidateIndex, setActiveCandidateIndex] = useState(restoredCandidateIndex);
-  const restoredCandidateIndexRef = useRef(restoredCandidateIndex);
-  restoredCandidateIndexRef.current = restoredCandidateIndex;
   const [carouselPaused, setCarouselPaused] = useState(false);
   const candidateRefs = useRef<(HTMLAnchorElement | HTMLDivElement | null)[]>([]);
   const updateHomeParams = useCallback((updates: Record<string, string | null>) => {
@@ -269,6 +266,44 @@ export function HomeElectionSpotlight({
         : activeCategoryRaces,
     [activeCategory, activeCategoryRaces, candidateCategoryGroups, selectedCouncilorRaceId],
   );
+  const candidateCounts = useMemo(() => Object.fromEntries(
+    candidateCategoryGroups.map((group) => {
+      const raceIds = new Set(group.races.map((race) => race.id));
+      const candidateIds = new Set(candidateSummaries
+        .filter((summary) => raceIds.has(summary.candidate.race_id))
+        .map((summary) => summary.candidate.candidate_id));
+      return [group.key, candidateIds.size];
+    }),
+  ), [candidateCategoryGroups, candidateSummaries]);
+  const displayedCandidateSummaries = useMemo(() => {
+    const raceOrder = new Map(displayedCategoryRaces.map((race, index) => [race.id, index]));
+    const raceIds = new Set(raceOrder.keys());
+    const seenCandidateIds = new Set<string>();
+    return candidateSummaries
+      .filter((summary) => raceIds.has(summary.candidate.race_id))
+      .slice()
+      .sort((left, right) => (
+        (raceOrder.get(left.candidate.race_id) ?? Number.MAX_SAFE_INTEGER)
+        - (raceOrder.get(right.candidate.race_id) ?? Number.MAX_SAFE_INTEGER)
+        || compareCandidates(left.candidate, right.candidate, language)
+      ))
+      .filter((summary) => {
+        if (seenCandidateIds.has(summary.candidate.candidate_id)) return false;
+        seenCandidateIds.add(summary.candidate.candidate_id);
+        return true;
+      });
+  }, [candidateSummaries, displayedCategoryRaces, language]);
+  const candidates = useMemo(
+    () => displayedCandidateSummaries.map((summary) => summary.candidate),
+    [displayedCandidateSummaries],
+  );
+  const candidateDemographics = useMemo(() => new Map<string, CandidateDemographics>(
+    displayedCandidateSummaries.map((summary) => [summary.candidate.person_id, {
+      gender: summary.gender,
+      birthDate: summary.birthDate,
+      ageGroup: summary.ageGroup,
+    }]),
+  ), [displayedCandidateSummaries]);
   const hasCandidateContent = candidateCategoryGroups.length > 0;
   const hasReferendumContent = referendumRaces.length > 0;
   const requestedNationalContent = searchParams.get('homeContent');
@@ -283,99 +318,8 @@ export function HomeElectionSpotlight({
 
 
   useEffect(() => {
-    let active = true;
-    setCandidateCounts({});
-
-    if (candidateCategoryGroups.length === 0) {
-      return () => {
-        active = false;
-      };
-    }
-
-    void refreshConfiguredPublicDataProvider()
-      .then(async () => Promise.all(candidateCategoryGroups.map(async (group) => {
-        const race = group.races[0];
-        const year = Number.parseInt(race?.date.slice(0, 4) ?? '', 10);
-        if (!race || !Number.isFinite(year)) return [group.key, 0] as const;
-
-        const rows = await publicDataProvider.loadElectionPartyPerformance(
-          buildElectionEventKey(year, race.date, national ? 'national' : 'local'),
-          Array.from(new Set(group.races.map((item) => item.electionId))),
-          national ? {
-            raceTypes: Array.from(new Set(group.races.map((item) => item.raceType))),
-          } : {
-            raceTypes: Array.from(new Set(group.races.map((item) => item.raceType))),
-            regionKey: regionLabel,
-          },
-        );
-        return [group.key, rows.reduce((sum, row) => sum + row.candidate_count, 0)] as const;
-      })))
-      .then((entries) => {
-        if (active) setCandidateCounts(Object.fromEntries(entries));
-      })
-      .catch((error: unknown) => {
-        if (import.meta.env.DEV) console.warn('Failed to load home candidate counts', error);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [candidateCategoryGroups, national, regionLabel]);
-
-  useEffect(() => {
-    let active = true;
-    setCandidates([]);
-    setCandidateDemographics(new Map());
-    setCandidateLoadError(false);
-
-    if (displayedCategoryRaces.length === 0) {
-      setCandidatesLoading(false);
-      return () => {
-        active = false;
-      };
-    }
-
-    setCandidatesLoading(true);
-    void refreshConfiguredPublicDataProvider()
-      .then(() => publicDataProvider.loadHomeCandidateSummaries(
-        displayedCategoryRaces.map((race) => race.id),
-      ))
-      .then((summaries) => {
-        if (!active) return;
-        const raceOrder = new Map(displayedCategoryRaces.map((race, index) => [race.id, index]));
-        const seenCandidateIds = new Set<string>();
-        const sortedSummaries = summaries
-          .slice()
-          .sort((left, right) => (
-            (raceOrder.get(left.candidate.race_id) ?? Number.MAX_SAFE_INTEGER)
-            - (raceOrder.get(right.candidate.race_id) ?? Number.MAX_SAFE_INTEGER)
-            || compareCandidates(left.candidate, right.candidate, language)
-          ))
-          .filter((summary) => {
-            if (seenCandidateIds.has(summary.candidate.candidate_id)) return false;
-            seenCandidateIds.add(summary.candidate.candidate_id);
-            return true;
-          });
-        const sortedCandidates = sortedSummaries.map((summary) => summary.candidate);
-        setCandidates(sortedCandidates);
-        setCandidateDemographics(new Map(sortedSummaries.map((summary) => [
-          summary.candidate.person_id,
-          { gender: summary.gender, birthDate: summary.birthDate },
-        ])));
-        setActiveCandidateIndex(Math.min(restoredCandidateIndexRef.current, Math.max(sortedCandidates.length - 1, 0)));
-      })
-      .catch((error: unknown) => {
-        if (active) setCandidateLoadError(true);
-        if (import.meta.env.DEV) console.warn('Failed to load home candidate carousel', error);
-      })
-      .finally(() => {
-        if (active) setCandidatesLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [displayedCategoryRaces, language]);
+    setActiveCandidateIndex((index) => Math.min(index, Math.max(candidates.length - 1, 0)));
+  }, [candidates.length]);
 
   useEffect(() => {
     if (candidates.length <= 2 || carouselPaused || window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(max-width: 767px)').matches) {
@@ -687,6 +631,7 @@ export function HomeElectionSpotlight({
                       partyKey={themeKey}
                       gender={demographics?.gender}
                       birthDate={demographics?.birthDate}
+                      ageGroup={demographics?.ageGroup}
                       useDemographicSprite
                       partyLabel={party}
                       variant={candidate.candidate_id}

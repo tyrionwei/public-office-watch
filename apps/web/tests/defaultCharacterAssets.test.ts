@@ -6,6 +6,7 @@ import {
   defaultFemaleCandidateSprites,
   defaultMaleCandidateSprites,
   pickDefaultCandidateSprite,
+  pickDefaultCandidateSpriteForAgeGroup,
   pickPersonCandidateSprite,
   personCandidateSprites,
   xiezhiMascotSprite,
@@ -38,6 +39,14 @@ test('uses gender and age together to select one deterministic sprite', () => {
     pickDefaultCandidateSprite('person-d', 'female', '1960-01-01', referenceDate),
     defaultFemaleCandidateSprites[3],
   );
+});
+
+test('uses a server-provided age group without exposing the birth date', () => {
+  assert.equal(
+    pickDefaultCandidateSpriteForAgeGroup('female', '50-59'),
+    defaultFemaleCandidateSprites[2],
+  );
+  assert.equal(pickDefaultCandidateSpriteForAgeGroup('male', null), xiezhiMascotSprite);
 });
 
 test('falls back to the Xiezhi mascot when gender or exact birth date is unavailable', () => {

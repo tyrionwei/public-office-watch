@@ -147,17 +147,24 @@ export function candidateAgeGroup(
   return '60-plus';
 }
 
+export function pickDefaultCandidateSpriteForAgeGroup(
+  gender?: string | null,
+  ageGroup?: CandidateAgeGroup | null,
+) {
+  if ((gender !== 'male' && gender !== 'female') || !ageGroup) return xiezhiMascotSprite;
+
+  const sprites = gender === 'male' ? defaultMaleCandidateSprites : defaultFemaleCandidateSprites;
+  return sprites[ageGroupIndexes[ageGroup]];
+}
+
 export function pickDefaultCandidateSprite(
   _seed: string,
   gender?: string | null,
   birthDate?: string | null,
   referenceDate = new Date(),
 ) {
-  if (gender !== 'male' && gender !== 'female') return xiezhiMascotSprite;
-
-  const ageGroup = candidateAgeGroup(birthDate, referenceDate);
-  if (!ageGroup) return xiezhiMascotSprite;
-
-  const sprites = gender === 'male' ? defaultMaleCandidateSprites : defaultFemaleCandidateSprites;
-  return sprites[ageGroupIndexes[ageGroup]];
+  return pickDefaultCandidateSpriteForAgeGroup(
+    gender,
+    candidateAgeGroup(birthDate, referenceDate),
+  );
 }

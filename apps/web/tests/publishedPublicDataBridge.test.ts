@@ -55,9 +55,6 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
     async loadRaceDetail() {
       return { raceRow: null, electionRow: null, candidateRows: [], partyAffiliationRows: [] };
     },
-    async loadHomeCandidateSummaries() {
-      return [];
-    },
     async loadPeoplePage() {
       return { rows: [], total: 0 };
     },

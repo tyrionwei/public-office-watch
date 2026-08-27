@@ -148,9 +148,6 @@ function createBridge(overrides: Partial<PublishedPublicDataBridge> = {}) {
     async loadRaceDetail() {
       return { race: null, election: null, candidates: [], partyAffiliations: [] };
     },
-    async loadHomeCandidateSummaries() {
-      return [];
-    },
     async loadPeoplePage() {
       return { items: [person], total: 1 };
     },
@@ -318,18 +315,31 @@ test('published provider keeps the last complete snapshot when refresh fails and
   assert.equal(assembly.provider.getHomeTicker().electionId, 'election-1');
 });
 
-test('published provider keeps home content when the region directory fails', async () => {
+test('published provider gets the home directory from one region-scoped payload', async () => {
+  let directoryCalls = 0;
+  const requestedRegions: Array<string | null> = [];
+  const baseBridge = createBridge();
   const bridge = createBridge({
+    async loadHomePageData(regionId = null) {
+      requestedRegions.push(regionId);
+      return baseBridge.loadHomePageData();
+    },
     async loadRegionDirectory() {
-      throw new Error('region failed');
+      directoryCalls += 1;
+      throw new Error('homepage must not load a separate region directory');
     },
   });
   const assembly = createPublishedPublicDataProvider(bridge);
 
-  const home = await assembly.provider.loadHomePageData();
+  const [first, second] = await Promise.all([
+    assembly.provider.loadHomePageData(' taipei '),
+    assembly.provider.loadHomePageData('taipei'),
+  ]);
 
-  assert.equal(home.ticker.electionId, 'election-1');
-  assert.equal(home.stageRegions[0]?.publicRegionId, 'region-taipei');
+  assert.equal(first.ticker.electionId, 'election-1');
+  assert.equal(second.stageRegions[0]?.publicRegionId, 'region-taipei');
+  assert.deepEqual(requestedRegions, ['taipei']);
+  assert.equal(directoryCalls, 0);
 });
 test('published provider de-duplicates identical page requests for the session cache window', async () => {
   let peopleCalls = 0;

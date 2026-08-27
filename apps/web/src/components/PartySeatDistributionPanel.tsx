@@ -1,25 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
-import { publicDataProvider } from '../lib/publicData';
-import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
+import type { HomeSeatCount } from '../lib/publicDataProvider';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import { PixelFrame } from './PixelFrame';
 
-type PartyCount = {
-  party: string;
-  count: number;
-};
-
 type PartySeatDistributionPanelProps = {
   regionId: string | null;
   regionLabel: string;
   national: boolean;
+  partyCounts: HomeSeatCount[];
+  loading: boolean;
 };
 
-function combinePartyCounts(items: PartyCount[]) {
+function combinePartyCounts(items: HomeSeatCount[]) {
   const counts = new Map<string, number>();
   for (const item of items) {
     const party = normalizePartyLabel(item.party);
@@ -33,40 +29,11 @@ export function PartySeatDistributionPanel({
   regionId,
   regionLabel,
   national,
+  partyCounts: rawPartyCounts,
+  loading,
 }: PartySeatDistributionPanelProps) {
   const { t } = useI18n();
-  const [partyCounts, setPartyCounts] = useState<PartyCount[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let active = true;
-    setLoading(true);
-    setPartyCounts([]);
-
-    void refreshConfiguredPublicDataProvider()
-      .then(async () => {
-        if (national) {
-          const summary = await publicDataProvider.loadCurrentLegislatorPartySummary();
-          return summary.map((item) => ({ party: item.party_name, count: item.legislator_count }));
-        }
-        if (!regionId) return [];
-        const summary = await publicDataProvider.loadLocalOfficeSummaryByRegionId(regionId);
-        return summary.councilor_party_counts;
-      })
-      .then((counts) => {
-        if (active) setPartyCounts(combinePartyCounts(counts));
-      })
-      .catch((error: unknown) => {
-        if (import.meta.env.DEV) console.warn('Failed to load party seat distribution', error);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [national, regionId]);
+  const partyCounts = useMemo(() => combinePartyCounts(rawPartyCounts), [rawPartyCounts]);
 
   const total = useMemo(() => partyCounts.reduce((sum, item) => sum + item.count, 0), [partyCounts]);
   const visiblePartyCounts = partyCounts.slice(0, 5);

@@ -1,17 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
-  ELECTION_COLUMNS,
   ELECTION_EDUCATION_DISTRIBUTION_LIMIT,
   ELECTION_FACET_BATCH_LIMIT,
   ELECTION_ID_BATCH_SIZE,
-  ELECTION_INDEX_LIMIT,
   ELECTION_PARTY_PERFORMANCE_LIMIT,
   ELECTION_RACE_PAGE_ELECTION_LIMIT,
   ELECTION_RACE_PAGE_SIZE,
-  HOME_CANDIDATE_RACE_LIMIT,
-  HOME_CANDIDATE_SUMMARY_LIMIT,
-  HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
   LOCAL_OFFICE_PERSON_LIMIT,
   LEGISLATOR_PARTY_SUMMARY_COLUMNS,
@@ -19,7 +14,6 @@ import {
   NATIONAL_OFFICE_HOLDER_COLUMNS,
   NATIONAL_OFFICE_HOLDER_LIMIT,
   PEOPLE_DIRECTORY_COLUMNS,
-  PERSON_PARTY_AFFILIATION_COLUMNS,
   PARTY_ANNUAL_FINANCE_COLUMNS,
   PARTY_ANNUAL_FINANCE_LIMIT,
   PARTY_COLUMNS,
@@ -33,23 +27,19 @@ import {
   PERSON_CANDIDATE_LIMIT,
   PERSON_CANDIDATE_COLUMNS,
   PERSON_CLAIM_LIMIT,
-  PERSON_PARTY_AFFILIATION_LIMIT,
   PERSON_PROFILE_BATCH_LIMIT,
   PUBLIC_UPDATE_COLUMNS,
   PUBLIC_UPDATE_LIMIT,
   RACE_DETAIL_CANDIDATE_LIMIT,
-  RACE_DETAIL_PARTY_AFFILIATION_LIMIT,
-  RACE_DETAIL_COLUMNS,
-  RACE_DETAIL_REFERENDUM_OPTION_LIMIT,
-  RACE_DETAIL_REFERENDUM_REGION_LIMIT,
-  REFERENDUM_OPTION_COLUMNS,
-  REFERENDUM_QUESTION_COLUMNS,
-  REFERENDUM_REGION_RESULT_COLUMNS,
-  REGION_CHILD_LIMIT,
-  REGION_RACE_LIMIT,
   createPublishedReadAdapter,
   type PublishedSchemaClient,
 } from '../src/lib/publishedReadAdapter.ts';
+
+const payloadMetadata = {
+  api_version: 1,
+  release_id: 'release-1',
+  published_at: '2026-08-27T00:00:00Z',
+};
 
 type FakeResponse = {
   data: unknown[] | null;
@@ -259,81 +249,57 @@ test('adapter surfaces database errors', async () => {
   await assert.rejects(() => adapter.search('台北'), /Published search query failed: permission denied/);
 });
 
-test('home and region directory reads stay independently bounded', async () => {
+test('home page uses one region-scoped RPC payload', async () => {
   const ticker = { election_id: 'election-1', election_name: '測試選舉' };
   const regionSummary = { region_id: 'region-taipei', region_name: '臺北市' };
   const region = { region_id: 'region-taipei', name: '臺北市', slug: 'taipei' };
   const race = { race_id: 'race-1', title: '臺北市長' };
+  const candidate = {
+    candidate_id: 'candidate-1', race_id: 'race-1', person_id: 'person-1',
+    person_name: '測試候選人', gender: 'female', age_group: '40-49',
+  };
+  const payload = {
+    api_version: 1,
+    release_id: 'release-1',
+    published_at: '2026-08-27T00:00:00Z',
+    ticker_rows: [ticker],
+    region_summary_rows: [regionSummary],
+    region_rows: [region],
+    race_rows: [race],
+    candidate_rows: [candidate],
+    seat_rows: [{ party_name: '測試黨', seat_count: 3 }],
+  };
   const fake = createFakeClient({
-    home_ticker: { data: [ticker], error: null, count: null },
-    home_region_summary: { data: [regionSummary], error: null, count: null },
+    'rpc:home_page_for': { data: [{ payload }], error: null, count: null },
     regions: { data: [region], error: null, count: null },
-    races: { data: [race], error: null, count: null },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
-  assert.deepEqual(await adapter.loadHomePage(), {
+  assert.deepEqual(await adapter.loadHomePage(' taipei '), {
+    apiVersion: 1,
+    releaseId: 'release-1',
+    publishedAt: '2026-08-27T00:00:00Z',
     tickerRows: [ticker],
     regionSummaryRows: [regionSummary],
+    regionRows: [region],
     raceRows: [race],
+    candidateRows: [candidate],
+    seatRows: [{ party_name: '測試黨', seat_count: 3 }],
   });
   assert.deepEqual(await adapter.loadRegionDirectory(), [region]);
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
-    ['from', 'home_ticker'],
-    ['from', 'home_region_summary'],
-    ['from', 'races'],
-    ['from', 'regions'],
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc'), [
+    ['rpc', 'home_page_for', { p_region_slug: 'taipei' }],
   ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
-    ['limit', 1],
-    ['limit', HOME_REGION_LIMIT],
-    ['limit', HOME_RACE_LIMIT],
     ['limit', HOME_REGION_LIMIT],
   ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'in'), [
-    ['in', 'status', ['announced', 'upcoming', 'registration_open', 'candidates_announced', 'voting']],
     ['in', 'region_type', ['country', 'municipality', 'county', 'city']],
   ]);
+  assert.equal(JSON.stringify(payload).includes('birth_date'), false);
 });
 
-test('home candidate summaries use one bounded query for all displayed races', async () => {
-  const row = {
-    candidate_id: 'candidate-1',
-    race_id: 'race-1',
-    person_id: 'person-1',
-    person_name: '測試候選人',
-    gender: 'female',
-    birth_date: '1980-01-01',
-  };
-  const fake = createFakeClient({
-    'rpc:home_candidate_summaries_for': { data: [row], error: null, count: null },
-  });
-  const adapter = createPublishedReadAdapter(fake.client);
-
-  assert.deepEqual(await adapter.loadHomeCandidateSummaries(['race-2', 'race-1', 'race-1']), [row]);
-  assert.deepEqual(fake.calls, [
-    ['schema', 'published'],
-    ['rpc', 'home_candidate_summaries_for', { p_race_ids: ['race-2', 'race-1'] }],
-  ]);
-
-  const oversizedFake = createFakeClient({
-    'rpc:home_candidate_summaries_for': {
-      data: Array.from({ length: HOME_CANDIDATE_SUMMARY_LIMIT + 1 }, () => row),
-      error: null,
-      count: null,
-    },
-  });
-  await assert.rejects(
-    () => createPublishedReadAdapter(oversizedFake.client).loadHomeCandidateSummaries(['race-1']),
-    /exceeded the 400-row batch limit/,
-  );
-  await assert.rejects(
-    () => adapter.loadHomeCandidateSummaries(Array.from({ length: HOME_CANDIDATE_RACE_LIMIT + 1 }, (_, index) => `race-${index}`)),
-    /accept at most 24 race ids/,
-  );
-});
-
-test('region page resolves one slug and bounds direct children and related races', async () => {
+test('region page uses one slug-scoped RPC and bounds payload collections', async () => {
   const region = {
     region_id: 'region-taipei',
     name: '臺北市',
@@ -349,12 +315,16 @@ test('region page resolves one slug and bounds direct children and related races
   const summary = { region_id: 'region-taipei', region_slug: 'taipei' };
   const race = { race_id: 'race-1', region_slug: 'taipei' };
   const fake = createFakeClient({
-    regions: [
-      { data: [region], error: null, count: null },
-      { data: [child], error: null, count: null },
-    ],
-    home_region_summary: { data: [summary], error: null, count: null },
-    races: { data: [race], error: null, count: null },
+    'rpc:region_page_for': {
+      data: [{ payload: { ...payloadMetadata,
+        region_row: region,
+        summary_row: summary,
+        child_region_rows: [child],
+        race_rows: [race],
+      } }],
+      error: null,
+      count: null,
+    },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -364,27 +334,13 @@ test('region page resolves one slug and bounds direct children and related races
     childRegionRows: [child],
     raceRows: [race],
   });
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
-    ['from', 'regions'],
-    ['from', 'home_region_summary'],
-    ['from', 'races'],
-    ['from', 'regions'],
-  ]);
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'eq'), [
-    ['eq', 'slug', 'taipei'],
-    ['eq', 'region_slug', 'taipei'],
-    ['eq', 'region_slug', 'taipei'],
-    ['eq', 'parent_region_id', 'region-taipei'],
-  ]);
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
-    ['limit', 1],
-    ['limit', 1],
-    ['limit', REGION_RACE_LIMIT],
-    ['limit', REGION_CHILD_LIMIT],
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['rpc', 'region_page_for', { p_region_slug: 'taipei' }],
   ]);
 });
 
-test('election index bounds elections and loads only matching summaries', async () => {
+test('election index uses one bounded RPC payload', async () => {
   const elections = [
     { election_id: 'election-2', name: '選舉二' },
     { election_id: 'election-1', name: '選舉一' },
@@ -394,8 +350,11 @@ test('election index bounds elections and loads only matching summaries', async 
     { election_id: 'election-2', race_count: 1, race_types: ['president'] },
   ];
   const fake = createFakeClient({
-    elections: { data: elections, error: null, count: null },
-    election_race_summaries: { data: summaries, error: null, count: null },
+    'rpc:election_index_page': {
+      data: [{ payload: { ...payloadMetadata, election_rows: elections, race_summary_rows: summaries } }],
+      error: null,
+      count: null,
+    },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -403,16 +362,9 @@ test('election index bounds elections and loads only matching summaries', async 
     electionRows: elections,
     raceSummaryRows: summaries,
   });
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
-    ['from', 'elections'],
-    ['from', 'election_race_summaries'],
-  ]);
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'in'), [
-    ['in', 'election_id', ['election-2', 'election-1']],
-  ]);
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
-    ['limit', ELECTION_INDEX_LIMIT],
-    ['limit', 2],
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['rpc', 'election_index_page', {}],
   ]);
 });
 
@@ -539,16 +491,22 @@ test('party legal statistics requires a non-empty party name', async () => {
 });
 
 
-test('person profiles de-duplicate at most four ids and bound every published relation', async () => {
+test('person profiles de-duplicate at most four ids and use one bounded payload', async () => {
   const person = { person_id: 'person-2', name: '測試人物' };
   const candidate = { candidate_id: 'candidate-1', person_id: 'person-2' };
   const claim = { claim_id: 'claim-1', person_id: 'person-2' };
   const affiliation = { affiliation_id: 'affiliation-1', person_id: 'person-2' };
   const fake = createFakeClient({
-    people: { data: [person], error: null, count: null },
-    candidates: { data: [candidate], error: null, count: 1 },
-    'rpc:person_claims_for': { data: [claim], error: null, count: null },
-    person_party_affiliations: { data: [affiliation], error: null, count: 1 },
+    'rpc:person_profiles_for': {
+      data: [{ payload: { ...payloadMetadata,
+        person_rows: [person],
+        candidate_rows: [candidate],
+        claim_rows: [claim],
+        party_affiliation_rows: [affiliation],
+      } }],
+      error: null,
+      count: null,
+    },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -561,23 +519,9 @@ test('person profiles de-duplicate at most four ids and bound every published re
       partyAffiliationRows: [affiliation],
     },
   );
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'from'), [
-    ['from', 'people'],
-    ['from', 'candidates'],
-    ['from', 'person_party_affiliations'],
-  ]);
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc'), [
-    ['rpc', 'person_claims_for', { p_person_ids: ['person-2', 'person-1'] }],
-  ]);
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'in'), [
-    ['in', 'person_id', ['person-2', 'person-1']],
-    ['in', 'person_id', ['person-2', 'person-1']],
-    ['in', 'person_id', ['person-2', 'person-1']],
-  ]);
-  assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
-    ['limit', 2],
-    ['limit', PERSON_CANDIDATE_LIMIT + 1],
-    ['limit', PERSON_PARTY_AFFILIATION_LIMIT + 1],
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['rpc', 'person_profiles_for', { p_person_ids: ['person-2', 'person-1'] }],
   ]);
 });
 
@@ -596,19 +540,21 @@ test('person profile reads reject more than four unique ids before querying', as
   assert.deepEqual(fake.calls, []);
 });
 
-test('person profile reads fail closed when a related-row limit truncates data', async () => {
+test('person profile reads fail closed when a payload collection exceeds its limit', async () => {
   const fake = createFakeClient({
-    people: { data: [], error: null, count: null },
-    candidates: {
-      data: Array.from({ length: PERSON_CANDIDATE_LIMIT + 1 }, (_, index) => ({
-        candidate_id: `candidate-${index}`,
-        person_id: 'person-1',
-      })),
+    'rpc:person_profiles_for': {
+      data: [{ payload: { ...payloadMetadata,
+        person_rows: [],
+        candidate_rows: Array.from({ length: PERSON_CANDIDATE_LIMIT + 1 }, (_, index) => ({
+          candidate_id: `candidate-${index}`,
+          person_id: 'person-1',
+        })),
+        claim_rows: [],
+        party_affiliation_rows: [],
+      } }],
       error: null,
       count: null,
     },
-    'rpc:person_claims_for': { data: [], error: null, count: null },
-    person_party_affiliations: { data: [], error: null, count: 0 },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -618,19 +564,21 @@ test('person profile reads fail closed when a related-row limit truncates data',
   );
 });
 
-test('person profile reads reject the claims RPC sentinel row', async () => {
+test('person profile reads reject the claims payload sentinel row', async () => {
   const fake = createFakeClient({
-    people: { data: [], error: null, count: null },
-    candidates: { data: [], error: null, count: null },
-    'rpc:person_claims_for': {
-      data: Array.from({ length: PERSON_CLAIM_LIMIT + 1 }, (_, index) => ({
-        claim_id: `claim-${index}`,
-        person_id: 'person-1',
-      })),
+    'rpc:person_profiles_for': {
+      data: [{ payload: { ...payloadMetadata,
+        person_rows: [],
+        candidate_rows: [],
+        claim_rows: Array.from({ length: PERSON_CLAIM_LIMIT + 1 }, (_, index) => ({
+          claim_id: `claim-${index}`,
+          person_id: 'person-1',
+        })),
+        party_affiliation_rows: [],
+      } }],
       error: null,
       count: null,
     },
-    person_party_affiliations: { data: [], error: null, count: null },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -729,49 +677,30 @@ test('election race page surfaces function failures', async () => {
   );
 });
 
-test('race detail reads one race then bounded election and candidate rows', async () => {
+test('race detail uses one bounded RPC payload', async () => {
   const race = {
     race_id: 'race-1',
     election_id: 'election-1',
-    election_name: '地方公職人員選舉',
-    region_id: 'region-1',
-    region_name: '新北市',
-    region_slug: 'new-taipei',
     race_type: 'municipality_mayor',
     title: '新北市長選舉',
-    voting_date: '2022-11-26',
-    status: 'completed',
-    source_name: '中央選舉委員會',
-    source_url: 'https://example.test/race-1',
   };
-  const election = {
-    election_id: 'election-1',
-    name: '地方公職人員選舉',
-    year: 2022,
-    election_type: 'local',
-    voting_date: '2022-11-26',
-    status: 'completed',
-    source_name: '中央選舉委員會',
-    source_url: 'https://example.test/election-1',
-  };
-  const candidate = {
-    candidate_id: 'candidate-1',
-    person_id: 'person-1',
-    person_name: '測試候選人',
-    race_id: 'race-1',
-    election_id: 'election-1',
-  };
-  const partyAffiliation = {
-    affiliation_id: 'affiliation-1',
-    person_id: 'person-1',
-    party_name: '中國國民黨',
-    observed_year: 2018,
-  };
+  const election = { election_id: 'election-1', name: '地方公職人員選舉' };
+  const candidate = { candidate_id: 'candidate-1', person_id: 'person-1' };
+  const partyAffiliation = { affiliation_id: 'affiliation-1', person_id: 'person-1' };
   const fake = createFakeClient({
-    races: { data: [race], error: null, count: null },
-    elections: { data: [election], error: null, count: null },
-    candidates: { data: [candidate], error: null, count: null },
-    person_party_affiliations: { data: [partyAffiliation], error: null, count: null },
+    'rpc:race_page_for': {
+      data: [{ payload: { ...payloadMetadata,
+        race_row: race,
+        election_row: election,
+        candidate_rows: [candidate],
+        party_affiliation_rows: [partyAffiliation],
+        referendum_question_row: null,
+        referendum_option_rows: [],
+        referendum_region_result_rows: [],
+      } }],
+      error: null,
+      count: null,
+    },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -786,38 +715,25 @@ test('race detail reads one race then bounded election and candidate rows', asyn
   });
   assert.deepEqual(fake.calls, [
     ['schema', 'published'],
-    ['from', 'races'],
-    ['select', RACE_DETAIL_COLUMNS],
-    ['eq', 'race_id', 'race-1'],
-    ['limit', 1],
-    ['from', 'elections'],
-    ['select', ELECTION_COLUMNS],
-    ['eq', 'election_id', 'election-1'],
-    ['limit', 1],
-    ['from', 'candidates'],
-    ['select', PERSON_CANDIDATE_COLUMNS],
-    ['eq', 'race_id', 'race-1'],
-    ['order', 'candidate_no', { ascending: true, nullsFirst: false }],
-    ['order', 'person_name', { ascending: true }],
-    ['order', 'candidate_id', { ascending: true }],
-    ['limit', RACE_DETAIL_CANDIDATE_LIMIT + 1],
-    ['from', 'referendum_questions'],
-    ['select', REFERENDUM_QUESTION_COLUMNS],
-    ['eq', 'race_id', 'race-1'],
-    ['limit', 1],
-    ['from', 'person_party_affiliations'],
-    ['select', PERSON_PARTY_AFFILIATION_COLUMNS],
-    ['in', 'person_id', ['person-1']],
-    ['order', 'person_id', { ascending: true }],
-    ['order', 'observed_year', { ascending: false, nullsFirst: false }],
-    ['order', 'affiliation_id', { ascending: true }],
-    ['limit', RACE_DETAIL_PARTY_AFFILIATION_LIMIT + 1],
+    ['rpc', 'race_page_for', { p_race_id: 'race-1' }],
   ]);
 });
 
-test('race detail stops after a missing race', async () => {
+test('race detail returns the empty shape for a missing race payload', async () => {
   const fake = createFakeClient({
-    races: { data: [], error: null, count: null },
+    'rpc:race_page_for': {
+      data: [{ payload: { ...payloadMetadata,
+        race_row: null,
+        election_row: null,
+        candidate_rows: [],
+        party_affiliation_rows: [],
+        referendum_question_row: null,
+        referendum_option_rows: [],
+        referendum_region_result_rows: [],
+      } }],
+      error: null,
+      count: null,
+    },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -830,30 +746,32 @@ test('race detail stops after a missing race', async () => {
     referendumOptionRows: [],
     referendumRegionResultRows: [],
   });
-  assert.equal(fake.calls.some((call) => call[0] === 'from' && call[1] === 'candidates'), false);
+  assert.equal(fake.calls.filter((call) => call[0] === 'rpc').length, 1);
 });
 
-test('race detail reads a referendum question, two options and bounded region results', async () => {
+test('race detail payload includes a referendum question and bounded result rows', async () => {
   const race = { race_id: 'race-referendum', election_id: 'election-referendum', race_type: 'referendum' };
   const election = { election_id: 'election-referendum', election_type: 'referendum' };
-  const question = {
-    question_id: 'question-1',
-    race_id: 'race-referendum',
-    election_id: 'election-referendum',
-    proposal_text: '您是否同意測試？',
-  };
+  const question = { question_id: 'question-1', proposal_text: '您是否同意測試？' };
   const options = [
     { option_id: 'yes', question_id: 'question-1', display_order: 1 },
     { option_id: 'no', question_id: 'question-1', display_order: 2 },
   ];
   const regionResults = [{ result_id: 'result-1', question_id: 'question-1', region_name: '臺北市' }];
   const fake = createFakeClient({
-    races: { data: [race], error: null, count: null },
-    elections: { data: [election], error: null, count: null },
-    candidates: { data: [], error: null, count: null },
-    referendum_questions: { data: [question], error: null, count: null },
-    referendum_options: { data: options, error: null, count: null },
-    referendum_region_results: { data: regionResults, error: null, count: null },
+    'rpc:race_page_for': {
+      data: [{ payload: { ...payloadMetadata,
+        race_row: race,
+        election_row: election,
+        candidate_rows: [],
+        party_affiliation_rows: [],
+        referendum_question_row: question,
+        referendum_option_rows: options,
+        referendum_region_result_rows: regionResults,
+      } }],
+      error: null,
+      count: null,
+    },
   });
   const adapter = createPublishedReadAdapter(fake.client);
 
@@ -866,24 +784,22 @@ test('race detail reads a referendum question, two options and bounded region re
     referendumOptionRows: options,
     referendumRegionResultRows: regionResults,
   });
-  assert.equal(fake.calls.some((call) => call[0] === 'select' && call[1] === REFERENDUM_OPTION_COLUMNS), true);
-  assert.equal(fake.calls.some((call) => call[0] === 'limit' && call[1] === RACE_DETAIL_REFERENDUM_OPTION_LIMIT + 1), true);
-  assert.equal(fake.calls.some((call) => call[0] === 'select' && call[1] === REFERENDUM_REGION_RESULT_COLUMNS), true);
-  assert.equal(fake.calls.some((call) => call[0] === 'limit' && call[1] === RACE_DETAIL_REFERENDUM_REGION_LIMIT + 1), true);
 });
 
-test('race detail rejects a candidate sentinel row', async () => {
+test('race detail rejects a candidate payload sentinel row', async () => {
   const fake = createFakeClient({
-    races: {
-      data: [{ race_id: 'race-1', election_id: 'election-1' }],
-      error: null,
-      count: null,
-    },
-    elections: { data: [], error: null, count: null },
-    candidates: {
-      data: Array.from({ length: RACE_DETAIL_CANDIDATE_LIMIT + 1 }, (_, index) => ({
-        candidate_id: `candidate-${index}`,
-      })),
+    'rpc:race_page_for': {
+      data: [{ payload: { ...payloadMetadata,
+        race_row: { race_id: 'race-1' },
+        election_row: null,
+        candidate_rows: Array.from({ length: RACE_DETAIL_CANDIDATE_LIMIT + 1 }, (_, index) => ({
+          candidate_id: `candidate-${index}`,
+        })),
+        party_affiliation_rows: [],
+        referendum_question_row: null,
+        referendum_option_rows: [],
+        referendum_region_result_rows: [],
+      } }],
       error: null,
       count: null,
     },

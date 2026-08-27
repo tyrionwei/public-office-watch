@@ -293,19 +293,6 @@ export const mockPublicDataProvider: PublicDataProvider = {
     };
   },
 
-  async loadHomeCandidateSummaries(raceIds: string[]) {
-    const raceIdSet = new Set(raceIds);
-    return mockPublicCandidates
-      .filter((candidate) => raceIdSet.has(candidate.race_id))
-      .map((candidate) => {
-        const person = mockPublicPeople.find((item) => item.person_id === candidate.person_id);
-        const birthDate = mockPublicPersonClaims.find((claim) => (
-          claim.person_id === candidate.person_id && claim.claim_type === 'birth_date'
-        ))?.claim_value ?? null;
-        return { candidate, gender: person?.gender ?? null, birthDate };
-      });
-  },
-
   async loadRaceDetail(raceId: string) {
     const race = this.getRaceById(raceId);
     const candidates = this.getCandidatesByRaceId(raceId);

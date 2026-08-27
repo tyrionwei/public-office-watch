@@ -174,6 +174,72 @@ test('homepage stays within the viewport at responsive widths', async ({ page })
   }
 });
 
+test('homepage uses one scoped payload and stays populated after client-side navigation', async ({ page }) => {
+  const apiRequests: string[] = [];
+  page.on('request', (request) => {
+    const url = new URL(request.url());
+    if (url.pathname.includes('/rest/v1/')) apiRequests.push(url.pathname);
+  });
+
+  await page.goto('/?region=taipei-city');
+  await expect(page.locator('[data-candidate-category-tabs]')).toBeVisible();
+  await expect(page.locator('[data-party-seat-row]').first()).toBeVisible();
+  await page.waitForLoadState('networkidle');
+
+  expect(apiRequests.filter((path) => path.endsWith('/rest/v1/rpc/home_page_for'))).toHaveLength(1);
+  expect(apiRequests.some((path) => path.includes('home_candidate_summaries_for'))).toBe(false);
+  expect(apiRequests.some((path) => path.includes('current_legislator_party_summary'))).toBe(false);
+  expect(apiRequests.some((path) => path.includes('local_office'))).toBe(false);
+  expect(apiRequests.some((path) => path.includes('/rest/v1/regions'))).toBe(false);
+
+  apiRequests.length = 0;
+  await page.getByRole('link', { name: '◎ 人物', exact: true }).click();
+  await expect(page).toHaveURL((url) => url.pathname === '/people');
+  await page.getByRole('link', { name: '⌂ 首頁', exact: true }).click();
+  await expect(page.locator('[data-candidate-category-tabs]')).toBeVisible();
+  await expect(page.locator('[data-party-seat-row]').first()).toBeVisible();
+  await page.waitForLoadState('networkidle');
+
+  expect(apiRequests.some((path) => path.endsWith('/rest/v1/rpc/home_page_for'))).toBe(false);
+});
+
+test('detail routes use bounded page payloads without duplicate feedback reads', async ({ page }) => {
+  const apiRequests: string[] = [];
+  page.on('request', (request) => {
+    const url = new URL(request.url());
+    if (url.pathname.includes('/rest/v1/')) {
+      apiRequests.push(url.pathname.replace(/^.*\/rest\/v1\//u, ''));
+    }
+  });
+
+  await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
+  await expect(page.getByRole('heading', { name: '王世堅', exact: true })).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  expect(apiRequests).toEqual([
+    'rpc/person_profiles_for',
+    'rpc/get_person_feedback_context',
+  ]);
+
+  apiRequests.length = 0;
+  await page.goto('/elections/events/2026-2026-11-28-local');
+  await expect(page.getByRole('heading', { name: '大選總覽' })).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  expect(apiRequests.filter((path) => path === 'rpc/election_index_page')).toHaveLength(1);
+  expect(apiRequests.some((path) => path === 'elections' || path === 'election_race_summaries')).toBe(false);
+
+  apiRequests.length = 0;
+  await page.goto('/elections/races/1ddcde35-f1ed-4e38-8652-ceb5e616f91a');
+  await expect(page.getByRole('heading', { name: '選區項目細節' })).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  expect(apiRequests).toEqual(['rpc/race_page_for']);
+
+  apiRequests.length = 0;
+  await page.goto('/regions/taipei-city');
+  await expect(page.getByRole('heading', { name: '臺北市', exact: true, level: 1 })).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  expect(apiRequests).toEqual(['rpc/region_page_for']);
+});
+
 test('people page loads public people results', async ({ page }) => {
   let candidateRequestCount = 0;
   page.on('request', (request) => {
@@ -257,7 +323,7 @@ test('person page leads with data status and keeps sensitive source context besi
 });
 
 test('person load failures are visually distinct from uncollected data', async ({ page }) => {
-  await page.route(/\/rest\/v1\/rpc\/person_claims_for(?:\?|$)/, async (route) => {
+  await page.route(/\/rest\/v1\/rpc\/person_profiles_for(?:\?|$)/, async (route) => {
     await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ message: 'test failure' }) });
   });
 
@@ -268,7 +334,12 @@ test('person load failures are visually distinct from uncollected data', async (
 });
 
 test('home candidate load failures are distinct from an empty roster', async ({ page }) => {
-  await page.route(/\/rest\/v1\/rpc\/home_candidate_summaries_for(?:\?|$)/, async (route) => {
+  await page.route(/\/rest\/v1\/rpc\/home_page_for(?:\?|$)/, async (route) => {
+    const body = route.request().postDataJSON() as { p_region_slug?: string | null };
+    if (body.p_region_slug !== 'taipei-city') {
+      await route.continue();
+      return;
+    }
     await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ message: 'test failure' }) });
   });
 
@@ -301,8 +372,9 @@ test('county highlight panel provides a distinct background for every county cit
 
   for (const county of countyHighlightTargets) {
     const countyControl = page.locator('[aria-label="選取 ' + county.label + '"]').first();
-    await countyControl.focus();
-    await countyControl.press('Enter');
+    await countyControl.evaluate((element) => {
+      element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    });
     await expect(highlightPanel).toHaveAttribute('data-region-highlight', county.id);
     await expect(countyControl).toHaveAttribute('aria-pressed', 'true');
 
@@ -313,24 +385,23 @@ test('county highlight panel provides a distinct background for every county cit
   await expectNoHorizontalOverflow(page);
 });
 
-test('homepage defaults to Taipei when no nationwide election is announced', async ({ page }) => {
+test('homepage defaults to the nationwide overview', async ({ page }) => {
   await page.goto('/');
 
-  const electionFrame = page.locator('[data-region-highlight]').locator('xpath=ancestor::section[1]');
-  await expect(page.locator('[data-region-highlight]')).toHaveAttribute('data-region-highlight', 'county-63000');
-  await expect(electionFrame.getByText('即將到來的選舉', { exact: true })).toHaveCount(1);
-  await expect(electionFrame.getByText('臺北市', { exact: true })).toHaveCount(0);
-  await expect(electionFrame.getByRole('link', { name: '查看此縣市', exact: true })).toHaveAttribute('href', '/regions/taipei-city');
-  await expect(page.locator('[data-national-fallback-notice]')).toHaveCount(0);
+  await expect(page.locator('[data-national-overview]')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '全國', exact: true })).toBeVisible();
+  await expect(page.locator('[data-region-highlight]')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
 });
 
-test('homepage ignores a remembered nationwide view during an election gap', async ({ page }) => {
+test('homepage restores a remembered nationwide view', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => window.localStorage.setItem('public-office-watch.selected-region', 'national'));
   await page.reload();
 
-  await expect(page.locator('[data-region-highlight]')).toHaveAttribute('data-region-highlight', 'county-63000');
+  await expect(page.locator('[data-national-overview]')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '全國', exact: true })).toBeVisible();
+  await expect(page.locator('[data-region-highlight]')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
 });
 
@@ -378,7 +449,7 @@ test('explicit nationwide selection remains selected during the election gap', a
 });
 
 test('homepage quick select exposes the six municipalities and seat links carry people filters', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/?region=taipei-city');
 
   const quickSelect = page.getByRole('navigation', { name: '縣市快速選擇' });
   for (const label of ['臺北市', '新北市', '桃園市', '臺中市', '臺南市', '高雄市']) {
@@ -451,7 +522,7 @@ test('more counties menu closes after selection and outside clicks', async ({ pa
 });
 
 test('homepage election links and candidate categories use county filters and district-ordered cards', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/?region=taipei-city');
 
   const electionFrame = page.locator('[data-region-highlight]').locator('xpath=ancestor::section[1]');
   await expect(electionFrame.getByRole('heading', { name: '臺北市地方公職人員選舉', exact: true })).toBeVisible();
@@ -509,7 +580,7 @@ test('homepage election links and candidate categories use county filters and di
   await expect(candidateFrame.getByText('正在載入參選人物…', { exact: true })).toHaveCount(0);
   await expect(candidateFrame.locator('a[href^="/people/"]')).toHaveCount(councilorCandidateCount);
   const viewAllCandidates = candidateFrame.locator('[data-candidate-view-all]');
-  await expect(viewAllCandidates).toHaveText(`查看全部 ${councilorCandidateCount} 位人選 ›`);
+  await expect(viewAllCandidates).toHaveText(`查看目前已收錄 ${councilorCandidateCount} 位公開人選 ›`);
   await expect(viewAllCandidates).toHaveAttribute('href', /\/elections\/events\/2026-2026-11-28-local\?category=councilor&region=/);
   await expect(page).toHaveURL(/candidateCategory=councilor/);
   await expect(candidateFrame.locator('[data-candidate-position]')).toHaveText(`1 / ${councilorCandidateCount}`);
@@ -530,7 +601,7 @@ test('homepage election links and candidate categories use county filters and di
   await expect(candidateFrame.locator('a[href^="/people/"]')).toHaveCount(6);
   await expect(candidateFrame.locator('[data-candidate-position]')).toHaveText('1 / 6');
   const selectedDistrictContexts = await candidateFrame.locator('[data-candidate-race-context]').allTextContents();
-  await expect(viewAllCandidates).toHaveText('查看全部 6 位人選 ›');
+  await expect(viewAllCandidates).toHaveText('查看目前已收錄 6 位公開人選 ›');
   await expect(viewAllCandidates).toHaveAttribute('href', /\/elections\/races\//);
   await expect(page).toHaveURL(/candidateDistrict=/);
   expect(Array.from(new Set(selectedDistrictContexts))).toEqual(['第二選區']);
@@ -591,7 +662,7 @@ test('homepage election links and candidate categories use county filters and di
 });
 
 test('homepage candidate category district and carousel position survive person navigation and back', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/?region=taipei-city');
 
   const candidateFrame = page.getByRole('heading', { name: '臺北市參選人物', exact: true }).locator('xpath=ancestor::section[1]');
   await candidateFrame.getByRole('button', { name: /市議員 \(\d+\)/ }).click();
@@ -619,7 +690,7 @@ test('homepage candidate category district and carousel position survive person 
 
 test('homepage candidate carousel stays still on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
+  await page.goto('/?region=taipei-city');
 
   const candidateFrame = page.getByRole('heading', { name: '臺北市參選人物', exact: true }).locator('xpath=ancestor::section[1]');
   await candidateFrame.getByRole('button', { name: /市議員 \(\d+\)/ }).click();
@@ -642,10 +713,9 @@ test('homepage region selection survives navigation and browser back', async ({ 
 
   await page.locator('a[href="/people"]').first().click();
   await expect(page).toHaveURL(/\/people$/);
-  await expect(page.locator('[data-current-region]')).toContainText('目前地區：臺中市');
-  await expect(page.locator('[data-current-region]')).toContainText('變更');
+  await expect(page.locator('[data-current-region]')).toHaveCount(0);
   await page.reload();
-  await expect(page.locator('[data-current-region]')).toContainText('目前地區：臺中市');
+  await expect(page.locator('[data-current-region]')).toHaveCount(0);
   await page.goBack();
 
   await expect(page).toHaveURL(/\?region=taichung-city$/);
@@ -655,8 +725,9 @@ test('homepage region selection survives navigation and browser back', async ({ 
 test('homepage falls back safely when the region query is unknown', async ({ page }) => {
   await page.goto('/?region=not-a-region');
 
-  await expect(page.locator('[data-region-highlight]')).toHaveAttribute('data-region-highlight', 'county-63000');
-  await expect(page.locator('[data-national-fallback-notice]')).toHaveCount(0);
+  await expect(page.locator('[data-national-overview]')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '全國', exact: true })).toBeVisible();
+  await expect(page.locator('[data-region-highlight]')).toHaveCount(0);
 });
 
 test('people filters and pagination survive profile navigation and browser back', async ({ page }) => {

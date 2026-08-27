@@ -4,29 +4,16 @@ GRANT USAGE ON SCHEMA published TO anon, authenticated;
 
 GRANT SELECT ON TABLE
   published.active_party_candidates,
-  published.candidates,
-  published.election_race_facets,
-  published.election_race_summaries,
-  published.elections,
-  published.home_candidate_summaries,
-  published.home_region_summary,
-  published.home_ticker,
   published.current_legislator_party_summary,
+  published.election_race_facets,
   published.national_office_holders,
   published.parties,
   published.party_annual_finance_filings,
   published.party_company_contribution_summaries,
   published.party_finance_summaries,
   published.party_officers,
-  published.people,
   published.people_directory,
-  published.person_party_affiliations,
-  published.races,
-  published.referendum_options,
-  published.referendum_questions,
-  published.referendum_region_results,
   published.regions,
-  published.search_results,
   published.update_feed
 TO anon, authenticated;
 
@@ -56,6 +43,7 @@ GRANT EXECUTE ON FUNCTION published.election_race_page(
   UUID[],
   TEXT[],
   TEXT,
+  TEXT,
   INTEGER,
   INTEGER
 ) TO anon, authenticated;
@@ -74,10 +62,19 @@ GRANT EXECUTE ON FUNCTION published.election_party_performance(
   TEXT
 ) TO anon, authenticated;
 
-GRANT EXECUTE ON FUNCTION published.home_candidate_summaries_for(UUID[])
+GRANT EXECUTE ON FUNCTION published.home_page_for(TEXT)
 TO anon, authenticated;
 
-GRANT EXECUTE ON FUNCTION published.person_claims_for(UUID[])
+GRANT EXECUTE ON FUNCTION published.election_index_page()
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.person_profiles_for(UUID[])
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.race_page_for(UUID)
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.region_page_for(TEXT)
 TO anon, authenticated;
 
 GRANT EXECUTE ON FUNCTION published.party_legal_statistics(TEXT)

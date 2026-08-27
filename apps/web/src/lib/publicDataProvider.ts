@@ -39,6 +39,13 @@ export type HomeTicker = {
   electionId: string | null;
 };
 
+export type HomeCandidateAgeGroup = 'under-40' | '40-49' | '50-59' | '60-plus';
+
+export type HomeSeatCount = {
+  party: string;
+  count: number;
+};
+
 export type HomePageData = {
   ticker: HomeTicker;
   regions: RegionCard[];
@@ -46,12 +53,17 @@ export type HomePageData = {
   stageRegionSummaries: StageRegionSummary[];
   upcomingRaces: UpcomingRace[];
   dataPrinciples: string[];
+  candidateSummaries?: HomeCandidateSummary[];
+  seatDistribution?: HomeSeatCount[];
+  releaseId?: string | null;
+  publishedAt?: string | null;
 };
 
 export type HomeCandidateSummary = {
   candidate: PublicCandidate;
   gender: PublicPerson['gender'];
   birthDate: string | null;
+  ageGroup?: HomeCandidateAgeGroup | null;
 };
 
 export type PublicSearchResultType = 'person' | 'company' | 'party' | 'election' | 'region';
@@ -108,7 +120,7 @@ export type PublicRaceQueryFilters = {
 };
 
 export interface PublicDataProvider {
-  loadHomePageData(): Promise<HomePageData>;
+  loadHomePageData(regionId?: string | null): Promise<HomePageData>;
   loadRegionDirectory(): Promise<StageRegionNode[]>;
   getHomeTicker(): HomeTicker;
   getHomePageData(): HomePageData;
@@ -136,7 +148,6 @@ export interface PublicDataProvider {
   loadRacesByElectionIds(electionIds: string[], filters?: PublicRaceQueryFilters): Promise<PublicRace[]>;
   loadElectionRacePage(eventKey: string, electionIds: string[], filters: PublicRaceQueryFilters, page: number, pageSize: number): Promise<PublicRaceListPage>;
   loadRaceDetail(raceId: string): Promise<PublicRaceDetailData>;
-  loadHomeCandidateSummaries(raceIds: string[]): Promise<HomeCandidateSummary[]>;
   getPollComparisonByElectionId(electionId: string): PollComparison | null;
   getPeople(): PublicPerson[];
   getPeopleByFilters(filters?: PublicPersonFilters): PublicPersonListItem[];

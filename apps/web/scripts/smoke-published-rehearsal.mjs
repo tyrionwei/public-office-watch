@@ -9,25 +9,30 @@ const envPath = path.join(webRoot, '.env.rehearsal.local');
 
 const readableRelations = [
   'active_party_candidates',
-  'candidates',
-  'election_race_facets',
-  'election_race_summaries',
-  'elections',
-  'home_candidate_summaries',
-  'home_region_summary',
-  'home_ticker',
   'current_legislator_party_summary',
+  'election_race_facets',
   'national_office_holders',
   'parties',
   'party_annual_finance_filings',
   'party_company_contribution_summaries',
   'party_finance_summaries',
   'party_officers',
-  'people',
   'people_directory',
+  'regions',
+  'update_feed',
+];
+
+const blockedRelations = [
+  'candidates',
+  'election_race_summaries',
+  'elections',
+  'home_candidate_summaries',
+  'home_region_summary',
+  'home_ticker',
+  'party_name_aliases',
+  'people',
   'person_party_affiliations',
   'races',
-  'regions',
   'referendum_options',
   'referendum_questions',
   'referendum_region_results',
@@ -35,17 +40,11 @@ const readableRelations = [
 ];
 
 const requiredNonEmptyRelations = new Set([
-  'candidates',
-  'elections',
   'current_legislator_party_summary',
   'national_office_holders',
-  'people',
-  'races',
+  'parties',
+  'people_directory',
   'regions',
-  'referendum_options',
-  'referendum_questions',
-  'referendum_region_results',
-  'search_results',
 ]);
 
 function parseEnv(content) {
@@ -57,6 +56,13 @@ function parseEnv(content) {
       const separator = line.indexOf('=');
       return [line.slice(0, separator), line.slice(separator + 1)];
     }));
+}
+
+function assertPayloadVersion(payload, label) {
+  if (payload?.api_version !== 1) fail(label + ' returned an unsupported API version');
+  if (typeof payload.release_id !== 'string' || typeof payload.published_at !== 'string') {
+    fail(label + ' returned invalid release metadata');
+  }
 }
 
 function fail(message) {
@@ -84,6 +90,58 @@ async function main() {
       fail(`${relation} is unexpectedly empty`);
     }
   }
+
+  for (const relation of blockedRelations) {
+    const result = await published.from(relation).select('*').limit(1);
+    if (!result.error) fail('anon can read retired published.' + relation);
+  }
+
+  const homePage = await published.rpc('home_page_for', { p_region_slug: 'taipei-city' });
+  if (homePage.error) fail(`home_page_for is not executable: ${homePage.error.message}`);
+  const homePayload = homePage.data?.[0]?.payload;
+  assertPayloadVersion(homePayload, 'home_page_for');
+  if (!homePayload || homePayload.region_rows?.length === 0) fail('home_page_for returned no regions');
+  if (homePayload.race_rows?.length === 0) fail('home_page_for returned no Taipei races');
+  if (homePayload.candidate_rows?.length === 0) fail('home_page_for returned no Taipei candidates');
+  if (homePayload.seat_rows?.length === 0) fail('home_page_for returned no Taipei seats');
+  if (JSON.stringify(homePayload).includes('birth_date')) fail('home_page_for exposed an exact birth date');
+
+  const regionPage = await published.rpc('region_page_for', { p_region_slug: 'taipei-city' });
+  if (regionPage.error) fail(`region_page_for is not executable: ${regionPage.error.message}`);
+  const regionPayload = regionPage.data?.[0]?.payload;
+  assertPayloadVersion(regionPayload, 'region_page_for');
+  if (!regionPayload.region_row) fail('region_page_for returned no region');
+
+  const electionIndex = await published.rpc('election_index_page');
+  if (electionIndex.error) fail(`election_index_page is not executable: ${electionIndex.error.message}`);
+  const electionPayload = electionIndex.data?.[0]?.payload;
+  assertPayloadVersion(electionPayload, 'election_index_page');
+  if (electionPayload.election_rows?.length === 0) {
+    fail('election_index_page returned no elections');
+  }
+
+  const raceId = homePayload.race_rows[0]?.race_id;
+  const racePage = await published.rpc('race_page_for', { p_race_id: raceId });
+  if (racePage.error) fail(`race_page_for is not executable: ${racePage.error.message}`);
+  const racePayload = racePage.data?.[0]?.payload;
+  assertPayloadVersion(racePayload, 'race_page_for');
+  if (racePayload.race_row?.race_id !== raceId) {
+    fail('race_page_for returned the wrong race');
+  }
+
+  const personId = homePayload.candidate_rows[0]?.person_id;
+  const personProfiles = await published.rpc('person_profiles_for', { p_person_ids: [personId] });
+  if (personProfiles.error) fail(`person_profiles_for is not executable: ${personProfiles.error.message}`);
+  const personPayload = personProfiles.data?.[0]?.payload;
+  assertPayloadVersion(personPayload, 'person_profiles_for');
+  if (personPayload.person_rows?.[0]?.person_id !== personId) {
+    fail('person_profiles_for returned the wrong person');
+  }
+
+  const retiredHomeSummary = await published.rpc('home_candidate_summaries_for', { p_race_ids: [] });
+  if (!retiredHomeSummary.error) fail('anon can execute retired home_candidate_summaries_for');
+  const retiredPersonClaims = await published.rpc('person_claims_for', { p_person_ids: [personId] });
+  if (!retiredPersonClaims.error) fail('anon can execute retired person_claims_for');
 
   const releaseState = await published.from('release_state').select('*').limit(1);
   if (!releaseState.error) fail('anon can read internal published.release_state');

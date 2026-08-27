@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { X509Certificate } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const accessMigration = readFileSync(
@@ -14,6 +14,21 @@ const homeCandidateSecurityMigration = readFileSync(
 );
 const homeCandidateQueryMigration = readFileSync(
   new URL('../../../supabase/migrations/20260826105941_fix_home_candidate_summary_query.sql', import.meta.url),
+  'utf8',
+);
+
+const homePagePayloadMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260827035539_add_home_page_payload_rpc.sql', import.meta.url),
+  'utf8',
+);
+
+const routePagePayloadMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260827042424_add_route_page_payload_rpcs.sql', import.meta.url),
+  'utf8',
+);
+
+const narrowPublishedAccessMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260827052016_narrow_published_frontend_access.sql', import.meta.url),
   'utf8',
 );
 
@@ -162,11 +177,14 @@ test('legacy public views are removed from browser roles', () => {
 });
 
 test('local public smoke follows the reviewed published API', () => {
-  assert.match(publicSmokeSource, /client\.schema\('published'\)/u);
-  assert.match(publicSmokeSource, /rpc\('person_claims_for'/u);
-  assert.match(publicSmokeSource, /rpc\('search_public_records'/u);
-  assert.match(publicSmokeSource, /rpc\('election_race_page'/u);
-  assert.doesNotMatch(publicSmokeSource, /allowedPublicViews|client\.from\(viewName\)/u);
+  assert.ok(publicSmokeSource.includes("client.schema('published')"));
+  assert.ok(publicSmokeSource.includes("rpc('person_profiles_for'"));
+  assert.ok(publicSmokeSource.includes("rpc('person_claims_for'"));
+  assert.ok(publicSmokeSource.includes("if (!retiredPersonClaims.error)"));
+  assert.ok(publicSmokeSource.includes("rpc('search_public_records'"));
+  assert.ok(publicSmokeSource.includes("rpc('election_race_page'"));
+  assert.ok(!publicSmokeSource.includes('allowedPublicViews'));
+  assert.ok(!publicSmokeSource.includes('client.from(viewName)'));
 });
 
 test('new public objects are private by default', () => {
@@ -195,26 +213,102 @@ test('dynamic chat status is exposed only through the published RPC', () => {
   assert.doesNotMatch(globalChatSource, /from\('public_chat_status'\)/u);
 });
 
-test('party normalization functions use invoker rights and homepage summaries stay bounded', () => {
-  assert.match(homeCandidateSecurityMigration, /canonical_party_name\(p_name TEXT\)[\s\S]*SECURITY INVOKER/u);
-  assert.match(homeCandidateSecurityMigration, /canonical_party_key\(p_name TEXT\)[\s\S]*SECURITY INVOKER/u);
-  assert.match(homeCandidateSecurityMigration, /published\.home_candidate_summaries[\s\S]*security_invoker = false/u);
-  assert.match(homeCandidateSecurityMigration, /GRANT SELECT ON published\.home_candidate_summaries TO anon, authenticated, service_role, admin_role;/u);
+test('party normalization functions use invoker rights and internal homepage summaries are no longer browser-readable', () => {
+  assert.ok(homeCandidateSecurityMigration.includes('canonical_party_name(p_name TEXT)'));
+  assert.ok(homeCandidateSecurityMigration.includes('canonical_party_key(p_name TEXT)'));
+  assert.ok(homeCandidateSecurityMigration.includes('SECURITY INVOKER'));
+  assert.ok(homeCandidateSecurityMigration.includes('published.home_candidate_summaries'));
+  assert.ok(narrowPublishedAccessMigration.includes('published.home_candidate_summaries'));
+  assert.ok(narrowPublishedAccessMigration.includes('FROM PUBLIC, anon, authenticated;'));
 });
 
-test('home candidate summary RPC bounds privileged reads before demographic joins', () => {
-  assert.match(homeCandidateQueryMigration, /FUNCTION published\.home_candidate_summaries_for\(p_race_ids UUID\[\]\)/u);
-  assert.match(homeCandidateQueryMigration, /SECURITY DEFINER[\s\S]*SET search_path = ''/u);
-  assert.match(homeCandidateQueryMigration, /IF v_race_count > 24[\s\S]*LIMIT 401/u);
-  assert.match(homeCandidateQueryMigration, /requested_candidates AS MATERIALIZED/u);
+test('retired home candidate and person claims RPCs are service-only', () => {
+  assert.ok(homeCandidateQueryMigration.includes('FUNCTION published.home_candidate_summaries_for(p_race_ids UUID[])'));
+  assert.ok(homeCandidateQueryMigration.includes('SECURITY DEFINER'));
+  assert.ok(homeCandidateQueryMigration.includes("SET search_path = ''"));
+  assert.ok(homeCandidateQueryMigration.includes('IF v_race_count > 24'));
+  assert.ok(homeCandidateQueryMigration.includes('LIMIT 401'));
+  for (const functionName of ['home_candidate_summaries_for', 'person_claims_for']) {
+    assert.ok(narrowPublishedAccessMigration.includes('REVOKE ALL ON FUNCTION published.' + functionName));
+  }
+});
+
+test('P2 removes the legacy provider and revokes internal assembly relations', () => {
+  assert.equal(existsSync(new URL('../src/lib/supabasePublicDataProvider.ts', import.meta.url)), false);
+  for (const relation of [
+    'candidates',
+    'election_race_summaries',
+    'elections',
+    'home_candidate_summaries',
+    'home_region_summary',
+    'home_ticker',
+    'party_name_aliases',
+    'people',
+    'person_party_affiliations',
+    'races',
+    'referendum_options',
+    'referendum_questions',
+    'referendum_region_results',
+    'search_results',
+  ]) {
+    assert.ok(narrowPublishedAccessMigration.includes('published.' + relation));
+  }
+  assert.ok(narrowPublishedAccessMigration.includes('CREATE OR REPLACE VIEW published.parties'));
+  assert.ok(narrowPublishedAccessMigration.includes('FROM public.party_name_aliases alias'));
+  assert.ok(narrowPublishedAccessMigration.includes('ALTER FUNCTION published.search_public_records(TEXT, INTEGER) SECURITY DEFINER'));
+  assert.ok(narrowPublishedAccessMigration.includes("SET search_path = ''"));
+  assert.ok(narrowPublishedAccessMigration.includes('REVOKE ALL ON TABLE'));
+  assert.ok(narrowPublishedAccessMigration.includes('FROM PUBLIC, anon, authenticated;'));
+});
+
+test('home page payload is bounded and explicitly granted through published', () => {
+  assert.match(homePagePayloadMigration, /FUNCTION published\.home_page_for\(p_region_slug TEXT DEFAULT NULL\)/u);
+  assert.match(homePagePayloadMigration, /SECURITY DEFINER[\s\S]*SET search_path = ''/u);
+  for (const limit of ['LIMIT 33', 'LIMIT 25', 'LIMIT 401', 'LIMIT 21']) {
+    assert.match(homePagePayloadMigration, new RegExp(limit, 'u'));
+  }
+  assert.match(homePagePayloadMigration, /demographic\.birth_date[\s\S]*END AS age_group/u);
+  assert.doesNotMatch(homePagePayloadMigration, /'birth_date'/u);
+  assert.match(homePagePayloadMigration, /'api_version', 1/u);
+  assert.ok(homePagePayloadMigration.includes("'release_id'"));
+  assert.ok(homePagePayloadMigration.includes("'published_at'"));
   assert.match(
-    homeCandidateQueryMigration,
-    /REVOKE ALL ON FUNCTION published\.home_candidate_summaries_for\(UUID\[\]\)\s+FROM PUBLIC, anon, authenticated;/u,
+    homePagePayloadMigration,
+    /REVOKE ALL ON FUNCTION published\.home_page_for\(TEXT\)\s+FROM PUBLIC, anon, authenticated;/u,
   );
   assert.match(
-    homeCandidateQueryMigration,
-    /GRANT EXECUTE ON FUNCTION published\.home_candidate_summaries_for\(UUID\[\]\)\s+TO anon, authenticated, service_role, admin_role;/u,
+    homePagePayloadMigration,
+    /GRANT EXECUTE ON FUNCTION published\.home_page_for\(TEXT\)\s+TO anon, authenticated, service_role, admin_role;/u,
   );
+});
+
+test('route page payloads stay bounded and explicitly granted through published', () => {
+  for (const [name, signature] of [
+    ['region_page_for', 'TEXT'],
+    ['election_index_page', ''],
+    ['race_page_for', 'UUID'],
+    ['person_profiles_for', 'UUID\\[\\]'],
+  ]) {
+    assert.match(
+      routePagePayloadMigration,
+      new RegExp(`FUNCTION published\\.${name}\\(`, 'u'),
+    );
+    assert.match(
+      routePagePayloadMigration,
+      new RegExp(`REVOKE ALL ON FUNCTION published\\.${name}\\(${signature}\\)\\s+FROM PUBLIC, anon, authenticated;`, 'u'),
+    );
+    assert.match(
+      routePagePayloadMigration,
+      new RegExp(`GRANT EXECUTE ON FUNCTION published\\.${name}\\(${signature}\\)\\s+TO anon, authenticated, service_role, admin_role;`, 'u'),
+    );
+  }
+  assert.equal((routePagePayloadMigration.match(/SECURITY DEFINER[\s\S]*?SET search_path = ''/gu) ?? []).length, 4);
+  assert.equal(routePagePayloadMigration.split("'api_version', 1").length - 1, 4);
+  assert.equal(routePagePayloadMigration.split("'release_id'").length - 1, 4);
+  for (const limit of ['LIMIT 65', 'LIMIT 25', 'LIMIT 501', 'LIMIT 101', 'LIMIT 1001', 'LIMIT 401']) {
+    assert.match(routePagePayloadMigration, new RegExp(limit, 'u'));
+  }
+  assert.match(routePagePayloadMigration, /cardinality\(COALESCE\(p_person_ids[\s\S]*?BETWEEN 1 AND 4/u);
 });
 
 test('region issue participation uses only the reviewed published API', () => {

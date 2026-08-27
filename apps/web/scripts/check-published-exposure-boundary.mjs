@@ -27,36 +27,41 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260824063832_add_election_race_search.sql',
   'supabase/migrations/20260825194609_home_candidate_summaries_and_function_security.sql',
   'supabase/migrations/20260826105941_fix_home_candidate_summary_query.sql',
+  'supabase/migrations/20260827035539_add_home_page_payload_rpc.sql',
+  'supabase/migrations/20260827042424_add_route_page_payload_rpcs.sql',
+  'supabase/migrations/20260827052016_narrow_published_frontend_access.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
-  'candidates',
   'current_legislator_party_summary',
   'election_race_facets',
-  'election_race_summaries',
-  'elections',
-  'home_candidate_summaries',
-  'home_region_summary',
-  'home_ticker',
   'national_office_holders',
   'parties',
   'party_annual_finance_filings',
   'party_company_contribution_summaries',
   'party_finance_summaries',
   'party_officers',
-  'people',
   'people_directory',
+  'regions',
+  'update_feed',
+];
+const retiredFrontendRelations = [
+  'candidates',
+  'election_race_summaries',
+  'elections',
+  'home_candidate_summaries',
+  'home_region_summary',
+  'home_ticker',
+  'party_name_aliases',
+  'people',
   'person_party_affiliations',
   'races',
   'referendum_options',
   'referendum_questions',
   'referendum_region_results',
-  'regions',
-  'update_feed',
   'search_results',
 ];
-const indirectlyQueriedRelations = new Set(['home_candidate_summaries', 'search_results']);
-const directlyQueriedRelations = reviewedRelations.filter((relation) => !indirectlyQueriedRelations.has(relation));
+const directlyQueriedRelations = reviewedRelations;
 const reviewedAuxiliaryFunctions = [
   'chat_messages',
   'chat_status',
@@ -66,7 +71,21 @@ const reviewedAuxiliaryFunctions = [
   'submit_person_feedback',
   'submit_region_issue_response',
 ];
-const reviewedFunctions = ['election_education_distribution', 'election_party_performance', 'election_race_page', 'home_candidate_summaries_for', 'party_legal_statistics', 'party_people_statistics', 'person_claims_for', 'search_public_records'];
+const reviewedFunctions = [
+  'election_education_distribution',
+  'election_index_page',
+  'election_party_performance',
+  'election_race_page',
+  'home_page_for',
+  'party_legal_statistics',
+  'party_people_statistics',
+  'person_profiles_for',
+  'race_page_for',
+  'region_page_for',
+  'search_public_records',
+];
+const retiredFrontendFunctions = ['home_candidate_summaries_for', 'person_claims_for'];
+const directlyQueriedFunctions = reviewedFunctions;
 const reviewedGrantedFunctions = [...reviewedAuxiliaryFunctions, ...reviewedFunctions];
 const issues = [];
 
@@ -129,6 +148,24 @@ for (const functionName of reviewedGrantedFunctions) {
   }
 }
 
+const boundaryTightening = read('supabase/migrations/20260827052016_narrow_published_frontend_access.sql');
+for (const relation of retiredFrontendRelations) {
+  if (!boundaryTightening.includes('published.' + relation)) {
+    addIssue('retired-relation-revoke-missing', 'The P2 migration does not revoke ' + relation + '.');
+  }
+}
+for (const functionName of retiredFrontendFunctions) {
+  if (!boundaryTightening.includes('published.' + functionName)) {
+    addIssue('retired-function-revoke-missing', 'The P2 migration does not revoke ' + functionName + '.');
+  }
+}
+if (!/REVOKE ALL ON TABLE[\s\S]*FROM PUBLIC, anon, authenticated;/u.test(boundaryTightening)) {
+  addIssue('retired-relation-revoke-block-missing', 'The P2 migration must revoke retired relations from browser roles.');
+}
+if ((boundaryTightening.match(/REVOKE ALL ON FUNCTION published\./gu) ?? []).length !== retiredFrontendFunctions.length) {
+  addIssue('retired-function-revoke-block-missing', 'The P2 migration must revoke retired functions from browser roles.');
+}
+
 const productionGrant = [publicAccessMigration, ...supplementalPublicAccessMigrations]
   .map(read)
   .join('\n');
@@ -188,7 +225,7 @@ const adapterRelations = Array.from(new Set(
   Array.from(adapterSource.matchAll(/\.from<[^>]+>\('([^']+)'\)/g), (match) => match[1]),
 )).sort();
 const adapterFunctions = Array.from(new Set(
-  Array.from(adapterSource.matchAll(/\.rpc(?:<[^>]+>)?\('([^']+)'/g), (match) => match[1]),
+  Array.from(adapterSource.matchAll(/\.rpc(?:<[^>]+>)?\(\s*'([^']+)'/g), (match) => match[1]),
 )).sort();
 
 if (JSON.stringify(adapterRelations) !== JSON.stringify(directlyQueriedRelations)) {
@@ -198,10 +235,10 @@ if (JSON.stringify(adapterRelations) !== JSON.stringify(directlyQueriedRelations
   );
 }
 
-if (JSON.stringify(adapterFunctions) !== JSON.stringify(reviewedFunctions)) {
+if (JSON.stringify(adapterFunctions) !== JSON.stringify(directlyQueriedFunctions)) {
   addIssue(
     'adapter-function-allowlist-mismatch',
-    `Expected ${reviewedFunctions.join(', ')}, found ${adapterFunctions.join(', ') || 'none'}.`,
+    `Expected ${directlyQueriedFunctions.join(', ')}, found ${adapterFunctions.join(', ') || 'none'}.`,
   );
 }
 

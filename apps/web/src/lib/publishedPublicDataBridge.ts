@@ -9,7 +9,6 @@ import type {
   PublicSearchResultType,
 } from './publicDataProvider';
 import type {
-  PublishedHomeCandidateSummaryRow,
   PublishedHomeTickerRow,
   PublishedPeopleDirectoryRow,
   PublishedPersonProfileRow,
@@ -98,7 +97,6 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadElectionPartyPerformance'
   | 'loadElectionRacePage'
   | 'loadRaceDetail'
-  | 'loadHomeCandidateSummaries'
   | 'loadPeoplePage'
   | 'loadPartyCandidatePage'
   | 'loadPersonProfiles'
@@ -111,7 +109,7 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadPartyLegalStatistics'
   | 'searchPublicRecords'
 > & {
-  loadHomePageData(): Promise<HomePageData>;
+  loadHomePageData(regionId?: string | null): Promise<HomePageData>;
   loadRegionDirectory(): Promise<StageRegionNode[]>;
   loadRegionPageData(regionSlug: string): Promise<PublishedRegionPageData>;
   loadPartyDirectory(): Promise<PublicParty[]>;
@@ -351,8 +349,8 @@ export function createPublishedPublicDataBridge(
   }
 
   return {
-    async loadHomePageData() {
-      const rows = await adapter.loadHomePage();
+    async loadHomePageData(regionId = null) {
+      const rows = await adapter.loadHomePage(regionId);
       const regionRows = rows.regionRows ?? [];
       const regionById = new Map(regionRows.map((region) => [region.region_id, region]));
       const stageRegions = regionRows.map((region, index) => {
@@ -366,6 +364,16 @@ export function createPublishedPublicDataBridge(
         stageRegions,
         stageRegionSummaries: rows.regionSummaryRows.map(mapRegionSummary),
         upcomingRaces: rows.raceRows.map(mapRace),
+        candidateSummaries: (rows.candidateRows ?? []).map((row) => {
+          const { gender, age_group: ageGroup, ...candidate } = row;
+          return { candidate, gender, birthDate: null, ageGroup };
+        }),
+        seatDistribution: (rows.seatRows ?? []).map((row) => ({
+          party: row.party_name?.trim() || '未知黨籍',
+          count: Number(row.seat_count) || 0,
+        })),
+        releaseId: rows.releaseId ?? null,
+        publishedAt: rows.publishedAt ?? null,
         dataPrinciples: publishedDataPrinciples,
       };
     },
@@ -438,14 +446,6 @@ export function createPublishedPublicDataBridge(
 
     loadElectionRacePage(eventKey, electionIds, filters, page, pageSize) {
       return adapter.loadElectionRacePage(eventKey, electionIds, filters, page, pageSize);
-    },
-
-    async loadHomeCandidateSummaries(raceIds) {
-      const rows = await adapter.loadHomeCandidateSummaries(raceIds);
-      return rows.map((row: PublishedHomeCandidateSummaryRow) => {
-        const { gender, birth_date: birthDate, ...candidate } = row;
-        return { candidate, gender, birthDate };
-      });
     },
 
     async loadRaceDetail(raceId) {

@@ -48,6 +48,10 @@ const emptyHomePageData: HomePageData = {
     '前端只讀經審核且有界的 published 發布資料。',
     '尚未載入公開發布資料。',
   ],
+  candidateSummaries: [],
+  seatDistribution: [],
+  releaseId: null,
+  publishedAt: null,
 };
 
 export type PublishedProviderAssembly = {
@@ -200,26 +204,23 @@ export function createPublishedPublicDataProvider(
       return regions;
     },
 
-    async loadHomePageData() {
-      const [homeResult, directoryResult] = await Promise.allSettled([
-        cached('home-page', pageDataStaleTimeMs, () => bridge.loadHomePageData()),
-        provider.loadRegionDirectory(),
-      ]);
-      if (homeResult.status === 'rejected') throw homeResult.reason;
-      const nextHomeData = homeResult.value;
-      const directoryRegions = directoryResult.status === 'fulfilled'
-        ? directoryResult.value
-        : homeData.stageRegions;
-      const stageRegions = nextHomeData.stageRegions.length > 0
-        ? nextHomeData.stageRegions
-        : directoryRegions;
-      const loadedRegionRaces = Array.from(regionRacesByRegionId.values())
-        .flat();
+    async loadHomePageData(regionId = null) {
+      const normalizedRegionId = regionId?.trim() || null;
+      const nextHomeData = await cached(
+        `home-page:${normalizedRegionId ?? 'national'}`,
+        pageDataStaleTimeMs,
+        () => bridge.loadHomePageData(normalizedRegionId),
+      );
+      const loadedRegionRaces = Array.from(regionRacesByRegionId.values()).flat();
       homeData = {
         ...nextHomeData,
-        stageRegions,
         upcomingRaces: mergeByKey(nextHomeData.upcomingRaces, loadedRegionRaces, (race) => race.id),
       };
+      candidates = mergeByKey(
+        candidates,
+        (nextHomeData.candidateSummaries ?? []).map((summary) => summary.candidate),
+        (candidate) => candidate.candidate_id,
+      );
       return homeData;
     },
 
@@ -356,14 +357,6 @@ export function createPublishedPublicDataProvider(
       candidates = mergeByKey(candidates, result.candidates, (candidate) => candidate.candidate_id);
       notifyPublicDataReady();
       return result;
-    },
-
-    async loadHomeCandidateSummaries(raceIds: string[]) {
-      const normalizedIds = Array.from(new Set(raceIds.map((raceId) => raceId.trim()).filter(Boolean))).sort();
-      const summaries = await cached(`home-candidates:${normalizedIds.join(',')}`, pageDataStaleTimeMs, () =>
-        bridge.loadHomeCandidateSummaries(normalizedIds));
-      candidates = mergeByKey(candidates, summaries.map((summary) => summary.candidate), (candidate) => candidate.candidate_id);
-      return summaries;
     },
 
     getPollComparisonByElectionId(): PollComparison | null {

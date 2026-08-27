@@ -9,39 +9,42 @@ const envPath = path.join(webRoot, '.env.local');
 
 const readableRelations = [
   'active_party_candidates',
-  'candidates',
   'current_legislator_party_summary',
   'election_race_facets',
-  'election_race_summaries',
-  'elections',
-  'home_candidate_summaries',
-  'home_region_summary',
-  'home_ticker',
   'national_office_holders',
   'parties',
   'party_annual_finance_filings',
   'party_company_contribution_summaries',
   'party_finance_summaries',
   'party_officers',
-  'people',
   'people_directory',
+  'regions',
+  'update_feed',
+];
+
+const blockedRelations = [
+  'candidates',
+  'election_race_summaries',
+  'elections',
+  'home_candidate_summaries',
+  'home_region_summary',
+  'home_ticker',
+  'party_name_aliases',
+  'people',
   'person_party_affiliations',
   'races',
   'referendum_options',
   'referendum_questions',
   'referendum_region_results',
-  'regions',
   'search_results',
-  'update_feed',
 ];
 
 const requiredNonEmptyRelations = new Set([
-  'candidates',
-  'elections',
-  'people',
-  'races',
+  'current_legislator_party_summary',
+  'national_office_holders',
+  'parties',
+  'people_directory',
   'regions',
-  'search_results',
 ]);
 
 function parseEnv(content) {
@@ -56,6 +59,13 @@ function parseEnv(content) {
         line.slice(separator + 1).trim().replace(/^['"]|['"]$/gu, ''),
       ];
     }));
+}
+
+function assertPayloadVersion(payload, label) {
+  if (payload?.api_version !== 1) fail(label + ' returned an unsupported API version');
+  if (typeof payload.release_id !== 'string' || typeof payload.published_at !== 'string') {
+    fail(label + ' returned invalid release metadata');
+  }
 }
 
 function fail(message) {
@@ -106,37 +116,33 @@ async function main() {
     }
   }
 
-  const personResponse = await published
-    .from('people')
-    .select('person_id,name')
-    .eq('name', '蔣萬安')
-    .limit(1);
-  const person = personResponse.data?.[0];
-  if (personResponse.error || !person) fail(`recognizable person is unavailable: ${personResponse.error?.message ?? 'missing row'}`);
-
-  const claimsResponse = await published.rpc('person_claims_for', { p_person_ids: [person.person_id] });
-  if (claimsResponse.error) fail(`person_claims_for is unavailable: ${claimsResponse.error.message}`);
-  if (!claimsResponse.data?.some((claim) => claim.claim_type === 'finance_summary')) {
-    fail('person_claims_for did not return the reviewed candidate finance summary');
+  for (const relation of blockedRelations) {
+    const result = await published.from(relation).select('*').limit(1);
+    if (!result.error) fail('anon can read retired published.' + relation);
   }
 
   const searchResponse = await published.rpc('search_public_records', { p_query: '蔣萬安', p_limit: 3 });
-  if (searchResponse.error) fail(`search_public_records is unavailable: ${searchResponse.error.message}`);
-  if (!searchResponse.data?.some((row) => row.title === '蔣萬安')) {
-    fail('published search did not return the recognizable person');
+  if (searchResponse.error) fail('search_public_records is unavailable: ' + searchResponse.error.message);
+  const person = searchResponse.data?.find((row) => row.title === '蔣萬安');
+  if (!person) fail('published search did not return the recognizable person');
+
+  const personProfiles = await published.rpc('person_profiles_for', { p_person_ids: [person.entity_id] });
+  if (personProfiles.error) fail('person_profiles_for is unavailable: ' + personProfiles.error.message);
+  const personPayload = personProfiles.data?.[0]?.payload;
+  assertPayloadVersion(personPayload, 'person_profiles_for');
+  if (!personPayload.claim_rows?.some((claim) => claim.claim_type === 'finance_summary')) {
+    fail('person_profiles_for did not return the reviewed candidate finance summary');
   }
 
-  const electionResponse = await published
-    .from('elections')
-    .select('election_id,name,year,election_type,voting_date')
-    .eq('year', 2022)
-    .ilike('name', '%市長%')
-    .not('voting_date', 'is', null)
-    .order('election_id', { ascending: true })
-    .limit(1);
-  const election = electionResponse.data?.[0];
-  if (electionResponse.error || !election) fail(`election race search anchor is unavailable: ${electionResponse.error?.message ?? 'missing row'}`);
-  const eventKey = `${election.voting_date.slice(0, 4)}-${election.voting_date}-${electionCategory(election.election_type)}`;
+  const electionIndex = await published.rpc('election_index_page');
+  if (electionIndex.error) fail('election_index_page is unavailable: ' + electionIndex.error.message);
+  const electionPayload = electionIndex.data?.[0]?.payload;
+  assertPayloadVersion(electionPayload, 'election_index_page');
+  const election = electionPayload.election_rows?.find((row) => (
+    row.year === 2022 && row.name.includes('市長') && row.voting_date
+  ));
+  if (!election) fail('election race search anchor is unavailable');
+  const eventKey = election.voting_date.slice(0, 4) + '-' + election.voting_date + '-' + electionCategory(election.election_type);
   const racePageResponse = await published.rpc('election_race_page', {
     p_event_key: eventKey,
     p_election_ids: [election.election_id],
@@ -146,10 +152,15 @@ async function main() {
     p_page: 1,
     p_page_size: 1,
   });
-  if (racePageResponse.error) fail(`election_race_page is unavailable: ${racePageResponse.error.message}`);
+  if (racePageResponse.error) fail('election_race_page is unavailable: ' + racePageResponse.error.message);
   if (!racePageResponse.data?.[0] || Number(racePageResponse.data[0].total) < 1) {
     fail('election_race_page returned no reviewed races');
   }
+
+  const retiredHomeSummary = await published.rpc('home_candidate_summaries_for', { p_race_ids: [] });
+  if (!retiredHomeSummary.error) fail('anon can execute retired home_candidate_summaries_for');
+  const retiredPersonClaims = await published.rpc('person_claims_for', { p_person_ids: [person.entity_id] });
+  if (!retiredPersonClaims.error) fail('anon can execute retired person_claims_for');
 
   const releaseState = await published.from('release_state').select('*').limit(1);
   if (!releaseState.error) fail('anon can read internal published.release_state');

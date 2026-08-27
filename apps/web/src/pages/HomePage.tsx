@@ -17,52 +17,38 @@ export function HomePage() {
   const { t } = useI18n();
   const { selectedRegionId: storedRegionId, setSelectedRegionId } = useSelectedRegion();
   const [searchParams, setSearchParams] = useSearchParams();
+  const requestedRegionId = searchParams.get('region');
+  const requestedHomeRegionId = requestedRegionId ?? storedRegionId;
   const [homeData, setHomeData] = useState(() => publicDataProvider.getHomePageData());
+  const [homeLoading, setHomeLoading] = useState(true);
+  const [homeLoadError, setHomeLoadError] = useState(false);
   useEffect(() => {
     let active = true;
-    void publicDataProvider.loadHomePageData()
+    const regionId = !requestedHomeRegionId || requestedHomeRegionId === NATIONAL_REGION_QUERY
+      ? null
+      : requestedHomeRegionId;
+    setHomeLoading(true);
+    setHomeLoadError(false);
+    void publicDataProvider.loadHomePageData(regionId)
       .then((data) => {
         if (active) setHomeData(data);
       })
       .catch((error: unknown) => {
+        if (active) setHomeLoadError(true);
         if (import.meta.env.DEV) console.warn('Failed to load home data', error);
+      })
+      .finally(() => {
+        if (active) setHomeLoading(false);
       });
     return () => { active = false; };
-  }, []);
-  const requestedRegionId = searchParams.get('region');
+  }, [requestedHomeRegionId]);
   const selectedRegionId = selectHomeRegionId(
     homeData.stageRegions,
     requestedRegionId ?? storedRegionId,
   );
   const isNationalView = selectedRegionId === null;
-  const [relatedRaces, setRelatedRaces] = useState(() => (
-    selectHomeRelatedRaces(homeData, selectedRegionId)
-  ));
+  const relatedRaces = selectHomeRelatedRaces(homeData, selectedRegionId);
   const [, startTransition] = useTransition();
-  useEffect(() => {
-    let active = true;
-    setRelatedRaces(selectHomeRelatedRaces(homeData, selectedRegionId));
-    if (!selectedRegionId) {
-      return () => {
-        active = false;
-      };
-    }
-
-    void publicDataProvider.loadRelatedRacesByRegionId(selectedRegionId)
-      .then((races) => {
-        if (active) {
-          setRelatedRaces(selectHomeRelatedRaces({
-            stageRegions: homeData.stageRegions,
-            upcomingRaces: races,
-          }, selectedRegionId));
-        }
-      })
-      .catch(() => undefined);
-
-    return () => {
-      active = false;
-    };
-  }, [homeData, selectedRegionId]);
 
   const selectedRegionNode = selectedRegionId ? publicDataProvider.getStageRegion(selectedRegionId) : null;
   const selectedRegionSummary = selectedRegionId ? publicDataProvider.getRegionSummary(selectedRegionId) : null;
@@ -77,9 +63,12 @@ export function HomePage() {
   }, [homeData.stageRegions.length, selectedRegionId, setSelectedRegionId, storedRegionId]);
 
   const handleSelectRegion = useCallback((regionId: string | null) => {
-    if (regionId === selectedRegionId && searchParams.get('region') === regionId) {
-      return;
-    }
+    const currentRegionQuery = searchParams.get('region');
+    const alreadyExplicitlySelected = regionId === selectedRegionId
+      && (regionId === null
+        ? currentRegionQuery === NATIONAL_REGION_QUERY
+        : currentRegionQuery === regionId);
+    if (alreadyExplicitlySelected) return;
 
     const nextRegionId = regionId ?? NATIONAL_REGION_QUERY;
     setSelectedRegionId(nextRegionId);
@@ -112,6 +101,9 @@ export function HomePage() {
             regionNode={selectedRegionNode}
             regionSummary={selectedRegionSummary}
             national={isNationalView}
+            candidateSummaries={homeData.candidateSummaries ?? []}
+            candidatesLoading={homeLoading}
+            candidateLoadError={homeLoadError}
           />
         </section>
 
@@ -120,6 +112,8 @@ export function HomePage() {
             regionId={selectedRegionId}
             regionLabel={selectedRegionLabel}
             national={isNationalView}
+            partyCounts={homeData.seatDistribution ?? []}
+            loading={homeLoading}
           />
           <RegionIssueConcernPanel
             regionId={isNationalView ? null : selectedRegionNode?.publicRegionId ?? null}

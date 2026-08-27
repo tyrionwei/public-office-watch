@@ -44,6 +44,7 @@ type PersonFeedbackInput = {
 };
 
 const participantStorageKey = 'public-office-watch:person-feedback-participant';
+const feedbackContextRequests = new Map<string, Promise<PersonFeedbackContext>>();
 
 function getParticipantToken() {
   if (typeof window === 'undefined') return null;
@@ -65,17 +66,26 @@ export async function fetchPersonFeedbackContext(personId: string): Promise<Pers
   const participantToken = getParticipantToken();
   if (!client || !participantToken) return emptyContext();
 
-  const { data, error } = await client.schema('published').rpc('get_person_feedback_context', {
+  const requestKey = `${personId}:${participantToken}`;
+  const existingRequest = feedbackContextRequests.get(requestKey);
+  if (existingRequest) return existingRequest;
+
+  const request = Promise.resolve(client.schema('published').rpc('get_person_feedback_context', {
     p_person_id: personId,
     p_participant_token: participantToken,
+  })).then(({ data, error }) => {
+    if (error) throw error;
+    const context = data && typeof data === 'object' ? data as Partial<PersonFeedbackContext> : {};
+    return {
+      priorities: Array.isArray(context.priorities) ? context.priorities : [],
+      ownSubmissions: Array.isArray(context.ownSubmissions) ? context.ownSubmissions : [],
+    };
+  }).finally(() => {
+    feedbackContextRequests.delete(requestKey);
   });
 
-  if (error) throw error;
-  const context = data && typeof data === 'object' ? data as Partial<PersonFeedbackContext> : {};
-  return {
-    priorities: Array.isArray(context.priorities) ? context.priorities : [],
-    ownSubmissions: Array.isArray(context.ownSubmissions) ? context.ownSubmissions : [],
-  };
+  feedbackContextRequests.set(requestKey, request);
+  return request;
 }
 
 export async function submitPersonFeedback(input: PersonFeedbackInput) {

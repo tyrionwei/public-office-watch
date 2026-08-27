@@ -35,7 +35,6 @@ import {
 
 export const HOME_REGION_LIMIT = 32;
 export const HOME_RACE_LIMIT = 24;
-export const HOME_CANDIDATE_RACE_LIMIT = 24;
 export const HOME_CANDIDATE_SUMMARY_LIMIT = 400;
 export const REGION_CHILD_LIMIT = 64;
 export const REGION_RACE_LIMIT = 24;
@@ -64,14 +63,6 @@ export const PARTY_OFFICER_LIMIT = 200;
 export const PARTY_PEOPLE_STATISTICS_LIMIT = 19;
 export const PERSON_PARTY_AFFILIATION_LIMIT = 100;
 export const PUBLIC_UPDATE_LIMIT = 50;
-
-const ACTIVE_RACE_STATUSES: PublicRace['status'][] = [
-  'announced',
-  'upcoming',
-  'registration_open',
-  'candidates_announced',
-  'voting',
-];
 
 const LOCAL_OFFICE_ROLES: PublicPersonRole[] = [
   'local_chief',
@@ -515,9 +506,14 @@ export type PublishedPeopleDirectoryRow = {
   list_role_order: number;
 };
 
-export type PublishedHomeCandidateSummaryRow = PublicCandidate & {
+export type PublishedHomePageCandidateRow = PublicCandidate & {
   gender: PublishedPeopleDirectoryRow['gender'];
-  birth_date: string | null;
+  age_group: 'under-40' | '40-49' | '50-59' | '60-plus' | null;
+};
+
+export type PublishedHomeSeatRow = {
+  party_name: string | null;
+  seat_count: number;
 };
 
 export type PublishedNationalOfficeHolderRow = PublicNationalOfficeHolder;
@@ -568,10 +564,71 @@ export type PublishedPartyCandidatePage = {
 };
 
 export type PublishedHomePageRows = {
+  apiVersion: number;
+  releaseId: string | null;
+  publishedAt: string | null;
   tickerRows: PublishedHomeTickerRow[];
   regionSummaryRows: PublishedRegionSummaryRow[];
-  regionRows?: PublishedRegionRow[];
+  regionRows: PublishedRegionRow[];
   raceRows: PublishedRaceRow[];
+  candidateRows: PublishedHomePageCandidateRow[];
+  seatRows: PublishedHomeSeatRow[];
+};
+
+type PublishedPayloadMetadata = {
+  api_version: number;
+  release_id: string | null;
+  published_at: string | null;
+};
+
+type PublishedHomePagePayloadRow = {
+  payload: PublishedPayloadMetadata & {
+    release_id: string | null;
+    published_at: string | null;
+    ticker_rows: PublishedHomeTickerRow[];
+    region_summary_rows: PublishedRegionSummaryRow[];
+    region_rows: PublishedRegionRow[];
+    race_rows: PublishedRaceRow[];
+    candidate_rows: PublishedHomePageCandidateRow[];
+    seat_rows: PublishedHomeSeatRow[];
+  };
+};
+
+type PublishedRegionPagePayloadRow = {
+  payload: PublishedPayloadMetadata & {
+    region_row: PublishedRegionRow | null;
+    summary_row: PublishedRegionSummaryRow | null;
+    child_region_rows: PublishedRegionRow[];
+    race_rows: PublishedRaceRow[];
+  };
+};
+
+type PublishedElectionIndexPayloadRow = {
+  payload: PublishedPayloadMetadata & {
+    election_rows: PublishedElectionRow[];
+    race_summary_rows: PublishedElectionRaceSummaryRow[];
+  };
+};
+
+type PublishedRacePagePayloadRow = {
+  payload: PublishedPayloadMetadata & {
+    race_row: PublicRace | null;
+    election_row: PublicElection | null;
+    candidate_rows: PublicCandidate[];
+    party_affiliation_rows: PublicPersonPartyAffiliation[];
+    referendum_question_row: PublicReferendumQuestion | null;
+    referendum_option_rows: PublicReferendumOption[];
+    referendum_region_result_rows: PublicReferendumRegionResult[];
+  };
+};
+
+type PublishedPersonProfilesPayloadRow = {
+  payload: PublishedPayloadMetadata & {
+    person_rows: PublishedPersonProfileRow[];
+    candidate_rows: PublicCandidate[];
+    claim_rows: PublicPersonClaim[];
+    party_affiliation_rows: PublicPersonPartyAffiliation[];
+  };
 };
 
 export type PublishedPartyCompanyContributionPage = {
@@ -654,7 +711,7 @@ export interface PublishedSchemaClient {
 }
 
 export type PublishedReadAdapter = {
-  loadHomePage(): Promise<PublishedHomePageRows>;
+  loadHomePage(regionSlug?: string | null): Promise<PublishedHomePageRows>;
   loadRegionDirectory(): Promise<PublishedRegionRow[]>;
   loadRegionPage(regionSlug: string): Promise<PublishedRegionPageRows>;
   loadElectionIndex(): Promise<PublishedElectionIndexRows>;
@@ -677,7 +734,6 @@ export type PublishedReadAdapter = {
     pageSize: number,
   ): Promise<PublishedElectionRacePage>;
   loadRaceDetail(raceId: string): Promise<PublishedRaceDetailRows>;
-  loadHomeCandidateSummaries(raceIds: string[]): Promise<PublishedHomeCandidateSummaryRow[]>;
   loadLocalOfficePeople(districtPrefixes: string[]): Promise<PublishedPeopleDirectoryRow[]>;
   loadNationalOfficeHolders(): Promise<PublishedNationalOfficeHolderRow[]>;
   loadCurrentLegislatorPartySummary(): Promise<PublishedLegislatorPartySummaryRow[]>;
@@ -720,22 +776,34 @@ function getBoundedRowsOrThrow<Row>(
   return rows;
 }
 
+function getBoundedPayloadRows<Row>(value: unknown, label: string, limit: number) {
+  if (!Array.isArray(value)) {
+    throw new Error(label + ' returned an invalid payload.');
+  }
+  if (value.length > limit) {
+    throw new Error(label + ' exceeded the ' + limit + '-row batch limit.');
+  }
+  return value as Row[];
+}
+
+function assertPayloadMetadata(payload: PublishedPayloadMetadata, label: string) {
+  if (payload.api_version !== 1) {
+    throw new Error(label + ' returned an unsupported API version.');
+  }
+  if (payload.release_id !== null && typeof payload.release_id !== 'string') {
+    throw new Error(label + ' returned an invalid release id.');
+  }
+  if (payload.published_at !== null && typeof payload.published_at !== 'string') {
+    throw new Error(label + ' returned an invalid publication timestamp.');
+  }
+}
+
 function normalizePersonIds(personIds: string[]) {
   const normalized = Array.from(new Set(
     personIds.map((personId) => personId.trim()).filter(Boolean),
   ));
   if (normalized.length > PERSON_PROFILE_BATCH_LIMIT) {
     throw new Error(`Published person profiles accept at most ${PERSON_PROFILE_BATCH_LIMIT} person ids.`);
-  }
-  return normalized;
-}
-
-function normalizeHomeCandidateRaceIds(raceIds: string[]) {
-  const normalized = Array.from(new Set(
-    raceIds.map((raceId) => raceId.trim()).filter(Boolean),
-  ));
-  if (normalized.length > HOME_CANDIDATE_RACE_LIMIT) {
-    throw new Error(`Published home candidate summaries accept at most ${HOME_CANDIDATE_RACE_LIMIT} race ids.`);
   }
   return normalized;
 }
@@ -760,35 +828,53 @@ function normalizeElectionRacePageIds(electionIds: string[]) {
 
 export function createPublishedReadAdapter(client: PublishedSchemaClient): PublishedReadAdapter {
   return {
-    async loadHomePage() {
-      const published = client.schema('published');
-      const [tickerResponse, regionSummaryResponse, raceResponse] = await Promise.all([
-        published
-          .from<PublishedHomeTickerRow>('home_ticker')
-          .select(HOME_TICKER_COLUMNS)
-          .order('voting_date', { ascending: true })
-          .order('election_id', { ascending: true })
-          .limit(1),
-        published
-          .from<PublishedRegionSummaryRow>('home_region_summary')
-          .select(HOME_REGION_SUMMARY_COLUMNS)
-          .order('region_name', { ascending: true })
-          .order('region_id', { ascending: true })
-          .limit(HOME_REGION_LIMIT),
-        published
-          .from<PublishedRaceRow>('races')
-          .select(RACE_COLUMNS)
-          .in('status', ACTIVE_RACE_STATUSES)
-          .order('voting_date', { ascending: true })
-          .order('title', { ascending: true })
-          .order('race_id', { ascending: true })
-          .limit(HOME_RACE_LIMIT),
-      ]);
+    async loadHomePage(rawRegionSlug = null) {
+      const regionSlug = rawRegionSlug?.trim() || null;
+      const response = await client.schema('published').rpc<PublishedHomePagePayloadRow>(
+        'home_page_for',
+        { p_region_slug: regionSlug },
+      );
+      const rows = getBoundedRowsOrThrow(response, 'Published home page', 1);
+      const payload = rows[0]?.payload;
+      if (!payload || typeof payload !== 'object') {
+        throw new Error('Published home page returned an invalid payload.');
+      }
+      assertPayloadMetadata(payload, 'Published home page');
 
       return {
-        tickerRows: getRowsOrThrow(tickerResponse, 'Published home ticker'),
-        regionSummaryRows: getRowsOrThrow(regionSummaryResponse, 'Published home region summary'),
-        raceRows: getRowsOrThrow(raceResponse, 'Published home races'),
+        apiVersion: payload.api_version,
+        releaseId: payload.release_id ?? null,
+        publishedAt: payload.published_at ?? null,
+        tickerRows: getBoundedPayloadRows<PublishedHomeTickerRow>(
+          payload.ticker_rows,
+          'Published home ticker',
+          1,
+        ),
+        regionSummaryRows: getBoundedPayloadRows<PublishedRegionSummaryRow>(
+          payload.region_summary_rows,
+          'Published home region summaries',
+          HOME_REGION_LIMIT,
+        ),
+        regionRows: getBoundedPayloadRows<PublishedRegionRow>(
+          payload.region_rows,
+          'Published home regions',
+          HOME_REGION_LIMIT,
+        ),
+        raceRows: getBoundedPayloadRows<PublishedRaceRow>(
+          payload.race_rows,
+          'Published home races',
+          HOME_RACE_LIMIT,
+        ),
+        candidateRows: getBoundedPayloadRows<PublishedHomePageCandidateRow>(
+          payload.candidate_rows,
+          'Published home candidates',
+          HOME_CANDIDATE_SUMMARY_LIMIT,
+        ),
+        seatRows: getBoundedPayloadRows<PublishedHomeSeatRow>(
+          payload.seat_rows,
+          'Published home seat distribution',
+          LEGISLATOR_PARTY_SUMMARY_LIMIT,
+        ),
       };
     },
 
@@ -817,84 +903,57 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         };
       }
 
-      const published = client.schema('published');
-      const [regionResponse, summaryResponse, raceResponse] = await Promise.all([
-        published
-          .from<PublishedRegionRow>('regions')
-          .select(REGION_COLUMNS)
-          .eq('slug', regionSlug)
-          .order('region_id', { ascending: true })
-          .limit(1),
-        published
-          .from<PublishedRegionSummaryRow>('home_region_summary')
-          .select(HOME_REGION_SUMMARY_COLUMNS)
-          .eq('region_slug', regionSlug)
-          .order('region_id', { ascending: true })
-          .limit(1),
-        published
-          .from<PublishedRaceRow>('races')
-          .select(RACE_COLUMNS)
-          .eq('region_slug', regionSlug)
-          .in('status', ACTIVE_RACE_STATUSES)
-          .order('voting_date', { ascending: true })
-          .order('title', { ascending: true })
-          .order('race_id', { ascending: true })
-          .limit(REGION_RACE_LIMIT),
-      ]);
-      const regionRow = getRowsOrThrow(regionResponse, 'Published region')[0] ?? null;
-      const summaryRow = getRowsOrThrow(summaryResponse, 'Published region summary')[0] ?? null;
-      const raceRows = getRowsOrThrow(raceResponse, 'Published region races');
-
-      if (!regionRow) {
-        return { regionRow: null, summaryRow, childRegionRows: [], raceRows };
+      const response = await client.schema('published').rpc<PublishedRegionPagePayloadRow>(
+        'region_page_for',
+        { p_region_slug: regionSlug },
+      );
+      const rows = getBoundedRowsOrThrow(response, 'Published region page', 1);
+      const payload = rows[0]?.payload;
+      if (!payload || typeof payload !== 'object') {
+        throw new Error('Published region page returned an invalid payload.');
       }
-
-      const childResponse = await published
-        .from<PublishedRegionRow>('regions')
-        .select(REGION_COLUMNS)
-        .eq('parent_region_id', regionRow.region_id)
-        .order('display_order', { ascending: true })
-        .order('name', { ascending: true })
-        .order('region_id', { ascending: true })
-        .limit(REGION_CHILD_LIMIT);
+      assertPayloadMetadata(payload, 'Published region page');
 
       return {
-        regionRow,
-        summaryRow,
-        childRegionRows: getRowsOrThrow(childResponse, 'Published child regions'),
-        raceRows,
+        regionRow: payload.region_row ?? null,
+        summaryRow: payload.summary_row ?? null,
+        childRegionRows: getBoundedPayloadRows<PublishedRegionRow>(
+          payload.child_region_rows,
+          'Published child regions',
+          REGION_CHILD_LIMIT,
+        ),
+        raceRows: getBoundedPayloadRows<PublishedRaceRow>(
+          payload.race_rows,
+          'Published region races',
+          REGION_RACE_LIMIT,
+        ),
       };
     },
 
     async loadElectionIndex() {
-      const published = client.schema('published');
-      const electionResponse = await published
-        .from<PublishedElectionRow>('elections')
-        .select(ELECTION_COLUMNS)
-        .order('year', { ascending: false, nullsFirst: false })
-        .order('voting_date', { ascending: false, nullsFirst: false })
-        .order('name', { ascending: true })
-        .order('election_id', { ascending: true })
-        .limit(ELECTION_INDEX_LIMIT);
-      const electionRows = getRowsOrThrow(electionResponse, 'Published elections');
-      const electionIds = electionRows.map((row) => row.election_id);
-      const raceSummaryBatches: string[][] = [];
-
-      for (let index = 0; index < electionIds.length; index += ELECTION_ID_BATCH_SIZE) {
-        raceSummaryBatches.push(electionIds.slice(index, index + ELECTION_ID_BATCH_SIZE));
+      const response = await client.schema('published').rpc<PublishedElectionIndexPayloadRow>(
+        'election_index_page',
+        {},
+      );
+      const rows = getBoundedRowsOrThrow(response, 'Published election index', 1);
+      const payload = rows[0]?.payload;
+      if (!payload || typeof payload !== 'object') {
+        throw new Error('Published election index returned an invalid payload.');
       }
+      assertPayloadMetadata(payload, 'Published election index');
 
-      const raceSummaryRows = (await Promise.all(raceSummaryBatches.map(async (chunk) => {
-        const response = await published
-          .from<PublishedElectionRaceSummaryRow>('election_race_summaries')
-          .select(ELECTION_RACE_SUMMARY_COLUMNS)
-          .in('election_id', chunk)
-          .order('election_id', { ascending: true })
-          .limit(chunk.length);
-        return getRowsOrThrow(response, 'Published election race summaries');
-      }))).flat();
-
-      return { electionRows, raceSummaryRows };
+      return {
+        electionRows: getBoundedPayloadRows<PublishedElectionRow>(
+          payload.election_rows,
+          'Published elections',
+          ELECTION_INDEX_LIMIT,
+        ),
+        raceSummaryRows: getBoundedPayloadRows<PublishedElectionRaceSummaryRow>(
+          payload.race_summary_rows,
+          'Published election race summaries',
+          ELECTION_INDEX_LIMIT,
+        ),
+      };
     },
 
     async loadElectionRaceFacets(rawElectionIds) {
@@ -1014,21 +1073,6 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       return { items: result.items, total: Number(result.total) };
     },
 
-    async loadHomeCandidateSummaries(rawRaceIds) {
-      const raceIds = normalizeHomeCandidateRaceIds(rawRaceIds);
-      if (raceIds.length === 0) return [];
-
-      const response = await client.schema('published').rpc<PublishedHomeCandidateSummaryRow>('home_candidate_summaries_for', {
-        p_race_ids: raceIds,
-      });
-
-      return getBoundedRowsOrThrow(
-        response,
-        'Published home candidate summaries',
-        HOME_CANDIDATE_SUMMARY_LIMIT,
-      );
-    },
-
     async loadRaceDetail(rawRaceId) {
       const raceId = rawRaceId.trim();
       if (!raceId) {
@@ -1043,104 +1087,41 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         };
       }
 
-      const published = client.schema('published');
-      const raceResponse = await published
-        .from<PublicRace>('races')
-        .select(RACE_DETAIL_COLUMNS)
-        .eq('race_id', raceId)
-        .limit(1);
-      const raceRow = getRowsOrThrow(raceResponse, 'Published race detail')[0] ?? null;
-
-      if (!raceRow) {
-        return {
-          raceRow: null,
-          electionRow: null,
-          candidateRows: [],
-          partyAffiliationRows: [],
-          referendumQuestionRow: null,
-          referendumOptionRows: [],
-          referendumRegionResultRows: [],
-        };
-      }
-
-      const [electionResponse, candidateResponse, referendumQuestionResponse] = await Promise.all([
-        published
-          .from<PublicElection>('elections')
-          .select(ELECTION_COLUMNS)
-          .eq('election_id', raceRow.election_id)
-          .limit(1),
-        published
-          .from<PublicCandidate>('candidates')
-          .select(PERSON_CANDIDATE_COLUMNS)
-          .eq('race_id', raceId)
-          .order('candidate_no', { ascending: true, nullsFirst: false })
-          .order('person_name', { ascending: true })
-          .order('candidate_id', { ascending: true })
-          .limit(RACE_DETAIL_CANDIDATE_LIMIT + 1),
-        published
-          .from<PublicReferendumQuestion>('referendum_questions')
-          .select(REFERENDUM_QUESTION_COLUMNS)
-          .eq('race_id', raceId)
-          .limit(1),
-      ]);
-
-      const candidateRows = getBoundedRowsOrThrow(
-        candidateResponse,
-        'Published race candidates',
-        RACE_DETAIL_CANDIDATE_LIMIT,
+      const response = await client.schema('published').rpc<PublishedRacePagePayloadRow>(
+        'race_page_for',
+        { p_race_id: raceId },
       );
-      const personIds = Array.from(new Set(candidateRows.map((candidate) => candidate.person_id).filter(Boolean)));
-      const partyAffiliationRows = personIds.length === 0
-        ? []
-        : getBoundedRowsOrThrow(
-          await published
-            .from<PublicPersonPartyAffiliation>('person_party_affiliations')
-            .select(PERSON_PARTY_AFFILIATION_COLUMNS)
-            .in('person_id', personIds)
-            .order('person_id', { ascending: true })
-            .order('observed_year', { ascending: false, nullsFirst: false })
-            .order('affiliation_id', { ascending: true })
-            .limit(RACE_DETAIL_PARTY_AFFILIATION_LIMIT + 1),
-          'Published race party affiliations',
-          RACE_DETAIL_PARTY_AFFILIATION_LIMIT,
-        );
-      const referendumQuestionRow = getRowsOrThrow(
-        referendumQuestionResponse,
-        'Published referendum question',
-      )[0] ?? null;
-      const [referendumOptionRows, referendumRegionResultRows] = referendumQuestionRow === null
-        ? [[], []]
-        : await Promise.all([
-          getBoundedRowsOrThrow(
-            await published
-              .from<PublicReferendumOption>('referendum_options')
-              .select(REFERENDUM_OPTION_COLUMNS)
-              .eq('question_id', referendumQuestionRow.question_id)
-              .order('display_order', { ascending: true })
-              .limit(RACE_DETAIL_REFERENDUM_OPTION_LIMIT + 1),
-            'Published referendum options',
-            RACE_DETAIL_REFERENDUM_OPTION_LIMIT,
-          ),
-          getBoundedRowsOrThrow(
-            await published
-              .from<PublicReferendumRegionResult>('referendum_region_results')
-              .select(REFERENDUM_REGION_RESULT_COLUMNS)
-              .eq('question_id', referendumQuestionRow.question_id)
-              .order('region_name', { ascending: true })
-              .limit(RACE_DETAIL_REFERENDUM_REGION_LIMIT + 1),
-            'Published referendum region results',
-            RACE_DETAIL_REFERENDUM_REGION_LIMIT,
-          ),
-        ]);
+      const rows = getBoundedRowsOrThrow(response, 'Published race page', 1);
+      const payload = rows[0]?.payload;
+      if (!payload || typeof payload !== 'object') {
+        throw new Error('Published race page returned an invalid payload.');
+      }
+      assertPayloadMetadata(payload, 'Published race page');
 
       return {
-        raceRow,
-        electionRow: getRowsOrThrow(electionResponse, 'Published race election')[0] ?? null,
-        candidateRows,
-        partyAffiliationRows,
-        referendumQuestionRow,
-        referendumOptionRows,
-        referendumRegionResultRows,
+        raceRow: payload.race_row ?? null,
+        electionRow: payload.election_row ?? null,
+        candidateRows: getBoundedPayloadRows<PublicCandidate>(
+          payload.candidate_rows,
+          'Published race candidates',
+          RACE_DETAIL_CANDIDATE_LIMIT,
+        ),
+        partyAffiliationRows: getBoundedPayloadRows<PublicPersonPartyAffiliation>(
+          payload.party_affiliation_rows,
+          'Published race party affiliations',
+          RACE_DETAIL_PARTY_AFFILIATION_LIMIT,
+        ),
+        referendumQuestionRow: payload.referendum_question_row ?? null,
+        referendumOptionRows: getBoundedPayloadRows<PublicReferendumOption>(
+          payload.referendum_option_rows,
+          'Published referendum options',
+          RACE_DETAIL_REFERENDUM_OPTION_LIMIT,
+        ),
+        referendumRegionResultRows: getBoundedPayloadRows<PublicReferendumRegionResult>(
+          payload.referendum_region_result_rows,
+          'Published referendum region results',
+          RACE_DETAIL_REFERENDUM_REGION_LIMIT,
+        ),
       };
     },
 
@@ -1414,52 +1395,35 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         return { personRows: [], candidateRows: [], claimRows: [], partyAffiliationRows: [] };
       }
 
-      const published = client.schema('published');
-      const [personResponse, candidateResponse, claimResponse, partyAffiliationResponse] = await Promise.all([
-        published
-          .from<PublishedPersonProfileRow>('people')
-          .select(PERSON_PROFILE_COLUMNS)
-          .in('person_id', personIds)
-          .order('person_id', { ascending: true })
-          .limit(personIds.length),
-        published
-          .from<PublicCandidate>('candidates')
-          .select(PERSON_CANDIDATE_COLUMNS)
-          .in('person_id', personIds)
-          .order('person_id', { ascending: true })
-          .order('election_year', { ascending: false, nullsFirst: false })
-          .order('race_id', { ascending: true })
-          .order('candidate_id', { ascending: true })
-          .limit(PERSON_CANDIDATE_LIMIT + 1),
-        published.rpc<PublicPersonClaim>('person_claims_for', {
-          p_person_ids: personIds,
-        }),
-        published
-          .from<PublicPersonPartyAffiliation>('person_party_affiliations')
-          .select(PERSON_PARTY_AFFILIATION_COLUMNS)
-          .in('person_id', personIds)
-          .order('person_id', { ascending: true })
-          .order('is_current', { ascending: false })
-          .order('observed_year', { ascending: false, nullsFirst: false })
-          .order('display_order', { ascending: true, nullsFirst: false })
-          .order('affiliation_id', { ascending: true })
-          .limit(PERSON_PARTY_AFFILIATION_LIMIT + 1),
-      ]);
+      const response = await client.schema('published').rpc<PublishedPersonProfilesPayloadRow>(
+        'person_profiles_for',
+        { p_person_ids: personIds },
+      );
+      const rows = getBoundedRowsOrThrow(response, 'Published person profiles', 1);
+      const payload = rows[0]?.payload;
+      if (!payload || typeof payload !== 'object') {
+        throw new Error('Published person profiles returned an invalid payload.');
+      }
+      assertPayloadMetadata(payload, 'Published person profiles');
 
       return {
-        personRows: getRowsOrThrow(personResponse, 'Published person profiles'),
-        candidateRows: getBoundedRowsOrThrow(
-          candidateResponse,
+        personRows: getBoundedPayloadRows<PublishedPersonProfileRow>(
+          payload.person_rows,
+          'Published person profiles',
+          PERSON_PROFILE_BATCH_LIMIT,
+        ),
+        candidateRows: getBoundedPayloadRows<PublicCandidate>(
+          payload.candidate_rows,
           'Published person candidates',
           PERSON_CANDIDATE_LIMIT,
         ),
-        claimRows: getBoundedRowsOrThrow(
-          claimResponse,
+        claimRows: getBoundedPayloadRows<PublicPersonClaim>(
+          payload.claim_rows,
           'Published person claims',
           PERSON_CLAIM_LIMIT,
         ),
-        partyAffiliationRows: getBoundedRowsOrThrow(
-          partyAffiliationResponse,
+        partyAffiliationRows: getBoundedPayloadRows<PublicPersonPartyAffiliation>(
+          payload.party_affiliation_rows,
           'Published person party affiliations',
           PERSON_PARTY_AFFILIATION_LIMIT,
         ),

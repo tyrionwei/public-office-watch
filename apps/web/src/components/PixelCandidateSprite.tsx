@@ -1,8 +1,10 @@
 import {
   pickDefaultCandidateSprite,
+  pickDefaultCandidateSpriteForAgeGroup,
   pickPersonCandidateSprite,
   unknownCandidateSprite,
   xiezhiMascotSprite,
+  type CandidateAgeGroup,
 } from '../data/defaultCharacterAssets';
 import { useI18n } from '../i18n';
 import { partyTheme, type PartyThemeKey } from '../styles/partyThemes';
@@ -16,6 +18,7 @@ type PixelCandidateSpriteProps = {
   align?: 'left' | 'right';
   gender?: string | null;
   birthDate?: string | null;
+  ageGroup?: CandidateAgeGroup | null;
   useDemographicSprite?: boolean;
 };
 
@@ -28,12 +31,16 @@ export function PixelCandidateSprite({
   align = 'left',
   gender,
   birthDate,
+  ageGroup,
   useDemographicSprite = false,
 }: PixelCandidateSpriteProps) {
   const { t } = useI18n();
   const personSprite = pickPersonCandidateSprite(personId);
-  const spriteSrc = personSprite ?? (useDemographicSprite
+  const demographicSprite = ageGroup === undefined
     ? pickDefaultCandidateSprite(`${displayName}-${variant}`, gender, birthDate)
+    : pickDefaultCandidateSpriteForAgeGroup(gender, ageGroup);
+  const spriteSrc = personSprite ?? (useDemographicSprite
+    ? demographicSprite
     : partyKey === 'unknown' ? unknownCandidateSprite : pickDefaultCandidateSprite(`${displayName}-${variant}`));
   const usesMascot = spriteSrc === xiezhiMascotSprite;
   const theme = partyTheme[partyKey];

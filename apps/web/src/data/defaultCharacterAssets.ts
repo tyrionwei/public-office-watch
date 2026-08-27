@@ -53,6 +53,12 @@ export const personCandidateSprites: Record<string, string> = {
   'd773465a-e4ae-4ffb-9f7f-59204f717149': '/assets/characters/candidates/d773465a-e4ae-4ffb-9f7f-59204f717149.png',
   'aed4c48f-b895-4344-9fa8-45d66b54241e': '/assets/characters/candidates/aed4c48f-b895-4344-9fa8-45d66b54241e.png',
   '3028bba8-3232-4d8f-8081-ab41503c9409': '/assets/characters/candidates/3028bba8-3232-4d8f-8081-ab41503c9409.png',
+  '7ceadf52-bdeb-45ae-9542-9fd3ace7a502': '/assets/characters/candidates/7ceadf52-bdeb-45ae-9542-9fd3ace7a502.png',
+  '880f8fb6-84d7-44e1-a38a-818707dcd22e': '/assets/characters/candidates/880f8fb6-84d7-44e1-a38a-818707dcd22e.png',
+  'e333ae37-8821-4f98-8a90-54a4d217dbce': '/assets/characters/candidates/e333ae37-8821-4f98-8a90-54a4d217dbce.png',
+  '1d6d74ef-ea70-4503-bc59-6bf36d9f25cf': '/assets/characters/candidates/1d6d74ef-ea70-4503-bc59-6bf36d9f25cf.png',
+  '0d12b2a3-6c0f-4533-bc7b-d130f8604443': '/assets/characters/candidates/0d12b2a3-6c0f-4533-bc7b-d130f8604443.png',
+  '997ccfba-3c27-41e0-a6cf-cdfd42dbcbf0': '/assets/characters/candidates/997ccfba-3c27-41e0-a6cf-cdfd42dbcbf0.png',
 };
 export const xiezhiMascotPoses = {
   idle: '/assets/characters/xiezhi/xiezhi-idle.png',

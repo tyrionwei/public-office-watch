@@ -58,7 +58,7 @@ test('falls back to the Xiezhi mascot when gender or exact birth date is unavail
 });
 
 test('uses canonical person IDs for configured candidate sprites', () => {
-  assert.equal(Object.keys(personCandidateSprites).length, 39);
+  assert.equal(Object.keys(personCandidateSprites).length, 45);
   for (const [personId, spritePath] of Object.entries(personCandidateSprites)) {
     assert.match(personId, /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
     assert.equal(spritePath, `/assets/characters/candidates/${personId}.png`);
@@ -72,6 +72,19 @@ test('uses canonical person IDs for configured candidate sprites', () => {
     pickPersonCandidateSprite('20915299-0469-47b7-ae81-cf499a806a1a'),
     '/assets/characters/candidates/20915299-0469-47b7-ae81-cf499a806a1a.png',
   );
+  for (const personId of [
+    '7ceadf52-bdeb-45ae-9542-9fd3ace7a502',
+    '880f8fb6-84d7-44e1-a38a-818707dcd22e',
+    'e333ae37-8821-4f98-8a90-54a4d217dbce',
+    '1d6d74ef-ea70-4503-bc59-6bf36d9f25cf',
+    '0d12b2a3-6c0f-4533-bc7b-d130f8604443',
+    '997ccfba-3c27-41e0-a6cf-cdfd42dbcbf0',
+  ]) {
+    assert.equal(
+      pickPersonCandidateSprite(personId),
+      `/assets/characters/candidates/${personId}.png`,
+    );
+  }
   assert.equal(pickPersonCandidateSprite('b81440cf-865f-419a-96a0-c362a4e7eaba'), null);
   assert.equal(pickPersonCandidateSprite(null), null);
 });

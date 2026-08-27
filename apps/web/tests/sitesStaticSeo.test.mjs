@@ -91,6 +91,7 @@ test('injects exact catalog metadata and absolute social URLs', () => {
 test('covers election detail routes and marks private or unknown routes as noindex', () => {
   assert.equal(documentMetadata('/elections/election-1', catalog).title, '2026 地方選舉');
   assert.equal(documentMetadata('/elections/events/2026-11-28-local', catalog).title, '2026 地方公職人員選舉');
+  assert.equal(documentMetadata('/support', catalog).title, '支持本站');
   assert.equal(documentMetadata('/people/missing', catalog).noIndex, true);
   assert.equal(documentMetadata('/internal/chat-admin', catalog).noIndex, true);
   assert.equal(documentMetadata('/missing', catalog).noIndex, true);
@@ -102,6 +103,7 @@ test('covers election detail routes and marks private or unknown routes as noind
 
 test('returns real document statuses for known, missing entity, and unknown routes', () => {
   assert.equal(documentResponseStatus('/about', catalog), 200);
+  assert.equal(documentResponseStatus('/support', catalog), 200);
   assert.equal(documentResponseStatus('/internal/chat-admin', catalog), 200);
   assert.equal(documentResponseStatus('/people/person-1', catalog), 200);
   assert.equal(documentResponseStatus('/people/missing', catalog), 404);
@@ -130,6 +132,7 @@ test('publishes a sitemap index with separated public entity maps', () => {
   const robots = robotsText('https://watch.example');
 
   assert.match(index, /https:\/\/watch\.example\/sitemaps\/static\.xml/);
+  assert.match(sitemapXml('https://watch.example'), /https:\/\/watch\.example\/support/);
   assert.match(index, /https:\/\/watch\.example\/sitemaps\/people\.xml/);
   assert.match(index, /https:\/\/watch\.example\/sitemaps\/elections\.xml/);
   assert.match(index, /https:\/\/watch\.example\/sitemaps\/events\.xml/);

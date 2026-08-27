@@ -4,7 +4,7 @@ import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
-import { peoplePath } from '../routes/routePaths';
+import { peoplePath, supportPath } from '../routes/routePaths';
 
 const roadmapStages = [
   {
@@ -79,9 +79,12 @@ export function AboutPage() {
               <p className="text-xs uppercase tracking-[0.18em] text-signal">{t('about.donationEyebrow')}</p>
               <h3 className="mt-2 font-display text-xl text-white">{t('about.donationTitle')}</h3>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">{t('about.donationDescription')}</p>
-              <span className="mt-4 inline-flex border border-signal/45 bg-bg/45 px-3 py-2 text-sm text-signal">
-                {t('about.donationPending')}
-              </span>
+              <Link
+                to={supportPath()}
+                className="pixel-corners mt-4 inline-flex border border-signal/55 bg-bg/45 px-3 py-2 text-sm text-signal transition hover:border-signal hover:text-white"
+              >
+                {t('about.donationAction')}
+              </Link>
             </div>
 
             <Link

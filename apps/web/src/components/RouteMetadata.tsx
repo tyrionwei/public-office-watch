@@ -187,6 +187,12 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
         ? 'About the goals, principles, and open-source development of Public Office Watch.'
         : '認識公職資料觀測站的目標、資料原則與開源開發方式。',
     },
+    '/support': {
+      title: isEnglish ? 'Support this site' : '支持本站',
+      description: isEnglish
+        ? 'One-time support for Public Office Watch hosting, public-data maintenance, and continued development.'
+        : '自願支持公職資料觀測站的主機、公開資料維護與持續開發成本。',
+    },
   };
 
   return staticMetadata[pathname] ?? {

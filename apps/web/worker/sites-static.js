@@ -2,7 +2,7 @@ const siteName = '公職資料觀測站';
 const englishSiteName = 'Public Office Watch';
 const defaultDescription = '查詢臺灣公職人物、政黨、選舉、候選人政見、政治獻金與公開資料來源。';
 const canonicalSiteOrigin = 'https://pow4vote.org';
-const staticSitemapPaths = ['/', '/people', '/elections', '/parties', '/updates', '/data-guidance', '/about'];
+const staticSitemapPaths = ['/', '/people', '/elections', '/parties', '/updates', '/data-guidance', '/about', '/support'];
 const dynamicSitemapGroups = ['people', 'parties', 'regions', 'elections', 'events', 'races'];
 const internalDocumentPaths = new Set([
   '/internal/chat-admin',
@@ -184,6 +184,7 @@ function documentMetadata(pathname, catalog = emptySeoCatalog) {
     '/updates': { title: '公開更新動態', description: '查看公職資料觀測站最近已審核並公開的資料新增、修正與功能更新。' },
     '/data-guidance': { title: '資料說明', description: '了解公職資料觀測站如何蒐集、審核、引用與呈現公開資料。' },
     '/about': { title: '關於本站', description: '認識公職資料觀測站的目標、資料原則與開源開發方式。' },
+    '/support': { title: '支持本站', description: '自願支持公職資料觀測站的主機、公開資料維護與持續開發成本。' },
   };
 
   return staticMetadata[pathname] ?? {

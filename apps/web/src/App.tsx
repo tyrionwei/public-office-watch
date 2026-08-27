@@ -4,7 +4,7 @@ import { GlobalChatWidget } from './components/GlobalChatWidget';
 import { LanguageProvider, useI18n } from './i18n';
 import { RouteMetadata } from './components/RouteMetadata';
 import { publicDataReadyEvent, refreshConfiguredPublicDataProvider } from './lib/publicDataProviderFactory';
-import { aboutPath, dataGuidancePath, electionsPath, homePath, internalChatAdminPath, internalDataProgressPath, internalReviewQueuePath, internalUpdateAdminPath, partiesPath, peoplePath, updatesPath } from './routes/routePaths';
+import { aboutPath, dataGuidancePath, electionsPath, homePath, internalChatAdminPath, internalDataProgressPath, internalReviewQueuePath, internalUpdateAdminPath, partiesPath, peoplePath, supportPath, updatesPath } from './routes/routePaths';
 import { SelectedRegionProvider } from './selectedRegion';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })));
@@ -17,6 +17,7 @@ const PartiesPage = lazy(() => import('./pages/PartiesPage').then((module) => ({
 const PartyPage = lazy(() => import('./pages/PartyPage').then((module) => ({ default: module.PartyPage })));
 const DataGuidancePage = lazy(() => import('./pages/DataGuidancePage').then((module) => ({ default: module.DataGuidancePage })));
 const AboutPage = lazy(() => import('./pages/AboutPage').then((module) => ({ default: module.AboutPage })));
+const SupportPage = lazy(() => import('./pages/SupportPage').then((module) => ({ default: module.SupportPage })));
 const UpdatesPage = lazy(() => import('./pages/UpdatesPage').then((module) => ({ default: module.UpdatesPage })));
 const RegionPage = lazy(() => import('./pages/RegionPage').then((module) => ({ default: module.RegionPage })));
 const ElectionPage = lazy(() => import('./pages/ElectionPage').then((module) => ({ default: module.ElectionPage })));
@@ -92,6 +93,7 @@ function AppRoutes({
           <Route path="/parties/:partySlug" element={<PartyPage />} />
           <Route path={dataGuidancePath()} element={<DataGuidancePage />} />
           <Route path={aboutPath()} element={<AboutPage />} />
+          <Route path={supportPath()} element={<SupportPage />} />
           <Route path={updatesPath()} element={<UpdatesPage />} />
           <Route path="/regions/:regionId" element={<RegionPage />} />
           <Route path="/elections/:electionId" element={<ElectionPage />} />

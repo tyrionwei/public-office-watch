@@ -133,6 +133,24 @@ test('update log is clearly presented as reviewed site data rather than politica
   await expect(page.getByText('這裡記錄本站新增與修正的資料，不是政治新聞，也不會直接公開尚未審核的自動蒐集結果。')).toBeVisible();
 });
 
+test('support page presents review-ready amounts, policies, and disabled payment', async ({ page }) => {
+  await page.goto('/support');
+
+  await expect(page.getByRole('heading', { name: '支持公職資料觀測站' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '♡ 支持本站' })).toBeVisible();
+  await expect(page.locator('[data-support-amounts] button')).toHaveText(['NT$100', 'NT$300', 'NT$500', 'NT$1,000', '自訂金額']);
+  await expect(page.locator('[data-selected-support-amount]')).toHaveText('NT$300');
+
+  await page.getByRole('button', { name: '自訂金額' }).click();
+  await page.getByLabel('輸入自訂金額').fill('850');
+  await expect(page.locator('[data-selected-support-amount]')).toHaveText('NT$850');
+  await expect(page.getByRole('button', { name: '藍新金流申請中' })).toBeDisabled();
+  await expect(page.getByRole('link', { name: 'support@pow4vote.org' })).toHaveAttribute('href', 'mailto:support@pow4vote.org');
+  await expect(page.getByRole('heading', { name: '取消與退款政策' })).toBeVisible();
+  await expect(page.getByText('支持者不因付款取得資料收錄、排序、查核、優先處理或政治立場的影響權。')).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+});
+
 test('focused global search offers examples and person results include party context', async ({ page }) => {
   await page.goto('/');
 

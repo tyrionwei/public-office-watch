@@ -61,6 +61,10 @@ export function aboutPath() {
   return '/about';
 }
 
+export function supportPath() {
+  return '/support';
+}
+
 export function updatesPath() {
   return '/updates';
 }

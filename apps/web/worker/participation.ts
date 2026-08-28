@@ -4,6 +4,12 @@ const turnstileVerificationUrl = 'https://challenges.cloudflare.com/turnstile/v0
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
 const turnstileAlwaysPassTestSecret = '1x0000000000000000000000000000000AA';
 const feedbackKinds = new Set(['supplement_request', 'problem_report']);
+const fulfillmentStatuses = new Set([
+  'fulfilled',
+  'in_progress',
+  'not_fulfilled',
+  'insufficient_information',
+]);
 const feedbackSections = new Set([
   'basic',
   'candidacies',
@@ -191,6 +197,49 @@ function rpcForPayload(payload: Record<string, unknown>) {
     };
   }
 
+  if (payload.action === 'platform-fulfillment') {
+    if (
+      typeof payload.claimId !== 'string'
+      || !uuidPattern.test(payload.claimId)
+      || typeof payload.itemKey !== 'string'
+      || !/^[0-9a-f]{64}$/u.test(payload.itemKey)
+      || typeof payload.voteStatus !== 'string'
+      || !fulfillmentStatuses.has(payload.voteStatus)
+    ) {
+      return null;
+    }
+    return {
+      action: 'platform-fulfillment',
+      name: 'submit_platform_fulfillment_vote',
+      rateLimitSuffix: `${payload.claimId}:${payload.itemKey}`,
+      body: {
+        p_claim_id: payload.claimId,
+        p_item_key: payload.itemKey,
+        p_vote_status: payload.voteStatus,
+      },
+    };
+  }
+
+  if (payload.action === 'platform-fulfillment-withdrawal') {
+    if (
+      typeof payload.claimId !== 'string'
+      || !uuidPattern.test(payload.claimId)
+      || typeof payload.itemKey !== 'string'
+      || !/^[0-9a-f]{64}$/u.test(payload.itemKey)
+    ) {
+      return null;
+    }
+    return {
+      action: 'platform-fulfillment-withdrawal',
+      name: 'withdraw_platform_fulfillment_vote',
+      rateLimitSuffix: `${payload.claimId}:${payload.itemKey}`,
+      body: {
+        p_claim_id: payload.claimId,
+        p_item_key: payload.itemKey,
+      },
+    };
+  }
+
   return null;
 }
 
@@ -316,8 +365,11 @@ async function handleSubmit(
   if (!userId) return jsonResponse(401, { error: 'PARTICIPATION_UNAUTHENTICATED' });
 
   const ipDigest = await hmacSha256Hex(clientIp, env.PARTICIPATION_IP_HMAC_KEY);
+  const userRateLimitKey = 'rateLimitSuffix' in rpc
+    ? `${rpc.action}:${userId}:${rpc.rateLimitSuffix}`
+    : `${rpc.action}:${userId}`;
   const [userLimit, ipLimit] = await Promise.all([
-    env.PARTICIPATION_USER_RATE_LIMITER.limit({ key: `${rpc.action}:${userId}` }),
+    env.PARTICIPATION_USER_RATE_LIMITER.limit({ key: userRateLimitKey }),
     env.PARTICIPATION_IP_RATE_LIMITER.limit({ key: `${rpc.action}:${ipDigest}` }),
   ]);
   if (!userLimit.success || !ipLimit.success) {

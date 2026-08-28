@@ -4,6 +4,7 @@ import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { PersonFeedbackPanel } from '../components/PersonFeedbackPanel';
+import { PlatformFulfillmentList } from '../components/PlatformFulfillmentList';
 import { SectionPanel } from '../components/SectionPanel';
 import {
   pickDefaultCandidateSprite,
@@ -21,26 +22,12 @@ import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplay
 import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
 import { peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicCandidate, PublicPersonClaim, PublicPersonPartyAffiliation, PublicPersonTimelineItem } from '../types/publicViews';
+import type { PublicCandidate, PublicPersonClaim, PublicPersonPartyAffiliation } from '../types/publicViews';
 
 const genderLabels: Record<'male' | 'female' | 'unknown', TranslationKey> = {
   male: 'person.gender.male',
   female: 'person.gender.female',
   unknown: 'person.gender.unknown',
-};
-
-const timelineCategoryLabels: Record<PublicPersonTimelineItem['category'], TranslationKey> = {
-  office: 'person.claim.office',
-  candidacy: 'person.claim.candidacy',
-  party: 'person.claim.party',
-  experience: 'person.claim.experience',
-};
-
-const timelineStatusLabels: Record<PublicPersonTimelineItem['status'], TranslationKey> = {
-  current: 'person.timeline.status.current',
-  past: 'person.timeline.status.past',
-  candidate: 'person.timeline.status.candidate',
-  unknown: 'person.timeline.status.record',
 };
 
 const partyRoleContextLabels: Record<PublicPersonPartyAffiliation['role_context'], TranslationKey> = {
@@ -127,14 +114,20 @@ function candidateDetailRows(
   locale: string,
   replacementElected: boolean,
 ) {
-  const rows: Array<[string, string]> = [];
+  const rows: Array<[string, string, string?]> = [];
   const voteCount = formatVoteCount(candidate.vote_count, locale);
   const voteRate = formatVoteRate(candidate.vote_rate);
 
   if (candidate.region_name) rows.push([t('person.region'), candidate.region_name]);
   rows.push([t('person.party'), normalizePartyLabel(candidate.party)]);
   if (candidate.election_result === 'elected' || candidate.election_result === 'not_elected') {
-    rows.push([t('person.electionResult'), translateElectionResult(candidate.election_result, t)]);
+    rows.push([
+      t('person.electionResult'),
+      translateElectionResult(candidate.election_result, t),
+      candidate.election_result === 'elected'
+        ? 'border border-emerald-400/50 bg-emerald-400/10 px-2 py-0.5 font-semibold text-emerald-200'
+        : 'border border-rose-400/45 bg-rose-400/10 px-2 py-0.5 font-semibold text-rose-200',
+    ]);
   }
   if (replacementElected) {
     rows.push([t('person.laterElectionStatus'), t('person.replacementElected')]);
@@ -319,32 +312,6 @@ function ClaimCard({
   );
 }
 
-function TimelineList({ items }: { items: PublicPersonTimelineItem[] }) {
-  const { t } = useI18n();
-
-  if (items.length === 0) {
-    return <DataStateNotice kind="uncollected">{t('person.timeline.empty')}</DataStateNotice>;
-  }
-
-  return (
-    <ol className="space-y-3">
-      {items.map((item) => (
-        <li key={item.id} className="grid gap-3 sm:grid-cols-[76px_minmax(0,1fr)]">
-          <div className="text-sm font-semibold text-signal">{item.year ?? item.date ?? '—'}</div>
-          <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-              <span className="pixel-corners border border-line/70 px-2 py-1">{t(timelineCategoryLabels[item.category])}</span>
-              {item.status !== 'unknown' ? <span>{t(timelineStatusLabels[item.status])}</span> : null}
-            </div>
-            <h3 className="mt-2 text-sm font-semibold text-white">{item.label}</h3>
-            {item.detail ? <p className="mt-2 text-sm text-slate-400">{item.detail}</p> : null}
-          </article>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
 function PartyAffiliationList({ affiliations, currentParty }: { affiliations: PublicPersonPartyAffiliation[]; currentParty: string | null }) {
   const { t } = useI18n();
 
@@ -361,24 +328,26 @@ function PartyAffiliationList({ affiliations, currentParty }: { affiliations: Pu
   );
 
   return (
-    <div className="grid gap-3 md:grid-cols-2">
+    <div className="pixel-corners divide-y divide-line/60 border border-line/70 bg-bg/35">
       {affiliations.map((affiliation) => (
-        <article key={affiliation.affiliation_id} className="pixel-corners border border-line/70 bg-bg/35 p-4">
+        <article key={affiliation.affiliation_id} className="px-3 py-3">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{isCurrentAffiliation(affiliation) ? t('person.affiliation.current') : t('person.affiliation.past')}</p>
-              <h3 className="mt-2 text-sm font-semibold text-white">{normalizePartyLabel(affiliation.party_name)}</h3>
+              <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                {isCurrentAffiliation(affiliation) ? t('person.affiliation.current') : t('person.affiliation.past')}
+              </p>
+              <h4 className="mt-1 text-sm font-semibold text-white">{normalizePartyLabel(affiliation.party_name)}</h4>
             </div>
-            <span className={isCurrentAffiliation(affiliation) ? 'text-xs text-signal' : 'text-xs text-slate-400'}>
+            <span className={isCurrentAffiliation(affiliation) ? 'text-[10px] text-signal' : 'text-[10px] text-slate-400'}>
               {isCurrentAffiliation(affiliation) ? t('person.affiliation.belongs') : t('person.affiliation.formerly')}
             </span>
           </div>
-          <dl className="mt-3 space-y-2 text-sm">
-            {affiliation.observed_date || affiliation.observed_year ? (
-              <div className="flex justify-between gap-3"><dt className="text-slate-500">{t('person.affiliation.observed')}</dt><dd className="text-right text-slate-200">{affiliation.observed_date ?? affiliation.observed_year}</dd></div>
-            ) : null}
-            <div className="flex justify-between gap-3"><dt className="text-slate-500">{t('person.affiliation.type')}</dt><dd className="text-right text-slate-200">{t(partyRoleContextLabels[affiliation.role_context])}</dd></div>
-          </dl>
+          <p className="mt-2 text-xs leading-5 text-slate-400">
+            {[
+              affiliation.observed_date ?? affiliation.observed_year,
+              t(partyRoleContextLabels[affiliation.role_context]),
+            ].filter(Boolean).join(' · ')}
+          </p>
         </article>
       ))}
     </div>
@@ -435,14 +404,10 @@ function PlatformClaimCard({ claim }: { claim: PublicPersonClaim }) {
 
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
-      <h3 className="text-sm font-semibold text-white">{t('person.publicPlatform')}</h3>
-      {platformItems.length > 0 ? (
-        <ol className="mt-3 max-h-72 list-decimal space-y-2 overflow-auto pl-5 pr-2 text-sm leading-6 text-slate-200">
-          {platformItems.map((item, index) => <li key={`${claim.claim_id}:${index}`}>{item}</li>)}
-        </ol>
-      ) : (
+      <PlatformFulfillmentList claim={claim} title={t('person.publicPlatform')} />
+      {platformItems.length === 0 ? (
         <div className="mt-3 text-sm leading-6 text-slate-200">{t('person.noContent')}</div>
-      )}
+      ) : null}
       {claim.source_url ? (
         <a href={claim.source_url} target="_blank" rel="noreferrer" className="mt-3 block truncate text-xs text-accent hover:text-white">
           {claim.source_name?.trim() || t('person.publicSource')}
@@ -553,7 +518,6 @@ export function PersonPage() {
     },
     { label: t('person.party'), status: person?.party ? 'complete' : 'uncollected' },
     { label: t('person.candidaciesTitle'), status: profile?.candidate_records.length ? 'complete' : 'uncollected' },
-    { label: t('person.timelineTitle'), status: profile?.timeline_records.length ? 'complete' : 'uncollected' },
     { label: t('person.affiliationsTitle'), status: partyAffiliations.length ? 'complete' : 'uncollected' },
     { label: t('person.education'), status: educationItems.length ? 'complete' : 'uncollected' },
     { label: t('person.experience'), status: experienceItems.length ? 'complete' : 'uncollected' },
@@ -683,14 +647,21 @@ export function PersonPage() {
             />
 
             <SectionPanel title={t('person.basicTitle')} eyebrow={t('person.basicEyebrow')}>
-              <dl className="grid gap-3 sm:grid-cols-2">
-                {basicFacts.map(([label, value]) => (
-                  <div key={label} className="pixel-corners border border-line/70 bg-bg/35 p-3">
-                    <dt className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</dt>
-                    <dd className="mt-2 text-sm text-white">{value}</dd>
-                  </div>
-                ))}
-              </dl>
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
+                <dl className="grid content-start gap-3 sm:grid-cols-2">
+                  {basicFacts.map(([label, value]) => (
+                    <div key={label} className="pixel-corners border border-line/70 bg-bg/35 p-3">
+                      <dt className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</dt>
+                      <dd className="mt-2 text-sm text-white">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('person.affiliationsEyebrow')}</p>
+                  <h3 className="mb-3 mt-1 text-sm font-semibold text-white">{t('person.affiliationsTitle')}</h3>
+                  <PartyAffiliationList affiliations={partyAffiliations} currentParty={person.party} />
+                </div>
+              </div>
             </SectionPanel>
 
             {identityRecords.length > 1 ? (
@@ -740,10 +711,10 @@ export function PersonPage() {
                         </span>
                       </div>
                       <dl className="mt-3 space-y-2 text-sm">
-                        {candidateDetailRows(candidate, t, language, replacementElected).map(([label, value]) => (
+                        {candidateDetailRows(candidate, t, language, replacementElected).map(([label, value, valueClass]) => (
                           <div key={label} className="flex justify-between gap-3">
                             <dt className="text-slate-500">{label}</dt>
-                            <dd className="text-right text-slate-200">{value}</dd>
+                            <dd className={`text-right ${valueClass ?? 'text-slate-200'}`}>{value}</dd>
                           </div>
                         ))}
                       </dl>
@@ -775,15 +746,6 @@ export function PersonPage() {
                 <PartyOfficeList affiliations={partyOffices} />
               </SectionPanel>
             ) : null}
-
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
-              <SectionPanel title={t('person.timelineTitle')} eyebrow={t('person.timelineEyebrow')}>
-                <TimelineList items={profile.timeline_records} />
-              </SectionPanel>
-              <SectionPanel title={t('person.affiliationsTitle')} eyebrow={t('person.affiliationsEyebrow')}>
-                <PartyAffiliationList affiliations={partyAffiliations} currentParty={person.party} />
-              </SectionPanel>
-            </div>
 
             <SectionPanel title={t('person.resumeTitle')} eyebrow={t('person.resumeEyebrow')}>
               <div className="grid gap-4 lg:grid-cols-2">

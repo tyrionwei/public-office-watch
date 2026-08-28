@@ -31,6 +31,17 @@ type ParticipationPayload =
     problemType?: string;
     message?: string;
     evidenceUrl?: string;
+  }
+  | {
+    action: 'platform-fulfillment';
+    claimId: string;
+    itemKey: string;
+    voteStatus: 'fulfilled' | 'in_progress' | 'not_fulfilled' | 'insufficient_information';
+  }
+  | {
+    action: 'platform-fulfillment-withdrawal';
+    claimId: string;
+    itemKey: string;
   };
 
 type ParticipationSession = {

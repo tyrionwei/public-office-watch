@@ -7,11 +7,14 @@ import {
   useState,
   type FormEvent,
 } from 'react';
+import { useLocation } from 'react-router-dom';
 import { xiezhiMascotPoses } from '../data/defaultCharacterAssets';
 import { useI18n } from '../i18n';
 import {
   ChatApiError,
   chatCooldownSeconds,
+  chatTopicTags,
+  getChatRoomContext,
   chatNameCooldownMinutes,
   chatDateKey,
   chatPageSize,
@@ -20,8 +23,11 @@ import {
   formatChatDate,
   formatChatTimestamp,
   getExistingChatSession,
+  isCurrentChatRealtimeSubscription,
   limitChatInput,
   loadChatMessages,
+  loadChatRoomDirectory,
+  loadChatRooms,
   loadChatProfile,
   loadChatStatus,
   mergeChatMessages,
@@ -31,14 +37,38 @@ import {
   unsubscribeFromChat,
   type ChatMessage,
   type ChatProfile,
+  type ChatRoom,
+  type ChatTopicTag,
   type ChatProfileModeration,
   type ChatRealtimeChannel,
   type ChatStatus,
 } from '../lib/globalChat';
+import { useSelectedRegion } from '../selectedRegion';
 const chatNudgeStorageKey = 'public-office-watch-chat-nudge-seen-at-v1';
 const chatNudgeDelayMs = 5_000;
 const chatNudgeDurationMs = 6_000;
 const chatNudgeSuppressionMs = 7 * 24 * 60 * 60 * 1_000;
+const chatRecentRoomsStorageKey = 'public-office-watch-chat-recent-rooms-v1';
+const chatRecentRoomHistoryLimit = 6;
+
+function loadRecentChatRoomIds() {
+  try {
+    const stored = JSON.parse(window.localStorage.getItem(chatRecentRoomsStorageKey) ?? '[]');
+    return Array.isArray(stored)
+      ? stored.filter((value): value is string => typeof value === 'string').slice(0, chatRecentRoomHistoryLimit)
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+function storeRecentChatRoomIds(roomIds: string[]) {
+  try {
+    window.localStorage.setItem(chatRecentRoomsStorageKey, JSON.stringify(roomIds));
+  } catch {
+    // Recent channel shortcuts are optional when storage is unavailable.
+  }
+}
 
 function wasChatNudgeSeenRecently() {
   try {
@@ -59,9 +89,23 @@ function rememberChatNudge() {
 
 const copy = {
   'zh-TW': {
-    launcher: '開啟全站即時討論',
+    launcher: '開啟即時討論',
     tooltip: '即時討論',
-    title: '全站即時討論',
+    title: '即時討論',
+    channels: '討論頻道',
+    channelPicker: '選擇頻道',
+    regionChannels: '地區頻道',
+    electionChannels: '選舉頻道',
+    globalRoom: '全站大廳',
+    topics: '討論議題',
+    allTopics: '全部',
+    topicTransport: '交通',
+    topicHousing: '居住',
+    topicEducation: '教育',
+    topicHealthcare: '醫療',
+    topicEnvironment: '環境',
+    topicSafety: '治安',
+    topicOther: '其他',
     nudgeTitle: '全站聊天室',
     nudgeBody: '聊選舉、人物與地方議題',
     nudgeOpen: '開啟聊天',
@@ -110,9 +154,23 @@ const copy = {
     nameCooldownError: '名稱每 30 分鐘只能修改一次。',
   },
   en: {
-    launcher: 'Open site-wide live chat',
-    tooltip: 'Live chat',
-    title: 'Site-wide live chat',
+    launcher: 'Open live discussion',
+    tooltip: 'Live discussion',
+    title: 'Live discussion',
+    channels: 'Channels',
+    channelPicker: 'Choose channel',
+    regionChannels: 'Regional channels',
+    electionChannels: 'Election channels',
+    globalRoom: 'Site lobby',
+    topics: 'Discussion topics',
+    allTopics: 'All',
+    topicTransport: 'Transport',
+    topicHousing: 'Housing',
+    topicEducation: 'Education',
+    topicHealthcare: 'Healthcare',
+    topicEnvironment: 'Environment',
+    topicSafety: 'Safety',
+    topicOther: 'Other',
     nudgeTitle: 'Site-wide chat',
     nudgeBody: 'Discuss elections, people, and local issues',
     nudgeOpen: 'Open chat',
@@ -179,6 +237,20 @@ function PixelChatIcon() {
 
 type ChatCopy = { [Key in keyof typeof copy['zh-TW']]: string };
 
+function chatTopicLabel(topic: ChatTopicTag, text: ChatCopy) {
+  if (topic === 'transport') return text.topicTransport;
+  if (topic === 'housing') return text.topicHousing;
+  if (topic === 'education') return text.topicEducation;
+  if (topic === 'healthcare') return text.topicHealthcare;
+  if (topic === 'environment') return text.topicEnvironment;
+  if (topic === 'safety') return text.topicSafety;
+  return text.topicOther;
+}
+
+function chatRoomLabel(room: ChatRoom, text: ChatCopy) {
+  return room.room_type === 'global' ? text.globalRoom : room.display_name;
+}
+
 function errorMessage(error: unknown, text: ChatCopy) {
   const code = error instanceof ChatApiError ? error.code : '';
   if (code === 'CHAT_EXTERNAL_LINK') return text.externalLink;
@@ -204,6 +276,12 @@ function visibleMessageBody(message: ChatMessage, text: ChatCopy) {
 export function GlobalChatWidget() {
   const { language } = useI18n();
   const text = copy[language];
+  const location = useLocation();
+  const { selectedRegionId } = useSelectedRegion();
+  const roomContext = useMemo(
+    () => getChatRoomContext(location.pathname, selectedRegionId),
+    [location.pathname, selectedRegionId],
+  );
   const [status, setStatus] = useState<ChatStatus | null | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [isNudgeVisible, setIsNudgeVisible] = useState(false);
@@ -215,6 +293,11 @@ export function GlobalChatWidget() {
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [rooms, setRooms] = useState<ChatRoom[]>([]);
+  const [contextualRoomIds, setContextualRoomIds] = useState<string[]>([]);
+  const [recentRoomIds, setRecentRoomIds] = useState<string[]>(loadRecentChatRoomIds);
+  const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
+  const [selectedTopicTag, setSelectedTopicTag] = useState<ChatTopicTag | null>(null);
   const [profile, setProfile] = useState<ChatProfile | null>(null);
   const [isEditingName, setIsEditingName] = useState(false);
   const [displayName, setDisplayName] = useState('');
@@ -232,6 +315,7 @@ export function GlobalChatWidget() {
   const panelRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const channelRef = useRef<ChatRealtimeChannel | null>(null);
+  const realtimeSubscriptionRevisionRef = useRef(0);
   const statusRef = useRef<ChatStatus | null | undefined>(undefined);
   const statusRequestRef = useRef<Promise<ChatStatus | null> | null>(null);
   const preserveHeightRef = useRef<number | null>(null);
@@ -242,6 +326,35 @@ export function GlobalChatWidget() {
   const profileMuteUntil = profile?.status === 'muted' && profile.muted_until
     ? Date.parse(profile.muted_until)
     : 0;
+  const activeRoom = useMemo(
+    () => rooms.find((room) => room.id === activeRoomId) ?? null,
+    [activeRoomId, rooms],
+  );
+  const contextualRooms = useMemo(() => contextualRoomIds
+    .map((roomId) => rooms.find((room) => room.id === roomId))
+    .filter((room): room is ChatRoom => Boolean(room)), [contextualRoomIds, rooms]);
+  const globalRoom = useMemo(
+    () => rooms.find((room) => room.room_type === 'global') ?? null,
+    [rooms],
+  );
+  const regionRooms = useMemo(
+    () => rooms.filter((room) => room.room_type === 'region'),
+    [rooms],
+  );
+  const electionRooms = useMemo(
+    () => rooms.filter((room) => room.room_type === 'election_event'),
+    [rooms],
+  );
+  const recentRooms = useMemo(() => {
+    const excludedRoomIds = new Set(contextualRoomIds);
+    return recentRoomIds
+      .map((roomId) => rooms.find((room) => room.id === roomId))
+      .filter((room): room is ChatRoom => room !== undefined
+        && room.room_type !== 'global'
+        && !excludedRoomIds.has(room.id))
+      .slice(0, 2);
+  }, [contextualRoomIds, recentRoomIds, rooms]);
+
   const nextVisibilityExpiry = useMemo(() => messages
     .filter((message) => message.visibility_state === 'author_muted' && message.visibility_until)
     .map((message) => Date.parse(message.visibility_until as string))
@@ -316,6 +429,48 @@ export function GlobalChatWidget() {
   useEffect(() => {
     if (!isOpen || !status) return undefined;
     let cancelled = false;
+    void Promise.all([loadChatRooms(roomContext), loadChatRoomDirectory()])
+      .then(([availableRooms, directoryRooms]) => {
+        if (cancelled) return;
+        setRooms(directoryRooms);
+        setContextualRoomIds(availableRooms.map((room) => room.id));
+        setActiveRoomId((current) => directoryRooms.some((room) => room.id === current)
+          ? current
+          : directoryRooms.find((room) => room.room_type === 'global')?.id ?? directoryRooms[0]?.id ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setError(text.loadError);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, roomContext, status, text.loadError]);
+
+  useEffect(() => {
+    if (!activeRoom || activeRoom.room_type === 'global') return;
+    setRecentRoomIds((current) => {
+      const next = [activeRoom.id, ...current.filter((roomId) => roomId !== activeRoom.id)]
+        .slice(0, chatRecentRoomHistoryLimit);
+      if (next.length === current.length && next.every((roomId, index) => roomId === current[index])) {
+        return current;
+      }
+      storeRecentChatRoomIds(next);
+      return next;
+    });
+  }, [activeRoom]);
+
+  useEffect(() => {
+    if (!isOpen || !status || !activeRoom) return undefined;
+    const subscriptionRevision = realtimeSubscriptionRevisionRef.current + 1;
+    realtimeSubscriptionRevisionRef.current = subscriptionRevision;
+    setRealtimeStatus('CONNECTING');
+    const receiveRealtimeStatus = (nextStatus: string) => {
+      if (isCurrentChatRealtimeSubscription(
+        realtimeSubscriptionRevisionRef.current,
+        subscriptionRevision,
+      )) setRealtimeStatus(nextStatus);
+    };
+    let cancelled = false;
     setIsLoading(true);
     setMessageLoadFailed(false);
     setPostingUnavailable(false);
@@ -370,7 +525,7 @@ export function GlobalChatWidget() {
       });
 
       if (moderation.visibility_state === 'visible') {
-        void loadChatMessages().then((page) => {
+        void loadChatMessages(activeRoom.id, null).then((page) => {
           if (!cancelled) setMessages((current) => mergeChatMessages(current, page));
         }).catch(() => undefined);
         return;
@@ -401,7 +556,7 @@ export function GlobalChatWidget() {
       }
     };
 
-    void loadChatMessages()
+    void loadChatMessages(activeRoom.id, null)
       .then((page) => {
         if (cancelled) return;
         setHasMore(page.length === chatPageSize);
@@ -424,8 +579,9 @@ export function GlobalChatWidget() {
         const [profileResult, channelResult] = await Promise.allSettled([
           existingSession ? loadChatProfile() : Promise.resolve(null),
           subscribeToChatMessages(
+            activeRoom,
             receiveMessage,
-            setRealtimeStatus,
+            receiveRealtimeStatus,
             removeMessage,
             receiveChatStatus,
             receiveProfileModeration,
@@ -455,12 +611,18 @@ export function GlobalChatWidget() {
 
     return () => {
       cancelled = true;
+      if (isCurrentChatRealtimeSubscription(
+        realtimeSubscriptionRevisionRef.current,
+        subscriptionRevision,
+      )) {
+        realtimeSubscriptionRevisionRef.current += 1;
+        setRealtimeStatus('CLOSED');
+      }
       const channel = channelRef.current;
       channelRef.current = null;
-      setRealtimeStatus('CLOSED');
       void unsubscribeFromChat(channel);
     };
-  }, [chatSessionRevision, isOpen, status, text]);
+  }, [activeRoom, chatSessionRevision, isOpen, status, text]);
 
   useEffect(() => {
     if (Math.max(cooldownUntil, nameCooldownUntil, profileMuteUntil) <= Date.now()) return undefined;
@@ -469,9 +631,9 @@ export function GlobalChatWidget() {
   }, [cooldownUntil, nameCooldownUntil, profileMuteUntil]);
 
   useEffect(() => {
-    if (!isOpen || nextVisibilityExpiry === 0) return undefined;
+    if (!isOpen || !activeRoom || nextVisibilityExpiry === 0) return undefined;
     const timer = window.setTimeout(() => {
-      void loadChatMessages().then((page) => {
+      void loadChatMessages(activeRoom.id, null).then((page) => {
         setMessages((current) => mergeChatMessages(current, page));
         setProfile((current) => current?.status === 'muted'
           ? { ...current, status: 'active', muted_until: null }
@@ -479,7 +641,7 @@ export function GlobalChatWidget() {
       }).catch(() => undefined);
     }, Math.max(0, nextVisibilityExpiry - Date.now()) + 250);
     return () => window.clearTimeout(timer);
-  }, [isOpen, nextVisibilityExpiry]);
+  }, [activeRoom, isOpen, nextVisibilityExpiry]);
 
   useLayoutEffect(() => {
     const list = listRef.current;
@@ -521,12 +683,12 @@ export function GlobalChatWidget() {
   })), [messages]);
 
   async function loadOlder() {
-    if (isLoadingOlder || !hasMore || messages.length === 0) return;
+    if (!activeRoom || isLoadingOlder || !hasMore || messages.length === 0) return;
     const list = listRef.current;
     if (list) preserveHeightRef.current = list.scrollHeight;
     setIsLoadingOlder(true);
     try {
-      const page = await loadChatMessages(messages[0]);
+      const page = await loadChatMessages(activeRoom.id, null, messages[0]);
       setHasMore(page.length === chatPageSize);
       setMessages((current) => mergeChatMessages(current, page));
     } catch (caught) {
@@ -566,11 +728,14 @@ export function GlobalChatWidget() {
 
   async function handleMessageSubmit(event: FormEvent) {
     event.preventDefault();
-    if (!canSend) return;
+    if (!canSend || !activeRoom) return;
+    const targetRoom = replyTo
+      ? rooms.find((room) => room.id === replyTo.room_id) ?? activeRoom
+      : activeRoom;
     setIsSending(true);
     setError(null);
     try {
-      const sent = await sendChatMessage(body, replyTo?.id ?? null);
+      const sent = await sendChatMessage(targetRoom, selectedTopicTag, body, replyTo?.id ?? null);
       scrollToBottomRef.current = true;
       setMessages((current) => mergeChatMessages(current, [sent]));
       setBody('');
@@ -709,6 +874,92 @@ export function GlobalChatWidget() {
             </div>
           </header>
 
+          {rooms.length > 0 ? (
+            <>
+              <div className="flex items-center gap-2 border-b border-cyan-300/20 px-3 py-2">
+                <nav aria-label={text.channels} className="flex min-w-0 flex-1 gap-2 overflow-x-auto">
+                  {contextualRooms.map((room) => (
+                    <button
+                      key={room.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveRoomId(room.id);
+                        setReplyTo(null);
+                        setError(null);
+                      }}
+                      className={`shrink-0 border px-2 py-1 text-[11px] transition ${room.id === activeRoomId ? 'border-cyan-300/70 bg-cyan-300/10 text-cyan-100' : 'border-line text-slate-400 hover:border-cyan-300/40 hover:text-white'}`}
+                    >
+                      {chatRoomLabel(room, text)}
+                    </button>
+                  ))}
+                  {recentRooms.map((room, index) => (
+                    <button
+                      key={room.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveRoomId(room.id);
+                        setReplyTo(null);
+                        setError(null);
+                      }}
+                      className={`hidden shrink-0 border px-2 py-1 text-[11px] transition ${index === 0 ? 'sm:block' : 'lg:block'} ${room.id === activeRoomId ? 'border-cyan-300/70 bg-cyan-300/10 text-cyan-100' : 'border-line text-slate-400 hover:border-cyan-300/40 hover:text-white'}`}
+                    >
+                      {chatRoomLabel(room, text)}
+                    </button>
+                  ))}
+                </nav>
+                <select
+                  aria-label={text.channelPicker}
+                  value={activeRoomId ?? ''}
+                  onChange={(event) => {
+                    setActiveRoomId(event.target.value);
+                    setReplyTo(null);
+                    setError(null);
+                  }}
+                  className="max-w-[9rem] shrink-0 border border-line bg-[#07101f] px-2 py-1 text-[11px] text-slate-200 outline-none focus:border-cyan-300/60"
+                >
+                  {globalRoom ? <option value={globalRoom.id}>{chatRoomLabel(globalRoom, text)}</option> : null}
+                  {regionRooms.length > 0 ? (
+                    <optgroup label={text.regionChannels}>
+                      {regionRooms.map((room) => <option key={room.id} value={room.id}>{room.display_name}</option>)}
+                    </optgroup>
+                  ) : null}
+                  {electionRooms.length > 0 ? (
+                    <optgroup label={text.electionChannels}>
+                      {electionRooms.map((room) => <option key={room.id} value={room.id}>{room.display_name}</option>)}
+                    </optgroup>
+                  ) : null}
+                </select>
+              </div>
+              <nav aria-label={text.topics} className="flex gap-1 overflow-x-auto border-b border-cyan-300/20 px-3 py-2">
+                <button
+                  type="button"
+                  aria-pressed={selectedTopicTag === null}
+                  onClick={() => {
+                    setSelectedTopicTag(null);
+                    setReplyTo(null);
+                  }}
+                  className={`shrink-0 border px-2 py-1 text-[10px] transition ${selectedTopicTag === null ? 'border-pink-300/60 bg-pink-300/10 text-pink-100' : 'border-line text-slate-400 hover:border-pink-300/40 hover:text-white'}`}
+                >
+                  {text.allTopics}
+                </button>
+                {chatTopicTags.map((topic) => (
+                  <button
+                    key={topic}
+                    type="button"
+                    aria-pressed={selectedTopicTag === topic}
+                    onClick={() => {
+                      setSelectedTopicTag(topic);
+                      setReplyTo(null);
+                    }}
+                    className={`shrink-0 border px-2 py-1 text-[10px] transition ${selectedTopicTag === topic ? 'border-pink-300/60 bg-pink-300/10 text-pink-100' : 'border-line text-slate-400 hover:border-pink-300/40 hover:text-white'}`}
+                  >
+                    {chatTopicLabel(topic, text)}
+                  </button>
+                ))}
+              </nav>
+            </>
+          ) : null}
+
           <div
             ref={listRef}
             onScroll={handleScroll}
@@ -757,6 +1008,18 @@ export function GlobalChatWidget() {
                         {message.display_name_snapshot} <span className="font-normal text-slate-500">（#{message.public_code_snapshot}）</span>
                       </p>
                       <time className="shrink-0 text-[10px] text-slate-500">{formatChatTimestamp(message.created_at)}</time>
+                    </div>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {activeRoom?.room_type === 'global' ? (
+                        <span className="inline-block border border-pink-300/25 bg-pink-300/[0.05] px-1.5 py-0.5 text-[9px] text-pink-200/80">
+                          {message.room_display_name}
+                        </span>
+                      ) : null}
+                      {message.topic_tag ? (
+                        <span className="inline-block border border-cyan-300/25 bg-cyan-300/[0.05] px-1.5 py-0.5 text-[9px] text-cyan-200/80">
+                          {chatTopicLabel(message.topic_tag, text)}
+                        </span>
+                      ) : null}
                     </div>
                     <p className={`mt-1 break-words text-sm leading-6 ${message.visibility_state === 'visible' ? 'text-slate-100' : 'italic text-amber-100/75'}`}>{visibleMessageBody(message, text)}</p>
                     {message.visibility_state === 'visible' ? (

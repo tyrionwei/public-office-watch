@@ -10,6 +10,60 @@ export const chatPageSize = 50;
 export const chatCooldownSeconds = 8;
 export const chatNameCooldownMinutes = 30;
 
+export const chatTopicTags = [
+  'transport',
+  'housing',
+  'education',
+  'healthcare',
+  'environment',
+  'safety',
+  'other',
+] as const;
+
+export type ChatTopicTag = typeof chatTopicTags[number];
+export type ChatRoomType = 'global' | 'region' | 'election_event';
+
+export type ChatRoom = {
+  id: string;
+  room_key: string;
+  room_type: ChatRoomType;
+  entity_key: string | null;
+  display_name: string;
+  region_id: string | null;
+  display_order: number;
+};
+
+export type ChatRoomContext = {
+  regionId: string | null;
+  eventKey: string | null;
+  electionId: string | null;
+};
+
+const canonicalUuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
+
+export function normalizeChatUuid(value: string | null) {
+  const normalized = value?.trim() ?? '';
+  return canonicalUuidPattern.test(normalized) ? normalized : null;
+}
+
+function normalizeChatRegionReference(value: string | null) {
+  const normalized = value?.trim() ?? '';
+  return normalized && normalized !== 'national' ? normalized : null;
+}
+
+export function getChatRoomContext(pathname: string, selectedRegionId: string | null): ChatRoomContext {
+  const regionMatch = pathname.match(/^\/regions\/([^/?#]+)\/?$/u);
+  const eventMatch = pathname.match(/^\/elections\/events\/([^/?#]+)\/?$/u);
+  const electionMatch = pathname.match(/^\/elections\/(?!events\/)([^/?#]+)\/?$/u);
+  return {
+    regionId: normalizeChatRegionReference(
+      regionMatch ? decodeURIComponent(regionMatch[1]) : selectedRegionId,
+    ),
+    eventKey: eventMatch ? decodeURIComponent(eventMatch[1]) : null,
+    electionId: normalizeChatUuid(electionMatch ? decodeURIComponent(electionMatch[1]) : null),
+  };
+}
+
 export type ChatStatus = {
   is_enabled: boolean;
   updated_at: string;
@@ -30,6 +84,11 @@ export type ChatMessageVisibility = 'visible' | 'removed' | 'author_muted' | 'au
 
 export type ChatMessage = {
   id: string;
+  room_id: string;
+  topic_tag: ChatTopicTag | null;
+  room_key: string;
+  room_type: ChatRoomType;
+  room_display_name: string;
   display_name_snapshot: string;
   public_code_snapshot: string;
   body: string | null;
@@ -49,7 +108,14 @@ export type ChatProfileModeration = {
   visibility_until: string | null;
 };
 
-export type ChatRealtimeChannel = PublicRealtimeChannel;
+export type ChatRealtimeChannel = PublicRealtimeChannel[];
+
+export function isCurrentChatRealtimeSubscription(
+  activeRevision: number,
+  reportedRevision: number,
+) {
+  return activeRevision === reportedRevision;
+}
 
 export class ChatApiError extends Error {
   readonly code: string;
@@ -140,31 +206,82 @@ export async function saveChatProfile(displayName: string, acceptTerms: boolean)
   return result.profile;
 }
 
-export async function loadChatMessages(before?: Pick<ChatMessage, 'created_at' | 'id'>) {
+export async function loadChatRooms(context: ChatRoomContext) {
+  const client = requireChatClient();
+  let regionId = normalizeChatUuid(context.regionId);
+  const regionSlug = regionId ? null : normalizeChatRegionReference(context.regionId);
+  if (regionSlug) {
+    const regionResult = await client
+      .schema('published')
+      .from('regions')
+      .select('region_id')
+      .eq('slug', regionSlug)
+      .limit(1)
+      .maybeSingle();
+    if (regionResult.error) throw new ChatApiError('CHAT_ROOMS_UNAVAILABLE');
+    regionId = normalizeChatUuid(
+      (regionResult.data as { region_id?: string } | null)?.region_id ?? null,
+    );
+  }
+
+  const { data, error } = await client.schema('published').rpc('chat_rooms', {
+    p_region_id: regionId,
+    p_event_key: context.eventKey,
+    p_election_id: normalizeChatUuid(context.electionId),
+  });
+  if (error) throw new ChatApiError('CHAT_ROOMS_UNAVAILABLE');
+  return (data as ChatRoom[] | null) ?? [];
+}
+
+export async function loadChatRoomDirectory() {
+  const client = requireChatClient();
+  const { data, error } = await client.schema('published').rpc('chat_room_directory');
+  if (error) throw new ChatApiError('CHAT_ROOMS_UNAVAILABLE');
+  return (data as ChatRoom[] | null) ?? [];
+}
+
+export async function loadChatMessages(
+  roomId: string,
+  topicTag: ChatTopicTag | null,
+  before?: Pick<ChatMessage, 'created_at' | 'id'>,
+) {
   const client = requireChatClient();
   const { data, error } = await client.schema('published').rpc('chat_messages', {
+    p_room_id: roomId,
     p_before_created_at: before?.created_at ?? null,
     p_before_id: before?.id ?? null,
     p_limit: chatPageSize,
+    p_topic_tag: topicTag,
   });
   if (error) throw new ChatApiError('CHAT_MESSAGES_UNAVAILABLE');
   return (data as ChatMessage[] | null) ?? [];
 }
 
-export async function sendChatMessage(body: string, replyToMessageId: string | null) {
-  const result = await invokeChatApi<{ message: ChatMessage }>({
+export async function sendChatMessage(
+  room: ChatRoom,
+  topicTag: ChatTopicTag | null,
+  body: string,
+  replyToMessageId: string | null,
+) {
+  const result = await invokeChatApi<{ message: Omit<ChatMessage, 'room_key' | 'room_type' | 'room_display_name'> }>({
     action: 'send-message',
+    roomId: room.id,
+    topicTag,
     body,
     replyToMessageId,
   });
   return {
     ...result.message,
+    room_key: room.room_key,
+    room_type: room.room_type,
+    room_display_name: room.display_name,
     visibility_state: result.message.visibility_state ?? 'visible',
     visibility_until: result.message.visibility_until ?? null,
   };
 }
 
 export async function subscribeToChatMessages(
+  room: ChatRoom,
   onMessage: (message: ChatMessage) => void,
   onStatus: (status: string) => void,
   onMessageRemoved: (messageId: string) => void,
@@ -175,10 +292,13 @@ export async function subscribeToChatMessages(
   const session = await getExistingParticipationSession().catch(() => null);
   if (session) await client.realtime.setAuth(session.access_token);
 
-  const channel = client
-    .channel('global-chat', { config: { private: true } })
+  const roomChannel = client
+    .channel(`chat-room:${room.room_key}`, { config: { private: true } })
     .on('broadcast', { event: 'message_created' }, ({ payload }) => {
-      if (isChatMessage(payload)) onMessage(payload);
+      if (
+        isChatMessage(payload)
+        && (room.room_type === 'global' || payload.room_id === room.id)
+      ) onMessage(payload);
     })
     .on('broadcast', { event: 'message_removed' }, ({ payload }) => {
       if (
@@ -189,21 +309,25 @@ export async function subscribeToChatMessages(
         onMessageRemoved((payload as { id: string }).id);
       }
     })
+    .subscribe((status) => onStatus(status));
+
+  const controlChannel = client
+    .channel('global-chat', { config: { private: true } })
     .on('broadcast', { event: 'status_changed' }, ({ payload }) => {
       if (isChatStatus(payload)) onChatStatusChanged(payload);
     })
     .on('broadcast', { event: 'profile_moderation_changed' }, ({ payload }) => {
       if (isChatProfileModeration(payload)) onProfileModerationChanged(payload);
     })
-    .subscribe((status) => onStatus(status));
+    .subscribe();
 
-  return channel;
+  return [roomChannel, controlChannel];
 }
 
-export async function unsubscribeFromChat(channel: ChatRealtimeChannel | null) {
-  if (!channel) return;
+export async function unsubscribeFromChat(channels: ChatRealtimeChannel | null) {
+  if (!channels) return;
   const client = getChatClient();
-  if (client) await client.removeChannel(channel);
+  if (client) await Promise.all(channels.map((channel) => client.removeChannel(channel)));
 }
 
 export function mergeChatMessages(current: ChatMessage[], incoming: ChatMessage[]) {
@@ -273,6 +397,15 @@ function isChatMessage(value: unknown): value is ChatMessage {
   if (!value || typeof value !== 'object') return false;
   const message = value as Partial<ChatMessage>;
   return typeof message.id === 'string'
+    && typeof message.room_id === 'string'
+    && typeof message.room_key === 'string'
+    && (
+      message.room_type === 'global'
+      || message.room_type === 'region'
+      || message.room_type === 'election_event'
+    )
+    && typeof message.room_display_name === 'string'
+    && (message.topic_tag === null || chatTopicTags.includes(message.topic_tag as ChatTopicTag))
     && typeof message.display_name_snapshot === 'string'
     && typeof message.public_code_snapshot === 'string'
     && (typeof message.body === 'string' || message.body === null)

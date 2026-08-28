@@ -35,6 +35,10 @@ const publicFeedbackAndChatRealtimeMigration = readFileSync(
   new URL('../supabase/migrations/20260827170729_split_public_feedback_and_chat_realtime_reads.sql', import.meta.url),
   'utf8',
 );
+const channelMigration = readFileSync(
+  new URL('../supabase/migrations/20260828093717_add_chat_channels.sql', import.meta.url),
+  'utf8',
+);
 const app = readFileSync(
   new URL('../apps/web/src/App.tsx', import.meta.url),
   'utf8',
@@ -63,6 +67,21 @@ const adminClient = readFileSync(
   new URL('../apps/web/src/lib/chatAdmin.ts', import.meta.url),
   'utf8',
 );
+
+test('chat channels preserve the global lobby and reject cross-room replies', () => {
+  assert.match(channelMigration, /room_type IN \('global', 'region', 'election_event'\)/);
+  assert.match(channelMigration, /ADD COLUMN room_id UUID NOT NULL DEFAULT/);
+  assert.match(channelMigration, /replied\.room_id <> p_room_id/);
+  assert.match(channelMigration, /OR message\.room_id = p_room_id/);
+  assert.match(channelMigration, /p_room_id = '00000000-0000-4000-8000-000000000001'/);
+  assert.match(channelMigration, /CREATE FUNCTION published\.chat_room_directory/);
+  assert.match(channelMigration, /'chat-room:' \|\| target_room\.room_key/);
+  assert.match(channelMigration, /'chat-room:global'/);
+  assert.match(channelMigration, /p_topic_tag IS NULL OR message\.topic_tag = p_topic_tag/);
+  assert.match(channelMigration, /'room_display_name', target_room\.display_name/);
+  assert.match(channelMigration, /topic_tag IN/);
+  assert.doesNotMatch(channelMigration, /person_room|room_type = 'person'/);
+});
 
 test('local Supabase explicitly enables anonymous auth for chat development', () => {
   assert.match(config, /^enable_anonymous_sign_ins = true$/m);
@@ -181,6 +200,12 @@ test('the global widget survives route changes and follows the agreed quiet UI',
   assert.match(widget, /md:hover:opacity-100/);
   assert.match(widget, /md:opacity-60/);
   assert.match(widget, /text\.minimize/);
+  assert.match(widget, /aria-label=\{text\.channelPicker\}/);
+  assert.match(widget, /aria-label=\{text\.topics\}/);
+  assert.match(widget, /message\.room_display_name/);
+  assert.match(widget, /realtimeSubscriptionRevisionRef/);
+  assert.match(widget, /receiveRealtimeStatus/);
+  assert.doesNotMatch(widget, /receiveMessage,\s+setRealtimeStatus/);
   assert.doesNotMatch(widget, /text\.subtitle/);
 });
 
@@ -188,6 +213,15 @@ test('history uses a 50-row cursor RPC rather than offset pagination', () => {
   assert.match(interfaceMigration, /\(message\.created_at, message\.id\) < \(p_before_created_at, p_before_id\)/);
   assert.match(interfaceMigration, /COALESCE\(p_limit, 50\)/);
   assert.match(chatClient, /p_before_created_at: before\?\.created_at \?\? null/);
+  assert.match(chatClient, /p_topic_tag: topicTag/);
+  assert.match(chatClient, /topicTag: ChatTopicTag \| null/);
+  assert.match(widget, /sendChatMessage\(targetRoom, selectedTopicTag,/);
+  assert.doesNotMatch(widget, /topicLabel:/);
+  assert.doesNotMatch(widget, /message\.topic_tag !== selectedTopicTag/);
+  assert.doesNotMatch(widget, /loadChatMessages\(activeRoom\.id, selectedTopicTag/);
+  assert.match(widget, /chatRecentRoomsStorageKey/);
+  assert.match(widget, /recentRooms\.map\(\(room, index\)/);
+  assert.match(widget, /index === 0 \? 'sm:block' : 'lg:block'/);
   assert.doesNotMatch(chatClient, /offset/i);
 });
 

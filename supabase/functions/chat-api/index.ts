@@ -31,6 +31,9 @@ function databaseErrorCode(error: { message?: string } | null) {
     'CHAT_COOLDOWN',
     'CHAT_DUPLICATE',
     'CHAT_REPLY_UNAVAILABLE',
+    'CHAT_REPLY_WRONG_ROOM',
+    'CHAT_ROOM_UNAVAILABLE',
+    'CHAT_INVALID_TOPIC',
     'CHAT_INVALID_BODY',
     'CHAT_TERMS_REQUIRED',
     'CHAT_NAME_COOLDOWN',
@@ -171,6 +174,19 @@ Deno.serve(async (request) => {
         return jsonResponse(400, { error: body.code });
       }
 
+      const roomId = validateReplyId(payload.roomId);
+      if (!roomId) {
+        return jsonResponse(400, { error: 'CHAT_ROOM_UNAVAILABLE' });
+      }
+
+      const allowedTopics = new Set([
+        'transport', 'housing', 'education', 'healthcare',
+        'environment', 'safety', 'other',
+      ]);
+      const topicTag = typeof payload.topicTag === 'string' && allowedTopics.has(payload.topicTag)
+        ? payload.topicTag
+        : null;
+
       const replyToMessageId = validateReplyId(payload.replyToMessageId);
       if (replyToMessageId === undefined) {
         return jsonResponse(400, { error: 'CHAT_INVALID_REPLY' });
@@ -198,8 +214,10 @@ Deno.serve(async (request) => {
         userAgent ? sha256Hex(userAgent) : Promise.resolve(null),
       ]);
       const { data, error } = await serviceClient
-        .rpc('create_chat_message', {
+        .rpc('create_chat_channel_message', {
           p_user_id: authData.user.id,
+          p_room_id: roomId,
+          p_topic_tag: topicTag,
           p_body: body.value,
           p_reply_to_message_id: replyToMessageId,
           p_ip_hmac: ipHmac,

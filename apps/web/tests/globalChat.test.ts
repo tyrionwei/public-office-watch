@@ -4,14 +4,25 @@ import {
   chatDateKey,
   countChatCharacters,
   formatChatTimestamp,
+  getChatRoomContext,
+  isCurrentChatRealtimeSubscription,
   limitChatInput,
   mergeChatMessages,
+  normalizeChatUuid,
   type ChatMessage,
 } from '../src/lib/globalChat.ts';
+
+const regionId = '11111111-1111-4111-8111-111111111111';
+const electionId = '22222222-2222-4222-8222-222222222222';
 
 function message(id: string, createdAt: string, body = id): ChatMessage {
   return {
     id,
+    room_id: '00000000-0000-4000-8000-000000000001',
+    topic_tag: null,
+    room_key: 'global',
+    room_type: 'global',
+    room_display_name: '全站大廳',
     display_name_snapshot: '測試者',
     public_code_snapshot: 'A7K2F9',
     body,
@@ -25,6 +36,54 @@ function message(id: string, createdAt: string, body = id): ChatMessage {
     visibility_until: null,
   };
 }
+
+test('chat room context uses route context without creating person rooms', () => {
+  assert.deepEqual(getChatRoomContext(`/regions/${regionId}`, null), {
+    regionId,
+    eventKey: null,
+    electionId: null,
+  });
+  assert.deepEqual(getChatRoomContext('/elections/events/2024-2024-01-13-national', regionId), {
+    regionId,
+    eventKey: '2024-2024-01-13-national',
+    electionId: null,
+  });
+  assert.deepEqual(getChatRoomContext(`/elections/${electionId}`, regionId), {
+    regionId,
+    eventKey: null,
+    electionId,
+  });
+  assert.deepEqual(getChatRoomContext('/people/person-1', regionId), {
+    regionId,
+    eventKey: null,
+    electionId: null,
+  });
+});
+
+test('ignores late realtime statuses from a replaced room subscription', () => {
+  assert.equal(isCurrentChatRealtimeSubscription(2, 1), false);
+  assert.equal(isCurrentChatRealtimeSubscription(2, 2), true);
+});
+
+test('chat room context keeps region slugs while ignoring the nationwide sentinel', () => {
+  assert.equal(normalizeChatUuid(' national '), null);
+  assert.equal(normalizeChatUuid(` ${regionId} `), regionId);
+  assert.deepEqual(getChatRoomContext('/people/person-1', 'national'), {
+    regionId: null,
+    eventKey: null,
+    electionId: null,
+  });
+  assert.deepEqual(getChatRoomContext('/people/person-1', 'new-taipei-city'), {
+    regionId: 'new-taipei-city',
+    eventKey: null,
+    electionId: null,
+  });
+  assert.deepEqual(getChatRoomContext('/regions/new-taipei-city', regionId), {
+    regionId: 'new-taipei-city',
+    eventKey: null,
+    electionId: null,
+  });
+});
 
 test('chat input stays single-line and stops at 50 Unicode characters', () => {
   assert.equal(countChatCharacters('😀'), 1);

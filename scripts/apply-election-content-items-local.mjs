@@ -8,6 +8,7 @@ import { educationProfileItems, experienceProfileItems } from '../apps/web/src/l
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const reportPath = path.join(repoRoot, 'tmp', 'election-content-items-report.json');
+const reviewedPlatformItemsPath = path.join(repoRoot, 'scripts', 'data', 'platform-fulfillment-reviewed-items.json');
 const localHosts = new Set(['127.0.0.1', 'localhost', '::1']);
 const version = 'election-content-items-v1';
 
@@ -144,6 +145,21 @@ export function splitClaimItems(claim, position = '') {
     ? claim.claim_json?.platformText ?? claim.claim_value
     : claim.claim_value ?? (Array.isArray(claim.claim_json?.items) ? claim.claim_json.items.join('\n') : '');
 
+  const reviewedSnapshot = reviewedPlatformSnapshots.get(claim.id);
+  if (claim.claim_type === 'platform' && reviewedSnapshot) {
+    if (source !== reviewedSnapshot.original) {
+      throw new Error('Reviewed platform source changed for claim ' + claim.id);
+    }
+    return {
+      items: reviewedSnapshot.items,
+      metadata: {
+        version,
+        method: 'manually_reviewed_platform_snapshot',
+        confidence: 100,
+        reviewStatus: 'reviewed',
+      },
+    };
+  }
   if (claim.claim_type === 'platform' && reviewedPlatformItems.has(claim.id)) {
     return {
       items: reviewedPlatformItems.get(claim.id),
@@ -374,6 +390,21 @@ const reviewedExperienceItems = new Map([
   ['e4082121-7875-4722-912f-7b2570e45b3a', ['第1、2屆桃園市議員', '第16、17屆桃園縣議員', '第10屆中壢市民代表', '桃園市勞資關係發展協進會副理事長', '桃園市黃墘溪水環境保護協進會理事長', '桃園市中壢青溪婦女協會理事長', '桃園市中壢區婦女會理事長', '台灣葉姓宗親會理事長', '桃園市文化警友協進會理事長', '桃園市長春藤健康促進協會理事長']],
   ['5241579d-99a0-4231-a5bd-92aee7cd52a4', ['新北市第3屆議員', '台大研究生協會會長', '民進黨發言人', '民進黨青年代表', '立法院議會資深政策助理', '民視、三立、年代政論來賓', '太陽花學運成員', '陳文成基金會董事', '新北足球委員會委員', '新北屏東同鄉會顧問', '新北牙醫公會顧問', '新北驗光公會顧問', '新北樂山會顧問', '耕著熊運動健康社團代言人']],
 ]);
+
+const reviewedPlatformSnapshots = new Map(
+  JSON.parse(fs.readFileSync(reviewedPlatformItemsPath, 'utf8')).map((record) => {
+    if (
+      !record?.claimId
+      || !record?.original
+      || !Array.isArray(record?.items)
+      || record.items.length === 0
+      || record.items.some((item) => typeof item !== 'string' || item.trim() !== item || !item)
+    ) {
+      throw new Error('Invalid reviewed platform snapshot: ' + (record?.claimId ?? 'missing claim ID'));
+    }
+    return [record.claimId, record];
+  }),
+);
 
 const reviewedPlatformItems = new Map([
   ['bd708886-98b1-4601-a49c-21bbe865c4c4', ['建請縣府成立外來投資聯合局處小組，可加速審核速度，提高投資意願。', '針對秀姑巒溪流域研議強化泛舟活動及任何可行的水上遊憩行為，並增設親水公園等空間。', '重視南區觀光及農業産業，研議多時節經年常態性之中大型活動來為南區帶入更多的人潮及就業機會，增進活絡在地產業。', '加速瑞穗溫泉區開發計劃，檢討特定農業區地目之存廢，讓瑞穗溫泉區能夠有實質之發展。', '優化或建置南區公共運輸系統，推行銀髮就醫固定班次接駁往返，讓長輩就醫無憂。', '以南區四鄉鎮為主軸結合各區農特產品，邀請各大銷售通路做規劃配合，讓農民不再為銷售煩惱，共創雙赢。']],

@@ -33,12 +33,16 @@ export function platformClaimsForCandidate(
 }
 
 export function platformItemsForClaim(claim: PublicPersonClaim) {
+  const contentSplit = claim.claim_json.contentSplit;
+  const storedItemsNeedReview = contentSplit !== null
+    && typeof contentSplit === 'object'
+    && (contentSplit as { reviewStatus?: unknown }).reviewStatus === 'needs_review';
   const storedItems = Array.isArray(claim.claim_json.items)
     ? claim.claim_json.items
       .map((item) => typeof item === 'string' ? item.trim() : '')
       .filter(Boolean)
     : [];
-  if (storedItems.length > 0) return Array.from(new Set(storedItems));
+  if (!storedItemsNeedReview && storedItems.length > 0) return Array.from(new Set(storedItems));
 
   const platformText = typeof claim.claim_json.platformText === 'string'
     ? claim.claim_json.platformText

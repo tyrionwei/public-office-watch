@@ -10,6 +10,10 @@ const presidentialMigration = readFileSync(
   new URL('../../../supabase/migrations/20260828210500_enable_2024_presidential_platform_voting.sql', import.meta.url),
   'utf8',
 );
+const approvedItemsMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260829010000_release_approved_platform_items.sql', import.meta.url),
+  'utf8',
+);
 const participationSource = readFileSync(
   new URL('../src/lib/platformFulfillment.ts', import.meta.url),
   'utf8',
@@ -86,6 +90,18 @@ test('elected presidential tickets share one reviewed platform vote record', () 
   assert.ok(
     (presidentialMigration.match(/vote_claim_id := public\.platform_fulfillment_vote_claim_id/gu)?.length ?? 0) >= 3,
   );
+});
+
+test('only reviewed platform splits can become fulfilment voting items', () => {
+  assert.match(
+    approvedItemsMigration,
+    /#>> '\{contentSplit,reviewStatus\}'\s+IN \('auto_approved', 'reviewed'\)/u,
+  );
+  assert.match(approvedItemsMigration, /cec-platform:2024:presidential-ticket-2/u);
+  assert.match(approvedItemsMigration, /Expected 991 approved non-empty platform item payloads/u);
+  assert.match(approvedItemsMigration, /candidate_map\.canonical_person_id <> claim_map\.canonical_person_id/u);
+  assert.match(approvedItemsMigration, /Inserted platform claim conflicts with the reviewed release row/u);
+  assert.doesNotMatch(approvedItemsMigration, /"reviewStatus":"needs_review"/u);
 });
 
 test('browser reads only aggregate and own-vote RPCs and writes through the participation proxy', () => {

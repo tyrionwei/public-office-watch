@@ -106,6 +106,14 @@ test('local presidential ticket shares votes across the elected running mates', 
     && Array.isArray((row.claim_json as { items?: unknown }).items)
     && ((row.claim_json as { items: unknown[] }).items).length > 0
   ));
+  const needsReviewClaims = (claims.data ?? []).filter((row) => (
+    row.claim_json
+    && typeof row.claim_json === 'object'
+    && (row.claim_json as { contentSplit?: { reviewStatus?: string } })
+      .contentSplit?.reviewStatus === 'needs_review'
+    && Array.isArray((row.claim_json as { items?: unknown }).items)
+    && ((row.claim_json as { items: unknown[] }).items).length > 0
+  ));
   const claim = sharedClaims.find((row) => (
     (row.claim_json as { presidentialTicket?: { candidateRole?: string } })
       .presidentialTicket?.candidateRole === 'president'
@@ -117,6 +125,7 @@ test('local presidential ticket shares votes across the elected running mates', 
   assert.equal(sharedClaims.length, 2);
   assert.ok(claim);
   assert.ok(peerClaim);
+  assert.equal(needsReviewClaims.length, 0);
 
   let participantHash: string | null = null;
   let userId: string | null = null;

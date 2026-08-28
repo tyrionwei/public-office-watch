@@ -68,6 +68,15 @@ test('falls back to the original platform text when stored items are empty', () 
   ]);
 });
 
+test('ignores stored platform items that still need review', () => {
+  const claim = platformClaim('needs-review');
+  claim.claim_value = '原始完整政見內容';
+  claim.claim_json.items = ['尚未確認的切分項目'];
+  claim.claim_json.contentSplit = { reviewStatus: 'needs_review' };
+
+  assert.deepEqual(platformItemsForClaim(claim), ['原始完整政見內容']);
+});
+
 test('does not remove candidate-specific text from the generic platform parser', () => {
   const claim = platformClaim('candidate-specific-text');
   claim.claim_value = '改善地方交通。 光達是素人投入服務社會，將推動青年就業。';

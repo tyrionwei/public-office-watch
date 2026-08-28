@@ -73,13 +73,13 @@ function PlatformFulfillmentLegend() {
 
 function VoteButtons({
   selected,
-  pendingStatus,
+  savingStatus,
   busy,
   enabled,
   onVote,
 }: {
   selected?: PlatformFulfillmentStatus;
-  pendingStatus?: PlatformFulfillmentStatus;
+  savingStatus?: PlatformFulfillmentStatus;
   busy: boolean;
   enabled: boolean;
   onVote: (status: PlatformFulfillmentStatus) => void;
@@ -100,7 +100,7 @@ function VoteButtons({
             selected === status ? 'bg-white/10 ring-1 ring-white/30' : 'bg-bg/50',
           ].join(' ')}
         >
-          {pendingStatus === status
+          {savingStatus === status
             ? t('person.fulfillment.saving')
             : t(statusPresentation[status].label)}
         </button>
@@ -214,7 +214,7 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
   const [participation, setParticipation] = useState<PlatformFulfillmentParticipation | null>(null);
   const [loading, setLoading] = useState(true);
   const [visibleResultKeys, setVisibleResultKeys] = useState<Set<string>>(() => new Set());
-  const [pendingVote, setPendingVote] = useState<{
+  const [savingVote, setSavingVote] = useState<{
     itemKey: string;
     status: PlatformFulfillmentStatus;
   } | null>(null);
@@ -269,7 +269,7 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
     currentStatus?: PlatformFulfillmentStatus,
   ) {
     if (!participation?.votingIsOpen || status === currentStatus) return;
-    setPendingVote({ itemKey, status });
+    setSavingVote({ itemKey, status });
     setError(null);
     try {
       await submitPlatformFulfillmentVote(claim.claim_id, itemKey, status);
@@ -281,7 +281,7 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
       }
       setError({ itemKey, kind: 'submit' });
     } finally {
-      setPendingVote(null);
+      setSavingVote(null);
     }
   }
 
@@ -403,8 +403,8 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
       <ol className="mt-2 max-h-[34rem] list-decimal divide-y divide-line/50 overflow-auto pl-5 pr-2 text-sm text-slate-200">
         {items.map((item) => {
           const ownVote = participation.ownVotes[item.itemKey];
-          const itemPendingVote = pendingVote?.itemKey === item.itemKey
-            ? pendingVote.status
+          const itemSavingVote = savingVote?.itemKey === item.itemKey
+            ? savingVote.status
             : undefined;
           const withdrawing = withdrawingKey === item.itemKey;
           return (
@@ -418,8 +418,8 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
                   <div className="grid gap-2">
                     <VoteButtons
                       selected={ownVote}
-                      pendingStatus={itemPendingVote}
-                      busy={Boolean(itemPendingVote) || withdrawing}
+                      savingStatus={itemSavingVote}
+                      busy={Boolean(itemSavingVote) || withdrawing}
                       enabled={participation.votingIsOpen}
                       onVote={(status) => void handleVote(item.itemKey, status, ownVote)}
                     />

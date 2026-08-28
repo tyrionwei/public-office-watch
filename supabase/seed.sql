@@ -94,3 +94,18 @@ TO anon, authenticated;
 
 GRANT EXECUTE ON FUNCTION published.search_public_records(TEXT, INTEGER)
 TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.chat_messages(UUID, TIMESTAMPTZ, UUID, INTEGER, TEXT)
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.chat_rooms(UUID, TEXT, UUID)
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.chat_room_directory()
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.platform_fulfillment_results(UUID)
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.get_platform_fulfillment_votes(UUID)
+TO authenticated;

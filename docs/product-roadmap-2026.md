@@ -159,20 +159,16 @@ portrait, but:
 - No “sponsored unlock” label is shown beside a political figure.
 - Payment and improvement-suggestion records remain logically separate.
 
-## 11. Payment methods
+## 11. Support availability
 
-Initial support methods:
+Public support is not currently available. The support page should present
+the feature as being in preparation and must not collect payment details or
+create transactions.
 
-1. NewebPay as the primary small-payment method.
-2. USDC and USDT as supplemental crypto support methods.
-3. No direct bank-transfer option.
-
-Support should emphasize broad small contributions rather than large
-individual payments.
-
-Crypto support must later specify the accepted network for each asset,
-use a project-specific wallet and clearly warn against transfers over an
-unsupported network.
+Any future provider or payment method requires a separate review before its
+name, amounts, transaction flow or refund terms are published. Once launched,
+support should emphasize broad small contributions rather than large individual
+payments.
 
 ## 12. Transparency reporting
 
@@ -183,12 +179,10 @@ Prefer periodic reporting of:
 
 - Monthly supporter count
 - Monthly support total
-- NewebPay and crypto channel totals
+- Support channel totals
 - Payment and network fees
 - Expense categories
 - Remaining operating funds
-
-Crypto contributions are valued in TWD at the time received.
 
 Do not publish individual names, wallet addresses, individual amounts or
 the monetary support associated with a particular political figure or

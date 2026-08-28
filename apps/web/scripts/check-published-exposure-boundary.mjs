@@ -33,6 +33,8 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260827090000_add_seo_catalog_page_rpc.sql',
   'supabase/migrations/20260827094616_use_server_issued_anonymous_participant.sql',
   'supabase/migrations/20260827170729_split_public_feedback_and_chat_realtime_reads.sql',
+  'supabase/migrations/20260828065136_add_platform_fulfillment_voting.sql',
+  'supabase/migrations/20260828093717_add_chat_channels.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -67,11 +69,15 @@ const retiredFrontendRelations = [
 const directlyQueriedRelations = reviewedRelations;
 const reviewedAuxiliaryFunctions = [
   'chat_messages',
+  'chat_room_directory',
+  'chat_rooms',
   'chat_status',
   'get_region_issue_response',
   'get_person_feedback_own_submissions',
   'get_person_feedback_context',
+  'get_platform_fulfillment_votes',
   'person_feedback_priorities',
+  'platform_fulfillment_results',
   'region_issue_results',
   'seo_catalog_page',
   'submit_person_feedback',

@@ -22,6 +22,7 @@ const roadmapStages = [
       'about.roadmapCurrentOffices',
       'about.roadmapCurrentIdentity',
       'about.roadmapCurrentDesktop',
+      'about.roadmapCurrentSprites',
     ],
     markerClassName: 'bg-accent',
   },

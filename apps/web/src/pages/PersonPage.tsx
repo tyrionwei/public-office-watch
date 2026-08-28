@@ -20,7 +20,7 @@ import { platformClaimsForCandidate, platformItemsForClaim } from '../lib/candid
 import type { FeedbackSectionKey } from '../lib/personFeedback';
 import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
-import { peoplePath } from '../routes/routePaths';
+import { dataGuidancePath, peoplePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonClaim, PublicPersonPartyAffiliation } from '../types/publicViews';
 
@@ -578,6 +578,12 @@ export function PersonPage() {
                 <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{person.role_label}</p>
                 <h2 className="mt-2 font-display text-4xl text-white">{person.name}</h2>
                 <p className="mt-3 text-sm leading-6 text-slate-300">{displayPosition}</p>
+                <p className="mt-2 max-w-3xl text-[11px] leading-5 text-slate-500">
+                  {t('person.dataQualityNote')}{' '}
+                  <Link className="text-accent hover:text-white" to={dataGuidancePath()}>
+                    {t('person.qualityDetails')} →
+                  </Link>
+                </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   <HudStatCard
                     label={t('person.party')}

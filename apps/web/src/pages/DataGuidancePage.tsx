@@ -129,6 +129,20 @@ export function DataGuidancePage() {
           </div>
         </SectionPanel>
 
+        <SectionPanel title={t('dataGuidance.qualityTitle')} eyebrow={t('dataGuidance.qualityEyebrow')}>
+          <p className="max-w-4xl text-sm leading-6 text-slate-300">{t('dataGuidance.qualityDescription')}</p>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            {(['dataGuidance.qualitySource', 'dataGuidance.qualityTransform', 'dataGuidance.qualityReview'] as const).map((key) => (
+              <p
+                key={key}
+                className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm leading-6 text-slate-300"
+              >
+                {t(key)}
+              </p>
+            ))}
+          </div>
+        </SectionPanel>
+
         <SectionPanel title={t('dataGuidance.updatesTitle')} eyebrow={t('dataGuidance.updatesEyebrow')}>
           <p className="max-w-4xl text-sm leading-6 text-slate-300">{t('dataGuidance.updatesDescription')}</p>
           <div className="mt-4 grid gap-3 md:grid-cols-3">

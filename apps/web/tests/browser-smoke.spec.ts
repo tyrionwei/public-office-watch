@@ -131,24 +131,40 @@ test('update log is clearly presented as reviewed site data rather than politica
   await expect(page.getByRole('link', { name: '↻ 資料更新紀錄' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '公開資料更新紀錄' })).toBeVisible();
   await expect(page.getByText('這裡記錄本站新增與修正的資料，不是政治新聞，也不會直接公開尚未審核的自動蒐集結果。')).toBeVisible();
+  await expect(page.getByText('補充資料品質與開源貢獻說明', { exact: true })).toBeVisible();
 });
 
-test('support page presents review-ready amounts, policies, and disabled payment', async ({ page }) => {
+test('support page clearly presents the feature as still in preparation', async ({ page }) => {
   await page.goto('/support');
 
   await expect(page.getByRole('heading', { name: '支持公職資料觀測站' })).toBeVisible();
   await expect(page.getByRole('link', { name: '♡ 支持本站' })).toBeVisible();
-  await expect(page.locator('[data-support-amounts] button')).toHaveText(['NT$100', 'NT$300', 'NT$500', 'NT$1,000', '自訂金額']);
-  await expect(page.locator('[data-selected-support-amount]')).toHaveText('NT$300');
-
-  await page.getByRole('button', { name: '自訂金額' }).click();
-  await page.getByLabel('輸入自訂金額').fill('850');
-  await expect(page.locator('[data-selected-support-amount]')).toHaveText('NT$850');
-  await expect(page.getByRole('button', { name: '藍新金流申請中' })).toBeDisabled();
+  await expect(page.getByRole('heading', { name: '支持功能準備中' })).toBeVisible();
+  await expect(page.getByText('準備中', { exact: true })).toBeVisible();
+  await expect(page.getByText('本站目前不會收集付款資料，也不會建立任何交易。支持功能完成必要準備後，會在本頁更新。')).toBeVisible();
+  await expect(page.getByText(/藍新|NewebPay|信用卡|ATM/u)).toHaveCount(0);
+  await expect(page.locator('[data-support-amounts]')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'support@pow4vote.org' })).toHaveAttribute('href', 'mailto:support@pow4vote.org');
-  await expect(page.getByRole('heading', { name: '取消與退款政策' })).toBeVisible();
-  await expect(page.getByText('支持者不因付款取得資料收錄、排序、查核、優先處理或政治立場的影響權。')).toBeVisible();
+  await expect(page.getByText('未來的支持者不會因付款取得資料收錄、排序、查核、優先處理或政治立場的影響權。')).toBeVisible();
   await expectNoHorizontalOverflow(page);
+});
+
+test('data quality limits and current roadmap are public', async ({ page }) => {
+  await page.goto('/data-guidance');
+  await expect(page.getByRole('heading', { name: '資料品質與限制' })).toBeVisible();
+  await expect(page.getByText(/無法保證每筆學經歷、政見與其他文字均已逐筆確認/)).toBeVisible();
+
+  await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
+  await expect(page.getByText(/部分人物資料（包含學經歷與政見）由選舉公報等公開來源批次整理/)).toBeVisible();
+  await expect(page.getByText(/部分人物資料（包含學經歷與政見）由選舉公報等公開來源批次整理/)).toHaveCount(1);
+  await expect(page.getByRole('link', { name: /了解資料品質限制/ }).first()).toHaveAttribute('href', '/data-guidance');
+
+  await page.goto('/about');
+  await expect(page.getByRole('heading', { name: '發展規劃' })).toBeVisible();
+  await expect(page.getByText(/當選人政見履行情況社群投票/)).toBeVisible();
+  await expect(page.getByText(/地區／選舉情境聊天室/)).toBeVisible();
+  await expect(page.getByText(/持續校正學經歷/)).toBeVisible();
+  await expect(page.getByText(/人物專屬小人圖/)).toBeVisible();
 });
 
 test('focused global search offers examples and person results include party context', async ({ page }) => {

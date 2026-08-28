@@ -14,6 +14,7 @@ import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import type { PublicRaceDetailData } from '../lib/publicDataProvider';
 import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { groupRaceCandidates, isPresidentialTicketRace } from '../lib/raceCandidateGroups';
 import { electionEventPath, electionsPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonProfile } from '../types/publicViews';
@@ -90,6 +91,11 @@ export function RacePage() {
     () => detail.candidates.slice().sort((left, right) => compareCandidates(left, right, language)),
     [detail.candidates, language],
   );
+  const candidateGroups = useMemo(
+    () => groupRaceCandidates(candidates, race?.title),
+    [candidates, race?.title],
+  );
+  const isPresidentialTicket = isPresidentialTicketRace(race?.title);
   const candidatePersonIds = useMemo(
     () => new Set(candidates.map((candidate) => candidate.person_id).filter(Boolean)),
     [candidates],
@@ -104,7 +110,7 @@ export function RacePage() {
     .map((personId) => candidates.find((candidate) => candidate.person_id === personId))
     .filter((candidate): candidate is PublicCandidate => Boolean(candidate));
   const comparisonKey = selectedPersonIds.join(',');
-  const electedCount = candidates.filter(isCandidateElected).length;
+  const electedCount = candidateGroups.filter((group) => group.isElected).length;
   useEffect(() => {
     let active = true;
     const personIds = comparisonKey ? comparisonKey.split(',') : [];
@@ -217,7 +223,7 @@ export function RacePage() {
                 </>
               ) : (
                 <>
-                  <HudStatCard label={t('race.candidates')} value={<span className="font-display text-xl text-white">{candidates.length}</span>} />
+                  <HudStatCard label={t(isPresidentialTicket ? 'race.candidateTickets' : 'race.candidates')} value={<span className="font-display text-xl text-white">{candidateGroups.length}</span>} />
                   <HudStatCard label={t('race.elected')} value={<span className="font-display text-xl text-signal">{electedCount}</span>} />
                   <HudStatCard label={t('race.region')} value={<span className="font-display text-xl text-white">{region.label}</span>} />
                 </>
@@ -312,8 +318,8 @@ export function RacePage() {
           </SectionPanel>
         ) : null}
 
-        {!isReferendum ? <SectionPanel title={candidates.length > 0 ? t('race.listTitle') : t('race.listFallbackTitle')} eyebrow={t('race.roster')}>
-          {candidates.length > 0 ? (
+        {!isReferendum ? <SectionPanel title={candidateGroups.length > 0 ? t('race.listTitle') : t('race.listFallbackTitle')} eyebrow={t('race.roster')}>
+          {candidateGroups.length > 0 ? (
             <div className="overflow-hidden pixel-corners border border-line/70">
               <div className="grid gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]">
                 <span>{t('race.compareSelect')}</span>
@@ -325,36 +331,62 @@ export function RacePage() {
                 <span>{t('race.voteRate')}</span>
               </div>
               <div className="divide-y divide-line/60">
-                {candidates.map((candidate) => {
+                {candidateGroups.map((group) => {
+                  const candidate = group.representative;
+                  const statusCandidate = group.members.find(isCandidateElected) ?? candidate;
                   const partyLabel = normalizePartyLabel(candidate.party ?? candidate.person_party);
-                  const previousPartyName = getPreviousPartyName(
-                    detail.partyAffiliations.filter((affiliation) => affiliation.person_id === candidate.person_id),
-                    partyLabel,
-                    candidate.election_year,
-                  );
+                  const previousPartyName = group.members.length === 1
+                    ? getPreviousPartyName(
+                        detail.partyAffiliations.filter((affiliation) => affiliation.person_id === candidate.person_id),
+                        partyLabel,
+                        candidate.election_year,
+                      )
+                    : null;
                   const theme = partyTheme[toPartyThemeKey(partyLabel)];
-                  const isSelected = selectedPersonIds.includes(candidate.person_id);
-                  const selectionDisabled = !candidate.person_id || (!isSelected && selectedPersonIds.length >= 4);
+                  const memberPositions = Array.from(new Set(
+                    group.members
+                      .map((member) => member.person_position)
+                      .filter((position): position is string => Boolean(position)),
+                  )).join('、');
                   const rowContent = (
                     <>
-                      <label className="flex h-6 w-6 items-center justify-center" title={selectionDisabled ? t('race.compareLimit') : t('race.compareSelect')}>
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          disabled={selectionDisabled}
-                          onChange={(event) => updateComparison(candidate.person_id, event.target.checked)}
-                          className="h-4 w-4 accent-cyan-300 disabled:cursor-not-allowed disabled:opacity-30"
-                          aria-label={`${t('race.compareSelect')} ${candidate.person_name}`}
-                        />
-                      </label>
+                      <div className="flex flex-col gap-1">
+                        {group.members.map((member) => {
+                          const isSelected = selectedPersonIds.includes(member.person_id);
+                          const selectionDisabled = !member.person_id || (!isSelected && selectedPersonIds.length >= 4);
+                          return (
+                            <label
+                              key={member.candidate_id}
+                              className="flex h-6 w-6 items-center justify-center"
+                              title={selectionDisabled ? t('race.compareLimit') : t('race.compareSelect')}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                disabled={selectionDisabled}
+                                onChange={(event) => updateComparison(member.person_id, event.target.checked)}
+                                className="h-4 w-4 accent-cyan-300 disabled:cursor-not-allowed disabled:opacity-30"
+                                aria-label={`${t('race.compareSelect')} ${member.person_name}`}
+                              />
+                            </label>
+                          );
+                        })}
+                      </div>
                       <p className="text-sm text-slate-300">{candidate.candidate_no ?? '—'}</p>
                       <div className="min-w-0">
-                        {candidate.person_id ? (
-                          <Link to={personPath(candidate.person_id)} className="truncate font-display text-lg text-white hover:text-accent">
-                            {candidate.person_name}
-                          </Link>
-                        ) : <p className="truncate font-display text-lg text-white">{candidate.person_name}</p>}
-                        <p className="mt-1 truncate text-xs text-slate-500">{candidate.person_position ?? race.title}</p>
+                        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                          {group.members.map((member, index) => (
+                            <span key={`${group.key}:${member.candidate_id}`} className="inline-flex min-w-0 items-center gap-x-2">
+                              {member.person_id ? (
+                                <Link to={personPath(member.person_id)} className="truncate font-display text-lg text-white hover:text-accent">
+                                  {member.person_name}
+                                </Link>
+                              ) : <span className="truncate font-display text-lg text-white">{member.person_name}</span>}
+                              {index < group.members.length - 1 ? <span className="text-slate-600">/</span> : null}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="mt-1 truncate text-xs text-slate-500">{memberPositions || race.title}</p>
                       </div>
                       <div className="min-w-0">
                         <span
@@ -370,10 +402,10 @@ export function RacePage() {
                         ) : null}
                       </div>
                       <div>
-                        <p className={isCandidateElected(candidate) ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
-                          {translateCandidateStatus(candidate, t)}
+                        <p className={group.isElected ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
+                          {translateCandidateStatus(statusCandidate, t)}
                         </p>
-                        {candidate.is_incumbent ? (
+                        {group.isIncumbent ? (
                           <span className="mt-1 inline-block border border-amber-300/50 bg-amber-300/10 px-2 py-0.5 text-[11px] text-amber-200" data-incumbent-badge>
                             {t('race.incumbent')}
                           </span>
@@ -385,7 +417,7 @@ export function RacePage() {
                   );
                   const rowClassName = 'grid gap-3 px-4 py-3 transition hover:bg-accent/8 lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]';
 
-                  return <div key={candidate.candidate_id} className={rowClassName}>{rowContent}</div>;
+                  return <div key={group.key} className={rowClassName}>{rowContent}</div>;
                 })}
               </div>
             </div>
@@ -394,7 +426,7 @@ export function RacePage() {
               <p>{t('race.emptyCandidates')}</p>
             </div>
           )}
-          {candidates.length > 0 ? (
+          {candidateGroups.length > 0 ? (
             <div className="mt-4 flex flex-col gap-2 border-t border-line/50 pt-4 text-sm sm:flex-row sm:items-center sm:justify-between">
               <p className="text-slate-400">{t('race.compareHint')}</p>
               <p className={selectedPersonIds.length >= 2 ? 'text-signal' : 'text-accent'}>

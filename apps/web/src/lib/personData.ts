@@ -343,11 +343,26 @@ export function getPersonRole(position: string | null | undefined, candidateReco
   return getRoleFromText([positionText, candidateText].filter(Boolean).join(' '));
 }
 
+export function extractTimelineYear(value: string | null | undefined) {
+  const text = value ?? '';
+  const westernYear = text.match(/(?:19|20)\d{2}/)?.[0];
+  if (westernYear) return Number.parseInt(westernYear, 10);
+
+  const explicitRocYear = text.match(/民國\s*(\d{1,3})\s*年/)?.[1];
+  if (explicitRocYear) return Number.parseInt(explicitRocYear, 10) + 1911;
+
+  for (const match of text.matchAll(/(?:^|[^0-9])(\d{2,3})\s*年/g)) {
+    const rocYear = Number.parseInt(match[1], 10);
+    if (rocYear >= 35 && rocYear <= 199) return rocYear + 1911;
+  }
+
+  return null;
+}
+
 function candidateElectionYear(candidate: PublicCandidate) {
   if (candidate.election_year !== null) return candidate.election_year;
   const text = [candidate.election_name, candidate.race_title].filter(Boolean).join(' ');
-  const year = text.match(/(?:19|20)\d{2}/)?.[0];
-  return year ? Number.parseInt(year, 10) : null;
+  return extractTimelineYear(text);
 }
 
 export function getCandidateElectionLabel(candidate: PublicCandidate) {
@@ -614,8 +629,7 @@ function partyAffiliationsFor(personIds: string[], affiliations: PublicPersonPar
 }
 
 function timelineYearFromDate(value: string | null | undefined) {
-  const year = value?.match(/(?:19|20)\d{2}/)?.[0];
-  return year ? Number.parseInt(year, 10) : null;
+  return extractTimelineYear(value);
 }
 
 function timelineYearForCandidate(candidate: PublicCandidate) {

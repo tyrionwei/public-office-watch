@@ -33,6 +33,24 @@ export type ChatRoom = {
   display_order: number;
 };
 
+function chatRoomYear(room: ChatRoom) {
+  const match = `${room.display_name} ${room.room_key} ${room.entity_key ?? ''}`.match(/(?:19|20)\d{2}/u);
+  return match ? Number(match[0]) : Number.NEGATIVE_INFINITY;
+}
+
+export function sortElectionChatRoomsNewestFirst(rooms: readonly ChatRoom[]) {
+  return [...rooms].sort((left, right) => {
+    const leftYear = chatRoomYear(left);
+    const rightYear = chatRoomYear(right);
+    if (leftYear !== rightYear) return rightYear - leftYear;
+
+    const eventDifference = (right.entity_key ?? '').localeCompare(left.entity_key ?? '', 'en');
+    if (eventDifference !== 0) return eventDifference;
+
+    return left.display_name.localeCompare(right.display_name, 'zh-Hant');
+  });
+}
+
 export type ChatRoomContext = {
   regionId: string | null;
   eventKey: string | null;

@@ -82,6 +82,7 @@ test('local chat rooms accept a nationwide context without a region UUID', {
     .from('regions')
     .select('region_id,slug')
     .in('region_type', ['municipality', 'county', 'city'])
+    .not('slug', 'like', 'historical-%')
     .limit(1)
     .single();
   assert.ifError(regionResult.error);
@@ -101,6 +102,48 @@ test('local chat rooms accept a nationwide context without a region UUID', {
   assert.ifError(directory.error);
   assert.ok(directory.data?.some((room) => room.room_type === 'region'));
   assert.ok(directory.data?.some((room) => room.room_type === 'election_event'));
+
+  const directoryRooms = directory.data ?? [];
+  const electionRooms = directoryRooms.filter((room) => room.room_type === 'election_event');
+  assert.equal(
+    new Set(electionRooms.map((room) => room.entity_key)).size,
+    electionRooms.length,
+  );
+  assert.ok(electionRooms.every((room) => /^\d{4}$/u.test(room.entity_key)));
+  assert.equal(
+    electionRooms.find((room) => room.entity_key === '2022')?.display_name,
+    '2022 地方公職人員選舉+公民投票',
+  );
+
+  const historicalRegions = await client
+    .schema('published')
+    .from('regions')
+    .select('region_id')
+    .like('slug', 'historical-%');
+  assert.ifError(historicalRegions.error);
+  const historicalRegionIds = new Set(
+    historicalRegions.data?.map((region) => region.region_id) ?? [],
+  );
+  assert.ok(!directoryRooms.some((room) => (
+    room.room_type === 'region' && historicalRegionIds.has(room.region_id)
+  )));
+
+  const orderedRegions = await client
+    .schema('published')
+    .from('regions')
+    .select('region_id')
+    .in('region_type', ['municipality', 'county', 'city'])
+    .not('slug', 'like', 'historical-%')
+    .order('display_order', { ascending: true })
+    .order('name', { ascending: true })
+    .order('region_id', { ascending: true });
+  assert.ifError(orderedRegions.error);
+  assert.deepEqual(
+    directoryRooms
+      .filter((room) => room.room_type === 'region')
+      .map((room) => room.region_id),
+    orderedRegions.data?.map((region) => region.region_id),
+  );
 });
 
 test('local chat creates a profile and sends a message through the Edge Function', {

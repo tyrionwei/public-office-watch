@@ -7,14 +7,12 @@ import {
   useState,
   type FormEvent,
 } from 'react';
-import { useLocation } from 'react-router-dom';
 import { xiezhiMascotPoses } from '../data/defaultCharacterAssets';
 import { useI18n } from '../i18n';
 import {
   ChatApiError,
   chatCooldownSeconds,
   chatTopicTags,
-  getChatRoomContext,
   chatNameCooldownMinutes,
   chatDateKey,
   chatPageSize,
@@ -27,12 +25,12 @@ import {
   limitChatInput,
   loadChatMessages,
   loadChatRoomDirectory,
-  loadChatRooms,
   loadChatProfile,
   loadChatStatus,
   mergeChatMessages,
   saveChatProfile,
   sendChatMessage,
+  sortElectionChatRoomsNewestFirst,
   subscribeToChatMessages,
   unsubscribeFromChat,
   type ChatMessage,
@@ -43,7 +41,6 @@ import {
   type ChatRealtimeChannel,
   type ChatStatus,
 } from '../lib/globalChat';
-import { useSelectedRegion } from '../selectedRegion';
 const chatNudgeStorageKey = 'public-office-watch-chat-nudge-seen-at-v1';
 const chatNudgeDelayMs = 5_000;
 const chatNudgeDurationMs = 6_000;
@@ -97,6 +94,7 @@ const copy = {
     regionChannels: '地區頻道',
     electionChannels: '選舉頻道',
     globalRoom: '全站大廳',
+    channelTagNote: '訊息上的頻道標籤表示發言所在頻道，不代表使用者所在地區；\n頻道下方的選項是這則發言想討論的議題。',
     topics: '討論議題',
     allTopics: '全部',
     topicTransport: '交通',
@@ -162,6 +160,7 @@ const copy = {
     regionChannels: 'Regional channels',
     electionChannels: 'Election channels',
     globalRoom: 'Site lobby',
+    channelTagNote: 'A message’s channel tag shows where it was posted, not the user’s location.\nThe row below the channel selects the topic of the message.',
     topics: 'Discussion topics',
     allTopics: 'All',
     topicTransport: 'Transport',
@@ -276,12 +275,6 @@ function visibleMessageBody(message: ChatMessage, text: ChatCopy) {
 export function GlobalChatWidget() {
   const { language } = useI18n();
   const text = copy[language];
-  const location = useLocation();
-  const { selectedRegionId } = useSelectedRegion();
-  const roomContext = useMemo(
-    () => getChatRoomContext(location.pathname, selectedRegionId),
-    [location.pathname, selectedRegionId],
-  );
   const [status, setStatus] = useState<ChatStatus | null | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [isNudgeVisible, setIsNudgeVisible] = useState(false);
@@ -294,7 +287,6 @@ export function GlobalChatWidget() {
   const [hasMore, setHasMore] = useState(true);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
-  const [contextualRoomIds, setContextualRoomIds] = useState<string[]>([]);
   const [recentRoomIds, setRecentRoomIds] = useState<string[]>(loadRecentChatRoomIds);
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
   const [selectedTopicTag, setSelectedTopicTag] = useState<ChatTopicTag | null>(null);
@@ -330,9 +322,6 @@ export function GlobalChatWidget() {
     () => rooms.find((room) => room.id === activeRoomId) ?? null,
     [activeRoomId, rooms],
   );
-  const contextualRooms = useMemo(() => contextualRoomIds
-    .map((roomId) => rooms.find((room) => room.id === roomId))
-    .filter((room): room is ChatRoom => Boolean(room)), [contextualRoomIds, rooms]);
   const globalRoom = useMemo(
     () => rooms.find((room) => room.room_type === 'global') ?? null,
     [rooms],
@@ -342,18 +331,16 @@ export function GlobalChatWidget() {
     [rooms],
   );
   const electionRooms = useMemo(
-    () => rooms.filter((room) => room.room_type === 'election_event'),
+    () => sortElectionChatRoomsNewestFirst(
+      rooms.filter((room) => room.room_type === 'election_event'),
+    ),
     [rooms],
   );
-  const recentRooms = useMemo(() => {
-    const excludedRoomIds = new Set(contextualRoomIds);
-    return recentRoomIds
-      .map((roomId) => rooms.find((room) => room.id === roomId))
-      .filter((room): room is ChatRoom => room !== undefined
-        && room.room_type !== 'global'
-        && !excludedRoomIds.has(room.id))
-      .slice(0, 2);
-  }, [contextualRoomIds, recentRoomIds, rooms]);
+  const recentRooms = useMemo(() => recentRoomIds
+    .map((roomId) => rooms.find((room) => room.id === roomId))
+    .filter((room): room is ChatRoom => room !== undefined
+      && room.room_type !== 'global')
+    .slice(0, 2), [recentRoomIds, rooms]);
 
   const nextVisibilityExpiry = useMemo(() => messages
     .filter((message) => message.visibility_state === 'author_muted' && message.visibility_until)
@@ -429,11 +416,10 @@ export function GlobalChatWidget() {
   useEffect(() => {
     if (!isOpen || !status) return undefined;
     let cancelled = false;
-    void Promise.all([loadChatRooms(roomContext), loadChatRoomDirectory()])
-      .then(([availableRooms, directoryRooms]) => {
+    void loadChatRoomDirectory()
+      .then((directoryRooms) => {
         if (cancelled) return;
         setRooms(directoryRooms);
-        setContextualRoomIds(availableRooms.map((room) => room.id));
         setActiveRoomId((current) => directoryRooms.some((room) => room.id === current)
           ? current
           : directoryRooms.find((room) => room.room_type === 'global')?.id ?? directoryRooms[0]?.id ?? null);
@@ -444,7 +430,7 @@ export function GlobalChatWidget() {
     return () => {
       cancelled = true;
     };
-  }, [isOpen, roomContext, status, text.loadError]);
+  }, [isOpen, status, text.loadError]);
 
   useEffect(() => {
     if (!activeRoom || activeRoom.room_type === 'global') return;
@@ -878,20 +864,19 @@ export function GlobalChatWidget() {
             <>
               <div className="flex items-center gap-2 border-b border-cyan-300/20 px-3 py-2">
                 <nav aria-label={text.channels} className="flex min-w-0 flex-1 gap-2 overflow-x-auto">
-                  {contextualRooms.map((room) => (
+                  {globalRoom ? (
                     <button
-                      key={room.id}
                       type="button"
                       onClick={() => {
-                        setActiveRoomId(room.id);
+                        setActiveRoomId(globalRoom.id);
                         setReplyTo(null);
                         setError(null);
                       }}
-                      className={`shrink-0 border px-2 py-1 text-[11px] transition ${room.id === activeRoomId ? 'border-cyan-300/70 bg-cyan-300/10 text-cyan-100' : 'border-line text-slate-400 hover:border-cyan-300/40 hover:text-white'}`}
+                      className={`shrink-0 border px-2 py-1 text-[11px] transition ${globalRoom.id === activeRoomId ? 'border-cyan-300/70 bg-cyan-300/10 text-cyan-100' : 'border-line text-slate-400 hover:border-cyan-300/40 hover:text-white'}`}
                     >
-                      {chatRoomLabel(room, text)}
+                      {chatRoomLabel(globalRoom, text)}
                     </button>
-                  ))}
+                  ) : null}
                   {recentRooms.map((room, index) => (
                     <button
                       key={room.id}
@@ -915,17 +900,17 @@ export function GlobalChatWidget() {
                     setReplyTo(null);
                     setError(null);
                   }}
-                  className="max-w-[9rem] shrink-0 border border-line bg-[#07101f] px-2 py-1 text-[11px] text-slate-200 outline-none focus:border-cyan-300/60"
+                  className="w-[7.25rem] max-w-[34%] shrink-0 border border-line bg-[#07101f] px-2 py-1 text-[11px] text-slate-200 outline-none focus:border-cyan-300/60"
                 >
                   {globalRoom ? <option value={globalRoom.id}>{chatRoomLabel(globalRoom, text)}</option> : null}
                   {regionRooms.length > 0 ? (
-                    <optgroup label={text.regionChannels}>
-                      {regionRooms.map((room) => <option key={room.id} value={room.id}>{room.display_name}</option>)}
+                    <optgroup label={text.regionChannels} className="bg-[#07101f] font-semibold text-cyan-300">
+                      {regionRooms.map((room) => <option key={room.id} value={room.id} className="font-normal text-slate-200">{room.display_name}</option>)}
                     </optgroup>
                   ) : null}
                   {electionRooms.length > 0 ? (
-                    <optgroup label={text.electionChannels}>
-                      {electionRooms.map((room) => <option key={room.id} value={room.id}>{room.display_name}</option>)}
+                    <optgroup label={text.electionChannels} className="bg-[#07101f] font-semibold text-pink-300">
+                      {electionRooms.map((room) => <option key={room.id} value={room.id} className="font-normal text-slate-200">{room.display_name}</option>)}
                     </optgroup>
                   ) : null}
                 </select>
@@ -1011,12 +996,12 @@ export function GlobalChatWidget() {
                     </div>
                     <div className="mt-1 flex flex-wrap gap-1">
                       {activeRoom?.room_type === 'global' ? (
-                        <span className="inline-block border border-pink-300/25 bg-pink-300/[0.05] px-1.5 py-0.5 text-[9px] text-pink-200/80">
+                        <span className="inline-block border border-cyan-300/25 bg-cyan-300/[0.05] px-1.5 py-0.5 text-[9px] text-cyan-200/80">
                           {message.room_display_name}
                         </span>
                       ) : null}
                       {message.topic_tag ? (
-                        <span className="inline-block border border-cyan-300/25 bg-cyan-300/[0.05] px-1.5 py-0.5 text-[9px] text-cyan-200/80">
+                        <span className="inline-block border border-pink-300/25 bg-pink-300/[0.05] px-1.5 py-0.5 text-[9px] text-pink-200/80">
                           {chatTopicLabel(message.topic_tag, text)}
                         </span>
                       ) : null}
@@ -1110,6 +1095,7 @@ export function GlobalChatWidget() {
                     {isSending ? text.sending : text.send}
                   </button>
                 </div>
+                <p className="mt-1 whitespace-pre-line text-[10px] leading-4 text-slate-500">{text.channelTagNote}</p>
               </form>
             )}
           </footer>

@@ -9,7 +9,9 @@ import {
   limitChatInput,
   mergeChatMessages,
   normalizeChatUuid,
+  sortElectionChatRoomsNewestFirst,
   type ChatMessage,
+  type ChatRoom,
 } from '../src/lib/globalChat.ts';
 
 const regionId = '11111111-1111-4111-8111-111111111111';
@@ -83,6 +85,41 @@ test('chat room context keeps region slugs while ignoring the nationwide sentine
     eventKey: null,
     electionId: null,
   });
+});
+
+test('election chat rooms are sorted from newest year to oldest', () => {
+  const rooms: ChatRoom[] = [
+    {
+      id: '1', room_key: 'event:2022-local', room_type: 'election_event',
+      entity_key: '2022-2022-11-26-local', display_name: '2022 地方公職人員選舉',
+      region_id: null, display_order: 20,
+    },
+    {
+      id: '2', room_key: 'event:2026-local', room_type: 'election_event',
+      entity_key: '2026-2026-11-28-local', display_name: '2026 地方公職人員選舉',
+      region_id: null, display_order: 20,
+    },
+    {
+      id: '3', room_key: 'event:2024-national', room_type: 'election_event',
+      entity_key: '2024-2024-01-13-national', display_name: '2024 總統副總統及立法委員選舉',
+      region_id: null, display_order: 20,
+    },
+    {
+      id: '4', room_key: 'event:unknown', room_type: 'election_event',
+      entity_key: null, display_name: '未標年份選舉', region_id: null, display_order: 20,
+    },
+  ];
+
+  assert.deepEqual(
+    sortElectionChatRoomsNewestFirst(rooms).map((room) => room.display_name),
+    [
+      '2026 地方公職人員選舉',
+      '2024 總統副總統及立法委員選舉',
+      '2022 地方公職人員選舉',
+      '未標年份選舉',
+    ],
+  );
+  assert.equal(rooms[0].display_name, '2022 地方公職人員選舉');
 });
 
 test('chat input stays single-line and stops at 50 Unicode characters', () => {

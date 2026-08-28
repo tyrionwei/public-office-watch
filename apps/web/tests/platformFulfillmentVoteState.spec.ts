@@ -167,11 +167,11 @@ test('votes reveal results automatically while non-voters can reveal one or all 
   const overallSummary = card.getByTestId('fulfillment-overall-summary');
   await expect(overallSummary).toBeVisible();
   await expect(overallSummary.getByText('整體社群判斷分布', { exact: true })).toBeVisible();
-  await expect(overallSummary.getByText('2 項政見', { exact: true })).toBeVisible();
+  await expect(overallSummary.getByText('0 / 2 項已達顯示門檻', { exact: true })).toBeVisible();
+  await expect(overallSummary.getByText('整體結果尚未顯示；每項政見至少累積 20 票後才會產生整體分布。', { exact: true })).toBeVisible();
   await expect(
-    overallSummary.getByRole('img', { name: /已實現 25\.0%.*推進中 50\.0%/u }),
-  ).toBeVisible();
-  await expect(overallSummary.getByText('8 票', { exact: true })).toBeVisible();
+    overallSummary.getByRole('img', { name: /社群投票結果/u }),
+  ).toHaveCount(0);
 
   await expect(
     firstItem.getByRole('img', { name: /社群投票結果/ }),

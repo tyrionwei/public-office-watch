@@ -6,6 +6,7 @@ import {
   formatChatTimestamp,
   getChatRoomContext,
   isCurrentChatRealtimeSubscription,
+  isReferendumChatRoom,
   limitChatInput,
   mergeChatMessages,
   normalizeChatUuid,
@@ -120,6 +121,27 @@ test('election chat rooms are sorted from newest year to oldest', () => {
     ],
   );
   assert.equal(rooms[0].display_name, '2022 地方公職人員選舉');
+});
+
+test('identifies referendum rooms separately from election rooms', () => {
+  const electionRoom: ChatRoom = {
+    id: 'election',
+    room_key: 'event:2022:election',
+    room_type: 'election_event',
+    entity_key: '2022:election',
+    display_name: '2022 地方公職人員選舉',
+    region_id: null,
+    display_order: 20,
+  };
+
+  assert.equal(isReferendumChatRoom(electionRoom), false);
+  assert.equal(isReferendumChatRoom({
+    ...electionRoom,
+    id: 'referendum',
+    room_key: 'event:2022:referendum',
+    entity_key: '2022:referendum',
+    display_name: '2022 公民投票',
+  }), true);
 });
 
 test('chat input stays single-line and stops at 50 Unicode characters', () => {

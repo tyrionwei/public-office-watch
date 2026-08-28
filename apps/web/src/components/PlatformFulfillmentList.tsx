@@ -5,6 +5,7 @@ import {
   fulfillmentPercent,
   loadPlatformFulfillment,
   platformFulfillmentStatuses,
+  platformFulfillmentSummaryMinimumVotes,
   summarizePlatformFulfillment,
   submitPlatformFulfillmentVote,
   withdrawPlatformFulfillmentVote,
@@ -109,7 +110,13 @@ function VoteButtons({
   );
 }
 
-function ResultBar({ item }: { item: PlatformFulfillmentItem }) {
+function ResultBar({
+  item,
+  countLabel,
+}: {
+  item: PlatformFulfillmentItem;
+  countLabel?: string;
+}) {
   const { t } = useI18n();
   const description = platformFulfillmentStatuses
     .map((status) => {
@@ -139,7 +146,7 @@ function ResultBar({ item }: { item: PlatformFulfillmentItem }) {
         })}
       </div>
       <span className="shrink-0 text-[10px] text-slate-500">
-        {t('person.fulfillment.voteCount', { count: item.totalCount })}
+        {countLabel ?? t('person.fulfillment.voteCount', { count: item.totalCount })}
       </span>
     </>
   );
@@ -247,12 +254,14 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
   }, [claim.claim_id]);
 
   const items = useMemo(() => participation?.items ?? [], [participation]);
-  const overallResult = useMemo<PlatformFulfillmentItem>(() => ({
+  const overallSummary = useMemo(() => summarizePlatformFulfillment(items), [items]);
+  const overallResult: PlatformFulfillmentItem = {
     itemKey: 'overall',
     displayOrder: 0,
     promiseText: '',
-    ...summarizePlatformFulfillment(items),
-  }), [items]);
+    counts: overallSummary.counts,
+    totalCount: overallSummary.totalCount,
+  };
 
   const announcedDate = formatEligibilityDate(
     participation?.resultsAnnouncedOn ?? null,
@@ -365,11 +374,15 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
           >
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-semibold text-slate-200">{t('person.fulfillment.overallDistribution')}</p>
-              <span className="text-[10px] text-slate-500">{t('person.fulfillment.itemCount', { count: items.length })}</span>
+              <span className="text-[10px] text-slate-500">{t('person.fulfillment.summaryProgress', { qualified: overallSummary.qualifyingItemCount, total: overallSummary.itemCount })}</span>
             </div>
-            <div className="mt-2 flex min-w-0 items-center gap-2">
-              <ResultBar item={overallResult} />
-            </div>
+            {overallSummary.ready ? (
+              <div className="mt-2 flex min-w-0 items-center gap-2">
+                <ResultBar item={overallResult} countLabel={t('person.fulfillment.summaryVoteCount', { count: overallSummary.totalVoteCount })} />
+              </div>
+            ) : (
+              <p className="mt-2 text-[11px] leading-5 text-slate-400">{t('person.fulfillment.summaryPending', { count: platformFulfillmentSummaryMinimumVotes })}</p>
+            )}
           </section>
         ) : null}
         {participation.votingIsOpen ? (

@@ -101,7 +101,7 @@ function splitTrailingPlatformHeading(value: string) {
   let skipSection = false;
 
   for (const rawItem of items.flatMap(splitTrailingPlatformHeading)) {
-    const item = rawItem.replace(/\s+光達是素人投入服務社會[\s\S]*$/u, '').trim();
+    const item = rawItem.trim();
     const nextHeading = platformHeading(item);
     if (nextHeading) {
       if (/^(?:政績|公益|服務實績|過往政績)$/u.test(nextHeading)) {

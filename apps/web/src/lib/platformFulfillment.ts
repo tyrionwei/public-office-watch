@@ -2,11 +2,11 @@ import {
   ensureAnonymousParticipationSession,
   getExistingParticipationSession,
   getSupabaseParticipationClient,
-} from './supabasePublicClient';
+} from './supabasePublicClient.ts';
 import {
   createParticipationCaptchaToken,
   submitParticipationRequest,
-} from './participationSecurity';
+} from './participationSecurity.ts';
 
 export const platformFulfillmentStatuses = [
   'fulfilled',
@@ -14,6 +14,8 @@ export const platformFulfillmentStatuses = [
   'not_fulfilled',
   'insufficient_information',
 ] as const;
+
+export const platformFulfillmentSummaryMinimumVotes = 20;
 
 export type PlatformFulfillmentStatus = typeof platformFulfillmentStatuses[number];
 
@@ -87,21 +89,33 @@ export function fulfillmentPercent(countValue: number, totalCount: number) {
 
 export function summarizePlatformFulfillment(
   items: PlatformFulfillmentItem[],
+  minimumVotes = platformFulfillmentSummaryMinimumVotes,
 ) {
+  const qualifyingItems = items.filter((item) => item.totalCount >= minimumVotes);
   const counts: Record<PlatformFulfillmentStatus, number> = {
     fulfilled: 0,
     in_progress: 0,
     not_fulfilled: 0,
     insufficient_information: 0,
   };
-  for (const item of items) {
+
+  for (const item of qualifyingItems) {
     for (const status of platformFulfillmentStatuses) {
-      counts[status] += item.counts[status];
+      counts[status] += item.counts[status] / item.totalCount;
     }
   }
+
+  const totalVoteCount = qualifyingItems
+    .reduce((total, item) => total + item.totalCount, 0);
+
   return {
     counts,
-    totalCount: platformFulfillmentStatuses.reduce((total, status) => total + counts[status], 0),
+    totalCount: qualifyingItems.length,
+    qualifyingItemCount: qualifyingItems.length,
+    itemCount: items.length,
+    totalVoteCount,
+    ready: items.length > 0
+      && qualifyingItems.length === items.length,
   };
 }
 

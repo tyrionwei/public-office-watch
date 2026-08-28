@@ -43,10 +43,6 @@ test('does not guess the election for legacy unscoped platform claims', () => {
   );
 });
 
-
-  const intentionallyEmpty = platformClaim('intentionally-empty');
-  intentionallyEmpty.claim_json.items = [];
-  assert.deepEqual(platformItemsForClaim(intentionallyEmpty), []);
 test('uses stored platform items and safely splits explicit numbered originals', () => {
   const stored = platformClaim('stored');
   stored.claim_json.items = ['第一項', '第二項'];
@@ -59,6 +55,24 @@ test('uses stored platform items and safely splits explicit numbered originals',
     '推動地下停車場。',
     '改善市場周邊交通。',
   ]);
+});
+
+test('falls back to the original platform text when stored items are empty', () => {
+  const claim = platformClaim('empty-stored-items');
+  claim.claim_value = '一、增設公共托育據點。二、改善市場周邊交通。';
+  claim.claim_json.items = ['', '   '];
+
+  assert.deepEqual(platformItemsForClaim(claim), [
+    '增設公共托育據點。',
+    '改善市場周邊交通。',
+  ]);
+});
+
+test('does not remove candidate-specific text from the generic platform parser', () => {
+  const claim = platformClaim('candidate-specific-text');
+  claim.claim_value = '改善地方交通。 光達是素人投入服務社會，將推動青年就業。';
+
+  assert.deepEqual(platformItemsForClaim(claim), [claim.claim_value]);
 });
 
 test('uses source newlines as platform item boundaries', () => {

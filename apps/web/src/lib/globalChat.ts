@@ -51,6 +51,11 @@ export function sortElectionChatRoomsNewestFirst(rooms: readonly ChatRoom[]) {
   });
 }
 
+export function isReferendumChatRoom(room: ChatRoom) {
+  return room.room_type === 'election_event'
+    && room.entity_key?.endsWith(':referendum') === true;
+}
+
 export type ChatRoomContext = {
   regionId: string | null;
   eventKey: string | null;

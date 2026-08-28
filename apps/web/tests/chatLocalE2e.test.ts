@@ -109,11 +109,16 @@ test('local chat rooms accept a nationwide context without a region UUID', {
     new Set(electionRooms.map((room) => room.entity_key)).size,
     electionRooms.length,
   );
-  assert.ok(electionRooms.every((room) => /^\d{4}$/u.test(room.entity_key)));
+  assert.ok(electionRooms.every((room) => /^\d{4}:(?:election|referendum)$/u.test(room.entity_key)));
   assert.equal(
-    electionRooms.find((room) => room.entity_key === '2022')?.display_name,
-    '2022 地方公職人員選舉+公民投票',
+    electionRooms.find((room) => room.entity_key === '2022:election')?.display_name,
+    '2022 地方公職人員選舉',
   );
+  assert.equal(
+    electionRooms.find((room) => room.entity_key === '2022:referendum')?.display_name,
+    '2022 公民投票',
+  );
+  assert.ok(!electionRooms.some((room) => /補選|罷免/u.test(room.display_name)));
 
   const historicalRegions = await client
     .schema('published')

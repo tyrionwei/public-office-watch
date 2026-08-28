@@ -38,7 +38,7 @@ export function platformItemsForClaim(claim: PublicPersonClaim) {
       .map((item) => typeof item === 'string' ? item.trim() : '')
       .filter(Boolean)
     : [];
-  if (Array.isArray(claim.claim_json.items)) return Array.from(new Set(storedItems));
+  if (storedItems.length > 0) return Array.from(new Set(storedItems));
 
   const platformText = typeof claim.claim_json.platformText === 'string'
     ? claim.claim_json.platformText

@@ -22,6 +22,7 @@ import {
   formatChatTimestamp,
   getExistingChatSession,
   isCurrentChatRealtimeSubscription,
+  isReferendumChatRoom,
   limitChatInput,
   loadChatMessages,
   loadChatRoomDirectory,
@@ -93,6 +94,7 @@ const copy = {
     channelPicker: '選擇頻道',
     regionChannels: '地區頻道',
     electionChannels: '選舉頻道',
+    referendumChannels: '公投頻道',
     globalRoom: '全站大廳',
     channelTagNote: '訊息上的頻道標籤表示發言所在頻道，不代表使用者所在地區；\n頻道下方的選項是這則發言想討論的議題。',
     topics: '討論議題',
@@ -159,6 +161,7 @@ const copy = {
     channelPicker: 'Choose channel',
     regionChannels: 'Regional channels',
     electionChannels: 'Election channels',
+    referendumChannels: 'Referendum channels',
     globalRoom: 'Site lobby',
     channelTagNote: 'A message’s channel tag shows where it was posted, not the user’s location.\nThe row below the channel selects the topic of the message.',
     topics: 'Discussion topics',
@@ -332,8 +335,12 @@ export function GlobalChatWidget() {
   );
   const electionRooms = useMemo(
     () => sortElectionChatRoomsNewestFirst(
-      rooms.filter((room) => room.room_type === 'election_event'),
+      rooms.filter((room) => room.room_type === 'election_event' && !isReferendumChatRoom(room)),
     ),
+    [rooms],
+  );
+  const referendumRooms = useMemo(
+    () => sortElectionChatRoomsNewestFirst(rooms.filter(isReferendumChatRoom)),
     [rooms],
   );
   const recentRooms = useMemo(() => recentRoomIds
@@ -911,6 +918,11 @@ export function GlobalChatWidget() {
                   {electionRooms.length > 0 ? (
                     <optgroup label={text.electionChannels} className="bg-[#07101f] font-semibold text-pink-300">
                       {electionRooms.map((room) => <option key={room.id} value={room.id} className="font-normal text-slate-200">{room.display_name}</option>)}
+                    </optgroup>
+                  ) : null}
+                  {referendumRooms.length > 0 ? (
+                    <optgroup label={text.referendumChannels} className="bg-[#07101f] font-semibold text-amber-300">
+                      {referendumRooms.map((room) => <option key={room.id} value={room.id} className="font-normal text-slate-200">{room.display_name}</option>)}
                     </optgroup>
                   ) : null}
                 </select>

@@ -704,14 +704,12 @@ function joinClaimTexts(claims: PublicPersonClaim[], claimType: PublicPersonClai
 }
 
 function structuredClaimText(claims: PublicPersonClaim[], claimType: PublicPersonClaim['claim_type']) {
-  for (const claim of claims) {
-    if (claim.claim_type !== claimType || !Array.isArray(claim.claim_json.items)) continue;
-    const items = claim.claim_json.items
-      .map((value) => typeof value === 'string' ? value.trim() : '')
-      .filter(Boolean);
-    if (items.length > 0) return Array.from(new Set(items)).join('；');
-  }
-  return null;
+  const items = claims
+    .filter((claim) => claim.claim_type === claimType)
+    .flatMap((claim) => Array.isArray(claim.claim_json.items) ? claim.claim_json.items : [])
+    .map((value: unknown) => typeof value === 'string' ? value.trim() : '')
+    .filter(Boolean);
+  return Array.from(new Set(items)).join('；') || null;
 }
 
 function genderFromClaimText(value: string | null | undefined): PublicPerson['gender'] {

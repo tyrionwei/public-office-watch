@@ -1,4 +1,5 @@
 import type { PublicPersonClaim } from '../types/publicViews';
+import { splitPlatformContent } from './contentItems.ts';
 
 type ElectionContext = {
   candidateId: string | null;
@@ -29,4 +30,18 @@ export function platformClaimsForCandidate(
     if (context.candidateId) return context.candidateId === candidateId;
     return context.raceId === raceId;
   });
+}
+
+export function platformItemsForClaim(claim: PublicPersonClaim) {
+  const storedItems = Array.isArray(claim.claim_json.items)
+    ? claim.claim_json.items
+      .map((item) => typeof item === 'string' ? item.trim() : '')
+      .filter(Boolean)
+    : [];
+  if (Array.isArray(claim.claim_json.items)) return Array.from(new Set(storedItems));
+
+  const platformText = typeof claim.claim_json.platformText === 'string'
+    ? claim.claim_json.platformText
+    : claim.claim_value;
+  return splitPlatformContent(platformText).items;
 }

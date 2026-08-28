@@ -1,3 +1,5 @@
+import { splitEducationContent, splitExperienceContent } from './contentItems.ts';
+
 const comparisonCollator = new Intl.Collator('zh-Hant-TW', {
   usage: 'search',
   sensitivity: 'base',
@@ -69,40 +71,8 @@ function equivalentText(left: string, right: string) {
   return normalizedLeft === normalizedRight || comparisonCollator.compare(normalizedLeft, normalizedRight) === 0;
 }
 
-function stripListPrefix(value: string) {
-  return value
-    .replace(/^[\s\-–—•●▪◆◇★※]+/u, '')
-    .replace(/^(?:(?:\(?\d{1,2}\)?|[一二三四五六七八九十]+)[.、．）)]\s*)/u, '')
-    .trim()
-    .replace(/[;；]+$/u, '')
-    .trim();
-}
-
-function splitBaseProfileText(value: string | null | undefined, splitSentences: boolean) {
-  if (!value?.trim()) return [];
-
-  let normalized = value
-    .replace(/<br\s*\/?>/gi, '；')
-    .replace(/\r\n?/g, '\n')
-    .replace(/[•●▪◆◇★]+/gu, '；')
-    .replace(/(?:^|\s)(?=(?:\(?\d{1,2}\)?|[一二三四五六七八九十]+)[.、．）)]\s*)/gu, '；');
-
-  if (splitSentences) {
-    normalized = normalized.replace(/。+(?=\s*[^）)])/gu, '；');
-  }
-
-  return normalized
-    .split(/[;；\n]+/u)
-    .map(stripListPrefix)
-    .filter(Boolean);
-}
-
 function splitEducationText(value: string | null | undefined) {
-  const institutionAhead = '(?=[^,，、;；\\n]{0,28}(?:大學|大学|學院|学院|研究所|專科|专科|高中|高職|高职|國中|国中|國小|国小|University|College|Institute|School))';
-  const normalized = value
-    ?.replace(new RegExp(`[,，、]\\s*${institutionAhead}`, 'giu'), '；')
-    .replace(/\s+(?=(?:(?:國立|国立|私立|市立|縣立|县立|省立|美國|美国|英國|英国|澳洲|德國|德国)?[^\s;；,，、]{1,20}(?:大學|大学|學院|学院|高中|高職|高职|國中|国中|國小|国小)))/gu, '；');
-  return splitBaseProfileText(normalized, false);
+  return splitEducationContent(value);
 }
 
 function educationLevel(item: string) {
@@ -110,12 +80,12 @@ function educationLevel(item: string) {
   if (/博士後|postdoc|postdoctoral/u.test(normalized)) return 8;
   if (/博士|phd|doctorate/u.test(normalized)) return 7;
   if (/碩士|研究所|master|emba|mba/u.test(normalized)) return 6;
-  if (/大學|學院|學士|學系|college|university|bachelor/u.test(normalized)) return 5;
-  if (/專科|工專|商專|醫專|護專|警專|五專|二專/u.test(normalized)) return 4;
-  if (/高中|高職|高級中學|職校/u.test(normalized)) return 3;
-  if (/國中|國民中學|初中/u.test(normalized)) return 2;
-  if (/國小|國民小學|小學/u.test(normalized)) return 1;
+  if (/副學士|專科|專校|工專|商專|師專|醫專|護專|警專|五專|二專/u.test(normalized)) return 4;
+  if (/國民中學|初中|國中(?:部|畢業|肄業|結業|在學)?$/u.test(normalized)) return 2;
+  if (/國小|國民小學|小學|附小/u.test(normalized)) return 1;
   if (/幼稚園|幼兒園/u.test(normalized)) return 0;
+  if (/高中|女中|高職|高級中學|職校|中學|預備學校|高級.{0,12}(?:學校|部)|農工|高工|商職|工校|家商|高商|士商|商工|工商|附中|附工|附農|一中/u.test(normalized)) return 3;
+  if (/大學|學院|學士|學系|臺大|政大|師大|清大|交大|成大|college|university|bachelor/u.test(normalized)) return 5;
   return -1;
 }
 
@@ -147,7 +117,7 @@ function chineseSchoolKey(value: string) {
   };
   if (abbreviation) return abbreviationAliases[abbreviation];
 
-  const school = normalized.match(/((?:國立|私立|市立|縣立|省立)?[\p{Script=Han}]{1,20}?(?:大學|學院|專科學校|高中|高級中學|高職|國中|國民中學|國小|國民小學|小學))/u)?.[1];
+  const school = normalized.match(/((?:國立|私立|市立|縣立|省立)?[\p{Script=Han}]{1,20}?(?:大學|學院|專科學校|專校|工專|商專|師專|高中|女中|高級中學|高職|中學|農工|高工|商職|工校|家商|高商|士商|商工|工商|附中|附工|附農|一中|國中|國民中學|國小|國民小學|小學|附小|學校))/u)?.[1];
   return school?.replace(/^(?:國立|私立|市立|縣立|省立)/u, '') ?? null;
 }
 
@@ -229,10 +199,10 @@ function dedupeEducationItems(items: string[]) {
 }
 
 export function educationProfileItems(value: string | null | undefined) {
-  const items = dedupeEducationItems(splitEducationText(value));
-  const universityAndAbove = items.filter((item) => educationLevel(item) >= 5);
-  const hasExplicitSchool = items.some((item) => Boolean(chineseSchoolKey(item) || latinSchoolKey(item)));
-  if (universityAndAbove.length > 0 && hasExplicitSchool) return universityAndAbove;
+  const items = dedupeEducationItems(splitEducationText(value))
+    .sort((left, right) => educationLevel(right) - educationLevel(left));
+  const explicitSchools = items.filter((item) => Boolean(chineseSchoolKey(item) || latinSchoolKey(item)));
+  if (explicitSchools.length > 0) return explicitSchools;
 
   const highestLevel = Math.max(...items.map(educationLevel));
   if (highestLevel >= 0) {
@@ -270,7 +240,7 @@ export function experienceProfileItems(value: string | null | undefined, current
   const normalizedCurrentPosition = normalizeRole(currentPosition);
   const result: string[] = [];
 
-  for (const item of splitBaseProfileText(value, true)) {
+  for (const item of splitExperienceContent(value)) {
     const normalizedItem = normalizeRole(item);
     if (!normalizedItem) continue;
     if (isExperienceNoise(normalizedItem)) continue;
@@ -281,6 +251,12 @@ export function experienceProfileItems(value: string | null | undefined, current
     result.push(item);
   }
 
-  const chineseItems = result.filter((item) => /[\u3400-\u9fff]/u.test(item));
-  return chineseItems.length > 0 ? chineseItems : result;
+  const specificItems = result.filter((item, index, items) => {
+    const normalizedItem = normalizeRole(item);
+    return normalizedItem !== '大學校長' || !items.some((other, otherIndex) => otherIndex !== index
+      && normalizeRole(other).endsWith(normalizedItem));
+  });
+
+  const chineseItems = specificItems.filter((item) => /[\u3400-\u9fff]/u.test(item));
+  return chineseItems.length > 0 ? chineseItems : specificItems;
 }

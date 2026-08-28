@@ -15,7 +15,7 @@ import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
-import { platformClaimsForCandidate } from '../lib/candidatePlatform';
+import { platformClaimsForCandidate, platformItemsForClaim } from '../lib/candidatePlatform';
 import type { FeedbackSectionKey } from '../lib/personFeedback';
 import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
@@ -109,10 +109,6 @@ function claimElectionRaceId(claim: PublicPersonClaim) {
   if (!electionContext || typeof electionContext !== 'object' || Array.isArray(electionContext)) return null;
   const raceId = (electionContext as Record<string, unknown>).raceId;
   return typeof raceId === 'string' && raceId.trim() ? raceId.trim() : null;
-}
-
-function platformTextForClaim(claim: PublicPersonClaim) {
-  return claimJsonString(claim, 'platformText') ?? claim.claim_value?.trim() ?? null;
 }
 
 function formatVoteCount(value: number | null, locale: string) {
@@ -435,14 +431,18 @@ function ClaimGrid({
 
 function PlatformClaimCard({ claim }: { claim: PublicPersonClaim }) {
   const { t } = useI18n();
-  const platformText = platformTextForClaim(claim);
+  const platformItems = platformItemsForClaim(claim);
 
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
       <h3 className="text-sm font-semibold text-white">{t('person.publicPlatform')}</h3>
-      <div className="mt-3 max-h-72 overflow-auto whitespace-pre-line pr-2 text-sm leading-6 text-slate-200">
-        {platformText ?? t('person.noContent')}
-      </div>
+      {platformItems.length > 0 ? (
+        <ol className="mt-3 max-h-72 list-decimal space-y-2 overflow-auto pl-5 pr-2 text-sm leading-6 text-slate-200">
+          {platformItems.map((item, index) => <li key={`${claim.claim_id}:${index}`}>{item}</li>)}
+        </ol>
+      ) : (
+        <div className="mt-3 text-sm leading-6 text-slate-200">{t('person.noContent')}</div>
+      )}
       {claim.source_url ? (
         <a href={claim.source_url} target="_blank" rel="noreferrer" className="mt-3 block truncate text-xs text-accent hover:text-white">
           {claim.source_name?.trim() || t('person.publicSource')}

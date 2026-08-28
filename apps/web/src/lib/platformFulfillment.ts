@@ -25,6 +25,7 @@ export type PlatformFulfillmentItem = {
   totalCount: number;
 };
 
+
 export type PlatformFulfillmentParticipation = {
   claimId: string;
   items: PlatformFulfillmentItem[];
@@ -82,6 +83,26 @@ function mapResult(row: PlatformFulfillmentResultRow): PlatformFulfillmentItem {
 export function fulfillmentPercent(countValue: number, totalCount: number) {
   if (totalCount <= 0 || countValue <= 0) return 0;
   return countValue * 100 / totalCount;
+}
+
+export function summarizePlatformFulfillment(
+  items: PlatformFulfillmentItem[],
+) {
+  const counts: Record<PlatformFulfillmentStatus, number> = {
+    fulfilled: 0,
+    in_progress: 0,
+    not_fulfilled: 0,
+    insufficient_information: 0,
+  };
+  for (const item of items) {
+    for (const status of platformFulfillmentStatuses) {
+      counts[status] += item.counts[status];
+    }
+  }
+  return {
+    counts,
+    totalCount: platformFulfillmentStatuses.reduce((total, status) => total + counts[status], 0),
+  };
 }
 
 export async function loadPlatformFulfillment(

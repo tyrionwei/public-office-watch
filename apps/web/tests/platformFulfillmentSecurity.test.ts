@@ -6,6 +6,10 @@ const migration = readFileSync(
   new URL('../../../supabase/migrations/20260828065136_add_platform_fulfillment_voting.sql', import.meta.url),
   'utf8',
 );
+const presidentialMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260828210500_enable_2024_presidential_platform_voting.sql', import.meta.url),
+  'utf8',
+);
 const participationSource = readFileSync(
   new URL('../src/lib/platformFulfillment.ts', import.meta.url),
   'utf8',
@@ -60,6 +64,27 @@ test('platform fulfilment votes keep participant rows private and expose bounded
   assert.doesNotMatch(
     migration,
     /GRANT (?:SELECT|INSERT|UPDATE|DELETE).*platform_fulfillment_votes.*TO (?:anon|authenticated)/u,
+  );
+});
+
+test('elected presidential tickets share one reviewed platform vote record', () => {
+  assert.match(presidentialMigration, /race\.race_type = 'president'/u);
+  assert.match(presidentialMigration, /results_announced_on = DATE '2024-01-19'/u);
+  assert.match(presidentialMigration, /official_numbered_lines/u);
+  assert.match(
+    presidentialMigration,
+    /#>> '\{presidentialTicket,ticketNo\}'/u,
+  );
+  assert.match(
+    presidentialMigration,
+    /#>> '\{presidentialTicket,candidateRole\}' = 'president'/u,
+  );
+  assert.match(
+    presidentialMigration,
+    /public\.platform_fulfillment_vote_claim_id\(p_claim_id\)/u,
+  );
+  assert.ok(
+    (presidentialMigration.match(/vote_claim_id := public\.platform_fulfillment_vote_claim_id/gu)?.length ?? 0) >= 3,
   );
 });
 

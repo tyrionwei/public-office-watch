@@ -46,7 +46,7 @@ function localPost(path: string, body: unknown, headers: Record<string, string> 
   });
 }
 
-test('local anonymous participant can vote, change, and withdraw one platform item', {
+test('local presidential ticket shares votes across the elected running mates', {
   skip: process.env.RUN_LOCAL_PARTICIPATION_E2E !== '1',
 }, async () => {
   const webRoot = resolve(import.meta.dirname, '..');
@@ -94,15 +94,29 @@ test('local anonymous participant can vote, change, and withdraw one platform it
     .eq('review_status', 'verified')
     .eq('visibility', 'public')
     .eq('is_public', true)
-    .limit(200);
+    .limit(5000);
   assert.ifError(claims.error);
-  const claim = (claims.data ?? []).find((row) => (
+  const sharedClaims = (claims.data ?? []).filter((row) => (
     row.claim_json
     && typeof row.claim_json === 'object'
+    && (row.claim_json as { presidentialTicket?: { ticketNo?: string } })
+      .presidentialTicket?.ticketNo === '2'
+    && (row.claim_json as { presidentialTicket?: { sharedPlatform?: boolean } })
+      .presidentialTicket?.sharedPlatform === true
     && Array.isArray((row.claim_json as { items?: unknown }).items)
     && ((row.claim_json as { items: unknown[] }).items).length > 0
   ));
+  const claim = sharedClaims.find((row) => (
+    (row.claim_json as { presidentialTicket?: { candidateRole?: string } })
+      .presidentialTicket?.candidateRole === 'president'
+  ));
+  const peerClaim = sharedClaims.find((row) => (
+    (row.claim_json as { presidentialTicket?: { candidateRole?: string } })
+      .presidentialTicket?.candidateRole === 'vice_president'
+  ));
+  assert.equal(sharedClaims.length, 2);
   assert.ok(claim);
+  assert.ok(peerClaim);
 
   let participantHash: string | null = null;
   let userId: string | null = null;
@@ -133,6 +147,16 @@ test('local anonymous participant can vote, change, and withdraw one platform it
     itemKey = item.item_key;
     const initialTotal = Number(item.total_count);
 
+    const peerBefore = await anonymousClient
+      .schema('published')
+      .rpc('platform_fulfillment_results', { p_claim_id: peerClaim.id });
+    assert.ifError(peerBefore.error);
+    assert.equal(peerBefore.data?.length, 12);
+    assert.deepEqual(
+      peerBefore.data?.map((row) => row.item_key),
+      before.data?.map((row) => row.item_key),
+    );
+
     const challenge = await handleParticipationRequest(
       localPost('/api/participation/challenge', { token: 'local-smoke-token' }),
       environment,
@@ -161,7 +185,7 @@ test('local anonymous participant can vote, change, and withdraw one platform it
 
     const ownVotes = await anonymousClient
       .schema('published')
-      .rpc('get_platform_fulfillment_votes', { p_claim_id: claim.id });
+      .rpc('get_platform_fulfillment_votes', { p_claim_id: peerClaim.id });
     assert.ifError(ownVotes.error);
     assert.deepEqual(ownVotes.data, [{ item_key: itemKey, vote_status: 'fulfilled' }]);
 
@@ -178,10 +202,19 @@ test('local anonymous participant can vote, change, and withdraw one platform it
     assert.equal(Number(updatedItem.total_count), initialTotal + 1);
     assert.ok(Number(updatedItem.fulfilled_count) >= 1);
 
+    const peerAfter = await anonymousClient
+      .schema('published')
+      .rpc('platform_fulfillment_results', { p_claim_id: peerClaim.id });
+    assert.ifError(peerAfter.error);
+    assert.equal(
+      Number(peerAfter.data?.find((row) => row.item_key === itemKey)?.total_count),
+      initialTotal + 1,
+    );
+
     const withdrawal = await handleParticipationRequest(
       localPost('/api/participation/submit', {
         action: 'platform-fulfillment-withdrawal',
-        claimId: claim.id,
+        claimId: peerClaim.id,
         itemKey,
       }, {
         authorization: 'Bearer ' + signup.data.session.access_token,

@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('votes reveal results automatically while non-voters can reveal one or all results', async ({ page }) => {
   const itemKey = 'b'.repeat(64);
+  const itemKey2 = 'c'.repeat(64);
   let ownVote: string | null = null;
   let resultsAnnouncedOn = '2024-01-19';
   let votingOpensOn = '2025-01-19';
@@ -39,6 +40,18 @@ test('votes reveal results automatically while non-voters can reveal one or all 
         not_fulfilled_count: notFulfilledCount,
         insufficient_information_count: insufficientCount,
         total_count: 4 + (ownVote ? 1 : 0),
+        results_announced_on: resultsAnnouncedOn,
+        voting_opens_on: votingOpensOn,
+        voting_is_open: votingIsOpen,
+      }, {
+        item_key: itemKey2,
+        display_order: 2,
+        promise_text: '改善公共運輸轉乘，提升通勤便利性。',
+        fulfilled_count: 0,
+        in_progress_count: 3,
+        not_fulfilled_count: 1,
+        insufficient_information_count: 0,
+        total_count: 4,
         results_announced_on: resultsAnnouncedOn,
         voting_opens_on: votingOpensOn,
         voting_is_open: votingIsOpen,
@@ -137,10 +150,29 @@ test('votes reveal results automatically while non-voters can reveal one or all 
     '尚未實現',
     '資訊不足',
   ]);
-  await expect(card.getByText('選舉結果公布滿一年後才開放投票。', {
+  const votingSchedule = card.getByTestId('fulfillment-voting-schedule');
+  const votingRule = votingSchedule.getByText('選舉結果公布滿一年後才開放投票。', {
     exact: true,
-  })).toBeVisible();
-  await expect(card.getByText(/結果公布：2024\/1\/19 · 投票開放：2025\/1\/19/u)).toBeVisible();
+  });
+  const votingDates = votingSchedule.getByText(
+    /結果公布：2024\/1\/19 · 投票開放：2025\/1\/19/u,
+  );
+  await expect(votingRule).toBeVisible();
+  await expect(votingDates).toBeVisible();
+  const ruleBox = await votingRule.boundingBox();
+  const datesBox = await votingDates.boundingBox();
+  expect(Math.abs((ruleBox?.y ?? 0) - (datesBox?.y ?? 0))).toBeLessThanOrEqual(1);
+  expect(datesBox?.x ?? 0).toBeGreaterThan(ruleBox?.x ?? 0);
+
+  const overallSummary = card.getByTestId('fulfillment-overall-summary');
+  await expect(overallSummary).toBeVisible();
+  await expect(overallSummary.getByText('整體社群判斷分布', { exact: true })).toBeVisible();
+  await expect(overallSummary.getByText('2 項政見', { exact: true })).toBeVisible();
+  await expect(
+    overallSummary.getByRole('img', { name: /已實現 25\.0%.*推進中 50\.0%/u }),
+  ).toBeVisible();
+  await expect(overallSummary.getByText('8 票', { exact: true })).toBeVisible();
+
   await expect(
     firstItem.getByRole('img', { name: /社群投票結果/ }),
   ).toHaveCount(0);
@@ -163,6 +195,7 @@ test('votes reveal results automatically while non-voters can reveal one or all 
   await expect(
     firstItem.getByRole('img', { name: /社群投票結果/ }),
   ).toHaveCount(0);
+  await expect(overallSummary).toBeVisible();
 
   await firstItem
     .getByRole('button', { name: '看結果', exact: true })
@@ -239,6 +272,7 @@ test('votes reveal results automatically while non-voters can reveal one or all 
     card.getByRole('button', { name: '查看全部結果', exact: true }),
   ).toHaveCount(0);
   await expect(card.getByLabel('社群履約投票圖例')).toHaveCount(0);
+  await expect(card.getByTestId('fulfillment-overall-summary')).toHaveCount(0);
   await expect(
     firstItem.getByRole('button', { name: '看結果', exact: true }),
   ).toHaveCount(0);

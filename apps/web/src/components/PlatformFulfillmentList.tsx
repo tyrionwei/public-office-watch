@@ -5,6 +5,7 @@ import {
   fulfillmentPercent,
   loadPlatformFulfillment,
   platformFulfillmentStatuses,
+  summarizePlatformFulfillment,
   submitPlatformFulfillmentVote,
   withdrawPlatformFulfillmentVote,
   type PlatformFulfillmentItem,
@@ -246,6 +247,13 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
   }, [claim.claim_id]);
 
   const items = useMemo(() => participation?.items ?? [], [participation]);
+  const overallResult = useMemo<PlatformFulfillmentItem>(() => ({
+    itemKey: 'overall',
+    displayOrder: 0,
+    promiseText: '',
+    ...summarizePlatformFulfillment(items),
+  }), [items]);
+
   const announcedDate = formatEligibilityDate(
     participation?.resultsAnnouncedOn ?? null,
     language,
@@ -351,27 +359,46 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
       </div>
       <div className="mt-3 border-b border-line/60 pb-2">
         {participation.votingIsOpen ? (
+          <section
+            className="mt-3 border border-line/70 bg-bg/35 p-3"
+            data-testid="fulfillment-overall-summary"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs font-semibold text-slate-200">{t('person.fulfillment.overallDistribution')}</p>
+              <span className="text-[10px] text-slate-500">{t('person.fulfillment.itemCount', { count: items.length })}</span>
+            </div>
+            <div className="mt-2 flex min-w-0 items-center gap-2">
+              <ResultBar item={overallResult} />
+            </div>
+          </section>
+        ) : null}
+        {participation.votingIsOpen ? (
           <p className="text-[10px] leading-4 text-slate-500">{t('person.fulfillment.disclaimer')}</p>
         ) : null}
-        <p className="mt-1 text-[10px] leading-4 text-slate-400">
-          {t('person.fulfillment.votingRule')}
-        </p>
-        {announcedDate && openDate ? (
-          <p className={`mt-1 text-[10px] leading-4 ${
-            participation.votingIsOpen ? 'text-slate-500' : 'text-amber-200'
-          }`}>
-            {t(
-              participation.votingIsOpen
-                ? 'person.fulfillment.votingDates'
-                : 'person.fulfillment.votingDatesLocked',
-              { announcedDate, openDate },
-            )}
+        <div
+          className="mt-1 flex flex-wrap items-start justify-between gap-x-4 gap-y-1"
+          data-testid="fulfillment-voting-schedule"
+        >
+          <p className="text-[10px] leading-4 text-slate-400">
+            {t('person.fulfillment.votingRule')}
           </p>
-        ) : (
-          <p className="mt-1 text-[10px] leading-4 text-amber-200">
-            {t('person.fulfillment.votingDateMissing')}
-          </p>
-        )}
+          {announcedDate && openDate ? (
+            <p className={`text-[10px] leading-4 ${
+              participation.votingIsOpen ? 'text-slate-500' : 'text-amber-200'
+            }`}>
+              {t(
+                participation.votingIsOpen
+                  ? 'person.fulfillment.votingDates'
+                  : 'person.fulfillment.votingDatesLocked',
+                { announcedDate, openDate },
+              )}
+            </p>
+          ) : (
+            <p className="text-[10px] leading-4 text-amber-200">
+              {t('person.fulfillment.votingDateMissing')}
+            </p>
+          )}
+        </div>
       </div>
       <ol className="mt-2 max-h-[34rem] list-decimal divide-y divide-line/50 overflow-auto pl-5 pr-2 text-sm text-slate-200">
         {items.map((item) => {

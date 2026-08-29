@@ -2,12 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { classifyPlatformFulfillmentRelease, releaseQualityVersion } from './platform-fulfillment-release-quality.mjs';
+
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const localHosts = new Set(['127.0.0.1', 'localhost', '::1']);
 const expectedTargetCount = 991;
-const expectedApprovedItemCount = 991;
-const expectedNeedsReviewCount = 0;
-const expectedApprovedEmptyCount = 0;
 const missingClaimIds = new Set([
   '35c0b7d5-9925-4300-a87f-fde402e81011',
   '50bc9a00-7af7-4ac5-9e33-e17e2d7d59a9',
@@ -128,14 +127,37 @@ function isElected(candidate) {
   return candidate.is_elected === true || candidate.election_result === 'elected';
 }
 
-function isApprovedReviewStatus(value) {
-  return value === 'auto_approved' || value === 'reviewed';
+function releaseContentSplit(claim, decision) {
+  const contentSplit = { ...(claim.claim_json?.contentSplit ?? {}) };
+  if (!decision.releaseable) {
+    return {
+      ...contentSplit,
+      reviewStatus: 'needs_review',
+      releaseQuality: {
+        version: releaseQualityVersion,
+        reasonCodes: decision.reasonCodes,
+      },
+    };
+  }
+  if (decision.excludedItemCount > 0) {
+    return {
+      ...contentSplit,
+      releaseQuality: {
+        version: releaseQualityVersion,
+        excludedItemCount: decision.excludedItemCount,
+        reasonCodes: decision.excludedReasonCodes,
+      },
+    };
+  }
+  return contentSplit;
 }
 
-function platformItems(claim) {
-  return Array.isArray(claim.claim_json?.items)
-    ? claim.claim_json.items.map((item) => String(item ?? '').trim()).filter(Boolean)
-    : [];
+function releasedClaimJson(entry) {
+  const claimJson = { ...(entry.claim.claim_json ?? {}) };
+  if (entry.releaseable) claimJson.items = entry.items;
+  else delete claimJson.items;
+  claimJson.contentSplit = entry.contentSplit;
+  return claimJson;
 }
 
 function validateClaims(claims) {
@@ -145,26 +167,6 @@ function validateClaims(claims) {
   const uniqueIds = new Set(claims.map((claim) => claim.id));
   if (uniqueIds.size !== claims.length) throw new Error('Duplicate platform claim IDs in release scope');
 
-  const approved = claims.filter((claim) => (
-    isApprovedReviewStatus(claim.claim_json?.contentSplit?.reviewStatus)
-    && platformItems(claim).length > 0
-  ));
-  const needsReview = claims.filter((claim) => (
-    claim.claim_json?.contentSplit?.reviewStatus === 'needs_review'
-  ));
-  const approvedEmpty = claims.filter((claim) => (
-    isApprovedReviewStatus(claim.claim_json?.contentSplit?.reviewStatus)
-    && platformItems(claim).length === 0
-  ));
-  if (approved.length !== expectedApprovedItemCount) {
-    throw new Error(`Expected ${expectedApprovedItemCount} approved non-empty platform items, found ${approved.length}`);
-  }
-  if (needsReview.length !== expectedNeedsReviewCount) {
-    throw new Error(`Expected ${expectedNeedsReviewCount} needs-review platform claims, found ${needsReview.length}`);
-  }
-  if (approvedEmpty.length !== expectedApprovedEmptyCount) {
-    throw new Error(`Expected ${expectedApprovedEmptyCount} approved empty platform claims, found ${approvedEmpty.length}`);
-  }
   for (const claim of claims) {
     if (
       claim.claim_type !== 'platform'
@@ -177,14 +179,26 @@ function validateClaims(claims) {
       throw new Error('Platform claim is outside the reviewed public boundary: ' + claim.id);
     }
   }
-  const missingClaims = claims.filter((claim) => missingClaimIds.has(claim.id));
-  if (
-    missingClaims.length !== missingClaimIds.size
-    || missingClaims.some((claim) => !approved.includes(claim))
-  ) {
-    throw new Error('The seven production-missing claims must all be approved release rows');
+
+  const entries = claims.map((claim) => {
+    const decision = classifyPlatformFulfillmentRelease(claim);
+    return {
+      claim,
+      ...decision,
+      contentSplit: releaseContentSplit(claim, decision),
+    };
+  });
+  const approved = entries.filter((entry) => entry.releaseable);
+  const withheld = entries.filter((entry) => !entry.releaseable);
+  if (approved.length + withheld.length !== expectedTargetCount) {
+    throw new Error('Platform release decisions do not cover the full target scope');
   }
-  return { approved, missingClaims };
+
+  const missingClaims = entries.filter((entry) => missingClaimIds.has(entry.claim.id));
+  if (missingClaims.length !== missingClaimIds.size) {
+    throw new Error('The seven production-missing claims must be present in the release scope');
+  }
+  return { approved, withheld, missingClaims };
 }
 
 const resultsFunctionSql = `CREATE OR REPLACE FUNCTION published.platform_fulfillment_results(
@@ -297,18 +311,30 @@ AS $function$
 $function$;`;
 
 function buildMigration(claims) {
-  const { approved, missingClaims } = validateClaims(claims);
-  const itemRows = approved.toSorted((left, right) => left.id.localeCompare(right.id)).map((claim) => ({
-    claim_id: claim.id,
-    items: platformItems(claim),
-    content_split: claim.claim_json.contentSplit,
+  const { approved, withheld, missingClaims } = validateClaims(claims);
+  const itemRows = approved.toSorted((left, right) => left.claim.id.localeCompare(right.claim.id)).map((entry) => ({
+    claim_id: entry.claim.id,
+    items: entry.items,
+    content_split: entry.contentSplit,
   }));
-  const missingRows = missingClaims.toSorted((left, right) => left.id.localeCompare(right.id)).map((claim) => Object.fromEntries(
-    claimColumns.map(([column]) => [column, claim[column]]),
+  const withheldRows = withheld.toSorted((left, right) => left.claim.id.localeCompare(right.claim.id)).map((entry) => ({
+    claim_id: entry.claim.id,
+    content_split: entry.contentSplit,
+  }));
+  const missingRows = missingClaims.toSorted((left, right) => left.claim.id.localeCompare(right.claim.id)).map((entry) => Object.fromEntries(
+    claimColumns.map(([column]) => [
+      column,
+      column === 'claim_json' ? releasedClaimJson(entry) : entry.claim[column],
+    ]),
   ));
   const itemJson = JSON.stringify(itemRows);
+  const withheldJson = JSON.stringify(withheldRows);
   const missingJson = JSON.stringify(missingRows);
-  if (itemJson.includes('$platform_items$') || missingJson.includes('$missing_claims$')) {
+  if (
+    itemJson.includes('$platform_items$')
+    || withheldJson.includes('$withheld_items$')
+    || missingJson.includes('$missing_claims$')
+  ) {
     throw new Error('Platform release payload conflicts with SQL dollar tags');
   }
   const claimColumnNames = claimColumns.map(([name]) => name).join(', ');
@@ -328,6 +354,13 @@ FROM pg_catalog.jsonb_to_recordset($platform_items$${itemJson}$platform_items$::
     content_split JSONB
 );
 
+CREATE TEMP TABLE _platform_release_withheld_items ON COMMIT DROP AS
+SELECT *
+FROM pg_catalog.jsonb_to_recordset($withheld_items$${withheldJson}$withheld_items$::JSONB) AS release(
+    claim_id UUID,
+    content_split JSONB
+);
+
 CREATE TEMP TABLE _platform_release_missing_claims ON COMMIT DROP AS
 SELECT *
 FROM pg_catalog.jsonb_to_recordset($missing_claims$${missingJson}$missing_claims$::JSONB) AS release(
@@ -336,8 +369,28 @@ ${claimColumnDefinitions}
 
 DO $checks$
 BEGIN
-    IF (SELECT pg_catalog.count(*) FROM _platform_release_items) <> ${expectedApprovedItemCount} THEN
-        RAISE EXCEPTION 'Expected ${expectedApprovedItemCount} approved non-empty platform item payloads';
+    IF (SELECT pg_catalog.count(*) FROM _platform_release_items) <> ${approved.length} THEN
+        RAISE EXCEPTION 'Expected ${approved.length} approved non-empty platform item payloads';
+    END IF;
+
+    IF (SELECT pg_catalog.count(*) FROM _platform_release_withheld_items) <> ${withheld.length} THEN
+        RAISE EXCEPTION 'Expected ${withheld.length} withheld platform item payloads';
+    END IF;
+
+    IF (
+        (SELECT pg_catalog.count(*) FROM _platform_release_items)
+        + (SELECT pg_catalog.count(*) FROM _platform_release_withheld_items)
+    ) <> ${expectedTargetCount} THEN
+        RAISE EXCEPTION 'Platform release decisions do not cover all ${expectedTargetCount} target claims';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM _platform_release_items AS approved
+        JOIN _platform_release_withheld_items AS withheld
+          ON withheld.claim_id = approved.claim_id
+    ) THEN
+        RAISE EXCEPTION 'A platform claim cannot be both approved and withheld';
     END IF;
 
     IF EXISTS (
@@ -436,6 +489,32 @@ BEGIN
 END
 $insert_verify$;
 
+CREATE TEMP TABLE _platform_release_withheld_claims (
+    claim_id UUID PRIMARY KEY
+) ON COMMIT DROP;
+
+WITH updated AS (
+    UPDATE public.person_claims AS claim
+    SET
+        claim_json = pg_catalog.jsonb_set(
+            COALESCE(claim.claim_json, '{}'::JSONB) - 'items',
+            '{contentSplit}',
+            release.content_split,
+            TRUE
+        ),
+        updated_at = pg_catalog.now()
+    FROM _platform_release_withheld_items AS release
+    WHERE claim.id = release.claim_id
+      AND claim.claim_type = 'platform'
+      AND claim.review_status = 'verified'
+      AND claim.visibility = 'public'
+      AND claim.is_public = TRUE
+    RETURNING claim.id
+)
+INSERT INTO _platform_release_withheld_claims (claim_id)
+SELECT id
+FROM updated;
+
 CREATE TEMP TABLE _platform_release_updated_claims (
     claim_id UUID PRIMARY KEY
 ) ON COMMIT DROP;
@@ -470,8 +549,24 @@ FROM updated;
 DO $verify$
 BEGIN
     IF (SELECT pg_catalog.count(*) FROM _platform_release_updated_claims)
-        <> ${expectedApprovedItemCount} THEN
+        <> ${approved.length} THEN
         RAISE EXCEPTION 'Approved platform items were not fully released';
+    END IF;
+
+    IF (SELECT pg_catalog.count(*) FROM _platform_release_withheld_claims)
+        <> ${withheld.length} THEN
+        RAISE EXCEPTION 'Withheld platform claims were not fully updated';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM _platform_release_withheld_items AS release
+        JOIN public.person_claims AS claim ON claim.id = release.claim_id
+        WHERE claim.claim_json ? 'items'
+           OR claim.claim_json -> 'contentSplit' IS DISTINCT FROM release.content_split
+           OR claim.claim_json #>> '{contentSplit,reviewStatus}' <> 'needs_review'
+    ) THEN
+        RAISE EXCEPTION 'Withheld platform claim payload does not match the release decision';
     END IF;
 
     IF EXISTS (
@@ -546,13 +641,14 @@ async function loadLocalClaims() {
 async function main() {
   const { outputPath } = parseArgs(process.argv.slice(2));
   const claims = await loadLocalClaims();
+  const summary = validateClaims(claims);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, buildMigration(claims));
   console.log(JSON.stringify({
     outputPath,
     targetClaims: claims.length,
-    approvedItemClaims: expectedApprovedItemCount,
-    withheldNeedsReviewClaims: expectedNeedsReviewCount,
+    approvedItemClaims: summary.approved.length,
+    withheldNeedsReviewClaims: summary.withheld.length,
     missingClaimsIncluded: missingClaimIds.size,
   }, null, 2));
 }

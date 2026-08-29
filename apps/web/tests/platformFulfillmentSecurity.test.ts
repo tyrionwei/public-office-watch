@@ -98,9 +98,12 @@ test('only reviewed platform splits can become fulfilment voting items', () => {
     /#>> '\{contentSplit,reviewStatus\}'\s+IN \('auto_approved', 'reviewed'\)/u,
   );
   assert.match(approvedItemsMigration, /cec-platform:2024:presidential-ticket-2/u);
-  assert.match(approvedItemsMigration, /Expected 991 approved non-empty platform item payloads/u);
+  assert.match(approvedItemsMigration, /Platform release decisions do not cover all 991 target claims/u);
+  assert.match(approvedItemsMigration, /_platform_release_withheld_items/u);
+  assert.match(approvedItemsMigration, /COALESCE\(claim\.claim_json, '\{\}'::JSONB\) - 'items'/u);
   assert.match(approvedItemsMigration, /candidate_map\.canonical_person_id <> claim_map\.canonical_person_id/u);
   assert.match(approvedItemsMigration, /Inserted platform claim conflicts with the reviewed release row/u);
+  assert.match(approvedItemsMigration, /Expected 0 withheld platform item payloads/u);
   assert.doesNotMatch(approvedItemsMigration, /"reviewStatus":"needs_review"/u);
 });
 

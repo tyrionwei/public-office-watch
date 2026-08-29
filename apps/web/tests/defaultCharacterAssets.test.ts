@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readdirSync } from 'node:fs';
 import test from 'node:test';
 
 import {
@@ -58,11 +59,19 @@ test('falls back to the Xiezhi mascot when gender or exact birth date is unavail
 });
 
 test('uses canonical person IDs for configured candidate sprites', () => {
-  assert.equal(Object.keys(personCandidateSprites).length, 45);
+  assert.equal(Object.keys(personCandidateSprites).length, 237);
   for (const [personId, spritePath] of Object.entries(personCandidateSprites)) {
     assert.match(personId, /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
     assert.equal(spritePath, `/assets/characters/candidates/${personId}.png`);
   }
+
+  assert.deepEqual(
+    Object.keys(personCandidateSprites).sort(),
+    readdirSync(new URL('../public/assets/characters/candidates/', import.meta.url))
+      .filter((fileName) => fileName.endsWith('.png'))
+      .map((fileName) => fileName.slice(0, -4))
+      .sort(),
+  );
 
   assert.equal(
     pickPersonCandidateSprite('A4A44DFF-EFA9-45CC-8371-CBAA4CF6772D'),

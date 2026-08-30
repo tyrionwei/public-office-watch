@@ -47,9 +47,8 @@ function translateIncumbencyBadge(badge: CandidateIncumbencyBadge, t: Translate)
     case 'reelection_failed':
       return t('race.reelectionFailed');
     case 'current_other_office':
-      return t('race.currentOtherOffice', { office: badge.office ?? '' });
     case 'former_other_office':
-      return t('race.formerOtherOffice', { office: badge.office ?? '' });
+      return t('race.priorElectedOffice', { office: badge.office ?? '' });
   }
 }
 

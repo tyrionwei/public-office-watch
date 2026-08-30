@@ -4,7 +4,13 @@ const actionPattern = /(?:爭取|推動|改善|增設|加速|建立|支持|保�
 const webPromotionPattern = /(?:https?:\/\/|www\.|更多(?:政見|訊息)|請搜尋|輸入網址|掃\s*QR(?:-?CODE)?|[a-z0-9-]+\.(?:tw|com|org|net)(?:\b|\/))/iu;
 const biographyPattern = /(?:政見如下|候選人(?:簡介|介紹)|懇請.*(?:支持|機會)|請投|票投|我(?:是|叫|參選|投入這場選舉|願意承擔)|本人(?:出生|參選)|當選以來|這四年我|從政.*(?:初衷|目標))/u;
 const resumePattern = /(?:【\s*(?:經歷|學歷|現任|曾任)\s*】|^(?:經歷|學歷|現任|曾任)\s*[：:])/u;
-const pastAchievementPattern = /(?:已(?:經)?完成|成功(?:爭取|推動|促成)|爭取到|任內(?:完成|促成)|過去.*(?:完成|促成)|曾經.*(?:完成|促成)|重大成果)/u;
+const pastAchievementPattern = /(?:(?:已|己)(?:經)?(?:完成|動工|完工|啟用)|成功(?:爭取|推動|促成)|爭取到|任內(?:完成|促成)|過去.*(?:完成|促成)|曾經.*(?:完成|促成)|重大成果)/u;
+const reviewedHardSafetyReasonCodes = new Set([
+  'election_metadata',
+  'web_promotion',
+  'past_achievement',
+  'abnormal_structure',
+]);
 
 function compactText(value) {
   return value.normalize('NFKC').replace(/[\s\p{P}\p{S}]+/gu, '');
@@ -64,9 +70,31 @@ export function classifyPlatformFulfillmentRelease(claim) {
     : [];
 
   if (reviewStatus === 'reviewed') {
-    return sourceItems.length > 0
-      ? { releaseable: true, items: sourceItems, reasonCodes: [], excludedItemCount: 0 }
-      : { releaseable: false, items: [], reasonCodes: ['no_items'], excludedItemCount: 0 };
+    const auditedItems = sourceItems.map((item) => ({
+      item,
+      reasonCodes: platformFulfillmentItemReasonCodes(item)
+        .filter((reasonCode) => reviewedHardSafetyReasonCodes.has(reasonCode)),
+    }));
+    const structurallyAbnormal = auditedItems.some(({ reasonCodes }) => (
+      reasonCodes.includes('abnormal_structure')
+    ));
+    const items = auditedItems
+      .filter(({ reasonCodes }) => reasonCodes.length === 0)
+      .map(({ item }) => item);
+    const reasonCodes = structurallyAbnormal ? ['abnormal_structure'] : [];
+    if (items.length === 0) reasonCodes.push('no_items');
+    const excludedItemCount = sourceItems.length - items.length;
+    const excludedReasonCodes = Array.from(new Set(
+      auditedItems.flatMap(({ reasonCodes: itemReasonCodes }) => itemReasonCodes),
+    ));
+
+    return {
+      releaseable: reasonCodes.length === 0,
+      items: reasonCodes.length === 0 ? items : [],
+      reasonCodes,
+      excludedItemCount,
+      excludedReasonCodes,
+    };
   }
   if (reviewStatus !== 'auto_approved') {
     return { releaseable: false, items: [], reasonCodes: ['source_needs_review'], excludedItemCount: 0 };

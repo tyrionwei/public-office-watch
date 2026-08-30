@@ -72,3 +72,28 @@ test('preserves explicitly reviewed splits as the human override', () => {
   assert.equal(decision.releaseable, true);
   assert.deepEqual(decision.items, reviewedItems);
 });
+
+test('still applies hard-safety filtering to explicitly reviewed splits', () => {
+  const decision = classifyPlatformFulfillmentRelease(claim([
+    '推動地方公共建設。',
+    '更多政見請上 http://example.tw/',
+    '落實居住正義，推動社會住宅-開南安居己動工',
+  ], 'reviewed'));
+
+  assert.equal(decision.releaseable, true);
+  assert.deepEqual(decision.items, ['推動地方公共建設。']);
+  assert.equal(decision.excludedItemCount, 2);
+  assert.ok(decision.excludedReasonCodes.includes('web_promotion'));
+  assert.ok(decision.excludedReasonCodes.includes('past_achievement'));
+});
+
+test('withholds explicitly reviewed splits with abnormal structure', () => {
+  const decision = classifyPlatformFulfillmentRelease(claim([
+    '推動地方公共建設。',
+    '四師平台」，留住在地專業人才。',
+  ], 'reviewed'));
+
+  assert.equal(decision.releaseable, false);
+  assert.deepEqual(decision.items, []);
+  assert.ok(decision.reasonCodes.includes('abnormal_structure'));
+});

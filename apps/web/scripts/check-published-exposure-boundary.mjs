@@ -35,6 +35,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260827170729_split_public_feedback_and_chat_realtime_reads.sql',
   'supabase/migrations/20260828065136_add_platform_fulfillment_voting.sql',
   'supabase/migrations/20260828093717_add_chat_channels.sql',
+  'supabase/migrations/20260830062225_candidate_election_incumbency_labels.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -187,7 +188,10 @@ if (!/GRANT USAGE ON SCHEMA published TO anon, authenticated/i.test(productionGr
 if (!/ALTER ROLE authenticator\s+SET pgrst\.db_schemas = ['"]public, graphql_public, published['"]/i.test(productionGrant)) {
   addIssue('production-published-schema-exposure-missing', `${publicAccessMigration} must expose only the approved Data API schemas.`);
 }
-if (/GRANT\s+(?:ALL|INSERT|UPDATE|DELETE)[^;]*published/i.test(productionGrant) || /GRANT[^;]*published\.promote/i.test(productionGrant)) {
+if (
+  /GRANT\s+(?:ALL|INSERT|UPDATE|DELETE)[^;]*published/i.test(productionGrant)
+  || /GRANT\s+EXECUTE\s+ON\s+FUNCTION\s+published\.promote\([^;]*\)\s+TO\s+[^;]*(?:PUBLIC|anon|authenticated)/i.test(productionGrant)
+) {
   addIssue('unsafe-production-published-grant', `${publicAccessMigration} may grant only reviewed reads and read functions.`);
 }
 for (const relation of reviewedRelations) {

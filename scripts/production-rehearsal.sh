@@ -215,6 +215,7 @@ copy_runtime_data() {
 refresh_publication_layer() {
   docker exec -i "$rehearsal_container" \
     psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres <<'SQL' >/dev/null
+REFRESH MATERIALIZED VIEW published.candidate_election_office_facts;
 REFRESH MATERIALIZED VIEW public.public_people_list_cached;
 SELECT published.promote(NULL);
 ANALYZE;

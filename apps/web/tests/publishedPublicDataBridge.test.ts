@@ -317,6 +317,7 @@ test('bridge maps complete published person profile rows to the existing fronten
     vote_rate: 51.2,
     is_elected: true,
     is_incumbent: false,
+    office_at_election: null,
     source_name: '中選會',
     source_url: 'https://example.test/election',
     primary_photo_url: null,

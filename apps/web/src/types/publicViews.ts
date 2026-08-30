@@ -299,6 +299,7 @@ export type PublicCandidate = {
   vote_rate: number | null;
   is_elected: boolean | null;
   is_incumbent: boolean | null;
+  office_at_election: string | null;
   source_name: string | null;
   source_url: string | null;
   primary_photo_url: string | null;

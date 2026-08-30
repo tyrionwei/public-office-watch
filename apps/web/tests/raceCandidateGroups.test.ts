@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { groupRaceCandidates } from '../src/lib/raceCandidateGroups.ts';
+import { getCandidateIncumbencyBadge, groupRaceCandidates } from '../src/lib/raceCandidateGroups.ts';
 import type { PublicCandidate } from '../src/types/publicViews.ts';
 
 function candidate(overrides: Partial<PublicCandidate>): PublicCandidate {
@@ -28,6 +28,7 @@ function candidate(overrides: Partial<PublicCandidate>): PublicCandidate {
     vote_rate: null,
     is_elected: false,
     is_incumbent: false,
+    office_at_election: null,
     source_name: null,
     source_url: null,
     primary_photo_url: null,
@@ -64,4 +65,94 @@ test('keeps non-presidential candidates as separate rows', () => {
 
   assert.equal(groups.length, 2);
   assert.deepEqual(groups.map((group) => group.members.length), [1, 1]);
+});
+
+test('does not label a non-incumbent candidate', () => {
+  assert.equal(
+    getCandidateIncumbencyBadge(candidate({ is_incumbent: false, office_at_election: null }), 'completed'),
+    null,
+  );
+});
+
+test('labels ongoing same-office incumbents as seeking reelection', () => {
+  assert.deepEqual(
+    getCandidateIncumbencyBadge(candidate({ is_incumbent: true, is_elected: null, election_result: 'pending' }), 'upcoming'),
+    { kind: 'seeking_reelection', office: null },
+  );
+});
+
+test('labels completed same-office incumbent results without replacing the election result', () => {
+  assert.deepEqual(
+    getCandidateIncumbencyBadge(candidate({ is_incumbent: true, is_elected: true, election_result: 'elected' }), 'completed'),
+    { kind: 'reelected', office: null },
+  );
+  assert.deepEqual(
+    getCandidateIncumbencyBadge(candidate({ is_incumbent: true, is_elected: false, election_result: 'not_elected' }), 'completed'),
+    { kind: 'reelection_failed', office: null },
+  );
+});
+
+test('does not infer success or failure for a completed incumbent with an unknown result', () => {
+  assert.equal(
+    getCandidateIncumbencyBadge(candidate({
+      is_incumbent: true,
+      is_elected: false,
+      election_result: 'unknown',
+      registration_status: 'qualified',
+    }), 'completed'),
+    null,
+  );
+});
+
+test('labels cross-office candidacies by the office held at that election', () => {
+  const councilorRunningForLegislator = candidate({
+    race_title: '臺北市第1選舉區立法委員選舉',
+    person_position: '立法委員候選人',
+    is_incumbent: false,
+    is_elected: null,
+    election_result: 'pending',
+    office_at_election: '議員',
+  });
+
+  assert.deepEqual(
+    getCandidateIncumbencyBadge(councilorRunningForLegislator, 'upcoming'),
+    { kind: 'current_other_office', office: '議員' },
+  );
+  assert.deepEqual(
+    getCandidateIncumbencyBadge({ ...councilorRunningForLegislator, election_result: 'unknown' }, 'completed'),
+    { kind: 'former_other_office', office: '議員' },
+  );
+});
+
+test('fails closed when the race status is unknown', () => {
+  assert.equal(
+    getCandidateIncumbencyBadge(candidate({ is_incumbent: true }), 'unknown'),
+    null,
+  );
+});
+
+test('deduplicates identical incumbency badges on presidential tickets', () => {
+  const groups = groupRaceCandidates([
+    candidate({
+      candidate_id: 'president-1',
+      person_id: 'president-1',
+      person_name: '總統甲',
+      is_incumbent: true,
+      is_elected: null,
+      election_result: 'pending',
+    }),
+    candidate({
+      candidate_id: 'vice-1',
+      person_id: 'vice-1',
+      person_name: '副手甲',
+      person_position: '副總統候選人',
+      is_incumbent: true,
+      is_elected: null,
+      election_result: 'pending',
+    }),
+  ], '總統副總統全國選舉', 'upcoming');
+
+  assert.deepEqual(groups[0].incumbencyBadges, [
+    { kind: 'seeking_reelection', office: null },
+  ]);
 });

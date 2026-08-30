@@ -9,12 +9,12 @@ import { SectionPanel } from '../components/SectionPanel';
 import { buildElectionEvents, getElectionEventForRace, getRaceRegionGroup } from '../data/electionEvents';
 import { isCandidateElected, translateCandidateStatus, translateElectionEventTitle, translateElectionStatus, translateRaceCategory, translateRaceStatus, translateRaceType } from '../data/electionI18n';
 import { getRaceCategory } from '../data/electionLabels';
-import { useI18n } from '../i18n';
+import { useI18n, type Translate } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import type { PublicRaceDetailData } from '../lib/publicDataProvider';
 import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
-import { groupRaceCandidates, isPresidentialTicketRace } from '../lib/raceCandidateGroups';
+import { groupRaceCandidates, isPresidentialTicketRace, type CandidateIncumbencyBadge } from '../lib/raceCandidateGroups';
 import { electionEventPath, electionsPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonProfile } from '../types/publicViews';
@@ -36,6 +36,21 @@ function compareCandidates(left: PublicCandidate, right: PublicCandidate, locale
   const numberDiff = getCandidateNumber(left) - getCandidateNumber(right);
   if (numberDiff !== 0) return numberDiff;
   return left.person_name.localeCompare(right.person_name, locale);
+}
+
+function translateIncumbencyBadge(badge: CandidateIncumbencyBadge, t: Translate) {
+  switch (badge.kind) {
+    case 'seeking_reelection':
+      return t('race.incumbent');
+    case 'reelected':
+      return t('race.reelectionSucceeded');
+    case 'reelection_failed':
+      return t('race.reelectionFailed');
+    case 'current_other_office':
+      return t('race.currentOtherOffice', { office: badge.office ?? '' });
+    case 'former_other_office':
+      return t('race.formerOtherOffice', { office: badge.office ?? '' });
+  }
 }
 
 export function RacePage() {
@@ -92,8 +107,8 @@ export function RacePage() {
     [detail.candidates, language],
   );
   const candidateGroups = useMemo(
-    () => groupRaceCandidates(candidates, race?.title),
-    [candidates, race?.title],
+    () => groupRaceCandidates(candidates, race?.title, race?.status),
+    [candidates, race?.status, race?.title],
   );
   const isPresidentialTicket = isPresidentialTicketRace(race?.title);
   const candidatePersonIds = useMemo(
@@ -405,11 +420,15 @@ export function RacePage() {
                         <p className={group.isElected ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
                           {translateCandidateStatus(statusCandidate, t)}
                         </p>
-                        {group.isIncumbent ? (
-                          <span className="mt-1 inline-block border border-amber-300/50 bg-amber-300/10 px-2 py-0.5 text-[11px] text-amber-200" data-incumbent-badge>
-                            {t('race.incumbent')}
+                        {group.incumbencyBadges.map((badge) => (
+                          <span
+                            key={badge.kind + ':' + (badge.office ?? '')}
+                            className="mt-1 mr-1 inline-block border border-amber-300/50 bg-amber-300/10 px-2 py-0.5 text-[11px] text-amber-200"
+                            data-incumbent-badge
+                          >
+                            {translateIncumbencyBadge(badge, t)}
                           </span>
-                        ) : null}
+                        ))}
                       </div>
                       <p className="text-sm text-slate-300">{formatNumber(candidate.vote_count, language)}</p>
                       <p className="text-sm text-slate-300">{formatPercent(candidate.vote_rate)}</p>

@@ -43,6 +43,7 @@ function candidate(
     vote_rate: null,
     is_elected: elected,
     is_incumbent: null,
+    office_at_election: null,
     source_name: null,
     source_url: null,
     primary_photo_url: null,

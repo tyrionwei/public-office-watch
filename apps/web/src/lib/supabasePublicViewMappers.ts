@@ -322,6 +322,7 @@ export function mapPublicCandidateRow(row: PartialRow<PublicCandidate>): PublicC
     vote_rate: asNullableNumber(row?.vote_rate),
     is_elected: isElected,
     is_incumbent: typeof row?.is_incumbent === 'boolean' ? row.is_incumbent : null,
+    office_at_election: asNullableString(row?.office_at_election),
     source_name: asNullableString(row?.source_name),
     source_url: asNullableString(row?.source_url),
     primary_photo_url: asNullableString(row?.primary_photo_url),

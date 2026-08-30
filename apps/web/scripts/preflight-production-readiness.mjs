@@ -5,6 +5,7 @@ const checks = [
   { label: 'build:sites', command: ['npm', 'run', 'build:sites'] },
   { label: 'lint', command: ['npm', 'run', 'lint'] },
   { label: 'check:data-boundary', command: ['npm', 'run', 'check:data-boundary'] },
+  { label: 'check:published-exposure', command: ['npm', 'run', 'check:published-exposure'] },
   { label: 'smoke:public-views', command: ['npm', 'run', 'smoke:public-views'] },
   { label: 'check:public-view-contracts', command: ['npm', 'run', 'check:public-view-contracts'] },
 ];

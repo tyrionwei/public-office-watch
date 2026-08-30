@@ -237,7 +237,7 @@ test('homepage uses one scoped payload and stays populated after client-side nav
   expect(apiRequests.some((path) => path.endsWith('/rest/v1/rpc/home_page_for'))).toBe(false);
 });
 
-test('detail routes use bounded page payloads without eager feedback reads', async ({ page }) => {
+test('detail routes use bounded page payloads with only reviewed supplemental reads', async ({ page }) => {
   const apiRequests: string[] = [];
   page.on('request', (request) => {
     const url = new URL(request.url());
@@ -249,7 +249,14 @@ test('detail routes use bounded page payloads without eager feedback reads', asy
   await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
   await expect(page.getByRole('heading', { name: '王世堅', exact: true })).toBeVisible();
   await page.waitForLoadState('networkidle');
-  expect(apiRequests).toEqual(['rpc/person_profiles_for']);
+  expect(apiRequests.filter((path) => path === 'rpc/person_profiles_for')).toHaveLength(1);
+  expect(apiRequests.filter((path) => path === 'rpc/platform_fulfillment_results')).toHaveLength(4);
+  expect(apiRequests.filter((path) => path === 'rpc/person_feedback_priorities')).toHaveLength(1);
+  expect(new Set(apiRequests)).toEqual(new Set([
+    'rpc/person_profiles_for',
+    'rpc/platform_fulfillment_results',
+    'rpc/person_feedback_priorities',
+  ]));
 
   apiRequests.length = 0;
   await page.goto('/elections/events/2026-2026-11-28-local');
@@ -546,6 +553,8 @@ test('chat creates a CAPTCHA-protected anonymous session only after consent', as
 
   await page.goto('/');
   await page.locator('[data-chat-launcher]').click();
+  await expect(page.getByText('目前還沒有訊息。', { exact: true })).toBeVisible();
+  await expect(page.getByText('即時連線重新建立中…', { exact: true })).toHaveCount(0);
   await page.getByRole('textbox', { name: '設定聊天名稱' }).fill('測試使用者');
   await page.getByRole('checkbox', { name: /我了解發言將公開顯示/ }).check();
   expect(signupBodies).toHaveLength(0);

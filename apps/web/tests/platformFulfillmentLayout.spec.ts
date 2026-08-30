@@ -82,6 +82,7 @@ test('mobile platform choices form a two-by-two grid without horizontal overflow
     name: '你認為目前履行情況如何？',
   });
   const buttons = choices.getByRole('button');
+  await expect(buttons).toHaveText(['已實現', '推進中', '尚未實現', '資訊不足']);
   const boxes = await buttons.evaluateAll((elements) => elements.map((element) => {
     const box = element.getBoundingClientRect();
     return { top: box.top, left: box.left, right: box.right, bottom: box.bottom };

@@ -2,12 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { findDangerousBrowserRelationGrants } from './relation-privilege-policy.mjs';
+
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const webRoot = path.resolve(scriptDir, '..');
 const repoRoot = path.resolve(webRoot, '..', '..');
 const srcRoot = path.join(webRoot, 'src');
 const migrationsRoot = path.join(repoRoot, 'supabase', 'migrations');
 const publicAccessMigration = 'supabase/migrations/202607280004_published_public_read_access.sql';
+const relationPrivilegeBaselineMigration = 'supabase/migrations/20260830144212_revoke_browser_relation_maintenance_privileges.sql';
 const supplementalPublicAccessMigrations = [
   'supabase/migrations/202607280005_published_ranked_search.sql',
   'supabase/migrations/202608010002_published_active_party_candidate_access.sql',
@@ -206,8 +209,18 @@ for (const functionName of reviewedGrantedFunctions) {
 }
 
 for (const migrationPath of walk(migrationsRoot).filter((filePath) => filePath.endsWith('.sql'))) {
-  const sql = fs.readFileSync(migrationPath, 'utf8').replace(/\s+/g, ' ');
+  const rawSql = fs.readFileSync(migrationPath, 'utf8');
+  const sql = rawSql.replace(/\s+/g, ' ');
   const relativePath = path.relative(repoRoot, migrationPath).replaceAll(path.sep, '/');
+
+  if (relativePath.localeCompare(relationPrivilegeBaselineMigration) > 0) {
+    for (const finding of findDangerousBrowserRelationGrants(rawSql)) {
+      addIssue(
+        'dangerous-browser-relation-grant-forbidden',
+        `${relativePath} grants ${finding.privileges.join(', ')} to ${finding.roles.join(', ')}.`,
+      );
+    }
+  }
 
   if (
     relativePath === publicAccessMigration

@@ -259,6 +259,7 @@ test('local platform voting supports shared presidential tickets and party-list 
       .select('result_id')
       .eq('is_public', true)
       .not('platform_items_reviewed_at', 'is', null)
+      .gt('allocated_seats', 0)
       .order('party_ballot_number', { ascending: true })
       .limit(1);
     assert.ifError(partyResults.error);
@@ -274,6 +275,41 @@ test('local platform voting supports shared presidential tickets and party-list 
     assert.equal(partyItem.voting_is_open, true);
     partyItemKey = partyItem.item_key;
     const partyInitialTotal = Number(partyItem.total_count);
+
+    const belowThresholdResults = await adminClient
+      .schema('public')
+      .from('party_list_race_results')
+      .select('result_id')
+      .eq('is_public', true)
+      .not('platform_items_reviewed_at', 'is', null)
+      .eq('allocated_seats', 0)
+      .order('party_ballot_number', { ascending: true })
+      .limit(1);
+    assert.ifError(belowThresholdResults.error);
+    const belowThresholdResultId = belowThresholdResults.data?.[0]?.result_id;
+    assert.ok(belowThresholdResultId);
+
+    const belowThresholdPlatforms = await anonymousClient
+      .schema('published')
+      .rpc('platform_fulfillment_results', { p_claim_id: belowThresholdResultId });
+    assert.ifError(belowThresholdPlatforms.error);
+    assert.ok((belowThresholdPlatforms.data?.length ?? 0) > 0);
+    assert.ok(belowThresholdPlatforms.data?.every((row) => row.voting_is_open === false));
+
+    const rejectedPartyVote = await handleParticipationRequest(
+      localPost('/api/participation/submit', {
+        action: 'platform-fulfillment',
+        claimId: belowThresholdResultId,
+        itemKey: belowThresholdPlatforms.data?.[0]?.item_key,
+        voteStatus: 'in_progress',
+      }, {
+        authorization: 'Bearer ' + signup.data.session.access_token,
+        cookie,
+      }),
+      environment,
+      upstreamFetch,
+    );
+    assert.equal(rejectedPartyVote.status, 400);
 
     const partyVote = await handleParticipationRequest(
       localPost('/api/participation/submit', {

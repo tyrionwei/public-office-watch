@@ -28,6 +28,14 @@ test('2024 party-list race shows party results, full rosters, and party comparis
   await roster.getByRole('button', { name: '關閉名單' }).click();
   await expect(roster).toHaveCount(0);
 
+  const nppRow = page.locator('[data-party-result-row="npp"]');
+  await nppRow.getByRole('button', { name: '查看完整名單' }).click();
+  const belowThresholdRoster = page.locator('[data-party-list-roster]');
+  await expect(belowThresholdRoster.locator('[data-testid="platform-promise"]')).not.toHaveCount(0);
+  await expect(belowThresholdRoster.getByTestId('party-threshold-voting-locked')).toContainText('未跨過 5% 門檻');
+  await expect(belowThresholdRoster.getByRole('group', { name: '你認為目前履行情況如何？' })).toHaveCount(0);
+  await belowThresholdRoster.getByRole('button', { name: '關閉名單' }).click();
+
   await page.getByRole('checkbox', { name: '比較 民主進步黨' }).click();
   await expect(page.getByRole('checkbox', { name: '比較 民主進步黨' })).toBeChecked();
   await page.getByRole('checkbox', { name: '比較 中國國民黨' }).click();
@@ -83,4 +91,14 @@ test('party page shows each party-list election platform with community voting',
     'href',
     '/elections/races/fbf84648-d6d7-480b-a0a4-518ad1f39d2b',
   );
+});
+
+test('party page only enables fulfilment voting for elections where the party crossed five percent', async ({ page }) => {
+  await page.goto('/parties/npp');
+
+  const platform2024 = page.locator('[data-party-platform-record="2024"]');
+  const platform2020 = page.locator('[data-party-platform-record="2020"]');
+  await expect(platform2024.getByTestId('party-threshold-voting-locked')).toContainText('未跨過 5% 門檻');
+  await expect(platform2024.getByRole('group', { name: '你認為目前履行情況如何？' })).toHaveCount(0);
+  await expect(platform2020.getByRole('group', { name: '你認為目前履行情況如何？' }).first()).toBeVisible();
 });

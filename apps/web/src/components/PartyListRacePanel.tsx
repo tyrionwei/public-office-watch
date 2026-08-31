@@ -238,6 +238,7 @@ export function PartyListRacePanel({ results, candidates, language, t }: PartyLi
               <PlatformFulfillmentList
                 targetId={openParty.result_id}
                 title={t('race.partyListOfficialPlatform')}
+                votingBlockedReason={openParty.allocated_seats > 0 ? undefined : 'party_threshold'}
               />
               <p className="mt-2 text-sm leading-6 text-slate-400">{t('race.partyListPlatformSourceOnly')}</p>
               {openParty.platform_source_url ? (

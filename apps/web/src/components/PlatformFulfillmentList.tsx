@@ -222,6 +222,7 @@ type PlatformFulfillmentListProps = {
   targetId: string;
   staticItems?: string[];
   title: string;
+  votingBlockedReason?: 'party_threshold';
 };
 
 export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
@@ -230,6 +231,9 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
   const staticItems = 'targetId' in props
     ? props.staticItems ?? []
     : platformItemsForClaim(props.claim);
+  const votingBlockedReason = 'targetId' in props
+    ? props.votingBlockedReason
+    : undefined;
   const { t, language } = useI18n();
   const [participation, setParticipation] = useState<PlatformFulfillmentParticipation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -268,6 +272,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
 
   const items = useMemo(() => participation?.items ?? [], [participation]);
   const overallSummary = useMemo(() => summarizePlatformFulfillment(items), [items]);
+  const votingIsOpen = participation?.votingIsOpen === true && !votingBlockedReason;
   const overallResult: PlatformFulfillmentItem = {
     itemKey: 'overall',
     displayOrder: 0,
@@ -290,7 +295,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
     status: PlatformFulfillmentStatus,
     currentStatus?: PlatformFulfillmentStatus,
   ) {
-    if (!participation?.votingIsOpen || status === currentStatus) return;
+    if (!votingIsOpen || status === currentStatus) return;
     setSavingVote({ itemKey, status });
     setError(null);
     try {
@@ -308,7 +313,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
   }
 
   async function handleWithdraw(itemKey: string) {
-    if (!participation?.votingIsOpen) return;
+    if (!votingIsOpen) return;
     setWithdrawingKey(itemKey);
     setError(null);
     try {
@@ -364,7 +369,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
     <>
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-sm font-semibold text-white">{title}</h3>
-        {participation.votingIsOpen ? (
+        {votingIsOpen ? (
           <div className="flex flex-col items-end gap-2">
             <button
               type="button"
@@ -380,7 +385,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
         ) : null}
       </div>
       <div className="mt-3 border-b border-line/60 pb-2">
-        {participation.votingIsOpen ? (
+        {votingIsOpen ? (
           <section
             className="mt-3 border border-line/70 bg-bg/35 p-3"
             data-testid="fulfillment-overall-summary"
@@ -398,7 +403,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
             )}
           </section>
         ) : null}
-        {participation.votingIsOpen ? (
+        {votingIsOpen ? (
           <p className="text-[10px] leading-4 text-slate-500">{t('person.fulfillment.disclaimer')}</p>
         ) : null}
         <div
@@ -408,12 +413,16 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
           <p className="text-[10px] leading-4 text-slate-400">
             {t('person.fulfillment.votingRule')}
           </p>
-          {announcedDate && openDate ? (
+          {votingBlockedReason === 'party_threshold' ? (
+            <p className="text-[10px] leading-4 text-amber-200" data-testid="party-threshold-voting-locked">
+              {t('person.fulfillment.partyThresholdLocked')}
+            </p>
+          ) : announcedDate && openDate ? (
             <p className={`text-[10px] leading-4 ${
-              participation.votingIsOpen ? 'text-slate-500' : 'text-amber-200'
+              votingIsOpen ? 'text-slate-500' : 'text-amber-200'
             }`}>
               {t(
-                participation.votingIsOpen
+                votingIsOpen
                   ? 'person.fulfillment.votingDates'
                   : 'person.fulfillment.votingDatesLocked',
                 { announcedDate, openDate },
@@ -435,18 +444,18 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
           const withdrawing = withdrawingKey === item.itemKey;
           return (
             <li key={item.itemKey} className="py-3 pl-1">
-              <div className={participation.votingIsOpen
+              <div className={votingIsOpen
                 ? 'grid gap-2 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start'
                 : ''}
               >
                 <p className="min-w-0 leading-6" data-testid="platform-promise">{item.promiseText}</p>
-                {participation.votingIsOpen ? (
+                {votingIsOpen ? (
                   <div className="grid gap-2">
                     <VoteButtons
                       selected={ownVote}
                       savingStatus={itemSavingVote}
                       busy={Boolean(itemSavingVote) || withdrawing}
-                      enabled={participation.votingIsOpen}
+                      enabled={votingIsOpen}
                       onVote={(status) => void handleVote(item.itemKey, status, ownVote)}
                     />
                     <ResultControls
@@ -454,7 +463,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
                       visible={Boolean(ownVote) || visibleResultKeys.has(item.itemKey)}
                       hasOwnVote={Boolean(ownVote)}
                       withdrawing={withdrawing}
-                      votingIsOpen={participation.votingIsOpen}
+                      votingIsOpen={votingIsOpen}
                       onToggle={() => toggleResult(item.itemKey)}
                       onWithdraw={() => void handleWithdraw(item.itemKey)}
                     />

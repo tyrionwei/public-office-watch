@@ -874,6 +874,7 @@ export function PartyPage() {
                         <PlatformFulfillmentList
                           targetId={record.result_id}
                           title={t('race.partyListOfficialPlatform')}
+                          votingBlockedReason={record.allocated_seats > 0 ? undefined : 'party_threshold'}
                         />
                       </div>
                       {record.platform_source_url ? (

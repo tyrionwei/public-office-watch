@@ -43,6 +43,7 @@ export function PixelCandidateSprite({
     ? demographicSprite
     : partyKey === 'unknown' ? unknownCandidateSprite : pickDefaultCandidateSprite(`${displayName}-${variant}`));
   const usesMascot = spriteSrc === xiezhiMascotSprite;
+  const usesDemographicFallback = !personSprite && useDemographicSprite && demographicSprite !== xiezhiMascotSprite;
   const theme = partyTheme[partyKey];
 
   return (
@@ -74,7 +75,11 @@ export function PixelCandidateSprite({
           >
             {partyLabel}
           </p>
-          {usesMascot ? <p className="mt-1 text-[10px] text-cyan-200/75">{t('person.mascotFallbackLabel')}</p> : null}
+          {usesMascot ? (
+            <p className="mt-1 text-[10px] text-cyan-200/75">{t('person.mascotFallbackLabel')}</p>
+          ) : usesDemographicFallback ? (
+            <p className="mt-1 text-[10px] text-cyan-200/75">{t('person.demographicFallbackLabel')}</p>
+          ) : null}
         </div>
       </div>
     </div>

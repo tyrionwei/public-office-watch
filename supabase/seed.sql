@@ -80,6 +80,9 @@ TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION published.race_page_for(UUID)
 TO anon, authenticated;
 
+GRANT EXECUTE ON FUNCTION published.party_list_race_page_for(UUID)
+TO anon, authenticated;
+
 GRANT EXECUTE ON FUNCTION published.seo_catalog_page(TEXT, INTEGER, INTEGER)
 TO anon, authenticated;
 

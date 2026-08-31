@@ -456,6 +456,7 @@ export function createPublishedPublicDataBridge(
         election: rows.electionRow,
         candidates: rows.candidateRows,
         partyAffiliations: rows.partyAffiliationRows,
+        partyListResults: rows.partyListResultRows ?? [],
         referendumQuestion: rows.referendumQuestionRow,
         referendumOptions: rows.referendumOptionRows,
         referendumRegionResults: rows.referendumRegionResultRows,

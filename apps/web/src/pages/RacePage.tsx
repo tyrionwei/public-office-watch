@@ -4,6 +4,7 @@ import { AppShell } from '../components/AppShell';
 import { CandidateComparisonPanel } from '../components/CandidateComparisonPanel';
 import { ElectionBreadcrumbs } from '../components/ElectionBreadcrumbs';
 import { HudStatCard } from '../components/HudStatCard';
+import { PartyListRacePanel } from '../components/PartyListRacePanel';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { buildElectionEvents, getElectionEventForRace, getRaceRegionGroup } from '../data/electionEvents';
@@ -62,6 +63,7 @@ export function RacePage() {
     election: null,
     candidates: [],
     partyAffiliations: [],
+    partyListResults: [],
     referendumQuestion: null,
     referendumOptions: [],
     referendumRegionResults: [],
@@ -78,6 +80,7 @@ export function RacePage() {
       election: null,
       candidates: [],
       partyAffiliations: [],
+      partyListResults: [],
       referendumQuestion: null,
       referendumOptions: [],
       referendumRegionResults: [],
@@ -189,6 +192,8 @@ export function RacePage() {
     ? `${eventRootPath}?${new URLSearchParams({ category: category.key, region: region.key }).toString()}`
     : eventRootPath;
   const isReferendum = race.race_type === 'referendum';
+  const isPartyList = race.race_type === 'party_list_legislator';
+  const partyListSeatCount = detail.partyListResults.reduce((sum, result) => sum + result.allocated_seats, 0);
   const referendumQuestion = detail.referendumQuestion;
   const referendumOptions = detail.referendumOptions.slice().sort((left, right) => left.display_order - right.display_order);
   const referendumRegionResults = detail.referendumRegionResults.slice().sort((left, right) => (
@@ -234,6 +239,12 @@ export function RacePage() {
                   <HudStatCard label={t('race.referendumOutcome')} value={<span className="font-display text-xl text-signal">{referendumOutcome}</span>} />
                   <HudStatCard label={t('race.referendumTurnout')} value={<span className="font-display text-xl text-white">{formatPercent(referendumQuestion?.turnout_rate ?? null)}</span>} />
                   <HudStatCard label={t('race.region')} value={<span className="font-display text-xl text-white">{referendumQuestion?.jurisdiction_name ?? region.label}</span>} />
+                </>
+              ) : isPartyList ? (
+                <>
+                  <HudStatCard label={t('race.partyListParties')} value={<span className="font-display text-xl text-white">{detail.partyListResults.length}</span>} />
+                  <HudStatCard label={t('race.partyListSeats')} value={<span className="font-display text-xl text-signal">{partyListSeatCount}</span>} />
+                  <HudStatCard label={t('race.region')} value={<span className="font-display text-xl text-white">{region.label}</span>} />
                 </>
               ) : (
                 <>
@@ -332,7 +343,16 @@ export function RacePage() {
           </SectionPanel>
         ) : null}
 
-        {!isReferendum ? <SectionPanel title={candidateGroups.length > 0 ? t('race.listTitle') : t('race.listFallbackTitle')} eyebrow={t('race.roster')}>
+        {isPartyList ? (
+          <PartyListRacePanel
+            results={detail.partyListResults}
+            candidates={candidates}
+            language={language}
+            t={t}
+          />
+        ) : null}
+
+        {!isReferendum && !isPartyList ? <SectionPanel title={candidateGroups.length > 0 ? t('race.listTitle') : t('race.listFallbackTitle')} eyebrow={t('race.roster')}>
           {candidateGroups.length > 0 ? (
             <div className="overflow-hidden pixel-corners border border-line/70">
               <div className="grid gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]">
@@ -454,7 +474,7 @@ export function RacePage() {
           ) : null}
         </SectionPanel> : null}
 
-        {!isReferendum && selectedCandidates.length > 0 ? (
+        {!isReferendum && !isPartyList && selectedCandidates.length > 0 ? (
           <CandidateComparisonPanel
             candidates={selectedCandidates}
             profiles={comparisonProfiles}

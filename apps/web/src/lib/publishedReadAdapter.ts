@@ -9,6 +9,7 @@ import type {
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPartyLegalStatistics,
+  PublicPartyListRaceResult,
   PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
   PublicPartyElectionPerformance,
@@ -52,6 +53,8 @@ export const LOCAL_OFFICE_PERSON_LIMIT = 200;
 export const NATIONAL_OFFICE_HOLDER_LIMIT = 12;
 export const LEGISLATOR_PARTY_SUMMARY_LIMIT = 20;
 export const RACE_DETAIL_CANDIDATE_LIMIT = 100;
+export const RACE_DETAIL_PARTY_LIST_CANDIDATE_LIMIT = 256;
+export const RACE_DETAIL_PARTY_LIST_RESULT_LIMIT = 32;
 export const RACE_DETAIL_PARTY_AFFILIATION_LIMIT = 1000;
 export const RACE_DETAIL_REFERENDUM_OPTION_LIMIT = 2;
 export const RACE_DETAIL_REFERENDUM_REGION_LIMIT = 64;
@@ -616,6 +619,7 @@ type PublishedRacePagePayloadRow = {
     election_row: PublicElection | null;
     candidate_rows: PublicCandidate[];
     party_affiliation_rows: PublicPersonPartyAffiliation[];
+    party_list_result_rows?: PublicPartyListRaceResult[];
     referendum_question_row: PublicReferendumQuestion | null;
     referendum_option_rows: PublicReferendumOption[];
     referendum_region_result_rows: PublicReferendumRegionResult[];
@@ -658,6 +662,7 @@ export type PublishedRaceDetailRows = {
   electionRow: PublicElection | null;
   candidateRows: PublicCandidate[];
   partyAffiliationRows: PublicPersonPartyAffiliation[];
+  partyListResultRows: PublicPartyListRaceResult[];
   referendumQuestionRow: PublicReferendumQuestion | null;
   referendumOptionRows: PublicReferendumOption[];
   referendumRegionResultRows: PublicReferendumRegionResult[];
@@ -1081,6 +1086,7 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           electionRow: null,
           candidateRows: [],
           partyAffiliationRows: [],
+          partyListResultRows: [],
           referendumQuestionRow: null,
           referendumOptionRows: [],
           referendumRegionResultRows: [],
@@ -1092,11 +1098,29 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         { p_race_id: raceId },
       );
       const rows = getBoundedRowsOrThrow(response, 'Published race page', 1);
-      const payload = rows[0]?.payload;
+      let payload = rows[0]?.payload;
       if (!payload || typeof payload !== 'object') {
         throw new Error('Published race page returned an invalid payload.');
       }
       assertPayloadMetadata(payload, 'Published race page');
+
+      if (payload.race_row?.race_type === 'party_list_legislator') {
+        const partyListResponse = await client.schema('published').rpc<PublishedRacePagePayloadRow>(
+          'party_list_race_page_for',
+          { p_race_id: raceId },
+        );
+        const partyListRows = getBoundedRowsOrThrow(partyListResponse, 'Published party-list race page', 1);
+        const partyListPayload = partyListRows[0]?.payload;
+        if (!partyListPayload || typeof partyListPayload !== 'object') {
+          throw new Error('Published party-list race page returned an invalid payload.');
+        }
+        assertPayloadMetadata(partyListPayload, 'Published party-list race page');
+        payload = partyListPayload;
+      }
+
+      const candidateLimit = payload.race_row?.race_type === 'party_list_legislator'
+        ? RACE_DETAIL_PARTY_LIST_CANDIDATE_LIMIT
+        : RACE_DETAIL_CANDIDATE_LIMIT;
 
       return {
         raceRow: payload.race_row ?? null,
@@ -1104,12 +1128,17 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         candidateRows: getBoundedPayloadRows<PublicCandidate>(
           payload.candidate_rows,
           'Published race candidates',
-          RACE_DETAIL_CANDIDATE_LIMIT,
+          candidateLimit,
         ),
         partyAffiliationRows: getBoundedPayloadRows<PublicPersonPartyAffiliation>(
           payload.party_affiliation_rows,
           'Published race party affiliations',
           RACE_DETAIL_PARTY_AFFILIATION_LIMIT,
+        ),
+        partyListResultRows: getBoundedPayloadRows<PublicPartyListRaceResult>(
+          payload.party_list_result_rows ?? [],
+          'Published party-list race results',
+          RACE_DETAIL_PARTY_LIST_RESULT_LIMIT,
         ),
         referendumQuestionRow: payload.referendum_question_row ?? null,
         referendumOptionRows: getBoundedPayloadRows<PublicReferendumOption>(

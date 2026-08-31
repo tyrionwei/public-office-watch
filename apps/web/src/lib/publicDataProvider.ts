@@ -15,6 +15,7 @@ import type {
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPartyLegalStatistics,
+  PublicPartyListRaceResult,
   PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
   PublicPartyElectionPerformance,
@@ -108,6 +109,7 @@ export type PublicRaceDetailData = {
   election: PublicElection | null;
   candidates: PublicCandidate[];
   partyAffiliations: PublicPersonPartyAffiliation[];
+  partyListResults: PublicPartyListRaceResult[];
   referendumQuestion: PublicReferendumQuestion | null;
   referendumOptions: PublicReferendumOption[];
   referendumRegionResults: PublicReferendumRegionResult[];

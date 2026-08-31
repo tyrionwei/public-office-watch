@@ -27,6 +27,11 @@ const routePagePayloadMigration = readFileSync(
   'utf8',
 );
 
+const partyListRacePageMigration = readFileSync(
+  new URL('../../../supabase/migrations/20260831082757_add_party_list_race_page.sql', import.meta.url),
+  'utf8',
+);
+
 const narrowPublishedAccessMigration = readFileSync(
   new URL('../../../supabase/migrations/20260827052016_narrow_published_frontend_access.sql', import.meta.url),
   'utf8',
@@ -337,6 +342,28 @@ test('route page payloads stay bounded and explicitly granted through published'
     assert.match(routePagePayloadMigration, new RegExp(limit, 'u'));
   }
   assert.match(routePagePayloadMigration, /cardinality\(COALESCE\(p_person_ids[\s\S]*?BETWEEN 1 AND 4/u);
+});
+
+test('party-list results stay private behind one bounded published RPC', () => {
+  assert.match(partyListRacePageMigration, /ALTER TABLE public\.party_list_race_results ENABLE ROW LEVEL SECURITY;/u);
+  assert.match(
+    partyListRacePageMigration,
+    /REVOKE ALL ON TABLE public\.party_list_race_results FROM PUBLIC, anon, authenticated;/u,
+  );
+  assert.match(
+    partyListRacePageMigration,
+    /CREATE FUNCTION published\.party_list_race_page_for\(p_race_id UUID\)[\s\S]*?SECURITY DEFINER[\s\S]*?SET search_path = ''/u,
+  );
+  assert.match(partyListRacePageMigration, /LIMIT 257/u);
+  assert.match(partyListRacePageMigration, /LIMIT 33/u);
+  assert.match(
+    partyListRacePageMigration,
+    /REVOKE ALL ON FUNCTION published\.party_list_race_page_for\(UUID\) FROM PUBLIC, anon, authenticated;/u,
+  );
+  assert.match(
+    partyListRacePageMigration,
+    /GRANT EXECUTE ON FUNCTION published\.party_list_race_page_for\(UUID\) TO anon, authenticated, service_role, admin_role;/u,
+  );
 });
 
 test('region issue participation uses only the reviewed published API', () => {

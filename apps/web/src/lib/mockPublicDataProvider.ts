@@ -302,6 +302,7 @@ export const mockPublicDataProvider: PublicDataProvider = {
       election: race ? this.getElectionById(race.election_id) : null,
       candidates,
       partyAffiliations: mockPublicPersonPartyAffiliations.filter((affiliation) => personIds.has(affiliation.person_id)),
+      partyListResults: [],
       referendumQuestion: null,
       referendumOptions: [],
       referendumRegionResults: [],

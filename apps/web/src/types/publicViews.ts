@@ -315,6 +315,34 @@ export type PublicPartyElectionPerformance = {
   pending_count: number;
 };
 
+export type PublicPartyListRaceResult = {
+  result_id: string;
+  race_id: string;
+  party_id: string;
+  party_ballot_number: number;
+  party_name: string;
+  party_short_name: string | null;
+  party_slug: string;
+  candidate_party_name: string;
+  vote_count: number;
+  vote_rate: number | null;
+  allocated_seats: number;
+  passed_threshold: boolean;
+  candidate_count: number;
+  elected_count: number;
+  female_candidate_count: number;
+  male_candidate_count: number;
+  unknown_gender_candidate_count: number;
+  platform_text: string | null;
+  source_name: string;
+  source_url: string;
+  platform_source_url: string | null;
+  finance_report_year: number | null;
+  finance_income_total: number | null;
+  finance_expense_total: number | null;
+  finance_source_url: string | null;
+};
+
 export type PublicPartyLegalStatistics = {
   party_name: string;
   total_people: number;

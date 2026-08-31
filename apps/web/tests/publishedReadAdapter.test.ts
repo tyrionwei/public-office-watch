@@ -31,6 +31,8 @@ import {
   PUBLIC_UPDATE_COLUMNS,
   PUBLIC_UPDATE_LIMIT,
   RACE_DETAIL_CANDIDATE_LIMIT,
+  RACE_DETAIL_PARTY_LIST_CANDIDATE_LIMIT,
+  RACE_DETAIL_PARTY_LIST_RESULT_LIMIT,
   createPublishedReadAdapter,
   type PublishedSchemaClient,
 } from '../src/lib/publishedReadAdapter.ts';
@@ -709,6 +711,7 @@ test('race detail uses one bounded RPC payload', async () => {
     electionRow: election,
     candidateRows: [candidate],
     partyAffiliationRows: [partyAffiliation],
+    partyListResultRows: [],
     referendumQuestionRow: null,
     referendumOptionRows: [],
     referendumRegionResultRows: [],
@@ -742,6 +745,7 @@ test('race detail returns the empty shape for a missing race payload', async () 
     electionRow: null,
     candidateRows: [],
     partyAffiliationRows: [],
+    partyListResultRows: [],
     referendumQuestionRow: null,
     referendumOptionRows: [],
     referendumRegionResultRows: [],
@@ -780,10 +784,60 @@ test('race detail payload includes a referendum question and bounded result rows
     electionRow: election,
     candidateRows: [],
     partyAffiliationRows: [],
+    partyListResultRows: [],
     referendumQuestionRow: question,
     referendumOptionRows: options,
     referendumRegionResultRows: regionResults,
   });
+});
+
+test('party-list race detail switches to the dedicated bounded RPC payload', async () => {
+  const race = { race_id: 'race-party-list', election_id: 'election-1', race_type: 'party_list_legislator' };
+  const candidates = Array.from({ length: 177 }, (_, index) => ({ candidate_id: `candidate-${index + 1}` }));
+  const partyListResults = Array.from({ length: 16 }, (_, index) => ({
+    result_id: `result-${index + 1}`,
+    party_ballot_number: index + 1,
+  }));
+  const fake = createFakeClient({
+    'rpc:race_page_for': {
+      data: [{ payload: { ...payloadMetadata,
+        race_row: race,
+        election_row: { election_id: 'election-1' },
+        candidate_rows: Array.from({ length: RACE_DETAIL_CANDIDATE_LIMIT + 1 }, (_, index) => ({ candidate_id: `sentinel-${index}` })),
+        party_affiliation_rows: [],
+        referendum_question_row: null,
+        referendum_option_rows: [],
+        referendum_region_result_rows: [],
+      } }],
+      error: null,
+      count: null,
+    },
+    'rpc:party_list_race_page_for': {
+      data: [{ payload: { ...payloadMetadata,
+        race_row: race,
+        election_row: { election_id: 'election-1' },
+        candidate_rows: candidates,
+        party_affiliation_rows: [],
+        party_list_result_rows: partyListResults,
+        referendum_question_row: null,
+        referendum_option_rows: [],
+        referendum_region_result_rows: [],
+      } }],
+      error: null,
+      count: null,
+    },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  const detail = await adapter.loadRaceDetail('race-party-list');
+  assert.equal(detail.candidateRows.length, 177);
+  assert.equal(detail.partyListResultRows.length, 16);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc'), [
+    ['rpc', 'race_page_for', { p_race_id: 'race-party-list' }],
+    ['rpc', 'party_list_race_page_for', { p_race_id: 'race-party-list' }],
+  ]);
+  assert.ok(detail.candidateRows.length <= RACE_DETAIL_PARTY_LIST_CANDIDATE_LIMIT);
+  assert.ok(detail.partyListResultRows.length <= RACE_DETAIL_PARTY_LIST_RESULT_LIMIT);
 });
 
 test('race detail rejects a candidate payload sentinel row', async () => {

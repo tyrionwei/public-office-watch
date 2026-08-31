@@ -134,6 +134,18 @@ async function main() {
     fail('person_profiles_for did not return the reviewed candidate finance summary');
   }
 
+  const partyListRace = await published.rpc('party_list_race_page_for', {
+    p_race_id: 'fbf84648-d6d7-480b-a0a4-518ad1f39d2b',
+  });
+  if (partyListRace.error) fail('party_list_race_page_for is unavailable: ' + partyListRace.error.message);
+  const partyListPayload = partyListRace.data?.[0]?.payload;
+  assertPayloadVersion(partyListPayload, 'party_list_race_page_for');
+  if (partyListPayload.party_list_result_rows?.length !== 16
+      || partyListPayload.candidate_rows?.length !== 177
+      || partyListPayload.party_list_result_rows.reduce((sum, row) => sum + row.allocated_seats, 0) !== 34) {
+    fail('party_list_race_page_for did not return 16 parties, 177 candidates, and 34 seats');
+  }
+
   const electionIndex = await published.rpc('election_index_page');
   if (electionIndex.error) fail('election_index_page is unavailable: ' + electionIndex.error.message);
   const electionPayload = electionIndex.data?.[0]?.payload;

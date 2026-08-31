@@ -424,6 +424,10 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return [];
   },
 
+  async loadPartyPlatformHistory() {
+    return [];
+  },
+
   async loadPartyPeopleStatistics(partyName) {
     return buildPartyPeopleStatistics(
       partyName,

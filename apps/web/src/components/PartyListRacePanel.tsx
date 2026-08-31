@@ -5,6 +5,7 @@ import { toPartyThemeKey } from '../lib/personData';
 import { personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPartyListRaceResult } from '../types/publicViews';
+import { PlatformFulfillmentList } from './PlatformFulfillmentList';
 import { SectionPanel } from './SectionPanel';
 
 type PartyListRacePanelProps = {
@@ -203,8 +204,10 @@ export function PartyListRacePanel({ results, candidates, language, t }: PartyLi
             </div>
 
             <div className="mt-4 pixel-corners border border-line/70 bg-bg/35 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.partyListOfficialPlatform')}</p>
-              {openParty.platform_text ? <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-slate-200">{openParty.platform_text}</p> : null}
+              <PlatformFulfillmentList
+                targetId={openParty.result_id}
+                title={t('race.partyListOfficialPlatform')}
+              />
               <p className="mt-2 text-sm leading-6 text-slate-400">{t('race.partyListPlatformSourceOnly')}</p>
               {openParty.platform_source_url ? (
                 <a href={openParty.platform_source_url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-xs text-accent hover:text-white">

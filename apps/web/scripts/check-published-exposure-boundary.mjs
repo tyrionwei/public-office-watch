@@ -41,6 +41,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260830062225_candidate_election_incumbency_labels.sql',
   'supabase/migrations/20260830184438_optimize_national_home_page_payload.sql',
   'supabase/migrations/20260831082757_add_party_list_race_page.sql',
+  'supabase/migrations/20260831123349_add_party_platform_history.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',
@@ -98,6 +99,7 @@ const reviewedFunctions = [
   'party_legal_statistics',
   'party_list_race_page_for',
   'party_people_statistics',
+  'party_platform_history_for',
   'person_profiles_for',
   'race_page_for',
   'region_page_for',

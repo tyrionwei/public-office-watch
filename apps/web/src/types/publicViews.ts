@@ -343,6 +343,23 @@ export type PublicPartyListRaceResult = {
   finance_source_url: string | null;
 };
 
+export type PublicPartyPlatformHistory = {
+  result_id: string;
+  race_id: string;
+  election_id: string;
+  election_year: number;
+  election_name: string;
+  race_title: string;
+  voting_date: string;
+  party_ballot_number: number;
+  vote_count: number;
+  vote_rate: number | null;
+  allocated_seats: number;
+  source_name: string;
+  source_url: string;
+  platform_source_url: string | null;
+};
+
 export type PublicPartyLegalStatistics = {
   party_name: string;
   total_people: number;

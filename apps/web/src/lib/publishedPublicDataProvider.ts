@@ -446,6 +446,10 @@ export function createPublishedPublicDataProvider(
       return cached(`party-officers:${partyId}`, pageDataStaleTimeMs, () => bridge.loadPartyOfficers(partyId));
     },
 
+    loadPartyPlatformHistory(partyId: string) {
+      return cached(`party-platform-history:${partyId}`, pageDataStaleTimeMs, () => bridge.loadPartyPlatformHistory(partyId));
+    },
+
     loadPartyPeopleStatistics(partyName: string) {
       return cached(`party-people:${partyName}`, pageDataStaleTimeMs, () => bridge.loadPartyPeopleStatistics(partyName));
     },

@@ -16,6 +16,7 @@ import type {
   PublicPartyFinanceSummary,
   PublicPartyLegalStatistics,
   PublicPartyListRaceResult,
+  PublicPartyPlatformHistory,
   PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
   PublicPartyElectionPerformance,
@@ -169,6 +170,7 @@ export interface PublicDataProvider {
   loadPartyFinanceData(): Promise<void>;
   getPartyBySlug(partySlug: string): PublicParty | null;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
+  loadPartyPlatformHistory(partyId: string): Promise<PublicPartyPlatformHistory[]>;
   loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
   loadPartyLegalStatistics(partyName: string): Promise<PublicPartyLegalStatistics>;
   getPartyAnnualFinanceFilings(partyId: string): PublicPartyAnnualFinanceFiling[];

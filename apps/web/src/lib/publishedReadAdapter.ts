@@ -10,6 +10,7 @@ import type {
   PublicPartyFinanceSummary,
   PublicPartyLegalStatistics,
   PublicPartyListRaceResult,
+  PublicPartyPlatformHistory,
   PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
   PublicPartyElectionPerformance,
@@ -63,6 +64,7 @@ export const PARTY_ANNUAL_FINANCE_LIMIT = 200;
 export const PARTY_FINANCE_LIMIT = 100;
 export const PARTY_COMPANY_CONTRIBUTION_PAGE_SIZE = 50;
 export const PARTY_OFFICER_LIMIT = 200;
+export const PARTY_PLATFORM_HISTORY_LIMIT = 16;
 export const PARTY_PEOPLE_STATISTICS_LIMIT = 19;
 export const PERSON_PARTY_AFFILIATION_LIMIT = 100;
 export const PUBLIC_UPDATE_LIMIT = 50;
@@ -749,6 +751,7 @@ export type PublishedReadAdapter = {
   loadPartyDirectory(): Promise<PublicParty[]>;
   loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number): Promise<PublishedPartyCompanyContributionPage>;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
+  loadPartyPlatformHistory(partyId: string): Promise<PublicPartyPlatformHistory[]>;
   loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
   loadPartyLegalStatistics(partyName: string): Promise<PublicPartyLegalStatistics>;
   loadPersonProfiles(personIds: string[]): Promise<PublishedPersonProfileRows>;
@@ -1311,6 +1314,22 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         response,
         'Published party officers',
         PARTY_OFFICER_LIMIT,
+      );
+    },
+    async loadPartyPlatformHistory(rawPartyId) {
+      const partyId = rawPartyId.trim();
+      if (!partyId) return [];
+
+      const response = await client
+        .schema('published')
+        .rpc<PublicPartyPlatformHistory>('party_platform_history_for', {
+          p_party_id: partyId,
+        });
+
+      return getBoundedRowsOrThrow(
+        response,
+        'Published party platform history',
+        PARTY_PLATFORM_HISTORY_LIMIT,
       );
     },
     async loadPartyPeopleStatistics(rawPartyName) {

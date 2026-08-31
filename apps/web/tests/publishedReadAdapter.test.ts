@@ -24,6 +24,7 @@ import {
   PARTY_LIMIT,
   PARTY_OFFICER_COLUMNS,
   PARTY_OFFICER_LIMIT,
+  PARTY_PLATFORM_HISTORY_LIMIT,
   PERSON_CANDIDATE_LIMIT,
   PERSON_CANDIDATE_COLUMNS,
   PERSON_CLAIM_LIMIT,
@@ -1077,6 +1078,32 @@ test('party officers skip the database for an empty party id', async () => {
 
   assert.deepEqual(await adapter.loadPartyOfficers(' '), []);
   assert.deepEqual(fake.calls, []);
+});
+
+test('party platform history uses one bounded reviewed RPC', async () => {
+  const record = { result_id: 'result-1', election_year: 2024 };
+  const fake = createFakeClient({
+    'rpc:party_platform_history_for': { data: [record], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadPartyPlatformHistory(' party-1 '), [record]);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['rpc', 'party_platform_history_for', { p_party_id: 'party-1' }],
+  ]);
+
+  const oversized = createFakeClient({
+    'rpc:party_platform_history_for': {
+      data: Array.from({ length: PARTY_PLATFORM_HISTORY_LIMIT + 1 }, (_, index) => ({ result_id: String(index) })),
+      error: null,
+      count: null,
+    },
+  });
+  await assert.rejects(
+    () => createPublishedReadAdapter(oversized.client).loadPartyPlatformHistory('party-1'),
+    /exceeded the 16-row batch limit/u,
+  );
 });
 test('party people statistics use the published RPC and require all buckets', async () => {
   const bucketPairs = [

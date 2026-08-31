@@ -7,17 +7,19 @@ import { PartyFinanceCompositionChart } from '../components/PartyFinanceComposit
 import { PartyLegalStatisticsChart } from '../components/PartyLegalStatisticsChart';
 import { PartyPeopleStatisticsChart } from '../components/PartyPeopleStatisticsChart';
 import { PixelFrame } from '../components/PixelFrame';
+import { PlatformFulfillmentList } from '../components/PlatformFulfillmentList';
 import { SectionPanel } from '../components/SectionPanel';
 import { translateCandidateStatus } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import type { PublicCandidateListPage, PublicPartyCompanyContributionPage, PublicPersonListPage } from '../lib/publicDataProvider';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
-import { dataGuidancePath, partiesPath, personPath } from '../routes/routePaths';
+import { dataGuidancePath, partiesPath, personPath, racePath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type {
   PublicCandidate,
   PublicPartyLegalStatistics,
+  PublicPartyPlatformHistory,
   PublicPartyPeopleStatisticRow,
   PublicPartyOfficer,
   PublicPersonListItem,
@@ -30,6 +32,15 @@ function formatCurrency(value: number, locale: string) {
     currency: 'TWD',
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function formatNumber(value: number, locale: string) {
+  return new Intl.NumberFormat(locale).format(value);
+}
+
+function formatPercent(value: number | null, locale: string) {
+  if (value === null) return '—';
+  return `${new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 4 }).format(value)}%`;
 }
 
 const PARTY_PEOPLE_PAGE_SIZE = 8;
@@ -222,6 +233,42 @@ function usePartyOfficers(partyId: string | null) {
   }, [partyId]);
 
   return { officers, loading };
+}
+
+function usePartyPlatformHistory(partyId: string | null) {
+  const [records, setRecords] = useState<PublicPartyPlatformHistory[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setRecords([]);
+
+    if (!partyId) {
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setLoading(true);
+    void refreshConfiguredPublicDataProvider()
+      .then(() => publicDataProvider.loadPartyPlatformHistory(partyId))
+      .then((nextRecords) => {
+        if (active) setRecords(nextRecords);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) console.warn('Failed to load party platform history', error);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [partyId]);
+
+  return { records, loading };
 }
 
 function usePartyPeopleStatistics(partyName: string | null) {
@@ -527,6 +574,7 @@ export function PartyPage() {
   const contributionRequestedPage = getSectionPage(searchParams, 'contributionPage');
   const companyContributions = usePartyCompanyContributions(party?.party_id ?? null, contributionRequestedPage);
   const partyOfficers = usePartyOfficers(party?.party_id ?? null);
+  const platformHistory = usePartyPlatformHistory(party?.party_id ?? null);
   const officeholders = usePartyPeoplePage(party?.name ?? null, 'current', officeholderRequestedPage);
   const candidates = usePartyCandidatePage(party?.name ?? null, candidateRequestedPage);
   const peopleStatistics = usePartyPeopleStatistics(party?.name ?? null);
@@ -792,6 +840,55 @@ export function PartyPage() {
                   )}
                 </div>
               </div>
+            </SectionPanel>
+
+            <SectionPanel title={t('partyDetail.platformHistoryTitle')} eyebrow={t('partyDetail.platformHistoryEyebrow')}>
+              {platformHistory.loading ? (
+                <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                  {t('partyDetail.platformHistoryLoading')}
+                </p>
+              ) : platformHistory.records.length > 0 ? (
+                <div className="space-y-4">
+                  {platformHistory.records.map((record) => (
+                    <article
+                      key={record.result_id}
+                      data-party-platform-record={record.election_year}
+                      className="pixel-corners border border-line/70 bg-bg/35 p-4 sm:p-5"
+                    >
+                      <div className="flex flex-col gap-3 border-b border-line/60 pb-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{record.election_year}</p>
+                          <h3 className="mt-1 font-display text-xl text-white">{record.race_title}</h3>
+                          <p className="mt-2 text-sm text-slate-400">
+                            {t('race.number')} {record.party_ballot_number}
+                            {' · '}{t('race.votes')} {formatNumber(record.vote_count, language)}
+                            {' · '}{t('race.voteRate')} {formatPercent(record.vote_rate, language)}
+                            {' · '}{t('race.partyListSeats')} {record.allocated_seats}
+                          </p>
+                        </div>
+                        <Link to={racePath(record.race_id)} className="shrink-0 text-xs text-accent hover:text-white">
+                          {t('partyDetail.platformHistoryViewRace')}
+                        </Link>
+                      </div>
+                      <div className="pt-4">
+                        <PlatformFulfillmentList
+                          targetId={record.result_id}
+                          title={t('race.partyListOfficialPlatform')}
+                        />
+                      </div>
+                      {record.platform_source_url ? (
+                        <a href={record.platform_source_url} target="_blank" rel="noreferrer" className="mt-4 inline-block text-xs text-accent hover:text-white">
+                          {t('race.partyListViewPlatform')}
+                        </a>
+                      ) : null}
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-400">
+                  {t('partyDetail.platformHistoryUnavailable')}
+                </p>
+              )}
             </SectionPanel>
 
             <SectionPanel title={t('partyDetail.peopleStatsTitle')} eyebrow={t('partyDetail.peopleStatsEyebrow')}>

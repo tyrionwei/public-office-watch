@@ -49,11 +49,10 @@ const statusPresentation: Record<PlatformFulfillmentStatus, StatusPresentation> 
   },
 };
 
-function StaticPlatformItems({ claim }: { claim: PublicPersonClaim }) {
-  const items = platformItemsForClaim(claim);
+function StaticPlatformItems({ items, targetId }: { items: string[]; targetId: string }) {
   return items.length > 0 ? (
     <ol className="mt-3 max-h-[34rem] list-decimal space-y-3 overflow-auto pl-5 pr-2 text-sm leading-6 text-slate-200">
-      {items.map((item, index) => <li key={`${claim.claim_id}:${index}`}>{item}</li>)}
+      {items.map((item, index) => <li key={`${targetId}:${index}`}>{item}</li>)}
     </ol>
   ) : null;
 }
@@ -216,7 +215,21 @@ function formatEligibilityDate(value: string | null, locale: string) {
   }).format(date);
 }
 
-export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonClaim; title: string }) {
+type PlatformFulfillmentListProps = {
+  claim: PublicPersonClaim;
+  title: string;
+} | {
+  targetId: string;
+  staticItems?: string[];
+  title: string;
+};
+
+export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
+  const { title } = props;
+  const targetId = 'targetId' in props ? props.targetId : props.claim.claim_id;
+  const staticItems = 'targetId' in props
+    ? props.staticItems ?? []
+    : platformItemsForClaim(props.claim);
   const { t, language } = useI18n();
   const [participation, setParticipation] = useState<PlatformFulfillmentParticipation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -236,7 +249,7 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
     setLoading(true);
     setError(null);
     setVisibleResultKeys(new Set());
-    void loadPlatformFulfillment(claim.claim_id)
+    void loadPlatformFulfillment(targetId)
       .then((result) => {
         if (active) setParticipation(result);
       })
@@ -251,7 +264,7 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
     return () => {
       active = false;
     };
-  }, [claim.claim_id]);
+  }, [targetId]);
 
   const items = useMemo(() => participation?.items ?? [], [participation]);
   const overallSummary = useMemo(() => summarizePlatformFulfillment(items), [items]);
@@ -281,8 +294,8 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
     setSavingVote({ itemKey, status });
     setError(null);
     try {
-      await submitPlatformFulfillmentVote(claim.claim_id, itemKey, status);
-      const refreshed = await loadPlatformFulfillment(claim.claim_id);
+      await submitPlatformFulfillmentVote(targetId, itemKey, status);
+      const refreshed = await loadPlatformFulfillment(targetId);
       setParticipation(refreshed);
     } catch (submitError: unknown) {
       if (import.meta.env.DEV) {
@@ -299,8 +312,8 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
     setWithdrawingKey(itemKey);
     setError(null);
     try {
-      await withdrawPlatformFulfillmentVote(claim.claim_id, itemKey);
-      const refreshed = await loadPlatformFulfillment(claim.claim_id);
+      await withdrawPlatformFulfillmentVote(targetId, itemKey);
+      const refreshed = await loadPlatformFulfillment(targetId);
       setParticipation(refreshed);
       setVisibleResultKeys((current) => {
         const next = new Set(current);
@@ -341,7 +354,7 @@ export function PlatformFulfillmentList({ claim, title }: { claim: PublicPersonC
     return (
       <>
         <h3 className="text-sm font-semibold text-white">{title}</h3>
-        <StaticPlatformItems claim={claim} />
+        <StaticPlatformItems items={staticItems} targetId={targetId} />
         {loading ? <p className="mt-2 text-[10px] text-slate-500">{t('person.fulfillment.loading')}</p> : null}
       </>
     );

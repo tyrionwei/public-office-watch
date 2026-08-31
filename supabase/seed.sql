@@ -95,6 +95,9 @@ TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION published.party_people_statistics(TEXT)
 TO anon, authenticated;
 
+GRANT EXECUTE ON FUNCTION published.party_platform_history_for(UUID)
+TO anon, authenticated;
+
 GRANT EXECUTE ON FUNCTION published.search_public_records(TEXT, INTEGER)
 TO anon, authenticated;
 

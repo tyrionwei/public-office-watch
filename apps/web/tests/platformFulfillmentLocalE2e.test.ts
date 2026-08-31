@@ -46,7 +46,7 @@ function localPost(path: string, body: unknown, headers: Record<string, string> 
   });
 }
 
-test('local presidential ticket shares votes across the elected running mates', {
+test('local platform voting supports shared presidential tickets and party-list platforms', {
   skip: process.env.RUN_LOCAL_PARTICIPATION_E2E !== '1',
 }, async () => {
   const webRoot = resolve(import.meta.dirname, '..');
@@ -130,6 +130,8 @@ test('local presidential ticket shares votes across the elected running mates', 
   let participantHash: string | null = null;
   let userId: string | null = null;
   let itemKey: string | null = null;
+  let partyResultId: string | null = null;
+  let partyItemKey: string | null = null;
   try {
     const signup = await anonymousClient.auth.signInAnonymously();
     assert.ifError(signup.error);
@@ -250,6 +252,71 @@ test('local presidential ticket shares votes across the elected running mates', 
     }> | null)?.find((row) => row.item_key === itemKey);
     assert.ok(withdrawnItem);
     assert.equal(Number(withdrawnItem.total_count), initialTotal);
+
+    const partyResults = await adminClient
+      .schema('public')
+      .from('party_list_race_results')
+      .select('result_id')
+      .eq('is_public', true)
+      .not('platform_items_reviewed_at', 'is', null)
+      .order('party_ballot_number', { ascending: true })
+      .limit(1);
+    assert.ifError(partyResults.error);
+    partyResultId = partyResults.data?.[0]?.result_id ?? null;
+    assert.ok(partyResultId);
+
+    const partyBefore = await anonymousClient
+      .schema('published')
+      .rpc('platform_fulfillment_results', { p_claim_id: partyResultId });
+    assert.ifError(partyBefore.error);
+    const partyItem = partyBefore.data?.[0];
+    assert.ok(partyItem);
+    assert.equal(partyItem.voting_is_open, true);
+    partyItemKey = partyItem.item_key;
+    const partyInitialTotal = Number(partyItem.total_count);
+
+    const partyVote = await handleParticipationRequest(
+      localPost('/api/participation/submit', {
+        action: 'platform-fulfillment',
+        claimId: partyResultId,
+        itemKey: partyItemKey,
+        voteStatus: 'in_progress',
+      }, {
+        authorization: 'Bearer ' + signup.data.session.access_token,
+        cookie,
+      }),
+      environment,
+      upstreamFetch,
+    );
+    assert.equal(partyVote.status, 200, await partyVote.text());
+
+    const partyOwnVotes = await anonymousClient
+      .schema('published')
+      .rpc('get_platform_fulfillment_votes', { p_claim_id: partyResultId });
+    assert.ifError(partyOwnVotes.error);
+    assert.deepEqual(partyOwnVotes.data, [{ item_key: partyItemKey, vote_status: 'in_progress' }]);
+
+    const partyAfter = await anonymousClient
+      .schema('published')
+      .rpc('platform_fulfillment_results', { p_claim_id: partyResultId });
+    assert.ifError(partyAfter.error);
+    const partyUpdatedItem = partyAfter.data?.find((row) => row.item_key === partyItemKey);
+    assert.ok(partyUpdatedItem);
+    assert.equal(Number(partyUpdatedItem.total_count), partyInitialTotal + 1);
+
+    const partyWithdrawal = await handleParticipationRequest(
+      localPost('/api/participation/submit', {
+        action: 'platform-fulfillment-withdrawal',
+        claimId: partyResultId,
+        itemKey: partyItemKey,
+      }, {
+        authorization: 'Bearer ' + signup.data.session.access_token,
+        cookie,
+      }),
+      environment,
+      upstreamFetch,
+    );
+    assert.equal(partyWithdrawal.status, 200, await partyWithdrawal.text());
   } finally {
     if (participantHash && itemKey) {
       const cleanup = await adminClient
@@ -258,6 +325,16 @@ test('local presidential ticket shares votes across the elected running mates', 
         .delete()
         .eq('claim_id', claim.id)
         .eq('item_key', itemKey)
+        .eq('participant_hash', participantHash);
+      assert.ifError(cleanup.error);
+    }
+    if (participantHash && partyResultId && partyItemKey) {
+      const cleanup = await adminClient
+        .schema('public')
+        .from('party_platform_fulfillment_votes')
+        .delete()
+        .eq('party_result_id', partyResultId)
+        .eq('item_key', partyItemKey)
         .eq('participant_hash', participantHash);
       assert.ifError(cleanup.error);
     }

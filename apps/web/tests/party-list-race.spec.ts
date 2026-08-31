@@ -21,6 +21,8 @@ test('2024 party-list race shows party results, full rosters, and party comparis
   await expect(roster.getByText('民主進步黨 不分區名單')).toBeVisible();
   await expect.poll(() => roster.evaluate((element) => Math.abs(element.getBoundingClientRect().top))).toBeLessThan(24);
   await expect(page.getByRole('link', { name: '林月琴', exact: true })).toBeVisible();
+  await expect(roster.locator('[data-testid="platform-promise"]')).toHaveCount(10);
+  await expect(roster.getByTestId('fulfillment-voting-schedule')).toBeVisible();
   await expect(page.getByRole('link', { name: '查看中選會共同政見原文' })).toBeVisible();
   await roster.getByRole('button', { name: '關閉名單' }).click();
   await expect(roster).toHaveCount(0);
@@ -48,6 +50,7 @@ test('2020 party-list race shows official results, women-quota winners, rosters,
   await expect(page.getByText('民主進步黨 不分區名單')).toBeVisible();
   await expect(page.getByRole('link', { name: '吳玉琴', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: '湯蕙禎', exact: true })).toBeVisible();
+  await expect(page.locator('[data-party-list-roster] [data-testid="platform-promise"]')).toHaveCount(10);
   await expect(page.getByRole('link', { name: '查看中選會共同政見原文' })).toBeVisible();
 
   await page.getByRole('checkbox', { name: '比較 民主進步黨' }).click();
@@ -57,4 +60,20 @@ test('2020 party-list race shows official results, women-quota winners, rosters,
   await expect(page.getByText('女性 16 · 男性 15 · 未知 0')).toBeVisible();
   await expect(page.getByText('政黨財務')).toBeVisible();
   await expect(page).toHaveURL(/compare=dpp%2Ckmt/u);
+});
+
+test('party page shows each party-list election platform with community voting', async ({ page }) => {
+  await page.goto('/parties/dpp');
+
+  await expect(page.getByText('政黨票參選紀錄與政見')).toBeVisible();
+  const platform2024 = page.locator('[data-party-platform-record="2024"]');
+  const platform2020 = page.locator('[data-party-platform-record="2020"]');
+  await expect(platform2024).toBeVisible();
+  await expect(platform2020).toBeVisible();
+  await expect(platform2024.locator('[data-testid="platform-promise"]')).toHaveCount(10);
+  await expect(platform2020.locator('[data-testid="platform-promise"]')).toHaveCount(10);
+  await expect(platform2024.getByRole('link', { name: '查看該屆選舉' })).toHaveAttribute(
+    'href',
+    '/elections/races/fbf84648-d6d7-480b-a0a4-518ad1f39d2b',
+  );
 });

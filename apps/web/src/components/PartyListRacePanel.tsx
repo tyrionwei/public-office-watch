@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { Translate } from '../i18n';
 import { toPartyThemeKey } from '../lib/personData';
@@ -39,6 +39,7 @@ function formatCurrency(value: number | null, locale: string) {
 
 export function PartyListRacePanel({ results, candidates, language, t }: PartyListRacePanelProps) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const rosterRef = useRef<HTMLDivElement>(null);
   const sortedResults = useMemo(
     () => results.slice().sort((left, right) => left.party_ballot_number - right.party_ballot_number),
     [results],
@@ -54,6 +55,13 @@ export function PartyListRacePanel({ results, candidates, language, t }: PartyLi
     .map((slug) => resultBySlug.get(slug))
     .filter((result): result is PublicPartyListRaceResult => Boolean(result));
   const openParty = resultBySlug.get(searchParams.get('party') ?? '') ?? null;
+  const openPartySlug = openParty?.party_slug ?? null;
+
+  useEffect(() => {
+    if (openPartySlug) {
+      rosterRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [openPartySlug]);
 
   function candidatesFor(result: PublicPartyListRaceResult) {
     return candidates
@@ -157,41 +165,55 @@ export function PartyListRacePanel({ results, candidates, language, t }: PartyLi
       </SectionPanel>
 
       {openParty ? (
-        <SectionPanel title={t('race.partyListRosterTitle', { party: openParty.party_name })} eyebrow={t('race.roster')}>
-          <div className="overflow-hidden pixel-corners border border-line/70">
-            <div className="grid grid-cols-[72px_minmax(160px,1fr)_110px] gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500">
-              <span>{t('race.partyListOrder')}</span>
-              <span>{t('race.name')}</span>
-              <span>{t('race.status')}</span>
+        <div ref={rosterRef} data-party-list-roster>
+          <SectionPanel
+            title={t('race.partyListRosterTitle', { party: openParty.party_name })}
+            eyebrow={t('race.roster')}
+            action={(
+              <button
+                type="button"
+                onClick={() => updateParty(null)}
+                className="shrink-0 text-xs uppercase tracking-[0.12em] text-accent hover:text-white"
+              >
+                {t('race.partyListCloseRoster')}
+              </button>
+            )}
+          >
+            <div className="overflow-hidden pixel-corners border border-line/70">
+              <div className="grid grid-cols-[72px_minmax(160px,1fr)_110px] gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500">
+                <span>{t('race.partyListOrder')}</span>
+                <span>{t('race.name')}</span>
+                <span>{t('race.status')}</span>
+              </div>
+              <div className="divide-y divide-line/60">
+                {candidatesFor(openParty).map((candidate) => (
+                  <div key={candidate.candidate_id} className="grid grid-cols-[72px_minmax(160px,1fr)_110px] gap-3 px-4 py-3 text-sm">
+                    <span className="text-slate-400">{candidate.candidate_no ?? '—'}</span>
+                    {candidate.person_id ? (
+                      <Link to={personPath(candidate.person_id)} className="font-display text-lg text-white hover:text-accent">
+                        {candidate.person_name}
+                      </Link>
+                    ) : <span className="font-display text-lg text-white">{candidate.person_name}</span>}
+                    <span className={candidate.is_elected ? 'text-signal' : 'text-slate-400'}>
+                      {candidate.is_elected ? t('race.elected') : '—'}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="divide-y divide-line/60">
-              {candidatesFor(openParty).map((candidate) => (
-                <div key={candidate.candidate_id} className="grid grid-cols-[72px_minmax(160px,1fr)_110px] gap-3 px-4 py-3 text-sm">
-                  <span className="text-slate-400">{candidate.candidate_no ?? '—'}</span>
-                  {candidate.person_id ? (
-                    <Link to={personPath(candidate.person_id)} className="font-display text-lg text-white hover:text-accent">
-                      {candidate.person_name}
-                    </Link>
-                  ) : <span className="font-display text-lg text-white">{candidate.person_name}</span>}
-                  <span className={candidate.is_elected ? 'text-signal' : 'text-slate-400'}>
-                    {candidate.is_elected ? t('race.elected') : '—'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          <div className="mt-4 pixel-corners border border-line/70 bg-bg/35 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.partyListOfficialPlatform')}</p>
-            {openParty.platform_text ? <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-slate-200">{openParty.platform_text}</p> : null}
-            <p className="mt-2 text-sm leading-6 text-slate-400">{t('race.partyListPlatformSourceOnly')}</p>
-            {openParty.platform_source_url ? (
-              <a href={openParty.platform_source_url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-xs text-accent hover:text-white">
-                {t('race.partyListViewPlatform')}
-              </a>
-            ) : null}
-          </div>
-        </SectionPanel>
+            <div className="mt-4 pixel-corners border border-line/70 bg-bg/35 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.partyListOfficialPlatform')}</p>
+              {openParty.platform_text ? <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-slate-200">{openParty.platform_text}</p> : null}
+              <p className="mt-2 text-sm leading-6 text-slate-400">{t('race.partyListPlatformSourceOnly')}</p>
+              {openParty.platform_source_url ? (
+                <a href={openParty.platform_source_url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-xs text-accent hover:text-white">
+                  {t('race.partyListViewPlatform')}
+                </a>
+              ) : null}
+            </div>
+          </SectionPanel>
+        </div>
       ) : null}
 
       {selectedResults.length > 0 ? (

@@ -1,5 +1,5 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { BrowserRouter, Route, Routes, useLocation, useNavigationType } from 'react-router-dom';
 import { GlobalChatWidget } from './components/GlobalChatWidget';
 import { LanguageProvider, useI18n } from './i18n';
 import { RouteMetadata } from './components/RouteMetadata';
@@ -61,6 +61,54 @@ function PublicDataBootstrapScreen({ failed, onRetry }: { failed: boolean; onRet
       </section>
     </main>
   );
+}
+
+function RouteScrollRestoration() {
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  const positionsRef = useRef(new Map<string, number>());
+  const previousPathnameRef = useRef(location.pathname);
+  const urlKey = `${location.pathname}${location.search}`;
+
+  useEffect(() => {
+    const previous = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+    return () => {
+      window.history.scrollRestoration = previous;
+    };
+  }, []);
+
+  useEffect(() => {
+    const savePosition = () => {
+      positionsRef.current.set(location.key, window.scrollY);
+      positionsRef.current.set(urlKey, window.scrollY);
+    };
+    window.addEventListener('scroll', savePosition, { passive: true });
+    return () => window.removeEventListener('scroll', savePosition);
+  }, [location.key, urlKey]);
+
+  useEffect(() => {
+    const pathnameChanged = previousPathnameRef.current !== location.pathname;
+    const target = navigationType === 'POP'
+      ? positionsRef.current.get(location.key) ?? positionsRef.current.get(urlKey) ?? 0
+      : pathnameChanged ? 0 : null;
+    previousPathnameRef.current = location.pathname;
+    if (target === null) return;
+
+    let frame = 0;
+    let attempts = 0;
+    const restore = () => {
+      window.scrollTo(0, target);
+      attempts += 1;
+      if (attempts < 60 && Math.abs(window.scrollY - target) > 1) {
+        frame = window.requestAnimationFrame(restore);
+      }
+    };
+    frame = window.requestAnimationFrame(restore);
+    return () => window.cancelAnimationFrame(frame);
+  }, [location.key, location.pathname, navigationType, urlKey]);
+
+  return null;
 }
 
 function AppRoutes({
@@ -142,6 +190,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <RouteScrollRestoration />
       <LanguageProvider>
         <SelectedRegionProvider>
           <AppRoutes

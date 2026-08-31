@@ -927,16 +927,23 @@ test('homepage falls back safely when the region query is unknown', async ({ pag
   await expect(page.locator('[data-region-highlight]')).toHaveCount(0);
 });
 
-test('people filters and pagination survive profile navigation and browser back', async ({ page }) => {
+test('people filters, pagination, and scroll position survive profile navigation and browser back', async ({ page }) => {
   await page.goto('/people?status=current&page=2');
 
-  const profileLink = page.locator('main a[href^="/people/"]').first();
+  const profileLink = page.locator('main a[href^="/people/"]').last();
+  await profileLink.scrollIntoViewIfNeeded();
   await expect(profileLink).toBeVisible();
+  const peopleScrollY = await page.evaluate(() => window.scrollY);
+  expect(peopleScrollY).toBeGreaterThan(0);
   await profileLink.click();
   await expect(page).toHaveURL(/\/people\/[^/?]+$/);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(24);
   await page.goBack();
 
   await expect(page).toHaveURL(/\/people\?status=current&page=2$/);
+  await expect.poll(
+    () => page.evaluate((expected) => Math.abs(window.scrollY - expected), peopleScrollY),
+  ).toBeLessThan(24);
   await expect(page.locator('select').filter({ has: page.locator('option[value="current"]') })).toHaveValue('current');
 });
 

@@ -129,16 +129,19 @@ async function main() {
     fail('race_page_for returned the wrong race');
   }
 
-  const partyListRace = await published.rpc('party_list_race_page_for', {
-    p_race_id: 'fbf84648-d6d7-480b-a0a4-518ad1f39d2b',
-  });
-  if (partyListRace.error) fail(`party_list_race_page_for is not executable: ${partyListRace.error.message}`);
-  const partyListPayload = partyListRace.data?.[0]?.payload;
-  assertPayloadVersion(partyListPayload, 'party_list_race_page_for');
-  if (partyListPayload.party_list_result_rows?.length !== 16
-      || partyListPayload.candidate_rows?.length !== 177
-      || partyListPayload.party_list_result_rows.reduce((sum, row) => sum + row.allocated_seats, 0) !== 34) {
-    fail('party_list_race_page_for did not return 16 parties, 177 candidates, and 34 seats');
+  for (const expected of [
+    { raceId: 'fbf84648-d6d7-480b-a0a4-518ad1f39d2b', parties: 16, candidates: 177 },
+    { raceId: '19c67780-237b-5f4f-9d2c-5b0dfa4920f1', parties: 19, candidates: 216 },
+  ]) {
+    const partyListRace = await published.rpc('party_list_race_page_for', { p_race_id: expected.raceId });
+    if (partyListRace.error) fail(`party_list_race_page_for is not executable: ${partyListRace.error.message}`);
+    const partyListPayload = partyListRace.data?.[0]?.payload;
+    assertPayloadVersion(partyListPayload, 'party_list_race_page_for');
+    if (partyListPayload.party_list_result_rows?.length !== expected.parties
+        || partyListPayload.candidate_rows?.length !== expected.candidates
+        || partyListPayload.party_list_result_rows.reduce((sum, row) => sum + row.allocated_seats, 0) !== 34) {
+      fail(`party_list_race_page_for did not return ${expected.parties} parties, ${expected.candidates} candidates, and 34 seats`);
+    }
   }
 
   const personId = homePayload.candidate_rows[0]?.person_id;

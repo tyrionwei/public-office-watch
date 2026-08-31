@@ -851,6 +851,11 @@ test('homepage election links and candidate categories use county filters and di
   const visiblePartyRowCount = await partyFrame.locator('[data-party-seat-row]').count();
   expect(visiblePartyRowCount).toBeGreaterThan(0);
   expect(visiblePartyRowCount).toBeLessThanOrEqual(5);
+  const overviewBarColor = await partyFrame.locator('[data-party-seat-segment]').first()
+    .evaluate((element) => getComputedStyle(element).backgroundColor);
+  const firstPartyBarColor = await partyFrame.locator('[data-party-seat-bar]').first()
+    .evaluate((element) => getComputedStyle(element).backgroundColor);
+  expect(firstPartyBarColor).toBe(overviewBarColor);
 });
 
 test('homepage candidate category district and carousel position survive person navigation and back', async ({ page }) => {

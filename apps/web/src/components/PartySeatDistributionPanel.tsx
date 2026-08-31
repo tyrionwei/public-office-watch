@@ -65,7 +65,13 @@ export function PartySeatDistributionPanel({
             <div className="flex h-4 overflow-hidden border border-line/70 bg-bg/70" aria-hidden="true">
               {partyCounts.map((item) => {
                 const theme = partyTheme[toPartyThemeKey(item.party)];
-                return <span key={item.party} style={{ width: `${(item.count / total) * 100}%`, backgroundColor: theme.primary }} />;
+                return (
+                  <span
+                    key={item.party}
+                    data-party-seat-segment
+                    style={{ width: `${(item.count / total) * 100}%`, backgroundColor: theme.primary }}
+                  />
+                );
               })}
             </div>
 
@@ -84,7 +90,8 @@ export function PartySeatDistributionPanel({
                     <span className="h-2 overflow-hidden bg-bg/70">
                       <span
                         className="block h-full"
-                        style={{ width: `${Math.max(4, (item.count / largestCount) * 100)}%`, backgroundColor: theme.accent }}
+                        data-party-seat-bar
+                        style={{ width: `${Math.max(4, (item.count / largestCount) * 100)}%`, backgroundColor: theme.primary }}
                       />
                     </span>
                     <span className="text-right font-display text-base" style={{ color: theme.text }}>{item.count}</span>

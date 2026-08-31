@@ -466,6 +466,13 @@ export function PersonPage() {
     ? personSprite ?? primaryPhotoUrl ?? pickDefaultCandidateSprite(person.name, person.gender, birthDateClaim?.claim_value)
     : xiezhiMascotSprite;
   const usesMascotFallback = Boolean(person && !primaryPhotoUrl && portraitSrc === xiezhiMascotSprite);
+  const usesDemographicFallback = Boolean(person && !personSprite && !primaryPhotoUrl && portraitSrc !== xiezhiMascotSprite);
+  const portraitFallbackLabel = usesMascotFallback
+    ? t('person.mascotFallbackLabel')
+    : usesDemographicFallback ? t('person.demographicFallbackLabel') : null;
+  const portraitFallbackDescription = usesMascotFallback
+    ? t('person.mascotFallbackDescription')
+    : usesDemographicFallback ? t('person.demographicFallbackDescription') : null;
   const financeClaims = profile ? claimsByType(profile.public_claims, 'finance_summary') : [];
   const rawLegalClaims = profile ? claimsByType(profile.public_claims, 'legal_case') : [];
   const rawFamilyClaims = profile ? claimsByType(profile.public_claims, 'family_relation') : [];
@@ -558,18 +565,18 @@ export function PersonPage() {
                 <div className="pixel-corners relative flex min-h-[220px] items-end justify-center border border-line/70 bg-bg/40 p-4">
                   <img
                     src={portraitSrc}
-                    alt={personSprite || primaryPhotoUrl ? person.name : usesMascotFallback ? t('person.mascotFallbackLabel') : ''}
+                    alt={personSprite || primaryPhotoUrl ? person.name : portraitFallbackLabel ?? ''}
                     className="max-h-[190px] w-auto object-contain object-bottom [image-rendering:pixelated]"
                   />
-                  {usesMascotFallback ? (
+                  {portraitFallbackLabel ? (
                     <span className="absolute left-2 top-2 border border-cyan-300/50 bg-[#07101f]/90 px-2 py-1 text-[10px] text-cyan-100">
-                      {t('person.mascotFallbackLabel')}
+                      {portraitFallbackLabel}
                     </span>
                   ) : null}
                 </div>
-                {usesMascotFallback ? (
+                {portraitFallbackDescription ? (
                   <figcaption className="text-xs leading-5 text-slate-400">
-                    {t('person.mascotFallbackDescription')}
+                    {portraitFallbackDescription}
                   </figcaption>
                 ) : null}
               </figure>

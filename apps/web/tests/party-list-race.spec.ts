@@ -12,10 +12,10 @@ test('2024 party-list race shows party results, full rosters, and party comparis
   await expect(page.getByText('4,981,060')).toBeVisible();
   await expect(page.getByText('4,764,293')).toBeVisible();
 
-  const dppCard = page.locator('article').filter({
-    has: page.getByRole('heading', { name: '民主進步黨', exact: true }),
-  });
-  await dppCard.getByRole('button', { name: '查看完整名單' }).click();
+  const partyRows = page.locator('[data-party-result-row]');
+  await expect(partyRows).toHaveCount(16);
+  const dppRow = page.locator('[data-party-result-row="dpp"]');
+  await dppRow.getByRole('button', { name: '查看完整名單' }).click();
   await expect(page.getByText('民主進步黨 不分區名單')).toBeVisible();
   await expect(page.getByRole('link', { name: '林月琴', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: '查看中選會共同政見原文' })).toBeVisible();

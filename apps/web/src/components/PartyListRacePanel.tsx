@@ -85,71 +85,67 @@ export function PartyListRacePanel({ results, candidates, language, t }: PartyLi
   return (
     <>
       <SectionPanel title={t('race.partyListResultsTitle')} eyebrow={t('race.partyListEyebrow')}>
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {sortedResults.map((result) => {
-            const theme = partyTheme[toPartyThemeKey(result.party_name)];
-            const selected = selectedSlugs.includes(result.party_slug);
-            const comparisonDisabled = !selected && selectedSlugs.length >= 4;
-            const isOpen = openParty?.party_slug === result.party_slug;
+        <div className="overflow-x-auto pixel-corners border border-line/70">
+          <div className="min-w-[960px]">
+            <div className="grid grid-cols-[44px_72px_minmax(200px,1fr)_118px_128px_100px_80px_112px] gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500">
+              <span>{t('race.compareSelect')}</span>
+              <span>{t('race.number')}</span>
+              <span>{t('race.party')}</span>
+              <span>{t('race.status')}</span>
+              <span>{t('race.votes')}</span>
+              <span>{t('race.voteRate')}</span>
+              <span>{t('race.partyListSeats')}</span>
+              <span>{t('race.roster')}</span>
+            </div>
+            <div className="divide-y divide-line/60">
+              {sortedResults.map((result) => {
+                const theme = partyTheme[toPartyThemeKey(result.party_name)];
+                const selected = selectedSlugs.includes(result.party_slug);
+                const comparisonDisabled = !selected && selectedSlugs.length >= 4;
+                const isOpen = openParty?.party_slug === result.party_slug;
 
-            return (
-              <article
-                key={result.result_id}
-                className="pixel-corners border bg-panelAlt/45 p-4"
-                style={{ borderColor: `${theme.accent}88` }}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.number')} {result.party_ballot_number}</p>
-                    <h2 className="mt-2 font-display text-2xl text-white">{result.party_name}</h2>
+                return (
+                  <div
+                    key={result.result_id}
+                    data-party-result-row={result.party_slug}
+                    className="grid grid-cols-[44px_72px_minmax(200px,1fr)_118px_128px_100px_80px_112px] items-center gap-3 px-4 py-3 transition hover:bg-accent/8"
+                  >
+                    <label className="flex h-6 w-6 items-center justify-center" title={comparisonDisabled ? t('race.compareLimit') : t('race.compareSelect')}>
+                      <input
+                        type="checkbox"
+                        checked={selected}
+                        disabled={comparisonDisabled}
+                        onChange={(event) => updateComparison(result.party_slug, event.target.checked)}
+                        className="h-4 w-4 accent-cyan-300 disabled:cursor-not-allowed disabled:opacity-30"
+                        aria-label={`${t('race.compareSelect')} ${result.party_name}`}
+                      />
+                    </label>
+                    <span className="text-sm text-slate-300">{result.party_ballot_number}</span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="h-2.5 w-2.5 shrink-0" style={{ backgroundColor: theme.accent }} aria-hidden="true" />
+                        <h2 className="truncate font-display text-lg text-white">{result.party_name}</h2>
+                      </div>
+                      <p className="mt-1 text-xs text-slate-500">{t('race.partyListCandidatesUnit', { count: result.candidate_count })}</p>
+                    </div>
+                    <span className={result.passed_threshold ? 'text-sm text-signal' : 'text-sm text-slate-400'}>
+                      {t(result.passed_threshold ? 'race.partyListPassedThreshold' : 'race.partyListBelowThreshold')}
+                    </span>
+                    <span className="text-sm tabular-nums text-slate-300">{formatNumber(result.vote_count, language)}</span>
+                    <span className="text-sm tabular-nums text-accent">{formatPercent(result.vote_rate, language)}</span>
+                    <span className="font-display text-lg tabular-nums text-signal">{result.allocated_seats}</span>
+                    <button
+                      type="button"
+                      onClick={() => updateParty(isOpen ? null : result.party_slug)}
+                      className="text-left text-xs uppercase tracking-[0.12em] text-accent hover:text-white"
+                    >
+                      {t(isOpen ? 'race.partyListHideRoster' : 'race.partyListViewRoster')}
+                    </button>
                   </div>
-                  <label className="flex items-center gap-2 text-xs text-slate-400" title={comparisonDisabled ? t('race.compareLimit') : t('race.compareSelect')}>
-                    <input
-                      type="checkbox"
-                      checked={selected}
-                      disabled={comparisonDisabled}
-                      onChange={(event) => updateComparison(result.party_slug, event.target.checked)}
-                      className="h-4 w-4 accent-cyan-300 disabled:cursor-not-allowed disabled:opacity-30"
-                      aria-label={`${t('race.compareSelect')} ${result.party_name}`}
-                    />
-                    {t('race.compareSelect')}
-                  </label>
-                </div>
-
-                <div className="mt-4 grid grid-cols-3 gap-2">
-                  <div>
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">{t('race.votes')}</p>
-                    <p className="mt-1 font-display text-lg text-white">{formatNumber(result.vote_count, language)}</p>
-                  </div>
-                  <div>
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">{t('race.voteRate')}</p>
-                    <p className="mt-1 font-display text-lg text-accent">{formatPercent(result.vote_rate, language)}</p>
-                  </div>
-                  <div>
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">{t('race.partyListSeats')}</p>
-                    <p className="mt-1 font-display text-lg text-signal">{result.allocated_seats}</p>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                  <span className={result.passed_threshold ? 'border border-signal/50 bg-signal/10 px-2 py-1 text-signal' : 'border border-line/70 bg-bg/35 px-2 py-1 text-slate-400'}>
-                    {t(result.passed_threshold ? 'race.partyListPassedThreshold' : 'race.partyListBelowThreshold')}
-                  </span>
-                  <span className="border border-line/70 bg-bg/35 px-2 py-1 text-slate-300">
-                    {t('race.partyListCandidatesUnit', { count: result.candidate_count })}
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => updateParty(isOpen ? null : result.party_slug)}
-                  className="mt-4 text-xs uppercase tracking-[0.16em] text-accent hover:text-white"
-                >
-                  {t(isOpen ? 'race.partyListHideRoster' : 'race.partyListViewRoster')}
-                </button>
-              </article>
-            );
-          })}
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         <div className="mt-4 flex flex-col gap-2 border-t border-line/50 pt-4 text-sm sm:flex-row sm:items-center sm:justify-between">

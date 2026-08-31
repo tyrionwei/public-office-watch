@@ -16,6 +16,7 @@ test('2024 party-list race shows party results, full rosters, and party comparis
   const partyRows = page.locator('[data-party-result-row]');
   await expect(partyRows).toHaveCount(16);
   const dppRow = page.locator('[data-party-result-row="dpp"]');
+  await expect(dppRow.getByRole('link', { name: '民主進步黨', exact: true })).toHaveAttribute('href', '/parties/dpp');
   await dppRow.getByRole('button', { name: '查看完整名單' }).click();
   const roster = page.locator('[data-party-list-roster]');
   await expect(roster.getByText('民主進步黨 不分區名單')).toBeVisible();
@@ -32,6 +33,9 @@ test('2024 party-list race shows party results, full rosters, and party comparis
   await page.getByRole('checkbox', { name: '比較 中國國民黨' }).click();
   await expect(page.getByRole('checkbox', { name: '比較 中國國民黨' })).toBeChecked();
   await expect(page.getByText('政黨比較')).toBeVisible();
+  await expect(page.locator('[data-party-comparison-platform="dpp"] [data-testid="party-comparison-platform-item"]')).toHaveCount(10);
+  await expect(page.locator('[data-party-comparison-platform="kmt"] [data-testid="party-comparison-platform-item"]')).not.toHaveCount(0);
+  await expect(page.getByRole('link', { name: '民主進步黨', exact: true }).last()).toHaveAttribute('href', '/parties/dpp');
   await expect(page.getByText('女性 18 · 男性 16 · 未知 0')).toBeVisible();
   await expect(page.getByText('女性 17 · 男性 17 · 未知 0')).toBeVisible();
   await expect(page).toHaveURL(/compare=dpp%2Ckmt/u);
@@ -46,6 +50,7 @@ test('2020 party-list race shows official results, women-quota winners, rosters,
   await expect(page.getByText('4,723,504')).toBeVisible();
 
   const dppRow = page.locator('[data-party-result-row="dpp"]');
+  await expect(dppRow.getByRole('link', { name: '民主進步黨', exact: true })).toHaveAttribute('href', '/parties/dpp');
   await dppRow.getByRole('button', { name: '查看完整名單' }).click();
   await expect(page.getByText('民主進步黨 不分區名單')).toBeVisible();
   await expect(page.getByRole('link', { name: '吳玉琴', exact: true })).toBeVisible();
@@ -56,6 +61,8 @@ test('2020 party-list race shows official results, women-quota winners, rosters,
   await page.getByRole('checkbox', { name: '比較 民主進步黨' }).click();
   await page.getByRole('checkbox', { name: '比較 中國國民黨' }).click();
   await expect(page.getByText('政黨比較')).toBeVisible();
+  await expect(page.locator('[data-party-comparison-platform="dpp"] [data-testid="party-comparison-platform-item"]')).toHaveCount(10);
+  await expect(page.locator('[data-party-comparison-platform="kmt"] [data-testid="party-comparison-platform-item"]')).not.toHaveCount(0);
   await expect(page.getByText('女性 17 · 男性 16 · 未知 0')).toBeVisible();
   await expect(page.getByText('女性 16 · 男性 15 · 未知 0')).toBeVisible();
   await expect(page.getByText('政黨財務')).toBeVisible();

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { Translate } from '../i18n';
 import { toPartyThemeKey } from '../lib/personData';
-import { personPath } from '../routes/routePaths';
+import { partyPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPartyListRaceResult } from '../types/publicViews';
 import { PlatformFulfillmentList } from './PlatformFulfillmentList';
@@ -36,6 +36,33 @@ function formatCurrency(value: number | null, locale: string) {
     currency: 'TWD',
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function platformItems(result: PublicPartyListRaceResult) {
+  return (result.platform_text ?? '')
+    .split(/\r?\n/u)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function PartyPlatformComparison({ result, emptyLabel }: { result: PublicPartyListRaceResult; emptyLabel: string }) {
+  const items = platformItems(result);
+
+  return (
+    <div data-party-comparison-platform={result.party_slug}>
+      {items.length > 0 ? (
+        <ol className="max-h-[28rem] list-decimal space-y-2 overflow-auto pl-5 pr-2 leading-6 text-slate-200">
+          {items.map((item, index) => (
+            <li key={`${result.result_id}:${index}`} data-testid="party-comparison-platform-item">
+              {item}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <span className="text-slate-500">{emptyLabel}</span>
+      )}
+    </div>
+  );
 }
 
 export function PartyListRacePanel({ results, candidates, language, t }: PartyListRacePanelProps) {
@@ -133,7 +160,11 @@ export function PartyListRacePanel({ results, candidates, language, t }: PartyLi
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="h-2.5 w-2.5 shrink-0" style={{ backgroundColor: theme.accent }} aria-hidden="true" />
-                        <h2 className="truncate font-display text-lg text-white">{result.party_name}</h2>
+                        <h2 className="truncate font-display text-lg">
+                          <Link to={partyPath(result.party_slug)} className="text-white hover:text-accent">
+                            {result.party_name}
+                          </Link>
+                        </h2>
                       </div>
                       <p className="mt-1 text-xs text-slate-500">{t('race.partyListCandidatesUnit', { count: result.candidate_count })}</p>
                     </div>
@@ -228,7 +259,11 @@ export function PartyListRacePanel({ results, candidates, language, t }: PartyLi
               <div className="min-w-[760px]" style={{ width: `${Math.max(100, selectedResults.length * 26)}%` }}>
                 <div className="grid gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-3" style={{ gridTemplateColumns: `160px repeat(${selectedResults.length}, minmax(170px, 1fr))` }}>
                   <span />
-                  {selectedResults.map((result) => <span key={result.result_id} className="font-display text-lg text-white">{result.party_name}</span>)}
+                  {selectedResults.map((result) => (
+                    <Link key={result.result_id} to={partyPath(result.party_slug)} className="font-display text-lg text-white hover:text-accent">
+                      {result.party_name}
+                    </Link>
+                  ))}
                 </div>
                 {[
                   [t('race.votes'), (result: PublicPartyListRaceResult) => formatNumber(result.vote_count, language)],
@@ -250,6 +285,12 @@ export function PartyListRacePanel({ results, candidates, language, t }: PartyLi
                     {selectedResults.map((result) => <span key={result.result_id} className="leading-6 text-slate-200">{(render as (value: PublicPartyListRaceResult) => string)(result)}</span>)}
                   </div>
                 ))}
+                <div className="grid gap-3 border-b border-line/60 px-4 py-3 text-sm last:border-b-0" style={{ gridTemplateColumns: `160px repeat(${selectedResults.length}, minmax(170px, 1fr))` }}>
+                  <span className="text-xs uppercase tracking-[0.16em] text-slate-500">{t('race.partyListOfficialPlatform')}</span>
+                  {selectedResults.map((result) => (
+                    <PartyPlatformComparison key={result.result_id} result={result} emptyLabel={t('race.compareNoData')} />
+                  ))}
+                </div>
               </div>
             </div>
           )}

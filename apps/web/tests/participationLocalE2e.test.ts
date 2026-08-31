@@ -122,9 +122,13 @@ test('local Worker writes through the signed Supabase participation RPC', {
       },
     },
   };
+  let replayRequest: Request | null = null;
   const upstreamFetch = async (request: Request) => {
     if (request.url === 'https://challenges.cloudflare.com/turnstile/v0/siteverify') {
       return Response.json({ success: true });
+    }
+    if (request.url.includes('/rest/v1/rpc/submit_region_issue_response')) {
+      replayRequest = request.clone();
     }
     return fetch(request);
   };
@@ -171,6 +175,10 @@ test('local Worker writes through the signed Supabase participation RPC', {
       upstreamFetch,
     );
     assert.equal(response.status, 200, await response.text());
+
+    assert.ok(replayRequest);
+    const replay = await fetch(replayRequest.clone());
+    assert.equal(replay.status, 403, await replay.text());
 
     const saved = await adminClient
       .schema('public')

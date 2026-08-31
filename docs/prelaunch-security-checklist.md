@@ -60,11 +60,17 @@ This checklist assumes attackers have read the complete public repository. See t
   fail, other users' rows fail, and Realtime reveals no extra records.
 - [ ] **Add server-side abuse controls to every public write.** Developer, staging.
   Cover anonymous sign-in, chat, feedback, and region participation with durable
-  per-user/device/IP or challenge-based controls. Verify distributed and replayed
-  requests cannot create unacceptable spam or cost. Client cooldowns do not count.
-- [ ] **Constrain Auth.** Owner/developer. Use exact Site URL and redirect allowlist,
-  review anonymous sign-in and email rate limits, enable CAPTCHA/Turnstile where
-  compatible, and test magic-link replay/expiry and both internal admin callbacks.
+  per-user/device/IP or challenge-based controls. Participation proxy proofs must
+  bind the normalized RPC body and consume a single-use request ID; client
+  cooldowns do not count.
+- [ ] **Constrain Auth.** Owner/developer. Use exact Site URL and redirect allowlist;
+  require at least 12 characters plus lower/upper-case letters, digits, and symbols;
+  enable secure password changes and leaked-password protection in the production
+  Auth dashboard; and review anonymous sign-in and email rate limits. Enable TOTP,
+  enroll every non-anonymous administrator, and prove sensitive admin sessions have
+  reached AAL2. Anonymous participants do not have passwords and are not expected
+  to enroll an MFA factor. Also enable CAPTCHA/Turnstile where compatible and test
+  magic-link replay/expiry and both internal admin callbacks.
 - [ ] **Constrain Edge Function CORS.** Developer, after final hostnames exist.
   Allow only the production origin and explicitly approved previews; verify an
   arbitrary origin cannot read authenticated responses.

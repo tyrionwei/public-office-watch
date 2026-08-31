@@ -39,6 +39,7 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260828065136_add_platform_fulfillment_voting.sql',
   'supabase/migrations/20260828093717_add_chat_channels.sql',
   'supabase/migrations/20260830062225_candidate_election_incumbency_labels.sql',
+  'supabase/migrations/20260830184438_optimize_national_home_page_payload.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',

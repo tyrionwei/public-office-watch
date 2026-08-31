@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash, createHmac } from 'node:crypto';
 import test from 'node:test';
 
 import { handleParticipationRequest } from '../worker/participation.ts';
@@ -137,7 +138,7 @@ test('a cleared anonymous user is rate limited and proxied with a signed databas
   const response = await handleParticipationRequest(
     post('/api/participation/submit', {
       action: 'person-feedback',
-      personId: '00000000-0000-4000-8000-000000000010',
+      personId: '00000000-0000-4000-8000-ABCDEFABCDEF',
       feedbackKind: 'supplement_request',
       sectionKey: 'basic',
     }, {
@@ -165,7 +166,30 @@ test('a cleared anonymous user is rate limited and proxied with a signed databas
   assert.equal(rpcRequest.headers.get('authorization'), 'Bearer user-token');
   assert.equal(rpcRequest.headers.get('apikey'), 'test-anon-key');
   assert.equal(rpcRequest.headers.get('x-participation-proxy-action'), 'person-feedback');
-  assert.match(rpcRequest.headers.get('x-participation-proxy-signature') ?? '', /^[0-9a-f]{64}$/u);
+  const requestId = rpcRequest.headers.get('x-participation-proxy-request-id') ?? '';
+  const timestamp = rpcRequest.headers.get('x-participation-proxy-timestamp') ?? '';
+  const bodyProof = [
+    '00000000-0000-4000-8000-abcdefabcdef',
+    'supplement_request',
+    'basic',
+    null,
+    null,
+    null,
+  ].map((value) => (
+    value === null ? '-1:' : `${Buffer.byteLength(value, 'utf8')}:${value}`
+  )).join('\n');
+  const bodySha256 = createHash('sha256').update(bodyProof).digest('hex');
+  const legacyProof = `00000000-0000-4000-8000-000000000099\nperson-feedback\n${timestamp}\n${requestId}`;
+  const hmac = (value: string) => createHmac(
+    'sha256',
+    'test-proxy-key-with-enough-material',
+  ).update(value).digest('hex');
+  assert.equal(rpcRequest.headers.get('x-participation-proxy-body-sha256'), bodySha256);
+  assert.equal(rpcRequest.headers.get('x-participation-proxy-signature'), hmac(legacyProof));
+  assert.equal(
+    rpcRequest.headers.get('x-participation-proxy-signature-v2'),
+    hmac(`${legacyProof}\n${bodySha256}`),
+  );
   assert.deepEqual(userKeys, ['person-feedback:00000000-0000-4000-8000-000000000099']);
   assert.equal(ipKeys.length, 1);
   assert.match(ipKeys[0], /^person-feedback:[0-9a-f]{64}$/u);

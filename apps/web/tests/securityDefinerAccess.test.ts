@@ -472,7 +472,9 @@ test('participation writes require Turnstile clearance, rate limits, and a Cloud
 });
 
 test('Cloudflare Pages responses carry baseline security headers', () => {
-  assert.match(cloudflareHeaders, /Content-Security-Policy: base-uri 'self'; object-src 'none'; frame-ancestors 'none'/u);
+  assert.match(cloudflareHeaders, /Content-Security-Policy: default-src 'self'/u);
+  assert.match(cloudflareHeaders, /connect-src 'self' https:\/\/\*\.supabase\.co wss:\/\/\*\.supabase\.co/u);
+  assert.match(cloudflareHeaders, /Strict-Transport-Security: max-age=31536000/u);
   assert.match(cloudflareHeaders, /Permissions-Policy:/u);
   assert.match(cloudflareHeaders, /X-Content-Type-Options: nosniff/u);
   assert.match(cloudflareHeaders, /X-Frame-Options: DENY/u);

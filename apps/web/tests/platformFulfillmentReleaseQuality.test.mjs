@@ -3,12 +3,14 @@ import test from 'node:test';
 
 import { classifyPlatformFulfillmentRelease } from '../../../scripts/platform-fulfillment-release-quality.mjs';
 
-function claim(items, reviewStatus = 'auto_approved') {
+function claim(items, reviewStatus = 'auto_approved', platformText = '') {
   return {
     claim_json: {
       items,
+      platformText,
       contentSplit: { method: 'numbered', reviewStatus },
     },
+    claim_value: platformText,
   };
 }
 
@@ -96,4 +98,52 @@ test('withholds explicitly reviewed splits with abnormal structure', () => {
   assert.equal(decision.releaseable, false);
   assert.deepEqual(decision.items, []);
   assert.ok(decision.reasonCodes.includes('abnormal_structure'));
+});
+
+test('withholds auto-approved text with a clearly unreadable script mix', () => {
+  const corruptedFragment = 'ᑫӥНӥЎϯൺᑫၮ୏਒Шᑫ୔ࠔޜᇂ঵ྛׯ๓෧ໆ൨؃ᅿೀ౛';
+  const corrupted = corruptedFragment + corruptedFragment;
+  const decision = classifyPlatformFulfillmentRelease(claim(
+    ['ᑫӥНӥЎϯൺᑫၮ୏'],
+    'auto_approved',
+    corrupted,
+  ));
+
+  assert.equal(decision.releaseable, false);
+  assert.deepEqual(decision.items, []);
+  assert.ok(decision.reasonCodes.includes('unreadable_text'));
+});
+
+test('withholds auto-approved items when explicit source sections were flattened', () => {
+  const source = [
+    '●升級中和交通',
+    '1.增設轉運站。',
+    '●照顧新住民權益',
+    '1.成立新住民服務中心。',
+  ].join('\n');
+  const decision = classifyPlatformFulfillmentRelease(claim([
+    '升級中和交通：增設轉運站。',
+    '升級中和交通：成立新住民服務中心。',
+  ], 'auto_approved', source));
+
+  assert.equal(decision.releaseable, false);
+  assert.deepEqual(decision.items, []);
+  assert.ok(decision.reasonCodes.includes('section_heading_mismatch'));
+});
+
+test('releases auto-approved items when every explicit source section is preserved', () => {
+  const source = [
+    '●升級中和交通',
+    '1.增設轉運站。',
+    '●照顧新住民權益',
+    '1.成立新住民服務中心。',
+  ].join('\n');
+  const items = [
+    '升級中和交通：增設轉運站。',
+    '照顧新住民權益：成立新住民服務中心。',
+  ];
+  const decision = classifyPlatformFulfillmentRelease(claim(items, 'auto_approved', source));
+
+  assert.equal(decision.releaseable, true);
+  assert.deepEqual(decision.items, items);
 });

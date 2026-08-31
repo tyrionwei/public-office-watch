@@ -4,6 +4,7 @@ const siteName = '公職資料觀測站';
 const englishSiteName = 'Public Office Watch';
 const defaultDescription = '查詢臺灣公職人物、政黨、選舉、候選人政見、政治獻金與公開資料來源。';
 const canonicalSiteOrigin = 'https://pow4vote.org';
+const contentSecurityPolicy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; upgrade-insecure-requests";
 const staticSitemapPaths = ['/', '/people', '/elections', '/parties', '/updates', '/data-guidance', '/about', '/support'];
 const dynamicSitemapGroups = ['people', 'parties', 'regions', 'elections', 'events', 'races'];
 const internalDocumentPaths = new Set([
@@ -20,10 +21,13 @@ const cachedSeoCatalogPromises = new Map();
 
 function addSecurityHeaders(response, pathname = '') {
   const headers = new Headers(response.headers);
-  headers.set('permissions-policy', 'camera=(), geolocation=(), microphone=()');
+  headers.set('content-security-policy', contentSecurityPolicy);
+  headers.set('permissions-policy', 'camera=(), geolocation=(), microphone=(), payment=(), usb=()');
   headers.set('referrer-policy', 'strict-origin-when-cross-origin');
+  headers.set('strict-transport-security', 'max-age=31536000');
   headers.set('x-content-type-options', 'nosniff');
   headers.set('x-frame-options', 'DENY');
+  headers.set('x-permitted-cross-domain-policies', 'none');
   if (pathname.startsWith('/internal/')) {
     headers.set('cache-control', 'no-store');
     headers.set('x-robots-tag', 'noindex, nofollow');

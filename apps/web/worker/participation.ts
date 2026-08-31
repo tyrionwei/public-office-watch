@@ -85,6 +85,20 @@ async function hmacSha256Hex(value: string, secret: string) {
   return bytesToHex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(value)));
 }
 
+async function sha256Hex(value: string) {
+  return bytesToHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)));
+}
+
+function encodeProofValue(value: unknown) {
+  if (value === null || value === undefined) return '-1:';
+  const normalized = String(value);
+  return `${new TextEncoder().encode(normalized).byteLength}:${normalized}`;
+}
+
+async function participationBodySha256(values: unknown[]) {
+  return sha256Hex(values.map(encodeProofValue).join('\n'));
+}
+
 async function verifyHmac(value: string, signature: string, secret: string) {
   const signatureBytes = hexToBytes(signature);
   if (!signatureBytes) return false;
@@ -166,6 +180,11 @@ function rpcForPayload(payload: Record<string, unknown>) {
         p_region_id: payload.regionId,
         p_issue_ids: payload.issueIds,
       },
+      proofValues: [
+        payload.regionId.toLowerCase(),
+        payload.issueIds.length,
+        ...payload.issueIds.map((value) => String(value).toLowerCase()),
+      ],
     };
   }
 
@@ -194,6 +213,14 @@ function rpcForPayload(payload: Record<string, unknown>) {
         p_message: payload.message ?? null,
         p_evidence_url: payload.evidenceUrl ?? null,
       },
+      proofValues: [
+        payload.personId.toLowerCase(),
+        payload.feedbackKind,
+        payload.sectionKey,
+        payload.problemType ?? null,
+        payload.message ?? null,
+        payload.evidenceUrl ?? null,
+      ],
     };
   }
 
@@ -217,6 +244,7 @@ function rpcForPayload(payload: Record<string, unknown>) {
         p_item_key: payload.itemKey,
         p_vote_status: payload.voteStatus,
       },
+      proofValues: [payload.claimId.toLowerCase(), payload.itemKey, payload.voteStatus],
     };
   }
 
@@ -237,6 +265,7 @@ function rpcForPayload(payload: Record<string, unknown>) {
         p_claim_id: payload.claimId,
         p_item_key: payload.itemKey,
       },
+      proofValues: [payload.claimId.toLowerCase(), payload.itemKey],
     };
   }
 
@@ -382,8 +411,12 @@ async function handleSubmit(
 
   const timestamp = Math.floor(now() / 1000).toString();
   const requestId = crypto.randomUUID();
-  const proof = `${userId}\n${rpc.action}\n${timestamp}\n${requestId}`;
-  const signature = await hmacSha256Hex(proof, env.PARTICIPATION_PROXY_HMAC_KEY);
+  const legacyProof = `${userId}\n${rpc.action}\n${timestamp}\n${requestId}`;
+  const bodySha256 = await participationBodySha256(rpc.proofValues);
+  const [legacySignature, signature] = await Promise.all([
+    hmacSha256Hex(legacyProof, env.PARTICIPATION_PROXY_HMAC_KEY),
+    hmacSha256Hex(`${legacyProof}\n${bodySha256}`, env.PARTICIPATION_PROXY_HMAC_KEY),
+  ]);
   const response = await fetcher(new Request(
     `${env.SUPABASE_URL.replace(/\/$/u, '')}/rest/v1/rpc/${rpc.name}`,
     {
@@ -393,8 +426,10 @@ async function handleSubmit(
         authorization,
         'content-type': 'application/json',
         'x-participation-proxy-action': rpc.action,
+        'x-participation-proxy-body-sha256': bodySha256,
         'x-participation-proxy-request-id': requestId,
-        'x-participation-proxy-signature': signature,
+        'x-participation-proxy-signature': legacySignature,
+        'x-participation-proxy-signature-v2': signature,
         'x-participation-proxy-timestamp': timestamp,
       },
       body: JSON.stringify(rpc.body),

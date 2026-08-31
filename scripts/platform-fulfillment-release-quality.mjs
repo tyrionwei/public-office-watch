@@ -1,6 +1,6 @@
-const releaseQualityVersion = 'platform-fulfillment-release-v1';
+const releaseQualityVersion = 'platform-fulfillment-release-v2';
 
-const actionPattern = /(?:爭取|推動|改善|增設|加速|建立|支持|保障|監督|落實|提升|促進|強化|維護|興建|整建|補助|制定|修法|反對|要求|取消|開放|整合|規劃|活化|打造|完善|擴大|降低|提高|增加|確保|督促|檢討|協助|輔導|提供|設置|建置|發展|保護|捍衛|解決|鼓勵|充實|優化|保存|杜絕|重啟|放寬|暫緩|編列|清查|嚴查|普設|籌措|改建|重建|照顧|培育)/u;
+const actionPattern = /(?:爭取|推動|改善|增設|加速|建立|支持|保障|監督|落實|提升|促進|強化|維護|興建|整建|補助|制定|修法|反對|要求|取消|開放|整合|規劃|活化|打造|完善|擴大|降低|提高|增加|確保|督促|檢討|協助|輔導|提供|設置|建置|發展|保護|捍衛|解決|鼓勵|充實|優化|保存|杜絕|重啟|放寬|暫緩|編列|清查|嚴查|普設|籌措|改建|重建|照顧|培育|引進|減輕|廣設|增建|研議|推廣|結合|升級|維持|建構|實施|延長)/u;
 const webPromotionPattern = /(?:https?:\/\/|www\.|更多(?:政見|訊息)|請搜尋|輸入網址|掃\s*QR(?:-?CODE)?|[a-z0-9-]+\.(?:tw|com|org|net)(?:\b|\/))/iu;
 const biographyPattern = /(?:政見如下|候選人(?:簡介|介紹)|懇請.*(?:支持|機會)|請投|票投|我(?:是|叫|參選|投入這場選舉|願意承擔)|本人(?:出生|參選)|當選以來|這四年我|從政.*(?:初衷|目標))/u;
 const resumePattern = /(?:【\s*(?:經歷|學歷|現任|曾任)\s*】|^(?:經歷|學歷|現任|曾任)\s*[：:])/u;
@@ -14,6 +14,48 @@ const reviewedHardSafetyReasonCodes = new Set([
 
 function compactText(value) {
   return value.normalize('NFKC').replace(/[\s\p{P}\p{S}]+/gu, '');
+}
+
+function hasUnreadableScriptMix(value) {
+  const letters = Array.from(value).filter((character) => /\p{Letter}/u.test(character));
+  if (letters.length < 20) return false;
+  const unexpectedLetters = letters.filter((character) => (
+    !/[\p{Script=Han}\p{Script=Latin}]/u.test(character)
+  ));
+  return unexpectedLetters.length >= 5
+    && unexpectedLetters.length / letters.length >= 0.08;
+}
+
+function sourceSectionHeadings(value) {
+  const lines = value.split(/\r?\n/gu);
+  const headings = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index].trim();
+    if (!line) continue;
+    const nextLine = lines.slice(index + 1).find((candidate) => candidate.trim())?.trim() ?? '';
+    const bulletHeading = line.match(/^[•●○▪◆◇★※◎]\s*(.+)$/u)?.[1]?.trim() ?? null;
+    if (bulletHeading && /^(?:\d{1,3}[.、．）)]|\(\d{1,3}\)|（\d{1,3}）)\s*/u.test(nextLine)) {
+      headings.push(bulletHeading);
+    } else if (/[>＞]\s*$/u.test(line)) {
+      headings.push(line.replace(/[>＞]\s*$/u, ''));
+    } else if (
+      /^[\p{Script=Han}]{2,8}$/u.test(line)
+      && /^[•●○▪◆◇★※◎]\s*/u.test(nextLine)
+    ) {
+      headings.push(line);
+    }
+  }
+  return headings;
+}
+
+function hasSectionHeadingMismatch(source, items) {
+  const headings = sourceSectionHeadings(source);
+  if (headings.length < 2) return false;
+  const itemPrefixes = new Set(items.map((item) => {
+    const separator = item.search(/[：:]/u);
+    return separator < 0 ? '' : compactText(item.slice(0, separator));
+  }).filter(Boolean));
+  return headings.some((heading) => !itemPrefixes.has(compactText(heading)));
 }
 
 function looksLikeElectionMetadata(value) {
@@ -68,6 +110,23 @@ export function classifyPlatformFulfillmentRelease(claim) {
   const sourceItems = Array.isArray(claim.claim_json?.items)
     ? claim.claim_json.items.map((item) => String(item ?? '').trim()).filter(Boolean)
     : [];
+
+  if (reviewStatus === 'auto_approved') {
+    const source = String(claim.claim_json?.platformText ?? claim.claim_value ?? '');
+    const sourceReasonCodes = [];
+    if (hasUnreadableScriptMix(source)) sourceReasonCodes.push('unreadable_text');
+    if (hasSectionHeadingMismatch(source, sourceItems)) {
+      sourceReasonCodes.push('section_heading_mismatch');
+    }
+    if (sourceReasonCodes.length > 0) {
+      return {
+        releaseable: false,
+        items: [],
+        reasonCodes: sourceReasonCodes,
+        excludedItemCount: 0,
+      };
+    }
+  }
 
   if (reviewStatus === 'reviewed') {
     const auditedItems = sourceItems.map((item) => ({

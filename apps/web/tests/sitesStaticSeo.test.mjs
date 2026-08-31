@@ -124,6 +124,13 @@ test('forces private cache and crawler headers on internal routes', () => {
   assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow');
   assert.equal(publicResponse.headers.get('cache-control'), 'public, max-age=0');
   assert.equal(publicResponse.headers.get('x-robots-tag'), null);
+  assert.match(publicResponse.headers.get('content-security-policy') ?? '', /default-src 'self'/u);
+  assert.match(
+    publicResponse.headers.get('content-security-policy') ?? '',
+    /connect-src 'self' https:\/\/\*\.supabase\.co wss:\/\/\*\.supabase\.co/u,
+  );
+  assert.equal(publicResponse.headers.get('strict-transport-security'), 'max-age=31536000');
+  assert.equal(publicResponse.headers.get('x-permitted-cross-domain-policies'), 'none');
 });
 
 test('publishes a sitemap index with separated public entity maps', () => {

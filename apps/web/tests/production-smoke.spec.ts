@@ -5,11 +5,22 @@ const expectedSupabaseOrigin = new URL(process.env.VITE_SUPABASE_URL ?? '').orig
 test('production routes load real public data without Supabase failures', async ({ page }) => {
   const apiRequests: string[] = [];
   const apiFailures: string[] = [];
+  const requestStartedAt = new Map<string, number>();
+  const homePageLatencies: number[] = [];
 
+  page.on('request', (request) => {
+    if (new URL(request.url()).origin === expectedSupabaseOrigin) {
+      requestStartedAt.set(request.url(), Date.now());
+    }
+  });
   page.on('response', (response) => {
     const url = new URL(response.url());
     if (url.origin !== expectedSupabaseOrigin) return;
     apiRequests.push(url.pathname);
+    if (url.pathname.endsWith('/rpc/home_page_for')) {
+      const startedAt = requestStartedAt.get(response.url());
+      if (startedAt !== undefined) homePageLatencies.push(Date.now() - startedAt);
+    }
     if (response.status() >= 400) {
       apiFailures.push(`${response.status()} ${url.pathname}${url.search}`);
     }
@@ -22,7 +33,11 @@ test('production routes load real public data without Supabase failures', async 
     }
   });
 
-  await page.goto('/');
+  const homeResponse = await page.goto('/');
+  expect(homeResponse).not.toBeNull();
+  const homeHeaders = homeResponse?.headers() ?? {};
+  expect(homeHeaders['content-security-policy']).toContain("default-src 'self'");
+  expect(homeHeaders['strict-transport-security']).toBe('max-age=31536000');
   await expect(page.getByRole('heading', { name: '公職資料觀測站' })).toBeVisible();
 
   await page.goto('/regions/taipei-city');
@@ -58,4 +73,6 @@ test('production routes load real public data without Supabase failures', async 
   await page.waitForTimeout(500);
   expect(apiRequests.length).toBeGreaterThan(0);
   expect(apiFailures).toEqual([]);
+  expect(homePageLatencies.length).toBeGreaterThan(0);
+  expect(Math.max(...homePageLatencies)).toBeLessThan(1_000);
 });

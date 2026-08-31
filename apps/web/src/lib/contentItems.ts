@@ -50,12 +50,78 @@ function splitMarkedItems(value: string) {
   return uniqueItems(marked.split('\u001e').map(stripListPrefix).filter(Boolean));
 }
 
+const bulletPrefixPattern = /^[•●○▪◆◇★※◎]\s*/u;
+const numberedLinePattern = new RegExp(`^(?:${numberedMarkerSource})\\s*`, 'u');
+
+function explicitSectionHeading(lines: string[], index: number) {
+  const line = lines[index]?.trim() ?? '';
+  if (!line) return null;
+  const nextLine = lines.slice(index + 1).find((candidate) => candidate.trim())?.trim() ?? '';
+  const bulletHeading = line.match(/^[•●○▪◆◇★※◎]\s*(.+)$/u)?.[1]?.trim() ?? null;
+  if (bulletHeading && numberedLinePattern.test(nextLine)) return stripListPrefix(bulletHeading);
+  if (/[>＞]\s*$/u.test(line)) return stripListPrefix(line.replace(/[>＞]\s*$/u, ''));
+  if (
+    /^[\p{Script=Han}]{2,8}$/u.test(line)
+    && bulletPrefixPattern.test(nextLine)
+  ) {
+    return line;
+  }
+  return null;
+}
+
+function splitExplicitSectionItems(source: string) {
+  const lines = source.split(/\n/gu);
+  const items: string[] = [];
+  let heading: string | null = null;
+  let headingCount = 0;
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const nextHeading = explicitSectionHeading(lines, index);
+    if (nextHeading) {
+      heading = nextHeading;
+      headingCount += 1;
+      continue;
+    }
+    if (!heading || !lines[index].trim()) continue;
+    const item = stripListPrefix(lines[index]);
+    if (item) items.push(`${heading}：${item}`);
+  }
+
+  if (headingCount < 2 || items.length < 2) return null;
+  return uniqueItems(items);
+}
+
 export type PlatformSplitResult = {
   items: string[];
   splitMethod: 'numbered' | 'section' | 'paragraph' | 'line' | 'single';
   splitConfidence: number;
   reviewStatus: 'auto_approved' | 'needs_review';
 };
+
+function hasUnreadableScriptMix(value: string) {
+  const letters = Array.from(value).filter((character) => /\p{Letter}/u.test(character));
+  if (letters.length < 20) return false;
+  const unexpectedLetters = letters.filter((character) => (
+    !/[\p{Script=Han}\p{Script=Latin}]/u.test(character)
+  ));
+  return unexpectedLetters.length >= 5
+    && unexpectedLetters.length / letters.length >= 0.08;
+}
+
+function platformSplitResult(
+  source: string,
+  items: string[],
+  splitMethod: PlatformSplitResult['splitMethod'],
+  splitConfidence: number,
+  reviewStatus: PlatformSplitResult['reviewStatus'],
+): PlatformSplitResult {
+  return {
+    items,
+    splitMethod,
+    splitConfidence,
+    reviewStatus: hasUnreadableScriptMix(source) ? 'needs_review' : reviewStatus,
+  };
+}
 
 function splitSectionedPlatform(paragraphs: string[]) {
   if (paragraphs.length < 5 || (paragraphs.length - 1) % 2 !== 0) return null;
@@ -126,43 +192,50 @@ function splitTrailingPlatformHeading(value: string) {
 
 export function splitPlatformContent(value: string | null | undefined): PlatformSplitResult {
   const source = normalizeSourceText(value);
-  if (!source) return { items: [], splitMethod: 'single', splitConfidence: 100, reviewStatus: 'auto_approved' };
+  if (!source) return platformSplitResult(source, [], 'single', 100, 'auto_approved');
+
+  const sectionItems = splitExplicitSectionItems(source);
+  if (sectionItems) {
+    return platformSplitResult(source, sectionItems, 'section', 96, 'auto_approved');
+  }
 
   const markedItems = splitMarkedItems(source);
   if (markedItems && markedItems.length > 1) {
-    return { items: cleanPlatformItems(markedItems), splitMethod: 'numbered', splitConfidence: 98, reviewStatus: 'auto_approved' };
+    return platformSplitResult(source, cleanPlatformItems(markedItems), 'numbered', 98, 'auto_approved');
   }
 
   const paragraphs = uniqueItems(source
     .split(/\n\s*\n+/gu)
     .map(stripListPrefix)
     .filter(Boolean));
-  const sectionItems = splitSectionedPlatform(paragraphs);
-  if (sectionItems) {
-    return { items: cleanPlatformItems(sectionItems), splitMethod: 'section', splitConfidence: 96, reviewStatus: 'auto_approved' };
+  const pairedSectionItems = splitSectionedPlatform(paragraphs);
+  if (pairedSectionItems) {
+    return platformSplitResult(source, cleanPlatformItems(pairedSectionItems), 'section', 96, 'auto_approved');
   }
   if (paragraphs.length > 1) {
-    return { items: cleanPlatformItems(paragraphs), splitMethod: 'paragraph', splitConfidence: 90, reviewStatus: 'auto_approved' };
+    return platformSplitResult(source, cleanPlatformItems(paragraphs), 'paragraph', 90, 'auto_approved');
   }
 
   const lines = uniqueItems(source.split(/\n+/gu).map(stripListPrefix).filter(Boolean));
   const completeLines = lines.filter((line) => /[。！？!?；;：:]$/u.test(line)).length;
   if (lines.length > 1) {
     const highConfidence = completeLines / lines.length >= 0.75;
-    return {
-      items: cleanPlatformItems(lines),
-      splitMethod: 'line',
-      splitConfidence: highConfidence ? 85 : 70,
-      reviewStatus: highConfidence ? 'auto_approved' : 'needs_review',
-    };
+    return platformSplitResult(
+      source,
+      cleanPlatformItems(lines),
+      'line',
+      highConfidence ? 85 : 70,
+      highConfidence ? 'auto_approved' : 'needs_review',
+    );
   }
 
-  return {
-    items: cleanPlatformItems([stripListPrefix(source.replace(/\n+/gu, ' '))]),
-    splitMethod: 'single',
-    splitConfidence: 55,
-    reviewStatus: 'needs_review',
-  };
+  return platformSplitResult(
+    source,
+    cleanPlatformItems([stripListPrefix(source.replace(/\n+/gu, ' '))]),
+    'single',
+    55,
+    'needs_review',
+  );
 }
 
 function looksLikeEducationStart(value: string) {

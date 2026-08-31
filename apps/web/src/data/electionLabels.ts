@@ -82,7 +82,6 @@ export type RaceCategoryKey =
   | 'village_chief'
   | 'referendum'
   | 'recall'
-  | 'indigenous'
   | 'other';
 
 export type RaceCategory = {
@@ -109,7 +108,7 @@ const raceCategoryByType: Record<PublicRace['race_type'], RaceCategory> = {
   village_chief: { key: 'village_chief', label: '村里長', order: 70 },
   referendum: { key: 'referendum', label: '公投', order: 80 },
   recall: { key: 'recall', label: '罷免', order: 90 },
-  indigenous: { key: 'indigenous', label: '原住民選區', order: 100 },
+  indigenous: { key: 'legislator', label: '立法委員', order: 30 },
   other: { key: 'other', label: '其他', order: 999 },
 };
 

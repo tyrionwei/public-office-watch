@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useI18n, type TranslationKey } from '../i18n';
 import { platformItemsForClaim } from '../lib/candidatePlatform';
+import { buildPolicyShareUrl, policyShareAnchorId } from '../lib/socialSharing';
+import { ShareButton } from './ShareButton';
 import {
   fulfillmentPercent,
   loadPlatformFulfillment,
@@ -49,10 +51,75 @@ const statusPresentation: Record<PlatformFulfillmentStatus, StatusPresentation> 
   },
 };
 
-function StaticPlatformItems({ items, targetId }: { items: string[]; targetId: string }) {
+type PolicyShareContext = {
+  personId: string;
+  personName: string;
+};
+
+function PolicyShareButton({
+  targetId,
+  itemKey,
+  context,
+  content,
+}: {
+  targetId: string;
+  itemKey: string;
+  context: PolicyShareContext;
+  content: string;
+}) {
+  const { t } = useI18n();
+  const url = buildPolicyShareUrl(
+    window.location.origin,
+    context.personId,
+    targetId,
+    itemKey,
+  );
+  return (
+    <ShareButton
+      title={t('share.policyTitle', { person: context.personName })}
+      text={t('share.policyText', { person: context.personName })}
+      url={url}
+      imageEyebrow={t('share.policyEyebrow')}
+      imageBody={content}
+      imageAlt={t('share.policyPreviewAlt')}
+      imageFileName="policy.png"
+    />
+  );
+}
+
+function StaticPlatformItems({
+  items,
+  targetId,
+  shareContext,
+}: {
+  items: string[];
+  targetId: string;
+  shareContext?: PolicyShareContext;
+}) {
   return items.length > 0 ? (
     <ol className="mt-3 max-h-[34rem] list-decimal space-y-3 overflow-auto pl-5 pr-2 text-sm leading-6 text-slate-200">
-      {items.map((item, index) => <li key={`${targetId}:${index}`}>{item}</li>)}
+      {items.map((item, index) => {
+        const itemKey = `static-${index + 1}`;
+        return (
+          <li
+            id={policyShareAnchorId(targetId, itemKey)}
+            key={`${targetId}:${index}`}
+            className="scroll-mt-24 target:border-accent target:bg-accent/5"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <span>{item}</span>
+              {shareContext ? (
+                <PolicyShareButton
+                  targetId={targetId}
+                  itemKey={itemKey}
+                  context={shareContext}
+                  content={item}
+                />
+              ) : null}
+            </div>
+          </li>
+        );
+      })}
     </ol>
   ) : null;
 }
@@ -218,15 +285,17 @@ function formatEligibilityDate(value: string | null, locale: string) {
 type PlatformFulfillmentListProps = {
   claim: PublicPersonClaim;
   title: string;
+  shareContext?: PolicyShareContext;
 } | {
   targetId: string;
   staticItems?: string[];
   title: string;
   votingBlockedReason?: 'party_threshold';
+  shareContext?: PolicyShareContext;
 };
 
 export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
-  const { title } = props;
+  const { title, shareContext } = props;
   const targetId = 'targetId' in props ? props.targetId : props.claim.claim_id;
   const staticItems = 'targetId' in props
     ? props.staticItems ?? []
@@ -269,6 +338,19 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
       active = false;
     };
   }, [targetId]);
+
+  useEffect(() => {
+    if (loading || !window.location.hash) return;
+    let anchor = window.location.hash.slice(1);
+    try {
+      anchor = decodeURIComponent(anchor);
+    } catch {
+      return;
+    }
+    const target = document.getElementById(anchor);
+    if (!target) return;
+    window.requestAnimationFrame(() => target.scrollIntoView({ block: 'center' }));
+  }, [loading, targetId]);
 
   const items = useMemo(() => participation?.items ?? [], [participation]);
   const overallSummary = useMemo(() => summarizePlatformFulfillment(items), [items]);
@@ -359,7 +441,11 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
     return (
       <>
         <h3 className="text-sm font-semibold text-white">{title}</h3>
-        <StaticPlatformItems items={staticItems} targetId={targetId} />
+        <StaticPlatformItems
+          items={staticItems}
+          targetId={targetId}
+          shareContext={loading ? undefined : shareContext}
+        />
         {loading ? <p className="mt-2 text-[10px] text-slate-500">{t('person.fulfillment.loading')}</p> : null}
       </>
     );
@@ -443,12 +529,26 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
             : undefined;
           const withdrawing = withdrawingKey === item.itemKey;
           return (
-            <li key={item.itemKey} className="py-3 pl-1">
+            <li
+              id={policyShareAnchorId(targetId, item.itemKey)}
+              key={item.itemKey}
+              className="scroll-mt-24 py-3 pl-1 target:bg-accent/5"
+            >
               <div className={votingIsOpen
                 ? 'grid gap-2 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start'
                 : ''}
               >
-                <p className="min-w-0 leading-6" data-testid="platform-promise">{item.promiseText}</p>
+                <div className="flex min-w-0 items-start justify-between gap-3">
+                  <p className="min-w-0 leading-6" data-testid="platform-promise">{item.promiseText}</p>
+                  {shareContext ? (
+                    <PolicyShareButton
+                      targetId={targetId}
+                      itemKey={item.itemKey}
+                      context={shareContext}
+                      content={item.promiseText}
+                    />
+                  ) : null}
+                </div>
                 {votingIsOpen ? (
                   <div className="grid gap-2">
                     <VoteButtons

@@ -202,6 +202,67 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
   };
 }
 
+function isSafeShareIdentifier(value: string) {
+  return value.length > 0
+    && value.length <= 128
+    && /^[A-Za-z0-9._-]+$/.test(value);
+}
+
+function routeShareContext(
+  pathname: string,
+  search: string,
+  metadata: RouteMetadataValue,
+  language: 'zh-TW' | 'en',
+) {
+  const defaultContext = {
+    metadata,
+    canonicalPath: pathname,
+    imagePath: '/og.png',
+    imageAlt: `${siteName}｜${englishSiteName}`,
+  };
+  const params = new URLSearchParams(search);
+  const policy = params.get('policy');
+  if (/^\/people\/[^/]+$/.test(pathname) && policy) {
+    const parts = policy.split(':');
+    if (parts.length === 2 && parts.every(isSafeShareIdentifier)) {
+      return {
+        metadata: {
+          ...metadata,
+          title: language === 'en' ? `${metadata.title}'s platform` : `${metadata.title}的政見`,
+          description: language === 'en'
+            ? `View this platform from ${metadata.title}, its sources, and fulfilment status.`
+            : `查看${metadata.title}的這項政見、資料來源與履行情況。`,
+        },
+        canonicalPath: `${pathname}?${new URLSearchParams({ policy })}`,
+        imagePath: '/og-policy.png',
+        imageAlt: language === 'en' ? `Platform｜${englishSiteName}` : `政見分享｜${siteName}`,
+      };
+    }
+  }
+
+  const comparison = params.get('compare');
+  if (/^\/elections\/races\/[^/]+$/.test(pathname) && comparison) {
+    const personIds = Array.from(new Set(comparison.split(',').filter(isSafeShareIdentifier)));
+    if (personIds.length >= 2 && personIds.length <= 4) {
+      const normalizedComparison = personIds.join(',');
+      return {
+        metadata: {
+          ...metadata,
+          title: language === 'en' ? `${metadata.title} candidate comparison` : `${metadata.title}候選人比較`,
+          description: language === 'en'
+            ? `Compare candidates' experience, platforms, and public records for ${metadata.title}.`
+            : `比較${metadata.title}候選人的經歷、政見與公開資料。`,
+        },
+        canonicalPath: `${pathname}?${new URLSearchParams({ compare: normalizedComparison })}`,
+        imagePath: '/og-comparison.png',
+        imageAlt: language === 'en' ? `Candidate comparison｜${englishSiteName}` : `候選人比較｜${siteName}`,
+      };
+    }
+  }
+
+  return defaultContext;
+}
+
 function ensureMeta(selector: string, attributes: Record<string, string>) {
   let element = document.head.querySelector<HTMLMetaElement>(selector);
   if (!element) {
@@ -248,13 +309,15 @@ export function RouteMetadata() {
   }, []);
 
   useEffect(() => {
-    const metadata = routeMetadata(location.pathname, language, t);
+    const baseMetadata = routeMetadata(location.pathname, language, t);
+    const shareContext = routeShareContext(location.pathname, location.search, baseMetadata, language);
+    const metadata = shareContext.metadata;
     const isHome = location.pathname === '/';
     const fullTitle = isHome ? `${siteName}｜${englishSiteName}` : `${metadata.title}｜${siteName}`;
     const configuredSiteUrl = import.meta.env.VITE_SITE_URL?.trim();
     const siteUrl = configuredSiteUrl ? new URL(configuredSiteUrl).origin : fallbackSiteUrl;
-    const canonicalUrl = new URL(location.pathname, siteUrl).toString();
-    const imageUrl = new URL('/og.png', siteUrl).toString();
+    const canonicalUrl = new URL(shareContext.canonicalPath, siteUrl).toString();
+    const imageUrl = new URL(shareContext.imagePath, siteUrl).toString();
     const existingCanonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
     const preserveServerMetadata = metadata.unresolved
       && existingCanonical
@@ -277,13 +340,13 @@ export function RouteMetadata() {
     ensureMeta('meta[property="og:description"]', { property: 'og:description', content: metadata.description });
     ensureMeta('meta[property="og:url"]', { property: 'og:url', content: canonicalUrl });
     ensureMeta('meta[property="og:image"]', { property: 'og:image', content: imageUrl });
-    ensureMeta('meta[property="og:image:alt"]', { property: 'og:image:alt', content: `${siteName}｜${englishSiteName}` });
+    ensureMeta('meta[property="og:image:alt"]', { property: 'og:image:alt', content: shareContext.imageAlt });
     ensureMeta('meta[name="twitter:card"]', { name: 'twitter:card', content: 'summary_large_image' });
     ensureMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: fullTitle });
     ensureMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: metadata.description });
     ensureMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: imageUrl });
     setStructuredData(metadata.structuredData, canonicalUrl);
-  }, [language, location.pathname, publicDataVersion, t]);
+  }, [language, location.pathname, location.search, publicDataVersion, t]);
 
   return null;
 }

@@ -229,12 +229,67 @@ function documentResponseStatus(pathname, catalog = emptySeoCatalog) {
   return hasCatalog && !getCatalogPage(pathname, catalog) ? 404 : 200;
 }
 
+function isSafeShareIdentifier(value) {
+  return typeof value === 'string'
+    && value.length > 0
+    && value.length <= 128
+    && /^[A-Za-z0-9._-]+$/.test(value);
+}
+
+function documentShareContext(url, pathname, metadata) {
+  const defaultContext = {
+    metadata,
+    canonicalPath: pathname,
+    imagePath: '/og.png',
+    imageAlt: `${siteName}｜${englishSiteName}`,
+  };
+  const policy = url.searchParams.get('policy');
+  if (/^\/people\/[^/]+$/.test(pathname) && policy) {
+    const parts = policy.split(':');
+    if (parts.length === 2 && parts.every(isSafeShareIdentifier)) {
+      const params = new URLSearchParams({ policy });
+      return {
+        metadata: {
+          ...metadata,
+          title: `${metadata.title}的政見`,
+          description: `查看${metadata.title}的這項政見、資料來源與履行情況。`,
+        },
+        canonicalPath: `${pathname}?${params}`,
+        imagePath: '/og-policy.png',
+        imageAlt: `政見分享｜${siteName}`,
+      };
+    }
+  }
+
+  const comparison = url.searchParams.get('compare');
+  if (/^\/elections\/races\/[^/]+$/.test(pathname) && comparison) {
+    const personIds = Array.from(new Set(comparison.split(',').filter(isSafeShareIdentifier)));
+    if (personIds.length >= 2 && personIds.length <= 4) {
+      const params = new URLSearchParams({ compare: personIds.join(',') });
+      return {
+        metadata: {
+          ...metadata,
+          title: `${metadata.title}候選人比較`,
+          description: `比較${metadata.title}候選人的經歷、政見與公開資料。`,
+        },
+        canonicalPath: `${pathname}?${params}`,
+        imagePath: '/og-comparison.png',
+        imageAlt: `候選人比較｜${siteName}`,
+      };
+    }
+  }
+
+  return defaultContext;
+}
+
 function injectDocumentMetadata(html, requestUrl, catalog = emptySeoCatalog, siteOrigin = canonicalSiteOrigin) {
   const url = new URL(requestUrl);
   const pathname = url.pathname.replace(/\/$/, '') || '/';
-  const metadata = documentMetadata(pathname, catalog);
-  const canonicalUrl = new URL(pathname, siteOrigin).toString();
-  const imageUrl = new URL('/og.png', siteOrigin).toString();
+  const baseMetadata = documentMetadata(pathname, catalog);
+  const shareContext = documentShareContext(url, pathname, baseMetadata);
+  const metadata = shareContext.metadata;
+  const canonicalUrl = new URL(shareContext.canonicalPath, siteOrigin).toString();
+  const imageUrl = new URL(shareContext.imagePath, siteOrigin).toString();
   const fullTitle = metadata.home
     ? `${siteName}｜${englishSiteName}`
     : `${metadata.title}｜${siteName}`;
@@ -260,7 +315,7 @@ function injectDocumentMetadata(html, requestUrl, catalog = emptySeoCatalog, sit
     <meta property="og:description" content="${escapeAttribute(metadata.description)}" />
     <meta property="og:url" content="${escapeAttribute(canonicalUrl)}" />
     <meta property="og:image" content="${escapeAttribute(imageUrl)}" />
-    <meta property="og:image:alt" content="${siteName}｜${englishSiteName}" />
+    <meta property="og:image:alt" content="${escapeAttribute(shareContext.imageAlt)}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeAttribute(fullTitle)}" />
     <meta name="twitter:description" content="${escapeAttribute(metadata.description)}" />

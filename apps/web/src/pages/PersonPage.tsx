@@ -398,13 +398,19 @@ function ClaimGrid({
   );
 }
 
-function PlatformClaimCard({ claim }: { claim: PublicPersonClaim }) {
+function PlatformClaimCard({
+  claim,
+  personName,
+}: {
+  claim: PublicPersonClaim;
+  personName: string;
+}) {
   const { t } = useI18n();
   const platformItems = platformItemsForClaim(claim);
 
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
-      <PlatformFulfillmentList claim={claim} title={t('person.publicPlatform')} />
+      <PlatformFulfillmentList claim={claim} title={t('person.publicPlatform')} shareContext={{ personId: claim.person_id, personName }} />
       {platformItems.length === 0 ? (
         <div className="mt-3 text-sm leading-6 text-slate-200">{t('person.noContent')}</div>
       ) : null}
@@ -737,7 +743,7 @@ export function PersonPage() {
                             <p className="mb-3 text-xs uppercase tracking-[0.2em] text-slate-500">{t('person.platformTitle')}</p>
                             <div className="grid gap-3">
                               {candidatePlatforms.map((claim) => (
-                                <PlatformClaimCard key={claim.claim_id} claim={claim} />
+                                <PlatformClaimCard key={claim.claim_id} claim={claim} personName={person.name} />
                               ))}
                             </div>
                           </div>

@@ -46,6 +46,13 @@ const catalog = {
       description: '查看2026 地方選舉的候選人、選區、得票結果與公開資料來源。',
       structuredData: { '@context': 'https://schema.org', '@type': 'Event', name: '2026 地方選舉' },
     },
+    {
+      group: 'races',
+      path: '/elections/races/race-1',
+      title: '臺北市市長選舉',
+      description: '查看臺北市市長選舉的候選人、政黨、得票結果與政見比較。',
+      structuredData: { '@context': 'https://schema.org', '@type': 'Event', name: '臺北市市長選舉' },
+    },
   ],
 };
 
@@ -56,6 +63,8 @@ test('routes every document path through the Worker while bypassing static asset
     '!/seo-catalog/*',
     '!/seo-catalog.json',
     '!/og.png',
+    '!/og-policy.png',
+    '!/og-comparison.png',
     '!/site.webmanifest',
     '!/index.html',
   ]);
@@ -86,6 +95,26 @@ test('injects exact catalog metadata and absolute social URLs', () => {
   assert.match(html, /property="og:image" content="https:\/\/pow4vote\.org\/og\.png"/);
   assert.equal((html.match(/property="og:title"/g) ?? []).length, 1);
   assert.doesNotMatch(html, /Old title|Old description|old\.png/);
+});
+
+test('injects policy and candidate-comparison share previews from exact share URLs', () => {
+  const policyHtml = injectDocumentMetadata(
+    baseHtml,
+    'https://pow4vote.org/people/person-1?policy=claim-1%3Aitem-1#policy-claim-1-item-1',
+    catalog,
+  );
+  const comparisonHtml = injectDocumentMetadata(
+    baseHtml,
+    'https://pow4vote.org/elections/races/race-1?compare=person-1%2Cperson-2#candidate-comparison',
+    catalog,
+  );
+
+  assert.match(policyHtml, /<title>王小明的政見｜公職資料觀測站<\/title>/);
+  assert.match(policyHtml, /rel="canonical" href="https:\/\/pow4vote\.org\/people\/person-1\?policy=claim-1%3Aitem-1"/);
+  assert.match(policyHtml, /property="og:image" content="https:\/\/pow4vote\.org\/og-policy\.png"/);
+  assert.match(comparisonHtml, /<title>臺北市市長選舉候選人比較｜公職資料觀測站<\/title>/);
+  assert.match(comparisonHtml, /rel="canonical" href="https:\/\/pow4vote\.org\/elections\/races\/race-1\?compare=person-1%2Cperson-2"/);
+  assert.match(comparisonHtml, /property="og:image" content="https:\/\/pow4vote\.org\/og-comparison\.png"/);
 });
 
 test('covers election detail routes and marks private or unknown routes as noindex', () => {

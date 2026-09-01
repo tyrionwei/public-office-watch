@@ -4,16 +4,19 @@ import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { platformClaimsForCandidate } from '../lib/candidatePlatform';
 import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
+import { buildCandidateComparisonShareUrl, comparisonAnchorId } from '../lib/socialSharing';
 import { personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
 import type { PublicCandidate, PublicPersonClaim, PublicPersonProfile } from '../types/publicViews';
 import { SectionPanel } from './SectionPanel';
+import { ShareButton } from './ShareButton';
 
 type CandidateComparisonPanelProps = {
   candidates: PublicCandidate[];
   profiles: PublicPersonProfile[];
   loading: boolean;
   currentRaceId: string;
+  raceTitle: string;
   onRemove: (personId: string) => void;
 };
 
@@ -95,14 +98,45 @@ export function CandidateComparisonPanel({
   profiles,
   loading,
   currentRaceId,
+  raceTitle,
   onRemove,
 }: CandidateComparisonPanelProps) {
-  const { t } = useI18n();
+  const { language, t } = useI18n();
   const profilesByPersonId = new Map(profiles.map((profile) => [profile.person.person_id, profile]));
   const minWidth = Math.max(760, candidates.length * 280);
+  const candidateNames = candidates.map((candidate) => candidate.person_name).join(language === 'en' ? ', ' : '、');
+  const comparisonImageBody = candidates.map((candidate) => {
+    const profile = profilesByPersonId.get(candidate.person_id) ?? null;
+    const platform = profile
+      ? uniqueValues(platformClaimsForCandidate(profile.public_claims, candidate.candidate_id, currentRaceId).map(claimText), 1)[0]
+      : null;
+    return `${candidate.person_name}｜${platform ?? t('race.compareNoData')}`;
+  }).join('\n');
+  const shareUrl = candidates.length >= 2
+    ? buildCandidateComparisonShareUrl(
+        window.location.origin,
+        currentRaceId,
+        candidates.map((candidate) => candidate.person_id),
+      )
+    : null;
 
   return (
-    <SectionPanel title={t('race.compareTitle')} eyebrow={t('race.compareEyebrow')}>
+    <div id={comparisonAnchorId} className="scroll-mt-24">
+      <SectionPanel
+        title={t('race.compareTitle')}
+        eyebrow={t('race.compareEyebrow')}
+        action={shareUrl ? (
+          <ShareButton
+            title={t('share.comparisonTitle', { race: raceTitle })}
+            text={t('share.comparisonText', { candidates: candidateNames })}
+            url={shareUrl}
+            imageEyebrow={t('share.comparisonEyebrow')}
+            imageBody={comparisonImageBody}
+            imageAlt={t('share.comparisonPreviewAlt')}
+            imageFileName="candidate-comparison.png"
+          />
+        ) : null}
+      >
       {candidates.length < 2 ? (
         <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-300">{t('race.compareNeedTwo')}</p>
       ) : loading ? (
@@ -247,6 +281,7 @@ export function CandidateComparisonPanel({
           </div>
         </div>
       )}
-    </SectionPanel>
+      </SectionPanel>
+    </div>
   );
 }

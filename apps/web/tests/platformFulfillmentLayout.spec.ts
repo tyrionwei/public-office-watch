@@ -74,6 +74,104 @@ test('large platform uses one compact desktop row per promise with a header lege
   await expect(page.getByRole('heading', { name: '人物時間軸', exact: true })).toHaveCount(0);
 });
 
+test('policy share preview keeps content, text, link, and image actions reliable', async ({ page }) => {
+  const card = await firstPlatformCard(page);
+  const promiseText = (await card.getByTestId('platform-promise').first().textContent())?.trim() ?? '';
+  await page.evaluate(() => {
+    const state = window as Window & {
+      __shared?: Array<{
+        title?: string;
+        text?: string;
+        url?: string;
+        files: Array<{ name: string; type: string; size: number }>;
+      }>;
+      __copiedText?: string;
+      __copiedTypes?: string[];
+    };
+    state.__shared = [];
+    Object.defineProperty(navigator, 'canShare', {
+      configurable: true,
+      value: (data: ShareData) => Boolean(data.files?.length),
+    });
+    Object.defineProperty(navigator, 'share', {
+      configurable: true,
+      value: async (data: ShareData) => {
+        state.__shared?.push({
+          title: data.title,
+          text: data.text,
+          url: data.url,
+          files: Array.from(data.files ?? [], (file) => ({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+          })),
+        });
+      },
+    });
+    Object.defineProperty(navigator.clipboard, 'writeText', {
+      configurable: true,
+      value: async (value: string) => {
+        state.__copiedText = value;
+      },
+    });
+    Object.defineProperty(navigator.clipboard, 'write', {
+      configurable: true,
+      value: async (items: ClipboardItem[]) => {
+        state.__copiedTypes = items.flatMap((item) => item.types);
+      },
+    });
+  });
+
+  await card.locator('ol > li').first().getByRole('button', { name: '分享', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: '分享預覽' });
+  await expect(dialog).toBeVisible();
+
+  const preview = dialog.getByRole('img', { name: '政見分享預覽' });
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveAttribute('data-share-card-content', promiseText);
+
+  const textArea = dialog.getByLabel('分享文字');
+  const linkInput = dialog.getByLabel('分享連結');
+  await expect(textArea).toContainText('提出這項政見');
+  const sharedUrl = new URL(await linkInput.inputValue());
+  expect(sharedUrl.pathname).toBe(personPath);
+  expect(sharedUrl.searchParams.get('policy')).toMatch(/^[^:]+:[^:]+$/u);
+  expect(sharedUrl.hash).toMatch(/^#policy-/u);
+
+  await dialog.getByRole('button', { name: '複製文字與連結', exact: true }).click();
+  const copiedText = await page.evaluate(() => (
+    (window as Window & { __copiedText?: string }).__copiedText ?? ''
+  ));
+  expect(copiedText).toContain(await textArea.inputValue());
+  expect(copiedText).toContain(sharedUrl.toString());
+
+  await dialog.getByRole('button', { name: '複製圖片', exact: true }).click();
+  const copiedTypes = await page.evaluate(() => (
+    (window as Window & { __copiedTypes?: string[] }).__copiedTypes ?? []
+  ));
+  expect(copiedTypes).toContain('image/png');
+
+  await dialog.getByRole('button', { name: '分享文字與連結', exact: true }).click();
+  await dialog.getByRole('button', { name: '分享圖片', exact: true }).click();
+  const shares = await page.evaluate(() => (
+    (window as Window & {
+      __shared?: Array<{
+        title?: string;
+        text?: string;
+        url?: string;
+        files: Array<{ name: string; type: string; size: number }>;
+      }>;
+    }).__shared ?? []
+  ));
+  expect(shares[0]?.text).toContain(sharedUrl.toString());
+  expect(shares[0]?.url).toBe(sharedUrl.toString());
+  expect(shares[0]?.files).toHaveLength(0);
+  expect(shares[1]?.files).toEqual([
+    expect.objectContaining({ name: 'policy.png', type: 'image/png' }),
+  ]);
+  expect(shares[1]?.files[0]?.size ?? 0).toBeGreaterThan(0);
+});
+
 test('mobile platform choices form a two-by-two grid without horizontal overflow', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 780 });
   const card = await firstPlatformCard(page);

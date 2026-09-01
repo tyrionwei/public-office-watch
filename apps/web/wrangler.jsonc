@@ -44,6 +44,8 @@
       "!/seo-catalog/*",
       "!/seo-catalog.json",
       "!/og.png",
+      "!/og-policy.png",
+      "!/og-comparison.png",
       "!/site.webmanifest",
       "!/index.html"
     ]

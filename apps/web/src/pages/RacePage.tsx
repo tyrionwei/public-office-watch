@@ -480,6 +480,7 @@ export function RacePage() {
             profiles={comparisonProfiles}
             loading={comparisonLoading}
             currentRaceId={race.race_id}
+            raceTitle={race.title}
             onRemove={(personId) => updateComparison(personId, false)}
           />
         ) : null}

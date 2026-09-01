@@ -14,7 +14,9 @@
 - Variables: `VITE_SUPABASE_URL`, `VITE_TURNSTILE_SITE_KEY`, and `SUPABASE_PROJECT_REF`.
 - Secrets: `VITE_SUPABASE_ANON_KEY`, `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `CLOUDFLARE_API_TOKEN`, and `CLOUDFLARE_ACCOUNT_ID`.
 - Frontend credentials must use the public anon key, never a service-role key.
-- The manual `Production Release` workflow only runs from `main`. It checks production migration drift, runs contracts and lint, builds and validates the Worker bundle, deploys it, then runs the production browser and SEO smoke suite.
+- A successful `Web CI` push run on `main` automatically starts `Production Release` for that exact commit. A manual `main` dispatch remains available as a fallback.
+- Automatic releases reuse the completed CI checks; manual fallback releases rerun read contracts and lint. Both paths check production migration drift, build and validate the Worker bundle, deploy it, then run the production browser and SEO smoke suite.
+- Before deployment, the release workflow confirms its commit is still the tip of `main`; stale queued releases are skipped instead of overwriting a newer deployment.
 - The release workflow does not apply migrations. Review and apply pending migrations separately before starting it; any remaining drift blocks deployment.
 - The Worker build uses `VITE_PUBLIC_DATA_PROVIDER=published`, `VITE_ENABLE_PUBLISHED_PROVIDER=true`, and `npm run build:cloudflare`.
 

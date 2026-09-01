@@ -107,6 +107,28 @@ test('reads the smaller bounded share catalog RPC', async () => {
   });
 });
 
+test('retries a transient SEO RPC server failure', async () => {
+  let attempts = 0;
+  const delays = [];
+  const rows = await fetchPublishedRows({
+    supabaseUrl: 'https://database.example',
+    anonKey: 'anon-key',
+    relation: 'races',
+    fetchImpl: async () => {
+      attempts += 1;
+      if (attempts === 1) return new Response(null, { status: 500 });
+      return new Response(JSON.stringify([{
+        items: [{ race_id: 'race-1', title: '測試選舉' }],
+      }]), { status: 200, headers: { 'content-type': 'application/json' } });
+    },
+    waitImpl: async (delay) => delays.push(delay),
+  });
+
+  assert.equal(attempts, 2);
+  assert.deepEqual(delays, [500]);
+  assert.deepEqual(rows, [{ race_id: 'race-1', title: '測試選舉' }]);
+});
+
 test('writes a lightweight manifest and one bounded file per SEO group', () => {
   const directory = mkdtempSync(join(tmpdir(), 'public-office-watch-seo-'));
   try {

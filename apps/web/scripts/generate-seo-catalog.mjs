@@ -9,6 +9,8 @@ const sitemapPageLimit = 45_000;
 const sitesFileSizeLimit = 25 * 1024 * 1024;
 const seoCatalogTargetFileSize = 2 * 1024 * 1024;
 const indexableRegionTypes = new Set(['country', 'municipality', 'county', 'city']);
+const maxFetchAttempts = 3;
+const retryDelayMs = 500;
 
 const sources = [
   {
@@ -355,6 +357,7 @@ export async function fetchPublishedRows({
   rpcName = 'seo_catalog_page',
   requestedPageSize = pageSize,
   fetchImpl = fetch,
+  waitImpl = (delay) => new Promise((resolvePromise) => setTimeout(resolvePromise, delay)),
 }) {
   const rows = [];
   const requestPageSize = Number.isInteger(requestedPageSize) && requestedPageSize > 0
@@ -363,20 +366,25 @@ export async function fetchPublishedRows({
 
   for (let offset = 0; ; offset += requestPageSize) {
     const url = new URL(`/rest/v1/rpc/${rpcName}`, supabaseUrl);
-    const response = await fetchImpl(url, {
-      method: 'POST',
-      headers: {
-        apikey: anonKey,
-        authorization: `Bearer ${anonKey}`,
-        'content-profile': 'published',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        p_dataset: relation,
-        p_offset: offset,
-        p_page_size: requestPageSize,
-      }),
-    });
+    let response;
+    for (let attempt = 1; attempt <= maxFetchAttempts; attempt += 1) {
+      response = await fetchImpl(url, {
+        method: 'POST',
+        headers: {
+          apikey: anonKey,
+          authorization: `Bearer ${anonKey}`,
+          'content-profile': 'published',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          p_dataset: relation,
+          p_offset: offset,
+          p_page_size: requestPageSize,
+        }),
+      });
+      if (response.ok || response.status < 500 || attempt === maxFetchAttempts) break;
+      await waitImpl(retryDelayMs * attempt);
+    }
     if (!response.ok) {
       throw new Error(`Published ${relation} SEO RPC failed (${response.status}).`);
     }

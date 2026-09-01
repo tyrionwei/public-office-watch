@@ -197,13 +197,12 @@ function electionEventPages(rows) {
     const year = getElectionYear(group[0]);
     const family = getElectionFamily(group[0]);
     const title = getElectionEventTitle(year, family, group);
-    const votingDate = cleanText(group[0].voting_date);
     return makePage(
       'events',
       `/elections/events/${encodePathSegment(key)}`,
       title,
       `查看${title}的選區、候選人、政黨表現與公開資料。`,
-      compactRecord({ '@type': 'Event', name: title, startDate: votingDate || undefined }),
+      compactRecord({ '@type': 'CollectionPage', name: title }),
     );
   }).filter(Boolean);
 }
@@ -217,7 +216,7 @@ function electionPage(row) {
     `/elections/${id}`,
     name,
     `查看${name}的候選人、選區、得票結果與公開資料來源。`,
-    compactRecord({ '@type': 'Event', name, startDate: cleanText(row.voting_date) || undefined }),
+    compactRecord({ '@type': 'CollectionPage', name }),
   );
 }
 
@@ -233,7 +232,7 @@ function racePage(row) {
     `/elections/races/${id}`,
     title,
     `查看${context ? `${context}的` : ''}候選人、政黨、得票結果與政見比較。`,
-    compactRecord({ '@type': 'Event', name: title, startDate: cleanText(row.voting_date) || undefined }),
+    compactRecord({ '@type': 'WebPage', name: title }),
   );
 }
 

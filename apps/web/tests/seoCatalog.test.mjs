@@ -48,11 +48,17 @@ test('creates deduplicated public entity metadata from published rows', () => {
     { personId: 'person/1', name: '王小明' },
     { personId: 'person-2', name: '李小華' },
   ]);
-  assert.equal(catalog.pages.find((page) => page.group === 'elections').structuredData['@type'], 'Event');
+  assert.equal(catalog.pages.find((page) => page.group === 'elections').structuredData['@type'], 'CollectionPage');
   const eventPage = catalog.pages.find((page) => page.group === 'events');
   assert.equal(eventPage.path, '/elections/events/2026-2026-11-28-local');
   assert.equal(eventPage.lastModified, undefined);
+  assert.equal(eventPage.structuredData['@type'], 'CollectionPage');
   assert.equal(catalog.pages.some((page) => page.path === '/regions/test-village'), false);
+  assert.equal(catalog.pages.find((page) => page.group === 'races').structuredData['@type'], 'WebPage');
+  assert.equal(
+    catalog.pages.some((page) => ['events', 'elections', 'races'].includes(page.group) && page.structuredData['@type'] === 'Event'),
+    false,
+  );
 });
 
 test('reads the bounded SEO RPC with the anon credential', async () => {

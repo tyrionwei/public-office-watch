@@ -40,14 +40,14 @@ const catalog = {
       path: '/elections/events/2026-11-28-local',
       title: '2026 地方公職人員選舉',
       description: '查看2026 地方公職人員選舉的選區、候選人、政黨表現與公開資料。',
-      structuredData: { '@context': 'https://schema.org', '@type': 'Event', name: '2026 地方公職人員選舉' },
+      structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: '2026 地方公職人員選舉' },
     },
     {
       group: 'elections',
       path: '/elections/election-1',
       title: '2026 地方選舉',
       description: '查看2026 地方選舉的候選人、選區、得票結果與公開資料來源。',
-      structuredData: { '@context': 'https://schema.org', '@type': 'Event', name: '2026 地方選舉' },
+      structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: '2026 地方選舉' },
     },
     {
       group: 'races',
@@ -58,7 +58,7 @@ const catalog = {
         { personId: 'person-1', name: '王小明' },
         { personId: 'person-2', name: '李小華' },
       ],
-      structuredData: { '@context': 'https://schema.org', '@type': 'Event', name: '臺北市市長選舉' },
+      structuredData: { '@context': 'https://schema.org', '@type': 'WebPage', name: '臺北市市長選舉' },
     },
   ],
 };

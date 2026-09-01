@@ -472,6 +472,11 @@ export function createPublishedPublicDataProvider(
       return partyData.companyContributionSummaries.filter((summary) => summary.party_id === partyId);
     },
 
+    loadPartyCompanyContributionCounts() {
+      return cached('party-company-counts', pageDataStaleTimeMs, () =>
+        bridge.loadPartyCompanyContributionCounts());
+    },
+
     async loadPartyCompanyContributionPage(
       partyId: string,
       page: number,

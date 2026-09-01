@@ -577,6 +577,11 @@ export type PublicPartyAnnualFinanceFiling = {
   updated_at: string;
 };
 
+export type PublicPartyCompanyContributionCount = {
+  party_id: string;
+  contribution_count: number;
+};
+
 export type PublicPartyCompanyContributionSummary = {
   party_id: string;
   company_id: string;

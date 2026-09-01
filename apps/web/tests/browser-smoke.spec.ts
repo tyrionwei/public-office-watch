@@ -278,6 +278,22 @@ test('detail routes use bounded page payloads with only reviewed supplemental re
   expect(apiRequests).toEqual(['rpc/region_page_for']);
 });
 
+test('race load failures remain errors instead of becoming not-found pages', async ({ page }) => {
+  await page.route('**/rest/v1/rpc/race_page_for', async (route) => {
+    await route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ message: 'Temporary upstream failure' }),
+    });
+  });
+
+  await page.goto('/elections/races/1ddcde35-f1ed-4e38-8652-ceb5e616f91a');
+
+  await expect(page.getByText('公開資料暫時無法載入，請稍後再試。')).toBeVisible();
+  await expect(page.getByRole('button', { name: '重新載入' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '找不到選區項目' })).toHaveCount(0);
+});
+
 test('public participation reads do not create an anonymous session', async ({ page }) => {
   let anonymousSignupCount = 0;
   const participationRequests: Array<{ name: string; body: Record<string, unknown> }> = [];
@@ -331,6 +347,27 @@ test('people page loads public people results', async ({ page }) => {
   await expect(profileLinks.first()).toBeVisible();
   expect(await profileLinks.count()).toBeGreaterThan(0);
   expect(candidateRequestCount).toBe(0);
+});
+
+
+test('parties overview loads contribution counts with one aggregate request', async ({ page }) => {
+  const contributionRequests: string[] = [];
+  page.on('request', (request) => {
+    const url = new URL(request.url());
+    if (url.pathname.includes('party_company_contribution')) {
+      contributionRequests.push(url.pathname);
+    }
+  });
+
+  await page.goto('/parties');
+  await expect(
+    page.getByRole('heading', { name: '政黨與政治獻金' }).nth(1),
+  ).toBeVisible();
+  await page.waitForLoadState('networkidle');
+
+  expect(contributionRequests).toEqual([
+    '/rest/v1/rpc/party_company_contribution_counts',
+  ]);
 });
 
 

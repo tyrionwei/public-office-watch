@@ -456,6 +456,17 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return mockPublicPartyCompanyContributionSummaries.filter((summary) => summary.party_id === partyId);
   },
 
+  async loadPartyCompanyContributionCounts() {
+    const counts = new Map<string, number>();
+    for (const summary of mockPublicPartyCompanyContributionSummaries) {
+      counts.set(summary.party_id, (counts.get(summary.party_id) ?? 0) + 1);
+    }
+    return Array.from(counts, ([party_id, contribution_count]) => ({
+      party_id,
+      contribution_count,
+    }));
+  },
+
   async loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number) {
     const rows = this.getPartyCompanyContributionSummaries(partyId)
       .slice()

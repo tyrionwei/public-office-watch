@@ -69,12 +69,15 @@ export function RacePage() {
     referendumRegionResults: [],
   });
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [comparisonProfiles, setComparisonProfiles] = useState<PublicPersonProfile[]>([]);
   const [comparisonLoading, setComparisonLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setLoadError(false);
     setDetail({
       race: null,
       election: null,
@@ -92,6 +95,7 @@ export function RacePage() {
         if (active) setDetail(nextDetail);
       })
       .catch((error: unknown) => {
+        if (active) setLoadError(true);
         if (import.meta.env.DEV) console.warn('Failed to load race detail', error);
       })
       .finally(() => {
@@ -101,7 +105,7 @@ export function RacePage() {
     return () => {
       active = false;
     };
-  }, [safeRaceId]);
+  }, [loadAttempt, safeRaceId]);
 
   const { race, election } = detail;
   const candidates = useMemo(
@@ -174,8 +178,26 @@ export function RacePage() {
   if (!race) {
     return (
       <AppShell>
-        <PixelFrame title={loading ? t('race.loadingTitle') : t('race.notFoundTitle')} action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('race.backYears')}</Link>}>
-          <p className="text-sm text-slate-300">{loading ? t('race.loadingBody') : t('race.notFoundBody')}</p>
+        <PixelFrame
+          title={loading || loadError ? t('race.loadingTitle') : t('race.notFoundTitle')}
+          action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('race.backYears')}</Link>}
+        >
+          {loadError ? (
+            <div className="space-y-3">
+              <p className="text-sm text-slate-300">{t('app.loadError')}</p>
+              <button
+                type="button"
+                className="pixel-button"
+                onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+              >
+                {t('app.retry')}
+              </button>
+            </div>
+          ) : (
+            <p className="text-sm text-slate-300">
+              {loading ? t('race.loadingBody') : t('race.notFoundBody')}
+            </p>
+          )}
         </PixelFrame>
       </AppShell>
     );

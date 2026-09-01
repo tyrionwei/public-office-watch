@@ -23,6 +23,7 @@ import type {
   PublicPersonListItem,
   PublicParty,
   PublicPartyAnnualFinanceFiling,
+  PublicPartyCompanyContributionCount,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPersonRole,
@@ -115,6 +116,7 @@ export type PublishedPublicDataBridge = Pick<
   loadRegionPageData(regionSlug: string): Promise<PublishedRegionPageData>;
   loadPartyDirectory(): Promise<PublicParty[]>;
   loadPartyData(): Promise<PublishedPartyData>;
+  loadPartyCompanyContributionCounts(): Promise<PublicPartyCompanyContributionCount[]>;
   loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number): Promise<{ items: PublicPartyCompanyContributionSummary[]; total: number }>;
 };
 
@@ -508,6 +510,10 @@ export function createPublishedPublicDataBridge(
 
     loadPartyDirectory() {
       return adapter.loadPartyDirectory();
+    },
+
+    loadPartyCompanyContributionCounts() {
+      return adapter.loadPartyCompanyContributionCounts();
     },
 
     async loadPartyCompanyContributionPage(partyId, page, pageSize) {

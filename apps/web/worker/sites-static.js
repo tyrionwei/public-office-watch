@@ -340,7 +340,15 @@ function injectDocumentMetadata(html, requestUrl, catalog = emptySeoCatalog, sit
     <meta name="twitter:image" content="${escapeAttribute(imageUrl)}" />
     <script id="public-office-watch-server-structured-data" type="application/ld+json">${structuredData}</script>`;
 
-  return stripManagedMetadata(html).replace('</head>', `${tags}\n  </head>`);
+  const fallback = '<main data-server-rendered-fallback="true">'
+    + `<p>${escapeAttribute(siteName)}</p>`
+    + `<h1>${escapeAttribute(metadata.title)}</h1>`
+    + `<p>${escapeAttribute(metadata.description)}</p>`
+    + '</main>';
+
+  return stripManagedMetadata(html)
+    .replace('</head>', `${tags}\n  </head>`)
+    .replace(/<div id=["']root["']>\s*<\/div>/i, `<div id="root">${fallback}</div>`);
 }
 
 function sitemapXml(origin, entries = staticSitemapPaths) {

@@ -92,6 +92,9 @@ TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION published.region_page_for(TEXT)
 TO anon, authenticated;
 
+GRANT EXECUTE ON FUNCTION published.party_company_contribution_counts()
+TO anon, authenticated;
+
 GRANT EXECUTE ON FUNCTION published.party_legal_statistics(TEXT)
 TO anon, authenticated;
 

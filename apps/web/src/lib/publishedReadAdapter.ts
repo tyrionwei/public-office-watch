@@ -6,6 +6,7 @@ import type {
   PublicCandidate,
   PublicParty,
   PublicPartyAnnualFinanceFiling,
+  PublicPartyCompanyContributionCount,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPartyLegalStatistics,
@@ -749,6 +750,7 @@ export type PublishedReadAdapter = {
   loadPartyCandidatePage(partyName: string, page: number, pageSize: number): Promise<PublishedPartyCandidatePage>;
   loadPartyData(): Promise<PublishedPartyDataRows>;
   loadPartyDirectory(): Promise<PublicParty[]>;
+  loadPartyCompanyContributionCounts(): Promise<PublicPartyCompanyContributionCount[]>;
   loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number): Promise<PublishedPartyCompanyContributionPage>;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
   loadPartyPlatformHistory(partyId: string): Promise<PublicPartyPlatformHistory[]>;
@@ -1272,6 +1274,18 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         .limit(PARTY_LIMIT + 1);
 
       return getBoundedRowsOrThrow(response, 'Published parties', PARTY_LIMIT);
+    },
+
+    async loadPartyCompanyContributionCounts() {
+      const response = await client
+        .schema('published')
+        .rpc<PublicPartyCompanyContributionCount>('party_company_contribution_counts', {});
+
+      return getBoundedRowsOrThrow(
+        response,
+        'Published party company contribution counts',
+        PARTY_LIMIT,
+      );
     },
 
     async loadPartyCompanyContributionPage(rawPartyId, page, pageSize) {

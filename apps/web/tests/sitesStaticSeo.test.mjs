@@ -97,6 +97,9 @@ test('injects exact catalog metadata and absolute social URLs', () => {
 
   assert.match(html, /<title>王小明｜公職資料觀測站<\/title>/);
   assert.match(html, /查看王小明的公職、黨籍、參選、政見與公開資料來源。/);
+  assert.match(html, /<div id="root"><main data-server-rendered-fallback="true">/);
+  assert.match(html, /<h1>王小明<\/h1>/);
+  assert.match(html, /<p>查看王小明的公職、黨籍、參選、政見與公開資料來源。<\/p>/);
   assert.match(html, /rel="canonical" href="https:\/\/pow4vote\.org\/people\/person-1"/);
   assert.match(html, /property="og:type" content="profile"/);
   assert.match(html, /property="og:image" content="https:\/\/pow4vote\.org\/og\.png"/);

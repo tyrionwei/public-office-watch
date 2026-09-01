@@ -12,6 +12,7 @@ import type {
   PublicNationalOfficeHolder,
   PublicParty,
   PublicPartyAnnualFinanceFiling,
+  PublicPartyCompanyContributionCount,
   PublicPartyCompanyContributionSummary,
   PublicPartyFinanceSummary,
   PublicPartyLegalStatistics,
@@ -176,6 +177,7 @@ export interface PublicDataProvider {
   getPartyAnnualFinanceFilings(partyId: string): PublicPartyAnnualFinanceFiling[];
   getPartyFinanceSummaries(partyId: string): PublicPartyFinanceSummary[];
   getPartyCompanyContributionSummaries(partyId: string): PublicPartyCompanyContributionSummary[];
+  loadPartyCompanyContributionCounts(): Promise<PublicPartyCompanyContributionCount[]>;
   loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number): Promise<PublicPartyCompanyContributionPage>;
   searchPublicRecords(query: string): Promise<PublicSearchResult[]>;
 }

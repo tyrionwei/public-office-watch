@@ -2298,7 +2298,7 @@ function getInitialLanguage(): Language {
   const stored = window.localStorage.getItem(storageKey);
   if (stored === 'zh-TW' || stored === 'en') return stored;
 
-  return window.navigator.language.toLowerCase().startsWith('en') ? 'en' : 'zh-TW';
+  return 'zh-TW';
 }
 
 function formatTranslation(template: string, values?: TranslationValues) {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useI18n } from '../i18n';
 import { createShareCardFile } from '../lib/shareImage';
@@ -59,6 +59,9 @@ export function ShareButton({
   const [imageLoading, setImageLoading] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [status, setStatus] = useState<ActionStatus>('idle');
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -97,11 +100,49 @@ export function ShareButton({
 
   useEffect(() => {
     if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : triggerRef.current;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ));
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const activeElement = document.activeElement;
+      if (event.shiftKey && (activeElement === first || !dialog.contains(activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (activeElement === last || !dialog.contains(activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus();
+    };
   }, [isOpen]);
 
   function openPreview() {
@@ -188,6 +229,7 @@ export function ShareButton({
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={openPreview}
         className={[
@@ -209,6 +251,7 @@ export function ShareButton({
             className="fixed inset-0 z-[79] bg-black/70"
           />
           <section
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={t('share.previewTitle')}
@@ -220,6 +263,7 @@ export function ShareButton({
                 <h2 className="mt-1 font-display text-xl text-white">{t('share.previewTitle')}</h2>
               </div>
               <button
+                ref={closeButtonRef}
                 type="button"
                 onClick={() => setIsOpen(false)}
                 className="grid h-8 w-8 place-items-center border border-line text-lg text-slate-300 hover:border-cyan-300/70 hover:text-white"

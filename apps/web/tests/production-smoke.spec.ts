@@ -1,13 +1,35 @@
 import { expect, test } from '@playwright/test';
 
 const expectedSupabaseOrigin = new URL(process.env.VITE_SUPABASE_URL ?? '').origin;
+const knownPersonPath = '/people/e5e573d6-00f5-47b1-8e3b-55480e25fced';
+const knownRacePath = '/elections/races/af72236d-da9b-42c4-bdb0-98f69c60b539';
+const staleFallbackText = [
+  'Loading public data...',
+  'Load failed',
+  'Region not found',
+  'Race not found',
+  '載入失敗',
+  '找不到此選舉',
+];
 
-test('production routes load real public data without Supabase failures', async ({ page }) => {
+test('production routes load real public data without application failures', async ({
+  page,
+  request,
+}) => {
   const apiRequests: string[] = [];
   const apiFailures: string[] = [];
+  const browserFailures: string[] = [];
   const requestStartedAt = new Map<string, number>();
   const homePageLatencies: number[] = [];
 
+  page.on('pageerror', (error) => {
+    browserFailures.push(`pageerror: ${error.message}`);
+  });
+  page.on('console', (message) => {
+    if (message.type() === 'error') {
+      browserFailures.push(`console: ${message.text()}`);
+    }
+  });
   page.on('request', (request) => {
     if (new URL(request.url()).origin === expectedSupabaseOrigin) {
       requestStartedAt.set(request.url(), Date.now());
@@ -33,12 +55,21 @@ test('production routes load real public data without Supabase failures', async 
     }
   });
 
+  const homeApiResponsePromise = page.waitForResponse((response) => {
+    const url = new URL(response.url());
+    return (
+      url.origin === expectedSupabaseOrigin &&
+      url.pathname.endsWith('/rpc/home_page_for')
+    );
+  });
   const homeResponse = await page.goto('/');
   expect(homeResponse).not.toBeNull();
   const homeHeaders = homeResponse?.headers() ?? {};
   expect(homeHeaders['content-security-policy']).toContain("default-src 'self'");
   expect(homeHeaders['strict-transport-security']).toBe('max-age=31536000');
   await expect(page.getByRole('heading', { name: '公職資料觀測站' })).toBeVisible();
+  const homeApiResponse = await homeApiResponsePromise;
+  expect(homeApiResponse.ok()).toBe(true);
 
   await page.goto('/regions/taipei-city');
   await expect(page.locator('main').first()).toContainText(/臺北市|台北市/);
@@ -70,9 +101,32 @@ test('production routes load real public data without Supabase failures', async 
   await expect(searchResults).toBeVisible();
   await expect(searchResults.getByText(/臺北|台北/).first()).toBeVisible();
 
+  for (const path of [knownPersonPath, knownRacePath]) {
+    const response = await request.get(path);
+    const html = await response.text();
+
+    expect(response.status()).toBe(200);
+    expect(html).toContain('data-server-rendered-fallback="true"');
+    for (const staleText of staleFallbackText) {
+      expect(html).not.toContain(staleText);
+    }
+  }
+
+  for (const path of [
+    '/people/00000000-0000-0000-0000-000000000000',
+    '/elections/races/00000000-0000-0000-0000-000000000000',
+  ]) {
+    const response = await request.get(path);
+    const html = await response.text();
+
+    expect(response.status()).toBe(404);
+    expect(html).toContain('<meta name="robots" content="noindex, nofollow">');
+  }
+
   await page.waitForTimeout(500);
   expect(apiRequests.length).toBeGreaterThan(0);
   expect(apiFailures).toEqual([]);
+  expect(browserFailures).toEqual([]);
   expect(homePageLatencies.length).toBeGreaterThan(0);
   expect(Math.max(...homePageLatencies)).toBeLessThan(1_000);
 });

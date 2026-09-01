@@ -19,6 +19,7 @@
     "check:data-boundary": "node scripts/check-public-data-boundary.mjs",
     "check:public-view-contracts": "node scripts/check-public-view-contracts.mjs",
     "check:published-exposure": "node scripts/check-published-exposure-boundary.mjs",
+    "check:production-migration-drift": "node scripts/check-production-migration-drift.mjs",
     "test:read-contracts": "node --test --experimental-strip-types tests/*.test.ts tests/*.test.mjs",
     "preflight:production-readiness": "node scripts/preflight-production-readiness.mjs",
     "prepare:tw-map:counties": "node scripts/prepare-taiwan-county-map.mjs",

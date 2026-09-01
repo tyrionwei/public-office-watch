@@ -8,15 +8,15 @@
 - `npm --prefix apps/web run dev` and `npm --prefix apps/web run test:browser` run the local environment guard first; invalid or legacy provider modes stop instead of silently showing mock data.
 - An explicit production environment override causes the local guard to fail.
 
-## Production Cloudflare Pages builds
+## Production Cloudflare Worker releases
 
-- Production values are managed by Cloudflare Pages. Do not copy them into `.env.local` or commit them.
-- `VITE_SUPABASE_URL` must be a non-local HTTPS URL.
+- Production values are stored in the GitHub `production` environment. Do not copy them into `.env.local` or commit them.
+- Variables: `VITE_SUPABASE_URL`, `VITE_TURNSTILE_SITE_KEY`, and `SUPABASE_PROJECT_REF`.
+- Secrets: `VITE_SUPABASE_ANON_KEY`, `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `CLOUDFLARE_API_TOKEN`, and `CLOUDFLARE_ACCOUNT_ID`.
 - Frontend credentials must use the public anon key, never a service-role key.
-- Use `VITE_PUBLIC_DATA_PROVIDER=published` and `VITE_ENABLE_PUBLISHED_PROVIDER=true`.
-- Set the Pages root directory to `apps/web`, build command to `npm run check:production-env && npm run build`, and output directory to `dist`.
-- A missing environment or a loopback Supabase URL stops the build.
-- The `_headers` file in `apps/web/public` is copied into the deployment output.
+- The manual `Production Release` workflow only runs from `main`. It checks production migration drift, runs contracts and lint, builds and validates the Worker bundle, deploys it, then runs the production browser and SEO smoke suite.
+- The release workflow does not apply migrations. Review and apply pending migrations separately before starting it; any remaining drift blocks deployment.
+- The Worker build uses `VITE_PUBLIC_DATA_PROVIDER=published`, `VITE_ENABLE_PUBLISHED_PROVIDER=true`, and `npm run build:cloudflare`.
 
 ## Participation proof v2 deployment order
 

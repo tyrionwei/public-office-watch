@@ -47,9 +47,16 @@ test('mock sharing covers native payload, LINE, image clipboard, and URL restora
   await expect(panel).toBeVisible();
   await panel.getByRole('button', { name: '分享', exact: true }).click();
 
+  const shareTrigger = panel.getByRole('button', { name: '分享', exact: true });
   const dialog = page.getByRole('dialog', { name: '分享預覽' });
+  const closeButton = dialog.getByRole('button', { name: '關閉', exact: true });
   const preview = dialog.getByRole('img', { name: '候選人比較分享預覽' });
+  await expect(dialog).toBeVisible();
+  await expect(closeButton).toBeFocused();
+  await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
   await expect(preview).toBeVisible();
+  await page.keyboard.press('Shift+Tab');
+  await expect(dialog.getByRole('button', { name: '下載圖片', exact: true })).toBeFocused();
   const cardContent = await preview.getAttribute('data-share-card-content');
   expect(cardContent).toContain(names[0]);
   expect(cardContent).toContain(names[1]);
@@ -76,6 +83,11 @@ test('mock sharing covers native payload, LINE, image clipboard, and URL restora
     window as Window & { __copiedTypes?: string[] }
   ).__copiedTypes ?? []);
   expect(copiedTypes).toContain('image/png');
+
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+  await expect(shareTrigger).toBeFocused();
 
   await page.goto(shareLink);
   const restoredChoices = page.getByRole('checkbox', { name: /^比較 /u });

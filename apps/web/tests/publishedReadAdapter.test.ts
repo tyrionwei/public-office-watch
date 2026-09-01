@@ -1030,6 +1030,27 @@ test('party finance data excludes company contribution details', async () => {
   ]);
 });
 
+test('party company contribution counts use one bounded aggregate RPC', async () => {
+  const counts = [
+    { party_id: 'party-1', contribution_count: 12 },
+    { party_id: 'party-2', contribution_count: 3 },
+  ];
+  const fake = createFakeClient({
+    'rpc:party_company_contribution_counts': {
+      data: counts,
+      error: null,
+      count: null,
+    },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadPartyCompanyContributionCounts(), counts);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['rpc', 'party_company_contribution_counts', {}],
+  ]);
+});
+
 test('party company contributions use server pagination and an exact total', async () => {
   const contribution = { party_id: 'party-1', company_id: 'company-1' };
   const fake = createFakeClient({

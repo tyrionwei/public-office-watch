@@ -27,17 +27,17 @@ export function PartiesPage() {
     void Promise.allSettled([
       publicDataProvider.loadPartyDirectory(),
       publicDataProvider.loadPartyFinanceData(),
-    ]).then(async () => {
+      publicDataProvider.loadPartyCompanyContributionCounts(),
+    ]).then((results) => {
       if (!active) return;
       setDataVersion((value) => value + 1);
-      const trackedParties = publicDataProvider.getParties().filter((party) =>
-        publicDataProvider.getPartyFinanceSummaries(party.party_id).length > 0);
-      const entries = await Promise.all(trackedParties.map(async (party) => {
-        const page = await publicDataProvider.loadPartyCompanyContributionPage(party.party_id, 1, 1)
-          .catch(() => ({ items: [], total: 0 }));
-        return [party.party_id, page.total] as const;
-      }));
-      if (active) setCompanyCounts(Object.fromEntries(entries));
+      const contributionResult = results[2];
+      const counts = contributionResult.status === 'fulfilled'
+        ? contributionResult.value
+        : [];
+      setCompanyCounts(Object.fromEntries(
+        counts.map((row) => [row.party_id, row.contribution_count]),
+      ));
     }).catch((error: unknown) => {
       if (import.meta.env.DEV) console.warn('Failed to load party overview', error);
     });

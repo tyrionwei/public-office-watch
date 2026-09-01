@@ -20,7 +20,7 @@ export default defineConfig({
     viewport: { width: 1440, height: 900 },
   },
   webServer: {
-    command: `npm exec -- vite --host 127.0.0.1 --port ${port} --strictPort`,
+    command: `npm run build && npm run preview -- --host 127.0.0.1 --port ${port} --strictPort`,
     env: {
       VITE_PUBLIC_DATA_PROVIDER: 'mock',
       VITE_SUPABASE_URL: '',

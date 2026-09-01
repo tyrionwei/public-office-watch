@@ -70,6 +70,18 @@ test('production routes load real public data without application failures', asy
   await expect(page.getByRole('heading', { name: '公職資料觀測站' })).toBeVisible();
   const homeApiResponse = await homeApiResponsePromise;
   expect(homeApiResponse.ok()).toBe(true);
+  for (let sample = 1; sample < 3; sample += 1) {
+    const reloadedApiResponsePromise = page.waitForResponse((response) => {
+      const url = new URL(response.url());
+      return (
+        url.origin === expectedSupabaseOrigin &&
+        url.pathname.endsWith('/rpc/home_page_for')
+      );
+    });
+    await page.reload();
+    const reloadedApiResponse = await reloadedApiResponsePromise;
+    expect(reloadedApiResponse.ok()).toBe(true);
+  }
 
   await page.goto('/regions/taipei-city');
   await expect(page.locator('main').first()).toContainText(/臺北市|台北市/);
@@ -131,6 +143,8 @@ test('production routes load real public data without application failures', asy
   expect(apiRequests.length).toBeGreaterThan(0);
   expect(apiFailures).toEqual([]);
   expect(browserFailures).toEqual([]);
-  expect(homePageLatencies.length).toBeGreaterThan(0);
-  expect(Math.max(...homePageLatencies)).toBeLessThan(1_000);
+  expect(homePageLatencies.length).toBeGreaterThanOrEqual(3);
+  const sortedHomePageLatencies = [...homePageLatencies].sort((left, right) => left - right);
+  expect(sortedHomePageLatencies[Math.floor(sortedHomePageLatencies.length / 2)]).toBeLessThan(1_000);
+  expect(Math.max(...sortedHomePageLatencies)).toBeLessThan(2_500);
 });

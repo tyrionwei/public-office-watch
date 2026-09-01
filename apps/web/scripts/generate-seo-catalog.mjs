@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { validateProductionEnvironment } from './environmentGuards.mjs';
 
 const pageSize = 1000;
+const sharePageSize = 100;
 const sitemapPageLimit = 45_000;
 const sitesFileSizeLimit = 25 * 1024 * 1024;
 const seoCatalogTargetFileSize = 2 * 1024 * 1024;
@@ -41,6 +42,11 @@ const sources = [
     columns: 'race_id,title,election_name,region_name,voting_date,status',
     orderColumn: 'race_id',
   },
+];
+
+const shareSources = [
+  { key: 'peopleShares', relation: 'people' },
+  { key: 'raceShares', relation: 'races' },
 ];
 
 const catalogGroupKeys = [...sources.map((source) => source.key), 'events'];
@@ -237,6 +243,31 @@ const pageMappers = {
   races: racePage,
 };
 
+function normalizeSharePolicies(value) {
+  if (!Array.isArray(value)) return undefined;
+  const policies = value
+    .filter((item) => item && typeof item.key === 'string' && typeof item.text === 'string')
+    .map((item) => ({ key: item.key.trim(), text: item.text.trim() }))
+    .filter((item) => item.key && item.key.length <= 260 && item.text)
+    .slice(0, 1000);
+  return policies.length ? policies : undefined;
+}
+
+function normalizeShareCandidates(value) {
+  if (!Array.isArray(value)) return undefined;
+  const seen = new Set();
+  const candidates = [];
+  for (const item of value) {
+    const personId = cleanText(item?.person_id);
+    const name = cleanText(item?.name);
+    if (!personId || !name || seen.has(personId)) continue;
+    seen.add(personId);
+    candidates.push({ personId, name });
+    if (candidates.length === 100) break;
+  }
+  return candidates.length ? candidates : undefined;
+}
+
 export function createSeoCatalog(datasets, generatedAt = new Date().toISOString()) {
   const pageByPath = new Map();
 
@@ -249,6 +280,17 @@ export function createSeoCatalog(datasets, generatedAt = new Date().toISOString(
   }
   for (const page of electionEventPages(Array.isArray(datasets.elections) ? datasets.elections : [])) {
     if (!pageByPath.has(page.path)) pageByPath.set(page.path, page);
+  }
+
+  for (const row of Array.isArray(datasets.peopleShares) ? datasets.peopleShares : []) {
+    const page = pageByPath.get(`/people/${encodePathSegment(row.person_id)}`);
+    const sharePolicies = normalizeSharePolicies(row.policies);
+    if (page && sharePolicies) page.sharePolicies = sharePolicies;
+  }
+  for (const row of Array.isArray(datasets.raceShares) ? datasets.raceShares : []) {
+    const page = pageByPath.get(`/elections/races/${encodePathSegment(row.race_id)}`);
+    const shareCandidates = normalizeShareCandidates(row.candidates);
+    if (page && shareCandidates) page.shareCandidates = shareCandidates;
   }
 
   const pages = Array.from(pageByPath.values()).sort((left, right) => left.path.localeCompare(right.path, 'zh-TW'));
@@ -310,12 +352,17 @@ export async function fetchPublishedRows({
   supabaseUrl,
   anonKey,
   relation,
+  rpcName = 'seo_catalog_page',
+  requestedPageSize = pageSize,
   fetchImpl = fetch,
 }) {
   const rows = [];
+  const requestPageSize = Number.isInteger(requestedPageSize) && requestedPageSize > 0
+    ? requestedPageSize
+    : pageSize;
 
-  for (let offset = 0; ; offset += pageSize) {
-    const url = new URL('/rest/v1/rpc/seo_catalog_page', supabaseUrl);
+  for (let offset = 0; ; offset += requestPageSize) {
+    const url = new URL(`/rest/v1/rpc/${rpcName}`, supabaseUrl);
     const response = await fetchImpl(url, {
       method: 'POST',
       headers: {
@@ -327,7 +374,7 @@ export async function fetchPublishedRows({
       body: JSON.stringify({
         p_dataset: relation,
         p_offset: offset,
-        p_page_size: pageSize,
+        p_page_size: requestPageSize,
       }),
     });
     if (!response.ok) {
@@ -340,7 +387,7 @@ export async function fetchPublishedRows({
       throw new Error(`Published ${relation} SEO RPC returned invalid data.`);
     }
     rows.push(...page);
-    if (page.length < pageSize) return rows;
+    if (page.length < requestPageSize) return rows;
   }
 }
 async function main() {
@@ -352,15 +399,24 @@ async function main() {
   const supabaseUrl = process.env.VITE_SUPABASE_URL.trim();
   const anonKey = process.env.VITE_SUPABASE_ANON_KEY.trim();
   const outputPath = resolve(process.argv[2] || 'dist/client/seo-catalog.json');
-  const results = await Promise.all(sources.map((source) => fetchPublishedRows({
-    supabaseUrl,
-    anonKey,
-    relation: source.relation,
-    columns: source.columns,
-    orderColumn: source.orderColumn,
-    filters: source.filters,
-  })));
-  const datasets = Object.fromEntries(sources.map((source, index) => [source.key, results[index]]));
+  const [results, shareResults] = await Promise.all([
+    Promise.all(sources.map((source) => fetchPublishedRows({
+      supabaseUrl,
+      anonKey,
+      relation: source.relation,
+    }))),
+    Promise.all(shareSources.map((source) => fetchPublishedRows({
+      supabaseUrl,
+      anonKey,
+      relation: source.relation,
+      rpcName: 'seo_share_catalog_page',
+      requestedPageSize: sharePageSize,
+    }))),
+  ]);
+  const datasets = {
+    ...Object.fromEntries(sources.map((source, index) => [source.key, results[index]])),
+    ...Object.fromEntries(shareSources.map((source, index) => [source.key, shareResults[index]])),
+  };
   const catalog = createSeoCatalog(datasets);
 
   writeSeoCatalogFiles(catalog, outputPath);

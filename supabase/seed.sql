@@ -86,6 +86,9 @@ TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION published.seo_catalog_page(TEXT, INTEGER, INTEGER)
 TO anon, authenticated;
 
+GRANT EXECUTE ON FUNCTION published.seo_share_catalog_page(TEXT, INTEGER, INTEGER)
+TO anon, authenticated;
+
 GRANT EXECUTE ON FUNCTION published.region_page_for(TEXT)
 TO anon, authenticated;
 

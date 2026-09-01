@@ -25,9 +25,11 @@
     "check:local-test-env": "node scripts/check-environment.mjs local",
     "check:production-env": "node scripts/check-environment.mjs production",
     "test:browser": "npm run check:local-test-env && playwright test",
-    "test:browser:production": "node scripts/check-environment.mjs production-smoke && playwright test --config=playwright.production.config.ts"
+    "test:browser:production": "node scripts/check-environment.mjs production-smoke && playwright test --config=playwright.production.config.ts",
+    "test:browser:ci": "playwright test --config=playwright.ci.config.ts"
   },
   "dependencies": {
+    "@resvg/resvg-wasm": "2.6.2",
     "@supabase/supabase-js": "^2.105.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

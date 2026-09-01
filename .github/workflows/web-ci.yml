@@ -43,6 +43,12 @@ jobs:
       - name: Test browser read contracts
         run: npm run test:read-contracts
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Test sharing browser flows
+        run: npm run test:browser:ci
+
       - name: Check published exposure boundary
         run: npm run check:published-exposure
 

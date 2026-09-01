@@ -163,13 +163,18 @@ test('policy share preview keeps content, text, link, and image actions reliable
       }>;
     }).__shared ?? []
   ));
-  expect(shares[0]?.text).toContain(sharedUrl.toString());
+  expect(shares[0]?.text).toBe(await textArea.inputValue());
+  expect(shares[0]?.text).not.toContain(sharedUrl.toString());
   expect(shares[0]?.url).toBe(sharedUrl.toString());
   expect(shares[0]?.files).toHaveLength(0);
   expect(shares[1]?.files).toEqual([
     expect.objectContaining({ name: 'policy.png', type: 'image/png' }),
   ]);
   expect(shares[1]?.files[0]?.size ?? 0).toBeGreaterThan(0);
+
+  await page.goto(sharedUrl.toString());
+  const restoredPromise = page.locator(sharedUrl.hash);
+  await expect(restoredPromise).toContainText(promiseText);
 });
 
 test('mobile platform choices form a two-by-two grid without horizontal overflow', async ({ page }) => {

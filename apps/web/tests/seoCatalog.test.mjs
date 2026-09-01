@@ -24,12 +24,30 @@ test('creates deduplicated public entity metadata from published rows', () => {
     ],
     elections: [{ election_id: 'election-1', name: '2026 地方選舉', year: 2026, election_type: 'local', voting_date: '2026-11-28' }],
     races: [{ race_id: 'race-1', title: '臺北市長', election_name: '2026 地方選舉', region_name: '臺北市' }],
+    peopleShares: [{
+      person_id: 'person/1',
+      policies: [{ key: 'claim-1:static-1', text: '增加公共托育據點。' }],
+    }],
+    raceShares: [{
+      race_id: 'race-1',
+      candidates: [
+        { person_id: 'person/1', name: '王小明' },
+        { person_id: 'person-2', name: '李小華' },
+      ],
+    }],
   }, '2026-08-11T00:00:00.000Z');
 
   assert.equal(catalog.version, 1);
   assert.equal(catalog.pages.length, 6);
   assert.equal(catalog.pages.find((page) => page.group === 'people').path, '/people/person%2F1');
   assert.match(catalog.pages.find((page) => page.group === 'people').description, /測試黨、市議員/);
+  assert.deepEqual(catalog.pages.find((page) => page.group === 'people').sharePolicies, [
+    { key: 'claim-1:static-1', text: '增加公共托育據點。' },
+  ]);
+  assert.deepEqual(catalog.pages.find((page) => page.group === 'races').shareCandidates, [
+    { personId: 'person/1', name: '王小明' },
+    { personId: 'person-2', name: '李小華' },
+  ]);
   assert.equal(catalog.pages.find((page) => page.group === 'elections').structuredData['@type'], 'Event');
   const eventPage = catalog.pages.find((page) => page.group === 'events');
   assert.equal(eventPage.path, '/elections/events/2026-2026-11-28-local');
@@ -61,6 +79,31 @@ test('reads the bounded SEO RPC with the anon credential', async () => {
     p_dataset: 'parties',
     p_offset: 0,
     p_page_size: 1000,
+  });
+});
+
+test('reads the smaller bounded share catalog RPC', async () => {
+  const requests = [];
+  const rows = await fetchPublishedRows({
+    supabaseUrl: 'https://database.example',
+    anonKey: 'anon-key',
+    relation: 'people',
+    rpcName: 'seo_share_catalog_page',
+    requestedPageSize: 100,
+    fetchImpl: async (url, options) => {
+      requests.push({ url: url.toString(), options });
+      return new Response(JSON.stringify([{
+        items: [{ person_id: 'person-1', policies: [] }],
+      }]), { status: 200, headers: { 'content-type': 'application/json' } });
+    },
+  });
+
+  assert.equal(rows.length, 1);
+  assert.match(requests[0].url, /rest\/v1\/rpc\/seo_share_catalog_page/);
+  assert.deepEqual(JSON.parse(requests[0].options.body), {
+    p_dataset: 'people',
+    p_offset: 0,
+    p_page_size: 100,
   });
 });
 

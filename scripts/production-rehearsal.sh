@@ -179,6 +179,7 @@ copy_runtime_data() {
   copy_table parties 'is_public = TRUE'
   copy_table people
   copy_table candidates
+  copy_table party_list_race_results 'is_public = TRUE'
   copy_table companies 'is_public = TRUE'
   # The publication layer needs the merge graph, not its private review evidence.
   copy_table person_merge_decisions TRUE \

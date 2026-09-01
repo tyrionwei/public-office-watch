@@ -1,4 +1,5 @@
 import { handleParticipationRequest } from './participation.ts';
+import { renderShareCardPng, shareCardForUrl, shareCardSvg } from './share-image.js';
 
 const siteName = '公職資料觀測站';
 const englishSiteName = 'Public Office Watch';
@@ -236,7 +237,13 @@ function isSafeShareIdentifier(value) {
     && /^[A-Za-z0-9._-]+$/.test(value);
 }
 
-function documentShareContext(url, pathname, metadata) {
+function dynamicShareImagePath(params, catalog) {
+  if (catalog?.generatedAt) params.set('v', catalog.generatedAt);
+  const imagePath = `/og/share.png?${params}`;
+  return shareCardForUrl(new URL(imagePath, canonicalSiteOrigin), catalog) ? imagePath : null;
+}
+
+function documentShareContext(url, pathname, metadata, catalog) {
   const defaultContext = {
     metadata,
     canonicalPath: pathname,
@@ -247,15 +254,20 @@ function documentShareContext(url, pathname, metadata) {
   if (/^\/people\/[^/]+$/.test(pathname) && policy) {
     const parts = policy.split(':');
     if (parts.length === 2 && parts.every(isSafeShareIdentifier)) {
-      const params = new URLSearchParams({ policy });
+      const canonicalParams = new URLSearchParams({ policy });
+      const imagePath = dynamicShareImagePath(
+        new URLSearchParams({ path: pathname, policy }),
+        catalog,
+      );
+      if (!imagePath) return defaultContext;
       return {
         metadata: {
           ...metadata,
           title: `${metadata.title}的政見`,
           description: `查看${metadata.title}的這項政見、資料來源與履行情況。`,
         },
-        canonicalPath: `${pathname}?${params}`,
-        imagePath: '/og-policy.png',
+        canonicalPath: `${pathname}?${canonicalParams}`,
+        imagePath,
         imageAlt: `政見分享｜${siteName}`,
       };
     }
@@ -265,15 +277,21 @@ function documentShareContext(url, pathname, metadata) {
   if (/^\/elections\/races\/[^/]+$/.test(pathname) && comparison) {
     const personIds = Array.from(new Set(comparison.split(',').filter(isSafeShareIdentifier)));
     if (personIds.length >= 2 && personIds.length <= 4) {
-      const params = new URLSearchParams({ compare: personIds.join(',') });
+      const normalizedComparison = personIds.join(',');
+      const canonicalParams = new URLSearchParams({ compare: normalizedComparison });
+      const imagePath = dynamicShareImagePath(
+        new URLSearchParams({ path: pathname, compare: normalizedComparison }),
+        catalog,
+      );
+      if (!imagePath) return defaultContext;
       return {
         metadata: {
           ...metadata,
           title: `${metadata.title}候選人比較`,
           description: `比較${metadata.title}候選人的經歷、政見與公開資料。`,
         },
-        canonicalPath: `${pathname}?${params}`,
-        imagePath: '/og-comparison.png',
+        canonicalPath: `${pathname}?${canonicalParams}`,
+        imagePath,
         imageAlt: `候選人比較｜${siteName}`,
       };
     }
@@ -286,7 +304,7 @@ function injectDocumentMetadata(html, requestUrl, catalog = emptySeoCatalog, sit
   const url = new URL(requestUrl);
   const pathname = url.pathname.replace(/\/$/, '') || '/';
   const baseMetadata = documentMetadata(pathname, catalog);
-  const shareContext = documentShareContext(url, pathname, baseMetadata);
+  const shareContext = documentShareContext(url, pathname, baseMetadata, catalog);
   const metadata = shareContext.metadata;
   const canonicalUrl = new URL(shareContext.canonicalPath, siteOrigin).toString();
   const imageUrl = new URL(shareContext.imagePath, siteOrigin).toString();
@@ -369,13 +387,46 @@ function textResponse(body, contentType) {
 }
 
 const worker = {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const isGetOrHead = request.method === 'GET' || request.method === 'HEAD';
     const responseBody = (body) => (request.method === 'HEAD' ? null : body);
 
     if (url.pathname.startsWith('/api/participation/')) {
       return addSecurityHeaders(await handleParticipationRequest(request, env), url.pathname);
+    }
+
+    if (isGetOrHead && url.pathname === '/og/share.png') {
+      const targetPath = url.searchParams.get('path') ?? '';
+      const group = catalogGroupForPathname(targetPath);
+      if (!['people', 'races'].includes(group)) {
+        return addSecurityHeaders(new Response('Not found', { status: 404 }), url.pathname);
+      }
+      const catalog = await loadSeoCatalogGroup(env, url.origin, group, targetPath);
+      const card = shareCardForUrl(url, catalog);
+      if (!card) {
+        return addSecurityHeaders(new Response('Not found', { status: 404 }), url.pathname);
+      }
+      const headers = {
+        'cache-control': 'public, max-age=31536000, immutable',
+        'content-type': 'image/png',
+      };
+      if (request.method === 'HEAD') {
+        return addSecurityHeaders(new Response(null, { headers }), url.pathname);
+      }
+
+      const cache = globalThis.caches?.default;
+      const cachedResponse = cache ? await cache.match(request) : null;
+      if (cachedResponse) return addSecurityHeaders(cachedResponse, url.pathname);
+
+      try {
+        const png = await renderShareCardPng(card, env, url.origin);
+        const response = addSecurityHeaders(new Response(png, { headers }), url.pathname);
+        if (cache && ctx?.waitUntil) ctx.waitUntil(cache.put(request, response.clone()));
+        return response;
+      } catch {
+        return addSecurityHeaders(new Response('Preview image unavailable', { status: 500 }), url.pathname);
+      }
     }
 
     if (isGetOrHead && url.pathname === '/robots.txt') {
@@ -424,6 +475,8 @@ export {
   documentResponseStatus,
   injectDocumentMetadata,
   robotsText,
+  shareCardForUrl,
+  shareCardSvg,
   sitemapIndexXml,
   sitemapXml,
 };

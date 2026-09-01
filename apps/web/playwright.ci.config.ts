@@ -1,0 +1,33 @@
+import { defineConfig } from '@playwright/test';
+
+const port = 4173;
+const baseURL = `http://127.0.0.1:${port}`;
+
+export default defineConfig({
+  testDir: './tests',
+  testMatch: 'sharingCi.pw.ts',
+  timeout: 30_000,
+  expect: {
+    timeout: 5_000,
+  },
+  workers: 1,
+  use: {
+    baseURL,
+    headless: true,
+    locale: 'zh-TW',
+    screenshot: 'only-on-failure',
+    trace: 'retain-on-failure',
+    viewport: { width: 1440, height: 900 },
+  },
+  webServer: {
+    command: `npm exec -- vite --host 127.0.0.1 --port ${port} --strictPort`,
+    env: {
+      VITE_PUBLIC_DATA_PROVIDER: 'mock',
+      VITE_SUPABASE_URL: '',
+      VITE_SUPABASE_ANON_KEY: '',
+    },
+    url: baseURL,
+    reuseExistingServer: false,
+    timeout: 120_000,
+  },
+});

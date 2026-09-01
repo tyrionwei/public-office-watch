@@ -7,6 +7,8 @@ import worker, {
   documentResponseStatus,
   injectDocumentMetadata,
   robotsText,
+  shareCardForUrl,
+  shareCardSvg,
   sitemapIndexXml,
   sitemapXml,
 } from '../worker/sites-static.js';
@@ -30,6 +32,7 @@ const catalog = {
       title: '王小明',
       description: '查看王小明的公職、黨籍、參選、政見與公開資料來源。',
       lastModified: '2026-08-10T00:00:00.000Z',
+      sharePolicies: [{ key: 'claim-1:item-1', text: '增設公共托育據點，降低家庭照顧負擔。' }],
       structuredData: { '@context': 'https://schema.org', '@type': 'Person', name: '王小明' },
     },
     {
@@ -51,6 +54,10 @@ const catalog = {
       path: '/elections/races/race-1',
       title: '臺北市市長選舉',
       description: '查看臺北市市長選舉的候選人、政黨、得票結果與政見比較。',
+      shareCandidates: [
+        { personId: 'person-1', name: '王小明' },
+        { personId: 'person-2', name: '李小華' },
+      ],
       structuredData: { '@context': 'https://schema.org', '@type': 'Event', name: '臺北市市長選舉' },
     },
   ],
@@ -111,10 +118,43 @@ test('injects policy and candidate-comparison share previews from exact share UR
 
   assert.match(policyHtml, /<title>王小明的政見｜公職資料觀測站<\/title>/);
   assert.match(policyHtml, /rel="canonical" href="https:\/\/pow4vote\.org\/people\/person-1\?policy=claim-1%3Aitem-1"/);
-  assert.match(policyHtml, /property="og:image" content="https:\/\/pow4vote\.org\/og-policy\.png"/);
+  assert.match(policyHtml, /property="og:image" content="https:\/\/pow4vote\.org\/og\/share\.png\?path=%2Fpeople%2Fperson-1&amp;policy=claim-1%3Aitem-1&amp;v=2026-08-11T00%3A00%3A00\.000Z"/);
   assert.match(comparisonHtml, /<title>臺北市市長選舉候選人比較｜公職資料觀測站<\/title>/);
   assert.match(comparisonHtml, /rel="canonical" href="https:\/\/pow4vote\.org\/elections\/races\/race-1\?compare=person-1%2Cperson-2"/);
-  assert.match(comparisonHtml, /property="og:image" content="https:\/\/pow4vote\.org\/og-comparison\.png"/);
+  assert.match(comparisonHtml, /property="og:image" content="https:\/\/pow4vote\.org\/og\/share\.png\?path=%2Felections%2Fraces%2Frace-1&amp;compare=person-1%2Cperson-2&amp;v=2026-08-11T00%3A00%3A00\.000Z"/);
+});
+
+test('resolves only published catalog content into compact share cards', () => {
+  const policy = shareCardForUrl(new URL(
+    'https://pow4vote.org/og/share.png?path=%2Fpeople%2Fperson-1&policy=claim-1%3Aitem-1',
+  ), catalog);
+  const comparison = shareCardForUrl(new URL(
+    'https://pow4vote.org/og/share.png?path=%2Felections%2Fraces%2Frace-1&compare=person-2%2Cperson-1',
+  ), catalog);
+
+  assert.deepEqual(policy, {
+    kind: 'policy',
+    eyebrow: '單一政見',
+    title: '王小明',
+    body: '增設公共托育據點，降低家庭照顧負擔。',
+  });
+  assert.deepEqual(comparison, {
+    kind: 'comparison',
+    eyebrow: '候選人比較',
+    title: '臺北市市長選舉',
+    body: '李小華、王小明',
+  });
+  assert.equal(shareCardForUrl(new URL(
+    'https://pow4vote.org/og/share.png?path=%2Fpeople%2Fperson-1&policy=claim-1%3Aforged',
+  ), catalog), null);
+
+  const svg = shareCardSvg(policy);
+  assert.match(svg, /單一政見/);
+  assert.match(svg, /王小明/);
+  assert.match(svg, /增設公共托育據點/);
+  assert.match(svg, /y="276" class="title"/);
+  assert.match(svg, /y="390" class="body"/);
+  assert.doesNotMatch(svg, /<script/iu);
 });
 
 test('covers election detail routes and marks private or unknown routes as noindex', () => {

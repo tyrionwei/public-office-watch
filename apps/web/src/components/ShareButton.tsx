@@ -149,8 +149,7 @@ export function ShareButton({
     }
 
     try {
-      const textWithUrl = shareClipboardText(editableText, url);
-      await navigator.share({ title, text: textWithUrl, url });
+      await navigator.share({ title, text: editableText, url });
     } catch (error: unknown) {
       if (!isAbortError(error)) setStatus('error');
     }

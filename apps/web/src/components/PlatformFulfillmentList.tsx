@@ -61,11 +61,13 @@ function PolicyShareButton({
   itemKey,
   context,
   content,
+  className,
 }: {
   targetId: string;
   itemKey: string;
   context: PolicyShareContext;
   content: string;
+  className?: string;
 }) {
   const { t } = useI18n();
   const url = buildPolicyShareUrl(
@@ -83,6 +85,7 @@ function PolicyShareButton({
       imageBody={content}
       imageAlt={t('share.policyPreviewAlt')}
       imageFileName="policy.png"
+      className={className}
     />
   );
 }
@@ -538,14 +541,18 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
                 ? 'grid gap-2 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start'
                 : ''}
               >
-                <div className="flex min-w-0 items-start justify-between gap-3">
-                  <p className="min-w-0 leading-6" data-testid="platform-promise">{item.promiseText}</p>
+                <div className={votingIsOpen
+                  ? 'flex min-w-0 items-start justify-between gap-3'
+                  : 'grid min-w-0 gap-2'}
+                >
+                  <p className="min-w-0 flex-1 leading-6" data-testid="platform-promise">{item.promiseText}</p>
                   {shareContext ? (
                     <PolicyShareButton
                       targetId={targetId}
                       itemKey={item.itemKey}
                       context={shareContext}
                       content={item.promiseText}
+                      className={votingIsOpen ? undefined : 'justify-self-end'}
                     />
                   ) : null}
                 </div>

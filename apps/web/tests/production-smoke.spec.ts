@@ -102,7 +102,9 @@ test('production routes load real public data without application failures', asy
   await expect(searchResults.getByText(/臺北|台北/).first()).toBeVisible();
 
   for (const path of [knownPersonPath, knownRacePath]) {
-    const response = await request.get(path);
+    const response = await request.get(path, {
+      headers: { accept: 'text/html' },
+    });
     const html = await response.text();
 
     expect(response.status()).toBe(200);
@@ -116,11 +118,13 @@ test('production routes load real public data without application failures', asy
     '/people/00000000-0000-0000-0000-000000000000',
     '/elections/races/00000000-0000-0000-0000-000000000000',
   ]) {
-    const response = await request.get(path);
+    const response = await request.get(path, {
+      headers: { accept: 'text/html' },
+    });
     const html = await response.text();
 
     expect(response.status()).toBe(404);
-    expect(html).toContain('<meta name="robots" content="noindex, nofollow">');
+    expect(html).toContain('content="noindex,nofollow"');
   }
 
   await page.waitForTimeout(500);

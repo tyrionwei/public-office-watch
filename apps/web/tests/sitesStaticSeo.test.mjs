@@ -201,6 +201,10 @@ test('forces private cache and crawler headers on internal routes', () => {
     publicResponse.headers.get('content-security-policy') ?? '',
     /connect-src 'self' https:\/\/\*\.supabase\.co wss:\/\/\*\.supabase\.co/u,
   );
+  assert.match(
+    publicResponse.headers.get('content-security-policy') ?? '',
+    /script-src[^;]*https:\/\/static\.cloudflareinsights\.com/u,
+  );
   assert.equal(publicResponse.headers.get('strict-transport-security'), 'max-age=31536000');
   assert.equal(publicResponse.headers.get('x-permitted-cross-domain-policies'), 'none');
 });

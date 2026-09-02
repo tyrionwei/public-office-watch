@@ -119,6 +119,7 @@ test('drops articles outside the lookback window or without event terms', () => 
 });
 
 test('rejects longer-name and commentator-context false positives', () => {
+  assert.equal(directEventMatch('王小明完成登記參選市議員', '王小明', ['登記參選', '完成登記'], 'candidacy_status'), true);
   assert.equal(directEventMatch('李政軒突請辭', '李政', ['請辭'], 'office_status'), false);
   assert.equal(directEventMatch('北市發言人才請辭 馬郁雯批評市府', '馬郁雯', ['請辭'], 'office_status'), false);
   assert.equal(directEventMatch('詹江村嗆聲：知廉恥就退選', '詹江村', ['退選'], 'candidacy_status'), false);

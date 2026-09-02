@@ -378,6 +378,23 @@ function pickField(row, candidates) {
   return '';
 }
 
+function describeFetchError(error) {
+  const descriptions = [];
+  const seen = new Set();
+  let current = error;
+
+  while (current && !seen.has(current)) {
+    seen.add(current);
+    const code = typeof current.code === 'string' && current.code ? `[${current.code}]` : '';
+    const message = current instanceof Error ? current.message : String(current);
+    const description = [code, message].filter(Boolean).join(' ');
+    if (description && !descriptions.includes(description)) descriptions.push(description);
+    current = current.cause;
+  }
+
+  return descriptions.join(': ') || 'Unknown error';
+}
+
 async function fetchText(url) {
   const response = await fetch(url, { signal: AbortSignal.timeout(30000) });
 
@@ -398,6 +415,23 @@ async function fetchText(url) {
   }
 
   return utf8;
+}
+
+function summarizeLiveSourceHealth(sources) {
+  const degradedSources = sources
+    .filter(({ result }) => result?.status === 'fallback' || result?.status === 'failed')
+    .map(({ name, result }) => ({
+      name,
+      status: result.status,
+      error: result.error ?? null,
+    }));
+
+  return {
+    status: degradedSources.length > 0 ? 'degraded' : 'ok',
+    needsAttention: degradedSources.length > 0,
+    degradedSourceCount: degradedSources.length,
+    degradedSources,
+  };
 }
 
 async function fetchBytes(url) {
@@ -1949,6 +1983,26 @@ async function enrichSeedWithHistoricalCecSourcePeople(seed, args) {
   }
 }
 
+function buildPartyRegistryProfile(row, name) {
+  const known = knownPartyProfiles[name] ?? {};
+  return {
+    externalId: `moi-party-${hashId(name)}`,
+    name,
+    shortName: known.shortName ?? null,
+    slug: slugifyPartyName(name),
+    themeKey: known.themeKey ?? 'unknown',
+    officialSiteUrl: known.officialSiteUrl ?? null,
+    registryNo: pickField(row, ['政黨編號', '編號', 'Political_party_no', 'registry_no', 'party_no']),
+    foundedDateText: pickField(row, ['成立日期', 'Date_of_establishment', 'founded_date']),
+    filedDateText: pickField(row, ['備案日期', 'Date_of_approval', 'filed_date', 'registration_date']),
+    headquartersAddress: pickField(row, ['主事務所地址', '地址', 'Main_office_address', 'headquarters_address']),
+    contactPhone: pickField(row, ['通訊電話', '電話', 'Tel', 'contact_phone']),
+    chairpersonName: pickField(row, ['負責人', '主任委員', '黨主席', 'Political_party_leader', 'chairperson', 'leader']),
+    status: 'active',
+    sourceId: 'moi-party-registry',
+  };
+}
+
 async function enrichSeedWithLivePartyRegistry(seed, args) {
   const registrySource = seed.sources.find((source) => source.id === 'moi-party-registry');
 
@@ -1970,7 +2024,7 @@ async function enrichSeedWithLivePartyRegistry(seed, args) {
     const parties = rows
       .map((row) => ({
         row,
-        name: pickField(row, ['政黨名稱', '名稱', '黨名', 'political_party_name']),
+        name: pickField(row, ['政黨名稱', '名稱', '黨名', 'Political_party_name', 'political_party_name']),
       }))
       .filter(({ name }) => {
         if (!name || seenNames.has(name) || !relevantPartyNames.has(name)) {
@@ -1980,25 +2034,7 @@ async function enrichSeedWithLivePartyRegistry(seed, args) {
         seenNames.add(name);
         return true;
       })
-      .map(({ row, name }) => {
-        const known = knownPartyProfiles[name] ?? {};
-        return {
-          externalId: `moi-party-${hashId(name)}`,
-          name,
-          shortName: known.shortName ?? null,
-          slug: slugifyPartyName(name),
-          themeKey: known.themeKey ?? 'unknown',
-          officialSiteUrl: known.officialSiteUrl ?? null,
-          registryNo: pickField(row, ['政黨編號', '編號', 'registry_no', 'party_no']),
-          foundedDateText: pickField(row, ['成立日期', 'founded_date']),
-          filedDateText: pickField(row, ['備案日期', 'filed_date', 'registration_date']),
-          headquartersAddress: pickField(row, ['主事務所地址', '地址', 'headquarters_address']),
-          contactPhone: pickField(row, ['通訊電話', '電話', 'contact_phone']),
-          chairpersonName: pickField(row, ['負責人', '主任委員', '黨主席', 'chairperson', 'leader']),
-          status: 'active',
-          sourceId: 'moi-party-registry',
-        };
-      });
+      .map(({ row, name }) => buildPartyRegistryProfile(row, name));
 
     if (parties.length === 0) {
       throw new Error('CSV parsed successfully but no party names were found.');
@@ -2016,7 +2052,7 @@ async function enrichSeedWithLivePartyRegistry(seed, args) {
       },
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
+    const message = describeFetchError(error);
     return {
       seed,
       livePartyRegistry: {
@@ -2024,6 +2060,7 @@ async function enrichSeedWithLivePartyRegistry(seed, args) {
         count: seed.parties.length,
         url: registrySource.downloadUrl,
         error: message,
+        fallbackFreshness: 'unknown',
       },
     };
   }
@@ -2116,7 +2153,7 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
       },
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
+    const message = describeFetchError(error);
     return {
       seed,
       liveCurrentOfficeholders: {
@@ -2124,6 +2161,7 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
         count: seed.people?.length ?? 0,
         url: source?.downloadUrl ?? null,
         error: message,
+        fallbackFreshness: 'unknown',
       },
     };
   }
@@ -4467,8 +4505,18 @@ function buildReport(
   personSourcePeople,
   electionHistory,
 ) {
+  const sourceHealth = summarizeLiveSourceHealth([
+    { name: 'MOI party registry', result: livePartyRegistry },
+    { name: 'LY current officeholders', result: liveCurrentOfficeholders },
+    { name: 'CEC candidate data', result: liveCecCandidates },
+    { name: 'Historical CEC data', result: historicalCecSourcePeople },
+    { name: 'Political contribution data', result: livePartyFinanceSummaries },
+  ]);
+
   return {
     syncName: 'real-public-data-foundation',
+    status: sourceHealth.status,
+    needsAttention: sourceHealth.needsAttention,
     mode: args.write ? 'write' : 'dry-run',
     cadence: args.mode,
     sourceHash: hash,
@@ -4501,6 +4549,7 @@ function buildReport(
     personEnrichmentClaims,
     personSourcePeople,
     electionHistory,
+    sourceHealth,
     skipped: {
       personalDonationDetails: true,
       rawContributionRows: true,
@@ -4568,13 +4617,16 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
 }
 
 export {
+  buildPartyRegistryProfile,
   buildSourcePersonRows,
   buildEnrichmentPartyAffiliationRows,
   buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,
+  describeFetchError,
   enrichSeedWithPlannedLocalElections,
   loadPlannedLocalRaceOverrides,
   scoreClaim,
+  summarizeLiveSourceHealth,
   supabaseRequest,
 };

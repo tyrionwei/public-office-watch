@@ -1,18 +1,64 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {
   applyReviewedCandidateResultOverride,
+  buildPartyRegistryProfile,
   buildEnrichmentPartyAffiliationRows,
   buildSourcePersonRows,
   buildPersonEnrichmentClaimRows,
   buildLegalRecordLeadRows,
   classifyHistoricalCecCandidateEntry,
   darkGuideFamilyReferenceNames,
+  describeFetchError,
   historicalCecAggregateResultKey,
   isHistoricalCecAggregateResultRow,
   isHistoricalCecNationalResult,
   scoreClaim,
+  summarizeLiveSourceHealth,
   supabaseRequest,
 } from './sync-real-public-data.mjs';
+
+const realPublicDataSeed = JSON.parse(fs.readFileSync('data-sources/real-public-data.seed.json', 'utf8'));
+const moiPartyRegistry = realPublicDataSeed.sources.find((source) => source.id === 'moi-party-registry');
+assert.equal(moiPartyRegistry.url, 'https://data.gov.tw/dataset/163038');
+assert.match(moiPartyRegistry.downloadUrl, /^https:\/\/opdadm\.moi\.gov\.tw\//);
+
+const officialPartyProfile = buildPartyRegistryProfile({
+  Political_party_no: '001',
+  Political_party_name: '民主進步黨',
+  Political_party_leader: '測試主席',
+  Date_of_establishment: '1986-09-28',
+  Date_of_approval: '1986-11-10',
+  Main_office_address: '測試地址',
+  Tel: '02-12345678',
+}, '民主進步黨');
+assert.equal(officialPartyProfile.registryNo, '001');
+assert.equal(officialPartyProfile.foundedDateText, '1986-09-28');
+assert.equal(officialPartyProfile.filedDateText, '1986-11-10');
+assert.equal(officialPartyProfile.headquartersAddress, '測試地址');
+assert.equal(officialPartyProfile.contactPhone, '02-12345678');
+assert.equal(officialPartyProfile.chairpersonName, '測試主席');
+
+const transportError = new TypeError('fetch failed', {
+  cause: Object.assign(new Error('unsafe legacy renegotiation disabled'), {
+    code: 'ERR_SSL_UNSAFE_LEGACY_RENEGOTIATION_DISABLED',
+  }),
+});
+assert.match(describeFetchError(transportError), /ERR_SSL_UNSAFE_LEGACY_RENEGOTIATION_DISABLED/);
+assert.match(describeFetchError(transportError), /unsafe legacy renegotiation disabled/);
+
+assert.deepEqual(
+  summarizeLiveSourceHealth([
+    { name: 'MOI party registry', result: { status: 'ok' } },
+    { name: 'LY current officeholders', result: { status: 'fallback', error: 'TLS failed' } },
+  ]),
+  {
+    status: 'degraded',
+    needsAttention: true,
+    degradedSourceCount: 1,
+    degradedSources: [{ name: 'LY current officeholders', status: 'fallback', error: 'TLS failed' }],
+  },
+);
 
 const originalFetch = globalThis.fetch;
 let publishedRpcRequest;

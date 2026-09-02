@@ -4,6 +4,8 @@ import test from 'node:test';
 import {
   buildPersonLegalFeedUrl,
   buildPersonLegalLeads,
+  buildPersonResearchFeedUrl,
+  buildPersonResearchLeads,
   directLegalSubjectMatch,
 } from './discover-daily-person-legal-news.mjs';
 
@@ -20,6 +22,47 @@ test('builds a per-person legal query without a current-news time limit', () => 
   assert.match(url.searchParams.get('q'), /"陳水扁"/);
   assert.match(url.searchParams.get('q'), /貪污 OR 起訴/);
   assert.doesNotMatch(url.searchParams.get('q'), /when:/);
+});
+
+test('adds a 30-day limit only for recurring person research', () => {
+  const historical = new URL(buildPersonResearchFeedUrl(feed, { name: '測試人物' }, ['配偶']));
+  const recurring = new URL(buildPersonResearchFeedUrl(feed, { name: '測試人物' }, ['配偶'], 30));
+  const delayed = new URL(buildPersonResearchFeedUrl(feed, { name: '測試人物' }, ['配偶'], 72));
+
+  assert.doesNotMatch(historical.searchParams.get('q'), /when:/);
+  assert.match(recurring.searchParams.get('q'), /when:30d/);
+  assert.match(delayed.searchParams.get('q'), /when:72d/);
+});
+
+test('keeps family research leads private and tagged with their time scope', () => {
+  const leads = buildPersonResearchLeads({
+    target: {
+      personId: 'person-family',
+      name: '王小明',
+      position: '立法委員',
+      district: '測試選區',
+    },
+    items: [{
+      title: '立委王小明妻子出席公益活動',
+      summary: '',
+      url: 'https://example.com/family',
+      publishedAt: '2020-01-01T00:00:00Z',
+      publisherName: '中央社',
+      publisherUrl: 'https://www.cna.com.tw/',
+    }],
+    category: 'family_relation',
+    categoryLabel: '家族關係',
+    terms: ['妻子'],
+    nextAction: 'confirm relationship',
+    trustedPublishers: ['中央社'],
+    timeScope: 'historical_backfill',
+  });
+
+  assert.equal(leads.length, 1);
+  assert.equal(leads[0].category, 'family_relation');
+  assert.equal(leads[0].timeScope, 'historical_backfill');
+  assert.equal(leads[0].visibility, 'review_only');
+  assert.equal(leads[0].autoPublish, false);
 });
 
 test('keeps historical legal clues private with identity context and year hints', () => {

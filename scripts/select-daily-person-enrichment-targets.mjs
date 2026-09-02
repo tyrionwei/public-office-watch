@@ -10,6 +10,7 @@ function parseArgs(argv) {
     recordInputPath: null,
     skipInputPath: null,
     progressInputPath: null,
+    researchInputPath: null,
     limit: 25,
     cooldownDays: 30,
   };
@@ -22,6 +23,7 @@ function parseArgs(argv) {
     else if (arg === '--record-input') options.recordInputPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--skip-input') options.skipInputPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--progress-input') options.progressInputPath = path.resolve(argv[++index] ?? '');
+    else if (arg === '--research-input') options.researchInputPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--limit') options.limit = Number.parseInt(argv[++index] ?? '', 10);
     else if (arg === '--cooldown-days') options.cooldownDays = Number.parseInt(argv[++index] ?? '', 10);
     else throw new Error(`Unsupported argument: ${arg}`);
@@ -48,6 +50,12 @@ function readState(filePath) {
   return {
     schemaVersion: payload?.schemaVersion ?? 1,
     attempts: payload?.attempts && typeof payload.attempts === 'object' ? payload.attempts : {},
+    historicalBackfill: payload?.historicalBackfill && typeof payload.historicalBackfill === 'object'
+      ? payload.historicalBackfill
+      : {},
+    researchMonitoring: payload?.researchMonitoring && typeof payload.researchMonitoring === 'object'
+      ? payload.researchMonitoring
+      : {},
     lastBatch: payload?.lastBatch ?? null,
   };
 }
@@ -60,19 +68,58 @@ function selectDailyTargets(targets, state, now = new Date(), limit = 25, cooldo
     seen.add(target.personId);
     return true;
   });
-  const untouched = uniqueTargets.filter((target) => !state?.attempts?.[target.personId]);
-  const retryable = uniqueTargets.filter((target) => {
-    if (!state?.attempts?.[target.personId]) return false;
+  const backfillState = state?.historicalBackfill ?? {};
+  const monitoringState = state?.researchMonitoring ?? {};
+  const untouched = uniqueTargets.filter((target) => (
+    !state?.attempts?.[target.personId] && !backfillState[target.personId]?.completedAt
+  ));
+  const pendingBackfill = uniqueTargets.filter((target) => {
+    if (!state?.attempts?.[target.personId] || backfillState[target.personId]?.completedAt) return false;
+    const attemptedAt = Date.parse(backfillState[target.personId]?.attemptedAt ?? state.attempts[target.personId]?.attemptedAt ?? '');
+    return !Number.isFinite(attemptedAt) || attemptedAt <= cutoff;
+  });
+  const recurring = uniqueTargets.filter((target) => {
+    if (!backfillState[target.personId]?.completedAt) return false;
     const attemptedAt = Date.parse(state?.attempts?.[target.personId]?.attemptedAt ?? '');
     return !Number.isFinite(attemptedAt) || attemptedAt <= cutoff;
   });
-  return [...untouched, ...retryable].slice(0, limit);
+  const backfillTargets = [
+    ...untouched.map((target) => ({ ...target, collectionMode: 'historical_backfill' })),
+    ...pendingBackfill.map((target) => ({ ...target, collectionMode: 'historical_backfill' })),
+  ];
+  const recurringTargets = recurring.map((target) => {
+    const lastSuccessfulAt = monitoringState[target.personId]?.lastSuccessfulAt
+      ?? backfillState[target.personId]?.completedAt;
+    const elapsedDays = Math.ceil((now.getTime() - Date.parse(lastSuccessfulAt ?? '')) / (24 * 60 * 60 * 1000));
+    return {
+      ...target,
+      collectionMode: 'recurring_monitor',
+      researchLookbackDays: Number.isFinite(elapsedDays) ? Math.max(cooldownDays, elapsedDays + 1) : cooldownDays,
+    };
+  });
+  const recurringQuota = backfillTargets.length > 0
+    ? Math.min(recurringTargets.length, Math.max(1, Math.ceil(limit / 2)))
+    : Math.min(recurringTargets.length, limit);
+  const selectedRecurring = recurringTargets.slice(0, recurringQuota);
+  const selectedBackfill = backfillTargets.slice(0, limit - selectedRecurring.length);
+  const remaining = limit - selectedRecurring.length - selectedBackfill.length;
+  return [
+    ...selectedRecurring,
+    ...selectedBackfill,
+    ...recurringTargets.slice(recurringQuota, recurringQuota + remaining),
+  ];
 }
 
 function readProgressResults(filePath) {
   if (!filePath || !fs.existsSync(filePath)) return [];
   const payload = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   return Array.isArray(payload?.lastResults) ? payload.lastResults : [];
+}
+
+function readResearchResults(filePath) {
+  if (!filePath || !fs.existsSync(filePath)) return [];
+  const payload = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return Array.isArray(payload?.results) ? payload.results : [];
 }
 
 function skippedResultStatus(record) {
@@ -106,10 +153,19 @@ function readSkippedResults(filePath, targets) {
   });
 }
 
-function recordDailyTargets(state, targets, now = new Date(), results = []) {
+function recordDailyTargets(state, targets, now = new Date(), results = [], researchResults = []) {
   const attemptedAt = now.toISOString();
   const attempts = { ...(state?.attempts ?? {}) };
+  const historicalBackfill = { ...(state?.historicalBackfill ?? {}) };
+  const researchMonitoring = { ...(state?.researchMonitoring ?? {}) };
   const resultsByPersonId = new Map(results.map((result) => [result.personId, result]));
+  const researchByPersonId = new Map();
+  for (const result of researchResults) {
+    if (!result?.personId || !result?.category) continue;
+    const byCategory = researchByPersonId.get(result.personId) ?? new Map();
+    byCategory.set(result.category, result);
+    researchByPersonId.set(result.personId, byCategory);
+  }
   for (const target of targets) {
     const result = resultsByPersonId.get(target.personId);
     attempts[target.personId] = {
@@ -120,10 +176,42 @@ function recordDailyTargets(state, targets, now = new Date(), results = []) {
       outcome: result?.status ?? 'attempted',
       claimCount: Number(result?.claimCount ?? 0),
       reason: result?.reason ?? null,
+      collectionMode: target.collectionMode ?? 'historical_backfill',
     };
+    const byCategory = researchByPersonId.get(target.personId) ?? new Map();
+    const requiredCategories = ['family_relation', 'party_affiliation', 'legal_case'];
+    const categoryResults = requiredCategories.map((category) => byCategory.get(category)).filter(Boolean);
+    const completed = categoryResults.length === requiredCategories.length
+      && categoryResults.every((item) => ['leads_found', 'no_leads'].includes(item.status));
+    const resultSummary = requiredCategories.map((category) => ({
+      category,
+      status: byCategory.get(category)?.status ?? 'missing_result',
+      leadCount: Number(byCategory.get(category)?.leadCount ?? 0),
+      reason: byCategory.get(category)?.reason ?? null,
+    }));
+    researchMonitoring[target.personId] = {
+      name: target.name,
+      attemptedAt,
+      lastSuccessfulAt: completed
+        ? attemptedAt
+        : researchMonitoring[target.personId]?.lastSuccessfulAt
+          ?? historicalBackfill[target.personId]?.completedAt
+          ?? null,
+      status: completed ? 'completed' : 'incomplete',
+      results: resultSummary,
+    };
+    if ((target.collectionMode ?? 'historical_backfill') === 'historical_backfill') {
+      historicalBackfill[target.personId] = {
+        name: target.name,
+        attemptedAt,
+        completedAt: completed ? attemptedAt : historicalBackfill[target.personId]?.completedAt ?? null,
+        status: completed ? 'completed' : 'incomplete',
+        results: resultSummary,
+      };
+    }
   }
   return {
-    schemaVersion: 2,
+    schemaVersion: 4,
     updatedAt: attemptedAt,
     lastBatch: {
       attemptedAt,
@@ -144,6 +232,8 @@ function recordDailyTargets(state, targets, now = new Date(), results = []) {
       }),
     },
     attempts,
+    historicalBackfill,
+    researchMonitoring,
   };
 }
 
@@ -160,7 +250,8 @@ function main() {
     const targets = readTargets(options.recordInputPath);
     const progressResults = readProgressResults(options.progressInputPath);
     const results = progressResults.length > 0 ? progressResults : readSkippedResults(options.skipInputPath, targets);
-    const nextState = recordDailyTargets(state, targets, new Date(), results);
+    const researchResults = readResearchResults(options.researchInputPath);
+    const nextState = recordDailyTargets(state, targets, new Date(), results, researchResults);
     writeJson(options.statePath, nextState);
     console.log(JSON.stringify({
       status: 'recorded',
@@ -189,7 +280,23 @@ function main() {
     status: 'written',
     targetCount: targets.length,
     outputPath: options.outputPath,
-    targets: targets.map(({ personId, name, priorityGroup, missingSignals, researchSignals }) => ({ personId, name, priorityGroup, missingSignals, researchSignals })),
+    targets: targets.map(({
+      personId,
+      name,
+      priorityGroup,
+      missingSignals,
+      researchSignals,
+      collectionMode,
+      researchLookbackDays,
+    }) => ({
+      personId,
+      name,
+      priorityGroup,
+      missingSignals,
+      researchSignals,
+      collectionMode,
+      researchLookbackDays,
+    })),
   }, null, 2));
 }
 

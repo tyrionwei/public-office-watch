@@ -26,6 +26,12 @@ function buildSearchPlans(target) {
   const missing = new Set(target.missingSignals ?? []);
   const research = new Set(target.researchSignals ?? []);
   const plans = [];
+  const historical = target.collectionMode !== 'recurring_monitor';
+  const recurringLookbackDays = Number.isInteger(target.researchLookbackDays) && target.researchLookbackDays > 0
+    ? target.researchLookbackDays
+    : 30;
+  const recentSuffix = historical ? '' : ` when:${recurringLookbackDays}d`;
+  const timeScope = historical ? 'all_history' : `recent_${recurringLookbackDays}_days`;
   const basicFields = [
     ['birth_date', '生日'],
     ['gender', '性別'],
@@ -44,8 +50,9 @@ function buildSearchPlans(target) {
   if (missing.has('family_relation') || research.has('family_relation')) {
     plans.push({
       key: 'family_relation',
-      query: `${identity} 配偶 父親 母親 子女 家族關係`,
-      historical: true,
+      query: `${identity} 配偶 父親 母親 子女 家族關係${recentSuffix}`,
+      historical,
+      timeScope,
       sensitive: true,
       sourcePriority: ['official_profile', 'direct_statement', 'trusted_media', 'wikidata_fallback'],
     });
@@ -61,8 +68,9 @@ function buildSearchPlans(target) {
   if (research.has('party_affiliation')) {
     plans.push({
       key: 'party_affiliation_history',
-      query: `${identity} 入黨 退黨 開除黨籍 恢復黨籍 更換黨籍`,
-      historical: true,
+      query: `${identity} 入黨 退黨 開除黨籍 恢復黨籍 更換黨籍${recentSuffix}`,
+      historical,
+      timeScope,
       sensitive: true,
       sourcePriority: ['party_official', 'direct_statement', 'election_authority', 'trusted_media'],
       note: 'Election recommendation is an election-time snapshot and must not be treated as proof of formal membership by itself.',
@@ -71,8 +79,9 @@ function buildSearchPlans(target) {
   if (research.has('legal_case')) {
     plans.push({
       key: 'legal_record_clues',
-      query: `${identity} 搜索 約談 交保 起訴 判決 定讞`,
-      historical: true,
+      query: `${identity} 搜索 約談 交保 起訴 判決 定讞${recentSuffix}`,
+      historical,
+      timeScope,
       sensitive: true,
       sourcePriority: ['trusted_media', 'prosecutor_or_court_release'],
       nextStep: 'Only after a concrete clue and identity match, search official Judicial Yuan criminal judgments from the event year onward.',
@@ -97,6 +106,7 @@ function buildResearchQueue(targets, generatedAt = new Date().toISOString()) {
       priorElectionYears: target.priorElectionYears ?? [],
       missingSignals: target.missingSignals ?? [],
       researchSignals: target.researchSignals ?? [],
+      collectionMode: target.collectionMode ?? 'historical_backfill',
       searchPlans: buildSearchPlans(target),
       reviewStatus: 'pending',
       autoPublish: false,

@@ -23,10 +23,29 @@ test('weekly summary preserves failed step names for review', () => {
     { name: 'two', status: 'failed' },
   ]), {
     status: 'needs_attention',
+    needsAttention: true,
     stepCount: 2,
     passedCount: 1,
     failedCount: 1,
     failedSteps: ['two'],
+    degradedCount: 0,
+    degradedSteps: [],
+  });
+});
+
+test('weekly summary reports successful but degraded source steps', () => {
+  assert.deepEqual(summarizeWeeklyResults([
+    { name: 'real-public-data', status: 'ok', result: { status: 'degraded', needsAttention: true } },
+    { name: 'cec', status: 'ok', result: { status: 'ok', needsAttention: false } },
+  ]), {
+    status: 'degraded',
+    needsAttention: true,
+    stepCount: 2,
+    passedCount: 2,
+    failedCount: 0,
+    failedSteps: [],
+    degradedCount: 1,
+    degradedSteps: ['real-public-data'],
   });
 });
 

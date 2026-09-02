@@ -64,11 +64,61 @@ test('moves to untouched people after recording the whole attempted batch', () =
   assert.deepEqual(selected.map((target) => target.personId), ['p-2', 'p-3']);
 });
 
+test('marks historical backfill complete only after all three research categories succeed', () => {
+  const target = { personId: 'p-1', name: '人物一', collectionMode: 'historical_backfill' };
+  const researchResults = [
+    { personId: 'p-1', category: 'family_relation', status: 'no_leads', leadCount: 0 },
+    { personId: 'p-1', category: 'party_affiliation', status: 'leads_found', leadCount: 1 },
+    { personId: 'p-1', category: 'legal_case', status: 'no_leads', leadCount: 0 },
+  ];
+  const next = recordDailyTargets(
+    { attempts: {}, historicalBackfill: {} },
+    [target],
+    new Date('2026-08-11T00:00:00Z'),
+    [],
+    researchResults,
+  );
+
+  assert.equal(next.historicalBackfill['p-1'].status, 'completed');
+  assert.equal(next.historicalBackfill['p-1'].completedAt, '2026-08-11T00:00:00.000Z');
+});
+
+test('keeps historical backfill incomplete when any category fails', () => {
+  const target = { personId: 'p-1', name: '人物一', collectionMode: 'historical_backfill' };
+  const researchResults = [
+    { personId: 'p-1', category: 'family_relation', status: 'no_leads' },
+    { personId: 'p-1', category: 'party_affiliation', status: 'source_error' },
+    { personId: 'p-1', category: 'legal_case', status: 'no_leads' },
+  ];
+  const next = recordDailyTargets(
+    { attempts: {}, historicalBackfill: {} },
+    [target],
+    new Date('2026-08-11T00:00:00Z'),
+    [],
+    researchResults,
+  );
+
+  assert.equal(next.historicalBackfill['p-1'].status, 'incomplete');
+  assert.equal(next.historicalBackfill['p-1'].completedAt, null);
+});
+
+test('uses recurring monitoring after a completed backfill reaches cooldown', () => {
+  const targets = [{ personId: 'p-1', name: '人物一' }];
+  const state = {
+    attempts: { 'p-1': { attemptedAt: '2026-06-01T00:00:00Z' } },
+    historicalBackfill: { 'p-1': { completedAt: '2026-06-01T00:00:00Z' } },
+  };
+  const selected = selectDailyTargets(targets, state, new Date('2026-08-11T00:00:00Z'), 25, 30);
+  assert.equal(selected[0].collectionMode, 'recurring_monitor');
+  assert.equal(selected[0].researchLookbackDays, 72);
+});
+
 test('accepts a progress file when recording attempts', () => {
-  const options = parseArgs(['--record-input', 'targets.json', '--progress-input', 'progress.json', '--skip-input', 'skipped.json']);
+  const options = parseArgs(['--record-input', 'targets.json', '--progress-input', 'progress.json', '--skip-input', 'skipped.json', '--research-input', 'research.json']);
   assert.match(options.recordInputPath, /targets\.json$/);
   assert.match(options.progressInputPath, /progress\.json$/);
   assert.match(options.skipInputPath, /skipped\.json$/);
+  assert.match(options.researchInputPath, /research\.json$/);
 });
 
 test('recovers current identity-review outcomes from a skipped file', () => {
@@ -83,4 +133,59 @@ test('recovers current identity-review outcomes from a skipped file', () => {
   assert.equal(skippedResultStatus({
     reason: 'Wikidata API failed: maxlag',
   }), 'source_error');
+});
+
+test('reserves half of a mixed batch for due recurring monitoring', () => {
+  const targets = [
+    { personId: 'recurring-1', name: '監測一' },
+    { personId: 'recurring-2', name: '監測二' },
+    { personId: 'recurring-3', name: '監測三' },
+    { personId: 'backfill-1', name: '補查一' },
+    { personId: 'backfill-2', name: '補查二' },
+  ];
+  const completedAt = '2026-06-01T00:00:00Z';
+  const state = {
+    attempts: Object.fromEntries(targets.slice(0, 3).map((target) => [target.personId, { attemptedAt: completedAt }])),
+    historicalBackfill: Object.fromEntries(targets.slice(0, 3).map((target) => [target.personId, { completedAt }])),
+  };
+
+  const selected = selectDailyTargets(targets, state, new Date('2026-08-11T00:00:00Z'), 4, 30);
+
+  assert.deepEqual(selected.map((target) => target.personId), [
+    'recurring-1',
+    'recurring-2',
+    'backfill-1',
+    'backfill-2',
+  ]);
+  assert.deepEqual(selected.map((target) => target.collectionMode), [
+    'recurring_monitor',
+    'recurring_monitor',
+    'historical_backfill',
+    'historical_backfill',
+  ]);
+});
+
+test('keeps the last successful research time until every recurring category succeeds', () => {
+  const previousSuccess = '2026-06-01T00:00:00.000Z';
+  const state = {
+    attempts: {},
+    historicalBackfill: { 'p-1': { completedAt: previousSuccess } },
+    researchMonitoring: { 'p-1': { lastSuccessfulAt: previousSuccess } },
+  };
+  const target = { personId: 'p-1', name: '人物一', collectionMode: 'recurring_monitor' };
+  const incomplete = recordDailyTargets(state, [target], new Date('2026-08-11T00:00:00Z'), [], [
+    { personId: 'p-1', category: 'family_relation', status: 'no_leads' },
+    { personId: 'p-1', category: 'party_affiliation', status: 'source_error' },
+    { personId: 'p-1', category: 'legal_case', status: 'no_leads' },
+  ]);
+
+  assert.equal(incomplete.researchMonitoring['p-1'].lastSuccessfulAt, previousSuccess);
+
+  const completed = recordDailyTargets(incomplete, [target], new Date('2026-08-12T00:00:00Z'), [], [
+    { personId: 'p-1', category: 'family_relation', status: 'no_leads' },
+    { personId: 'p-1', category: 'party_affiliation', status: 'leads_found' },
+    { personId: 'p-1', category: 'legal_case', status: 'no_leads' },
+  ]);
+
+  assert.equal(completed.researchMonitoring['p-1'].lastSuccessfulAt, '2026-08-12T00:00:00.000Z');
 });

@@ -29,6 +29,8 @@
 npm run monitor:daily
 ```
 
+完整流程若收到 `degraded`、`partial`、`failed` 或 `needsAttention: true`，會在輸出摘要後以非零狀態結束，供排程器發出通知。
+
 ```bash
 npm run discover:daily-person-news -- --output tmp/daily-person-news.json
 ```
@@ -47,11 +49,13 @@ npm run discover:daily-person-news -- \
 npm run discover:daily-person-news -- --lookback-hours 48
 ```
 
-每日 25 人另有不受 36 小時限制的歷史司法新聞搜尋；完整 `monitor:daily` 會自動執行，也可單獨執行：
+每日人物流程另有家族、黨籍與司法三類的逐人搜尋。每位人物首次補查不加日期限制；三類都查詢成功後，滿 30 天冷卻期即可再次監測。每日 25 人約半保留給到期監測、其餘繼續歷史補查；若排隊或來源失敗超過 30 天，查詢範圍會從上次三類皆成功的日期動態延長並多保留一天重疊。完整 `monitor:daily` 會自動執行，也可單獨執行：
 
 ```bash
-npm run discover:daily-person-legal-news
+npm run discover:daily-person-research-news
 ```
+
+保留的 `discover:daily-person-legal-news` 指令只供單獨診斷司法搜尋器，並非完整每日人物研究流程。
 
 ## 審核原則
 
@@ -61,7 +65,7 @@ npm run discover:daily-person-legal-news
 - 黨籍與公職異動應再找政黨、本人或主管機關等直接來源。
 - 司法線索應再依既有司法紀錄流程確認身分、案號、程序階段和判決結果。
 - 媒體消息即使可信，也只能建立待審資料；通過審核後才進入正式發布流程。
-- 25 人歷史司法搜尋要求法律詞直接描述目標人物；較弱的姓名配對保留為程序待審，不會直接跳過或建立公開紀錄。
+- 逐人研究要求關係、黨籍或法律詞直接描述目標人物；較弱的姓名配對保留為程序待審，不會直接跳過或建立公開紀錄。
 - 新聞確認具體罪名、年份與程序後，才搜尋司法院官方刑事裁判；不可只憑同名合併。
 
 ## 安全邊界

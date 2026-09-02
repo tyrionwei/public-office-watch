@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import test from 'node:test';
 
 import {
@@ -6,6 +7,11 @@ import {
   isRetryableWikidataError,
   wikidataRetryDelayMs,
 } from './fetch-wikidata-person-enrichment.mjs';
+
+test('scheduled daily enrichment limits Wikidata retries', () => {
+  const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+  assert.match(packageJson.scripts['fetch:daily-person-enrichment'], /--retry-count 3(?:\s|$)/);
+});
 
 test('maxlag errors wait at least five seconds', () => {
   const error = new Error('Wikidata API failed: maxlag');

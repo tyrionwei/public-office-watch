@@ -57,8 +57,8 @@
       "id": "moi-party-registry",
       "type": "party-registry",
       "name": "內政部政黨名冊",
-      "url": "https://data.gov.tw/dataset/31973",
-      "downloadUrl": "https://data.moi.gov.tw/MoiOD/System/DownloadFile.aspx?DATA=55514697-A736-4FE0-AFA4-61EC85F82929",
+      "url": "https://data.gov.tw/dataset/163038",
+      "downloadUrl": "https://opdadm.moi.gov.tw/api/v1/no-auth/resource/api/dataset/5EF8035C-ECC1-4BE7-AFDE-4C7BAE3C3620/resource/0ABEEA67-7CCD-4401-BBD8-B6DBF19B58C9/download",
       "refreshCadence": "daily",
       "notes": "每日同步完整政黨名冊；欄位包含政黨名稱、成立日期、負責人、地址、電話與備案日期。"
     },

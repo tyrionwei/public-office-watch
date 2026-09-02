@@ -51,6 +51,7 @@ function compactStepResult(payload) {
   ];
   return {
     status: payload.status ?? null,
+    ...(payload.needsAttention != null ? { needsAttention: payload.needsAttention } : {}),
     summary: payload.summary ?? null,
     counts: payload.counts ?? payload.totals ?? null,
     metrics: Object.fromEntries(metricKeys.filter((key) => payload[key] != null).map((key) => [key, payload[key]])),
@@ -92,12 +93,20 @@ function runNodeStep(name, args, outputDir) {
 
 function summarizeWeeklyResults(steps) {
   const failed = steps.filter((step) => step.status === 'failed');
+  const degraded = steps.filter((step) => {
+    if (step.status !== 'ok') return false;
+    return step.result?.needsAttention === true
+      || ['degraded', 'needs_attention', 'partial'].includes(step.result?.status);
+  });
   return {
-    status: failed.length === 0 ? 'ok' : 'needs_attention',
+    status: failed.length > 0 ? 'needs_attention' : degraded.length > 0 ? 'degraded' : 'ok',
+    needsAttention: failed.length > 0 || degraded.length > 0,
     stepCount: steps.length,
     passedCount: steps.length - failed.length,
     failedCount: failed.length,
     failedSteps: failed.map((step) => step.name),
+    degradedCount: degraded.length,
+    degradedSteps: degraded.map((step) => step.name),
   };
 }
 

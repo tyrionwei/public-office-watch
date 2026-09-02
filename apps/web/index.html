@@ -10,6 +10,12 @@
       content="公職資料觀測站整理臺灣公職人物、政黨、選舉與地方議題的公開資料。"
     />
     <meta name="theme-color" content="#071126" />
+    <script>
+      (() => {
+        const storedTheme = localStorage.getItem('public-office-watch-theme');
+        document.documentElement.dataset.theme = storedTheme === 'light' ? 'light' : 'dark';
+      })();
+    </script>
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="公職資料觀測站" />

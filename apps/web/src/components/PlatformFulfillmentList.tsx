@@ -27,25 +27,25 @@ type StatusPresentation = {
 const statusPresentation: Record<PlatformFulfillmentStatus, StatusPresentation> = {
   fulfilled: {
     label: 'person.fulfillment.fulfilled',
-    button: 'border-emerald-400/60 text-emerald-200 hover:bg-emerald-400/10',
+    button: 'theme-vote-fulfilled border-emerald-400/60 text-emerald-200 hover:bg-emerald-400/10',
     segment: 'bg-emerald-400',
     dot: 'bg-emerald-400',
   },
   in_progress: {
     label: 'person.fulfillment.inProgress',
-    button: 'border-cyan-400/60 text-cyan-100 hover:bg-cyan-400/10',
+    button: 'theme-vote-progress border-cyan-400/60 text-cyan-100 hover:bg-cyan-400/10',
     segment: 'bg-cyan-400',
     dot: 'bg-cyan-400',
   },
   not_fulfilled: {
     label: 'person.fulfillment.notFulfilled',
-    button: 'border-rose-400/60 text-rose-200 hover:bg-rose-400/10',
+    button: 'theme-vote-unfulfilled border-rose-400/60 text-rose-200 hover:bg-rose-400/10',
     segment: 'bg-rose-400',
     dot: 'bg-rose-400',
   },
   insufficient_information: {
     label: 'person.fulfillment.insufficientInformation',
-    button: 'border-slate-400/60 text-slate-200 hover:bg-slate-300/10',
+    button: 'theme-vote-unknown border-slate-400/60 text-slate-200 hover:bg-slate-300/10',
     segment: 'bg-slate-400',
     dot: 'bg-slate-400',
   },
@@ -165,7 +165,7 @@ function VoteButtons({
           aria-pressed={selected === status}
           onClick={() => onVote(status)}
           className={[
-            'min-h-9 border px-2 py-1 text-[11px] transition focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:cursor-wait disabled:opacity-50',
+            'theme-vote-button min-h-9 border px-2 py-1 text-[11px] transition focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:cursor-wait disabled:opacity-50',
             statusPresentation[status].button,
             selected === status ? 'bg-white/10 ring-1 ring-white/30' : 'bg-bg/50',
           ].join(' ')}

@@ -42,11 +42,11 @@ export function SelectedRegionHud({ races, regionNode, regionSummary }: Selected
   return (
     <PixelFrame
       title={t('regionHud.title')}
-      className="bg-[linear-gradient(180deg,rgba(6,46,91,0.95),rgba(9,37,74,0.92)_55%,rgba(10,19,39,0.95))]"
+      className="[background:var(--theme-panel-gradient)]"
     >
       <div className="space-y-3 text-sm text-slate-300">
         <div
-          className="relative flex min-h-[380px] flex-col overflow-hidden rounded-sm border border-accent/25 bg-slate-950 bg-cover bg-center p-6"
+          className="theme-dark-surface relative flex min-h-[380px] flex-col overflow-hidden rounded-sm border border-accent/25 bg-slate-950 bg-cover bg-center p-6"
           data-region-highlight={highlightBackground?.regionId ?? regionNode.id}
           data-region-highlight-feature={highlightBackground?.feature ?? undefined}
           style={!highlightImage ? {

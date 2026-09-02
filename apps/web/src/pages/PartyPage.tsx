@@ -652,7 +652,7 @@ export function PartyPage() {
       >
         {party ? (
           <div className="space-y-6">
-            <section className="pixel-corners border border-line/70 bg-[linear-gradient(180deg,rgba(11,19,38,0.94),rgba(15,24,46,0.88))] p-5">
+            <section className="pixel-corners border border-line/70 p-5 [background:var(--theme-panel-gradient)]">
               <div
                 className="mb-5 h-2 w-full"
                 style={{ background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})` }}
@@ -980,7 +980,7 @@ export function PartyPage() {
 
             {latestFinance ? (
               <SectionPanel title={t('partyDetail.financeTitle', { year: latestFinance.report_year })} eyebrow={t('partyDetail.financeEyebrow')}>
-                <div className="mb-5 pixel-corners border border-line/70 bg-[linear-gradient(135deg,rgba(8,17,35,0.92),rgba(15,24,46,0.72))] p-4 sm:p-5">
+                <div className="mb-5 pixel-corners border border-line/70 p-4 [background:var(--theme-panel-gradient)] sm:p-5">
                   <div className="mb-4 flex flex-wrap items-end justify-between gap-2 border-b border-line/60 pb-3">
                     <div>
                       <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">{t('partyDetail.financeMixEyebrow')}</p>
@@ -1081,7 +1081,7 @@ export function PartyPage() {
             <SectionPanel title={t('partyDetail.companyTitle')} eyebrow={t('partyDetail.companyEyebrow')}>
               {companyContributions.current.total > 0 ? (
                 <>
-                  <div className="mb-5 pixel-corners border border-line/70 bg-[linear-gradient(135deg,rgba(8,17,35,0.92),rgba(15,24,46,0.72))] p-4 sm:p-5">
+                  <div className="mb-5 pixel-corners border border-line/70 p-4 [background:var(--theme-panel-gradient)] sm:p-5">
                     <div className="mb-4 border-b border-line/60 pb-3">
                       <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">{t('partyDetail.topCompaniesChartEyebrow')}</p>
                       <h4 className="mt-1 font-display text-lg text-white">{t('partyDetail.topCompaniesChartTitle')}</h4>

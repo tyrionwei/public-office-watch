@@ -575,7 +575,7 @@ export function PersonPage() {
                     className="max-h-[190px] w-auto object-contain object-bottom [image-rendering:pixelated]"
                   />
                   {portraitFallbackLabel ? (
-                    <span className="absolute left-2 top-2 border border-cyan-300/50 bg-[#07101f]/90 px-2 py-1 text-[10px] text-cyan-100">
+                    <span className="absolute left-2 top-2 border border-accent/50 bg-panel/90 px-2 py-1 text-[10px] text-accent">
                       {portraitFallbackLabel}
                     </span>
                   ) : null}
@@ -602,7 +602,7 @@ export function PersonPage() {
                     label={t('person.party')}
                     value={
                       <span
-                        className="pixel-corners inline-block border px-2 py-1 text-sm"
+                        className="theme-party-chip pixel-corners inline-block border px-2 py-1 text-sm"
                         style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}33`, color: theme.text }}
                       >
                         {normalizePartyLabel(person.party)}
@@ -633,19 +633,19 @@ export function PersonPage() {
                   />
                 </div>
                 <div className="grid gap-3 lg:grid-cols-3">
-                  <article className="pixel-corners border border-signal/35 bg-signal/5 p-4">
+                  <article data-summary-state="completed" className="pixel-corners border border-signal/35 bg-signal/5 p-4">
                     <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-signal">{t('person.dataSummary.completed')}</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-200">
                       {completedSections.join(sectionListSeparator) || t('person.dataSummary.none')}
                     </p>
                   </article>
-                  <article className="pixel-corners border border-amber-300/35 bg-amber-300/5 p-4">
+                  <article data-summary-state="uncollected" className="pixel-corners border border-amber-300/35 bg-amber-300/5 p-4">
                     <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">{t('person.dataSummary.uncollected')}</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-200">
                       {uncollectedSections.join(sectionListSeparator) || t('person.dataSummary.none')}
                     </p>
                   </article>
-                  <article className="pixel-corners border border-violet-300/35 bg-violet-300/5 p-4">
+                  <article data-summary-state="pending" className="pixel-corners border border-violet-300/35 bg-violet-300/5 p-4">
                     <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-200">{t('person.dataSummary.pending')}</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-200">
                       {pendingSections.join(sectionListSeparator) || t('person.dataSummary.none')}
@@ -725,7 +725,7 @@ export function PersonPage() {
                           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{getCandidateElectionLabel(candidate)}</p>
                           <h3 className="mt-2 font-display text-lg text-white">{candidate.race_title}</h3>
                         </div>
-                        <span className="text-xs text-signal">
+                        <span className="theme-candidacy-status text-xs text-signal">
                           {t('person.candidacyStatusValue', { status: translateCandidacyStatus(candidate.candidacy_status, t) })}
                         </span>
                       </div>

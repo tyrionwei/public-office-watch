@@ -63,7 +63,7 @@ export function PixelCandidateSprite({
         <div className="min-w-0">
           <p className="font-display text-sm text-white">{displayName}</p>
           <p
-            className="mt-1 inline-flex rounded-sm border px-1.5 py-0.5 text-[10px] font-medium"
+            className="theme-party-chip mt-1 inline-flex rounded-sm border px-1.5 py-0.5 text-[10px] font-medium"
             data-candidate-party-label
             data-party-theme={partyKey}
             style={{

@@ -372,7 +372,7 @@ export function PeoplePage() {
                       <div className="min-w-0">
                         <span className="mb-1 block text-[10px] text-slate-500 lg:hidden">{t('people.party')}</span>
                         <span
-                          className="pixel-corners inline-block max-w-full truncate border px-2 py-1 text-xs"
+                          className="theme-party-chip pixel-corners inline-block max-w-full truncate border px-2 py-1 text-xs"
                           style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}33`, color: theme.text }}
                         >
                           {normalizePartyLabel(person.party)}

@@ -95,7 +95,7 @@ export function GlobalSearch() {
       </div>
 
       {showPanel ? (
-        <div data-testid="global-search-results" className="pixel-corners absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[420px] overflow-auto border border-accent/60 bg-[#030817] p-3 shadow-[0_20px_48px_rgba(0,0,0,0.82)]">
+        <div data-testid="global-search-results" className="pixel-corners absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[420px] overflow-auto border border-accent/60 bg-panel p-3 shadow-[0_20px_48px_rgba(0,0,0,0.36)]">
           {query.trim().length === 0 ? (
             <div data-testid="global-search-examples" className="px-2 py-2">
               <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">{t('search.examplesTitle')}</p>
@@ -167,7 +167,7 @@ function SearchResultContent({ result, note }: { result: PublicSearchResult; not
         {result.party && theme ? (
           <span
             data-search-party-label
-            className="mt-1 inline-flex rounded-sm border px-1.5 py-0.5 text-[10px] font-medium"
+            className="theme-party-chip mt-1 inline-flex rounded-sm border px-1.5 py-0.5 text-[10px] font-medium"
             style={{
               borderColor: theme.accent,
               backgroundColor: `${theme.primary}38`,

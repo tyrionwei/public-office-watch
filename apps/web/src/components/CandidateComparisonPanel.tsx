@@ -159,7 +159,7 @@ export function CandidateComparisonPanel({
                       <div className="min-w-0">
                         <p className="text-xs text-slate-500">{candidate.candidate_no ? `${t('race.number')} ${candidate.candidate_no}` : t('race.number')}</p>
                         <h3 className="mt-1 truncate font-display text-2xl text-white">{candidate.person_name}</h3>
-                        <span className="mt-2 inline-block border px-2 py-1 text-xs" style={{ borderColor: theme.accent, color: theme.text }}>
+                        <span className="theme-party-chip mt-2 inline-block border px-2 py-1 text-xs" style={{ borderColor: theme.accent, color: theme.text }}>
                           {partyLabel}
                         </span>
                         {previousPartyName ? (

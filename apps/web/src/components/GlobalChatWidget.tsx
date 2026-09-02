@@ -232,7 +232,7 @@ function PixelChatIcon() {
       <span className="absolute left-1 top-1 h-1 w-1 bg-current" />
       <span className="absolute left-[9px] top-1 h-1 w-1 bg-current" />
       <span className="absolute right-1 top-1 h-1 w-1 bg-current" />
-      <span className="absolute -bottom-1 left-1 h-1 w-2 border-l-2 border-current bg-[#07101f]" />
+      <span className="absolute -bottom-1 left-1 h-1 w-2 border-l-2 border-current bg-panel" />
     </span>
   );
 }
@@ -803,7 +803,7 @@ export function GlobalChatWidget() {
         >
           {isNudgeVisible ? (
             <aside
-              className="pixel-corners absolute bottom-full right-0 mb-3 w-[min(18rem,calc(100vw-2rem))] border border-cyan-300/60 bg-[#07101f] p-4 pr-10 text-left shadow-[5px_5px_0_rgba(34,211,238,0.16)]"
+              className="pixel-corners absolute bottom-full right-0 mb-3 w-[min(18rem,calc(100vw-2rem))] border border-accent/60 bg-panel p-4 pr-10 text-left shadow-[5px_5px_0_rgba(34,211,238,0.16)]"
               aria-live="polite"
               data-chat-nudge
             >
@@ -831,7 +831,7 @@ export function GlobalChatWidget() {
             onClick={() => void openChat()}
             aria-label={text.launcher}
             title={text.tooltip}
-            className="grid h-12 w-12 place-items-center border-2 border-cyan-300/80 bg-[#07101f] text-cyan-200 shadow-[4px_4px_0_rgba(34,211,238,0.2)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:text-white"
+            className="grid h-12 w-12 place-items-center border-2 border-accent/80 bg-panel text-accent shadow-[4px_4px_0_rgba(34,211,238,0.2)] transition hover:-translate-y-0.5 hover:border-accent hover:text-white"
           >
             <PixelChatIcon />
           </button>
@@ -847,7 +847,7 @@ export function GlobalChatWidget() {
           aria-modal="true"
           aria-label={text.title}
           onPointerDown={() => setIsPanelEngaged(true)}
-          className={`pixel-corners fixed inset-x-0 bottom-0 z-[72] flex h-[82dvh] flex-col border-2 border-cyan-300/70 bg-[#07101f] shadow-[0_-8px_32px_rgba(0,0,0,0.55)] transition-opacity duration-200 md:bottom-5 md:left-auto md:right-5 md:h-[72vh] md:max-h-[720px] md:min-h-[520px] md:w-[400px] md:shadow-[-8px_8px_32px_rgba(0,0,0,0.55)] ${isPanelEngaged ? 'md:opacity-100' : 'md:opacity-60 md:hover:opacity-100 md:focus-within:opacity-100'}`}
+          className={`pixel-corners fixed inset-x-0 bottom-0 z-[72] flex h-[82dvh] flex-col border-2 border-accent/70 bg-panel shadow-[0_-8px_32px_rgba(0,0,0,0.4)] transition-opacity duration-200 md:bottom-5 md:left-auto md:right-5 md:h-[72vh] md:max-h-[720px] md:min-h-[520px] md:w-[400px] md:shadow-[-8px_8px_32px_rgba(0,0,0,0.4)] ${isPanelEngaged ? 'md:opacity-100' : 'md:opacity-60 md:hover:opacity-100 md:focus-within:opacity-100'}`}
         >
           <header className="flex items-center justify-between gap-3 border-b border-cyan-300/25 bg-cyan-300/[0.06] px-4 py-3">
             <h2 className="font-display text-sm tracking-[0.14em] text-cyan-100">{text.title}</h2>
@@ -907,21 +907,21 @@ export function GlobalChatWidget() {
                     setReplyTo(null);
                     setError(null);
                   }}
-                  className="w-[7.25rem] max-w-[34%] shrink-0 border border-line bg-[#07101f] px-2 py-1 text-[11px] text-slate-200 outline-none focus:border-cyan-300/60"
+                  className="w-[7.25rem] max-w-[34%] shrink-0 border border-line bg-panel px-2 py-1 text-[11px] text-slate-200 outline-none focus:border-accent/60"
                 >
                   {globalRoom ? <option value={globalRoom.id}>{chatRoomLabel(globalRoom, text)}</option> : null}
                   {regionRooms.length > 0 ? (
-                    <optgroup label={text.regionChannels} className="bg-[#07101f] font-semibold text-cyan-300">
+                    <optgroup label={text.regionChannels} className="bg-panel font-semibold text-accent">
                       {regionRooms.map((room) => <option key={room.id} value={room.id} className="font-normal text-slate-200">{room.display_name}</option>)}
                     </optgroup>
                   ) : null}
                   {electionRooms.length > 0 ? (
-                    <optgroup label={text.electionChannels} className="bg-[#07101f] font-semibold text-pink-300">
+                    <optgroup label={text.electionChannels} className="bg-panel font-semibold text-arcadePink">
                       {electionRooms.map((room) => <option key={room.id} value={room.id} className="font-normal text-slate-200">{room.display_name}</option>)}
                     </optgroup>
                   ) : null}
                   {referendumRooms.length > 0 ? (
-                    <optgroup label={text.referendumChannels} className="bg-[#07101f] font-semibold text-amber-300">
+                    <optgroup label={text.referendumChannels} className="bg-panel font-semibold text-signal">
                       {referendumRooms.map((room) => <option key={room.id} value={room.id} className="font-normal text-slate-200">{room.display_name}</option>)}
                     </optgroup>
                   ) : null}
@@ -1030,7 +1030,7 @@ export function GlobalChatWidget() {
             </div>
           </div>
 
-          <footer className="border-t border-cyan-300/20 bg-[#050b16] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
+          <footer className="border-t border-accent/20 bg-bg px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
             {realtimeStatus !== 'SUBSCRIBED' && !isLoading && !postingUnavailable ? <p className="mb-2 text-[10px] text-amber-200/80">{text.reconnecting}</p> : null}
             {error ? <p role="alert" className="mb-2 border-l-2 border-pink-400 bg-pink-400/10 px-2 py-1 text-[11px] text-pink-100">{error}</p> : null}
 

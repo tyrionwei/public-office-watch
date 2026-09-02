@@ -23,8 +23,8 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
 
   return (
     <header className="relative z-50 px-3 py-3 sm:px-4">
-      <div className="pixel-corners pointer-events-none absolute inset-0 border border-line/80 bg-[#071126]/90 shadow-pixel" />
-      <div className="pixel-corners pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(114,232,255,0.08),transparent_35%,rgba(244,211,94,0.08))]" />
+      <div className="pixel-corners pointer-events-none absolute inset-0 border border-line/80 [background:var(--theme-header-background)] shadow-pixel" />
+      <div className="pixel-corners pointer-events-none absolute inset-0 [background:var(--theme-header-accent)]" />
 
       <div className="relative">
         <div className="grid gap-3 2xl:grid-cols-[minmax(260px,0.72fr)_minmax(340px,0.9fr)_auto_auto] 2xl:items-center">
@@ -86,7 +86,7 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
             ))}
           </nav>
 
-          {rightSlot ? <div className="w-full max-w-[300px] justify-self-end">{rightSlot}</div> : null}
+          {rightSlot ? <div className="w-full max-w-[360px] justify-self-end">{rightSlot}</div> : null}
         </div>
       </div>
     </header>

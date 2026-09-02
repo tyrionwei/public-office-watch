@@ -13,7 +13,7 @@ export function PollComparisonPanel({ comparison }: PollComparisonPanelProps) {
   return (
     <PixelFrame
       title={t('poll.frameTitle')}
-      className="bg-[linear-gradient(180deg,rgba(22,16,52,0.96),rgba(21,22,54,0.92)_55%,rgba(10,15,34,0.95))]"
+      className="[background:var(--theme-panel-gradient)]"
     >
       <div className="space-y-4">
         <div>

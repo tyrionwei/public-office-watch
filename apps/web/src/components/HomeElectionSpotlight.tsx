@@ -414,7 +414,7 @@ export function HomeElectionSpotlight({
     <div className="min-w-0 space-y-3 xl:grid xl:h-full xl:grid-rows-[400px_minmax(0,1fr)] xl:gap-3 xl:space-y-0">
       <PixelFrame title={t('homeSpotlight.title')}>
         <div
-          className="relative min-h-[312px] overflow-hidden rounded-sm border border-accent/25 bg-[#071b37]"
+          className="theme-dark-surface relative min-h-[312px] overflow-hidden rounded-sm border border-accent/25 bg-[#071b37]"
           data-region-highlight={highlightBackground?.regionId ?? undefined}
           data-region-highlight-feature={highlightBackground?.feature ?? undefined}
           data-national-overview={national ? '' : undefined}
@@ -555,7 +555,7 @@ export function HomeElectionSpotlight({
                 onChange={(event) => selectCouncilorDistrict(event.target.value)}
                 aria-label={language === 'en' ? 'Select councilor district' : '選擇市議員選區'}
                 data-councilor-district-select
-                className="pixel-corners mb-1 min-h-8 border border-accent/60 bg-[#061126] px-2 py-1 font-display text-[10px] text-white focus:outline-none focus:ring-2 focus:ring-accent/35"
+                className="pixel-corners mb-1 min-h-8 border border-accent/60 bg-bg px-2 py-1 font-display text-[10px] text-white focus:outline-none focus:ring-2 focus:ring-accent/35"
               >
                 <option value="">{language === 'en' ? 'All districts' : '全部選區'}</option>
                 {activeCategoryRaces.map((race) => (
@@ -637,7 +637,7 @@ export function HomeElectionSpotlight({
                       variant={candidate.candidate_id}
                     />
                     <div className="mt-2 border-t border-line/60 pt-2">
-                      <span className="inline-flex rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}28`, color: theme.text }}>
+                      <span className="theme-party-chip inline-flex rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}28`, color: theme.text }}>
                         {translateCandidateStatus(candidate, t)}
                       </span>
                       {raceContext ? <p className="mt-2 font-display text-xs text-accent" data-candidate-race-context>{raceContext}</p> : null}

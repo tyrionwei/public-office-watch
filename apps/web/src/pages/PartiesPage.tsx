@@ -172,7 +172,7 @@ export function PartiesPage() {
                           <p className="mt-1 truncate text-xs text-slate-500">{party.short_name ?? party.registry_no ?? t('parties.registryRecord')}</p>
                         </div>
                         <span
-                          className="shrink-0 rounded-sm border px-2 py-1 text-[11px]"
+                          className="theme-party-chip shrink-0 rounded-sm border px-2 py-1 text-[11px]"
                           style={{ borderColor: theme.accent, color: isTracked ? theme.text : '#94a3b8' }}
                         >
                           {isTracked ? t('parties.tracked') : theme.label}

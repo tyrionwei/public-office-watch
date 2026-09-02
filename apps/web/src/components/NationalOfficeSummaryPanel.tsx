@@ -132,7 +132,7 @@ export function NationalOfficeSummaryPanel() {
     <PixelFrame
       title={t('nationalOffice.title')}
       action={loading ? <span className="text-[11px] uppercase tracking-[0.2em] text-slate-500">{t('office.loading')}</span> : null}
-      className="overflow-visible bg-[linear-gradient(180deg,rgba(12,18,36,0.96),rgba(8,15,30,0.92))]"
+      className="overflow-visible [background:var(--theme-panel-gradient)]"
     >
       <div className="space-y-3">
         {institutionOrder.map((institution) => (
@@ -172,7 +172,7 @@ export function NationalOfficeSummaryPanel() {
                       />
                     </div>
                   </div>
-                  <span className="text-right font-display text-lg" style={{ color: theme.text }}>{count}</span>
+                  <span className="theme-party-text text-right font-display text-lg" style={{ color: theme.text }}>{count}</span>
                 </div>
               );
             })}

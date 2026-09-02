@@ -6,6 +6,7 @@ import { RouteMetadata } from './components/RouteMetadata';
 import { publicDataReadyEvent, refreshConfiguredPublicDataProvider } from './lib/publicDataProviderFactory';
 import { aboutPath, dataGuidancePath, electionsPath, homePath, internalChatAdminPath, internalDataProgressPath, internalReviewQueuePath, internalUpdateAdminPath, partiesPath, peoplePath, supportPath, updatesPath } from './routes/routePaths';
 import { SelectedRegionProvider } from './selectedRegion';
+import { ThemeProvider } from './theme';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })));
 const PeoplePage = lazy(() => import('./pages/PeoplePage').then((module) => ({ default: module.PeoplePage })));
@@ -189,17 +190,19 @@ function App() {
   }, [refreshAttempt]);
 
   return (
-    <BrowserRouter>
-      <RouteScrollRestoration />
-      <LanguageProvider>
-        <SelectedRegionProvider>
-          <AppRoutes
-            publicDataStatus={publicDataStatus}
-            onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
-          />
-        </SelectedRegionProvider>
-      </LanguageProvider>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <RouteScrollRestoration />
+        <LanguageProvider>
+          <SelectedRegionProvider>
+            <AppRoutes
+              publicDataStatus={publicDataStatus}
+              onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
+            />
+          </SelectedRegionProvider>
+        </LanguageProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

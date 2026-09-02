@@ -446,7 +446,7 @@ export function RacePage() {
                       </div>
                       <div className="min-w-0">
                         <span
-                          className="pixel-corners inline-block max-w-full truncate border px-2 py-1 text-xs"
+                          className="theme-party-chip pixel-corners inline-block max-w-full truncate border px-2 py-1 text-xs"
                           style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}33`, color: theme.text }}
                         >
                           {partyLabel}

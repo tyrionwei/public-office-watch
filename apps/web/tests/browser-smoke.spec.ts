@@ -73,6 +73,7 @@ test('chat launcher introduces itself once without exposing chat messages', asyn
 
   await page.setViewportSize({ width: 375, height: 780 });
   await page.clock.install({ time: new Date('2026-08-22T12:00:00+08:00') });
+
   await page.goto('/');
   await page.evaluate((key) => window.localStorage.removeItem(key), storageKey);
   await page.reload();
@@ -117,6 +118,76 @@ test('chat launcher introduces itself once without exposing chat messages', asyn
   await page.clock.fastForward(5_000);
   await expect(nudge).toHaveCount(0);
 });
+
+test('theme toggle keeps dark as the default and remembers a light preference', async ({ page }) => {
+  await page.goto('/');
+
+  const root = page.locator('html');
+  await expect(root).toHaveAttribute('data-theme', 'dark');
+
+  const lightToggle = page.getByRole('button', { name: '切換至淺色模式' });
+  await expect(lightToggle).toContainText('深色');
+  const darkBackground = await page.locator('body').evaluate((element) => getComputedStyle(element).backgroundColor);
+
+  await lightToggle.click();
+
+  await expect(root).toHaveAttribute('data-theme', 'light');
+  const darkToggle = page.getByRole('button', { name: '切換至深色模式' });
+  await expect(darkToggle).toContainText('淺色');
+  await expect.poll(() => page.evaluate(() => window.localStorage.getItem('public-office-watch-theme'))).toBe('light');
+  const lightBackground = await page.locator('body').evaluate((element) => getComputedStyle(element).backgroundColor);
+  expect(lightBackground).not.toBe(darkBackground);
+
+  await page.reload();
+  await expect(root).toHaveAttribute('data-theme', 'light');
+  await expect(page.getByRole('button', { name: '切換至深色模式' })).toBeVisible();
+
+  await page.getByRole('link', { name: '◎ 人物' }).click();
+  await expect(page).toHaveURL(/\/people(?:\?|$)/);
+  await expect(root).toHaveAttribute('data-theme', 'light');
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expectNoHorizontalOverflow(page);
+  await page.getByRole('button', { name: '切換至深色模式' }).click();
+  await expect(root).toHaveAttribute('data-theme', 'dark');
+  await expect.poll(() => page.evaluate(() => window.localStorage.getItem('public-office-watch-theme'))).toBe('dark');
+  await expectNoHorizontalOverflow(page);
+});
+
+test('light theme uses warm surfaces and readable semantic colors', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: '切換至淺色模式' }).click();
+
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(238, 232, 220)');
+
+  await page.goto('/people/49a7d775-31da-413c-aa2a-f9e6190fcade');
+  await expect(page.getByRole('heading', { name: '人物資料', exact: true })).toBeVisible();
+
+  const partyChip = page.locator('.theme-party-chip').first();
+  await expect(partyChip).toBeVisible();
+  await expect(partyChip).toHaveCSS('color', 'rgb(27, 41, 56)');
+
+  const uncollectedSummary = page.locator('[data-summary-state="uncollected"]');
+  const pendingSummary = page.locator('[data-summary-state="pending"]');
+  await expect(uncollectedSummary).toBeVisible();
+  await expect(pendingSummary).toBeVisible();
+  await expect(uncollectedSummary.getByRole('heading')).toHaveCSS('color', 'rgb(116, 70, 0)');
+  await expect(pendingSummary.getByRole('heading')).toHaveCSS('color', 'rgb(92, 59, 159)');
+
+  const candidacyStatus = page.locator('.theme-candidacy-status').first();
+  await expect(candidacyStatus).toBeVisible();
+  await expect(candidacyStatus).toHaveCSS('color', 'rgb(146, 87, 0)');
+
+  const voteButtons = page.locator('.theme-vote-button');
+  await expect(voteButtons.first()).toBeVisible();
+  await expect(voteButtons.nth(0)).toHaveCSS('color', 'rgb(13, 104, 73)');
+  await expect(voteButtons.nth(1)).toHaveCSS('color', 'rgb(0, 104, 121)');
+  await expect(voteButtons.nth(2)).toHaveCSS('color', 'rgb(154, 45, 76)');
+  await expect(voteButtons.nth(3)).toHaveCSS('color', 'rgb(64, 80, 101)');
+
+  await expectNoHorizontalOverflow(page);
+});
+
 test('desktop public pages do not introduce horizontal overflow in English', async ({ page }) => {
   for (const path of ['/', '/people']) {
     await page.goto(path);
@@ -696,6 +767,22 @@ test('homepage quick select exposes the six municipalities and seat links carry 
   expect(offshoreButtonBoxes[0].top - (offshoreRailBox?.y ?? 0)).toBeGreaterThan(20);
   expect((offshoreRailBox?.y ?? 0) + (offshoreRailBox?.height ?? 0) - offshoreButtonBoxes[2].bottom).toBeGreaterThan(20);
   await expect(page.locator('[data-main-island-map] > g')).toHaveAttribute('transform', /scale\(0\.93 1\.05\)/);
+  const readIslandLayoutRatio = async () => {
+    const railBox = await page.locator('[data-offshore-rail]').boundingBox();
+    const mainIslandBox = await page.locator('[data-main-island-map]').boundingBox();
+    expect(railBox).not.toBeNull();
+    expect(mainIslandBox).not.toBeNull();
+    return (railBox?.width ?? 0) / (mainIslandBox?.width ?? 1);
+  };
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileIslandLayoutRatio = await readIslandLayoutRatio();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  const compactIslandLayoutRatio = await readIslandLayoutRatio();
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  const wideIslandLayoutRatio = await readIslandLayoutRatio();
+  expect(Math.abs(mobileIslandLayoutRatio - wideIslandLayoutRatio)).toBeLessThan(0.02);
+  expect(Math.abs(compactIslandLayoutRatio - wideIslandLayoutRatio)).toBeLessThan(0.02);
+  await page.setViewportSize({ width: 1440, height: 900 });
   const moreCounties = quickSelect.locator('details').first();
   await moreCounties.locator('summary').click();
   const moreButtonBox = await moreCounties.locator('summary').boundingBox();

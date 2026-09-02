@@ -94,7 +94,7 @@ export function PartySeatDistributionPanel({
                         style={{ width: `${Math.max(4, (item.count / largestCount) * 100)}%`, backgroundColor: theme.primary }}
                       />
                     </span>
-                    <span className="text-right font-display text-base" style={{ color: theme.text }}>{item.count}</span>
+                    <span className="theme-party-text text-right font-display text-base" style={{ color: theme.text }}>{item.count}</span>
                   </Link>
                 );
               })}

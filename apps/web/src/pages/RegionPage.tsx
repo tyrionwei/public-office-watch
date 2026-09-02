@@ -74,7 +74,7 @@ export function RegionPage() {
       {regionNode && regionSummary && loadStatus === 'loaded' ? (
         <div className="space-y-5">
           <header
-            className="pixel-corners relative min-h-[330px] overflow-hidden border border-line/80 bg-panel"
+            className={`pixel-corners relative min-h-[330px] overflow-hidden border border-line/80 bg-panel ${highlightImage ? 'theme-dark-surface' : ''}`}
           >
             {highlightImage ? (
               <>

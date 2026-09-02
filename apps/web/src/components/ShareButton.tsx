@@ -255,7 +255,7 @@ export function ShareButton({
             role="dialog"
             aria-modal="true"
             aria-label={t('share.previewTitle')}
-            className="pixel-corners fixed inset-x-0 bottom-0 z-[80] max-h-[92dvh] overflow-y-auto border-2 border-cyan-300/70 bg-[#07101f] p-4 shadow-[0_-8px_32px_rgba(0,0,0,0.65)] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:w-[min(92vw,680px)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:p-5"
+            className="pixel-corners fixed inset-x-0 bottom-0 z-[80] max-h-[92dvh] overflow-y-auto border-2 border-accent/70 bg-panel p-4 shadow-[0_-8px_32px_rgba(0,0,0,0.4)] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:w-[min(92vw,680px)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:p-5"
           >
             <header className="flex items-start justify-between gap-4">
               <div>

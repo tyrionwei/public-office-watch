@@ -8,7 +8,7 @@ type NextEventTickerProps = {
   electionId: string | null;
 };
 
-const containerClassName = 'pixel-corners group relative block overflow-hidden border border-line/80 bg-[#071126]/92 px-3 py-2 shadow-[0_0_0_2px_rgba(114,232,255,0.14)] transition hover:border-accent/55 focus:outline-none focus:ring-2 focus:ring-accent/35';
+const containerClassName = 'pixel-corners group relative block overflow-hidden border border-line/80 bg-panel/92 px-3 py-2 shadow-[0_0_0_2px_rgba(114,232,255,0.14)] transition hover:border-accent/55 focus:outline-none focus:ring-2 focus:ring-accent/35';
 
 export function NextEventTicker({ title, date, electionId }: NextEventTickerProps) {
   const { t } = useI18n();

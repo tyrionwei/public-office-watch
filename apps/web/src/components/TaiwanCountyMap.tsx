@@ -141,10 +141,10 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
     taiwanCountyMapBounds.fullViewBox;
 
   return (
-    <div className="pixel-corners min-w-0 border border-line/70 bg-[linear-gradient(180deg,rgba(4,23,52,0.96),rgba(4,16,38,0.94)_58%,rgba(3,10,24,0.96))] p-3">
+    <div className="pixel-corners min-w-0 border border-line/70 p-3 [background:var(--theme-panel-gradient)]">
 
-      <div className="relative mx-auto aspect-[9/11] w-full max-w-[720px] min-w-0 overflow-hidden rounded-sm bg-[#0b5f91] bg-[url('/assets/map/pixel-ocean-panel-bg-preview.webp')] bg-cover bg-center bg-no-repeat p-2 shadow-[inset_0_0_36px_rgba(2,8,23,0.55)] [image-rendering:pixelated] xl:h-full xl:min-h-[620px] xl:aspect-auto">
-        <div data-county-map-layout className="relative grid h-full min-h-0 min-w-0 grid-cols-[clamp(94px,22%,132px)_minmax(0,1fr)] gap-2 2xl:gap-3">
+      <div className="theme-dark-surface relative mx-auto aspect-[9/11] w-full max-w-[720px] min-w-0 overflow-hidden rounded-sm bg-[#0b5f91] bg-[url('/assets/map/pixel-ocean-panel-bg-preview.webp')] bg-cover bg-center bg-no-repeat p-2 shadow-[inset_0_0_36px_rgba(2,8,23,0.55)] [image-rendering:pixelated] xl:h-full xl:min-h-[620px] xl:aspect-auto">
+        <div data-county-map-layout className="relative grid h-full min-h-0 min-w-0 grid-cols-[22fr_78fr] gap-2 2xl:gap-3">
           <div data-offshore-rail className="relative z-20 flex h-full min-h-0 flex-col justify-center gap-2">
             {offshoreCounties.map((county) => {
               const regionId = getRegionIdByCountyCode(regions, county.code);

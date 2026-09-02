@@ -54,7 +54,7 @@ export function PartyFinanceCompositionChart({
           className="absolute inset-0 rounded-full border border-white/10 shadow-[0_0_42px_rgba(103,232,249,0.14)]"
           style={{ background: donutBackground }}
         />
-        <div className="absolute inset-[20%] grid place-content-center rounded-full border border-line/80 bg-[#091225] text-center shadow-[inset_0_0_28px_rgba(103,232,249,0.08)]">
+        <div className="absolute inset-[20%] grid place-content-center rounded-full border border-line/80 bg-bg text-center shadow-[inset_0_0_28px_rgba(103,232,249,0.08)]">
           <span className="text-[10px] uppercase tracking-[0.22em] text-slate-500">{totalLabel}</span>
           <strong className="mt-2 px-2 font-display text-lg text-white sm:text-xl">{formatValue(chartTotal)}</strong>
         </div>

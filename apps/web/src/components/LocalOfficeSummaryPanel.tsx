@@ -53,7 +53,7 @@ function PersonOfficeLink({
         </p>
       </div>
       <span
-        className="pixel-corners shrink-0 border px-2 py-1 text-[11px]"
+        className="theme-party-chip pixel-corners shrink-0 border px-2 py-1 text-[11px]"
         style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}33`, color: theme.text }}
       >
         {normalizePartyLabel(person.party)}
@@ -209,12 +209,12 @@ function PartyCountCard({ summary, party, count }: { summary: PublicLocalOfficeS
       className="pixel-corners border p-3 transition hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(0,0,0,0.22)] focus:outline-none focus:ring-2 focus:ring-accent/35"
       style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}2E` }}
     >
-      <p className="text-xs uppercase tracking-[0.2em]" style={{ color: theme.accent }}>
+      <p className="theme-party-text text-xs uppercase tracking-[0.2em]" style={{ color: theme.accent }}>
         {t('office.councilors')}
       </p>
       <div className="mt-2 flex items-end justify-between gap-3">
         <span className="text-sm text-white">{party}</span>
-        <span className="font-display text-2xl leading-none" style={{ color: theme.text }}>
+        <span className="theme-party-text font-display text-2xl leading-none" style={{ color: theme.text }}>
           {count}
         </span>
       </div>
@@ -271,7 +271,7 @@ export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelPro
           </Link>
         )
       }
-      className="overflow-visible bg-[linear-gradient(180deg,rgba(12,18,36,0.96),rgba(8,15,30,0.92))]"
+      className="overflow-visible [background:var(--theme-panel-gradient)]"
     >
       <div className="mb-3 flex items-end justify-between gap-3">
         <div>

@@ -15,7 +15,7 @@ export function NationalOverviewHud({ races }: NationalOverviewHudProps) {
   return (
     <PixelFrame
       title={t('national.title')}
-      className="bg-[linear-gradient(145deg,rgba(10,35,65,0.98),rgba(8,19,39,0.95)_58%,rgba(16,31,54,0.96))]"
+      className="[background:var(--theme-panel-gradient)]"
     >
       <div data-national-overview className="relative overflow-hidden p-1">
         <div className="pointer-events-none absolute right-1 top-0 font-display text-7xl leading-none text-accent/10">TW</div>

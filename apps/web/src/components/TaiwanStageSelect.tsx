@@ -139,7 +139,7 @@ export function CompactCountyQuickSelect({
             <span>{t('stage.moreCounties')}</span>
             <span aria-hidden="true" className="transition group-open:rotate-90">›</span>
           </summary>
-          <div className="pixel-corners absolute left-0 top-full z-50 mt-2 grid max-h-[min(520px,calc(100vh-10rem))] w-[min(300px,calc(100vw-2rem))] grid-cols-2 gap-1.5 overflow-y-auto border border-line/90 bg-[#071329]/98 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.55)] sm:left-full sm:top-1/2 sm:ml-2 sm:mt-0 sm:-translate-y-1/2">
+          <div className="pixel-corners absolute left-0 top-full z-50 mt-2 grid max-h-[min(520px,calc(100vh-10rem))] w-[min(300px,calc(100vw-2rem))] grid-cols-2 gap-1.5 overflow-y-auto border border-line/90 bg-panel/98 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.35)] sm:left-full sm:top-1/2 sm:ml-2 sm:mt-0 sm:-translate-y-1/2">
             {additionalRegions.map((region) => (
               <RegionButton
                 key={region.id}
@@ -165,7 +165,7 @@ export function TaiwanStageSelect({
   const topLevelRegions = getCurrentCountyRegions(regions, selectedRegionId);
 
   return (
-    <div className="pixel-corners min-w-0 border border-line/70 bg-[linear-gradient(180deg,rgba(7,22,45,0.96),rgba(8,27,52,0.94)_55%,rgba(7,18,38,0.96))] p-3 sm:p-4 xl:flex xl:h-full xl:flex-col">
+    <div className="pixel-corners min-w-0 border border-line/70 p-3 [background:var(--theme-panel-gradient)] sm:p-4 xl:flex xl:h-full xl:flex-col">
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="font-display text-sm uppercase tracking-[0.22em] text-slate-200">{t('stage.countyGuide')}</p>
         <span className="rounded-sm border border-signal/30 bg-signal/10 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-signal">

@@ -36,6 +36,13 @@ export function DesktopVotingRegionInline({ onOpenEditor, ticker }: DesktopVotin
 
   return (
     <div data-desktop-voting-region className="hidden shrink-0 items-center gap-2 md:flex">
+      <button
+        type="button"
+        onClick={onOpenEditor}
+        className="inline-flex min-h-9 items-center border border-line px-2.5 text-xs text-slate-200 hover:border-accent/55 hover:text-accent"
+      >
+        {isEnglish ? 'Change' : '變更'}
+      </button>
       <span className="text-[10px] uppercase tracking-[0.14em] text-accent">{isEnglish ? 'VOTING AREA' : '戶籍'}</span>
       <span className="max-w-48 truncate text-xs font-semibold text-slate-100" title={preferenceLabel}>{preferenceLabel}</span>
       <Link
@@ -44,9 +51,6 @@ export function DesktopVotingRegionInline({ onOpenEditor, ticker }: DesktopVotin
       >
         {isEnglish ? `Browse ${preference.county.name}` : `切到${preference.county.name}`}
       </Link>
-      <button type="button" onClick={onOpenEditor} className="min-h-9 px-2 text-xs text-accent underline underline-offset-4">
-        {isEnglish ? 'Change' : '變更'}
-      </button>
       {pollingPlaceLookupUrl ? (
         <a href={pollingPlaceLookupUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center border border-signal/60 bg-signal/8 px-2.5 text-xs font-semibold text-signal">
           {isEnglish ? 'Polling place ↗' : '投票所 ↗'}

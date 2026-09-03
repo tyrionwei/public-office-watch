@@ -716,6 +716,14 @@ test('desktop voting area is optional, shared, and requests location only after 
   await expect(pollingPlaceLink).toHaveAttribute('href', /prvCityCode=63000/u);
   await expect(pollingPlaceLink).toHaveAttribute('href', /deptCode=020/u);
   await expect(pollingPlaceLink).toHaveAttribute('href', /liCode=001/u);
+  const changeButton = card.getByRole('button', { name: '變更' });
+  const changeButtonBox = await changeButton.boundingBox();
+  const votingAreaLabelBox = await card.getByText('戶籍', { exact: true }).boundingBox();
+  expect(changeButtonBox).not.toBeNull();
+  expect(votingAreaLabelBox).not.toBeNull();
+  expect(changeButtonBox!.x + changeButtonBox!.width).toBeLessThan(votingAreaLabelBox!.x);
+  await expect(changeButton).toHaveCSS('border-bottom-style', 'solid');
+  await expect(changeButton).toHaveCSS('text-decoration-line', 'none');
   const eventDetailsBox = await page.locator('[data-next-event-details]').boundingBox();
   const votingRegionBox = await card.boundingBox();
   expect(eventDetailsBox).not.toBeNull();

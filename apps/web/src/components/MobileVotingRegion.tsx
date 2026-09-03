@@ -70,6 +70,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const villagePickerRef = useRef<HTMLDivElement>(null);
   const restoreVillageForDistrictRef = useRef<string | null>(null);
+  const openVillageMenuForDistrictRef = useRef<string | null>(null);
   const [onboardingDismissed, setOnboardingDismissed] = useState(readOnboardingDismissed);
   const [counties, setCounties] = useState<StageRegionNode[]>([]);
   const [districts, setDistricts] = useState<VotingRegionChoice[]>([]);
@@ -80,6 +81,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
   const [villageSearch, setVillageSearch] = useState('');
   const [villageMenuOpen, setVillageMenuOpen] = useState(false);
   const [villagesLoading, setVillagesLoading] = useState(false);
+  const [villageLoadRequest, setVillageLoadRequest] = useState(0);
   const [source, setSource] = useState<VotingRegionPreference['source']>('manual');
   const [suggestedLocation, setSuggestedLocation] = useState<SuggestedLocation | null>(null);
   const [locating, setLocating] = useState(false);
@@ -180,6 +182,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     if (!editorOpen) return;
     let active = true;
     restoreVillageForDistrictRef.current = null;
+    openVillageMenuForDistrictRef.current = null;
     setCountyId(preference?.county.id ?? '');
     setDistrictId('');
     setVillages([]);
@@ -223,12 +226,15 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
         if (!active) return;
         setVillages(nextVillages);
         const shouldRestoreSavedVillage = restoreVillageForDistrictRef.current === districtId;
+        const shouldOpenVillageMenu = openVillageMenuForDistrictRef.current === districtId;
         restoreVillageForDistrictRef.current = null;
+        openVillageMenuForDistrictRef.current = null;
         if (shouldRestoreSavedVillage && preference?.village) {
           const savedVillage = nextVillages.find((village) => village.id === preference.village?.id)
             ?? nextVillages.find((village) => village.name === preference.village?.name);
           setVillageId(savedVillage?.id ?? '');
         }
+        if (shouldOpenVillageMenu) setVillageMenuOpen(true);
       })
       .finally(() => {
         if (active) setVillagesLoading(false);
@@ -236,11 +242,12 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     return () => {
       active = false;
     };
-  }, [districtId, editorOpen, preference]);
+  }, [districtId, editorOpen, preference, villageLoadRequest]);
 
   const chooseCounty = (nextCountyId: string, nextSource: VotingRegionPreference['source'] = 'manual') => {
     const selectedCounty = counties.find((county) => county.id === nextCountyId);
     restoreVillageForDistrictRef.current = null;
+    openVillageMenuForDistrictRef.current = null;
     setCountyId(nextCountyId);
     setDistrictId('');
     setVillages([]);
@@ -253,6 +260,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
 
   const chooseDistrict = (nextDistrictId: string) => {
     restoreVillageForDistrictRef.current = null;
+    openVillageMenuForDistrictRef.current = null;
     setDistrictId(nextDistrictId);
     setVillages([]);
     setVillageId('');
@@ -325,14 +333,17 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       ? nextDistricts.find((district) => district.id === suggestedLocation.district?.id)
         ?? nextDistricts.find((district) => district.name === suggestedLocation.district?.name)
       : undefined;
+    const nextDistrictId = matchingDistrict?.id ?? '';
     restoreVillageForDistrictRef.current = null;
+    openVillageMenuForDistrictRef.current = nextDistrictId || null;
     setCountyId(matchingCounty.id);
     setDistricts(nextDistricts);
-    setDistrictId(matchingDistrict?.id ?? '');
+    setDistrictId(nextDistrictId);
     setVillages([]);
     setVillageId('');
     setVillageSearch('');
     setVillageMenuOpen(false);
+    setVillageLoadRequest((request) => request + 1);
     setSource('confirmed-location');
     setSuggestedLocation(null);
   };

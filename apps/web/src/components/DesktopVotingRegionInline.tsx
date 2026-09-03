@@ -43,7 +43,7 @@ export function DesktopVotingRegionInline({ onOpenEditor, ticker }: DesktopVotin
       >
         {isEnglish ? 'Change' : '變更'}
       </button>
-      <span className="text-[10px] uppercase tracking-[0.14em] text-accent">{isEnglish ? 'VOTING AREA' : '戶籍'}</span>
+      <span className="text-[10px] uppercase tracking-[0.14em] text-accent">{isEnglish ? 'VOTING AREA' : '投票地區'}</span>
       <span className="max-w-48 truncate text-xs font-semibold text-slate-100" title={preferenceLabel}>{preferenceLabel}</span>
       <Link
         to={{ pathname: '/', search: `?region=${encodeURIComponent(preference.county.id)}` }}

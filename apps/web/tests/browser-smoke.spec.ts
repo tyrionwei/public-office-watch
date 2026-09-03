@@ -559,6 +559,9 @@ test('mobile voting area persists only confirmed choices and treats location as 
   await expect(reopenedDialog.locator('[data-voting-district] option')).toHaveCount(13);
   await expect(reopenedDialog.locator('[data-voting-village-trigger]')).toBeEnabled();
   await expect(reopenedDialog.locator('[data-voting-village-trigger]')).toContainText('搜尋或選擇村里');
+  await expect(reopenedDialog.locator('[data-voting-village-search]')).toBeVisible();
+  await expect(reopenedDialog.getByRole('option', { name: '西村里', exact: true })).toBeVisible();
+  await reopenedDialog.getByRole('option', { name: '不選村里', exact: true }).click();
   expect(await page.evaluate((key) => window.localStorage.getItem(key), storageKey)).toBe(persistedBeforeLocation);
 
   await reopenedDialog.getByRole('button', { name: '儲存投票地區' }).click();
@@ -718,7 +721,7 @@ test('desktop voting area is optional, shared, and requests location only after 
   await expect(pollingPlaceLink).toHaveAttribute('href', /liCode=001/u);
   const changeButton = card.getByRole('button', { name: '變更' });
   const changeButtonBox = await changeButton.boundingBox();
-  const votingAreaLabelBox = await card.getByText('戶籍', { exact: true }).boundingBox();
+  const votingAreaLabelBox = await card.getByText('投票地區', { exact: true }).boundingBox();
   expect(changeButtonBox).not.toBeNull();
   expect(votingAreaLabelBox).not.toBeNull();
   expect(changeButtonBox!.x + changeButtonBox!.width).toBeLessThan(votingAreaLabelBox!.x);

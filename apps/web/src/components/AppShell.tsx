@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import { supportPath } from '../routes/routePaths';
 import { AppHeader } from './AppHeader';
+import { DesktopVotingRegionInline } from './DesktopVotingRegionInline';
 import { LanguageToggle } from './LanguageToggle';
 import { MobileNavigation, type MobilePanel } from './MobileNavigation';
 import { MobileVotingRegion } from './MobileVotingRegion';
@@ -51,7 +52,14 @@ export function AppShell({ headerRight, ticker, tickerMobileHidden = false, chil
           onCloseEditor={() => setVotingRegionEditorOpen(false)}
         />
 
-        {ticker ? <div className={`mt-3 ${tickerMobileHidden ? 'hidden md:block' : ''}`}>{<NextEventTicker {...ticker} />}</div> : null}
+        {ticker ? (
+          <div className={`mt-3 ${tickerMobileHidden ? 'hidden md:block' : ''}`}>
+            <NextEventTicker
+              {...ticker}
+              rightSlot={<DesktopVotingRegionInline ticker={ticker} onOpenEditor={() => setVotingRegionEditorOpen(true)} />}
+            />
+          </div>
+        ) : null}
 
         <main className="mt-3">{children}</main>
       </div>

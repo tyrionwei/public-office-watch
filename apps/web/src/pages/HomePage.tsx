@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HomeElectionSpotlight } from '../components/HomeElectionSpotlight';
 import { MobileMyElection } from '../components/MobileMyElection';
+import { MobileRegionBrowser } from '../components/MobileRegionBrowser';
 import { PartySeatDistributionPanel } from '../components/PartySeatDistributionPanel';
 import { RegionIssueConcernPanel } from '../components/RegionIssueConcernPanel';
 import { TaiwanStageSelect } from '../components/TaiwanStageSelect';
@@ -22,10 +23,13 @@ export function HomePage() {
   const { preference: votingRegionPreference } = useVotingRegion();
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedRegionId = searchParams.get('region');
-  const requestedHomeRegionId = requestedRegionId ?? votingRegionPreference?.county.id ?? storedRegionId;
+  const requestedHomeRegionId = requestedRegionId ?? storedRegionId;
   const [homeData, setHomeData] = useState(() => publicDataProvider.getHomePageData());
   const [homeLoading, setHomeLoading] = useState(true);
   const [homeLoadError, setHomeLoadError] = useState(false);
+  const [myElectionData, setMyElectionData] = useState(() => publicDataProvider.getHomePageData());
+  const [myElectionLoading, setMyElectionLoading] = useState(Boolean(votingRegionPreference));
+  const [myElectionLoadError, setMyElectionLoadError] = useState(false);
   useEffect(() => {
     let active = true;
     const regionId = !requestedHomeRegionId || requestedHomeRegionId === NATIONAL_REGION_QUERY
@@ -46,14 +50,46 @@ export function HomePage() {
       });
     return () => { active = false; };
   }, [requestedHomeRegionId]);
+
+  const votingCountyId = votingRegionPreference?.county.id ?? null;
+  useEffect(() => {
+    if (!votingCountyId) {
+      setMyElectionLoading(false);
+      setMyElectionLoadError(false);
+      return undefined;
+    }
+    let active = true;
+    setMyElectionLoading(true);
+    setMyElectionLoadError(false);
+    void publicDataProvider.loadHomePageData(votingCountyId)
+      .then((data) => {
+        if (active) setMyElectionData(data);
+      })
+      .catch((error: unknown) => {
+        if (active) setMyElectionLoadError(true);
+        if (import.meta.env.DEV) console.warn('Failed to load my election data', error);
+      })
+      .finally(() => {
+        if (active) setMyElectionLoading(false);
+      });
+    return () => { active = false; };
+  }, [votingCountyId]);
+
   const selectedRegionId = selectHomeRegionId(homeData.stageRegions, requestedHomeRegionId)
     ?? (taiwanRegions.some((region) => region.slug === requestedHomeRegionId) ? requestedHomeRegionId : null);
   const isNationalView = selectedRegionId === null;
   const relatedRaces = selectHomeRelatedRaces(homeData, selectedRegionId);
+  const myElectionRegionId = selectHomeRegionId(myElectionData.stageRegions, votingCountyId)
+    ?? (taiwanRegions.some((region) => region.slug === votingCountyId) ? votingCountyId : null);
+  const myElectionRaces = selectHomeRelatedRaces(myElectionData, myElectionRegionId);
   const [, startTransition] = useTransition();
 
-  const selectedRegionNode = selectedRegionId ? publicDataProvider.getStageRegion(selectedRegionId) : null;
-  const selectedRegionSummary = selectedRegionId ? publicDataProvider.getRegionSummary(selectedRegionId) : null;
+  const selectedRegionNode = selectedRegionId
+    ? homeData.stageRegions.find((region) => region.id === selectedRegionId) ?? null
+    : null;
+  const selectedRegionSummary = selectedRegionId
+    ? homeData.stageRegionSummaries.find((summary) => summary.regionId === selectedRegionId) ?? null
+    : null;
   const selectedRegionLabel = isNationalView
     ? t('national.taiwan')
     : normalizeTaiwanText(selectedRegionSummary?.label ?? selectedRegionNode?.label ?? t('home.unspecifiedRegion'));
@@ -86,17 +122,52 @@ export function HomePage() {
     });
   }, [searchParams, selectedRegionId, setSearchParams, setSelectedRegionId, startTransition]);
 
+  const handleReturnToMyArea = useCallback(() => {
+    if (votingCountyId) setSelectedRegionId(votingCountyId);
+    startTransition(() => {
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.delete('region');
+      nextParams.delete('homeContent');
+      nextParams.delete('candidateCategory');
+      nextParams.delete('candidateDistrict');
+      nextParams.delete('candidateIndex');
+      setSearchParams(nextParams);
+    });
+  }, [searchParams, setSearchParams, setSelectedRegionId, startTransition, votingCountyId]);
+
   return (
     <AppShell ticker={homeData.ticker} tickerMobileHidden={Boolean(votingRegionPreference)}>
       {votingRegionPreference ? (
-        <MobileMyElection
-          preference={votingRegionPreference}
-          ticker={homeData.ticker}
-          races={relatedRaces}
-          candidateSummaries={homeData.candidateSummaries ?? []}
-          loading={homeLoading}
-          loadError={homeLoadError}
-        />
+        <div className="space-y-3 md:contents">
+          <MobileMyElection
+            preference={votingRegionPreference}
+            ticker={myElectionData.ticker}
+            races={myElectionRaces}
+            candidateSummaries={myElectionData.candidateSummaries ?? []}
+            loading={myElectionLoading}
+            loadError={myElectionLoadError}
+          />
+          <MobileRegionBrowser
+            selectedRegionId={selectedRegionId}
+            selectedRegionLabel={selectedRegionLabel}
+            browsing={requestedRegionId !== null}
+            onSelectRegion={handleSelectRegion}
+            onReturnToMyArea={handleReturnToMyArea}
+          />
+          {requestedRegionId !== null ? (
+            <section data-mobile-browse-results className="md:hidden">
+              <HomeElectionSpotlight
+                races={relatedRaces}
+                regionNode={selectedRegionNode}
+                regionSummary={selectedRegionSummary}
+                national={isNationalView}
+                candidateSummaries={homeData.candidateSummaries ?? []}
+                candidatesLoading={homeLoading}
+                candidateLoadError={homeLoadError}
+              />
+            </section>
+          ) : null}
+        </div>
       ) : null}
       <div
         data-home-research-grid

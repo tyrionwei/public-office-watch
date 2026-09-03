@@ -569,6 +569,25 @@ test('mobile voting area persists only confirmed choices and treats location as 
   expect(locationConfirmed.source).toBe('confirmed-location');
 });
 
+test('mobile voting area onboarding dismissal survives reloads', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.addInitScript(() => {
+    window.localStorage.setItem('public-office-watch-chat-nudge-seen-at-v1', String(Date.now()));
+    window.localStorage.removeItem('public-office-watch.voting-region-preference.v1');
+    window.localStorage.removeItem('public-office-watch.voting-region-onboarding-dismissed.v1');
+  });
+  await page.goto('/');
+
+  const onboarding = page.locator('[data-voting-region-onboarding]');
+  await expect(onboarding).toBeVisible();
+  await onboarding.getByRole('button', { name: '先看看全國資訊' }).click();
+  await expect(onboarding).toBeHidden();
+  expect(await page.evaluate(() => window.localStorage.getItem('public-office-watch.voting-region-onboarding-dismissed.v1'))).toBe('true');
+
+  await page.reload();
+  await expect(page.locator('[data-voting-region-onboarding]')).toBeHidden();
+});
+
 test('mobile my election uses the saved voting county and keeps research layout on desktop', async ({ page }) => {
   const homePayloads: Array<Record<string, unknown>> = [];
   page.on('request', (request) => {
@@ -627,6 +646,89 @@ test('mobile my election uses the saved voting county and keeps research layout 
   await page.setViewportSize({ width: 1024, height: 768 });
   await expect(dashboard).toBeHidden();
   await expect(page.locator('[data-home-research-grid]')).toBeVisible();
+});
+
+test('mobile browsing region never overrides the saved voting area', async ({ page }) => {
+  const homePayloads: Array<Record<string, unknown>> = [];
+  page.on('request', (request) => {
+    if (!request.url().includes('/rest/v1/rpc/home_page_for')) return;
+    homePayloads.push(request.postDataJSON() as Record<string, unknown>);
+  });
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.addInitScript(() => {
+    window.localStorage.setItem('public-office-watch-chat-nudge-seen-at-v1', String(Date.now()));
+    window.localStorage.setItem('public-office-watch.selected-region', 'national');
+    window.localStorage.setItem('public-office-watch.voting-region-preference.v1', JSON.stringify({
+      county: { id: 'new-taipei-city', name: '新北市' },
+      district: { id: 'district-65000010', name: '板橋區' },
+      source: 'manual',
+      confirmedAt: '2026-09-03T00:00:00.000Z',
+    }));
+  });
+
+  await page.goto('/?region=taipei-city');
+
+  const dashboard = page.locator('[data-mobile-my-election]');
+  await expect(dashboard.getByText('新北市首長選舉')).toBeVisible();
+  await expect(page.locator('[data-voting-region-summary]')).toContainText('新北市 板橋區');
+  await expect(page.locator('[data-mobile-region-browser]')).toContainText('正在瀏覽 臺北市');
+  await expect(page.locator('[data-mobile-browse-results]')).toBeVisible();
+  await expect.poll(() => homePayloads.some((payload) => payload.p_region_slug === 'new-taipei-city')).toBe(true);
+  await expect.poll(() => homePayloads.some((payload) => payload.p_region_slug === 'taipei-city')).toBe(true);
+
+  const storedBeforeReturn = await page.evaluate(() => window.localStorage.getItem('public-office-watch.voting-region-preference.v1'));
+  await page.locator('[data-mobile-region-browser]').getByRole('button', { name: '回到我的地區' }).click();
+  await expect(page).toHaveURL((url) => !url.searchParams.has('region'));
+  await expect(page.locator('[data-mobile-browse-results]')).toHaveCount(0);
+  expect(await page.evaluate(() => window.localStorage.getItem('public-office-watch.voting-region-preference.v1'))).toBe(storedBeforeReturn);
+  await expect(dashboard.getByText('新北市首長選舉')).toBeVisible();
+});
+
+test('desktop voting area is optional, shared, and requests location only after a click', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.addInitScript(() => {
+    const testWindow = window as Window & { geolocationCallCount: number };
+    testWindow.geolocationCallCount = 0;
+    window.localStorage.setItem('public-office-watch.voting-region-preference.v1', JSON.stringify({
+      county: { id: 'taipei-city', name: '臺北市' },
+      district: { id: 'district-63000020', name: '信義區' },
+      village: { id: 'village-63000020001', name: '西村里' },
+      source: 'manual',
+      confirmedAt: '2026-09-03T00:00:00.000Z',
+    }));
+    Object.defineProperty(navigator, 'geolocation', {
+      configurable: true,
+      value: {
+        getCurrentPosition() {
+          testWindow.geolocationCallCount += 1;
+        },
+      },
+    });
+  });
+  await page.goto('/');
+
+  const card = page.locator('[data-desktop-voting-region]');
+  await expect(card).toBeVisible();
+  await expect(page.locator('[data-next-event-ticker]').locator('[data-desktop-voting-region]')).toBeVisible();
+  await expect(card).toContainText('臺北市 信義區 西村里');
+  await expect(card.getByRole('link', { name: '切到臺北市' })).toHaveAttribute('href', '/?region=taipei-city');
+  const pollingPlaceLink = card.getByRole('link', { name: /投票所/u });
+  await expect(pollingPlaceLink).toHaveAttribute('href', /prvCityCode=63000/u);
+  await expect(pollingPlaceLink).toHaveAttribute('href', /deptCode=020/u);
+  await expect(pollingPlaceLink).toHaveAttribute('href', /liCode=001/u);
+  await expectNoHorizontalOverflow(page);
+  await page.setViewportSize({ width: 768, height: 768 });
+  await expect(card).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+  await page.setViewportSize({ width: 1024, height: 768 });
+  expect(await page.evaluate(() => (window as Window & { geolocationCallCount: number }).geolocationCallCount)).toBe(0);
+
+  await card.getByRole('button', { name: '變更' }).click();
+  const dialog = page.getByRole('dialog', { name: '我的投票地區' });
+  await expect(dialog).toBeVisible();
+  expect(await page.evaluate(() => (window as Window & { geolocationCallCount: number }).geolocationCallCount)).toBe(0);
+  await dialog.getByRole('button', { name: '使用目前位置' }).click();
+  expect(await page.evaluate(() => (window as Window & { geolocationCallCount: number }).geolocationCallCount)).toBe(1);
 });
 
 test('homepage uses one scoped payload and stays populated after client-side navigation', async ({ page }) => {

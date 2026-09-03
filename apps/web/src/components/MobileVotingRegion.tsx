@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { taiwanDistrictsByCountyCode } from '../data/generated/taiwanDistrictDirectory';
 import { taiwanRegions } from '../data/taiwanRegions';
 import { useI18n } from '../i18n';
@@ -17,6 +17,17 @@ type SuggestedLocation = {
   county: VotingRegionChoice;
   district?: VotingRegionChoice;
 };
+
+const onboardingStorageKey = 'public-office-watch.voting-region-onboarding-dismissed.v1';
+
+function readOnboardingDismissed() {
+  if (typeof window === 'undefined') return false;
+  try {
+    return window.localStorage.getItem(onboardingStorageKey) === 'true';
+  } catch {
+    return false;
+  }
+}
 
 function toChoice(region: StageRegionNode): VotingRegionChoice {
   return { id: region.id, name: region.label };
@@ -55,12 +66,11 @@ async function getVillageChoices(districtId: string): Promise<VotingRegionChoice
 export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: MobileVotingRegionProps) {
   const { language } = useI18n();
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const { preference, confirmPreference, clearPreference, setCurrentLocation } = useVotingRegion();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const villagePickerRef = useRef<HTMLDivElement>(null);
   const restoreVillageForDistrictRef = useRef<string | null>(null);
-  const [onboardingDismissed, setOnboardingDismissed] = useState(false);
+  const [onboardingDismissed, setOnboardingDismissed] = useState(readOnboardingDismissed);
   const [counties, setCounties] = useState<StageRegionNode[]>([]);
   const [districts, setDistricts] = useState<VotingRegionChoice[]>([]);
   const [countyId, setCountyId] = useState('');
@@ -293,6 +303,15 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     onOpenEditor();
   };
 
+  const dismissOnboarding = () => {
+    try {
+      window.localStorage.setItem(onboardingStorageKey, 'true');
+    } catch {
+      // The in-memory dismissal still works when storage is unavailable.
+    }
+    setOnboardingDismissed(true);
+  };
+
   const acceptSuggestedLocation = () => {
     if (!suggestedLocation) return;
     const matchingCounty = counties.find((county) => county.label === suggestedLocation.county.name);
@@ -331,7 +350,6 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       confirmedAt: new Date().toISOString(),
     });
     onCloseEditor();
-    navigate({ pathname: '/', search: `?region=${encodeURIComponent(county.id)}` });
   };
 
   const preferenceLabel = preference
@@ -357,7 +375,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
             <button type="button" onClick={onOpenEditor} className="min-h-12 border border-line bg-bg/45 px-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-accent/40">
               {copy.manual}
             </button>
-            <button type="button" onClick={() => setOnboardingDismissed(true)} className="min-h-11 text-sm text-slate-400 underline underline-offset-4">
+            <button type="button" onClick={dismissOnboarding} className="min-h-11 text-sm text-slate-400 underline underline-offset-4">
               {copy.skip}
             </button>
           </div>
@@ -375,9 +393,9 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       ) : null}
 
       {editorOpen ? (
-        <div className="fixed inset-0 z-[90] md:hidden">
+        <div className="fixed inset-0 z-[90]">
           <button type="button" aria-label={copy.close} onClick={onCloseEditor} className="absolute inset-0 bg-black/75" />
-          <section role="dialog" aria-modal="true" aria-labelledby="voting-region-title" className="pixel-corners absolute inset-x-0 bottom-0 max-h-[92dvh] overflow-y-auto border-2 border-signal/60 bg-panel px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-12px_40px_rgba(0,0,0,0.55)]">
+          <section role="dialog" aria-modal="true" aria-labelledby="voting-region-title" className="pixel-corners absolute inset-x-0 bottom-0 max-h-[92dvh] overflow-y-auto border-2 border-signal/60 bg-panel px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-12px_40px_rgba(0,0,0,0.55)] md:bottom-auto md:left-1/2 md:right-auto md:top-1/2 md:w-[min(44rem,calc(100vw-2rem))] md:-translate-x-1/2 md:-translate-y-1/2 md:pb-5">
             <header className="flex items-start justify-between gap-3 border-b border-line/70 pb-3">
               <div>
                 <h2 id="voting-region-title" className="font-display text-lg text-white">{copy.title}</h2>

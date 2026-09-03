@@ -45,8 +45,8 @@ html[data-theme='light'] {
   --color-line: 139 128 111;
   --color-accent: 0 104 132;
   --color-arcade-pink: 166 35 124;
-  --color-signal: 146 87 0;
-  --color-success: 0 122 82;
+  --color-signal: 124 73 0;
+  --color-success: 0 107 71;
   --color-fg: 18 32 51;
   --theme-page-background: #eee8dc;
   --theme-body-background:
@@ -64,8 +64,8 @@ html[data-theme='light'] {
   --theme-text-slate-200: #27364a;
   --theme-text-slate-300: #3d4f66;
   --theme-text-slate-400: #52657d;
-  --theme-text-slate-500: #64748b;
-  --theme-text-slate-600: #64748b;
+  --theme-text-slate-500: #475b72;
+  --theme-text-slate-600: #40546a;
   --theme-scanline: rgba(15, 76, 97, 0.035);
   --theme-divider: linear-gradient(90deg, transparent 0%, rgba(0, 104, 132, 0.42) 25%, rgba(15, 23, 42, 0.09) 100%);
   --shadow-pixel: 0 0 0 2px rgba(0, 104, 132, 0.18), 0 0 0 6px rgba(166, 35, 124, 0.05);
@@ -188,6 +188,55 @@ html[data-theme='light'] .text-rose-300 {
 
 html[data-theme='light'] .text-pink-300 {
   color: #942a70;
+}
+
+html[data-theme='light'] .text-pink-100,
+html[data-theme='light'] .text-pink-200 {
+  color: #942a70;
+}
+
+html[data-theme='light'] .text-red-200 {
+  color: #9f1239;
+}
+
+html[data-theme='light'] .text-signal\/80 {
+  color: rgb(var(--color-signal));
+}
+
+html[data-theme='light'] .text-accent\/60 {
+  color: rgb(var(--color-accent));
+}
+
+html[data-theme='light'] .text-amber-100\/75,
+html[data-theme='light'] .text-amber-100\/80,
+html[data-theme='light'] .text-amber-200\/80 {
+  color: #744600;
+}
+
+html[data-theme='light'] .text-cyan-200\/75,
+html[data-theme='light'] .text-cyan-200\/80,
+html[data-theme='light'] .text-cyan-300\/80 {
+  color: #006776;
+}
+
+html[data-theme='light'] .text-pink-200\/80 {
+  color: #942a70;
+}
+
+html[data-theme='light'] [data-race-category='presidential'] {
+  color: #992f50 !important;
+}
+
+html[data-theme='light'] [data-race-category='chief'] {
+  color: #744600 !important;
+}
+
+html[data-theme='light'] [data-race-category='representative'] {
+  color: #006776 !important;
+}
+
+html[data-theme='light'] [data-race-category='basic'] {
+  color: #146747 !important;
 }
 
 html[data-theme='light'] .theme-party-chip,
@@ -340,6 +389,28 @@ html[data-theme='light'] .theme-dark-surface .text-rose-200 {
 
 html[data-theme='light'] .theme-dark-surface .text-pink-300 {
   color: #f9a8d4;
+}
+
+html[data-theme='light'] .theme-dark-surface .text-amber-100\/75,
+html[data-theme='light'] .theme-dark-surface .text-amber-100\/80 {
+  color: rgb(254 243 199 / 0.8);
+}
+
+html[data-theme='light'] .theme-dark-surface .text-amber-200\/80 {
+  color: rgb(253 230 138 / 0.8);
+}
+
+html[data-theme='light'] .theme-dark-surface .text-cyan-200\/75 {
+  color: rgb(165 243 252 / 0.75);
+}
+
+html[data-theme='light'] .theme-dark-surface .text-cyan-200\/80,
+html[data-theme='light'] .theme-dark-surface .text-cyan-300\/80 {
+  color: rgb(165 243 252 / 0.8);
+}
+
+html[data-theme='light'] .theme-dark-surface .text-pink-200\/80 {
+  color: rgb(251 207 232 / 0.8);
 }
 
 html[data-theme='light'] .theme-dark-surface .theme-party-chip,

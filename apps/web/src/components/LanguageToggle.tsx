@@ -6,8 +6,28 @@ const languageOptions: { value: Language; labelKey: 'language.zh' | 'language.en
   { value: 'en', labelKey: 'language.en' },
 ];
 
-export function LanguageToggle() {
+type LanguageToggleProps = {
+  compact?: boolean;
+};
+
+export function LanguageToggle({ compact = false }: LanguageToggleProps) {
   const { language, setLanguage, t } = useI18n();
+
+  if (compact) {
+    const nextLanguage: Language = language === 'zh-TW' ? 'en' : 'zh-TW';
+    return (
+      <button
+        type="button"
+        data-language-toggle
+        aria-label={t('language.aria')}
+        title={t('language.aria')}
+        onClick={() => setLanguage(nextLanguage)}
+        className="grid h-11 w-11 shrink-0 place-items-center border border-line/80 bg-bg/45 font-display text-[11px] tracking-[0.08em] text-accent transition hover:border-accent/60 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/35"
+      >
+        {nextLanguage === 'en' ? 'EN' : '中'}
+      </button>
+    );
+  }
 
   return (
     <div

@@ -565,14 +565,14 @@ export function PersonPage() {
         }
       >
         {person && profile ? (
-          <div className="space-y-4">
-            <section className="grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+          <div className="flex flex-col gap-4">
+            <section data-person-profile-hero className="grid grid-cols-[96px_minmax(0,1fr)] gap-3 sm:grid-cols-[140px_minmax(0,1fr)] sm:gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
               <figure className="space-y-2">
-                <div className="pixel-corners relative flex min-h-[220px] items-end justify-center border border-line/70 bg-bg/40 p-4">
+                <div className="pixel-corners relative flex min-h-[112px] items-end justify-center border border-line/70 bg-bg/40 p-2 sm:min-h-[156px] sm:p-3 lg:min-h-[220px] lg:p-4">
                   <img
                     src={portraitSrc}
                     alt={personSprite || primaryPhotoUrl ? person.name : portraitFallbackLabel ?? ''}
-                    className="max-h-[190px] w-auto object-contain object-bottom [image-rendering:pixelated]"
+                    className="max-h-[96px] w-auto object-contain object-bottom [image-rendering:pixelated] sm:max-h-[134px] lg:max-h-[190px]"
                   />
                   {portraitFallbackLabel ? (
                     <span className="absolute left-2 top-2 border border-accent/50 bg-panel/90 px-2 py-1 text-[10px] text-accent">
@@ -589,7 +589,7 @@ export function PersonPage() {
 
               <div>
                 <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{person.role_label}</p>
-                <h2 className="mt-2 font-display text-4xl text-white">{person.name}</h2>
+                <h2 className="mt-2 break-words font-display text-3xl text-white sm:text-4xl">{person.name}</h2>
                 <p className="mt-3 text-sm leading-6 text-slate-300">{displayPosition}</p>
                 <p className="mt-2 max-w-3xl text-[11px] leading-5 text-slate-500">
                   {t('person.dataQualityNote')}{' '}
@@ -597,7 +597,7 @@ export function PersonPage() {
                     {t('person.qualityDetails')} →
                   </Link>
                 </p>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                <div className="col-span-2 mt-4 grid grid-cols-2 gap-2 sm:col-span-1 sm:gap-3 xl:grid-cols-4">
                   <HudStatCard
                     label={t('person.party')}
                     value={
@@ -616,8 +616,9 @@ export function PersonPage() {
               </div>
             </section>
 
-            <SectionPanel title={t('person.dataSummary.title')} eyebrow={t('person.dataSummary.eyebrow')}>
-              <div data-person-data-summary className="space-y-4">
+            <div className="order-5 md:order-none">
+              <SectionPanel title={t('person.dataSummary.title')} eyebrow={t('person.dataSummary.eyebrow')}>
+                <div data-person-data-summary className="space-y-4">
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                   <HudStatCard
                     label={t('person.dataSummary.lastUpdated')}
@@ -655,15 +656,18 @@ export function PersonPage() {
                 <p className="border-l-2 border-accent/60 pl-3 text-xs leading-5 text-slate-400">
                   {t('person.dataSummary.reviewPolicy')}
                 </p>
-              </div>
-            </SectionPanel>
+                </div>
+              </SectionPanel>
+            </div>
 
-            <PersonFeedbackPanel
-              personId={person.person_id}
-              personName={person.name}
-              requestedSection={feedbackRequest?.section}
-              requestVersion={feedbackRequest?.version}
-            />
+            <div className="order-6 md:order-none">
+              <PersonFeedbackPanel
+                personId={person.person_id}
+                personName={person.name}
+                requestedSection={feedbackRequest?.section}
+                requestVersion={feedbackRequest?.version}
+              />
+            </div>
 
             <SectionPanel title={t('person.basicTitle')} eyebrow={t('person.basicEyebrow')}>
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
@@ -766,8 +770,9 @@ export function PersonPage() {
               </SectionPanel>
             ) : null}
 
-            <SectionPanel title={t('person.resumeTitle')} eyebrow={t('person.resumeEyebrow')}>
-              <div className="grid gap-4 lg:grid-cols-2">
+            <div data-person-mobile-resume className="order-2 md:order-none">
+              <SectionPanel title={t('person.resumeTitle')} eyebrow={t('person.resumeEyebrow')}>
+                <div className="grid gap-4 lg:grid-cols-2">
                 <div>
                   <h3 className="mb-3 text-sm font-semibold text-white">{t('person.education')}</h3>
                   {educationItems.length > 0 ? (
@@ -796,74 +801,85 @@ export function PersonPage() {
                     <DataStateNotice kind="uncollected">{t('person.resume.experienceEmpty')}</DataStateNotice>
                   )}
                 </div>
-              </div>
-            </SectionPanel>
-
-            <div className="grid gap-4 xl:grid-cols-3">
-              <SectionPanel title={t('person.financeTitle')} eyebrow={t('person.financeEyebrow')}>
-                {financeClaims.length > 0 ? (
-                  <ClaimGrid claims={financeClaims} correctionSection="finance" onRequestCorrection={handleRequestCorrection} />
-                ) : (
-                  <DataStateNotice kind="uncollected">{t('person.finance.empty')}</DataStateNotice>
-                )}
-              </SectionPanel>
-              <SectionPanel title={t('person.legalTitle')} eyebrow={t('person.reviewedEyebrow')}>
-                {legalClaims.length > 0 ? (
-                  <ClaimGrid claims={legalClaims} correctionSection="legal" onRequestCorrection={handleRequestCorrection} />
-                ) : rawLegalClaims.length > 0 ? (
-                  <DataStateNotice kind="pending">{t('person.legal.pending')}</DataStateNotice>
-                ) : (
-                  <DataStateNotice kind="uncollected">{t('person.legal.empty')}</DataStateNotice>
-                )}
-              </SectionPanel>
-              <SectionPanel title={t('person.familyTitle')} eyebrow={t('person.reviewedEyebrow')}>
-                {familyClaims.length > 0 ? (
-                  <ClaimGrid claims={familyClaims} correctionSection="family" onRequestCorrection={handleRequestCorrection} />
-                ) : rawFamilyClaims.length > 0 ? (
-                  <DataStateNotice kind="pending">{t('person.family.pending')}</DataStateNotice>
-                ) : (
-                  <DataStateNotice kind="uncollected">{t('person.family.empty')}</DataStateNotice>
-                )}
+                </div>
               </SectionPanel>
             </div>
 
+            <div className="grid gap-4 xl:grid-cols-3">
+              <div data-person-mobile-finance className="order-2 md:order-none">
+                <SectionPanel title={t('person.financeTitle')} eyebrow={t('person.financeEyebrow')}>
+                  {financeClaims.length > 0 ? (
+                    <ClaimGrid claims={financeClaims} correctionSection="finance" onRequestCorrection={handleRequestCorrection} />
+                  ) : (
+                    <DataStateNotice kind="uncollected">{t('person.finance.empty')}</DataStateNotice>
+                  )}
+                </SectionPanel>
+              </div>
+              <div data-person-mobile-legal className="order-1 md:order-none">
+                <SectionPanel title={t('person.legalTitle')} eyebrow={t('person.reviewedEyebrow')}>
+                  {legalClaims.length > 0 ? (
+                    <ClaimGrid claims={legalClaims} correctionSection="legal" onRequestCorrection={handleRequestCorrection} />
+                  ) : rawLegalClaims.length > 0 ? (
+                    <DataStateNotice kind="pending">{t('person.legal.pending')}</DataStateNotice>
+                  ) : (
+                    <DataStateNotice kind="uncollected">{t('person.legal.empty')}</DataStateNotice>
+                  )}
+                </SectionPanel>
+              </div>
+              <div className="order-3 md:order-none">
+                <SectionPanel title={t('person.familyTitle')} eyebrow={t('person.reviewedEyebrow')}>
+                  {familyClaims.length > 0 ? (
+                    <ClaimGrid claims={familyClaims} correctionSection="family" onRequestCorrection={handleRequestCorrection} />
+                  ) : rawFamilyClaims.length > 0 ? (
+                    <DataStateNotice kind="pending">{t('person.family.pending')}</DataStateNotice>
+                  ) : (
+                    <DataStateNotice kind="uncollected">{t('person.family.empty')}</DataStateNotice>
+                  )}
+                </SectionPanel>
+              </div>
+            </div>
+
             {publicClaims.length > 0 ? (
-              <SectionPanel title={t('person.leadsTitle')} eyebrow={t('person.leadsEyebrow')}>
-                <div className="grid gap-3 md:grid-cols-2">
-                  {publicClaims.map((claim) => (
-                    <ClaimCard key={claim.claim_id} claim={claim} />
-                  ))}
-                </div>
-              </SectionPanel>
+              <div className="order-3 md:order-none">
+                <SectionPanel title={t('person.leadsTitle')} eyebrow={t('person.leadsEyebrow')}>
+                  <div className="grid gap-3 md:grid-cols-2">
+                    {publicClaims.map((claim) => (
+                      <ClaimCard key={claim.claim_id} claim={claim} />
+                    ))}
+                  </div>
+                </SectionPanel>
+              </div>
             ) : null}
 
-            <SectionPanel title={t('person.sourcesTitle')} eyebrow={t('person.sourcesEyebrow')}>
-              {profileSources.length > 0 ? (
-                <>
-                  {profileSources.length > visibleProfileSources.length ? (
-                    <p className="mb-3 text-xs text-slate-500">
-                      {t('person.sourcesShowing', { shown: visibleProfileSources.length, total: profileSources.length })}
-                    </p>
-                  ) : null}
-                  <ul className="grid gap-2 md:grid-cols-2">
-                    {visibleProfileSources.map((source) => (
-                      <li key={source.url}>
-                        <a
-                          href={source.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="pixel-corners block border border-line/70 bg-bg/35 px-3 py-2 text-sm text-accent hover:text-white"
-                        >
-                          {source.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : (
-                <DataStateNotice kind="uncollected">{t('person.sourcesEmpty')}</DataStateNotice>
-              )}
-            </SectionPanel>
+            <div data-person-mobile-sources className="order-4 md:order-none">
+              <SectionPanel title={t('person.sourcesTitle')} eyebrow={t('person.sourcesEyebrow')}>
+                {profileSources.length > 0 ? (
+                  <>
+                    {profileSources.length > visibleProfileSources.length ? (
+                      <p className="mb-3 text-xs text-slate-500">
+                        {t('person.sourcesShowing', { shown: visibleProfileSources.length, total: profileSources.length })}
+                      </p>
+                    ) : null}
+                    <ul className="grid gap-2 md:grid-cols-2">
+                      {visibleProfileSources.map((source) => (
+                        <li key={source.url}>
+                          <a
+                            href={source.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="pixel-corners block border border-line/70 bg-bg/35 px-3 py-2 text-sm text-accent hover:text-white"
+                          >
+                            {source.name}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <DataStateNotice kind="uncollected">{t('person.sourcesEmpty')}</DataStateNotice>
+                )}
+              </SectionPanel>
+            </div>
           </div>
         ) : loading ? (
           <div data-data-state="loading" aria-live="polite" className="pixel-corners border border-accent/45 bg-accent/8 px-4 py-8 text-center text-sm text-cyan-100">

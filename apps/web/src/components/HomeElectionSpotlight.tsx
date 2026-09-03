@@ -5,12 +5,13 @@ import { buildElectionEventKey } from '../data/electionEvents';
 import { getRaceCategoryByType, getRaceStatusLabel } from '../data/electionLabels';
 import { getRegionHighlightBackground, getRegionHighlightImageSources } from '../data/regionHighlights';
 import { useI18n } from '../i18n';
+import { publicDataProvider } from '../lib/publicData';
 import type { HomeCandidateSummary, UpcomingRace } from '../lib/publicDataProvider';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { normalizeTaiwanText } from '../lib/taiwanText';
 import { electionEventPath, personPath, racePath, regionPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicCandidate } from '../types/publicViews';
+import type { PublicCandidate, PublicReferendumQuestion } from '../types/publicViews';
 import type { StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import { PixelCandidateSprite } from './PixelCandidateSprite';
 import { PixelFrame } from './PixelFrame';
@@ -238,6 +239,35 @@ export function HomeElectionSpotlight({
     () => categoryGroups.find((group) => group.key === 'referendum')?.races ?? [],
     [categoryGroups],
   );
+  const [referendumQuestions, setReferendumQuestions] = useState<Record<string, PublicReferendumQuestion>>({});
+
+  useEffect(() => {
+    let active = true;
+    if (!national || referendumRaces.length === 0) {
+      setReferendumQuestions({});
+      return () => { active = false; };
+    }
+
+    void Promise.all(referendumRaces.map(async (race) => {
+      try {
+        const detail = await publicDataProvider.loadRaceDetail(race.id);
+        return detail.referendumQuestion
+          ? ([race.id, detail.referendumQuestion] as const)
+          : null;
+      } catch (error: unknown) {
+        if (import.meta.env.DEV) console.warn('Failed to load referendum summary', error);
+        return null;
+      }
+    })).then((entries) => {
+      if (!active) return;
+      setReferendumQuestions(Object.fromEntries(
+        entries.filter((entry): entry is readonly [string, PublicReferendumQuestion] => entry !== null),
+      ));
+    });
+
+    return () => { active = false; };
+  }, [national, referendumRaces]);
+
   const requestedCandidateCategory = searchParams.get('candidateCategory');
 
   useEffect(() => {
@@ -438,12 +468,12 @@ export function HomeElectionSpotlight({
               <>
                 <h2 className="max-w-[620px] font-display text-2xl leading-tight text-white sm:text-3xl">{national ? normalizeTaiwanText(activeRace.title) : getLocalElectionTitle(regionLabel, language)}</h2>
 
-                <dl className="mt-5 grid max-w-[440px] grid-cols-2 gap-4 text-sm">
-                  <div className="rounded-sm border border-white/15 bg-[#061126]/78 px-3 py-2">
+                <dl className="mt-5 grid max-w-[440px] grid-cols-2 gap-4 text-sm" data-home-election-timing>
+                  <div className="py-1">
                     <dt className="text-xs uppercase tracking-[0.16em] text-cyan-100">{t('homeSpotlight.voteDate')}</dt>
                     <dd className="mt-1 font-display text-lg text-white">{activeRace.date}</dd>
                   </div>
-                  <div className="rounded-sm border border-white/15 bg-[#061126]/78 px-3 py-2">
+                  <div className="py-1">
                     <dt className="text-xs uppercase tracking-[0.16em] text-cyan-100">{t('homeSpotlight.countdown')}</dt>
                     <dd className="mt-1 font-display text-lg text-white">
                       {daysUntil === null ? t('common.toBeAnnounced') : t('homeSpotlight.daysUntil', { count: daysUntil })}
@@ -576,23 +606,33 @@ export function HomeElectionSpotlight({
               className={referendumRaces.length <= 2 ? 'grid gap-3 sm:grid-cols-2' : 'flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 [scrollbar-width:thin]'}
               data-national-referendum-items
             >
-              {referendumRaces.map((race) => (
-                <Link
-                  key={race.id}
-                  to={racePath(race.id)}
-                  className={[
-                    'pixel-corners block border border-line/75 bg-bg/55 p-4 transition hover:border-accent/60 focus:outline-none focus:ring-2 focus:ring-accent/35',
-                    referendumRaces.length <= 2 ? 'w-full' : 'w-[240px] shrink-0 snap-start',
-                  ].join(' ')}
-                >
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-signal">{getRaceStatusLabel(race.status)}</p>
-                  <h3 className="mt-3 line-clamp-3 font-display text-base leading-6 text-white">{normalizeTaiwanText(race.title)}</h3>
-                  <p className="mt-3 text-xs text-slate-400">{language === 'en' ? `Vote date: ${race.date}` : `投票日：${race.date}`}</p>
-                  <p className="mt-5 border-t border-line/60 pt-3 text-xs text-accent">
-                    {language === 'en' ? 'View referendum details ›' : '查看完整公投內容 ›'}
-                  </p>
-                </Link>
-              ))}
+              {referendumRaces.map((race) => {
+                const question = referendumQuestions[race.id];
+                const statusLabel = question?.result_status === 'passed'
+                  ? t('race.referendumPassed')
+                  : question?.result_status === 'not_passed'
+                    ? t('race.referendumNotPassed')
+                    : question?.result_status === 'pending'
+                      ? t('race.referendumPending')
+                      : getRaceStatusLabel(race.status);
+                return (
+                  <Link
+                    key={race.id}
+                    to={racePath(race.id)}
+                    className={[
+                      'pixel-corners block border border-line/75 bg-bg/55 p-4 transition hover:border-accent/60 focus:outline-none focus:ring-2 focus:ring-accent/35',
+                      referendumRaces.length <= 2 ? 'w-full' : 'w-[240px] shrink-0 snap-start',
+                    ].join(' ')}
+                  >
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-signal" data-referendum-status>{statusLabel}</p>
+                    <h3 className="mt-3 line-clamp-4 font-display text-base leading-6 text-white">{normalizeTaiwanText(question?.proposal_text ?? `${t('race.referendumProposal')}…`)}</h3>
+                    <p className="mt-3 text-xs text-slate-400">{language === 'en' ? `Vote date: ${race.date}` : `投票日：${race.date}`}</p>
+                    <p className="mt-5 border-t border-line/60 pt-3 text-xs text-accent">
+                      {language === 'en' ? 'View referendum details ›' : '查看完整公投內容 ›'}
+                    </p>
+                  </Link>
+                );
+              })}
             </div>
           ) : (
             <div className="pixel-corners border border-line/70 bg-bg/35 px-4 py-8 text-center">

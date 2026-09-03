@@ -73,6 +73,15 @@ export function RacePage() {
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [comparisonProfiles, setComparisonProfiles] = useState<PublicPersonProfile[]>([]);
   const [comparisonLoading, setComparisonLoading] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(() => window.matchMedia('(max-width: 767px)').matches);
+
+  useEffect(() => {
+    const mobileViewport = window.matchMedia('(max-width: 767px)');
+    const updateMobileViewport = () => setIsMobileViewport(mobileViewport.matches);
+    updateMobileViewport();
+    mobileViewport.addEventListener('change', updateMobileViewport);
+    return () => mobileViewport.removeEventListener('change', updateMobileViewport);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -121,11 +130,12 @@ export function RacePage() {
     () => new Set(candidates.map((candidate) => candidate.person_id).filter(Boolean)),
     [candidates],
   );
+  const comparisonLimit = isMobileViewport ? 2 : 4;
   const selectedPersonIds = useMemo(
     () => Array.from(new Set((searchParams.get('compare') ?? '').split(',').filter(Boolean)))
       .filter((personId) => candidatePersonIds.has(personId))
-      .slice(0, 4),
-    [candidatePersonIds, searchParams],
+      .slice(0, comparisonLimit),
+    [candidatePersonIds, comparisonLimit, searchParams],
   );
   const selectedCandidates = selectedPersonIds
     .map((personId) => candidates.find((candidate) => candidate.person_id === personId))
@@ -167,7 +177,7 @@ export function RacePage() {
 
   function updateComparison(personId: string, selected: boolean) {
     const nextIds = selected
-      ? [...selectedPersonIds, personId].slice(0, 4)
+      ? [...selectedPersonIds, personId].slice(0, comparisonLimit)
       : selectedPersonIds.filter((selectedId) => selectedId !== personId);
     const nextSearchParams = new URLSearchParams(searchParams);
     if (nextIds.length > 0) nextSearchParams.set('compare', nextIds.join(','));
@@ -217,6 +227,7 @@ export function RacePage() {
   const isPartyList = race.race_type === 'party_list_legislator';
   const partyListSeatCount = detail.partyListResults.reduce((sum, result) => sum + result.allocated_seats, 0);
   const referendumQuestion = detail.referendumQuestion;
+  const isReferendumPending = referendumQuestion?.result_status === 'pending';
   const referendumOptions = detail.referendumOptions.slice().sort((left, right) => left.display_order - right.display_order);
   const referendumRegionResults = detail.referendumRegionResults.slice().sort((left, right) => (
     left.region_name.localeCompare(right.region_name, language)
@@ -245,7 +256,7 @@ export function RacePage() {
           <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.34fr)]">
             <div className="min-w-0">
               <p className="text-xs uppercase tracking-[0.22em] text-accent">{race.voting_date ?? election?.voting_date ?? t('race.voteDatePending')}</p>
-              <h1 className="mt-2 font-display text-4xl text-white">{race.title}</h1>
+              <h1 className="mt-2 break-words font-display text-3xl text-white sm:text-4xl">{race.title}</h1>
               <p className="mt-3 text-sm leading-6 text-slate-300">
                 {eventTitle} · {translateRaceCategory(category.key, t)} · {region.label}
               </p>
@@ -259,7 +270,10 @@ export function RacePage() {
               {isReferendum ? (
                 <>
                   <HudStatCard label={t('race.referendumOutcome')} value={<span className="font-display text-xl text-signal">{referendumOutcome}</span>} />
-                  <HudStatCard label={t('race.referendumTurnout')} value={<span className="font-display text-xl text-white">{formatPercent(referendumQuestion?.turnout_rate ?? null)}</span>} />
+                  <HudStatCard
+                    label={t(isReferendumPending ? 'race.referendumVotingDate' : 'race.referendumTurnout')}
+                    value={<span className="font-display text-xl text-white">{isReferendumPending ? race.voting_date ?? t('race.voteDatePending') : formatPercent(referendumQuestion?.turnout_rate ?? null)}</span>}
+                  />
                   <HudStatCard label={t('race.region')} value={<span className="font-display text-xl text-white">{referendumQuestion?.jurisdiction_name ?? region.label}</span>} />
                 </>
               ) : isPartyList ? (
@@ -280,30 +294,41 @@ export function RacePage() {
         </PixelFrame>
 
         {isReferendum ? (
-          <SectionPanel title={t('race.referendumResult')} eyebrow={t('race.publicData')}>
+          <SectionPanel title={t(isReferendumPending ? 'race.referendumDetails' : 'race.referendumResult')} eyebrow={t('race.publicData')}>
             {referendumQuestion ? (
               <div className="space-y-4">
                 <div className="pixel-corners border border-line/70 bg-bg/35 p-4">
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.referendumProposal')}</p>
                   <p className="mt-3 text-base leading-7 text-white">{referendumQuestion.proposal_text}</p>
                 </div>
-                <div className="grid gap-3 md:grid-cols-2">
-                  {referendumOptions.map((option) => (
-                    <div key={option.option_id} className="pixel-corners border border-line/70 bg-panelAlt/45 p-4">
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="font-display text-2xl text-white">{option.label}</p>
-                        <p className="font-display text-xl text-accent">{formatPercent(option.vote_rate)}</p>
-                      </div>
-                      <p className="mt-3 text-sm text-slate-300">{formatNumber(option.vote_count, language)} {t('race.referendumVotesUnit')}</p>
+                {isReferendumPending ? (
+                  <div className="pixel-corners border border-signal/45 bg-signal/8 p-4" data-referendum-pending role="status">
+                    <p className="font-display text-xl text-signal">{t('race.referendumVotingPending')}</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                      {t('race.referendumVotingPendingBody', { date: race.voting_date ?? t('race.voteDatePending') })}
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      {referendumOptions.map((option) => (
+                        <div key={option.option_id} className="pixel-corners border border-line/70 bg-panelAlt/45 p-4">
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="font-display text-2xl text-white">{option.label}</p>
+                            <p className="font-display text-xl text-accent">{formatPercent(option.vote_rate)}</p>
+                          </div>
+                          <p className="mt-3 text-sm text-slate-300">{formatNumber(option.vote_count, language)} {t('race.referendumVotesUnit')}</p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                  <HudStatCard label={t('race.referendumEligibleVoters')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.eligible_voters, language)}</span>} />
-                  <HudStatCard label={t('race.referendumTotalVotes')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.total_votes, language)}</span>} />
-                  <HudStatCard label={t('race.referendumValidVotes')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.valid_votes, language)}</span>} />
-                  <HudStatCard label={t('race.referendumInvalidVotes')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.invalid_votes, language)}</span>} />
-                </div>
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      <HudStatCard label={t('race.referendumEligibleVoters')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.eligible_voters, language)}</span>} />
+                      <HudStatCard label={t('race.referendumTotalVotes')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.total_votes, language)}</span>} />
+                      <HudStatCard label={t('race.referendumValidVotes')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.valid_votes, language)}</span>} />
+                      <HudStatCard label={t('race.referendumInvalidVotes')} value={<span className="font-display text-lg text-white">{formatNumber(referendumQuestion.invalid_votes, language)}</span>} />
+                    </div>
+                  </>
+                )}
                 {referendumQuestion.approval_rule ? (
                   <div className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm leading-6 text-slate-300">
                     <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('race.referendumApprovalRule')}</p>
@@ -377,7 +402,7 @@ export function RacePage() {
         {!isReferendum && !isPartyList ? <SectionPanel title={candidateGroups.length > 0 ? t('race.listTitle') : t('race.listFallbackTitle')} eyebrow={t('race.roster')}>
           {candidateGroups.length > 0 ? (
             <div className="overflow-hidden pixel-corners border border-line/70">
-              <div className="grid gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]">
+              <div className="hidden gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]">
                 <span>{t('race.compareSelect')}</span>
                 <span>{t('race.number')}</span>
                 <span>{t('race.name')}</span>
@@ -406,30 +431,33 @@ export function RacePage() {
                   )).join('、');
                   const rowContent = (
                     <>
-                      <div className="flex flex-col gap-1">
+                      <div className="flex flex-col items-center gap-1 max-lg:row-span-4">
                         {group.members.map((member) => {
                           const isSelected = selectedPersonIds.includes(member.person_id);
-                          const selectionDisabled = !member.person_id || (!isSelected && selectedPersonIds.length >= 4);
+                          const selectionDisabled = !member.person_id || (!isSelected && selectedPersonIds.length >= comparisonLimit);
                           return (
                             <label
                               key={member.candidate_id}
-                              className="flex h-6 w-6 items-center justify-center"
-                              title={selectionDisabled ? t('race.compareLimit') : t('race.compareSelect')}
+                              className="flex h-11 w-11 items-center justify-center lg:h-6 lg:w-6"
+                              title={selectionDisabled ? t(isMobileViewport ? 'race.compareMobileLimit' : 'race.compareLimit') : t('race.compareSelect')}
                             >
                               <input
                                 type="checkbox"
                                 checked={isSelected}
                                 disabled={selectionDisabled}
                                 onChange={(event) => updateComparison(member.person_id, event.target.checked)}
-                                className="h-4 w-4 accent-cyan-300 disabled:cursor-not-allowed disabled:opacity-30"
+                                className="h-5 w-5 accent-cyan-300 disabled:cursor-not-allowed disabled:opacity-30 lg:h-4 lg:w-4"
                                 aria-label={`${t('race.compareSelect')} ${member.person_name}`}
                               />
                             </label>
                           );
                         })}
                       </div>
-                      <p className="text-sm text-slate-300">{candidate.candidate_no ?? '—'}</p>
-                      <div className="min-w-0">
+                      <p className="text-sm text-slate-300 max-lg:col-start-2 max-lg:row-start-1">
+                        <span className="mr-2 text-[10px] uppercase tracking-[0.14em] text-slate-500 lg:hidden">{t('race.number')}</span>
+                        {candidate.candidate_no ?? '—'}
+                      </p>
+                      <div className="min-w-0 max-lg:col-start-2 max-lg:row-start-2">
                         <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                           {group.members.map((member, index) => (
                             <span key={`${group.key}:${member.candidate_id}`} className="inline-flex min-w-0 items-center gap-x-2">
@@ -444,7 +472,7 @@ export function RacePage() {
                         </div>
                         <p className="mt-1 truncate text-xs text-slate-500">{memberPositions || race.title}</p>
                       </div>
-                      <div className="min-w-0">
+                      <div className="min-w-0 max-lg:col-start-2 max-lg:row-start-3">
                         <span
                           className="theme-party-chip pixel-corners inline-block max-w-full truncate border px-2 py-1 text-xs"
                           style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}33`, color: theme.text }}
@@ -457,7 +485,7 @@ export function RacePage() {
                           </p>
                         ) : null}
                       </div>
-                      <div>
+                      <div className="max-lg:col-start-2 max-lg:row-start-4">
                         <p className={group.isElected ? 'text-sm text-signal' : 'text-sm text-slate-300'}>
                           {translateCandidateStatus(statusCandidate, t)}
                         </p>
@@ -471,11 +499,17 @@ export function RacePage() {
                           </span>
                         ))}
                       </div>
-                      <p className="text-sm text-slate-300">{formatNumber(candidate.vote_count, language)}</p>
-                      <p className="text-sm text-slate-300">{formatPercent(candidate.vote_rate)}</p>
+                      <p className="text-right text-sm text-slate-300 max-lg:col-start-3 max-lg:row-start-1">
+                        <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500 lg:hidden">{t('race.votes')}</span>
+                        {formatNumber(candidate.vote_count, language)}
+                      </p>
+                      <p className="text-right text-sm text-slate-300 max-lg:col-start-3 max-lg:row-start-2">
+                        <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500 lg:hidden">{t('race.voteRate')}</span>
+                        {formatPercent(candidate.vote_rate)}
+                      </p>
                     </>
                   );
-                  const rowClassName = 'grid gap-3 px-4 py-3 transition hover:bg-accent/8 lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]';
+                  const rowClassName = 'grid grid-cols-[44px_minmax(0,1fr)_auto] gap-x-3 gap-y-2 px-3 py-4 transition hover:bg-accent/8 sm:px-4 lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px] lg:gap-3 lg:py-3';
 
                   return <div key={group.key} className={rowClassName}>{rowContent}</div>;
                 })}
@@ -488,9 +522,9 @@ export function RacePage() {
           )}
           {candidateGroups.length > 0 ? (
             <div className="mt-4 flex flex-col gap-2 border-t border-line/50 pt-4 text-sm sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-slate-400">{t('race.compareHint')}</p>
+              <p className="text-slate-400"><span className="md:hidden">{t('race.compareMobileHint')}</span><span className="hidden md:inline">{t('race.compareHint')}</span></p>
               <p className={selectedPersonIds.length >= 2 ? 'text-signal' : 'text-accent'}>
-                {t('race.compareSelected', { count: selectedPersonIds.length })}
+                {t('race.compareSelected', { count: selectedPersonIds.length, limit: comparisonLimit })}
               </p>
             </div>
           ) : null}

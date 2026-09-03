@@ -22,7 +22,13 @@ const searchExampleKeys = [
   'search.example.region',
 ] as const;
 
-export function GlobalSearch() {
+type GlobalSearchProps = {
+  autoFocus?: boolean;
+  id?: string;
+  onNavigate?: () => void;
+};
+
+export function GlobalSearch({ autoFocus = false, id = 'global-search', onNavigate }: GlobalSearchProps) {
   const { t } = useI18n();
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
@@ -75,7 +81,7 @@ export function GlobalSearch() {
 
   return (
     <div className="relative min-w-0 flex-1">
-      <label htmlFor="global-search" className="sr-only">
+      <label htmlFor={id} className="sr-only">
         {t('search.placeholder')}
       </label>
       <div className="pixel-corners flex min-h-14 items-center gap-2 border border-line/80 bg-bg/55 px-3 shadow-[inset_0_0_18px_rgba(114,232,255,0.08)] focus-within:border-accent/70 focus-within:ring-2 focus-within:ring-accent/20">
@@ -83,8 +89,9 @@ export function GlobalSearch() {
           ⌕
         </span>
         <input
-          id="global-search"
+          id={id}
           type="search"
+          autoFocus={autoFocus}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onFocus={() => setIsFocused(true)}
@@ -130,7 +137,10 @@ export function GlobalSearch() {
                         <Link
                           key={`${result.type}-${result.id}`}
                           to={result.href}
-                          onClick={() => setQuery('')}
+                          onClick={() => {
+                            setQuery('');
+                            onNavigate?.();
+                          }}
                           className="pixel-corners block border border-transparent px-3 py-2 transition hover:border-accent/45 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/25"
                         >
                           <SearchResultContent result={result} />

@@ -2,23 +2,27 @@ import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HomeElectionSpotlight } from '../components/HomeElectionSpotlight';
+import { MobileMyElection } from '../components/MobileMyElection';
 import { PartySeatDistributionPanel } from '../components/PartySeatDistributionPanel';
 import { RegionIssueConcernPanel } from '../components/RegionIssueConcernPanel';
 import { TaiwanStageSelect } from '../components/TaiwanStageSelect';
+import { taiwanRegions } from '../data/taiwanRegions';
 import { useI18n } from '../i18n';
 import { selectHomeRegionId, selectHomeRelatedRaces } from '../lib/homeRaceSelection';
 import { publicDataProvider } from '../lib/publicData';
 import { normalizeTaiwanText } from '../lib/taiwanText';
 import { useSelectedRegion } from '../selectedRegion';
+import { useVotingRegion } from '../votingRegion';
 
 const NATIONAL_REGION_QUERY = 'national';
 
 export function HomePage() {
   const { t } = useI18n();
   const { selectedRegionId: storedRegionId, setSelectedRegionId } = useSelectedRegion();
+  const { preference: votingRegionPreference } = useVotingRegion();
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedRegionId = searchParams.get('region');
-  const requestedHomeRegionId = requestedRegionId ?? storedRegionId;
+  const requestedHomeRegionId = requestedRegionId ?? votingRegionPreference?.county.id ?? storedRegionId;
   const [homeData, setHomeData] = useState(() => publicDataProvider.getHomePageData());
   const [homeLoading, setHomeLoading] = useState(true);
   const [homeLoadError, setHomeLoadError] = useState(false);
@@ -42,10 +46,8 @@ export function HomePage() {
       });
     return () => { active = false; };
   }, [requestedHomeRegionId]);
-  const selectedRegionId = selectHomeRegionId(
-    homeData.stageRegions,
-    requestedRegionId ?? storedRegionId,
-  );
+  const selectedRegionId = selectHomeRegionId(homeData.stageRegions, requestedHomeRegionId)
+    ?? (taiwanRegions.some((region) => region.slug === requestedHomeRegionId) ? requestedHomeRegionId : null);
   const isNationalView = selectedRegionId === null;
   const relatedRaces = selectHomeRelatedRaces(homeData, selectedRegionId);
   const [, startTransition] = useTransition();
@@ -85,8 +87,21 @@ export function HomePage() {
   }, [searchParams, selectedRegionId, setSearchParams, setSelectedRegionId, startTransition]);
 
   return (
-    <AppShell ticker={homeData.ticker}>
-      <div className="grid gap-3 xl:min-h-[880px] xl:grid-cols-[minmax(420px,0.95fr)_minmax(480px,1.08fr)_minmax(300px,0.75fr)] xl:items-stretch">
+    <AppShell ticker={homeData.ticker} tickerMobileHidden={Boolean(votingRegionPreference)}>
+      {votingRegionPreference ? (
+        <MobileMyElection
+          preference={votingRegionPreference}
+          ticker={homeData.ticker}
+          races={relatedRaces}
+          candidateSummaries={homeData.candidateSummaries ?? []}
+          loading={homeLoading}
+          loadError={homeLoadError}
+        />
+      ) : null}
+      <div
+        data-home-research-grid
+        className={`${votingRegionPreference ? 'hidden md:grid' : 'grid'} gap-3 xl:min-h-[880px] xl:grid-cols-[minmax(420px,0.95fr)_minmax(480px,1.08fr)_minmax(300px,0.75fr)] xl:items-stretch`}
+      >
         <section className="min-w-0 xl:h-full">
           <TaiwanStageSelect
             regions={homeData.stageRegions}

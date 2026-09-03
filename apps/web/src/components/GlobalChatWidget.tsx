@@ -48,6 +48,7 @@ const chatNudgeDurationMs = 6_000;
 const chatNudgeSuppressionMs = 7 * 24 * 60 * 60 * 1_000;
 const chatRecentRoomsStorageKey = 'public-office-watch-chat-recent-rooms-v1';
 const chatRecentRoomHistoryLimit = 6;
+export const openGlobalChatEvent = 'public-office-watch:open-chat';
 
 function loadRecentChatRoomIds() {
   try {
@@ -770,18 +771,24 @@ export function GlobalChatWidget() {
     window.setTimeout(() => setHighlightedMessageId(null), 1600);
   }
 
-  function dismissChatNudge() {
+  const dismissChatNudge = useCallback(() => {
     rememberChatNudge();
     setIsNudgeVisible(false);
-  }
+  }, []);
 
-  async function openChat() {
+  const openChat = useCallback(async () => {
     dismissChatNudge();
     const currentStatus = await ensureChatStatus();
     if (!currentStatus) return;
     setIsPanelEngaged(false);
     setIsOpen(true);
-  }
+  }, [dismissChatNudge, ensureChatStatus]);
+
+  useEffect(() => {
+    const handleOpenChat = () => void openChat();
+    window.addEventListener(openGlobalChatEvent, handleOpenChat);
+    return () => window.removeEventListener(openGlobalChatEvent, handleOpenChat);
+  }, [openChat]);
 
   if (status === null) return null;
 
@@ -789,7 +796,7 @@ export function GlobalChatWidget() {
     <>
       {!isOpen ? (
         <div
-          className="fixed bottom-5 right-4 z-[70] sm:right-5"
+          className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] right-4 z-[70] sm:right-5 md:bottom-5"
           onPointerEnter={() => {
             setIsNudgePaused(true);
             void ensureChatStatus();

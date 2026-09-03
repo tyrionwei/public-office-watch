@@ -32,11 +32,13 @@ const blockedTermAllowlist = {
   source_documents: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
   person_media: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
   pending: new Set([
+    path.join(srcRoot, 'components', 'HomeElectionSpotlight.tsx'),
     path.join(srcRoot, 'types', 'publicViews.ts'),
     path.join(srcRoot, 'pages', 'ElectionPage.tsx'),
     path.join(srcRoot, 'pages', 'InternalDataProgressPage.tsx'),
     path.join(srcRoot, 'pages', 'InternalReviewQueuePage.tsx'),
     path.join(srcRoot, 'pages', 'PersonPage.tsx'),
+    path.join(srcRoot, 'pages', 'RacePage.tsx'),
     path.join(srcRoot, 'pages', 'PartyPage.tsx'),
     path.join(srcRoot, 'lib', 'internalDataProgress.ts'),
     path.join(srcRoot, 'lib', 'internalReviewData.ts'),

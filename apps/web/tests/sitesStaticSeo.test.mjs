@@ -73,6 +73,8 @@ test('routes every document path through the Worker while bypassing static asset
     '!/og-policy.png',
     '!/og-comparison.png',
     '!/site.webmanifest',
+    '!/service-worker.js',
+    '!/offline.html',
     '!/index.html',
   ]);
 });

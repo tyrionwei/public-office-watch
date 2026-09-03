@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
@@ -79,12 +79,17 @@ function ComparisonRow({
   candidates: PublicCandidate[];
   children: (candidate: PublicCandidate) => ReactNode;
 }) {
+  const desktopGridClass = candidates.length === 4
+    ? 'md:grid-cols-4'
+    : candidates.length === 3
+      ? 'md:grid-cols-3'
+      : 'md:grid-cols-2';
   return (
     <section className="border-t border-line/60 py-4">
       <h4 className="mb-3 text-xs uppercase tracking-[0.16em] text-slate-500">{label}</h4>
-      <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${candidates.length}, minmax(240px, 1fr))` }}>
+      <div className={`grid grid-cols-2 gap-2 md:gap-4 ${desktopGridClass}`}>
         {candidates.map((candidate) => (
-          <div key={candidate.person_id} className="min-w-0 border-l border-line/60 pl-4">
+          <div key={candidate.person_id} className="min-w-0 border-l border-line/60 pl-2 md:pl-4">
             {children(candidate)}
           </div>
         ))}
@@ -104,6 +109,11 @@ export function CandidateComparisonPanel({
   const { language, t } = useI18n();
   const profilesByPersonId = new Map(profiles.map((profile) => [profile.person.person_id, profile]));
   const minWidth = Math.max(760, candidates.length * 280);
+  const desktopGridClass = candidates.length === 4
+    ? 'md:grid-cols-4'
+    : candidates.length === 3
+      ? 'md:grid-cols-3'
+      : 'md:grid-cols-2';
   const candidateNames = candidates.map((candidate) => candidate.person_name).join(language === 'en' ? ', ' : '、');
   const comparisonImageBody = candidates.map((candidate) => {
     const profile = profilesByPersonId.get(candidate.person_id) ?? null;
@@ -121,7 +131,7 @@ export function CandidateComparisonPanel({
     : null;
 
   return (
-    <div id={comparisonAnchorId} className="scroll-mt-24">
+    <div id={comparisonAnchorId} data-candidate-comparison className="scroll-mt-24">
       <SectionPanel
         title={t('race.compareTitle')}
         eyebrow={t('race.compareEyebrow')}
@@ -142,9 +152,12 @@ export function CandidateComparisonPanel({
       ) : loading ? (
         <p className="text-sm text-slate-400">{t('race.compareLoading')}</p>
       ) : (
-        <div className="overflow-x-auto">
-          <div style={{ minWidth }}>
-            <div className="grid gap-4 pb-5" style={{ gridTemplateColumns: `repeat(${candidates.length}, minmax(240px, 1fr))` }}>
+        <div className="overflow-x-visible md:overflow-x-auto">
+          <div
+            className="min-w-0 md:min-w-[var(--comparison-min-width)]"
+            style={{ '--comparison-min-width': `${minWidth}px` } as CSSProperties}
+          >
+            <div className={`grid grid-cols-2 gap-2 pb-5 md:gap-4 ${desktopGridClass}`}>
               {candidates.map((candidate) => {
                 const partyLabel = normalizePartyLabel(candidate.party ?? candidate.person_party);
                 const previousPartyName = getPreviousPartyName(
@@ -154,8 +167,8 @@ export function CandidateComparisonPanel({
                 );
                 const theme = partyTheme[toPartyThemeKey(partyLabel)];
                 return (
-                  <header key={candidate.person_id} className="min-w-0 border-l-2 pl-4" style={{ borderColor: theme.accent }}>
-                    <div className="flex items-start justify-between gap-3">
+                  <header key={candidate.person_id} className="min-w-0 border-l-2 pl-2 md:pl-4" style={{ borderColor: theme.accent }}>
+                    <div className="flex min-w-0 flex-col gap-2 md:flex-row md:items-start md:justify-between md:gap-3">
                       <div className="min-w-0">
                         <p className="text-xs text-slate-500">{candidate.candidate_no ? `${t('race.number')} ${candidate.candidate_no}` : t('race.number')}</p>
                         <h3 className="mt-1 truncate font-display text-2xl text-white">{candidate.person_name}</h3>
@@ -168,11 +181,11 @@ export function CandidateComparisonPanel({
                           </p>
                         ) : null}
                       </div>
-                      <button type="button" onClick={() => onRemove(candidate.person_id)} className="shrink-0 text-xs text-slate-500 hover:text-rose-300">
+                      <button type="button" onClick={() => onRemove(candidate.person_id)} className="min-h-11 shrink-0 self-start text-left text-xs text-slate-500 hover:text-rose-300 md:min-h-0 md:text-right">
                         {t('race.compareRemove')}
                       </button>
                     </div>
-                    <Link to={personPath(candidate.person_id)} className="mt-3 inline-block text-sm text-accent hover:text-white">
+                    <Link to={personPath(candidate.person_id)} className="mt-2 inline-flex min-h-11 items-center text-sm text-accent hover:text-white md:mt-3 md:min-h-0">
                       {t('race.compareOpenPerson')}
                     </Link>
                   </header>

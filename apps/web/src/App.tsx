@@ -7,6 +7,7 @@ import { publicDataReadyEvent, refreshConfiguredPublicDataProvider } from './lib
 import { aboutPath, dataGuidancePath, electionsPath, homePath, internalChatAdminPath, internalDataProgressPath, internalReviewQueuePath, internalUpdateAdminPath, partiesPath, peoplePath, supportPath, updatesPath } from './routes/routePaths';
 import { SelectedRegionProvider } from './selectedRegion';
 import { ThemeProvider } from './theme';
+import { VotingRegionProvider } from './votingRegion';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })));
 const PeoplePage = lazy(() => import('./pages/PeoplePage').then((module) => ({ default: module.PeoplePage })));
@@ -194,12 +195,14 @@ function App() {
       <BrowserRouter>
         <RouteScrollRestoration />
         <LanguageProvider>
-          <SelectedRegionProvider>
-            <AppRoutes
-              publicDataStatus={publicDataStatus}
-              onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
-            />
-          </SelectedRegionProvider>
+          <VotingRegionProvider>
+            <SelectedRegionProvider>
+              <AppRoutes
+                publicDataStatus={publicDataStatus}
+                onRetry={() => setRefreshAttempt((attempt) => attempt + 1)}
+              />
+            </SelectedRegionProvider>
+          </VotingRegionProvider>
         </LanguageProvider>
       </BrowserRouter>
     </ThemeProvider>

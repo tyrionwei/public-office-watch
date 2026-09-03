@@ -685,7 +685,7 @@ test('mobile browsing region never overrides the saved voting area', async ({ pa
 });
 
 test('desktop voting area is optional, shared, and requests location only after a click', async ({ page }) => {
-  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.setViewportSize({ width: 1280, height: 768 });
   await page.addInitScript(() => {
     const testWindow = window as Window & { geolocationCallCount: number };
     testWindow.geolocationCallCount = 0;
@@ -716,6 +716,11 @@ test('desktop voting area is optional, shared, and requests location only after 
   await expect(pollingPlaceLink).toHaveAttribute('href', /prvCityCode=63000/u);
   await expect(pollingPlaceLink).toHaveAttribute('href', /deptCode=020/u);
   await expect(pollingPlaceLink).toHaveAttribute('href', /liCode=001/u);
+  const eventDetailsBox = await page.locator('[data-next-event-details]').boundingBox();
+  const votingRegionBox = await card.boundingBox();
+  expect(eventDetailsBox).not.toBeNull();
+  expect(votingRegionBox).not.toBeNull();
+  expect(votingRegionBox!.x - (eventDetailsBox!.x + eventDetailsBox!.width)).toBeGreaterThan(32);
   await expectNoHorizontalOverflow(page);
   await page.setViewportSize({ width: 768, height: 768 });
   await expect(card).toBeVisible();

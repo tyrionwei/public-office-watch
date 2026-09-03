@@ -5,7 +5,10 @@ const baseURL = `http://127.0.0.1:${port}`;
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: 'sharingCi.pw.ts',
+  projects: [
+    { name: 'sharing', testMatch: 'sharingCi.pw.ts' },
+    { name: 'mobile', testMatch: 'browser-smoke.spec.ts', grep: /@mobile-ci/ },
+  ],
   timeout: 30_000,
   expect: {
     timeout: 5_000,

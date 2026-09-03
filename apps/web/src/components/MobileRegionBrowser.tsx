@@ -7,7 +7,7 @@ type MobileRegionBrowserProps = {
   selectedRegionLabel: string;
   browsing: boolean;
   onSelectRegion: (regionId: string | null) => void;
-  onReturnToMyArea: () => void;
+  onReturnToMyArea?: () => void;
 };
 
 const regionGroups = [
@@ -79,12 +79,12 @@ export function MobileRegionBrowser({
                 : (isEnglish ? 'Browse other areas' : '瀏覽其他地區')}
             </h2>
             <p className="mt-1 text-xs leading-5 text-slate-400">
-              {isEnglish
-                ? 'Browsing never changes your saved voting area.'
-                : '瀏覽其他縣市不會變更已儲存的戶籍投票地區。'}
+              {onReturnToMyArea
+                ? (isEnglish ? 'Browsing never changes your saved voting area.' : '瀏覽其他縣市不會變更已儲存的投票地區。')
+                : (isEnglish ? 'Explore nationwide or any county without setting a voting area.' : '不必設定投票地區，也能自由查看全國與各縣市資訊。')}
             </p>
           </div>
-          {browsing ? (
+          {browsing && onReturnToMyArea ? (
             <button type="button" onClick={onReturnToMyArea} className="min-h-11 shrink-0 text-xs text-accent underline underline-offset-4">
               {isEnglish ? 'My area' : '回到我的地區'}
             </button>

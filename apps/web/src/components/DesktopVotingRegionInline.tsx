@@ -30,7 +30,7 @@ export function DesktopVotingRegionInline({ onOpenEditor, ticker }: DesktopVotin
     .filter(Boolean)
     .join(' ');
   const votingCycle = selectNextElectionVotingCycle(preference, ticker.date);
-  const pollingPlaceLookupUrl = votingCycle?.pollingPlaceLookupUrl
+  const pollingPlaceLookupUrl = votingCycle?.pollingPlaceStatus === 'lookup-available' && votingCycle.pollingPlaceLookupUrl
     ? buildCecPollingPlaceLookupUrl(votingCycle.pollingPlaceLookupUrl, preference)
     : null;
 

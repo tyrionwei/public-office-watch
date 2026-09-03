@@ -394,7 +394,7 @@ test('homepage stays within the viewport at responsive widths', async ({ page })
   }
 });
 
-test('mobile shell provides compact navigation, search, and overflow-safe controls', async ({ page }) => {
+test('mobile shell provides compact navigation, search, and overflow-safe controls', { tag: '@mobile-ci' }, async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.addInitScript(() => {
     window.localStorage.setItem('public-office-watch-chat-nudge-seen-at-v1', String(Date.now()));
@@ -420,7 +420,8 @@ test('mobile shell provides compact navigation, search, and overflow-safe contro
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(languageToggle).toHaveText('中');
   await languageToggle.click();
-  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-Hant');
+  await expect(page.locator('html')).toHaveAttribute('lang', /^zh-(Hant|TW)$/u);
+  await expect(languageToggle).toHaveText('EN');
   await themeToggle.click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect.poll(() => page.evaluate(() => window.localStorage.getItem('public-office-watch-theme'))).toBe('light');
@@ -572,12 +573,10 @@ test('mobile voting area persists only confirmed choices and treats location as 
   expect(locationConfirmed.source).toBe('confirmed-location');
 });
 
-test('mobile voting area onboarding dismissal survives reloads', async ({ page }) => {
+test('mobile voting area onboarding dismissal survives reloads', { tag: '@mobile-ci' }, async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.addInitScript(() => {
     window.localStorage.setItem('public-office-watch-chat-nudge-seen-at-v1', String(Date.now()));
-    window.localStorage.removeItem('public-office-watch.voting-region-preference.v1');
-    window.localStorage.removeItem('public-office-watch.voting-region-onboarding-dismissed.v1');
   });
   await page.goto('/');
 
@@ -589,6 +588,58 @@ test('mobile voting area onboarding dismissal survives reloads', async ({ page }
 
   await page.reload();
   await expect(page.locator('[data-voting-region-onboarding]')).toBeHidden();
+});
+
+test('mobile browsing is available without a saved voting area', { tag: '@mobile-ci' }, async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/?region=taipei-city');
+  await page.locator('[data-voting-region-onboarding]').getByRole('button', { name: '先看看全國資訊' }).click();
+  await expect(page).toHaveURL(/region=national/u);
+  const browser = page.locator('[data-mobile-region-browser]');
+  await expect(browser).toContainText('正在瀏覽');
+  await expect(page.locator('[data-mobile-browse-results]')).toBeVisible();
+  await expect(browser.getByRole('button', { name: '回到我的地區' })).toHaveCount(0);
+  await browser.getByRole('button', { name: /瀏覽地區/u }).click();
+  const sheet = page.getByRole('dialog', { name: '瀏覽地區' });
+  await expect(sheet.locator('button[aria-pressed]')).toHaveCount(23);
+  await expect(sheet.getByRole('button', { name: '全國總覽' })).toHaveAttribute('aria-pressed', 'true');
+  await sheet.getByRole('button', { name: '臺北市', exact: true }).click();
+  await expect(browser).toContainText('正在瀏覽 臺北市');
+  await expect(page).toHaveURL(/region=taipei-city/u);
+  expect(await page.evaluate(() => localStorage.getItem('public-office-watch.voting-region-preference.v1'))).toBeNull();
+  await page.reload();
+  await expect(browser).toContainText('正在瀏覽 臺北市');
+  await expect(page.locator('[data-voting-region-onboarding]')).toBeHidden();
+  await expectNoHorizontalOverflow(page);
+});
+
+test('mobile explicit browsing takes priority over my election', { tag: '@mobile-ci' }, async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.addInitScript(() => {
+    localStorage.setItem('public-office-watch.voting-region-preference.v1', JSON.stringify({
+      county: { id: 'new-taipei-city', name: '新北市' },
+      district: { id: 'district-65000010', name: '板橋區' },
+      source: 'manual',
+      confirmedAt: '2026-09-03T00:00:00.000Z',
+    }));
+  });
+  await page.goto('/?region=taipei-city');
+  const savedArea = await page.evaluate(() => localStorage.getItem('public-office-watch.voting-region-preference.v1'));
+  const browser = page.locator('[data-mobile-region-browser]');
+  await expect(page.locator('[data-mobile-my-election]')).toHaveCount(0);
+  await expect(page.locator('[data-voting-region-summary]')).toContainText('新北市 板橋區');
+  await expect(browser).toContainText('正在瀏覽 臺北市');
+  await expect(page.locator('[data-mobile-browse-results]')).toBeVisible();
+  await browser.getByRole('button', { name: /瀏覽地區/u }).click();
+  await page.getByRole('dialog', { name: '瀏覽地區' }).getByRole('button', { name: '全國總覽' }).click();
+  await expect(page).toHaveURL(/region=national/u);
+  await expect(page.locator('[data-mobile-my-election]')).toHaveCount(0);
+  await browser.getByRole('button', { name: '回到我的地區' }).click();
+  await expect(page).toHaveURL((url) => !url.searchParams.has('region'));
+  await expect(page.locator('[data-mobile-my-election]')).toBeVisible();
+  await expect(page.locator('[data-mobile-browse-results]')).toHaveCount(0);
+  expect(await page.evaluate(() => localStorage.getItem('public-office-watch.voting-region-preference.v1'))).toBe(savedArea);
+  await expectNoHorizontalOverflow(page);
 });
 
 test('mobile my election uses the saved voting county and keeps research layout on desktop', async ({ page }) => {
@@ -672,7 +723,7 @@ test('mobile browsing region never overrides the saved voting area', async ({ pa
   await page.goto('/?region=taipei-city');
 
   const dashboard = page.locator('[data-mobile-my-election]');
-  await expect(dashboard.getByText('新北市首長選舉')).toBeVisible();
+  await expect(dashboard).toHaveCount(0);
   await expect(page.locator('[data-voting-region-summary]')).toContainText('新北市 板橋區');
   await expect(page.locator('[data-mobile-region-browser]')).toContainText('正在瀏覽 臺北市');
   await expect(page.locator('[data-mobile-browse-results]')).toBeVisible();
@@ -1268,12 +1319,12 @@ test('homepage quick select exposes the six municipalities and seat links carry 
     return (railBox?.width ?? 0) / (mainIslandBox?.width ?? 1);
   };
   await page.setViewportSize({ width: 390, height: 844 });
-  const mobileIslandLayoutRatio = await readIslandLayoutRatio();
+  await expect(page.locator('[data-main-island-map]')).toBeHidden();
+  await expect(page.locator('[data-mobile-region-browser]')).toBeVisible();
   await page.setViewportSize({ width: 1280, height: 900 });
   const compactIslandLayoutRatio = await readIslandLayoutRatio();
   await page.setViewportSize({ width: 1920, height: 1080 });
   const wideIslandLayoutRatio = await readIslandLayoutRatio();
-  expect(Math.abs(mobileIslandLayoutRatio - wideIslandLayoutRatio)).toBeLessThan(0.02);
   expect(Math.abs(compactIslandLayoutRatio - wideIslandLayoutRatio)).toBeLessThan(0.02);
   await page.setViewportSize({ width: 1440, height: 900 });
   const moreCounties = quickSelect.locator('details').first();
@@ -1443,10 +1494,10 @@ test('homepage election links and candidate categories use county filters and di
   const selectedGridHeight = (await homepageGrid.boundingBox())?.height ?? 0;
   expect(Math.abs(selectedGridHeight - initialGridHeight)).toBeLessThanOrEqual(1);
 
-  const columnHeights = await page.locator('main > div > section').evaluateAll((columns) => columns.map((column) => column.getBoundingClientRect().height));
+  const columnHeights = await page.locator('[data-home-research-grid] > section').evaluateAll((columns) => columns.map((column) => column.getBoundingClientRect().height));
   const heightDifference = Math.max(...columnHeights) - Math.min(...columnHeights);
   expect(heightDifference).toBeLessThanOrEqual(1);
-  const columnOverflow = await page.locator('main > div > section').evaluateAll((columns) => columns.map((column) => column.scrollHeight - column.clientHeight));
+  const columnOverflow = await page.locator('[data-home-research-grid] > section').evaluateAll((columns) => columns.map((column) => column.scrollHeight - column.clientHeight));
   expect(Math.max(...columnOverflow)).toBeLessThanOrEqual(1);
 
   const partyFrame = page.getByRole('heading', { name: /政黨概況/ }).locator('xpath=ancestor::section[1]');

@@ -23,6 +23,7 @@ export function HomePage() {
   const { preference: votingRegionPreference } = useVotingRegion();
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedRegionId = searchParams.get('region');
+  const showMobileBrowse = !votingRegionPreference || requestedRegionId !== null;
   const requestedHomeRegionId = requestedRegionId ?? storedRegionId;
   const [homeData, setHomeData] = useState(() => publicDataProvider.getHomePageData());
   const [homeLoading, setHomeLoading] = useState(true);
@@ -92,7 +93,9 @@ export function HomePage() {
     : null;
   const selectedRegionLabel = isNationalView
     ? t('national.taiwan')
-    : normalizeTaiwanText(selectedRegionSummary?.label ?? selectedRegionNode?.label ?? t('home.unspecifiedRegion'));
+    : normalizeTaiwanText(selectedRegionSummary?.label ?? selectedRegionNode?.label
+      ?? taiwanRegions.find((region) => region.slug === selectedRegionId)?.name
+      ?? t('home.unspecifiedRegion'));
 
   useEffect(() => {
     if (homeData.stageRegions.length === 0) return;
@@ -136,9 +139,16 @@ export function HomePage() {
   }, [searchParams, setSearchParams, setSelectedRegionId, startTransition, votingCountyId]);
 
   return (
-    <AppShell ticker={homeData.ticker} tickerMobileHidden={Boolean(votingRegionPreference)}>
-      {votingRegionPreference ? (
-        <div className="space-y-3 md:contents">
+    <AppShell ticker={homeData.ticker} tickerMobileHidden>
+      <div className="mb-3 space-y-3 md:contents">
+        <MobileRegionBrowser
+          selectedRegionId={selectedRegionId}
+          selectedRegionLabel={selectedRegionLabel}
+          browsing={showMobileBrowse}
+          onSelectRegion={handleSelectRegion}
+          onReturnToMyArea={votingRegionPreference ? handleReturnToMyArea : undefined}
+        />
+        {votingRegionPreference && !showMobileBrowse ? (
           <MobileMyElection
             preference={votingRegionPreference}
             ticker={myElectionData.ticker}
@@ -147,33 +157,13 @@ export function HomePage() {
             loading={myElectionLoading}
             loadError={myElectionLoadError}
           />
-          <MobileRegionBrowser
-            selectedRegionId={selectedRegionId}
-            selectedRegionLabel={selectedRegionLabel}
-            browsing={requestedRegionId !== null}
-            onSelectRegion={handleSelectRegion}
-            onReturnToMyArea={handleReturnToMyArea}
-          />
-          {requestedRegionId !== null ? (
-            <section data-mobile-browse-results className="md:hidden">
-              <HomeElectionSpotlight
-                races={relatedRaces}
-                regionNode={selectedRegionNode}
-                regionSummary={selectedRegionSummary}
-                national={isNationalView}
-                candidateSummaries={homeData.candidateSummaries ?? []}
-                candidatesLoading={homeLoading}
-                candidateLoadError={homeLoadError}
-              />
-            </section>
-          ) : null}
-        </div>
-      ) : null}
+        ) : null}
+      </div>
       <div
         data-home-research-grid
-        className={`${votingRegionPreference ? 'hidden md:grid' : 'grid'} gap-3 xl:min-h-[880px] xl:grid-cols-[minmax(420px,0.95fr)_minmax(480px,1.08fr)_minmax(300px,0.75fr)] xl:items-stretch`}
+        className={`${showMobileBrowse ? 'grid' : 'hidden md:grid'} gap-3 xl:min-h-[880px] xl:grid-cols-[minmax(420px,0.95fr)_minmax(480px,1.08fr)_minmax(300px,0.75fr)] xl:items-stretch`}
       >
-        <section className="min-w-0 xl:h-full">
+        <section className="hidden min-w-0 md:block xl:h-full">
           <TaiwanStageSelect
             regions={homeData.stageRegions}
             selectedRegionId={selectedRegionId}
@@ -181,7 +171,7 @@ export function HomePage() {
           />
         </section>
 
-        <section className="min-w-0 xl:h-full">
+        <section data-mobile-browse-results={showMobileBrowse ? '' : undefined} className="min-w-0 xl:h-full">
           <HomeElectionSpotlight
             races={relatedRaces}
             regionNode={selectedRegionNode}

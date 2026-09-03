@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { taiwanDistrictsByCountyCode } from '../data/generated/taiwanDistrictDirectory';
 import { taiwanRegions } from '../data/taiwanRegions';
 import { useI18n } from '../i18n';
@@ -66,6 +66,7 @@ async function getVillageChoices(districtId: string): Promise<VotingRegionChoice
 export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: MobileVotingRegionProps) {
   const { language } = useI18n();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { preference, confirmPreference, clearPreference, setCurrentLocation } = useVotingRegion();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const villagePickerRef = useRef<HTMLDivElement>(null);
@@ -318,6 +319,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       // The in-memory dismissal still works when storage is unavailable.
     }
     setOnboardingDismissed(true);
+    navigate('/?region=national');
   };
 
   const acceptSuggestedLocation = () => {

@@ -436,17 +436,6 @@ test('mobile shell provides compact navigation, search, and overflow-safe contro
   await expect(bottomNav.getByText('討論', { exact: true })).toBeVisible();
   await expect(bottomNav.getByText('更多', { exact: true })).toBeVisible();
 
-  const navBox = await bottomNav.boundingBox();
-  const launcherBox = await page.locator('[data-chat-launcher]').boundingBox();
-  expect(navBox).not.toBeNull();
-  expect(launcherBox).not.toBeNull();
-  expect(launcherBox!.y + launcherBox!.height).toBeLessThanOrEqual(navBox!.y);
-
-  await bottomNav.getByRole('button', { name: '討論' }).click();
-  const chatDialog = page.getByRole('dialog', { name: '即時討論' });
-  await expect(chatDialog).toBeVisible();
-  await chatDialog.getByRole('button', { name: '縮小聊天室' }).click();
-
   await bottomNav.getByRole('button', { name: '搜尋' }).click();
   const searchDialog = page.getByRole('dialog', { name: '搜尋' });
   await expect(searchDialog).toBeVisible();
@@ -474,6 +463,25 @@ test('mobile shell provides compact navigation, search, and overflow-safe contro
   await expect(page.locator('[data-mobile-bottom-nav]')).toBeHidden();
   await expect(page.locator('[data-desktop-header]')).toBeVisible();
   await expect.poll(() => page.locator('body').evaluate((element) => element.style.overflow)).toBe('');
+});
+
+test('mobile chat stays above navigation and opens from the discussion button', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.addInitScript(() => {
+    localStorage.setItem('public-office-watch-chat-nudge-seen-at-v1', String(Date.now()));
+  });
+  await page.goto('/');
+  const bottomNav = page.locator('[data-mobile-bottom-nav]');
+  const navBox = await bottomNav.boundingBox();
+  const launcherBox = await page.locator('[data-chat-launcher]').boundingBox();
+  expect(navBox).not.toBeNull();
+  expect(launcherBox).not.toBeNull();
+  expect(launcherBox!.y + launcherBox!.height).toBeLessThanOrEqual(navBox!.y);
+  await bottomNav.getByRole('button', { name: '討論' }).click();
+  const chatDialog = page.getByRole('dialog', { name: '即時討論' });
+  await expect(chatDialog).toBeVisible();
+  await chatDialog.getByRole('button', { name: '縮小聊天室' }).click();
+  await expect(chatDialog).toBeHidden();
 });
 
 test('mobile voting area persists only confirmed choices and treats location as a suggestion', async ({ page }) => {

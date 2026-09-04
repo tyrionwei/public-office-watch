@@ -1,10 +1,29 @@
 import { useI18n } from '../i18n';
 import { useTheme } from '../theme';
 
-export function ThemeToggle() {
+type ThemeToggleProps = {
+  compact?: boolean;
+};
+
+export function ThemeToggle({ compact = false }: ThemeToggleProps) {
   const { t } = useI18n();
   const { theme, toggleTheme } = useTheme();
   const light = theme === 'light';
+
+  if (compact) {
+    return (
+      <button
+        type="button"
+        data-theme-toggle
+        onClick={toggleTheme}
+        aria-label={light ? t('theme.switchToDark') : t('theme.switchToLight')}
+        title={light ? t('theme.switchToDark') : t('theme.switchToLight')}
+        className="grid h-11 w-11 shrink-0 place-items-center border border-line/80 bg-bg/45 text-lg text-accent transition hover:border-accent/60 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/35"
+      >
+        <span aria-hidden="true">{light ? '◐' : '☀'}</span>
+      </button>
+    );
+  }
 
   return (
     <button

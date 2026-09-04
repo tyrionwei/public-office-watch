@@ -160,7 +160,8 @@ export function UpcomingElectionCards({
   const displayItems = groupRaces(races, selectedRegionLabel, t);
 
   function renderCompactRace(race: UpcomingElectionCardRace) {
-    const category = raceCategoryStyles[getRaceCategory(race)];
+    const categoryKind = getRaceCategory(race);
+    const category = raceCategoryStyles[categoryKind];
     const isRelated = race.regionId === normalizedPublicRegionId || race.regionId === selectedRegionId;
 
     const content = (
@@ -187,6 +188,7 @@ export function UpcomingElectionCards({
             <span className="text-xs text-slate-500">{getStatusLabel(race.status, t)}</span>
             {race.electionId ? (
               <span
+                data-race-category={categoryKind}
                 className="rounded-sm border bg-accent/8 px-2 py-1 text-[11px] focus:outline-none focus:ring-2 focus:ring-accent/30"
                 style={{ borderColor: `${category.color}88`, color: category.color }}
               >
@@ -215,7 +217,8 @@ export function UpcomingElectionCards({
 
   function renderCompactGroup(group: { id: string; groupKind: RaceGroupKind; title: string; races: UpcomingElectionCardRace[] }) {
     const sample = group.races[0];
-    const category = raceCategoryStyles[sample ? getRaceCategory(sample) : 'basic'];
+    const categoryKind = sample ? getRaceCategory(sample) : 'basic';
+    const category = raceCategoryStyles[categoryKind];
     const groupLabel = getRaceGroupLabel(group.groupKind, t);
 
     return (
@@ -246,6 +249,7 @@ export function UpcomingElectionCards({
             <div className="col-span-2 col-start-2 mt-2 flex items-center justify-between gap-3">
               <span className="text-xs text-slate-500">{sample ? getStatusLabel(sample.status, t) : t('common.toBeAnnounced')}</span>
               <span
+                data-race-category={categoryKind}
                 className="rounded-sm border bg-accent/8 px-2 py-1 text-[11px]"
                 style={{ borderColor: `${category.color}88`, color: category.color }}
               >
@@ -268,6 +272,7 @@ export function UpcomingElectionCards({
                   <p className="mt-1 text-xs text-slate-500">{race.region}</p>
                 </div>
                 <span
+                  data-race-category={categoryKind}
                   className="shrink-0 rounded-sm border bg-accent/8 px-2 py-1 text-[11px]"
                   style={{ borderColor: `${category.color}88`, color: category.color }}
                 >

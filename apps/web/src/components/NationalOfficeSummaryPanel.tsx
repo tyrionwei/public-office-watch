@@ -29,7 +29,7 @@ function HolderSlot({ holder }: { holder: PublicNationalOfficeHolder | undefined
       <div className="flex items-center justify-between gap-2">
         <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{roleLabel}</p>
         {holder?.tenure_status === 'acting' || isVacant ? (
-          <span className="text-[10px] uppercase tracking-[0.16em] text-warning">
+          <span className="text-[10px] uppercase tracking-[0.16em] text-signal">
             {holder?.tenure_status === 'acting' ? t('nationalOffice.acting') : t('nationalOffice.vacant')}
           </span>
         ) : null}

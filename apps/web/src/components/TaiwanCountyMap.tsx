@@ -1,4 +1,5 @@
 import { taiwanCountyMapBounds, taiwanCountyPaths } from '../data/generated/taiwanCountyMap';
+import { taiwanRegions } from '../data/taiwanRegions';
 import { useI18n } from '../i18n';
 import type { StageRegionNode } from '../types/stageMap';
 
@@ -9,7 +10,9 @@ type TaiwanCountyMapProps = {
 };
 
 function getRegionIdByCountyCode(regions: StageRegionNode[], countyCode: string) {
-  return regions.find((region) => region.stageLabel === countyCode)?.id ?? `county-${countyCode}`;
+  return regions.find((region) => region.stageLabel === countyCode)?.id
+    ?? taiwanRegions.find((region) => region.code === countyCode)?.slug
+    ?? `county-${countyCode}`;
 }
 
 const mainIslandTopDownXScale = 0.93;
@@ -158,10 +161,10 @@ export function TaiwanCountyMap({ regions, selectedRegionId, onSelectRegion }: T
                   aria-current={selected ? 'true' : undefined}
                   aria-label={t('map.selectCounty', { name: county.name })}
                   className={[
-                    'pixel-corners relative flex h-[clamp(120px,22%,150px)] min-h-0 shrink-0 flex-col overflow-hidden border bg-slate-950/12 p-1.5 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
+                    'pixel-corners relative flex h-[clamp(120px,22%,150px)] min-h-0 shrink-0 flex-col overflow-hidden bg-slate-950/12 p-1.5 text-left transition focus:outline-none focus:ring-2 focus:ring-accent/35',
                     selected
-                      ? 'border-yellow-300 text-white shadow-[0_0_18px_rgba(250,204,21,0.18)]'
-                      : 'border-white/20 text-slate-200 hover:border-accent/55',
+                      ? 'text-white shadow-[0_0_18px_rgba(250,204,21,0.18)]'
+                      : 'text-slate-200 hover:bg-slate-950/20 hover:text-white',
                   ].join(' ')}
                 >
                   <span className="relative z-10 mb-1 block rounded-sm border border-bg/60 bg-bg/75 px-1.5 py-0.5 text-center font-display text-[12px] leading-tight text-white [text-shadow:1px_1px_0_#06101f,-1px_1px_0_#06101f,1px_-1px_0_#06101f,-1px_-1px_0_#06101f]">

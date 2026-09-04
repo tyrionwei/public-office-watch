@@ -46,8 +46,15 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Test sharing browser flows
+      - name: Test sharing and core mobile browser flows
         run: npm run test:browser:ci
+
+      - name: Test PWA install and offline fallback
+        run: npm run test:pwa
+        env:
+          VITE_PUBLIC_DATA_PROVIDER: mock
+          VITE_SUPABASE_URL: ''
+          VITE_SUPABASE_ANON_KEY: ''
 
       - name: Check published exposure boundary
         run: npm run check:published-exposure

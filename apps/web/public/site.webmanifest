@@ -3,7 +3,9 @@
   "short_name": "公職資料觀測站",
   "description": "整理臺灣公職人物、政黨、選舉與地方議題的公開資料。",
   "lang": "zh-Hant",
+  "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#071126",
   "theme_color": "#071126",
@@ -11,12 +13,14 @@
     {
       "src": "/assets/brand/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/assets/brand/dianjiangtai-icon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

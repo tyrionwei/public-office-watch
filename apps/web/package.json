@@ -23,9 +23,13 @@
     "test:read-contracts": "node --test --experimental-strip-types tests/*.test.ts tests/*.test.mjs",
     "preflight:production-readiness": "node scripts/preflight-production-readiness.mjs",
     "prepare:tw-map:counties": "node scripts/prepare-taiwan-county-map.mjs",
+    "prepare:tw-map:districts": "node scripts/prepare-taiwan-district-map.mjs",
+    "prepare:tw-regions:districts": "node scripts/prepare-taiwan-district-directory.mjs",
+    "prepare:tw-regions:villages": "node scripts/prepare-taiwan-village-directory.mjs",
     "check:local-test-env": "node scripts/check-environment.mjs local",
     "check:production-env": "node scripts/check-environment.mjs production",
     "test:browser": "npm run check:local-test-env && playwright test",
+    "test:pwa": "npm run build && playwright test --config=playwright.pwa.config.ts",
     "test:browser:production": "node scripts/check-environment.mjs production-smoke && playwright test --config=playwright.production.config.ts",
     "test:browser:ci": "playwright test --config=playwright.ci.config.ts"
   },

@@ -1,19 +1,25 @@
-import type { ComponentProps, PropsWithChildren, ReactNode } from 'react';
+import { useState, type ComponentProps, type PropsWithChildren, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import { supportPath } from '../routes/routePaths';
 import { AppHeader } from './AppHeader';
+import { DesktopVotingRegionInline } from './DesktopVotingRegionInline';
 import { LanguageToggle } from './LanguageToggle';
+import { MobileNavigation, type MobilePanel } from './MobileNavigation';
+import { MobileVotingRegion } from './MobileVotingRegion';
 import { NextEventTicker } from './NextEventTicker';
 import { ThemeToggle } from './ThemeToggle';
 
 type AppShellProps = PropsWithChildren<{
   headerRight?: ReactNode;
   ticker?: ComponentProps<typeof NextEventTicker>;
+  tickerMobileHidden?: boolean;
 }>;
 
-export function AppShell({ headerRight, ticker, children }: AppShellProps) {
+export function AppShell({ headerRight, ticker, tickerMobileHidden = false, children }: AppShellProps) {
   const { t } = useI18n();
+  const [mobilePanel, setMobilePanel] = useState<MobilePanel>(null);
+  const [votingRegionEditorOpen, setVotingRegionEditorOpen] = useState(false);
   const headerControl = (
     <div className="grid gap-2">
       {headerRight}
@@ -24,8 +30,8 @@ export function AppShell({ headerRight, ticker, children }: AppShellProps) {
         >
           ♡ {t('nav.support')}
         </Link>
-        <ThemeToggle />
-        <LanguageToggle />
+        <ThemeToggle compact />
+        <LanguageToggle compact />
       </div>
     </div>
   );
@@ -37,13 +43,31 @@ export function AppShell({ headerRight, ticker, children }: AppShellProps) {
         <div className="scanline-overlay absolute inset-0 opacity-50" />
       </div>
 
-      <div className="relative w-full px-3 py-4 sm:px-4 lg:px-5 2xl:px-6">
+      <div className="relative w-full px-3 pb-[calc(5rem+env(safe-area-inset-bottom))] pt-3 sm:px-4 md:py-4 lg:px-5 2xl:px-6">
         <AppHeader rightSlot={headerControl} />
 
-        {ticker ? <div className="mt-3">{<NextEventTicker {...ticker} />}</div> : null}
+        <MobileVotingRegion
+          editorOpen={votingRegionEditorOpen}
+          onOpenEditor={() => setVotingRegionEditorOpen(true)}
+          onCloseEditor={() => setVotingRegionEditorOpen(false)}
+        />
+
+        {ticker ? (
+          <div className={`mt-3 ${tickerMobileHidden ? 'hidden md:block' : ''}`}>
+            <NextEventTicker
+              {...ticker}
+              rightSlot={<DesktopVotingRegionInline ticker={ticker} onOpenEditor={() => setVotingRegionEditorOpen(true)} />}
+            />
+          </div>
+        ) : null}
 
         <main className="mt-3">{children}</main>
       </div>
+      <MobileNavigation
+        panel={mobilePanel}
+        setPanel={setMobilePanel}
+        onOpenVotingRegion={() => setVotingRegionEditorOpen(true)}
+      />
     </div>
   );
 }

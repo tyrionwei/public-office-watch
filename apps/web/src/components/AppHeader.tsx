@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useI18n } from '../i18n';
-import { aboutPath, dataGuidancePath, electionsPath, homePath, partiesPath, peoplePath, updatesPath } from '../routes/routePaths';
+import { aboutPath, dataGuidancePath, electionsPath, homePath, partiesPath, peoplePath, supportPath, updatesPath } from '../routes/routePaths';
 import { GlobalSearch } from './GlobalSearch';
+import { LanguageToggle } from './LanguageToggle';
+import { ThemeToggle } from './ThemeToggle';
 
 type AppHeaderProps = {
   rightSlot?: ReactNode;
@@ -26,7 +28,32 @@ export function AppHeader({ rightSlot }: AppHeaderProps) {
       <div className="pixel-corners pointer-events-none absolute inset-0 border border-line/80 [background:var(--theme-header-background)] shadow-pixel" />
       <div className="pixel-corners pointer-events-none absolute inset-0 [background:var(--theme-header-accent)]" />
 
-      <div className="relative">
+      <div data-mobile-header className="relative flex min-h-12 items-center gap-3 md:hidden">
+        <Link
+          to={homePath()}
+          className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden border border-accent/50 bg-bg/60 focus:outline-none focus:ring-2 focus:ring-accent/35"
+          aria-label={t('nav.homeAria')}
+        >
+          <img src="/assets/brand/dianjiangtai-icon.png" alt="" width="44" height="44" className="h-full w-full object-cover" />
+        </Link>
+        <Link to={homePath()} className="min-w-0 flex-1 focus:outline-none focus:ring-2 focus:ring-accent/35">
+          <span className="block truncate font-display text-lg leading-tight text-white">POW</span>
+          <span className="block truncate text-[10px] text-slate-500">{t('brand.identity')}</span>
+        </Link>
+        <Link
+          to={supportPath()}
+          data-mobile-support
+          aria-label={t('nav.support')}
+          title={t('nav.support')}
+          className="grid h-11 w-11 shrink-0 place-items-center border border-line/80 bg-bg/45 text-lg text-signal transition hover:border-accent/60 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/35"
+        >
+          <span aria-hidden="true">&#9825;</span>
+        </Link>
+        <LanguageToggle compact />
+        <ThemeToggle compact />
+      </div>
+
+      <div data-desktop-header className="relative hidden md:block">
         <div className="grid gap-3 2xl:grid-cols-[minmax(260px,0.72fr)_minmax(340px,0.9fr)_auto_auto] 2xl:items-center">
           <div className="flex min-w-0 items-center gap-4">
             <Link

@@ -652,7 +652,7 @@ export function PartyPage() {
       >
         {party ? (
           <div className="space-y-6">
-            <section className="pixel-corners border border-line/70 p-5 [background:var(--theme-panel-gradient)]">
+            <section data-party-profile-hero className="pixel-corners border border-line/70 p-4 [background:var(--theme-panel-gradient)] sm:p-5">
               <div
                 className="mb-5 h-2 w-full"
                 style={{ background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})` }}
@@ -675,7 +675,7 @@ export function PartyPage() {
                 </Link>
               </div>
 
-              <dl className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <dl className="mt-5 grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <HudStatCard
                   label={t('partyDetail.income')}
                   value={<span className="font-display text-xl text-signal">{latestFinance ? currency(latestFinance.income_total) : t('parties.awaitingData')}</span>}

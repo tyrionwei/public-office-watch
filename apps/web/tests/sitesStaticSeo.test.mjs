@@ -79,6 +79,27 @@ test('routes every document path through the Worker while bypassing static asset
   ]);
 });
 
+test('document responses allow same-origin geolocation with matching static policy', async () => {
+  const expectedPolicy = 'camera=(), geolocation=(self), microphone=(), payment=(), usb=()';
+  const staticHeaders = readFileSync(new URL('../public/_headers', import.meta.url), 'utf8');
+  assert.equal(staticHeaders.match(/^  Permissions-Policy: (.+)$/m)?.[1], expectedPolicy);
+
+  for (const method of ['GET', 'HEAD']) {
+    const response = await worker.fetch(new Request('https://pow4vote.org/', {
+      method,
+      headers: { accept: 'text/html' },
+    }), {
+      ASSETS: {
+        fetch: async () => new Response(method === 'HEAD' ? null : baseHtml, {
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+        }),
+      },
+    });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('permissions-policy'), expectedPolicy);
+  }
+});
+
 test('returns a real 404 document for a generic unknown route', async () => {
   const response = await worker.fetch(new Request('https://pow4vote.org/not-a-real-route', {
     headers: { accept: 'text/html' },

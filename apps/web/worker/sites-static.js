@@ -23,7 +23,7 @@ const cachedSeoCatalogPromises = new Map();
 function addSecurityHeaders(response, pathname = '') {
   const headers = new Headers(response.headers);
   headers.set('content-security-policy', contentSecurityPolicy);
-  headers.set('permissions-policy', 'camera=(), geolocation=(), microphone=(), payment=(), usb=()');
+  headers.set('permissions-policy', 'camera=(), geolocation=(self), microphone=(), payment=(), usb=()');
   headers.set('referrer-policy', 'strict-origin-when-cross-origin');
   headers.set('strict-transport-security', 'max-age=31536000');
   headers.set('x-content-type-options', 'nosniff');

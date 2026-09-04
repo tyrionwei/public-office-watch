@@ -67,6 +67,7 @@ test('production routes load real public data without application failures', asy
   const homeHeaders = homeResponse?.headers() ?? {};
   expect(homeHeaders['content-security-policy']).toContain("default-src 'self'");
   expect(homeHeaders['strict-transport-security']).toBe('max-age=31536000');
+  expect(homeHeaders['permissions-policy']).toBe('camera=(), geolocation=(self), microphone=(), payment=(), usb=()');
   await expect(page.getByRole('heading', { name: '公職資料觀測站' })).toBeVisible();
   const homeApiResponse = await homeApiResponsePromise;
   expect(homeApiResponse.ok()).toBe(true);

@@ -484,7 +484,7 @@ test('mobile chat stays above navigation and opens from the discussion button', 
   await expect(chatDialog).toBeHidden();
 });
 
-test('mobile voting area persists only confirmed choices and treats location as a suggestion', async ({ page }) => {
+test('mobile voting area persists only confirmed choices and treats location as a suggestion', { tag: '@mobile-ci' }, async ({ page }) => {
   const storageKey = 'public-office-watch.voting-region-preference.v1';
   await page.setViewportSize({ width: 375, height: 812 });
   await page.addInitScript(() => {
@@ -574,11 +574,19 @@ test('mobile voting area persists only confirmed choices and treats location as 
   expect(await page.evaluate((key) => window.localStorage.getItem(key), storageKey)).toBe(persistedBeforeLocation);
 
   await reopenedDialog.getByRole('button', { name: '儲存投票地區' }).click();
-  const locationConfirmed = JSON.parse((await page.evaluate((key) => window.localStorage.getItem(key), storageKey))!);
+  const confirmedStorage = await page.evaluate((key) => window.localStorage.getItem(key), storageKey);
+  expect(confirmedStorage).not.toBe(persistedBeforeLocation);
+  expect(confirmedStorage).not.toContain('latitude');
+  expect(confirmedStorage).not.toContain('longitude');
+  const locationConfirmed = JSON.parse(confirmedStorage!);
   expect(locationConfirmed.county.name).toBe('臺北市');
   expect(locationConfirmed.district.name).toBe('信義區');
   expect(locationConfirmed.village).toBeUndefined();
   expect(locationConfirmed.source).toBe('confirmed-location');
+
+  await page.reload();
+  await expect(page.locator('[data-voting-region-summary]')).toContainText('臺北市');
+  expect(await page.evaluate((key) => window.localStorage.getItem(key), storageKey)).toBe(confirmedStorage);
 });
 
 test('mobile voting area onboarding dismissal survives reloads', { tag: '@mobile-ci' }, async ({ page }) => {

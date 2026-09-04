@@ -41,7 +41,7 @@ export const taiwanRegions: TaiwanRegionMetadata[] = [
 ];
 
 export const taiwanStageRegionNodes: StageRegionNode[] = taiwanRegions.map((region, index) => ({
-  id: region.id,
+  id: region.slug,
   label: region.name,
   level: 'county_city',
   parentId: 'taiwan-stage',
@@ -53,7 +53,7 @@ export const taiwanStageRegionNodes: StageRegionNode[] = taiwanRegions.map((regi
 }));
 
 export const taiwanStageRegionSummaries: StageRegionSummary[] = taiwanRegions.map((region) => ({
-  regionId: region.id,
+  regionId: region.slug,
   label: region.name,
   nearestElectionName: '待接入公開選舉 metadata',
   nearestElectionDate: 'TBD',

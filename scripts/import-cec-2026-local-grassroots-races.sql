@@ -86,21 +86,21 @@ catalog AS (
   FROM historic_races hr
   CROSS JOIN target_election tr
 ),
-new_villages(title, source_url) AS (
+new_villages(jurisdiction, title, source_url) AS (
   VALUES
-    ('宜蘭縣壯圍鄉壯六村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
-    ('宜蘭縣壯圍鄉順和村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
-    ('宜蘭縣壯圍鄉美間村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
-    ('宜蘭縣員山鄉金古村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
-    ('宜蘭縣員山鄉金泰村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
-    ('嘉義縣民雄鄉新山村村長選舉', 'https://web.cec.gov.tw/cycec/article/63452')
+    ('宜蘭縣', '宜蘭縣壯圍鄉壯六村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
+    ('宜蘭縣', '宜蘭縣壯圍鄉順和村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
+    ('宜蘭縣', '宜蘭縣壯圍鄉美間村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
+    ('宜蘭縣', '宜蘭縣員山鄉金古村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
+    ('宜蘭縣', '宜蘭縣員山鄉金泰村村長選舉', 'https://web.cec.gov.tw/ilec/article/63595'),
+    ('嘉義縣', '嘉義縣民雄鄉新山村村長選舉', 'https://web.cec.gov.tw/cycec/article/63452')
 ),
 complete_catalog AS (
   SELECT * FROM catalog
   UNION ALL
   SELECT
     tr.id,
-    NULL::uuid,
+    county.id,
     'village_chief',
     nv.title,
     DATE '2026-11-28',
@@ -112,6 +112,10 @@ complete_catalog AS (
     1
   FROM new_villages nv
   CROSS JOIN target_election tr
+  JOIN regions county
+    ON county.name = nv.jurisdiction
+   AND county.region_type = 'county'
+   AND county.is_public
 )
 INSERT INTO races (
   election_id,

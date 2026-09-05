@@ -20,7 +20,7 @@
     "test:official-candidate-workflow": "node --test scripts/cec-candidate-source-discovery.test.mjs scripts/import-official-candidate-snapshot.test.mjs scripts/official-candidate-review.test.mjs scripts/review-official-candidate-snapshot.test.mjs",
     "test:cec-election-data": "node --test scripts/cec-2026-local-election-data.test.mjs",
     "test:daily-person-news": "node --test scripts/discover-daily-person-news.test.mjs scripts/discover-daily-person-legal-news.test.mjs",
-    "test:daily-person-enrichment": "node --test scripts/build-person-enrichment-targets.test.mjs scripts/select-daily-person-enrichment-targets.test.mjs scripts/build-daily-person-research-queue.test.mjs scripts/fetch-wikidata-person-enrichment.test.mjs scripts/run-daily-monitor.test.mjs",
+    "test:daily-person-enrichment": "node --test scripts/build-person-enrichment-targets.test.mjs scripts/select-daily-person-enrichment-targets.test.mjs scripts/build-daily-person-research-queue.test.mjs scripts/fetch-wikidata-person-enrichment.test.mjs scripts/run-daily-monitor.test.mjs scripts/monitor-source-retry.test.mjs scripts/plan-monitor-review.test.mjs",
     "test:weekly-monitor": "node --test scripts/run-weekly-monitor.test.mjs scripts/cec-referendum-source-monitor.test.mjs",
     "test:cec-elected-platforms": "node --test scripts/fetch-cec-elected-platforms.test.mjs scripts/fetch-cec-elected-representative-platforms.test.mjs scripts/extract-cec-elected-platform-review.test.mjs scripts/stage-cec-elected-platform-review.test.mjs && python3 scripts/cec-platform-table-crop.test.py",
     "fetch:cec-elected-platforms": "node scripts/fetch-cec-elected-platforms.mjs --download",

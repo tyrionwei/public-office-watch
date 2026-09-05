@@ -41,7 +41,7 @@ test('weekly summary reports successful but degraded source steps', () => {
     status: 'degraded',
     needsAttention: true,
     stepCount: 2,
-    passedCount: 2,
+    passedCount: 1,
     failedCount: 0,
     failedSteps: [],
     degradedCount: 1,
@@ -58,4 +58,11 @@ test('large step output is compacted while the full log remains available', () =
     metrics: { leadCount: 3 },
     detailStoredInStepLog: true,
   });
+});
+
+test('zero-exit child reporting failed is not counted as healthy', () => {
+  const summary = summarizeWeeklyResults([{ name: 'source', status: 'ok', result: { status: 'failed' } }]);
+  assert.equal(summary.needsAttention, true);
+  assert.equal(summary.passedCount, 0);
+  assert.equal(summary.degradedCount, 1);
 });

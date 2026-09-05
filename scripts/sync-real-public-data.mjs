@@ -6,6 +6,7 @@ import zlib from 'node:zlib';
 import { assessLegalRecordMatch } from './legal-record-review-policy.mjs';
 import { normalizeElectionDistrict } from './normalize-election-district.mjs';
 import { canonicalPartyName } from './lib/party-name-normalization.mjs';
+import { withSourceRetry } from './monitor-source-retry.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultSeedPath = path.join(repoRoot, 'data-sources', 'real-public-data.seed.json');
@@ -400,7 +401,10 @@ async function fetchText(url) {
   const response = await fetch(url, { signal: AbortSignal.timeout(30000) });
 
   if (!response.ok) {
-    throw new Error(`${response.status} ${response.statusText}`);
+    const retryAfter = response.headers.get('retry-after');
+    const retryAfterMs = /^\d+$/.test(retryAfter ?? '') ? Number(retryAfter) * 1000
+      : Math.max(0, Date.parse(retryAfter) - Date.now()) || 0;
+    throw Object.assign(new Error(`${response.status} ${response.statusText}`), { retryAfterMs });
   }
 
   const bytes = await response.arrayBuffer();
@@ -425,6 +429,7 @@ function summarizeLiveSourceHealth(sources) {
       name,
       status: result.status,
       error: result.error ?? null,
+      ...(result.sourceRetry ? { sourceRetry: result.sourceRetry } : {}),
     }));
 
   return {
@@ -2098,7 +2103,12 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
   }
 
   try {
-    const payload = parseJsonPayload(await fetchText(source.downloadUrl));
+    const payload = await withSourceRetry({
+      key: source.id,
+      url: source.downloadUrl,
+      statePath: path.join(repoRoot, 'tmp', 'monitor-source-health.json'),
+      operation: async () => parseJsonPayload(await fetchText(source.downloadUrl)),
+    });
     const rows = Array.isArray(payload.dataList) ? payload.dataList : [];
     const officeholders = rows
       .filter((row) => pickField(row, ['leaveFlag']) === '否')
@@ -2162,6 +2172,7 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
         count: seed.people?.length ?? 0,
         url: source?.downloadUrl ?? null,
         error: message,
+        sourceRetry: error.sourceRetry ?? null,
         fallbackFreshness: 'unknown',
       },
     };

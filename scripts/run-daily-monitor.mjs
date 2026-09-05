@@ -105,16 +105,24 @@ function summarizeDailyResults(results, scheduledStepCount = dailySteps.length) 
   };
 }
 
-function runNpmScript(scriptName, extraArgs = []) {
+function runNpmScript(scriptName, extraArgs = [], outputDir = path.join(repoRoot, 'tmp', 'daily-monitor')) {
   const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-  return new Promise((resolve) => {
+  const startedAt = new Date().toISOString();
+  return new Promise((resolve, reject) => {
     let stdout = '';
     let stderr = '';
     let settled = false;
     const finish = (result) => {
       if (settled) return;
       settled = true;
-      resolve(result);
+      try {
+        const logPath = path.join(outputDir, 'logs', scriptName.replaceAll(':', '-') + '.log');
+        fs.mkdirSync(path.dirname(logPath), { recursive: true });
+        fs.writeFileSync(logPath, stdout + (stderr ? '\nSTDERR\n' + stderr : ''));
+        resolve({ ...result, startedAt, finishedAt: new Date().toISOString(), logPath });
+      } catch (error) {
+        reject(error); // Do not continue when evidence cannot be saved.
+      }
     };
     const child = spawn(npmCommand, ['run', scriptName, ...extraArgs], {
       cwd: repoRoot,
@@ -149,27 +157,36 @@ function runNpmScript(scriptName, extraArgs = []) {
         needsAttention: exitCode !== 0 || needsAttention,
         reportedStatus: reportedResult?.status ?? null,
         reportedNeedsAttention: reportedResult?.needsAttention === true,
+        sourceHealth: reportedResult?.sourceHealth ?? null,
         error: exitCode === 0 ? null : stderr.trim() || `${scriptName} exited with code ${exitCode}.`,
       });
     });
   });
 }
 
+async function runDailySteps(run = runNpmScript) {
+  const results = [];
+  // These steps do not consume each other's output. A source failure must not
+  // suppress unrelated collection; environment/lock checks remain run-wide.
+  for (const [scriptName, extraArgs] of dailySteps) {
+    results.push(await run(scriptName, extraArgs));
+  }
+  return results;
+}
+
 async function main() {
   const lock = acquireRunLock();
-  const results = [];
   try {
-    for (const [scriptName, extraArgs] of dailySteps) {
-      const result = await runNpmScript(scriptName, extraArgs);
-      results.push(result);
-      if (result.status === 'failed') break;
-    }
+    const results = await runDailySteps();
     const summary = {
       schemaVersion: 1,
       generatedAt: new Date().toISOString(),
       ...summarizeDailyResults(results),
       steps: results,
     };
+    const summaryPath = path.join(repoRoot, 'tmp', 'daily-monitor', 'summary.json');
+    fs.mkdirSync(path.dirname(summaryPath), { recursive: true });
+    fs.writeFileSync(summaryPath, JSON.stringify(summary, null, 2) + '\n');
     console.log(JSON.stringify(summary, null, 2));
     if (summary.needsAttention) process.exitCode = 1;
     return summary;
@@ -190,5 +207,6 @@ export {
   parseLastJsonOutput,
   releaseRunLock,
   resultNeedsAttention,
+  runDailySteps,
   summarizeDailyResults,
 };

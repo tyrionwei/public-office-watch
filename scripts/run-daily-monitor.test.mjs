@@ -9,6 +9,7 @@ import {
   parseLastJsonOutput,
   releaseRunLock,
   resultNeedsAttention,
+  runDailySteps,
   summarizeDailyResults,
 } from './run-daily-monitor.mjs';
 
@@ -69,4 +70,16 @@ test('keeps hard failures distinct from degraded results', () => {
   assert.equal(summary.status, 'failed');
   assert.equal(summary.needsAttention, true);
   assert.equal(summary.failedCount, 1);
+});
+
+test('a failed independent source does not prevent news or person research', async () => {
+  const called = [];
+  const results = await runDailySteps(async (scriptName) => {
+    called.push(scriptName);
+    return { scriptName, status: scriptName === 'sync:real-data:daily' ? 'failed' : 'ok' };
+  });
+  assert.deepEqual(called, ['monitor:cec-election-sources', 'sync:real-data:daily',
+    'discover:daily-person-news', 'run:daily-person-enrichment']);
+  assert.equal(summarizeDailyResults(results).passedCount, 3);
+  assert.equal(summarizeDailyResults(results).needsAttention, true);
 });

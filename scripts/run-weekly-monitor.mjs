@@ -96,13 +96,13 @@ function summarizeWeeklyResults(steps) {
   const degraded = steps.filter((step) => {
     if (step.status !== 'ok') return false;
     return step.result?.needsAttention === true
-      || ['degraded', 'needs_attention', 'partial'].includes(step.result?.status);
+      || ['degraded', 'needs_attention', 'partial', 'failed', 'error'].includes(step.result?.status);
   });
   return {
     status: failed.length > 0 ? 'needs_attention' : degraded.length > 0 ? 'degraded' : 'ok',
     needsAttention: failed.length > 0 || degraded.length > 0,
     stepCount: steps.length,
-    passedCount: steps.length - failed.length,
+    passedCount: steps.length - failed.length - degraded.length,
     failedCount: failed.length,
     failedSteps: failed.map((step) => step.name),
     degradedCount: degraded.length,
@@ -213,7 +213,7 @@ async function main() {
   };
   fs.writeFileSync(path.join(options.outputDir, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
   console.log(JSON.stringify(summary, null, 2));
-  if (summary.failedCount > 0) process.exitCode = 1;
+  if (summary.needsAttention) process.exitCode = 1;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

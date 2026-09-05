@@ -25,7 +25,6 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose }: { eventKey: str
   const current = state?.key === key ? state : null;
   const places = dedupePollingPlaces(current?.places ?? []);
   const matching = matchPollingPlaces(places, preference.neighborhood);
-  const source = current?.places[0];
   return (
     <section data-my-polling-place className="pixel-corners border border-line/80 bg-panel p-4">
       <div className="flex items-start justify-between gap-3">
@@ -61,7 +60,6 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose }: { eventKey: str
                 <a href={pollingPlaceMapUrl(place)} target="_blank" rel="noreferrer" className="mt-2 inline-flex min-h-11 items-center text-xs text-accent underline underline-offset-4">{english ? 'Open in Google Maps' : '在 Google Maps 開啟'} ↗</a>
               </li>)}
             </ul>
-            {source ? <p className="mt-3 text-[11px] text-slate-400"><a href={source.source_url} target="_blank" rel="noreferrer" className="underline underline-offset-4">{source.source_name} ↗</a>{source.source_published_on ? ' · ' + source.source_published_on : ''}</p> : null}
           </>}
       </> : <p className="mt-3 text-sm text-slate-400">{english ? 'Add a village in your voting-area settings to find nearby assignments.' : '請先在投票地區設定村里，再查詢對應場所。'}</p>}
       <a href={buildCecPollingPlaceLookupUrl(lookupUrl, preference)} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-11 items-center text-xs text-accent underline underline-offset-4">{english ? 'CEC official lookup' : '中選會官方查詢'} ↗</a>

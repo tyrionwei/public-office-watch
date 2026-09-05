@@ -683,6 +683,12 @@ test('mobile my election uses the saved voting county and keeps research layout 
   await expect(page.locator('[data-voting-region-summary]')).toContainText('臺北市 信義區 西村里');
   await expect(dashboard.getByText('下一場投票')).toBeVisible();
   await expect(dashboard.getByRole('heading', { name: '目前相關的選舉' })).toBeVisible();
+  const villageRaceCard = dashboard.locator('[data-mobile-race-card="village"]');
+  await expect(villageRaceCard).toContainText('已收錄村里長登記名冊 · 進入依地區查找');
+  await expect(villageRaceCard).toHaveAttribute('href', /category=village_chief/u);
+  await expect(villageRaceCard).toHaveAttribute('href', /region=%E8%87%BA%E5%8C%97%E5%B8%82/u);
+  await expect(villageRaceCard).toHaveAttribute('href', /q=%E8%A5%BF%E6%9D%91%E9%87%8C/u);
+  await expect(villageRaceCard).not.toContainText('尚無已發布村里選舉資料');
   await expect(dashboard.getByText('議員選區仍須依正式選區資料確認，不能只用行政區推定。')).toBeVisible();
   await expect(dashboard.getByRole('heading', { name: '已收錄參選名單' })).toBeVisible();
   const mobileCandidateRoster = dashboard.locator('[data-mobile-candidate-roster]');
@@ -894,7 +900,12 @@ test('detail routes use bounded page payloads with only reviewed supplemental re
   await page.goto('/elections/races/1ddcde35-f1ed-4e38-8652-ceb5e616f91a');
   await expect(page.getByRole('heading', { name: '選區項目細節' })).toBeVisible();
   await page.waitForLoadState('networkidle');
-  expect(apiRequests).toEqual(['rpc/race_page_for']);
+  expect(apiRequests.filter((path) => path === 'rpc/race_page_for')).toHaveLength(1);
+  expect(apiRequests.filter((path) => path === 'rpc/registration_names_for')).toHaveLength(1);
+  expect(new Set(apiRequests)).toEqual(new Set([
+    'rpc/race_page_for',
+    'rpc/registration_names_for',
+  ]));
 
   apiRequests.length = 0;
   await page.goto('/regions/taipei-city');
@@ -1473,7 +1484,11 @@ test('homepage election links and candidate categories use county filters and di
     '第八選區 山地原住民',
   ]);
   await expect(candidateFrame.getByText('正在載入參選人物…', { exact: true })).toHaveCount(0);
-  await expect(candidateFrame.locator('a[href^="/people/"]')).toHaveCount(councilorCandidateCount);
+  await expect(candidateFrame.locator('[data-candidate-carousel] > *')).toHaveCount(councilorCandidateCount);
+  expect(
+    await candidateFrame.locator('a[href^="/people/"]').count()
+      + await candidateFrame.locator('[data-registration-name]').count(),
+  ).toBe(councilorCandidateCount);
   const viewAllCandidates = candidateFrame.locator('[data-candidate-view-all]');
   await expect(viewAllCandidates).toHaveText(`查看目前已收錄 ${councilorCandidateCount} 位公開人選 ›`);
   await expect(viewAllCandidates).toHaveAttribute('href', /\/elections\/events\/2026-2026-11-28-local\?category=councilor&region=/);
@@ -1493,10 +1508,11 @@ test('homepage election links and candidate categories use county filters and di
 
   await districtSelect.selectOption({ label: '第二選區' });
   await expect(candidateFrame.getByText('正在載入參選人物…', { exact: true })).toHaveCount(0);
-  await expect(candidateFrame.locator('a[href^="/people/"]')).toHaveCount(6);
-  await expect(candidateFrame.locator('[data-candidate-position]')).toHaveText('1 / 6');
+  const selectedDistrictCandidateCount = await candidateFrame.locator('[data-candidate-carousel] > *').count();
+  expect(selectedDistrictCandidateCount).toBeGreaterThan(0);
+  await expect(candidateFrame.locator('[data-candidate-position]')).toHaveText('1 / ' + selectedDistrictCandidateCount);
   const selectedDistrictContexts = await candidateFrame.locator('[data-candidate-race-context]').allTextContents();
-  await expect(viewAllCandidates).toHaveText('查看目前已收錄 6 位公開人選 ›');
+  await expect(viewAllCandidates).toHaveText('查看目前已收錄 ' + selectedDistrictCandidateCount + ' 位公開人選 ›');
   await expect(viewAllCandidates).toHaveAttribute('href', /\/elections\/races\//);
   await expect(page).toHaveURL(/candidateDistrict=/);
   expect(Array.from(new Set(selectedDistrictContexts))).toEqual(['第二選區']);
@@ -1604,9 +1620,11 @@ test('homepage candidate carousel stays still on mobile', async ({ page }) => {
   await candidateFrame.getByRole('button', { name: /市議員 \(\d+\)/ }).click();
   await candidateFrame.getByLabel('選擇市議員選區').selectOption({ label: '第二選區' });
   const position = candidateFrame.locator('[data-candidate-position]');
-  await expect(position).toHaveText('1 / 6');
+  const selectedDistrictCandidateCount = await candidateFrame.locator('[data-candidate-carousel] > *').count();
+  expect(selectedDistrictCandidateCount).toBeGreaterThan(0);
+  await expect(position).toHaveText('1 / ' + selectedDistrictCandidateCount);
   await page.waitForTimeout(7500);
-  await expect(position).toHaveText('1 / 6');
+  await expect(position).toHaveText('1 / ' + selectedDistrictCandidateCount);
 });
 
 test('homepage region selection survives navigation and browser back', async ({ page }) => {

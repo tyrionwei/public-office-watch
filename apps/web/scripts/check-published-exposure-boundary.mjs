@@ -47,6 +47,8 @@ const supplementalPublicAccessMigrations = [
   'supabase/migrations/20260831123349_add_party_platform_history.sql',
   'supabase/migrations/20260901063921_add_seo_share_catalog.sql',
   'supabase/migrations/20260901103420_add_party_company_contribution_counts.sql',
+  'supabase/migrations/20260906090000_limit_home_page_to_displayed_local_races.sql',
+  'supabase/migrations/20260906090100_prioritize_region_major_races.sql',
 ];
 const reviewedRelations = [
   'active_party_candidates',

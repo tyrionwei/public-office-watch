@@ -5,7 +5,7 @@ import { selectNextElectionVotingCycle } from '../data/electionVotingCycles';
 import { useI18n } from '../i18n';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { normalizeTaiwanText } from '../lib/taiwanText';
-import { electionsPath, personPath, racePath, regionPath } from '../routes/routePaths';
+import { electionEventPath, electionsPath, personPath, racePath, regionPath } from '../routes/routePaths';
 import type { HomeCandidateSummary, HomeTicker, UpcomingRace } from '../lib/publicDataProvider';
 import type { VotingRegionPreference } from '../votingRegion';
 import { PixelCandidateSprite } from './PixelCandidateSprite';
@@ -86,6 +86,13 @@ export function MobileMyElection({
     races.filter((race) => getRaceGroupKey(race) !== 'village').map((race) => race.id),
   );
   const candidates = uniqueCandidates(candidateSummaries, homepageCandidateRaceIds);
+  const villageDirectoryPath = votingCycle?.electionEventKey && villageName
+    ? electionEventPath(votingCycle.electionEventKey) + '?' + new URLSearchParams({
+      category: 'village_chief',
+      region: preference.county.name,
+      q: villageName,
+    }).toString()
+    : null;
 
   const raceCards: Array<{
     key: RaceGroupKey;
@@ -171,6 +178,7 @@ export function MobileMyElection({
               const matchingRaces = groupedRaces.get(card.key) ?? [];
               const matchingRaceIds = new Set(matchingRaces.map((race) => race.id));
               const candidateCount = candidateSummaries.filter(({ candidate }) => matchingRaceIds.has(candidate.race_id)).length;
+              const directoryPath = card.key === 'village' ? villageDirectoryPath : null;
               const content = (
                 <>
                   <div className="flex items-start justify-between gap-3">
@@ -182,17 +190,22 @@ export function MobileMyElection({
                       ? isEnglish
                         ? `${matchingRaces.length} published race(s) · ${candidateCount} recorded candidate(s)`
                         : `已發布 ${matchingRaces.length} 個選區／項目 · 收錄 ${candidateCount} 筆參選紀錄`
-                      : card.emptyHint}
+                      : directoryPath
+                        ? isEnglish
+                          ? 'The village chief registration roster is available · Open the area directory'
+                          : '已收錄村里長登記名冊 · 進入依地區查找'
+                        : card.emptyHint}
                   </p>
                   {card.caution ? <p className="mt-2 text-[11px] leading-5 text-amber-200/80">{card.caution}</p> : null}
                 </>
               );
-              return matchingRaces.length === 1 ? (
-                <Link key={card.key} to={racePath(matchingRaces[0].id)} className="block min-h-20 border border-line/70 bg-bg/45 p-3 focus:outline-none focus:ring-2 focus:ring-accent/35">
+              const cardPath = matchingRaces.length === 1 ? racePath(matchingRaces[0].id) : directoryPath;
+              return cardPath ? (
+                <Link key={card.key} data-mobile-race-card={card.key} to={cardPath} className="block min-h-20 border border-line/70 bg-bg/45 p-3 focus:outline-none focus:ring-2 focus:ring-accent/35">
                   {content}
                 </Link>
               ) : (
-                <div key={card.key} className="min-h-20 border border-line/70 bg-bg/45 p-3">{content}</div>
+                <div key={card.key} data-mobile-race-card={card.key} className="min-h-20 border border-line/70 bg-bg/45 p-3">{content}</div>
               );
             })}
           </div>

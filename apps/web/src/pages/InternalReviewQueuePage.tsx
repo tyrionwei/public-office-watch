@@ -15,6 +15,7 @@ import {
   type ReviewClaim,
 } from '../lib/internalReviewData';
 import { personPath } from '../routes/routePaths';
+import { latestClaimEvidenceReview } from '../lib/claimEvidenceReview';
 
 const claimTypeLabels: Record<string, string> = {
   gender: '性別',
@@ -297,7 +298,7 @@ export function InternalReviewQueuePage() {
   const [identityError, setIdentityError] = useState<string | null>(null);
   const [claimType, setClaimType] = useState('');
   const [sourceName, setSourceName] = useState('');
-  const [reviewStatus, setReviewStatus] = useState<'pending' | 'needs_more_evidence' | ''>('pending');
+  const [reviewStatus, setReviewStatus] = useState<'pending' | 'needs_more_evidence' | 'ready_for_publication' | ''>('pending');
   const [query, setQuery] = useState('');
   const [actionClaimId, setActionClaimId] = useState<string | null>(null);
   const [actionIdentityKey, setActionIdentityKey] = useState<string | null>(null);
@@ -550,10 +551,11 @@ export function InternalReviewQueuePage() {
                 審核狀態
                 <select
                   value={reviewStatus}
-                  onChange={(event) => setReviewStatus(event.target.value as 'pending' | 'needs_more_evidence' | '')}
+                  onChange={(event) => setReviewStatus(event.target.value as typeof reviewStatus)}
                   className="pixel-corners h-10 border border-line/70 bg-bg/90 px-3 text-sm text-white"
                 >
                   <option value="pending">待審核</option>
+                  <option value="ready_for_publication">待公開建議（待你核准）</option>
                   <option value="needs_more_evidence">需要更多證據</option>
                   <option value="">全部狀態</option>
                 </select>
@@ -739,6 +741,9 @@ export function InternalReviewQueuePage() {
             {filteredClaims.map((claim) => {
               const metadata = claimReviewMetadata(claim);
               const auditReasons = reviewAuditReasons(claim.claim_json);
+              const evidenceReview = latestClaimEvidenceReview(claim.claim_json);
+              const readyForPublication = evidenceReview?.route === 'ready_for_publication'
+                && ['pending', 'needs_more_evidence'].includes(claim.review_status);
               const identityReviewItem = claim.source_person_id
                 ? identityItemsBySourcePersonId.get(claim.source_person_id)
                 : null;
@@ -759,6 +764,11 @@ export function InternalReviewQueuePage() {
                         {displayClaimType(claim.claim_type)}
                       </span>
                       <span className="text-xs text-slate-300">{reviewStatusLabels[claim.review_status] ?? claim.review_status}</span>
+                      {readyForPublication ? (
+                        <span className="pixel-corners border border-signal/60 bg-signal/10 px-2 py-1 text-xs text-signal">
+                          待公開建議 · 待你核准
+                        </span>
+                      ) : null}
                       <span className="text-xs text-slate-500">審核分數 {claim.review_score}</span>
                       <span className="text-xs text-slate-500">信心等級 {claim.confidence_level}</span>
                     </div>
@@ -793,6 +803,27 @@ export function InternalReviewQueuePage() {
                           {claim.claim_value ?? '未提供內容'}
                         </p>
                       )}
+                      {evidenceReview ? (
+                        <div className="mt-4 border-l-2 border-accent/70 pl-4 text-sm leading-6 text-slate-300">
+                          <p className="text-accent">
+                            最新補證判斷
+                            {evidenceReview.confidence ? ' · 信心：' + (({ high: '高', medium: '中', low: '低' } as Record<string, string>)[evidenceReview.confidence] ?? evidenceReview.confidence) : ''}
+                          </p>
+                          {readyForPublication ? <p>證據已達待公開建議門檻，仍需你核准；目前未公開。</p> : null}
+                          {evidenceReview.reason ? <p className="mt-1">{evidenceReview.reason}</p> : null}
+                          {evidenceReview.sources.length > 0 ? (
+                            <ul className="mt-2 list-disc pl-5">
+                              {evidenceReview.sources.map((source, index) => (
+                                <li key={source.url + ':' + index}>
+                                  <a href={source.url} target="_blank" rel="noreferrer" className="text-accent hover:text-white">
+                                    補證來源：{source.publisher}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : null}
+                        </div>
+                      ) : null}
                       {auditReasons.length > 0 ? (
                         <div className="mt-4 border-l-2 border-amber-400/70 pl-4 text-sm leading-6 text-amber-200">
                           <p>保留待審原因</p>

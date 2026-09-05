@@ -12,6 +12,21 @@ type EditableProfileClaim = {
 
 const editableProfileClaimTypes = new Set(['education', 'experience']);
 
+export function claimReviewStatusFilters(status: string | undefined): Record<string, string> | null {
+  if (!status) return {};
+  if (status === 'ready_for_publication') {
+    return {
+      review_status: 'in.(pending,needs_more_evidence)',
+      'claim_json->evidenceReviews->-1->>route': 'eq.ready_for_publication',
+      order: 'updated_at.desc',
+    };
+  }
+  if (status === 'pending' || status === 'needs_more_evidence') {
+    return { review_status: 'eq.' + status };
+  }
+  return null;
+}
+
 export function isEditableProfileClaimType(claimType: string) {
   return editableProfileClaimTypes.has(claimType);
 }

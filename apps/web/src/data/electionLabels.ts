@@ -69,6 +69,7 @@ export const registrationStatusLabels: Record<PublicCandidate['registration_stat
   not_elected: '未當選',
   disqualified: '資格不符',
   withdrawn: '已撤回',
+  not_registered: '未完成登記',
   unknown: '未知',
 };
 

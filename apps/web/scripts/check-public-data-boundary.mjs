@@ -49,6 +49,8 @@ const blockedTermAllowlist = {
     path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
   ]),
   rejected: new Set([
+    // Official qualification outcomes returned by the reviewed, bounded lifecycle RPC.
+    path.join(srcRoot, 'components', 'CandidateLifecycle.tsx'),
     path.join(srcRoot, 'components', 'GlobalChatWidget.tsx'),
     path.join(srcRoot, 'lib', 'publishedPublicDataProvider.ts'),
     path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),

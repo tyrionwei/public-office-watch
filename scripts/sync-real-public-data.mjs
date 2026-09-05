@@ -101,6 +101,7 @@ function candidateCandidacyStatus(candidate) {
   if (legacyStatus === 'pending') return 'potential';
   if (legacyStatus === 'registered' || legacyStatus === 'qualified') return legacyStatus;
   if (legacyStatus === 'disqualified' || legacyStatus === 'withdrawn') return 'withdrawn_or_disqualified';
+  if (legacyStatus === 'not_registered') return 'did_not_register';
   if (legacyStatus === 'elected' || legacyStatus === 'not_elected') return 'qualified';
   return 'unknown';
 }

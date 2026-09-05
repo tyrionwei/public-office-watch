@@ -359,6 +359,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       county: toChoice(county),
       ...(district ? { district } : {}),
       ...(village ? { village } : {}),
+      ...(village?.id === preference?.village?.id && preference?.neighborhood ? { neighborhood: preference.neighborhood } : {}),
       source,
       confirmedAt: new Date().toISOString(),
     });

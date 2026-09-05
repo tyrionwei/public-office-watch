@@ -397,6 +397,14 @@ export function createPublishedPublicDataProvider(
       return profilesById.get(personId) ?? null;
     },
 
+    loadPollingPlaces(eventKey: string, villageCode: string) {
+      return cached('polling:' + eventKey + ':' + villageCode, pageDataStaleTimeMs,
+        () => bridge.loadPollingPlaces(eventKey, villageCode));
+    },
+    loadCandidateLifecycle(candidateId: string) {
+      return cached('candidate-lifecycle:' + candidateId, pageDataStaleTimeMs,
+        () => bridge.loadCandidateLifecycle(candidateId));
+    },
     async loadPersonProfiles(personIds: string[]) {
       const normalizedIds = Array.from(new Set(personIds)).sort();
       const profiles = await cached(`profiles:${normalizedIds.join(',')}`, pageDataStaleTimeMs, () =>

@@ -1,0 +1,3383 @@
+{
+  "schemaVersion": 1,
+  "environment": "full-local",
+  "reviewedAt": "2026-09-05T06:14:23.619Z",
+  "policyBasis": "使用者確認：生日只有年份可用來辨識；村里長及鄉鎮市民代表採同名同小選區的唯一對應，不再強制完整生日、已知性別或相同政黨。",
+  "baselinePending": 1148,
+  "reviewed": 1148,
+  "resolved": 27,
+  "remainingPending": 1121,
+  "reusedPeople": 27,
+  "newPeople": 0,
+  "reasonCounts": {
+    "same_name_birth_year_county_history_unique": 25,
+    "same_name_exact_local_district_no_identity_conflict": 2
+  },
+  "inputs": {
+    "tmp/cec-registration-identity-review-11/targets.json": "353a95d730c0b5d4f668c8ef53811abc8865b0b6bd9a043ea9db922cac78de49",
+    "tmp/cec-registration-identity-review-11/local-evidence.json": "a2698b8f3b7d14ffc88dc9feee4bb7c48d852d4cefd9a3857fba4d2a8a484e59",
+    "tmp/cec-registration-identity-review-11/review-manifest.json": "6c61fa38c61cf1515db62c43ec9bf72b626996adc67befc7df15225685422e82",
+    "tmp/cec-registration-identity-review-11/audit-manifest.json": "7fc1ddff6a693da7c7a578c2c0fa40bc083d305c4870be409cd6b139b2592ec2",
+    "tmp/cec-registration-identity-review-11/baseline-claims.json": "cd023a821c4de4e43a5011011baf5bc2fa1a824557aa192be54a248ac248e135",
+    "tmp/cec-registration-identity-review-11/live-evidence.json": "47bfe04b4782a439b96baa6984b7400b2938f231a7a7df88baf90424d34b4ede",
+    "tmp/cec-registration-identity-review-11/classification.json": "b10321d468b8146ae2c260f79a281e216b3fadaf91e380b87e651f66a2a030df",
+    "tmp/cec-registration-final/import-manifest.json": "e004d07cfd82306b26adc55ec6b230d2601d73ff5fb9b8bfa29c3a38a83cf1f3",
+    "tmp/classify-identity-round-11.mjs": "c9c1309f686afd3fb164d63167c46983a6a7ab905ca2da82c1f00617c05f7ab4"
+  },
+  "accepted": [
+    {
+      "candidateExternalId": "pow-cec-registration-2026-f4dc1eb691734fcf0dc6ac222e9b7f3f",
+      "claimId": "0b7548a6-04b5-46cd-bca7-b1255d143036",
+      "sourcePersonId": "30f4e539-46c9-49d5-a6a7-81aa2c40d5c2",
+      "name": "黃奎翰",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣第1選舉區",
+      "office": "councilor",
+      "raceId": "0a3b1d78-39c8-40cb-bba6-504bcfd7af2b",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "5bca2619-daa3-471d-b6ae-0d7fc2e288b6",
+      "existingPersonIds": [
+        "5bca2619-daa3-471d-b6ae-0d7fc2e288b6"
+      ],
+      "registrationBirth": "071/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "e9f099a5-a67d-46e9-8fc6-e53dc5b52a7b",
+        "0a270bc3-5fae-4f10-94fe-3ee5468837c2"
+      ],
+      "evidenceCandidateIds": [
+        "6b8f0469-743c-47d0-85a8-6fba35c4228b"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/3758d32c-80d3-402c-af5a-591458d65c47.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%A4%81%E6%BA%AA%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%BB%83%E5%A5%8E%E7%BF%B0"
+      ],
+      "officialFile": "ilec-64650-03.pdf",
+      "officialSha256": "a73f1fd6b198020ffa9a5a501acc605579d8518c6e52e39584abed13f45fc0d7",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "ad7913f7-2617-4aa9-a563-323210e5f7fa",
+      "identityComparison": {
+        "personId": "5bca2619-daa3-471d-b6ae-0d7fc2e288b6",
+        "names": [
+          "黃奎翰"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1982-09-21"
+        ],
+        "birthYears": [
+          1982
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "6b8f0469-743c-47d0-85a8-6fba35c4228b",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "宜蘭縣礁溪鄉第1選舉區鄉民代表選舉",
+            "race_id": "b14ffcf7-2f77-4441-8dad-66eb902f28d2",
+            "is_public": true,
+            "person_id": "5bca2619-daa3-471d-b6ae-0d7fc2e288b6",
+            "race_type": "township_representative_district",
+            "vote_rate": 14,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%A4%81%E6%BA%AA%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 980,
+            "external_id": "votetw-candidate-102701efc4a2708b",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "5bca2619-daa3-471d-b6ae-0d7fc2e288b6",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "e9f099a5-a67d-46e9-8fc6-e53dc5b52a7b",
+          "0a270bc3-5fae-4f10-94fe-3ee5468837c2"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "5bca2619-daa3-471d-b6ae-0d7fc2e288b6"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e5542646c5eca7d7b962edd578dcb2b8",
+      "claimId": "cd5e0542-69af-42df-9976-535bb12750d4",
+      "sourcePersonId": "880d2980-ca24-4851-8e72-1a3b1e0286f0",
+      "name": "李奉祈",
+      "county": "臺東縣",
+      "district": "臺東縣第16選舉區",
+      "office": "councilor",
+      "raceId": "347642c4-afbe-4703-8a22-2bb8b21d1956",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "c2e2e53b-aac1-4c15-9ada-7f41cb453b1a",
+      "existingPersonIds": [
+        "7e552cdd-f61d-4b70-95e6-86a7e09aba33",
+        "c2e2e53b-aac1-4c15-9ada-7f41cb453b1a"
+      ],
+      "registrationBirth": "059/**/**",
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "a8859f94-4c6a-4fae-8d82-71e2740a3b15",
+        "65ffa455-d055-4129-8db1-d6f69a860343"
+      ],
+      "evidenceCandidateIds": [
+        "b2c40b71-3cc9-4d2c-9dcb-166adddb19a3"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%98%AD%E5%B6%BC%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E6%9D%8E%E5%A5%89%E7%A5%88"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "4d7d57a1-3da4-4d5d-83b8-ea5f054b60e5",
+      "identityComparison": {
+        "personId": "c2e2e53b-aac1-4c15-9ada-7f41cb453b1a",
+        "names": [
+          "李奉祈"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1970-04-02"
+        ],
+        "birthYears": [
+          1970
+        ],
+        "genders": [
+          "female"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "b2c40b71-3cc9-4d2c-9dcb-166adddb19a3",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣蘭嶼鄉選舉區鄉民代表選舉",
+            "race_id": "7a96e878-74eb-4c5c-8521-b9d435092cae",
+            "is_public": true,
+            "person_id": "c2e2e53b-aac1-4c15-9ada-7f41cb453b1a",
+            "race_type": "township_representative_district",
+            "vote_rate": 6.11,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%98%AD%E5%B6%BC%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 138,
+            "external_id": "votetw-candidate-c40738969e504a03",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "14",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "c2e2e53b-aac1-4c15-9ada-7f41cb453b1a",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "a8859f94-4c6a-4fae-8d82-71e2740a3b15",
+          "65ffa455-d055-4129-8db1-d6f69a860343"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "7e552cdd-f61d-4b70-95e6-86a7e09aba33",
+        "c2e2e53b-aac1-4c15-9ada-7f41cb453b1a"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-30272292e555d5cd05d394adbdace1c3",
+      "claimId": "c52fa85e-ecc6-47b7-af9e-cf806a436381",
+      "sourcePersonId": "60193fac-f585-4755-b49b-5faa0e6e1623",
+      "name": "劉光榮",
+      "county": "桃園市",
+      "district": "桃園市復興區第3選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "d7ca0406-b1c3-4ab2-a0e7-f9b7d5bffa54",
+      "decision": "use_existing",
+      "reasonCode": "same_name_exact_local_district_no_identity_conflict",
+      "personId": "a3b56352-9648-49da-9ee7-f8b9175ae25e",
+      "existingPersonIds": [
+        "a3b56352-9648-49da-9ee7-f8b9175ae25e",
+        "b9238e0f-8540-4251-a2a1-2d4fc8f77099",
+        "28b5f972-1b65-42d3-a28d-ee91b4161cc0"
+      ],
+      "registrationBirth": "061/11/12",
+      "registrationGender": null,
+      "registrationParty": "無",
+      "locality": "桃園市復興區",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "ad18c750-82b0-4227-b226-a97ff18a31a0"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/f512a9c4-6e3e-4379-939a-68e5d3778394.pdf",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R1/R3/53e5c0160ee86073f56dc2b19ba79cf4/A/68_000_00_000_0000.json"
+      ],
+      "officialFile": "tyec-64665-05.pdf",
+      "officialSha256": "db3ba2b6c2f5ed54d74f7640f9585f5529d7296c00b1b4c724c17fc0f6299549",
+      "reason": "依使用者確認的小範圍選舉標準：完整姓名與村里／代表選區唯一對應，無已知性別或生日衝突；不要求完整生日、性別必填或政黨一致。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "d3d361e7-515d-4fc9-b76d-522229415458",
+      "identityComparison": {
+        "personId": "a3b56352-9648-49da-9ee7-f8b9175ae25e",
+        "names": [
+          "劉光榮"
+        ],
+        "isPublic": true,
+        "birthDates": [],
+        "birthYears": [],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [
+          {
+            "id": "ad18c750-82b0-4227-b226-a97ff18a31a0",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "桃園市復興區第3選舉區區民代表選舉",
+            "race_id": "70cb7930-6fde-43af-9b7e-d1daee653928",
+            "is_public": true,
+            "person_id": "6057164c-b3d4-49c7-924d-36bab87c2ca8",
+            "race_type": "township_representative",
+            "vote_rate": 2.39,
+            "created_at": "2026-07-13T11:02:06.616349+00:00",
+            "is_elected": false,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R1/R3/53e5c0160ee86073f56dc2b19ba79cf4/A/68_000_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.616349+00:00",
+            "vote_count": 44,
+            "external_id": "cec-2018-local-subcounty-candidate-indigenous-district-representative-68000-130-03-8211",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.616349+00:00",
+            "canonical_person_id": "a3b56352-9648-49da-9ee7-f8b9175ae25e",
+            "registration_status": "not_elected"
+          }
+        ],
+        "countyHistory": [
+          {
+            "id": "ad18c750-82b0-4227-b226-a97ff18a31a0",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "桃園市復興區第3選舉區區民代表選舉",
+            "race_id": "70cb7930-6fde-43af-9b7e-d1daee653928",
+            "is_public": true,
+            "person_id": "6057164c-b3d4-49c7-924d-36bab87c2ca8",
+            "race_type": "township_representative",
+            "vote_rate": 2.39,
+            "created_at": "2026-07-13T11:02:06.616349+00:00",
+            "is_elected": false,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R1/R3/53e5c0160ee86073f56dc2b19ba79cf4/A/68_000_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.616349+00:00",
+            "vote_count": 44,
+            "external_id": "cec-2018-local-subcounty-candidate-indigenous-district-representative-68000-130-03-8211",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.616349+00:00",
+            "canonical_person_id": "a3b56352-9648-49da-9ee7-f8b9175ae25e",
+            "registration_status": "not_elected"
+          },
+          {
+            "id": "84360274-1413-4ccc-bef9-b20383d6d86a",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "桃園市復興區第3選舉區（直轄市原住民）區民代表選舉",
+            "race_id": "608c8fb6-be10-4881-84a0-a0d30348d97b",
+            "is_public": true,
+            "person_id": "a3b56352-9648-49da-9ee7-f8b9175ae25e",
+            "race_type": "township_representative_district",
+            "vote_rate": 2.39,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": false,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E6%A1%83%E5%9C%92%E5%B8%82%E5%BE%A9%E8%88%88%E5%8D%80%E5%8D%80%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 44,
+            "external_id": "votetw-candidate-2ebe695c5b7b2050",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "a3b56352-9648-49da-9ee7-f8b9175ae25e",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": []
+      },
+      "comparisonCandidatePersonIds": [
+        "a3b56352-9648-49da-9ee7-f8b9175ae25e",
+        "b9238e0f-8540-4251-a2a1-2d4fc8f77099",
+        "28b5f972-1b65-42d3-a28d-ee91b4161cc0"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-b3dab658bb2dc9cd7cc62b81c89d9478",
+      "claimId": "abdd5705-e5dc-4dad-8444-928331c3ab37",
+      "sourcePersonId": "0337c0a8-ac58-479c-8ba9-c8c9da3fe243",
+      "name": "王姷力",
+      "county": "臺東縣",
+      "district": "臺東縣綠島鄉",
+      "office": "township_mayor",
+      "raceId": "1d08e934-630b-4c5a-b4cf-b411189338e5",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "6ec566c4-c0c8-4267-8f9a-b0a7077a1f39",
+      "existingPersonIds": [
+        "3fb15448-9596-4ce4-9759-89a375b1d38b",
+        "6ec566c4-c0c8-4267-8f9a-b0a7077a1f39"
+      ],
+      "registrationBirth": "058/**/**",
+      "registrationGender": "女",
+      "registrationParty": "中國國民黨",
+      "locality": "臺東縣綠島鄉",
+      "evidenceClaimIds": [
+        "1b1d0443-fbcc-41bd-bf3a-cd5c70c9246a",
+        "03947756-cea5-42fa-8cc6-f44816a09984",
+        "ec4e5c56-5607-4b9b-a413-33fc2450eadc",
+        "bc43f48a-eec5-4f4b-8cc7-c3331b66e4b2",
+        "12b162e3-1882-4b56-a16c-3ca892543066",
+        "f1561489-6946-42a3-be65-ca16ad483620",
+        "c09c0652-8724-45cf-997b-7e7af322ad0a"
+      ],
+      "evidenceCandidateIds": [
+        "5ba5be19-d1a7-4ff2-a6a5-aa918a59036c"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/2f68b219-db5d-4d2d-add3-2eda8306b104.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.taitungcc.gov.tw/api/member/9?lg=1&desk=front",
+        "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/06%E7%B8%A3%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/16%E8%87%BA%E6%9D%B1%E7%B8%A3/%E8%87%BA%E6%9D%B1%E7%B8%A3%E7%AC%AC6%E3%80%8111%E3%80%8114%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+      ],
+      "officialFile": "ttec-64641-04.pdf",
+      "officialSha256": "8e3e6afcefe3062535e69674d515413a9b3990a73d5e860ee28761ac2ffae64e",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "722e14c2-bd63-4bf3-889a-9f50959bcc19",
+      "identityComparison": {
+        "personId": "6ec566c4-c0c8-4267-8f9a-b0a7077a1f39",
+        "names": [
+          "王姷力"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1969-09-24"
+        ],
+        "birthYears": [
+          1969
+        ],
+        "genders": [
+          "female"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "5ba5be19-d1a7-4ff2-a6a5-aa918a59036c",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣第6選舉區議員選舉",
+            "race_id": "6ae32776-902a-409b-95ba-b3dc1b6a8028",
+            "is_public": true,
+            "person_id": "6ec566c4-c0c8-4267-8f9a-b0a7077a1f39",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-regional-candidate-4253adb3bc72",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "2",
+            "is_incumbent": null,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "6ec566c4-c0c8-4267-8f9a-b0a7077a1f39",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "1b1d0443-fbcc-41bd-bf3a-cd5c70c9246a",
+          "03947756-cea5-42fa-8cc6-f44816a09984",
+          "ec4e5c56-5607-4b9b-a413-33fc2450eadc",
+          "bc43f48a-eec5-4f4b-8cc7-c3331b66e4b2",
+          "12b162e3-1882-4b56-a16c-3ca892543066",
+          "f1561489-6946-42a3-be65-ca16ad483620",
+          "c09c0652-8724-45cf-997b-7e7af322ad0a"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "3fb15448-9596-4ce4-9759-89a375b1d38b",
+        "6ec566c4-c0c8-4267-8f9a-b0a7077a1f39"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e358527c8300e423302a88988bde2132",
+      "claimId": "fa5ad1ff-b0d6-41b7-8291-5330f2fd9793",
+      "sourcePersonId": "a18a3ef1-3fb4-4ba4-b878-d9b848f7e994",
+      "name": "邱文俊",
+      "county": "臺東縣",
+      "district": "臺東縣第12選舉區",
+      "office": "councilor",
+      "raceId": "ec9347f7-6450-41b1-9445-e67186baac1a",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "0430b24d-ce4e-4f6c-bcb4-644b5f895839",
+      "existingPersonIds": [
+        "0430b24d-ce4e-4f6c-bcb4-644b5f895839"
+      ],
+      "registrationBirth": "062/**/**",
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "0e232367-ccbb-40e6-8efe-3df0480e90e2",
+        "01a4e903-3a0f-4e3a-ac87-bc02f0613fd1"
+      ],
+      "evidenceCandidateIds": [
+        "62a9013f-df38-4322-ad87-4ee0698e4ef6",
+        "7eccd0c1-a45b-414d-81c6-bb56400fcca8",
+        "a593a0ee-47b6-4bfa-a21d-fd2e6e7b9290"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%BB%B6%E5%B9%B3%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%BB%B6%E5%B9%B3%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%82%B1%E6%96%87%E4%BF%8A"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "ea9b9350-791c-414a-94f7-1aabc16c07b8",
+      "identityComparison": {
+        "personId": "0430b24d-ce4e-4f6c-bcb4-644b5f895839",
+        "names": [
+          "邱文俊"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1973-05-12"
+        ],
+        "birthYears": [
+          1973
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "62a9013f-df38-4322-ad87-4ee0698e4ef6",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "臺東縣延平鄉第2選舉區鄉民代表選舉",
+            "race_id": "b352e3cc-b1b3-4b51-8c34-1f1ecfd1f79f",
+            "is_public": true,
+            "person_id": "0430b24d-ce4e-4f6c-bcb4-644b5f895839",
+            "race_type": "township_representative_district",
+            "vote_rate": 36.94,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%BB%B6%E5%B9%B3%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 266,
+            "external_id": "votetw-candidate-2ec091a6b29bc2f7",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "4",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "0430b24d-ce4e-4f6c-bcb4-644b5f895839",
+            "registration_status": "elected"
+          },
+          {
+            "id": "7eccd0c1-a45b-414d-81c6-bb56400fcca8",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "臺東縣延平鄉第2選舉區鄉民代表選舉",
+            "race_id": "9798ccbd-c77b-4fc1-9eb7-add037fe34b2",
+            "is_public": true,
+            "person_id": "92e20c63-67b5-437a-852b-9e75fca68c6d",
+            "race_type": "township_representative",
+            "vote_rate": 36.94,
+            "created_at": "2026-07-13T11:12:06.981261+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+            "updated_at": "2026-07-13T11:12:06.981261+00:00",
+            "vote_count": 266,
+            "external_id": "cec-2018-local-subcounty-candidate-township-representative-regional-10014-130-02-120609",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "4",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:12:06.981261+00:00",
+            "canonical_person_id": "0430b24d-ce4e-4f6c-bcb4-644b5f895839",
+            "registration_status": "elected"
+          },
+          {
+            "id": "a593a0ee-47b6-4bfa-a21d-fd2e6e7b9290",
+            "year": 2022,
+            "party": "中國國民黨",
+            "title": "臺東縣延平鄉第2選舉區鄉民代表選舉",
+            "race_id": "56df27f3-8c58-44cb-9d9b-e4c699edf960",
+            "is_public": true,
+            "person_id": "33254fa4-6e62-4096-ba41-33c85622594a",
+            "race_type": "township_representative_district",
+            "vote_rate": 56.96,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%BB%B6%E5%B9%B3%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 356,
+            "external_id": "votetw-candidate-7d29c1fbf5baac00",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "0430b24d-ce4e-4f6c-bcb4-644b5f895839",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "0e232367-ccbb-40e6-8efe-3df0480e90e2",
+          "01a4e903-3a0f-4e3a-ac87-bc02f0613fd1"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "0430b24d-ce4e-4f6c-bcb4-644b5f895839"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-f95598233f2b2c0b8d20833345ea5fb7",
+      "claimId": "ff3efd4a-a128-4db7-8ff5-5946a4ccfefe",
+      "sourcePersonId": "42b55ff4-0160-4057-933e-6814b2fa72e9",
+      "name": "余瑋廷 Kavas Ispal idaz",
+      "county": "臺東縣",
+      "district": "臺東縣第13選舉區",
+      "office": "councilor",
+      "raceId": "66aa7a33-95b3-4404-947e-b62312d4ba48",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "601ef3aa-ec91-4bfa-924b-af81d6708882",
+      "existingPersonIds": [
+        "601ef3aa-ec91-4bfa-924b-af81d6708882"
+      ],
+      "registrationBirth": "068/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "03915d97-829c-41a7-9781-313a413ddd03",
+        "28f3917b-bc31-472e-937e-0980d7081de6"
+      ],
+      "evidenceCandidateIds": [
+        "d6b55b0d-6f69-4dab-ab98-165ba6f7fbbe"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E4%BD%99%E7%91%8B%E5%BB%B7"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "f3239f75-3223-4058-b86a-54ec4e3e48de",
+      "identityComparison": {
+        "personId": "601ef3aa-ec91-4bfa-924b-af81d6708882",
+        "names": [
+          "余瑋廷 Kavas Ispalidaz"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1979-10-20"
+        ],
+        "birthYears": [
+          1979
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "d6b55b0d-6f69-4dab-ab98-165ba6f7fbbe",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣海端鄉第2選舉區鄉民代表選舉",
+            "race_id": "af69458a-c3c9-48f7-b82e-9da4c810c2ff",
+            "is_public": true,
+            "person_id": "601ef3aa-ec91-4bfa-924b-af81d6708882",
+            "race_type": "township_representative_district",
+            "vote_rate": 15.25,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 161,
+            "external_id": "votetw-candidate-2d4e15520a8c5d4c",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "4",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "601ef3aa-ec91-4bfa-924b-af81d6708882",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "03915d97-829c-41a7-9781-313a413ddd03",
+          "28f3917b-bc31-472e-937e-0980d7081de6"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "601ef3aa-ec91-4bfa-924b-af81d6708882"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e9860cd7b204461fb4ea327d36d4ab15",
+      "claimId": "07307bbc-95d0-4e9d-b97b-885f32d0d6f4",
+      "sourcePersonId": "8b25d4ca-7846-40bb-ae17-22871022bfef",
+      "name": "葉光明 Umin•Havung",
+      "county": "花蓮縣",
+      "district": "花蓮縣卓溪鄉立山村",
+      "office": "village_chief",
+      "raceId": "78a2696c-59c0-45e9-86ba-b1847edc88a4",
+      "decision": "use_existing",
+      "reasonCode": "same_name_exact_local_district_no_identity_conflict",
+      "personId": "493697fe-47e9-4b1e-8c4e-cd89f0baaf52",
+      "existingPersonIds": [
+        "493697fe-47e9-4b1e-8c4e-cd89f0baaf52"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "花蓮縣卓溪鄉",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "aa6fb34e-392a-47dd-a3e9-5499182a3704"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/facbd2f4-3d34-42af-bfd6-016b8339c2d7.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8A%B1%E8%93%AE%E7%B8%A3%E5%8D%93%E6%BA%AA%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "officialFile": "hlec-64514-05.pdf",
+      "officialSha256": "cf864b6361c5d1884773540103f09af65356278eadcc3781ea587a2eeba3192a",
+      "reason": "依使用者確認的小範圍選舉標準：完整姓名與村里／代表選區唯一對應，無已知性別或生日衝突；不要求完整生日、性別必填或政黨一致。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "36e6c468-c353-487c-8d61-946b217d2a23",
+      "identityComparison": {
+        "personId": "493697fe-47e9-4b1e-8c4e-cd89f0baaf52",
+        "names": [
+          "葉光明 Umin‧Havung"
+        ],
+        "isPublic": true,
+        "birthDates": [],
+        "birthYears": [],
+        "genders": [],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [
+          {
+            "id": "aa6fb34e-392a-47dd-a3e9-5499182a3704",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "花蓮縣卓溪鄉立山村村長選舉",
+            "race_id": "ac8c426e-61d4-431e-905f-b2ae46b3a2a4",
+            "is_public": true,
+            "person_id": "493697fe-47e9-4b1e-8c4e-cd89f0baaf52",
+            "race_type": "village_chief",
+            "vote_rate": 64.33,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8A%B1%E8%93%AE%E7%B8%A3%E5%8D%93%E6%BA%AA%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 478,
+            "external_id": "votetw-candidate-7983091656ca242f",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "493697fe-47e9-4b1e-8c4e-cd89f0baaf52",
+            "registration_status": "elected"
+          }
+        ],
+        "countyHistory": [
+          {
+            "id": "aa6fb34e-392a-47dd-a3e9-5499182a3704",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "花蓮縣卓溪鄉立山村村長選舉",
+            "race_id": "ac8c426e-61d4-431e-905f-b2ae46b3a2a4",
+            "is_public": true,
+            "person_id": "493697fe-47e9-4b1e-8c4e-cd89f0baaf52",
+            "race_type": "village_chief",
+            "vote_rate": 64.33,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8A%B1%E8%93%AE%E7%B8%A3%E5%8D%93%E6%BA%AA%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 478,
+            "external_id": "votetw-candidate-7983091656ca242f",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "493697fe-47e9-4b1e-8c4e-cd89f0baaf52",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": []
+      },
+      "comparisonCandidatePersonIds": [
+        "493697fe-47e9-4b1e-8c4e-cd89f0baaf52"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-d95533abed6a57266e0db82facefc45d",
+      "claimId": "39254826-1140-4f64-a4ca-c6c74ef99b4d",
+      "sourcePersonId": "2e9054aa-9cc9-4e58-bcbd-640a330d4b1d",
+      "name": "沈清山",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣第5選舉區",
+      "office": "councilor",
+      "raceId": "5849ba0b-23dc-4853-a8e8-53631fdb874b",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "27127ab1-a2d9-495f-abd2-e7220977ca1e",
+      "existingPersonIds": [
+        "27127ab1-a2d9-495f-abd2-e7220977ca1e"
+      ],
+      "registrationBirth": "048/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "ffca3921-68ec-4e78-87da-9acd6055950b",
+        "cf4a7919-8418-41ce-a9ad-b3f1d538e639"
+      ],
+      "evidenceCandidateIds": [
+        "d8bc549d-f257-47b6-a8e6-6ebda2d512c5",
+        "74f0c86c-c151-47d1-b899-c2be1f8c0a36",
+        "23199e6b-5c68-4ecc-90f4-820288aa6d5b"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/28b4728c-3693-4f03-b7ad-ae050dd46b5a.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%A3%AF%E5%9C%8D%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%A3%AF%E5%9C%8D%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+        "https://votetw.com/wiki/%E6%B2%88%E6%B8%85%E5%B1%B1"
+      ],
+      "officialFile": "ilec-64650-08.pdf",
+      "officialSha256": "766276e7c4cf78e9ad04c5fd67fcc05e64eb179bcc1a816e879ad7263e5dcd47",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "fd90db7f-8f89-4051-8550-444963d247a3",
+      "identityComparison": {
+        "personId": "27127ab1-a2d9-495f-abd2-e7220977ca1e",
+        "names": [
+          "沈清山"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1959-06-01"
+        ],
+        "birthYears": [
+          1959
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "d8bc549d-f257-47b6-a8e6-6ebda2d512c5",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "宜蘭縣壯圍鄉鄉長選舉",
+            "race_id": "340a514d-cd2d-41bc-ad32-a5711ce6a01d",
+            "is_public": true,
+            "person_id": "3335bb2e-ad38-41ff-a89e-204cfb41f317",
+            "race_type": "township_mayor",
+            "vote_rate": 44.52,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%A3%AF%E5%9C%8D%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 6775,
+            "external_id": "votetw-candidate-5f4bf2b3fff15d81",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "27127ab1-a2d9-495f-abd2-e7220977ca1e",
+            "registration_status": "elected"
+          },
+          {
+            "id": "74f0c86c-c151-47d1-b899-c2be1f8c0a36",
+            "year": 2022,
+            "party": "中國國民黨",
+            "title": "宜蘭縣壯圍鄉鄉長選舉",
+            "race_id": "e91df010-52b0-4050-814a-a26e0402c1e9",
+            "is_public": true,
+            "person_id": "27127ab1-a2d9-495f-abd2-e7220977ca1e",
+            "race_type": "township_mayor",
+            "vote_rate": 66.56,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%A3%AF%E5%9C%8D%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 9107,
+            "external_id": "votetw-candidate-daef372a879fada2",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "27127ab1-a2d9-495f-abd2-e7220977ca1e",
+            "registration_status": "elected"
+          },
+          {
+            "id": "23199e6b-5c68-4ecc-90f4-820288aa6d5b",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "宜蘭縣壯圍鄉鄉長選舉",
+            "race_id": "52abaaaa-3fbb-4a32-9420-4f3ad31ccf7c",
+            "is_public": true,
+            "person_id": "8887b9d6-305c-4101-a9d4-f7ad35663e30",
+            "race_type": "township_mayor",
+            "vote_rate": 44.52,
+            "created_at": "2026-07-13T11:02:06.473216+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "vote_count": 6775,
+            "external_id": "cec-2018-local-subcounty-candidate-township-chief-10002-060-1482",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "canonical_person_id": "27127ab1-a2d9-495f-abd2-e7220977ca1e",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "ffca3921-68ec-4e78-87da-9acd6055950b",
+          "cf4a7919-8418-41ce-a9ad-b3f1d538e639"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "27127ab1-a2d9-495f-abd2-e7220977ca1e"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-394aaef8fca8a627e821b5f12268d3b2",
+      "claimId": "7b4db5fe-021d-4d15-8317-80a31a57238c",
+      "sourcePersonId": "44bb81a3-d383-4e8e-be46-5e29abc4f8d5",
+      "name": "林金樺",
+      "county": "臺東縣",
+      "district": "臺東縣池上鄉第1選舉區",
+      "office": "township_representative",
+      "raceId": "ec30268f-f8c3-413b-ab0c-1d2a72b1b797",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "27e4ad85-b246-4b52-b92e-76777d7a714f",
+      "existingPersonIds": [
+        "27e4ad85-b246-4b52-b92e-76777d7a714f"
+      ],
+      "registrationBirth": "059/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "臺東縣池上鄉",
+      "evidenceClaimIds": [
+        "2187fa7d-1223-47ef-8e05-14008ecf2d37",
+        "9d6e70f7-ffdf-485e-ad86-3ccfa34a7709",
+        "3010b530-09a5-4452-92f4-eb71dce83a5a",
+        "22c6af65-f942-4007-8e90-9dd1a436dd5d"
+      ],
+      "evidenceCandidateIds": [
+        "cd2620d6-4aba-4fb2-9214-b29b2b6f4bec",
+        "9a80e2ad-a6e7-4fdf-aeb3-ab3e4e96350f",
+        "f5cb01d2-bb9c-48b9-a0f6-a1f8a5bc1a79"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ad6f26ea-8ca2-4c9f-b746-f467c4768230.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_014_00_000_0000.json",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E6%9E%97%E9%87%91%E6%A8%BA"
+      ],
+      "officialFile": "ttec-64641-05.pdf",
+      "officialSha256": "5d8754fac57f95a41fbee7c59ad483a00bc27151355357c71a8d5cc9648393aa",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "f5725f6e-a91b-4bc2-93ce-eff341e8cb62",
+      "identityComparison": {
+        "personId": "27e4ad85-b246-4b52-b92e-76777d7a714f",
+        "names": [
+          "林金樺"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1970-09-16"
+        ],
+        "birthYears": [
+          1970
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "cd2620d6-4aba-4fb2-9214-b29b2b6f4bec",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣第4選舉區",
+            "race_id": "7ea2927d-dc37-4fff-b79d-3c0067a9d76f",
+            "is_public": true,
+            "person_id": "613c65a0-9380-426c-8a99-67fbce959bc5",
+            "race_type": "councilor_district",
+            "vote_rate": 23.65,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": false,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 2564,
+            "external_id": "votetw-candidate-866840aea0eaff45",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "27e4ad85-b246-4b52-b92e-76777d7a714f",
+            "registration_status": "not_elected"
+          },
+          {
+            "id": "9a80e2ad-a6e7-4fdf-aeb3-ab3e4e96350f",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣第4選舉區議員選舉",
+            "race_id": "0c106ac6-f7e1-4db7-a751-e23d5b31bb7c",
+            "is_public": true,
+            "person_id": "07027889-943a-4a14-a41d-b5656a26ec41",
+            "race_type": "county_councilor",
+            "vote_rate": 23.65,
+            "created_at": "2026-07-13T10:45:03.351173+00:00",
+            "is_elected": false,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_014_00_000_0000.json",
+            "updated_at": "2026-07-13T10:45:03.351173+00:00",
+            "vote_count": 2564,
+            "external_id": "cec-2018-local-councilor-candidate-regional-10014-04-23243",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T10:45:03.351173+00:00",
+            "canonical_person_id": "27e4ad85-b246-4b52-b92e-76777d7a714f",
+            "registration_status": "not_elected"
+          },
+          {
+            "id": "f5cb01d2-bb9c-48b9-a0f6-a1f8a5bc1a79",
+            "year": 2022,
+            "party": "民主進步黨",
+            "title": "臺東縣第4選舉區議員選舉",
+            "race_id": "b0e59142-b462-4452-ac3b-eb2082ddabcc",
+            "is_public": true,
+            "person_id": "27e4ad85-b246-4b52-b92e-76777d7a714f",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-regional-candidate-279a6a26251b",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "6",
+            "is_incumbent": null,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "27e4ad85-b246-4b52-b92e-76777d7a714f",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "2187fa7d-1223-47ef-8e05-14008ecf2d37",
+          "9d6e70f7-ffdf-485e-ad86-3ccfa34a7709",
+          "3010b530-09a5-4452-92f4-eb71dce83a5a",
+          "22c6af65-f942-4007-8e90-9dd1a436dd5d"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "27e4ad85-b246-4b52-b92e-76777d7a714f"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-120f13a0470d0503d192e0fb6e051e9d",
+      "claimId": "10fbda72-230e-4c8f-9552-f5695bf7df15",
+      "sourcePersonId": "7cfe389a-4531-45e0-8353-788baae89408",
+      "name": "黃玉英 Usay Amui Lipay",
+      "county": "臺東縣",
+      "district": "臺東縣關山鎮第4選舉區",
+      "office": "township_representative",
+      "raceId": "2672cb23-c94e-4972-85b6-96f365475a91",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "4b13284a-07b3-4f19-b709-7dfe0adae2b6",
+      "existingPersonIds": [
+        "5068f7d1-7d1f-4be9-ae8a-9152d31a2d34",
+        "4b13284a-07b3-4f19-b709-7dfe0adae2b6"
+      ],
+      "registrationBirth": "056/**/**",
+      "registrationGender": "女",
+      "registrationParty": "中國國民黨",
+      "locality": "臺東縣關山鎮",
+      "evidenceClaimIds": [
+        "a6642dbe-07d6-43ec-a9c6-4d52677ce7aa",
+        "b0460374-ae0d-4ce7-b899-01a9d5176c20"
+      ],
+      "evidenceCandidateIds": [
+        "f08ccdf2-730f-4155-9e00-b886f7c77d6a"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ad6f26ea-8ca2-4c9f-b746-f467c4768230.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E9%97%9C%E5%B1%B1%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%BB%83%E7%8E%89%E8%8B%B1"
+      ],
+      "officialFile": "ttec-64641-05.pdf",
+      "officialSha256": "5d8754fac57f95a41fbee7c59ad483a00bc27151355357c71a8d5cc9648393aa",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "8fa8e8ca-c8db-4714-afe0-7a561fe74172",
+      "identityComparison": {
+        "personId": "4b13284a-07b3-4f19-b709-7dfe0adae2b6",
+        "names": [
+          "黃玉英 Ｕsay Amui Lipay"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1967-11-05"
+        ],
+        "birthYears": [
+          1967
+        ],
+        "genders": [
+          "female"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "f08ccdf2-730f-4155-9e00-b886f7c77d6a",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣關山鎮第4選舉區（原住民）鎮民代表選舉",
+            "race_id": "b9daa3ad-ee1b-4130-91a8-599270c1a2c8",
+            "is_public": true,
+            "person_id": "4b13284a-07b3-4f19-b709-7dfe0adae2b6",
+            "race_type": "township_representative_district",
+            "vote_rate": 35.62,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E9%97%9C%E5%B1%B1%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 343,
+            "external_id": "votetw-candidate-1778f0872939a8f4",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "4b13284a-07b3-4f19-b709-7dfe0adae2b6",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "a6642dbe-07d6-43ec-a9c6-4d52677ce7aa",
+          "b0460374-ae0d-4ce7-b899-01a9d5176c20"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "5068f7d1-7d1f-4be9-ae8a-9152d31a2d34",
+        "4b13284a-07b3-4f19-b709-7dfe0adae2b6"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-545feb28bca65330e9937daea4f363c6",
+      "claimId": "2f43fc24-bedd-4881-9ba4-de3eac825e22",
+      "sourcePersonId": "f848a572-1b28-436f-98c2-bf8588075432",
+      "name": "李明哲",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣第10選舉區",
+      "office": "councilor",
+      "raceId": "5fc0d7c0-b35d-4f37-811e-7fa99c45368f",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+      "existingPersonIds": [
+        "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+        "6fbed1cc-d8b6-4be7-9860-e002016c8cb0",
+        "cc0d7cb6-6ed0-46d8-9c14-9093f77d7793"
+      ],
+      "registrationBirth": "055/**/**",
+      "registrationGender": "男",
+      "registrationParty": "民主進步黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "b9b2113c-f79a-4920-aa3e-4eb3228f22c2",
+        "d80def70-0c92-440f-9d10-39954578dda3"
+      ],
+      "evidenceCandidateIds": [
+        "bde5868d-ddb8-4c35-a0b5-441971211c99",
+        "f0d8d1f1-f921-419c-937a-4892b9da934b",
+        "9ee00d5c-1aad-4bcc-8dd4-b6a95e1ef3dc"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/28b4728c-3693-4f03-b7ad-ae050dd46b5a.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+        "https://eebulletin.cec.gov.tw/111/15%E5%AE%9C%E8%98%AD%E7%B8%A3/03%E9%84%89%E9%8E%AE%E5%B8%82%E9%95%B7/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf"
+      ],
+      "officialFile": "ilec-64650-08.pdf",
+      "officialSha256": "766276e7c4cf78e9ad04c5fd67fcc05e64eb179bcc1a816e879ad7263e5dcd47",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "8d55a741-1a86-45e9-a616-cd5322ce04a5",
+      "identityComparison": {
+        "personId": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+        "names": [
+          "李明哲"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1966-10-07"
+        ],
+        "birthYears": [
+          1966
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "bde5868d-ddb8-4c35-a0b5-441971211c99",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "宜蘭縣蘇澳鎮鎮長選舉",
+            "race_id": "4665a6ad-39d1-4138-8e96-54804097af67",
+            "is_public": true,
+            "person_id": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+            "race_type": "township_mayor",
+            "vote_rate": 57.79,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 13232,
+            "external_id": "votetw-candidate-fd88acf32234b58f",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+            "registration_status": "elected"
+          },
+          {
+            "id": "f0d8d1f1-f921-419c-937a-4892b9da934b",
+            "year": 2022,
+            "party": "民主進步黨",
+            "title": "宜蘭縣蘇澳鎮鎮長選舉",
+            "race_id": "143f77d2-ec52-41ab-b565-5dd3d21c6a07",
+            "is_public": true,
+            "person_id": "eecc7ded-8911-4317-919c-b7b2fcb18c0f",
+            "race_type": "township_mayor",
+            "vote_rate": 67.39,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 14178,
+            "external_id": "votetw-candidate-6ce9e16ade917721",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+            "registration_status": "elected"
+          },
+          {
+            "id": "9ee00d5c-1aad-4bcc-8dd4-b6a95e1ef3dc",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "宜蘭縣蘇澳鎮鎮長選舉",
+            "race_id": "b4140404-992c-4bdc-b261-2d233408709e",
+            "is_public": true,
+            "person_id": "fa64f6ae-46c4-48a8-a673-d130ffbc8c3e",
+            "race_type": "township_mayor",
+            "vote_rate": 57.79,
+            "created_at": "2026-07-13T11:02:06.473216+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "vote_count": 13232,
+            "external_id": "cec-2018-local-subcounty-candidate-township-chief-10002-030-1474",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "canonical_person_id": "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "b9b2113c-f79a-4920-aa3e-4eb3228f22c2",
+          "d80def70-0c92-440f-9d10-39954578dda3"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "0bdf6d74-e2b2-41ef-8e07-1d2461876731",
+        "6fbed1cc-d8b6-4be7-9860-e002016c8cb0",
+        "cc0d7cb6-6ed0-46d8-9c14-9093f77d7793"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-afd1fec838c37a9e373832f9f3f2f5cc",
+      "claimId": "d14ca700-e322-40d1-92d8-231e032db375",
+      "sourcePersonId": "e68d7480-06fe-4611-a122-b20f8e7996eb",
+      "name": "蔣爭光",
+      "county": "臺東縣",
+      "district": "臺東縣第14選舉區",
+      "office": "councilor",
+      "raceId": "217a6485-0be5-44c1-b48d-4d8fda67ac80",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "b0907a31-b36e-4767-946a-4d1e9f36dde3",
+      "existingPersonIds": [
+        "b0907a31-b36e-4767-946a-4d1e9f36dde3"
+      ],
+      "registrationBirth": "050/**/**",
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "9a8c1cda-6304-4d37-a78a-0e8163bc4eb0",
+        "c78c01a8-d33b-41c2-9ca5-03f13c47d2ce"
+      ],
+      "evidenceCandidateIds": [
+        "d583ba51-83df-46c9-9763-a17e4f532865",
+        "4e13ec03-2582-4051-97b9-4dc1d41a9d6f",
+        "3b274678-d1bf-44b5-8acc-1afeffb37a26"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E9%87%91%E5%B3%B0%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_014_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E9%87%91%E5%B3%B0%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E8%94%A3%E7%88%AD%E5%85%89"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "a51a85ac-a5f0-4a44-bb08-20d93ec7ce27",
+      "identityComparison": {
+        "personId": "b0907a31-b36e-4767-946a-4d1e9f36dde3",
+        "names": [
+          "蔣爭光"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1961-01-20"
+        ],
+        "birthYears": [
+          1961
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "d583ba51-83df-46c9-9763-a17e4f532865",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣金峰鄉鄉長選舉",
+            "race_id": "2036baab-df83-437b-9515-1abc93a50382",
+            "is_public": true,
+            "person_id": "b0907a31-b36e-4767-946a-4d1e9f36dde3",
+            "race_type": "township_mayor",
+            "vote_rate": 53.8,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E9%87%91%E5%B3%B0%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 1321,
+            "external_id": "votetw-candidate-b7afcecc0ba412ba",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "b0907a31-b36e-4767-946a-4d1e9f36dde3",
+            "registration_status": "elected"
+          },
+          {
+            "id": "4e13ec03-2582-4051-97b9-4dc1d41a9d6f",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣金峰鄉鄉長選舉",
+            "race_id": "c1e822d2-61cb-46bb-a08a-97941c1b73f6",
+            "is_public": true,
+            "person_id": "4794c31c-e61b-43d3-a75b-8ef23a14c33c",
+            "race_type": "township_mayor",
+            "vote_rate": 53.8,
+            "created_at": "2026-07-13T11:02:06.59502+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_014_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.59502+00:00",
+            "vote_count": 1321,
+            "external_id": "cec-2018-local-subcounty-candidate-township-chief-10014-140-1565",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.59502+00:00",
+            "canonical_person_id": "b0907a31-b36e-4767-946a-4d1e9f36dde3",
+            "registration_status": "elected"
+          },
+          {
+            "id": "3b274678-d1bf-44b5-8acc-1afeffb37a26",
+            "year": 2022,
+            "party": "中國國民黨",
+            "title": "臺東縣金峰鄉鄉長選舉",
+            "race_id": "f41eb232-5d8d-4a1c-8d1a-aff3430fc9d6",
+            "is_public": true,
+            "person_id": "b7b206d8-3f36-4fc4-8c01-d021d6719247",
+            "race_type": "township_mayor",
+            "vote_rate": 52.58,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E9%87%91%E5%B3%B0%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 1294,
+            "external_id": "votetw-candidate-6fade5774d34b0e3",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "b0907a31-b36e-4767-946a-4d1e9f36dde3",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "9a8c1cda-6304-4d37-a78a-0e8163bc4eb0",
+          "c78c01a8-d33b-41c2-9ca5-03f13c47d2ce"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "b0907a31-b36e-4767-946a-4d1e9f36dde3"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-7cb7cc0dfb73c1a9061e7cc7af7979e2",
+      "claimId": "bd6c7ed3-47f6-43c8-97f0-31271cefd1a2",
+      "sourcePersonId": "b56beb9a-dc7a-4cd0-9136-8bc18ffb2c98",
+      "name": "林峻輔",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣第8選舉區",
+      "office": "councilor",
+      "raceId": "c7e4ea02-84e3-4bab-81ea-740bff3fd33f",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "228abd40-fd47-445c-9ba8-e29bffcad40f",
+      "existingPersonIds": [
+        "228abd40-fd47-445c-9ba8-e29bffcad40f"
+      ],
+      "registrationBirth": "058/**/**",
+      "registrationGender": "男",
+      "registrationParty": "民主進步黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "0e8fe07e-ff6d-47c0-b836-e374f0c976a1",
+        "1f2185ed-dc45-413c-95a4-17ef1b1bae52"
+      ],
+      "evidenceCandidateIds": [
+        "948cec13-0688-47d0-9d0a-05b8b3631f2b",
+        "e60d892c-fedd-4979-a2ef-e09df21c47e0",
+        "8b13be70-b1d1-4691-869d-9cb71d7eddca"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/3758d32c-80d3-402c-af5a-591458d65c47.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%86%AC%E5%B1%B1%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%86%AC%E5%B1%B1%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+        "https://votetw.com/wiki/%E6%9E%97%E5%B3%BB%E8%BC%94"
+      ],
+      "officialFile": "ilec-64650-03.pdf",
+      "officialSha256": "a73f1fd6b198020ffa9a5a501acc605579d8518c6e52e39584abed13f45fc0d7",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "e7b55ebf-b6b7-477a-ae47-3d4158f1d69b",
+      "identityComparison": {
+        "personId": "228abd40-fd47-445c-9ba8-e29bffcad40f",
+        "names": [
+          "林峻輔"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1969-04-18"
+        ],
+        "birthYears": [
+          1969
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "948cec13-0688-47d0-9d0a-05b8b3631f2b",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "宜蘭縣冬山鄉鄉長選舉",
+            "race_id": "d9165327-10c6-4ef5-9c64-02c1bf0fd4ac",
+            "is_public": true,
+            "person_id": "228abd40-fd47-445c-9ba8-e29bffcad40f",
+            "race_type": "township_mayor",
+            "vote_rate": 58.31,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%86%AC%E5%B1%B1%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 16579,
+            "external_id": "votetw-candidate-e09c28824d3097ce",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "228abd40-fd47-445c-9ba8-e29bffcad40f",
+            "registration_status": "elected"
+          },
+          {
+            "id": "e60d892c-fedd-4979-a2ef-e09df21c47e0",
+            "year": 2022,
+            "party": "民主進步黨",
+            "title": "宜蘭縣冬山鄉鄉長選舉",
+            "race_id": "6f4b0dd0-a878-4197-ab3b-ca81655d581c",
+            "is_public": true,
+            "person_id": "3df3bf1a-3760-4e03-b8bb-52d09937d913",
+            "race_type": "township_mayor",
+            "vote_rate": 100,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%86%AC%E5%B1%B1%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 24743,
+            "external_id": "votetw-candidate-98376cc2b7f71604",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "228abd40-fd47-445c-9ba8-e29bffcad40f",
+            "registration_status": "elected"
+          },
+          {
+            "id": "8b13be70-b1d1-4691-869d-9cb71d7eddca",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "宜蘭縣冬山鄉鄉長選舉",
+            "race_id": "97dba559-a9a8-47ff-b660-5fb72b3446d2",
+            "is_public": true,
+            "person_id": "915d4f36-cef1-40d5-aa0f-2a476bf76e17",
+            "race_type": "township_mayor",
+            "vote_rate": 58.31,
+            "created_at": "2026-07-13T11:02:06.473216+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "vote_count": 16579,
+            "external_id": "cec-2018-local-subcounty-candidate-township-chief-10002-080-1487",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "canonical_person_id": "228abd40-fd47-445c-9ba8-e29bffcad40f",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "0e8fe07e-ff6d-47c0-b836-e374f0c976a1",
+          "1f2185ed-dc45-413c-95a4-17ef1b1bae52"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "228abd40-fd47-445c-9ba8-e29bffcad40f"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-4e17fbcb39946f8094d9689197f8eada",
+      "claimId": "b9b5b931-8d33-407c-96a4-482b82587e8c",
+      "sourcePersonId": "702c8b56-7b6a-4192-bd9c-115bef794c6f",
+      "name": "黃士駿",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣第10選舉區",
+      "office": "councilor",
+      "raceId": "5fc0d7c0-b35d-4f37-811e-7fa99c45368f",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "9bebe6a2-2a45-4a6a-91e6-28d15b7562b6",
+      "existingPersonIds": [
+        "9bebe6a2-2a45-4a6a-91e6-28d15b7562b6",
+        "b37e2465-fa72-4a70-b252-5240791a378f"
+      ],
+      "registrationBirth": "067/**/**",
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "db865df2-7fd9-448a-b389-da027d7ea324",
+        "2cf48e16-61dd-43f4-87d2-22ae45713dde"
+      ],
+      "evidenceCandidateIds": [
+        "dbd5d7dc-fba1-4ae4-901a-fb6273b12a99"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/28b4728c-3693-4f03-b7ad-ae050dd46b5a.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%BB%83%E5%A3%AB%E9%A7%BF"
+      ],
+      "officialFile": "ilec-64650-08.pdf",
+      "officialSha256": "766276e7c4cf78e9ad04c5fd67fcc05e64eb179bcc1a816e879ad7263e5dcd47",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "413d38b4-7bc4-4998-b68c-266f8971a496",
+      "identityComparison": {
+        "personId": "9bebe6a2-2a45-4a6a-91e6-28d15b7562b6",
+        "names": [
+          "黃士駿"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1978-04-30"
+        ],
+        "birthYears": [
+          1978
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "dbd5d7dc-fba1-4ae4-901a-fb6273b12a99",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "宜蘭縣蘇澳鎮第3選舉區鎮民代表選舉",
+            "race_id": "03e583b6-e0e9-451d-ac57-fd349fe13034",
+            "is_public": true,
+            "person_id": "9bebe6a2-2a45-4a6a-91e6-28d15b7562b6",
+            "race_type": "township_representative_district",
+            "vote_rate": 27.53,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E8%98%87%E6%BE%B3%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 1834,
+            "external_id": "votetw-candidate-0aae54bfe3e76e4b",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "3",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "9bebe6a2-2a45-4a6a-91e6-28d15b7562b6",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "db865df2-7fd9-448a-b389-da027d7ea324",
+          "2cf48e16-61dd-43f4-87d2-22ae45713dde"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "9bebe6a2-2a45-4a6a-91e6-28d15b7562b6",
+        "b37e2465-fa72-4a70-b252-5240791a378f"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-851af4dd2f2748eb8368ae9ba7ddfa0f",
+      "claimId": "eca53a14-86b6-4822-928c-079ca18a9136",
+      "sourcePersonId": "ed1a7b8f-be0d-4b3a-90f6-bab4f7d8f44a",
+      "name": "胡金至",
+      "county": "臺東縣",
+      "district": "臺東縣第13選舉區",
+      "office": "councilor",
+      "raceId": "66aa7a33-95b3-4404-947e-b62312d4ba48",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "416485e8-8643-46ac-9d13-a9a937b3df81",
+      "existingPersonIds": [
+        "416485e8-8643-46ac-9d13-a9a937b3df81"
+      ],
+      "registrationBirth": "049/**/**",
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "a2c20986-8390-4fd1-a0c9-760edd412f48",
+        "c690c217-63f5-44a9-af9c-ff26fe5a5130"
+      ],
+      "evidenceCandidateIds": [
+        "9b225d91-087b-4ac9-aa46-25010644b2d0",
+        "7bb43e27-d378-426b-b884-6734fc29b8a6",
+        "ebe73f64-e3d3-47c8-9651-85b6b57b6d54"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_014_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E8%83%A1%E9%87%91%E8%87%B3"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "ad6798e7-ffca-4aa4-a6ea-9fb6388e308a",
+      "identityComparison": {
+        "personId": "416485e8-8643-46ac-9d13-a9a937b3df81",
+        "names": [
+          "胡金至"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1960-06-13"
+        ],
+        "birthYears": [
+          1960
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "9b225d91-087b-4ac9-aa46-25010644b2d0",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣海端鄉鄉長選舉",
+            "race_id": "ed9ad82a-32af-46c6-977b-634988964592",
+            "is_public": true,
+            "person_id": "753162e9-c0d6-47a8-8b4e-9666eb7c3b4d",
+            "race_type": "township_mayor",
+            "vote_rate": 42.29,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 939,
+            "external_id": "votetw-candidate-3f337f81f07879dc",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "416485e8-8643-46ac-9d13-a9a937b3df81",
+            "registration_status": "elected"
+          },
+          {
+            "id": "7bb43e27-d378-426b-b884-6734fc29b8a6",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣海端鄉鄉長選舉",
+            "race_id": "a3e1b5de-3d7a-43f7-a876-f793d892a88b",
+            "is_public": true,
+            "person_id": "0137c99b-4b1f-4cdf-95b3-6c426c21f3a6",
+            "race_type": "township_mayor",
+            "vote_rate": 42.29,
+            "created_at": "2026-07-13T11:02:06.59502+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_014_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.59502+00:00",
+            "vote_count": 939,
+            "external_id": "cec-2018-local-subcounty-candidate-township-chief-10014-120-1555",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.59502+00:00",
+            "canonical_person_id": "416485e8-8643-46ac-9d13-a9a937b3df81",
+            "registration_status": "elected"
+          },
+          {
+            "id": "ebe73f64-e3d3-47c8-9651-85b6b57b6d54",
+            "year": 2022,
+            "party": "中國國民黨",
+            "title": "臺東縣海端鄉鄉長選舉",
+            "race_id": "f6fe5ea8-11b1-40fd-9cd5-9948bf8ae351",
+            "is_public": true,
+            "person_id": "416485e8-8643-46ac-9d13-a9a937b3df81",
+            "race_type": "township_mayor",
+            "vote_rate": 33.1,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 713,
+            "external_id": "votetw-candidate-735d899a3b548342",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "4",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "416485e8-8643-46ac-9d13-a9a937b3df81",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "a2c20986-8390-4fd1-a0c9-760edd412f48",
+          "c690c217-63f5-44a9-af9c-ff26fe5a5130"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "416485e8-8643-46ac-9d13-a9a937b3df81"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-54913cf867d137d998bfd09e54ba6ac0",
+      "claimId": "1d3c41d5-c2ab-4941-9f8f-c7e2ff9cbd6f",
+      "sourcePersonId": "7a7bfeeb-9d5c-4daa-82f7-ca6db62afd8c",
+      "name": "胡淑貞",
+      "county": "臺東縣",
+      "district": "臺東縣第13選舉區",
+      "office": "councilor",
+      "raceId": "66aa7a33-95b3-4404-947e-b62312d4ba48",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "814488b6-38ea-47ee-a89f-1737ce0bb912",
+      "existingPersonIds": [
+        "814488b6-38ea-47ee-a89f-1737ce0bb912"
+      ],
+      "registrationBirth": "051/**/**",
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "ef6b7bf2-d4dc-4f8e-88f8-a1a9fc0bd91b",
+        "ee61bbea-778b-4127-88b8-04082c946a1b"
+      ],
+      "evidenceCandidateIds": [
+        "5fcc8798-f21c-40b5-9a9a-cafe33b91b3d",
+        "dbce0c24-f20d-48f9-b46e-cafed654135c",
+        "75ec201a-19aa-459d-a0ed-55dd127e9691"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E8%83%A1%E6%B7%91%E8%B2%9E"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "26b706ad-d1a7-4073-bdff-2a0420894bf4",
+      "identityComparison": {
+        "personId": "814488b6-38ea-47ee-a89f-1737ce0bb912",
+        "names": [
+          "胡淑貞"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1962-09-03"
+        ],
+        "birthYears": [
+          1962
+        ],
+        "genders": [
+          "female"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "5fcc8798-f21c-40b5-9a9a-cafe33b91b3d",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣海端鄉第3選舉區鄉民代表選舉",
+            "race_id": "8f265960-8781-49c9-945c-58293b5d391d",
+            "is_public": true,
+            "person_id": "814488b6-38ea-47ee-a89f-1737ce0bb912",
+            "race_type": "township_representative_district",
+            "vote_rate": 29.81,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 220,
+            "external_id": "votetw-candidate-052cd91936a7118f",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "814488b6-38ea-47ee-a89f-1737ce0bb912",
+            "registration_status": "elected"
+          },
+          {
+            "id": "dbce0c24-f20d-48f9-b46e-cafed654135c",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣海端鄉第3選舉區鄉民代表選舉",
+            "race_id": "13f8c23f-f295-44d9-b4dc-857f50b9a5c3",
+            "is_public": true,
+            "person_id": "c8045104-2805-4a16-8287-abe7ba310fef",
+            "race_type": "township_representative",
+            "vote_rate": 29.81,
+            "created_at": "2026-07-13T11:12:06.981261+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+            "updated_at": "2026-07-13T11:12:06.981261+00:00",
+            "vote_count": 220,
+            "external_id": "cec-2018-local-subcounty-candidate-township-representative-regional-10014-120-03-120634",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:12:06.981261+00:00",
+            "canonical_person_id": "814488b6-38ea-47ee-a89f-1737ce0bb912",
+            "registration_status": "elected"
+          },
+          {
+            "id": "75ec201a-19aa-459d-a0ed-55dd127e9691",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣海端鄉第3選舉區鄉民代表選舉",
+            "race_id": "0f379d38-c348-4b57-9633-125796951092",
+            "is_public": true,
+            "person_id": "d5ede0a4-ce79-4fb2-9689-6e2735ccde99",
+            "race_type": "township_representative_district",
+            "vote_rate": 43.76,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%B5%B7%E7%AB%AF%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 319,
+            "external_id": "votetw-candidate-cc6510908313b8e7",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "3",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "814488b6-38ea-47ee-a89f-1737ce0bb912",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "ef6b7bf2-d4dc-4f8e-88f8-a1a9fc0bd91b",
+          "ee61bbea-778b-4127-88b8-04082c946a1b"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "814488b6-38ea-47ee-a89f-1737ce0bb912"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-4b5a0def2194302a7ecfb73073c2a851",
+      "claimId": "aa4dc719-d7ec-4680-8c98-8ace878856f6",
+      "sourcePersonId": "23d31416-ccc4-495c-981e-cafbe72aa29b",
+      "name": "張永德",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣第3選舉區",
+      "office": "councilor",
+      "raceId": "4f9afb98-58eb-47ff-9090-dfcdab3a44d7",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "87ce51ba-efef-4d43-8750-0e2767363e81",
+      "existingPersonIds": [
+        "87ce51ba-efef-4d43-8750-0e2767363e81"
+      ],
+      "registrationBirth": "047/**/**",
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "14e2d843-3a8f-46ac-9df7-2a4bb10961fe",
+        "21674c52-5042-49bc-8e0c-d2e08cc8659f"
+      ],
+      "evidenceCandidateIds": [
+        "7e983798-35c8-4e74-8c7c-bce51a045dc6",
+        "421b6fdf-5689-4ef6-8d57-abe3f97442b3",
+        "36d7e4cf-3a63-4f4f-a602-045a445e53d2"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/3758d32c-80d3-402c-af5a-591458d65c47.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%A4%81%E6%BA%AA%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%A4%81%E6%BA%AA%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+        "https://votetw.com/wiki/%E5%BC%B5%E6%B0%B8%E5%BE%B7"
+      ],
+      "officialFile": "ilec-64650-03.pdf",
+      "officialSha256": "a73f1fd6b198020ffa9a5a501acc605579d8518c6e52e39584abed13f45fc0d7",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "73e06241-b162-466f-9eec-597452ff681a",
+      "identityComparison": {
+        "personId": "87ce51ba-efef-4d43-8750-0e2767363e81",
+        "names": [
+          "張永德"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1958-09-10"
+        ],
+        "birthYears": [
+          1958
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "7e983798-35c8-4e74-8c7c-bce51a045dc6",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "宜蘭縣礁溪鄉鄉長選舉",
+            "race_id": "7a4d9a9c-0375-4cf1-9fd3-0c795977eb52",
+            "is_public": true,
+            "person_id": "87ce51ba-efef-4d43-8750-0e2767363e81",
+            "race_type": "township_mayor",
+            "vote_rate": 36.19,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%A4%81%E6%BA%AA%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 7630,
+            "external_id": "votetw-candidate-03325fcd8ee81b45",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "87ce51ba-efef-4d43-8750-0e2767363e81",
+            "registration_status": "elected"
+          },
+          {
+            "id": "421b6fdf-5689-4ef6-8d57-abe3f97442b3",
+            "year": 2022,
+            "party": "中國國民黨",
+            "title": "宜蘭縣礁溪鄉鄉長選舉",
+            "race_id": "4db1eff5-f656-4bf8-b31c-c868a9ae0063",
+            "is_public": true,
+            "person_id": "b7ff6754-583b-420a-b6ac-5d673d1044c6",
+            "race_type": "township_mayor",
+            "vote_rate": 53.99,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%A4%81%E6%BA%AA%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 10516,
+            "external_id": "votetw-candidate-1d25565f70b09d36",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "3",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "87ce51ba-efef-4d43-8750-0e2767363e81",
+            "registration_status": "elected"
+          },
+          {
+            "id": "36d7e4cf-3a63-4f4f-a602-045a445e53d2",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "宜蘭縣礁溪鄉鄉長選舉",
+            "race_id": "9ff0babc-2d10-4593-8938-cc7930472a2f",
+            "is_public": true,
+            "person_id": "b1e16ac2-00da-4dc5-a3db-7e960d380608",
+            "race_type": "township_mayor",
+            "vote_rate": 36.19,
+            "created_at": "2026-07-13T11:02:06.473216+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "vote_count": 7630,
+            "external_id": "cec-2018-local-subcounty-candidate-township-chief-10002-050-1478",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "canonical_person_id": "87ce51ba-efef-4d43-8750-0e2767363e81",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "14e2d843-3a8f-46ac-9df7-2a4bb10961fe",
+          "21674c52-5042-49bc-8e0c-d2e08cc8659f"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "87ce51ba-efef-4d43-8750-0e2767363e81"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e401f47d4b8f3b3e606e2b3c9feffa3a",
+      "claimId": "7365a1ee-6450-4a1a-bd8a-f33d5e9f4c1b",
+      "sourcePersonId": "21b5b8ff-be2a-44fa-875d-64ab42467c8e",
+      "name": "李勝雄",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣第13選舉區",
+      "office": "councilor",
+      "raceId": "08545575-a1fd-48d2-b1fb-ab670840f3a5",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "b35e830f-5f84-47e8-b7cd-5608065496fc",
+      "existingPersonIds": [
+        "b35e830f-5f84-47e8-b7cd-5608065496fc"
+      ],
+      "registrationBirth": "055/**/**",
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "3efb8a57-c0db-40db-b709-55caf773db81",
+        "9c28dee6-9bd0-4276-8492-3d64148570a1"
+      ],
+      "evidenceCandidateIds": [
+        "098e0fee-92f8-4548-ac4e-169d8a48ed7f",
+        "66df2ae8-e72d-4410-973f-8c7572c442a7",
+        "45eb460e-9161-4e20-8eef-e0b68e46f276"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/28b4728c-3693-4f03-b7ad-ae050dd46b5a.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%8D%97%E6%BE%B3%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%8D%97%E6%BE%B3%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+        "https://votetw.com/wiki/%E6%9D%8E%E5%8B%9D%E9%9B%84"
+      ],
+      "officialFile": "ilec-64650-08.pdf",
+      "officialSha256": "766276e7c4cf78e9ad04c5fd67fcc05e64eb179bcc1a816e879ad7263e5dcd47",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "82e5d7ac-f6f1-4876-9fea-68aa709dad32",
+      "identityComparison": {
+        "personId": "b35e830f-5f84-47e8-b7cd-5608065496fc",
+        "names": [
+          "李勝雄"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1966-08-14"
+        ],
+        "birthYears": [
+          1966
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "098e0fee-92f8-4548-ac4e-169d8a48ed7f",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "宜蘭縣南澳鄉鄉長選舉",
+            "race_id": "3579fddb-f5b9-495b-8234-1ba8182044d4",
+            "is_public": true,
+            "person_id": "f3da3bc9-ad6f-4552-9470-11453f9ce762",
+            "race_type": "township_mayor",
+            "vote_rate": 45.56,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%8D%97%E6%BE%B3%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 1675,
+            "external_id": "votetw-candidate-3f6bd4e9cef10e95",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "3",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "b35e830f-5f84-47e8-b7cd-5608065496fc",
+            "registration_status": "elected"
+          },
+          {
+            "id": "66df2ae8-e72d-4410-973f-8c7572c442a7",
+            "year": 2022,
+            "party": "中國國民黨",
+            "title": "宜蘭縣南澳鄉鄉長選舉",
+            "race_id": "fb745d95-9ec5-4f65-9474-b115c53538d8",
+            "is_public": true,
+            "person_id": "b35e830f-5f84-47e8-b7cd-5608065496fc",
+            "race_type": "township_mayor",
+            "vote_rate": 68.72,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%8D%97%E6%BE%B3%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 2425,
+            "external_id": "votetw-candidate-2c8a1005347dc797",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "b35e830f-5f84-47e8-b7cd-5608065496fc",
+            "registration_status": "elected"
+          },
+          {
+            "id": "45eb460e-9161-4e20-8eef-e0b68e46f276",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "宜蘭縣南澳鄉鄉長選舉",
+            "race_id": "70e85c7a-d5ae-43e7-ab13-1b8de2eeb96c",
+            "is_public": true,
+            "person_id": "e431baa3-20cf-43e6-86b7-772f5cbc6f9f",
+            "race_type": "township_mayor",
+            "vote_rate": 45.56,
+            "created_at": "2026-07-13T11:02:06.473216+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/D2/00/e34d0b6d7e29a5d82fec3aeb226f4a2f/D/10_002_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "vote_count": 1675,
+            "external_id": "cec-2018-local-subcounty-candidate-township-chief-10002-120-1499",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "3",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.473216+00:00",
+            "canonical_person_id": "b35e830f-5f84-47e8-b7cd-5608065496fc",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "3efb8a57-c0db-40db-b709-55caf773db81",
+          "9c28dee6-9bd0-4276-8492-3d64148570a1"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "b35e830f-5f84-47e8-b7cd-5608065496fc"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-fe064f5bcd447f8ca5a2383eb21077fd",
+      "claimId": "02f4166b-6a43-4d6d-a4cd-8ae447549bef",
+      "sourcePersonId": "bea32594-0ebb-44f0-b93a-702484d2d4b6",
+      "name": "林正芳",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣壯圍鄉吉祥村",
+      "office": "village_chief",
+      "raceId": "8c303052-6f21-421e-bdb2-9283d694d8ed",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "e45aa9e3-63ad-4d90-9a10-8e9f6e1d85cf",
+      "existingPersonIds": [
+        "e45aa9e3-63ad-4d90-9a10-8e9f6e1d85cf"
+      ],
+      "registrationBirth": "052/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "宜蘭縣壯圍鄉",
+      "evidenceClaimIds": [
+        "fa3cc290-c8df-4472-bba6-172578ad42fc",
+        "32776cbc-05dc-4b13-ae58-08029ab032a5",
+        "0bb34d41-c633-41bb-9c03-50a44ac5b9e5",
+        "ed4842b4-a27f-456e-afc8-d9946e8dacd4"
+      ],
+      "evidenceCandidateIds": [
+        "b0bfe8cf-0087-4edf-8d9e-54f3869862ff",
+        "a747d821-4b42-44e4-a764-aabf17d176ab",
+        "be73e3e8-f6f8-4f4c-82d9-62176f73a3f7"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/393f2e1b-f64d-47ae-adb0-d82e0853e9f2.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_002_00_000_0000.json",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E6%9E%97%E6%AD%A3%E8%8A%B3"
+      ],
+      "officialFile": "ilec-64650-11.pdf",
+      "officialSha256": "945465952dd7944361f8fa28deba0dd8009f9b64ce2975091da44e6bd872fb1f",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "081e7a9f-b5ad-4bcc-886a-61a64c392602",
+      "identityComparison": {
+        "personId": "e45aa9e3-63ad-4d90-9a10-8e9f6e1d85cf",
+        "names": [
+          "林正芳"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1963-10-28"
+        ],
+        "birthYears": [
+          1963
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "b0bfe8cf-0087-4edf-8d9e-54f3869862ff",
+            "year": 2018,
+            "party": "時代力量",
+            "title": "宜蘭縣第1選舉區",
+            "race_id": "791538b5-b0fa-4774-b53b-a47cf2a8030a",
+            "is_public": true,
+            "person_id": "d87dba90-efc7-419c-8424-00cccf2d9b8e",
+            "race_type": "councilor_district",
+            "vote_rate": 2.74,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": false,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 1335,
+            "external_id": "votetw-candidate-b66ada66925f91a9",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "14",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "e45aa9e3-63ad-4d90-9a10-8e9f6e1d85cf",
+            "registration_status": "not_elected"
+          },
+          {
+            "id": "a747d821-4b42-44e4-a764-aabf17d176ab",
+            "year": 2018,
+            "party": "時代力量",
+            "title": "宜蘭縣第1選舉區議員選舉",
+            "race_id": "762d9f58-0148-45ca-965a-c12bbf964834",
+            "is_public": true,
+            "person_id": "b3d9af4a-feff-43e1-a2f1-85103b543abf",
+            "race_type": "county_councilor",
+            "vote_rate": 2.74,
+            "created_at": "2026-07-13T10:45:03.104939+00:00",
+            "is_elected": false,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_002_00_000_0000.json",
+            "updated_at": "2026-07-13T10:45:03.104939+00:00",
+            "vote_count": 1335,
+            "external_id": "cec-2018-local-councilor-candidate-regional-10002-01-23121",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "14",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T10:45:03.104939+00:00",
+            "canonical_person_id": "e45aa9e3-63ad-4d90-9a10-8e9f6e1d85cf",
+            "registration_status": "not_elected"
+          },
+          {
+            "id": "be73e3e8-f6f8-4f4c-82d9-62176f73a3f7",
+            "year": 2022,
+            "party": "時代力量",
+            "title": "宜蘭縣第1選舉區議員選舉",
+            "race_id": "38ad38f6-57ef-49c7-a392-c49b8ac75f41",
+            "is_public": true,
+            "person_id": "e45aa9e3-63ad-4d90-9a10-8e9f6e1d85cf",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-regional-candidate-9acfeba95fc1",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "8",
+            "is_incumbent": null,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "e45aa9e3-63ad-4d90-9a10-8e9f6e1d85cf",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "fa3cc290-c8df-4472-bba6-172578ad42fc",
+          "32776cbc-05dc-4b13-ae58-08029ab032a5",
+          "0bb34d41-c633-41bb-9c03-50a44ac5b9e5",
+          "ed4842b4-a27f-456e-afc8-d9946e8dacd4"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "e45aa9e3-63ad-4d90-9a10-8e9f6e1d85cf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-714853fded39b5419b8660a8e699d5db",
+      "claimId": "90b8573e-8acf-41b2-98eb-b550cc6225a6",
+      "sourcePersonId": "1103020a-74fb-4aa4-b78b-c3c92f410f14",
+      "name": "温源田",
+      "county": "臺東縣",
+      "district": "臺東縣第12選舉區",
+      "office": "councilor",
+      "raceId": "ec9347f7-6450-41b1-9445-e67186baac1a",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "9426f0f1-5e37-45be-ae76-4502802735cf",
+      "existingPersonIds": [
+        "9426f0f1-5e37-45be-ae76-4502802735cf"
+      ],
+      "registrationBirth": "068/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "2e5de6d9-0883-4423-8f74-b90e22811524",
+        "58449b10-8270-41cb-a8e6-ae2fd08de8ba"
+      ],
+      "evidenceCandidateIds": [
+        "fba669d2-3eb6-4506-9b04-0610113384c7",
+        "9789d8ea-3a19-41d6-95fa-95b1f4732b13",
+        "88626b10-d992-4e94-9db3-afc02e749ad1"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%BB%B6%E5%B9%B3%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%BB%B6%E5%B9%B3%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E6%B8%A9%E6%BA%90%E7%94%B0"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "02b2a7dc-a1f8-4cce-9bd0-23201436fa6d",
+      "identityComparison": {
+        "personId": "9426f0f1-5e37-45be-ae76-4502802735cf",
+        "names": [
+          "温源田"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1979-05-05"
+        ],
+        "birthYears": [
+          1979
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "fba669d2-3eb6-4506-9b04-0610113384c7",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣延平鄉第1選舉區鄉民代表選舉",
+            "race_id": "f1f1e2bc-7869-4477-a3ec-f1bca65803dd",
+            "is_public": true,
+            "person_id": "d0cec6f3-b853-4617-af94-21029f4c54a8",
+            "race_type": "township_representative_district",
+            "vote_rate": 14.66,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%BB%B6%E5%B9%B3%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 167,
+            "external_id": "votetw-candidate-074230eee237635f",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "4",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "9426f0f1-5e37-45be-ae76-4502802735cf",
+            "registration_status": "elected"
+          },
+          {
+            "id": "9789d8ea-3a19-41d6-95fa-95b1f4732b13",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣延平鄉第1選舉區鄉民代表選舉",
+            "race_id": "5af6c141-136a-4f28-89db-3db1ba267b0d",
+            "is_public": true,
+            "person_id": "0e734562-5285-4e88-ba1c-8c7de12a1e62",
+            "race_type": "township_representative",
+            "vote_rate": 14.66,
+            "created_at": "2026-07-13T11:12:06.981261+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+            "updated_at": "2026-07-13T11:12:06.981261+00:00",
+            "vote_count": 167,
+            "external_id": "cec-2018-local-subcounty-candidate-township-representative-regional-10014-130-01-120540",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "4",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:12:06.981261+00:00",
+            "canonical_person_id": "9426f0f1-5e37-45be-ae76-4502802735cf",
+            "registration_status": "elected"
+          },
+          {
+            "id": "88626b10-d992-4e94-9db3-afc02e749ad1",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣延平鄉第1選舉區鄉民代表選舉",
+            "race_id": "90b3f76f-f4c1-4270-ade1-f77a1667aca6",
+            "is_public": true,
+            "person_id": "9426f0f1-5e37-45be-ae76-4502802735cf",
+            "race_type": "township_representative_district",
+            "vote_rate": 16.36,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%BB%B6%E5%B9%B3%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 175,
+            "external_id": "votetw-candidate-d96fe6fd46e6660e",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "5",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "9426f0f1-5e37-45be-ae76-4502802735cf",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "2e5de6d9-0883-4423-8f74-b90e22811524",
+          "58449b10-8270-41cb-a8e6-ae2fd08de8ba"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "9426f0f1-5e37-45be-ae76-4502802735cf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-449406d8b71e056b6279a46e07ad2b90",
+      "claimId": "9d3c663e-f674-43c8-a019-b81d274e6174",
+      "sourcePersonId": "4c50850b-8624-4a47-a1a6-24cbb4212789",
+      "name": "余秀芳",
+      "county": "臺東縣",
+      "district": "臺東縣海端鄉",
+      "office": "township_mayor",
+      "raceId": "a7fcfe41-992a-4f02-a703-77af13c51118",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "78286722-86a4-4509-b19c-8282aa50e6e3",
+      "existingPersonIds": [
+        "78286722-86a4-4509-b19c-8282aa50e6e3"
+      ],
+      "registrationBirth": "056/**/**",
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": "臺東縣海端鄉",
+      "evidenceClaimIds": [
+        "10bf9623-15a2-4d71-a6fa-ecc13e653846",
+        "c37aac4c-156f-4eb2-88d1-42dbf52bd309",
+        "e09774f0-c213-409c-810d-f54f1d12971d",
+        "3fb7ab0e-009e-48a9-a1c1-5edda510b202",
+        "82f4e9a2-a903-4034-9029-a1564ed5cbda",
+        "af24fc19-7505-4a50-8eb2-ce9645c8dd59",
+        "f6e59162-4cb9-4ab0-9b24-425a545a043b"
+      ],
+      "evidenceCandidateIds": [
+        "1cc2e311-fb53-4725-af53-be1eaac6df85",
+        "26cf2020-adb1-4a8e-866e-578268d8ddfb"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/2f68b219-db5d-4d2d-add3-2eda8306b104.pdf",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T3/aae1cbd3ea7b8fa21db2497250115e75/A/10_014_00_000_0000.json",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E4%BD%99%E7%A7%80%E8%8A%B3"
+      ],
+      "officialFile": "ttec-64641-04.pdf",
+      "officialSha256": "8e3e6afcefe3062535e69674d515413a9b3990a73d5e860ee28761ac2ffae64e",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "ac72db95-d6bb-4764-b04b-3c4c1c849217",
+      "identityComparison": {
+        "personId": "78286722-86a4-4509-b19c-8282aa50e6e3",
+        "names": [
+          "余秀芳"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1967-02-08"
+        ],
+        "birthYears": [
+          1967
+        ],
+        "genders": [
+          "female"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "1cc2e311-fb53-4725-af53-be1eaac6df85",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣第13選舉區山地原住民議員選舉",
+            "race_id": "6b3bae7d-48c1-4f70-b68f-e77c5e9c6a21",
+            "is_public": true,
+            "person_id": "78286722-86a4-4509-b19c-8282aa50e6e3",
+            "race_type": "county_councilor",
+            "vote_rate": 18.47,
+            "created_at": "2026-07-13T10:45:03.368664+00:00",
+            "is_elected": false,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T3/aae1cbd3ea7b8fa21db2497250115e75/A/10_014_00_000_0000.json",
+            "updated_at": "2026-08-01T12:05:09.043824+00:00",
+            "vote_count": 339,
+            "external_id": "cec-2018-local-councilor-candidate-mountain-indigenous-10014-13-23622",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-08-01T12:05:09.043824+00:00",
+            "canonical_person_id": "78286722-86a4-4509-b19c-8282aa50e6e3",
+            "registration_status": "not_elected"
+          },
+          {
+            "id": "26cf2020-adb1-4a8e-866e-578268d8ddfb",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣第13選舉區山地原住民議員選舉",
+            "race_id": "d628f26e-8ad0-448d-a3d8-e7ba15fac838",
+            "is_public": true,
+            "person_id": "d7a43a92-4a44-4fdf-b725-7bcf78ba3fc0",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-mountain-indigenous-candidate-6dd24d572b69",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "3",
+            "is_incumbent": null,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "78286722-86a4-4509-b19c-8282aa50e6e3",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "10bf9623-15a2-4d71-a6fa-ecc13e653846",
+          "c37aac4c-156f-4eb2-88d1-42dbf52bd309",
+          "e09774f0-c213-409c-810d-f54f1d12971d",
+          "3fb7ab0e-009e-48a9-a1c1-5edda510b202",
+          "82f4e9a2-a903-4034-9029-a1564ed5cbda",
+          "af24fc19-7505-4a50-8eb2-ce9645c8dd59",
+          "f6e59162-4cb9-4ab0-9b24-425a545a043b"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "78286722-86a4-4509-b19c-8282aa50e6e3"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-72ad5cfbf528bf6fd3672631e4117bed",
+      "claimId": "f17ad9a0-c318-4afa-a17b-57146178e830",
+      "sourcePersonId": "8b83d5f1-f1fa-4665-82b6-0cbfb5e6c5b8",
+      "name": "張家瑋",
+      "county": "臺東縣",
+      "district": "臺東縣第2選舉區",
+      "office": "councilor",
+      "raceId": "9ca3d154-3626-48ab-b613-14c09b0d8ab2",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "f8d264a2-b309-4fda-ad19-6cf2342adb8d",
+      "existingPersonIds": [
+        "f8d264a2-b309-4fda-ad19-6cf2342adb8d"
+      ],
+      "registrationBirth": "067/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "51291a95-7eec-459f-bbdb-babb56ee397d",
+        "fbd70893-5740-4906-93e4-8a03464de957"
+      ],
+      "evidenceCandidateIds": [
+        "6c94c127-1e5e-4f2e-bf6d-faabdd4b5d54"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%8D%91%E5%8D%97%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E5%BC%B5%E5%AE%B6%E7%91%8B"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "fdf2940a-7628-4d9d-a757-497de502dc46",
+      "identityComparison": {
+        "personId": "f8d264a2-b309-4fda-ad19-6cf2342adb8d",
+        "names": [
+          "張家瑋"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1978-10-31"
+        ],
+        "birthYears": [
+          1978
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "6c94c127-1e5e-4f2e-bf6d-faabdd4b5d54",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣卑南鄉鄉長選舉",
+            "race_id": "5fd9fa0b-f622-4d16-a7bf-03124bdaf444",
+            "is_public": true,
+            "person_id": "f8d264a2-b309-4fda-ad19-6cf2342adb8d",
+            "race_type": "township_mayor",
+            "vote_rate": 34.03,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": false,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%8D%91%E5%8D%97%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 3174,
+            "external_id": "votetw-candidate-1bc4f24c300c8ecd",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "f8d264a2-b309-4fda-ad19-6cf2342adb8d",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "51291a95-7eec-459f-bbdb-babb56ee397d",
+          "fbd70893-5740-4906-93e4-8a03464de957"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "f8d264a2-b309-4fda-ad19-6cf2342adb8d"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-c074c4f686f2d2663786f485ce9d4b13",
+      "claimId": "92665e8a-443b-4b26-b878-a2781ed6aeaa",
+      "sourcePersonId": "f12267f4-a7eb-4d95-bff6-957f067bc0e2",
+      "name": "潘頤頻",
+      "county": "臺東縣",
+      "district": "臺東縣第1選舉區",
+      "office": "councilor",
+      "raceId": "5bcd5f9e-d117-43a7-8f07-272f1ee4995e",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "a133381a-4116-4c64-b6d5-249be528de34",
+      "existingPersonIds": [
+        "a133381a-4116-4c64-b6d5-249be528de34"
+      ],
+      "registrationBirth": "068/**/**",
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "2dff8846-0a05-409e-90ee-80428ae61ce2",
+        "e8b2ea46-6c8b-4e0b-97c2-4e1ac315f6e2"
+      ],
+      "evidenceCandidateIds": [
+        "c1b25be6-00ec-4ff3-9832-fda9b1248431",
+        "06241561-b648-42be-b480-c523f4dff7a3",
+        "bcfa894f-01fa-489d-ad22-6e2048b8ede5"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%87%BA%E6%9D%B1%E5%B8%82%E5%B8%82%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%87%BA%E6%9D%B1%E5%B8%82%E5%B8%82%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E6%BD%98%E9%A0%A4%E9%A0%BB"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "a1d65e65-990a-4408-adda-e53f0e62f724",
+      "identityComparison": {
+        "personId": "a133381a-4116-4c64-b6d5-249be528de34",
+        "names": [
+          "潘頤頻"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1979-11-03"
+        ],
+        "birthYears": [
+          1979
+        ],
+        "genders": [
+          "female"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "c1b25be6-00ec-4ff3-9832-fda9b1248431",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣臺東市第2選舉區市民代表選舉",
+            "race_id": "7f379c99-18a3-472f-9710-10cbb15226f5",
+            "is_public": true,
+            "person_id": "a133381a-4116-4c64-b6d5-249be528de34",
+            "race_type": "township_representative_district",
+            "vote_rate": 8.98,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%87%BA%E6%9D%B1%E5%B8%82%E5%B8%82%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 1606,
+            "external_id": "votetw-candidate-520663beb412284f",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "5",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "a133381a-4116-4c64-b6d5-249be528de34",
+            "registration_status": "elected"
+          },
+          {
+            "id": "06241561-b648-42be-b480-c523f4dff7a3",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "臺東縣臺東市第2選舉區市民代表選舉",
+            "race_id": "6bf722ca-ca9e-4027-a94e-05bd2bb7611b",
+            "is_public": true,
+            "person_id": "c220925f-413d-4a3a-8e2d-47a1b005b3f7",
+            "race_type": "township_representative",
+            "vote_rate": 8.98,
+            "created_at": "2026-07-13T11:02:06.59502+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+            "updated_at": "2026-07-13T11:02:06.59502+00:00",
+            "vote_count": 1606,
+            "external_id": "cec-2018-local-subcounty-candidate-township-representative-regional-10014-010-02-120568",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "5",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:02:06.59502+00:00",
+            "canonical_person_id": "a133381a-4116-4c64-b6d5-249be528de34",
+            "registration_status": "elected"
+          },
+          {
+            "id": "bcfa894f-01fa-489d-ad22-6e2048b8ede5",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣臺東市第2選舉區市民代表選舉",
+            "race_id": "75369ee0-94cd-4196-98c3-c1a05eca37db",
+            "is_public": true,
+            "person_id": "cef4aa5c-6427-4401-88da-5b3f94ae2b6e",
+            "race_type": "township_representative_district",
+            "vote_rate": 10.2,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": false,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%87%BA%E6%9D%B1%E5%B8%82%E5%B8%82%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 1685,
+            "external_id": "votetw-candidate-b2117d455c253b9c",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "3",
+            "is_incumbent": true,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "a133381a-4116-4c64-b6d5-249be528de34",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "2dff8846-0a05-409e-90ee-80428ae61ce2",
+          "e8b2ea46-6c8b-4e0b-97c2-4e1ac315f6e2"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "a133381a-4116-4c64-b6d5-249be528de34"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-59df9ffc5dea8baa5b260ef4f426bbad",
+      "claimId": "f4f57405-0081-4659-b286-726f27697a7c",
+      "sourcePersonId": "4e21c5d4-76ca-4e75-bda6-918ff445ffda",
+      "name": "廖雙穎",
+      "county": "臺東縣",
+      "district": "臺東縣第5選舉區",
+      "office": "councilor",
+      "raceId": "d8644cda-72eb-41fe-b7bb-0bbe8926b84e",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "77e5f80f-1b76-42a7-ba24-c5295a4b3736",
+      "existingPersonIds": [
+        "77e5f80f-1b76-42a7-ba24-c5295a4b3736"
+      ],
+      "registrationBirth": "067/**/**",
+      "registrationGender": "女",
+      "registrationParty": "中國國民黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "4876907c-a6ba-4927-88c1-65662a8a07ae",
+        "43881395-536f-424f-8cb7-a7d9c9f8a881"
+      ],
+      "evidenceCandidateIds": [
+        "dad6ef79-28ba-4911-b191-ded496a10361"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%A4%AA%E9%BA%BB%E9%87%8C%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E5%BB%96%E9%9B%99%E7%A9%8E"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "4e1458a5-daeb-48c5-9f72-53d7058d47d2",
+      "identityComparison": {
+        "personId": "77e5f80f-1b76-42a7-ba24-c5295a4b3736",
+        "names": [
+          "廖雙穎"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1978-05-04"
+        ],
+        "birthYears": [
+          1978
+        ],
+        "genders": [
+          "female"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "dad6ef79-28ba-4911-b191-ded496a10361",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣太麻里鄉第2選舉區鄉民代表選舉",
+            "race_id": "646bdcbc-a833-48d3-88dc-3a3a165c20fc",
+            "is_public": true,
+            "person_id": "77e5f80f-1b76-42a7-ba24-c5295a4b3736",
+            "race_type": "township_representative_district",
+            "vote_rate": 23.38,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%A4%AA%E9%BA%BB%E9%87%8C%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 446,
+            "external_id": "votetw-candidate-daf52f93e1629ed6",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "77e5f80f-1b76-42a7-ba24-c5295a4b3736",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "4876907c-a6ba-4927-88c1-65662a8a07ae",
+          "43881395-536f-424f-8cb7-a7d9c9f8a881"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "77e5f80f-1b76-42a7-ba24-c5295a4b3736"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-5c33aa739f6a862c987c7b74e1394bfb",
+      "claimId": "36f01048-53b9-481a-b745-21a43798ff25",
+      "sourcePersonId": "8523c8f0-7c68-4df2-a795-176b2998a20d",
+      "name": "林本森",
+      "county": "臺東縣",
+      "district": "臺東縣金峰鄉第1選舉區",
+      "office": "township_representative",
+      "raceId": "6a77e23f-064a-47c4-81ef-e2f0457a19fa",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "71f1c455-f996-47b3-bb1d-ea8a351c8f79",
+      "existingPersonIds": [
+        "71f1c455-f996-47b3-bb1d-ea8a351c8f79"
+      ],
+      "registrationBirth": "062/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "臺東縣金峰鄉",
+      "evidenceClaimIds": [
+        "117bc993-20e7-4a20-9bca-9a7587f3c6d2",
+        "634202ec-198f-4272-9fc6-74cfa52a3bbc",
+        "7ecf8ff7-cf00-4c97-a61c-358b33646780"
+      ],
+      "evidenceCandidateIds": [
+        "4749f09b-5443-448b-b57b-954416fef314"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ad6f26ea-8ca2-4c9f-b746-f467c4768230.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E6%9E%97%E6%9C%AC%E6%A3%AE"
+      ],
+      "officialFile": "ttec-64641-05.pdf",
+      "officialSha256": "5d8754fac57f95a41fbee7c59ad483a00bc27151355357c71a8d5cc9648393aa",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "b907a62f-cc8b-4fce-bd0c-3883d512c911",
+      "identityComparison": {
+        "personId": "71f1c455-f996-47b3-bb1d-ea8a351c8f79",
+        "names": [
+          "林本森"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1973-11-11"
+        ],
+        "birthYears": [
+          1973
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "4749f09b-5443-448b-b57b-954416fef314",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "臺東縣第14選舉區山地原住民議員選舉",
+            "race_id": "36c77a05-b297-4685-b495-76dfebdd58c5",
+            "is_public": true,
+            "person_id": "71f1c455-f996-47b3-bb1d-ea8a351c8f79",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-mountain-indigenous-candidate-52585c687a6c",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "2",
+            "is_incumbent": null,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "71f1c455-f996-47b3-bb1d-ea8a351c8f79",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "117bc993-20e7-4a20-9bca-9a7587f3c6d2",
+          "634202ec-198f-4272-9fc6-74cfa52a3bbc",
+          "7ecf8ff7-cf00-4c97-a61c-358b33646780"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "71f1c455-f996-47b3-bb1d-ea8a351c8f79"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-04214b5d65dffe7a47308e686db73ea7",
+      "claimId": "ea7d959e-6e50-4c5e-8c33-1e0de55240f3",
+      "sourcePersonId": "6a9a3221-8a07-4864-ac9d-50ba5f7e18c5",
+      "name": "黃子堯",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣第7選舉區",
+      "office": "councilor",
+      "raceId": "816c2629-36fd-4caa-801e-4a83e29d43b5",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "6a409ee9-6a82-43b5-bac8-f44545e8f964",
+      "existingPersonIds": [
+        "6a409ee9-6a82-43b5-bac8-f44545e8f964"
+      ],
+      "registrationBirth": "077/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "bc648f49-0532-4d1c-b18d-f2dc45dde8b3",
+        "f84bc58b-8b23-48d0-beee-ac59dac15445"
+      ],
+      "evidenceCandidateIds": [
+        "67eb3f2c-7ed2-4f16-a52a-351487fb5d86",
+        "8d77f944-d3f0-480c-9218-82718efd51ca",
+        "e3c709a6-545a-4c94-93a6-4258faafc373"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/28b4728c-3693-4f03-b7ad-ae050dd46b5a.pdf",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E4%BA%94%E7%B5%90%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E4%BA%94%E7%B5%90%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_002_00_000_0000.json",
+        "https://votetw.com/wiki/%E9%BB%83%E5%AD%90%E5%A0%AF"
+      ],
+      "officialFile": "ilec-64650-08.pdf",
+      "officialSha256": "766276e7c4cf78e9ad04c5fd67fcc05e64eb179bcc1a816e879ad7263e5dcd47",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "3f939c66-67b7-4894-9ec3-870be5a53d94",
+      "identityComparison": {
+        "personId": "6a409ee9-6a82-43b5-bac8-f44545e8f964",
+        "names": [
+          "黃子堯"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1988-06-25"
+        ],
+        "birthYears": [
+          1988
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "67eb3f2c-7ed2-4f16-a52a-351487fb5d86",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "宜蘭縣五結鄉第4選舉區鄉民代表選舉",
+            "race_id": "b9e74454-6084-47ad-b1ed-6128f4231230",
+            "is_public": true,
+            "person_id": "aeee4055-1757-4eb0-8454-94a61538c280",
+            "race_type": "township_representative_district",
+            "vote_rate": 38.03,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E4%BA%94%E7%B5%90%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 1631,
+            "external_id": "votetw-candidate-d89b2b9f86468374",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "6a409ee9-6a82-43b5-bac8-f44545e8f964",
+            "registration_status": "elected"
+          },
+          {
+            "id": "8d77f944-d3f0-480c-9218-82718efd51ca",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "宜蘭縣五結鄉第4選舉區鄉民代表選舉",
+            "race_id": "1473af7b-c6d9-44b0-ac57-090817ae7d40",
+            "is_public": true,
+            "person_id": "6a409ee9-6a82-43b5-bac8-f44545e8f964",
+            "race_type": "township_representative_district",
+            "vote_rate": 56.61,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E4%BA%94%E7%B5%90%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 2137,
+            "external_id": "votetw-candidate-4a5294c5c02d3678",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "6a409ee9-6a82-43b5-bac8-f44545e8f964",
+            "registration_status": "elected"
+          },
+          {
+            "id": "e3c709a6-545a-4c94-93a6-4258faafc373",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "宜蘭縣五結鄉第4選舉區鄉民代表選舉",
+            "race_id": "d32f5225-93b0-4dfc-913f-2ab46101ec10",
+            "is_public": true,
+            "person_id": "a0ff892e-49b5-4b65-818f-46d200ab711c",
+            "race_type": "township_representative",
+            "vote_rate": 38.03,
+            "created_at": "2026-07-13T11:12:06.663225+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_002_00_000_0000.json",
+            "updated_at": "2026-07-13T11:12:06.663225+00:00",
+            "vote_count": 1631,
+            "external_id": "cec-2018-local-subcounty-candidate-township-representative-regional-10002-090-04-117958",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:12:06.663225+00:00",
+            "canonical_person_id": "6a409ee9-6a82-43b5-bac8-f44545e8f964",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "bc648f49-0532-4d1c-b18d-f2dc45dde8b3",
+          "f84bc58b-8b23-48d0-beee-ac59dac15445"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "6a409ee9-6a82-43b5-bac8-f44545e8f964"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-5a4bc1f3003e97c982af319f29ee8d15",
+      "claimId": "f6f9f2a2-9b33-47ea-918f-8c9f25310d0c",
+      "sourcePersonId": "b6fced8d-735d-4cd6-ab26-3b7bbcafed2a",
+      "name": "謝正信",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣蘇澳鎮",
+      "office": "township_mayor",
+      "raceId": "e1219a99-414f-4e4a-814e-b49d0ead3d9f",
+      "decision": "use_existing",
+      "reasonCode": "same_name_birth_year_county_history_unique",
+      "personId": "d6406116-33b4-4a72-af41-ca0bbd82112c",
+      "existingPersonIds": [
+        "d6406116-33b4-4a72-af41-ca0bbd82112c"
+      ],
+      "registrationBirth": "068/**/**",
+      "registrationGender": "男",
+      "registrationParty": "民主進步黨",
+      "locality": "宜蘭縣蘇澳鎮",
+      "evidenceClaimIds": [
+        "c6e8cf31-9361-4fbc-b747-f8060c8a3775",
+        "254ccafe-bf15-4634-b8aa-e404ba979e75",
+        "93280be4-587a-46e6-8d09-d8134fba334b",
+        "e83bd873-8b8a-4d9a-b079-44ee707b79ef"
+      ],
+      "evidenceCandidateIds": [
+        "022fbdcb-6ab7-44dc-8413-99450dc6322f"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/d2e0a974-1b0d-436e-a450-bce63ae708d1.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E8%AC%9D%E6%AD%A3%E4%BF%A1",
+        "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/06%E7%B8%A3%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/14%E5%AE%9C%E8%98%AD%E7%B8%A3/%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%AC%AC10%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+      ],
+      "officialFile": "ilec-64650-04.pdf",
+      "officialSha256": "1d701b36f857558e927d332d588ffa1ce2637f3c04930340f3b9b4e5bf391a27",
+      "reason": "完整姓名與官方登記出生年一致，並有同縣市 2018 至 2022 參選紀錄；既有人物中只有一位符合且沒有性別或生日衝突及其他 2026 參選關係。",
+      "reviewedBy": "Codex user-confirmed local-district and birth-year identity review round 11",
+      "reviewedAt": "2026-09-05T06:14:23.619Z",
+      "candidateId": "ddecad52-6aeb-424d-960e-70b9325333f9",
+      "identityComparison": {
+        "personId": "d6406116-33b4-4a72-af41-ca0bbd82112c",
+        "names": [
+          "謝正信"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1979-05-04"
+        ],
+        "birthYears": [
+          1979
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "022fbdcb-6ab7-44dc-8413-99450dc6322f",
+            "year": 2022,
+            "party": "民主進步黨",
+            "title": "宜蘭縣第10選舉區議員選舉",
+            "race_id": "38a46488-8abc-4b33-a9d3-22c6a9c79d0a",
+            "is_public": true,
+            "person_id": "d6406116-33b4-4a72-af41-ca0bbd82112c",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-regional-candidate-d087fa73d831",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "3",
+            "is_incumbent": null,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "d6406116-33b4-4a72-af41-ca0bbd82112c",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "c6e8cf31-9361-4fbc-b747-f8060c8a3775",
+          "254ccafe-bf15-4634-b8aa-e404ba979e75",
+          "93280be4-587a-46e6-8d09-d8134fba334b",
+          "e83bd873-8b8a-4d9a-b079-44ee707b79ef"
+        ]
+      },
+      "comparisonCandidatePersonIds": [
+        "d6406116-33b4-4a72-af41-ca0bbd82112c"
+      ]
+    }
+  ],
+  "officialFilesVerified": 108,
+  "remainingReasonCounts": {
+    "no_local_district_or_birth_year_bridge": 919,
+    "existing_person_other_2026_candidacy": 126,
+    "no_existing_full_name_person": 59,
+    "official_district_or_office_conflict": 1,
+    "known_identity_conflict": 12,
+    "unresolved_name_glyph": 4
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "audited_at": "2026-09-05T14:14:57.368162+00:00",
+  "scope": "full-local-supabase",
+  "simulation": "rollback transaction with all public 2026 registration surfaces suppressed",
+  "current_total_after": 11380,
+  "current_total_before_registration": 11380,
+  "exact_roster_changes": 0,
+  "after_roster_hash": "8363448237a6d0672f6cd9c986d07603",
+  "before_roster_hash": "8363448237a6d0672f6cd9c986d07603",
+  "counts_by_office": {
+    "agency_head": 238,
+    "councilor": 890,
+    "county_city_chief": 22,
+    "district_chief": 6,
+    "legislator": 113,
+    "local_deputy": 28,
+    "president": 1,
+    "township_mayor": 195,
+    "township_representative": 2138,
+    "vice_president": 1,
+    "village_chief": 7748
+  },
+  "counts_by_office_before_registration": {
+    "agency_head": 238,
+    "councilor": 890,
+    "county_city_chief": 22,
+    "district_chief": 6,
+    "legislator": 113,
+    "local_deputy": 28,
+    "president": 1,
+    "township_mayor": 195,
+    "township_representative": 2138,
+    "vice_president": 1,
+    "village_chief": 7748
+  },
+  "counts_by_site_role": {
+    "agency_head": 238,
+    "councilor": 890,
+    "legislator": 113,
+    "local_chief": 83,
+    "local_deputy": 28,
+    "other": 10026,
+    "president": 1,
+    "vice_president": 1
+  },
+  "counts_by_site_role_before_registration": {
+    "agency_head": 238,
+    "councilor": 890,
+    "legislator": 113,
+    "local_chief": 83,
+    "local_deputy": 28,
+    "other": 10026,
+    "president": 1,
+    "vice_president": 1
+  },
+  "current_assignment_counts": {
+    "agency_head": 238,
+    "councilor": 1,
+    "legislator": 113,
+    "local_deputy": 28
+  },
+  "registration_invariants": {
+    "new_registration_people_with_current_office": 0,
+    "elected_2026_candidate_rows": 0,
+    "registration_sourced_current_assignments": 0
+  }
+}

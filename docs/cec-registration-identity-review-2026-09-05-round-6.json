@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "environment": "full-local",
+  "reviewedAt": "2026-09-04T20:30:28.768Z",
+  "inputs": {
+    "tmp/cec-registration-identity-review-6/targets.json": "c241cf8e406ef199d1d29ff91b0fcb9ddccf3e0d530a0d6307dd058eeb72c7ac",
+    "tmp/cec-registration-identity-review-6/local-evidence.json": "9b98c004f24c411e28f6feb8a5f5410fdfaaacd7fe01d75fdf0c4ed1c4449baf",
+    "tmp/cec-registration-identity-review-6/external-evidence.json": "ea4f6ae37ffb05633a736aa7483e01ab07a74b7f616b696ef79dab5ff23f5653",
+    "tmp/cec-registration-identity-review-6/review-manifest.json": "775406845fa73025e4ed80c4dae34cbaaa2f3a3748d373d81fa062636f3d41aa",
+    "tmp/cec-registration-final/import-manifest.json": "e004d07cfd82306b26adc55ec6b230d2601d73ff5fb9b8bfa29c3a38a83cf1f3"
+  },
+  "baselinePending": 1198,
+  "reviewed": 6,
+  "resolved": 6,
+  "reusedPeople": 5,
+  "newPeople": 1,
+  "remainingPending": 1192,
+  "reasonCounts": {
+    "birth_year_local_role_and_geography_distinguish_new_person": 1,
+    "same_gender_party_and_2024_history_select_same_name_person": 1,
+    "reported_former_party_role_and_2022_candidacy_link_unique_person": 1,
+    "reported_election_history_selects_same_name_person": 1,
+    "reported_role_and_2022_candidacy_link_unique_person": 1,
+    "masked_birth_year_and_exact_2022_local_history_select_person": 1
+  },
+  "heldPending": [
+    {
+      "name": "周倪安",
+      "reason": "2010、2020、2024 三筆同名台聯黨人物尚未完成標準人物合併，無法安全選定主檔。"
+    },
+    {
+      "name": "林志成",
+      "reason": "同名人物過多，且其中已有其他 2026 參選紀錄；目前報導未提供可唯一比對的履歷。"
+    },
+    {
+      "name": "李文良",
+      "reason": "現任前金門縣副縣長與三位既有同名人物皆不吻合，但尚未完成所有同名範圍排除。"
+    }
+  ],
+  "accepted": [
+    {
+      "candidateExternalId": "pow-cec-registration-2026-1fc9f1eb38899dc8d8d3edbaeee62743",
+      "claimId": "d2e4deb0-7168-4288-bebc-144157acdf22",
+      "sourcePersonId": "0958cc1d-28fd-4794-a2fe-10294375dec5",
+      "name": "王志偉",
+      "county": "臺東縣",
+      "district": "臺東縣",
+      "office": "mayor",
+      "raceId": "baa48218-4439-44e0-8274-e601060e40c9",
+      "decision": "create_new",
+      "reasonCode": "birth_year_local_role_and_geography_distinguish_new_person",
+      "personId": "0c7120cc-e242-4d6d-9e9c-3cda67ddb335",
+      "existingPersonIds": [
+        "8987708a-416a-44d0-9fa9-4697bddd0b80"
+      ],
+      "registrationBirth": "049/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/3d87e46e-e31f-42cc-a178-946d444af581.pdf",
+        "https://www.cna.com.tw/news/aipl/202609040269.aspx"
+      ],
+      "officialFile": "ttec-64641-02.pdf",
+      "officialSha256": "d7c2ed894a95f9fdc358a24a252d0bfcc01950c4dd130f089b3e32a007061771",
+      "reason": "本次官方出生年民國 49 年、臺東縣登記地區及臺東釋迦合作社理事主席身分，均與既有高雄市大社區觀音里同名候選人無連接證據；中央社並報導其今年 66 歲、19 年前即想投入選戰，故建立新的標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 6",
+      "reviewedAt": "2026-09-04T20:30:28.749Z",
+      "candidateId": "d5131afd-ce5a-4fed-a17f-35b37e5e0bcb",
+      "externalEvidence": {
+        "url": "https://www.cna.com.tw/news/aipl/202609040269.aspx",
+        "title": "台東民眾黨無人登記 縣長選戰2無黨籍加入藍綠戰局",
+        "publisher": "中央社",
+        "statement": "報導指出 66 歲臺東釋迦合作社理事主席王志偉登記參選臺東縣長，具體年齡與地方身分可和高雄同名候選人區分。",
+        "retrievedAt": "2026-09-04T20:30:28.749Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-3f0cb384beb7eae896dae7a105e9a35b",
+      "claimId": "95f1b9ba-b5ee-4ff0-bab3-37d9a154f182",
+      "sourcePersonId": "8f570432-c215-4ef6-9f07-a90d3e1691ea",
+      "name": "洪麗華",
+      "county": "臺中市",
+      "district": "臺中市",
+      "office": "mayor",
+      "raceId": "07ded7ef-723f-416b-b4e7-701f65c17a63",
+      "decision": "use_existing",
+      "reasonCode": "same_gender_party_and_2024_history_select_same_name_person",
+      "personId": "037501fa-8eba-4809-a3e7-4041a07f204e",
+      "existingPersonIds": [
+        "037501fa-8eba-4809-a3e7-4041a07f204e",
+        "e6c9419d-2660-482d-b5e6-626ca0d20ea2"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "司法正義黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "a5a7cc65-14f8-48d2-bc0c-73441d03bd96",
+        "69ac62f3-760c-49eb-9d0d-3d991769fd29"
+      ],
+      "evidenceCandidateIds": [
+        "ed9d4c61-9739-43aa-9115-497519c37877"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/21e67124-56f7-4abd-ade1-d9919df57808.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://2024.cec.gov.tw/data/json/cand/L1/66000.json",
+        "https://www.cna.com.tw/news/aipl/202609045002.aspx"
+      ],
+      "officialFile": "tcec-64618-01.pdf",
+      "officialSha256": "6825c533a1929a425480241d6c8d40f626f9e1dc0f0fd4569faadf29cddb7da7",
+      "reason": "本次官方登記的姓名、女性與司法正義黨，和 2024 年中選會臺中市第 2 選舉區立委候選紀錄完全一致；另一位同名人物為 2018 年無黨籍市議員候選人，政黨與歷史身分不符。",
+      "reviewedBy": "Codex CEC registration identity review round 6",
+      "reviewedAt": "2026-09-04T20:30:28.747Z",
+      "candidateId": "690e3093-8412-457a-a923-b0b87400148a",
+      "externalEvidence": {
+        "url": "https://www.cna.com.tw/news/aipl/202609045002.aspx",
+        "title": "2026九合一選舉 22縣市長登記參選名單一次看",
+        "publisher": "中央社",
+        "statement": "中央社彙整名單確認司法正義黨洪麗華登記參選臺中市長。",
+        "retrievedAt": "2026-09-04T20:30:28.747Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-49a5334dad498c676c29bd500c3dfd95",
+      "claimId": "c714bf82-0eda-4319-adf3-8d2a9f64a77c",
+      "sourcePersonId": "0347508b-658a-4491-8377-5557a4079d7a",
+      "name": "何志勇",
+      "county": "新竹市",
+      "district": "新竹市",
+      "office": "mayor",
+      "raceId": "b7dc9a6d-06e7-4665-bdcd-d34081b2a94a",
+      "decision": "use_existing",
+      "reasonCode": "reported_former_party_role_and_2022_candidacy_link_unique_person",
+      "personId": "e3c88a8c-002b-4317-a880-02993d921008",
+      "existingPersonIds": [
+        "e3c88a8c-002b-4317-a880-02993d921008"
+      ],
+      "registrationBirth": null,
+      "registrationGender": null,
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "a01464d7-4f24-4a01-9a47-776080ffc6fc",
+        "0279ed9c-93c9-4a59-af5a-d485b44b7061"
+      ],
+      "evidenceCandidateIds": [
+        "0dfad4fe-1631-485c-a31a-5c3a8fb1a99c"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/6d3ef2fe-f9de-48cd-bcc5-984fa44c4dd9.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E4%BD%95%E5%BF%97%E5%8B%87",
+        "https://www.cna.com.tw/news/aipl/202609045002.aspx",
+        "https://eebulletin.cec.gov.tw/111/22%E6%96%B0%E7%AB%B9%E5%B8%82/02%E5%B8%82%E8%AD%B0%E5%93%A1/%E6%96%B0%E7%AB%B9%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+      ],
+      "officialFile": "hcec-64402-01.pdf",
+      "officialSha256": "b9934f3ee18d5c06da798620492059c4b076b600296826c66d4f75fee0683cea",
+      "reason": "中央社本次名單指認何志勇為國民黨前發言人；既有唯一同名人物為 2022 年國民黨新竹市第 1 選舉區議員候選人，官方歷史候選紀錄與公開經歷相互吻合。",
+      "reviewedBy": "Codex CEC registration identity review round 6",
+      "reviewedAt": "2026-09-04T20:30:28.749Z",
+      "candidateId": "e6e1d3bd-8b1f-4e2a-87db-7ec09b1cf200",
+      "externalEvidence": {
+        "url": "https://www.cna.com.tw/news/aipl/202609045002.aspx",
+        "title": "2026九合一選舉 22縣市長登記參選名單一次看",
+        "publisher": "中央社",
+        "statement": "中央社彙整名單確認國民黨前發言人何志勇以無黨籍登記參選新竹市長。",
+        "supportingUrls": [
+          "https://eebulletin.cec.gov.tw/111/22%E6%96%B0%E7%AB%B9%E5%B8%82/02%E5%B8%82%E8%AD%B0%E5%93%A1/%E6%96%B0%E7%AB%B9%E5%B8%82%E7%AC%AC01%E9%81%B8%E8%88%89%E5%8D%80.pdf"
+        ],
+        "retrievedAt": "2026-09-04T20:30:28.749Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-8db6f4bcbc234697742122bbf72298c1",
+      "claimId": "dd2c5890-6e59-4be9-9952-20650b1077cf",
+      "sourcePersonId": "d8a609fe-3512-47a8-95c4-e6880dc463fe",
+      "name": "吳炳輝",
+      "county": "雲林縣",
+      "district": "雲林縣",
+      "office": "mayor",
+      "raceId": "6896b059-2cf3-4001-b9dc-0de498d1e037",
+      "decision": "use_existing",
+      "reasonCode": "reported_election_history_selects_same_name_person",
+      "personId": "558dd1d3-a4d4-49ce-985d-b42a857e0a57",
+      "existingPersonIds": [
+        "f918786f-3bea-420f-8fee-0f24808c9f99",
+        "558dd1d3-a4d4-49ce-985d-b42a857e0a57"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "f3a5df46-5cad-4e4c-9486-e004ca7647f4",
+        "4d23b203-bfda-4a2b-b3b7-4412b4d4c5f2"
+      ],
+      "evidenceCandidateIds": [
+        "08c78112-906f-429b-8e77-9a37baea3fae"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/2f4e004c-f0e6-44e0-8026-b324ed57aff5.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://2024.cec.gov.tw/data/json/cand/L1/10009.json",
+        "https://udn.com/vote2026/story/124652/9724893"
+      ],
+      "officialFile": "ylec-64657-01.pdf",
+      "officialSha256": "cb92980263286049fb8c401b94450170c632023e8269898934630e3a3ff197ee",
+      "reason": "聯合報本次登記報導明列其曾參選臺南市立委、臺南市長及雲林縣立委；這組經歷只符合既有兩位同名人物中的雲林／臺南人物，並與 2024 中選會候選紀錄及已核對生日一致。",
+      "reviewedBy": "Codex CEC registration identity review round 6",
+      "reviewedAt": "2026-09-04T20:30:28.746Z",
+      "candidateId": "371e2183-cd23-4368-82fe-9d6d08a4dee5",
+      "externalEvidence": {
+        "url": "https://udn.com/vote2026/story/124652/9724893",
+        "title": "雲林縣長選戰突增第三人 他選過台南市長、立委今登記挑戰",
+        "publisher": "聯合報",
+        "statement": "報導指出 59 歲律師吳炳輝登記雲林縣長，並逐一列出臺南市立委、臺南市長、雲林縣立委與虎尾鎮長補選經歷。",
+        "retrievedAt": "2026-09-04T20:30:28.746Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9d0078fad85c5878a6e88acf6b9d1dca",
+      "claimId": "6ac1d578-31a5-41bc-884f-4b73985d70f4",
+      "sourcePersonId": "44b75800-cbc5-451c-a6ba-22ea43457827",
+      "name": "許智富",
+      "county": "澎湖縣",
+      "district": "澎湖縣",
+      "office": "mayor",
+      "raceId": "a38ee9c0-0d8d-4cf9-a3f6-e806386a374f",
+      "decision": "use_existing",
+      "reasonCode": "reported_role_and_2022_candidacy_link_unique_person",
+      "personId": "25115d29-88de-436c-9b89-6a53085a3900",
+      "existingPersonIds": [
+        "25115d29-88de-436c-9b89-6a53085a3900"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "c52458a3-ba6d-4c96-93d9-8bcc1ae28494",
+        "44fac056-8833-4fab-ba32-deabe336b85a"
+      ],
+      "evidenceCandidateIds": [
+        "517158e6-9e56-4ca1-8d03-233196098762"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/65164d75-133d-467b-87b5-96e7a476e6ed.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E8%A8%B1%E6%99%BA%E5%AF%8C",
+        "https://udn.com/news/story/6656/9353423",
+        "https://www.cna.com.tw/news/aipl/202609030122.aspx",
+        "https://www.cna.com.tw/news/aloc/202208020044.aspx"
+      ],
+      "officialFile": "phec-64633-01.pdf",
+      "officialSha256": "432a2ff25fafcbcf2d62abe02ce5a2659678d061a19b6ebbb7371cb273a8b285",
+      "reason": "2026 報導指認前澎湖副縣長許智富參選縣長，並明列他 2022 年參選馬公選區縣議員；這與唯一既有同名人物的 2022 中選會候選紀錄一致。",
+      "reviewedBy": "Codex CEC registration identity review round 6",
+      "reviewedAt": "2026-09-04T20:30:28.749Z",
+      "candidateId": "53551378-0394-47cf-b06c-fd5672fe0830",
+      "externalEvidence": {
+        "url": "https://udn.com/news/story/6656/9353423",
+        "title": "澎湖藍白合破局？民眾黨縣黨部前主委宣布「無黨籍」參選縣長",
+        "publisher": "聯合報",
+        "statement": "報導明列前澎湖副縣長許智富投入 2026 縣長選舉，並回溯其 2022 年代表民眾黨參選馬公選區縣議員。",
+        "supportingUrls": [
+          "https://www.cna.com.tw/news/aipl/202609030122.aspx",
+          "https://www.cna.com.tw/news/aloc/202208020044.aspx"
+        ],
+        "retrievedAt": "2026-09-04T20:30:28.749Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-eacf81edd72bd3594eeff5afe19259b1",
+      "claimId": "2b3c9bdd-7a40-4f9e-a027-6a8f5433290f",
+      "sourcePersonId": "afc85310-71f2-4adb-827d-2b089f4f1995",
+      "name": "劉燦輝",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣",
+      "office": "mayor",
+      "raceId": "e3d9925c-ded0-457b-8b3a-c48ed1889d93",
+      "decision": "use_existing",
+      "reasonCode": "masked_birth_year_and_exact_2022_local_history_select_person",
+      "personId": "c79908db-d20c-49e6-916b-97ec1eab8289",
+      "existingPersonIds": [
+        "45e2cdf0-390e-47b0-9705-26c3950d5243",
+        "c79908db-d20c-49e6-916b-97ec1eab8289"
+      ],
+      "registrationBirth": "052/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "1db3c629-1ef2-46f4-b1eb-1c40ed08ed3a",
+        "efe059b8-f124-44e0-b5c5-b8bbb2cf8d84"
+      ],
+      "evidenceCandidateIds": [
+        "4276fbc0-7dd6-4f6e-bd4c-ca8751ed1c8e"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a3fa3e1d-592c-47c7-be0f-0aec78638d42.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%93%A1%E5%B1%B1%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E5%8A%89%E7%87%A6%E8%BC%9D",
+        "https://www.cna.com.tw/news/aipl/202609045002.aspx",
+        "https://whoareyou.readr.tw/person/4136"
+      ],
+      "officialFile": "ilec-64650-07.pdf",
+      "officialSha256": "5987636c88ff23eb1ed13a32c071fa0ac2be924be686655efabe22ffb83a9afa",
+      "reason": "本次官方出生年民國 52 年與既有完整生日 1963-10-14 一致，且該人物有 2022 年宜蘭縣員山鄉長候選紀錄；另一位同名人物沒有可支持民國 52 年的生日資料。",
+      "reviewedBy": "Codex CEC registration identity review round 6",
+      "reviewedAt": "2026-09-04T20:30:28.749Z",
+      "candidateId": "67a71f86-6acc-4519-9c7b-074e2da4bbee",
+      "externalEvidence": {
+        "url": "https://www.cna.com.tw/news/aipl/202609045002.aspx",
+        "title": "2026九合一選舉 22縣市長登記參選名單一次看",
+        "publisher": "中央社",
+        "statement": "中央社彙整名單確認無黨籍劉燦輝登記參選宜蘭縣長。",
+        "supportingUrls": [
+          "https://whoareyou.readr.tw/person/4136"
+        ],
+        "retrievedAt": "2026-09-04T20:30:28.749Z"
+      }
+    }
+  ]
+}

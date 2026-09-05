@@ -23,6 +23,7 @@ use them to decide the displayed status.
 | `registered` | Registration was submitted to the election authority. |
 | `qualified` | Candidate qualification was confirmed by the election authority. |
 | `withdrawn_or_disqualified` | The candidacy ended through withdrawal or disqualification. |
+| `did_not_register` | A nominated or announced person did not file before registration closed, confirmed against a complete official named roster. |
 | `unknown` | Available sources do not establish a stage. |
 
 These values describe evidence, not a guaranteed linear workflow. For example,
@@ -47,6 +48,7 @@ registration evidence and final result remain independently traceable.
 - `pending` becomes `potential`.
 - `registered` and `qualified` retain their meaning.
 - `withdrawn` and `disqualified` become `withdrawn_or_disqualified`.
+- `not_registered` becomes `did_not_register`.
 - Historical `elected` and `not_elected` candidates become `qualified`, with
   their outcome written to `election_result`.
 - Active races without an official outcome use `election_result = pending`.

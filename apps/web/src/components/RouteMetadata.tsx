@@ -76,7 +76,8 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
         '@context': 'https://schema.org',
         '@type': 'Person',
         name: person.name,
-        jobTitle: person.current_office_label ?? person.position ?? undefined,
+        jobTitle: person.current_office_label
+          ?? (person.upcoming_candidate_label ? undefined : person.position ?? undefined),
         affiliation: person.party ? { '@type': 'Organization', name: person.party } : undefined,
       } : undefined,
     };

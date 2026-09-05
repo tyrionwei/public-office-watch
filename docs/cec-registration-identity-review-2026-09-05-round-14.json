@@ -1,0 +1,1724 @@
+{
+  "schemaVersion": 1,
+  "environment": "full-local",
+  "reviewedAt": "2026-09-05T07:37:08.646Z",
+  "policyBasis": "明確參選報導、官方補選資料及目視確認的姓名符號，連結既有歷屆紀錄；保留身分衝突與2026重複參選檢查。",
+  "baselinePending": 1087,
+  "reviewed": 12,
+  "resolved": 12,
+  "remainingPending": 1075,
+  "reusedPeople": 12,
+  "newPeople": 0,
+  "inputs": {
+    "tmp/cec-registration-identity-review-14/targets.json": "0b5782bf7825ce8ffbe1dd1998bd6ebfaee4b2003ec83f680e43bdfec8c33868",
+    "tmp/cec-registration-identity-review-14/local-evidence.json": "8ed4a9e34fc3548f5c9769bd078ff69d431cba11e2692a53b12fd35481913798",
+    "tmp/cec-registration-identity-review-14/review-manifest.json": "0911875613d59d11374ce1de9a999275cfe32290d6719b698978c333ff2c4871",
+    "tmp/cec-registration-identity-review-14/audit-manifest.json": "c9bd7d0a79e2561a116b29be0359a999665b0e6cd60e101b19bc3ca4f19153f8",
+    "tmp/cec-registration-identity-review-14/baseline-claims.json": "5249b10e05fa2647f31cb981e718fcad4285fc6eb4776eac394ed06c84f02a63",
+    "tmp/cec-registration-identity-review-14/live-evidence.json": "19ba758f75865bc52811253352b178e9ca93d11e72b583d7c027f04259f18966",
+    "tmp/cec-registration-identity-review-14/classification.json": "e2d97511787cbb1818d44d0537b32db897bb3c14ae02b4eb22b6413939c93862",
+    "tmp/cec-registration-identity-review-14/external-evidence.json": "5ff0e73f628e08b4756d08fcd6d5a26b753cad5c0a44beaae3a10ebe97440d68",
+    "tmp/cec-registration-identity-review-14/hualien-glyph.png": "2b439eae397ba05a70b49de36cca9e1e3acaa4ef1821eed6739f9eae68b1e6a4",
+    "tmp/cec-registration-final/import-manifest.json": "e004d07cfd82306b26adc55ec6b230d2601d73ff5fb9b8bfa29c3a38a83cf1f3",
+    "tmp/build-identity-round-14.mjs": "703e56595e739a3855766af23b257e039a4b9fef28cffd23debe4a40c76d28ed",
+    "tmp/classify-identity-round-14.mjs": "a083c0b9723a36dfba9cc63e59e5584e524061e2e038dfad3ff4756a1a98c78f"
+  },
+  "accepted": [
+    {
+      "candidateExternalId": "pow-cec-registration-2026-5e1947dd45de7be389e3f22b35c821e4",
+      "claimId": "c8dcaaad-adb2-4592-9fba-d55a078c2462",
+      "sourcePersonId": "d33c4900-ee68-4811-b6a1-5c6d2bf0d361",
+      "name": "余文忠",
+      "county": "苗栗縣",
+      "district": "苗栗縣苗栗市",
+      "office": "township_mayor",
+      "raceId": "c0a5b683-45d8-4a2c-a27f-dcffdde9d981",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "95a50cae-4e90-42ba-9e08-6139f500b30d",
+      "existingPersonIds": [
+        "95a50cae-4e90-42ba-9e08-6139f500b30d"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "苗栗縣苗栗市",
+      "evidenceClaimIds": [
+        "75d6eef9-2da5-4f10-9809-a7ca8cd540e8",
+        "3cd81e7e-419f-4dc1-abc6-0f05a02d789a",
+        "a1f40a9d-1670-4fc1-8bc6-3eb43f1fe317",
+        "f5730ee8-683c-407a-a183-cd2c8cbbb9e6",
+        "720c8814-e4dc-40bf-827e-1f9f3e6c44e0",
+        "5187148f-12aa-4de6-bd03-cf8946f9bcb6"
+      ],
+      "evidenceCandidateIds": [
+        "f430799a-d488-4758-908a-56e0677036e6",
+        "3c4fb195-f212-4f1a-b231-dadc8e0083f6",
+        "2d3c3726-f5ac-47db-ae6d-98ba0bb212f0",
+        "2a64d842-d536-4442-bb40-4c34785bce83"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+        "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0006&_PARENT_ID=MYR11305KF0001&_TYP=MYR&n=580",
+        "https://votetw.com/wiki/%E4%BD%99%E6%96%87%E5%BF%A0",
+        "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/06%E7%B8%A3%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/08%E8%8B%97%E6%A0%97%E7%B8%A3/%E7%AC%AC1%E9%81%B8%E8%88%89%E5%8D%80/%E7%AC%AC1%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_005_00_000_0000.json"
+      ],
+      "officialFile": "mlec-64615-04.xls",
+      "officialSha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a",
+      "reason": "內政部苗栗市長名冊明列余文忠，經歷為第19、20屆苗栗縣議員，可連結既有同名議員紀錄。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "8f04284e-09a4-417a-9ea9-d787d3695d9f",
+      "externalEvidence": {
+        "name": "余文忠",
+        "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0006&_PARENT_ID=MYR11305KF0001&_TYP=MYR&n=580",
+        "statement": "內政部苗栗市長名冊明列余文忠，經歷為第19、20屆苗栗縣議員，可連結既有同名議員紀錄。",
+        "historyPrefix": "苗栗縣第1選舉區",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "95a50cae-4e90-42ba-9e08-6139f500b30d",
+        "names": [
+          "余文忠"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1970-06-24"
+        ],
+        "birthYears": [
+          1970
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "f430799a-d488-4758-908a-56e0677036e6",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "苗栗縣第1選舉區",
+            "race_id": "c499ca91-4961-403e-b7f9-5dc144fcf84a",
+            "is_public": true,
+            "person_id": "1dde5f3b-faca-43b6-bf53-63e7c0c9f20a",
+            "race_type": "councilor_district",
+            "vote_rate": 9.55,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 6902,
+            "external_id": "votetw-candidate-b032061292627e5a",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "6",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "95a50cae-4e90-42ba-9e08-6139f500b30d",
+            "registration_status": "elected"
+          },
+          {
+            "id": "2d3c3726-f5ac-47db-ae6d-98ba0bb212f0",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "苗栗縣第1選舉區議員選舉",
+            "race_id": "e8689817-a50d-49cd-bf79-0e1b93050792",
+            "is_public": true,
+            "person_id": "3c9477f6-a5ed-454c-969e-2367281a781e",
+            "race_type": "county_councilor",
+            "vote_rate": 9.55,
+            "created_at": "2026-07-13T10:45:03.22397+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_005_00_000_0000.json",
+            "updated_at": "2026-07-13T10:45:03.22397+00:00",
+            "vote_count": 6902,
+            "external_id": "cec-2018-local-councilor-candidate-regional-10005-01-22707",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "6",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T10:45:03.22397+00:00",
+            "canonical_person_id": "95a50cae-4e90-42ba-9e08-6139f500b30d",
+            "registration_status": "elected"
+          },
+          {
+            "id": "2a64d842-d536-4442-bb40-4c34785bce83",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "苗栗縣第1選舉區議員選舉",
+            "race_id": "fcffcef9-205a-4f1a-bc98-0f904499b90f",
+            "is_public": true,
+            "person_id": "95a50cae-4e90-42ba-9e08-6139f500b30d",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-regional-candidate-77e019534632",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "13",
+            "is_incumbent": null,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "95a50cae-4e90-42ba-9e08-6139f500b30d",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "75d6eef9-2da5-4f10-9809-a7ca8cd540e8",
+          "3cd81e7e-419f-4dc1-abc6-0f05a02d789a",
+          "f5730ee8-683c-407a-a183-cd2c8cbbb9e6",
+          "720c8814-e4dc-40bf-827e-1f9f3e6c44e0"
+        ]
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-54bd0a86f725aaf8d0ef66ddd39478e7",
+      "claimId": "43326afa-4af6-42e6-9e26-c40779f69ebe",
+      "sourcePersonId": "445f7546-31d2-4d37-87e9-98b071eac860",
+      "name": "林嘉弘",
+      "county": "雲林縣",
+      "district": "雲林縣虎尾鎮",
+      "office": "township_mayor",
+      "raceId": "c487f9d3-8f04-4bbc-b35c-addb0399a47d",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "280906d0-9c05-4dbe-83b6-52431a52f005",
+      "existingPersonIds": [
+        "280906d0-9c05-4dbe-83b6-52431a52f005"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "雲林縣虎尾鎮",
+      "evidenceClaimIds": [
+        "32764d3b-e3b7-4656-ba88-6625fb41e358",
+        "ff05a688-d292-4fdf-b909-701e229a8f32",
+        "4b99dc80-4f42-479a-90a0-00e587db8616"
+      ],
+      "evidenceCandidateIds": [
+        "c6f3127b-1972-4c32-9444-0c9ab7065bfb",
+        "5b6356b9-60d0-45d9-bafd-3c430d6b6f3e",
+        "2b79efa8-f785-4c67-89f4-94fcac8188d4"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/288f65c2-33bb-4aaa-810d-f947c95c6000.pdf",
+        "https://tw.news.yahoo.com/%E8%99%8E%E5%B0%BE%E9%8E%AE%E9%95%B7%E9%81%B8%E6%88%B0-%E6%9E%97%E5%98%89%E5%BC%98%E6%8B%9A%E9%80%A3%E4%BB%BB-201000519.html",
+        "https://votetw.com/wiki/%E6%9E%97%E5%98%89%E5%BC%98",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E9%9B%B2%E6%9E%97%E7%B8%A3%E8%99%8E%E5%B0%BE%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E9%9B%B2%E6%9E%97%E7%B8%A3%E8%99%8E%E5%B0%BE%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_009_00_000_0000.json"
+      ],
+      "officialFile": "ylec-64657-03.pdf",
+      "officialSha256": "7232b3060ddd7c5bea82dd464b16b8942b6f7b017de798e57ae7ea3815aba386",
+      "reason": "2026年虎尾鎮長選情報導明列現任林嘉弘尋求連任，曾任鎮民代表及兩屆鎮代會主席，連結既有虎尾鎮代紀錄。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "16b3fcf7-59d8-4b9d-930b-aec2c8275f44",
+      "externalEvidence": {
+        "name": "林嘉弘",
+        "url": "https://tw.news.yahoo.com/%E8%99%8E%E5%B0%BE%E9%8E%AE%E9%95%B7%E9%81%B8%E6%88%B0-%E6%9E%97%E5%98%89%E5%BC%98%E6%8B%9A%E9%80%A3%E4%BB%BB-201000519.html",
+        "statement": "2026年虎尾鎮長選情報導明列現任林嘉弘尋求連任，曾任鎮民代表及兩屆鎮代會主席，連結既有虎尾鎮代紀錄。",
+        "historyPrefix": "雲林縣虎尾鎮",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "280906d0-9c05-4dbe-83b6-52431a52f005",
+        "names": [
+          "林嘉弘"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1970-05-17"
+        ],
+        "birthYears": [
+          1970
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "c6f3127b-1972-4c32-9444-0c9ab7065bfb",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "雲林縣虎尾鎮第1選舉區鎮民代表選舉",
+            "race_id": "57c27f2d-035a-42b7-ac84-788f010612aa",
+            "is_public": true,
+            "person_id": "b34e58fb-d509-4185-957a-3405fcbbfa31",
+            "race_type": "township_representative_district",
+            "vote_rate": 17.62,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E9%9B%B2%E6%9E%97%E7%B8%A3%E8%99%8E%E5%B0%BE%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 3624,
+            "external_id": "votetw-candidate-e1c4aaf99bfca1ea",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "8",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "280906d0-9c05-4dbe-83b6-52431a52f005",
+            "registration_status": "elected"
+          },
+          {
+            "id": "5b6356b9-60d0-45d9-bafd-3c430d6b6f3e",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "雲林縣虎尾鎮第1選舉區鎮民代表選舉",
+            "race_id": "ca2655f3-91e2-4469-b962-1fef2b2fa270",
+            "is_public": true,
+            "person_id": "280906d0-9c05-4dbe-83b6-52431a52f005",
+            "race_type": "township_representative_district",
+            "vote_rate": 24.49,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E9%9B%B2%E6%9E%97%E7%B8%A3%E8%99%8E%E5%B0%BE%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 4660,
+            "external_id": "votetw-candidate-15d99f3cfebf9773",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "10",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "280906d0-9c05-4dbe-83b6-52431a52f005",
+            "registration_status": "elected"
+          },
+          {
+            "id": "2b79efa8-f785-4c67-89f4-94fcac8188d4",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "雲林縣虎尾鎮第1選舉區鎮民代表選舉",
+            "race_id": "e69655c9-8c35-4366-83c0-d1c440ab4d35",
+            "is_public": true,
+            "person_id": "76c704c3-9318-46c9-8ef3-9df70c8ceed9",
+            "race_type": "township_representative",
+            "vote_rate": 17.62,
+            "created_at": "2026-07-13T11:12:06.848109+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_009_00_000_0000.json",
+            "updated_at": "2026-07-13T11:12:06.848109+00:00",
+            "vote_count": 3624,
+            "external_id": "cec-2018-local-subcounty-candidate-township-representative-regional-10009-030-01-119351",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "8",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:12:06.848109+00:00",
+            "canonical_person_id": "280906d0-9c05-4dbe-83b6-52431a52f005",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "32764d3b-e3b7-4656-ba88-6625fb41e358",
+          "ff05a688-d292-4fdf-b909-701e229a8f32"
+        ]
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-6f2b12e03f70c0cc76746075dc4c7339",
+      "claimId": "e4f560c3-3201-4ec9-ba4b-879dbd287977",
+      "sourcePersonId": "561eaaa5-c077-4cd7-aead-edc62b2f5497",
+      "name": "葉仁創",
+      "county": "南投縣",
+      "district": "南投縣埔里鎮",
+      "office": "township_mayor",
+      "raceId": "c0bdb0d4-6039-4793-8995-10b860a3cc95",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "a091e925-ab64-425c-8998-46b4754f59e3",
+      "existingPersonIds": [
+        "a091e925-ab64-425c-8998-46b4754f59e3"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "民主進步黨",
+      "locality": "南投縣埔里鎮",
+      "evidenceClaimIds": [
+        "32cc7e37-6862-44a7-a920-496af4c3f14a",
+        "f184c7c4-9004-4e6e-b7e4-c2e5a30ec9bc",
+        "3e026d61-14d7-445d-b6ad-6129d8de84c4",
+        "a31ec160-1a37-4a08-ae9b-f0c08eab4ba8",
+        "926b7e29-fd63-4904-a91e-2df13b1c98cb"
+      ],
+      "evidenceCandidateIds": [
+        "ab1d6416-c3fa-4e3e-912c-4074cab13ee8",
+        "aa232304-54c5-4211-beb6-87f639c8b8e2",
+        "5ff1c802-9909-4a1f-be3d-83fd7268e951",
+        "f94008d0-a239-46bb-a55f-e646ec8b2cac"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/939b3f02-3783-4060-8f0b-1d32e04994ba.pdf",
+        "https://finance.ftvnews.com.tw/news/detail/2026803C10M1",
+        "https://votetw.com/wiki/%E8%91%89%E4%BB%81%E5%89%B5",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%8D%97%E6%8A%95%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_008_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%8D%97%E6%8A%95%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "officialFile": "ntec-64622-01.pdf",
+      "officialSha256": "67635275f8d429559ec961a90b9f2b4c860fc4f5a11a1505378c43f6fdeaaea0",
+      "reason": "2026年參選報導明列前南投縣議員葉仁創參選埔里鎮長，連結既有議員紀錄。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "e6fc4f6e-feb2-440c-a9dc-5874a92e2d40",
+      "externalEvidence": {
+        "name": "葉仁創",
+        "url": "https://finance.ftvnews.com.tw/news/detail/2026803C10M1",
+        "statement": "2026年參選報導明列前南投縣議員葉仁創參選埔里鎮長，連結既有議員紀錄。",
+        "historyPrefix": "南投縣第5選舉區",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "a091e925-ab64-425c-8998-46b4754f59e3",
+        "names": [
+          "葉仁創"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1975-09-24"
+        ],
+        "birthYears": [
+          1975
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "ab1d6416-c3fa-4e3e-912c-4074cab13ee8",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "南投縣第5選舉區",
+            "race_id": "a4ffc67e-9c1f-42fb-9a2d-c5df304af905",
+            "is_public": true,
+            "person_id": "fc584db7-64e7-48b1-a696-3837a389fea0",
+            "race_type": "councilor_district",
+            "vote_rate": 7.89,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%8D%97%E6%8A%95%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 4549,
+            "external_id": "votetw-candidate-3d6a1316004f0065",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "a091e925-ab64-425c-8998-46b4754f59e3",
+            "registration_status": "elected"
+          },
+          {
+            "id": "aa232304-54c5-4211-beb6-87f639c8b8e2",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "南投縣第5選舉區議員選舉",
+            "race_id": "e19c9b62-4c6e-4964-89d5-557798210362",
+            "is_public": true,
+            "person_id": "76a996a9-d3ea-400a-b6b8-44e13546310b",
+            "race_type": "county_councilor",
+            "vote_rate": 7.89,
+            "created_at": "2026-07-13T10:45:03.301124+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_008_00_000_0000.json",
+            "updated_at": "2026-07-13T10:45:03.301124+00:00",
+            "vote_count": 4549,
+            "external_id": "cec-2018-local-councilor-candidate-regional-10008-05-22894",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T10:45:03.301124+00:00",
+            "canonical_person_id": "a091e925-ab64-425c-8998-46b4754f59e3",
+            "registration_status": "elected"
+          },
+          {
+            "id": "f94008d0-a239-46bb-a55f-e646ec8b2cac",
+            "year": 2022,
+            "party": "民主進步黨",
+            "title": "南投縣第5選舉區議員選舉",
+            "race_id": "2f724f99-c92d-48b1-9d4b-ed23f34af061",
+            "is_public": true,
+            "person_id": "a091e925-ab64-425c-8998-46b4754f59e3",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-regional-candidate-fed6787a58a8",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "9",
+            "is_incumbent": null,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "a091e925-ab64-425c-8998-46b4754f59e3",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "32cc7e37-6862-44a7-a920-496af4c3f14a",
+          "f184c7c4-9004-4e6e-b7e4-c2e5a30ec9bc",
+          "3e026d61-14d7-445d-b6ad-6129d8de84c4",
+          "a31ec160-1a37-4a08-ae9b-f0c08eab4ba8"
+        ]
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-959ed0cc97b158117a75c449325f1237",
+      "claimId": "e5b8386f-fc58-47d5-abe5-8959b2240d4a",
+      "sourcePersonId": "3aae1cc0-a2c0-479f-9344-c96cc3504c94",
+      "name": "蕭德恕",
+      "county": "雲林縣",
+      "district": "雲林縣西螺鎮",
+      "office": "township_mayor",
+      "raceId": "78c58b4a-3b77-4df8-8884-7ae85364e7e7",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "7b6398fd-1c8e-409b-8185-bf2eade6d6d1",
+      "existingPersonIds": [
+        "7b6398fd-1c8e-409b-8185-bf2eade6d6d1"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "雲林縣西螺鎮",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "4b305036-bf0a-41f9-b575-e420d119f9af",
+        "ef245fe6-5098-4779-b925-4b8906013743"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/288f65c2-33bb-4aaa-810d-f947c95c6000.pdf",
+        "https://udn.com/news/story/124652/9548251",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E9%9B%B2%E6%9E%97%E7%B8%A3%E8%A5%BF%E8%9E%BA%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_009_00_000_0000.json"
+      ],
+      "officialFile": "ylec-64657-03.pdf",
+      "officialSha256": "7232b3060ddd7c5bea82dd464b16b8942b6f7b017de798e57ae7ea3815aba386",
+      "reason": "參選報導明列雲林縣民政處長蕭德恕投入西螺鎮長，曾任兩屆鎮代及兩屆副主席，連結既有西螺鎮代紀錄。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "0805f4a8-98d2-4dce-af53-293e825fb369",
+      "externalEvidence": {
+        "name": "蕭德恕",
+        "url": "https://udn.com/news/story/124652/9548251",
+        "statement": "參選報導明列雲林縣民政處長蕭德恕投入西螺鎮長，曾任兩屆鎮代及兩屆副主席，連結既有西螺鎮代紀錄。",
+        "historyPrefix": "雲林縣西螺鎮",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "7b6398fd-1c8e-409b-8185-bf2eade6d6d1",
+        "names": [
+          "蕭德恕"
+        ],
+        "isPublic": true,
+        "birthDates": [],
+        "birthYears": [],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "4b305036-bf0a-41f9-b575-e420d119f9af",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "雲林縣西螺鎮第1選舉區鎮民代表選舉",
+            "race_id": "4d5904dd-fb67-4fda-add1-9e88faaf35bc",
+            "is_public": true,
+            "person_id": "7b6398fd-1c8e-409b-8185-bf2eade6d6d1",
+            "race_type": "township_representative_district",
+            "vote_rate": 24.14,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E9%9B%B2%E6%9E%97%E7%B8%A3%E8%A5%BF%E8%9E%BA%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 3312,
+            "external_id": "votetw-candidate-5037794a38c861a4",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "7b6398fd-1c8e-409b-8185-bf2eade6d6d1",
+            "registration_status": "elected"
+          },
+          {
+            "id": "ef245fe6-5098-4779-b925-4b8906013743",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "雲林縣西螺鎮第1選舉區鎮民代表選舉",
+            "race_id": "8c23b7d8-b692-4213-94c7-09b4a57fe818",
+            "is_public": true,
+            "person_id": "e4bddea5-99ff-4fd1-a75d-4925b0b69650",
+            "race_type": "township_representative",
+            "vote_rate": 24.14,
+            "created_at": "2026-07-13T11:12:06.848109+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_009_00_000_0000.json",
+            "updated_at": "2026-07-13T11:12:06.848109+00:00",
+            "vote_count": 3312,
+            "external_id": "cec-2018-local-subcounty-candidate-township-representative-regional-10009-040-01-119354",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:12:06.848109+00:00",
+            "canonical_person_id": "7b6398fd-1c8e-409b-8185-bf2eade6d6d1",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": []
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-1eeea9db0b4bbfeb4add441f0b53fa9a",
+      "claimId": "15614cb3-c98c-4394-ab70-2f6e1e4433a3",
+      "sourcePersonId": "cd45e1f0-97e0-4e38-bcaf-56d0f4f2dee8",
+      "name": "楊麗香",
+      "county": "彰化縣",
+      "district": "彰化縣北斗鎮",
+      "office": "township_mayor",
+      "raceId": "db795420-1a7f-4607-9158-f5bdf9ba2de9",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "6699240a-04f6-477b-abc0-5ce4d537e937",
+      "existingPersonIds": [
+        "6699240a-04f6-477b-abc0-5ce4d537e937"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": "彰化縣北斗鎮",
+      "evidenceClaimIds": [
+        "de6804e5-f31f-4b90-a3c2-92f64996a821",
+        "7f5909ef-ae36-4bac-a65f-8d92992d566f",
+        "e1d402d5-3699-4fff-ac33-51ee6209e3e6",
+        "5b2f461f-e1d3-47d8-9824-0c879882cfee"
+      ],
+      "evidenceCandidateIds": [
+        "faf88abd-2ddf-4a61-8831-27213c5b9f66"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+        "https://www.thehubnews.net/archives/661734",
+        "https://votetw.com/wiki/%E6%A5%8A%E9%BA%97%E9%A6%99",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/2020%E5%B9%B4%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "officialFile": "chec-64647-03.pdf",
+      "officialSha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8",
+      "reason": "2026年9月4日北斗鎮長登記報導明列楊麗香曾任兩屆北斗鎮長；另以既有經歷核對，連結唯一同名人物。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "461314ff-97b1-4ee0-a080-277f1531f9d3",
+      "externalEvidence": {
+        "name": "楊麗香",
+        "url": "https://www.thehubnews.net/archives/661734",
+        "statement": "2026年9月4日北斗鎮長登記報導明列楊麗香曾任兩屆北斗鎮長；另以既有經歷核對，連結唯一同名人物。",
+        "historyPrefix": "彰化縣",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "6699240a-04f6-477b-abc0-5ce4d537e937",
+        "names": [
+          "楊麗香"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1964-09-13"
+        ],
+        "birthYears": [
+          1964
+        ],
+        "genders": [
+          "female"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "faf88abd-2ddf-4a61-8831-27213c5b9f66",
+            "year": 2020,
+            "party": "無黨籍",
+            "title": "彰化縣第3選舉區",
+            "race_id": "3e8aeaed-3938-47df-88b5-2533bf21ae7d",
+            "is_public": true,
+            "person_id": "6699240a-04f6-477b-abc0-5ce4d537e937",
+            "race_type": "legislative_district",
+            "vote_rate": 4.47,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": false,
+            "source_url": "https://votetw.com/wiki/2020%E5%B9%B4%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 8518,
+            "external_id": "votetw-candidate-9962a92dafa3d109",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "6699240a-04f6-477b-abc0-5ce4d537e937",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "de6804e5-f31f-4b90-a3c2-92f64996a821",
+          "7f5909ef-ae36-4bac-a65f-8d92992d566f",
+          "5b2f461f-e1d3-47d8-9824-0c879882cfee"
+        ]
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9bdfaa498f2483e56072c34ff4022b95",
+      "claimId": "7be4a1a9-da8c-47ad-920e-27ec74e0dfad",
+      "sourcePersonId": "c360cdd2-0cae-4c9b-8e28-822c22a0475b",
+      "name": "林盈富",
+      "county": "苗栗縣",
+      "district": "苗栗縣三義鄉",
+      "office": "township_mayor",
+      "raceId": "39579e66-4277-4cb7-8fbd-0e3d79a483f5",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "28f1feb7-fdcf-40c6-80e8-0158ee2c0f93",
+      "existingPersonIds": [
+        "28f1feb7-fdcf-40c6-80e8-0158ee2c0f93"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "苗栗縣三義鄉",
+      "evidenceClaimIds": [
+        "e2e717ce-062e-41ab-b1c3-451ff456d4d4",
+        "f55e035a-6a2b-46c6-b434-da10622045d2",
+        "e20ed444-dfc0-4125-8944-2e0b6a0ac737"
+      ],
+      "evidenceCandidateIds": [
+        "070d1918-15d6-4b16-b25c-150e42f62498",
+        "3a1cca31-af37-4356-872b-385f9c0a6de8",
+        "8dd1ad44-9385-438b-a97d-e51eba8d7c6f"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+        "https://tw.news.yahoo.com/%E8%8B%97%E6%A0%97%E4%B8%89%E7%BE%A9%E9%84%89%E9%95%B7%E9%81%B8%E6%88%B0%E4%B8%89%E8%85%B3%E7%9D%A3-201000278.html",
+        "https://votetw.com/wiki/%E6%9E%97%E7%9B%88%E5%AF%8C",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E4%B8%89%E7%BE%A9%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E4%B8%89%E7%BE%A9%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_005_00_000_0000.json"
+      ],
+      "officialFile": "mlec-64615-04.xls",
+      "officialSha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a",
+      "reason": "2026年三義鄉長選情報導明列現任鄉代會主席林盈富爭取接棒、曾當選六屆鄉代，連結既有三義鄉代紀錄。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "926c834d-ac90-44e1-9b8c-35f79e74bd59",
+      "externalEvidence": {
+        "name": "林盈富",
+        "url": "https://tw.news.yahoo.com/%E8%8B%97%E6%A0%97%E4%B8%89%E7%BE%A9%E9%84%89%E9%95%B7%E9%81%B8%E6%88%B0%E4%B8%89%E8%85%B3%E7%9D%A3-201000278.html",
+        "statement": "2026年三義鄉長選情報導明列現任鄉代會主席林盈富爭取接棒、曾當選六屆鄉代，連結既有三義鄉代紀錄。",
+        "historyPrefix": "苗栗縣三義鄉",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "28f1feb7-fdcf-40c6-80e8-0158ee2c0f93",
+        "names": [
+          "林盈富"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1962-12-06"
+        ],
+        "birthYears": [
+          1962
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "070d1918-15d6-4b16-b25c-150e42f62498",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "苗栗縣三義鄉第1選舉區鄉民代表選舉",
+            "race_id": "a2e12ad0-4863-414f-8d20-95172538ccb5",
+            "is_public": true,
+            "person_id": "d022d79d-2eb1-4dd3-8e98-ddd2bf83c920",
+            "race_type": "township_representative_district",
+            "vote_rate": 32.77,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E4%B8%89%E7%BE%A9%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 989,
+            "external_id": "votetw-candidate-ad553096c2a9fa4e",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "28f1feb7-fdcf-40c6-80e8-0158ee2c0f93",
+            "registration_status": "elected"
+          },
+          {
+            "id": "3a1cca31-af37-4356-872b-385f9c0a6de8",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "苗栗縣三義鄉第1選舉區鄉民代表選舉",
+            "race_id": "12f8e04f-f1d8-49c1-9a40-b608fb3bd12f",
+            "is_public": true,
+            "person_id": "28f1feb7-fdcf-40c6-80e8-0158ee2c0f93",
+            "race_type": "township_representative_district",
+            "vote_rate": 38.37,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E4%B8%89%E7%BE%A9%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 835,
+            "external_id": "votetw-candidate-97b7549b46810957",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "28f1feb7-fdcf-40c6-80e8-0158ee2c0f93",
+            "registration_status": "elected"
+          },
+          {
+            "id": "8dd1ad44-9385-438b-a97d-e51eba8d7c6f",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "苗栗縣三義鄉第1選舉區鄉民代表選舉",
+            "race_id": "ad24b1cb-4537-42df-b5d2-d7d85be17930",
+            "is_public": true,
+            "person_id": "35ed753f-8308-469a-b755-e06cd6f42fe5",
+            "race_type": "township_representative",
+            "vote_rate": 32.77,
+            "created_at": "2026-07-13T11:12:06.735721+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_005_00_000_0000.json",
+            "updated_at": "2026-07-13T11:12:06.735721+00:00",
+            "vote_count": 989,
+            "external_id": "cec-2018-local-subcounty-candidate-township-representative-regional-10005-130-01-118322",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:12:06.735721+00:00",
+            "canonical_person_id": "28f1feb7-fdcf-40c6-80e8-0158ee2c0f93",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "e2e717ce-062e-41ab-b1c3-451ff456d4d4",
+          "f55e035a-6a2b-46c6-b434-da10622045d2"
+        ]
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-27067ce502b9169e83bb749e87bd406a",
+      "claimId": "58ae417e-ba28-449b-8e55-f56e736fb234",
+      "sourcePersonId": "335e89be-e7b8-4fbe-914f-7ab32a99d2f4",
+      "name": "徐文達",
+      "county": "苗栗縣",
+      "district": "苗栗縣三義鄉",
+      "office": "township_mayor",
+      "raceId": "39579e66-4277-4cb7-8fbd-0e3d79a483f5",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "8a513db5-ce9b-4a0e-a654-6abca17e165c",
+      "existingPersonIds": [
+        "8a513db5-ce9b-4a0e-a654-6abca17e165c"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "苗栗縣三義鄉",
+      "evidenceClaimIds": [
+        "6ab17560-bdc0-4639-a46c-10728e057f92",
+        "78fd55ca-322e-443d-8c4c-c6467b07baca",
+        "5590ffdd-e6b1-46bc-bdec-76e2347dddde",
+        "0ad62c0b-ef90-4298-abd1-70a010573524"
+      ],
+      "evidenceCandidateIds": [
+        "3ae7dc56-9213-4824-9a5f-ffb428ae581c",
+        "ffc7ed20-a461-47ef-8fbf-dfbdfd9eba03"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+        "https://tw.news.yahoo.com/%E8%8B%97%E6%A0%97%E4%B8%89%E7%BE%A9%E9%84%89%E9%95%B7%E9%81%B8%E6%88%B0%E4%B8%89%E8%85%B3%E7%9D%A3-201000278.html",
+        "https://votetw.com/wiki/%E5%BE%90%E6%96%87%E9%81%94",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "officialFile": "mlec-64615-04.xls",
+      "officialSha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a",
+      "reason": "三義鄉長選情報導明列前鄉長徐文達再次參選；公所歷任鄉長資料可核對其第16、17屆任期，連結既有同名人物。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "420d43c7-db8a-4b47-aff0-8e2c1be76782",
+      "externalEvidence": {
+        "name": "徐文達",
+        "url": "https://tw.news.yahoo.com/%E8%8B%97%E6%A0%97%E4%B8%89%E7%BE%A9%E9%84%89%E9%95%B7%E9%81%B8%E6%88%B0%E4%B8%89%E8%85%B3%E7%9D%A3-201000278.html",
+        "statement": "三義鄉長選情報導明列前鄉長徐文達再次參選；公所歷任鄉長資料可核對其第16、17屆任期，連結既有同名人物。",
+        "historyPrefix": "苗栗縣",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "8a513db5-ce9b-4a0e-a654-6abca17e165c",
+        "names": [
+          "徐文達"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1958-04-10"
+        ],
+        "birthYears": [
+          1958
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "ffc7ed20-a461-47ef-8fbf-dfbdfd9eba03",
+            "year": 2022,
+            "party": "中國國民黨",
+            "title": "苗栗縣第2選舉區議員選舉",
+            "race_id": "4dd7f13d-bf35-4215-b4e6-130587c9f316",
+            "is_public": true,
+            "person_id": "8a513db5-ce9b-4a0e-a654-6abca17e165c",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-regional-candidate-adcd4b355fbb",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "2",
+            "is_incumbent": null,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "8a513db5-ce9b-4a0e-a654-6abca17e165c",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "6ab17560-bdc0-4639-a46c-10728e057f92",
+          "78fd55ca-322e-443d-8c4c-c6467b07baca",
+          "0ad62c0b-ef90-4298-abd1-70a010573524"
+        ]
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-45d86f20d13d3ee317bdcf0e5b516b95",
+      "claimId": "4422d999-102d-4bcd-8503-fe71302cabf3",
+      "sourcePersonId": "55bdb6e5-1a07-4c3f-8309-50f9246a1e65",
+      "name": "黃芳椿",
+      "county": "苗栗縣",
+      "district": "苗栗縣銅鑼鄉",
+      "office": "township_mayor",
+      "raceId": "c86e1020-ce2c-4cbe-8bb4-c4148dcf2f24",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "e1a597bd-6b65-48af-a51c-9a0e02ad849a",
+      "existingPersonIds": [
+        "e1a597bd-6b65-48af-a51c-9a0e02ad849a"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "苗栗縣銅鑼鄉",
+      "evidenceClaimIds": [
+        "6b6a8277-7815-42ad-b216-33bba5148bad",
+        "a0194b27-a546-48ba-b042-fd205331443b",
+        "f1c2ca45-438e-495a-b23d-5d7398fdb851",
+        "40e8edab-addd-4d38-b5ad-7e9d7fc42414",
+        "5ee478b0-7638-421e-b18e-3f5dfad68bde",
+        "8bc8dfba-c28d-4cf2-b2b3-18cd1de99beb",
+        "e6fb260c-9468-4913-910b-291f15032b50"
+      ],
+      "evidenceCandidateIds": [
+        "72dfd3a9-2788-420f-9a6e-d77ca57a1001",
+        "28eb3691-bddc-4c19-b686-083ee768a05f",
+        "b485e1fd-74a1-4ec5-b3a3-a397731210a4",
+        "9df1632f-f12b-447f-9439-d5b3e644ea16"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+        "https://money.udn.com/money/story/7307/9505453",
+        "https://votetw.com/wiki/%E9%BB%83%E8%8A%B3%E6%A4%BF",
+        "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/06%E7%B8%A3%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/08%E8%8B%97%E6%A0%97%E7%B8%A3/%E7%AC%AC2%E3%80%813%E3%80%816%E9%81%B8%E8%88%89%E5%8D%80/%E7%AC%AC2%E3%80%813%E3%80%816%E9%81%B8%E8%88%89%E5%8D%80%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_005_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "officialFile": "mlec-64615-04.xls",
+      "officialSha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a",
+      "reason": "2026年國民黨苗栗提名登記報導列黃芳椿參選銅鑼鄉長，官方議員名冊與銅鑼歷任鄉長經歷相符，連結唯一同名人物。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "02d7d5b3-f582-4a63-a6b4-2a68d97db6dc",
+      "externalEvidence": {
+        "name": "黃芳椿",
+        "url": "https://money.udn.com/money/story/7307/9505453",
+        "statement": "2026年國民黨苗栗提名登記報導列黃芳椿參選銅鑼鄉長，官方議員名冊與銅鑼歷任鄉長經歷相符，連結唯一同名人物。",
+        "historyPrefix": "苗栗縣",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "e1a597bd-6b65-48af-a51c-9a0e02ad849a",
+        "names": [
+          "黃芳椿"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1955-07-05"
+        ],
+        "birthYears": [
+          1955
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "72dfd3a9-2788-420f-9a6e-d77ca57a1001",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "苗栗縣第2選舉區議員選舉",
+            "race_id": "e4a7b796-022d-4018-98a1-42ab299b38c2",
+            "is_public": true,
+            "person_id": "0cb16a2a-e4d5-4808-b83b-e169a7dc5bc5",
+            "race_type": "county_councilor",
+            "vote_rate": 33.78,
+            "created_at": "2026-07-13T10:45:03.22397+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_005_00_000_0000.json",
+            "updated_at": "2026-07-13T10:45:03.22397+00:00",
+            "vote_count": 8387,
+            "external_id": "cec-2018-local-councilor-candidate-regional-10005-02-22718",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T10:45:03.22397+00:00",
+            "canonical_person_id": "e1a597bd-6b65-48af-a51c-9a0e02ad849a",
+            "registration_status": "elected"
+          },
+          {
+            "id": "b485e1fd-74a1-4ec5-b3a3-a397731210a4",
+            "year": 2018,
+            "party": "中國國民黨",
+            "title": "苗栗縣第2選舉區",
+            "race_id": "263a48cc-2455-4413-aa36-cdac177d0618",
+            "is_public": true,
+            "person_id": "f4a60586-6216-4ec3-902b-1cd7dda7e566",
+            "race_type": "councilor_district",
+            "vote_rate": 33.78,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 8387,
+            "external_id": "votetw-candidate-52519ba587eb7238",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "e1a597bd-6b65-48af-a51c-9a0e02ad849a",
+            "registration_status": "elected"
+          },
+          {
+            "id": "9df1632f-f12b-447f-9439-d5b3e644ea16",
+            "year": 2022,
+            "party": "中國國民黨",
+            "title": "苗栗縣第2選舉區議員選舉",
+            "race_id": "4dd7f13d-bf35-4215-b4e6-130587c9f316",
+            "is_public": true,
+            "person_id": "e1a597bd-6b65-48af-a51c-9a0e02ad849a",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-regional-candidate-9e8e40eb0c5e",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "4",
+            "is_incumbent": null,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "e1a597bd-6b65-48af-a51c-9a0e02ad849a",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "6b6a8277-7815-42ad-b216-33bba5148bad",
+          "a0194b27-a546-48ba-b042-fd205331443b",
+          "5ee478b0-7638-421e-b18e-3f5dfad68bde",
+          "8bc8dfba-c28d-4cf2-b2b3-18cd1de99beb",
+          "e6fb260c-9468-4913-910b-291f15032b50"
+        ]
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-b6388dfa2bb3eff94a2f46acef39ebcb",
+      "claimId": "09de078b-63d1-4d28-8562-3bdd9672839e",
+      "sourcePersonId": "185806f4-d9c3-44a8-b55e-0d82308b254e",
+      "name": "葉俊緯",
+      "county": "屏東縣",
+      "district": "屏東縣南州鄉",
+      "office": "township_mayor",
+      "raceId": "8898479a-5710-4394-a6bf-e36b5140f091",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "dba1cfab-16f8-41e9-addb-da825dca0842",
+      "existingPersonIds": [
+        "dba1cfab-16f8-41e9-addb-da825dca0842"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "民主進步黨",
+      "locality": "屏東縣南州鄉",
+      "evidenceClaimIds": [
+        "b78db95a-03dd-4816-b25c-276f96ec6cff",
+        "8b24b64c-3253-4937-8c4c-5c03140ce9e7",
+        "eb1744be-d769-4958-999f-dd7999e26b1b"
+      ],
+      "evidenceCandidateIds": [
+        "b2b545d8-5a98-469f-9def-d66adbb96ebc"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://tw.news.yahoo.com/%E5%B1%8F%E6%9D%B1-%E5%8D%97%E5%B7%9E%E9%84%89%E6%89%80%E6%9C%83%E4%B8%8D%E5%90%88-%E9%84%89%E9%95%B7%E9%81%B8%E6%88%B0%E6%BF%80%E7%83%88-201000762.html",
+        "https://votetw.com/wiki/%E8%91%89%E4%BF%8A%E7%B7%AF",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "officialFile": "ptec-64654-01.xlsx",
+      "officialSha256": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87",
+      "reason": "2026年南州鄉長選情報導明列鄉代會副主席葉俊緯轉選鄉長，可連結既有南州第1選舉區鄉代紀錄。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "e81e9577-f797-47ad-87e1-f58a702e8826",
+      "externalEvidence": {
+        "name": "葉俊緯",
+        "url": "https://tw.news.yahoo.com/%E5%B1%8F%E6%9D%B1-%E5%8D%97%E5%B7%9E%E9%84%89%E6%89%80%E6%9C%83%E4%B8%8D%E5%90%88-%E9%84%89%E9%95%B7%E9%81%B8%E6%88%B0%E6%BF%80%E7%83%88-201000762.html",
+        "statement": "2026年南州鄉長選情報導明列鄉代會副主席葉俊緯轉選鄉長，可連結既有南州第1選舉區鄉代紀錄。",
+        "historyPrefix": "屏東縣南州鄉",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "dba1cfab-16f8-41e9-addb-da825dca0842",
+        "names": [
+          "葉俊緯"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1989-05-14"
+        ],
+        "birthYears": [
+          1989
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "b2b545d8-5a98-469f-9def-d66adbb96ebc",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "屏東縣南州鄉第1選舉區鄉民代表選舉",
+            "race_id": "102f76c3-26a0-409e-90b1-c43b41716e83",
+            "is_public": true,
+            "person_id": "dba1cfab-16f8-41e9-addb-da825dca0842",
+            "race_type": "township_representative_district",
+            "vote_rate": 9.14,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 285,
+            "external_id": "votetw-candidate-9d44283dbad45144",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "3",
+            "is_incumbent": false,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "dba1cfab-16f8-41e9-addb-da825dca0842",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "b78db95a-03dd-4816-b25c-276f96ec6cff",
+          "8b24b64c-3253-4937-8c4c-5c03140ce9e7"
+        ]
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-dd0dc6e9dcffb7c5e8724a4e03e4a86b",
+      "claimId": "b10e56a4-e553-4f87-8765-a5697ad26e19",
+      "sourcePersonId": "be4a145d-d374-407f-80ef-d88dabbe78c6",
+      "name": "吳亮慶",
+      "county": "屏東縣",
+      "district": "屏東縣長治鄉",
+      "office": "township_mayor",
+      "raceId": "fddeaefb-cdec-41ff-a429-66e29998eb92",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "f814d9ba-0896-421c-9d8a-8f697efb4bf8",
+      "existingPersonIds": [
+        "f814d9ba-0896-421c-9d8a-8f697efb4bf8",
+        "8c73c86a-3bf4-4816-933a-97061e48267b"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "屏東縣長治鄉",
+      "evidenceClaimIds": [
+        "bfd0f32c-54fb-448c-9133-f92efb5da7a0",
+        "be85e5d5-4385-4e88-a15b-b2fccb09bb07",
+        "759183d8-7ba4-4c6c-bf41-8627633cbea8",
+        "d075b1ff-78e3-47b5-9ebd-5615fc9c86f2",
+        "66dd4253-f5b7-4683-b28e-ca8d94fd2b00",
+        "3375fc58-61e0-45f8-9545-04a47da94915",
+        "53a8ee75-f14c-4c78-afc3-43cfe534d2f3",
+        "35c11365-4162-45a1-a1f2-46003e4c87f2",
+        "bcbde8e1-849a-4f22-bc71-b6d9491e6710",
+        "0458df6e-1529-4f1d-bd53-3118c415360e",
+        "b5207b9b-e9ee-451b-9b51-ad2a8839467b",
+        "124351a6-b567-487c-b938-c530587a8dff",
+        "3e8128b9-638d-445a-8d24-a611b7a384e5",
+        "56cabf46-bc4a-4c81-ab88-784c620b5025"
+      ],
+      "evidenceCandidateIds": [
+        "0616fb6a-f991-40f1-aadc-f4ca97ca3f5d",
+        "cf54d3b1-8335-4ed5-8c4a-b084089caab0",
+        "0aff5fe0-8dda-4f3d-ba17-f077ad7c02b3",
+        "588ea04d-700c-4085-b133-9e9e680976b5",
+        "d6e3a6c2-03d3-42bd-a2f2-cb3db8bd1d6a",
+        "af04ac67-aa22-450e-87f0-c04aae310883",
+        "3b8c338a-f572-4706-9907-77506381a4a6",
+        "238a0bb6-a4a1-4ee2-952c-fd09c3dceddd"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://web.cec.gov.tw/api/file/45c53ba1-c9db-4f60-a80b-878aff207925.pdf",
+        "https://votetw.com/wiki/%E5%90%B3%E4%BA%AE%E6%85%B6",
+        "https://bulletin.cec.gov.tw/01%E9%81%B8%E8%88%89%E5%85%AC%E5%A0%B1/06%E7%B8%A3%E5%B8%82%E8%AD%B0%E5%93%A1/111%E5%B9%B4/13%E5%B1%8F%E6%9D%B1%E7%B8%A3/%E5%B1%8F%E6%9D%B1%E7%B8%A3%E7%AC%AC02%E9%81%B8%E8%88%89%E5%8D%80.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.wikidata.org/wiki/Q50065532",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_013_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "officialFile": "ptec-64654-01.xlsx",
+      "officialSha256": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87",
+      "reason": "官方2024年長治鄉長補選當選名單列吳亮慶出生043/04/08，與既有議員人物出生日期相同；現任長治鄉長參選登記連結此人物，排除缺少該經歷的另一同名人物。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "71237e89-23ed-470d-abe5-cd4b78703272",
+      "externalEvidence": {
+        "name": "吳亮慶",
+        "url": "https://web.cec.gov.tw/api/file/45c53ba1-c9db-4f60-a80b-878aff207925.pdf",
+        "statement": "官方2024年長治鄉長補選當選名單列吳亮慶出生043/04/08，與既有議員人物出生日期相同；現任長治鄉長參選登記連結此人物，排除缺少該經歷的另一同名人物。",
+        "historyPrefix": "屏東縣第2選舉區",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "f814d9ba-0896-421c-9d8a-8f697efb4bf8",
+        "names": [
+          "吳亮慶"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1954-04-08"
+        ],
+        "birthYears": [
+          1954
+        ],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "0616fb6a-f991-40f1-aadc-f4ca97ca3f5d",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "屏東縣第2選舉區議員選舉",
+            "race_id": "a02305e7-8ed8-4602-86f6-c321ba54e849",
+            "is_public": true,
+            "person_id": "4658532a-a040-4b5f-8380-f8d62fe4f68c",
+            "race_type": "county_councilor",
+            "vote_rate": 9.17,
+            "created_at": "2026-07-13T10:45:03.333324+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/T2/T1/0863f605f58b84d598be62fabc0b3a7f/A/10_013_00_000_0000.json",
+            "updated_at": "2026-07-13T10:45:03.333324+00:00",
+            "vote_count": 7890,
+            "external_id": "cec-2018-local-councilor-candidate-regional-10013-02-23060",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "6",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T10:45:03.333324+00:00",
+            "canonical_person_id": "f814d9ba-0896-421c-9d8a-8f697efb4bf8",
+            "registration_status": "elected"
+          },
+          {
+            "id": "0aff5fe0-8dda-4f3d-ba17-f077ad7c02b3",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "屏東縣第2選舉區",
+            "race_id": "569695b6-d172-421a-b9cf-4e4b84f17180",
+            "is_public": true,
+            "person_id": "7f8bdaf5-51a1-46e0-ad24-9540229049a7",
+            "race_type": "councilor_district",
+            "vote_rate": 9.17,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 7890,
+            "external_id": "votetw-candidate-7f4fb98f0839e9b2",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "6",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "f814d9ba-0896-421c-9d8a-8f697efb4bf8",
+            "registration_status": "elected"
+          },
+          {
+            "id": "d6e3a6c2-03d3-42bd-a2f2-cb3db8bd1d6a",
+            "year": 2022,
+            "party": "民主進步黨",
+            "title": "屏東縣第2選舉區議員選舉",
+            "race_id": "26544c3c-3296-46a6-acf8-b443d3cdde26",
+            "is_public": true,
+            "person_id": "f814d9ba-0896-421c-9d8a-8f697efb4bf8",
+            "race_type": "county_councilor",
+            "vote_rate": null,
+            "created_at": "2026-05-21T04:14:16.834483+00:00",
+            "is_elected": null,
+            "source_url": "https://data.gov.tw/dataset/13119",
+            "updated_at": "2026-08-23T17:02:20.109+00:00",
+            "vote_count": null,
+            "external_id": "cec-2022-local-councilor-regional-candidate-a1cd87b6468a",
+            "source_name": "中央選舉委員會選舉資料庫：公開資料包",
+            "candidate_no": "2",
+            "is_incumbent": null,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "f814d9ba-0896-421c-9d8a-8f697efb4bf8",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": [
+          "bfd0f32c-54fb-448c-9133-f92efb5da7a0",
+          "be85e5d5-4385-4e88-a15b-b2fccb09bb07",
+          "759183d8-7ba4-4c6c-bf41-8627633cbea8",
+          "d075b1ff-78e3-47b5-9ebd-5615fc9c86f2",
+          "3375fc58-61e0-45f8-9545-04a47da94915",
+          "53a8ee75-f14c-4c78-afc3-43cfe534d2f3",
+          "35c11365-4162-45a1-a1f2-46003e4c87f2",
+          "0458df6e-1529-4f1d-bd53-3118c415360e",
+          "b5207b9b-e9ee-451b-9b51-ad2a8839467b",
+          "124351a6-b567-487c-b938-c530587a8dff",
+          "56cabf46-bc4a-4c81-ab88-784c620b5025"
+        ]
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-61faa456e184d730921fe3bb48a79f61",
+      "claimId": "51dab493-ba9d-4f2e-887d-f3676c4b6b41",
+      "sourcePersonId": "90122087-9457-454a-8536-ff39ea5643e1",
+      "name": "林吉善",
+      "county": "屏東縣",
+      "district": "屏東縣內埔鄉",
+      "office": "township_mayor",
+      "raceId": "75241349-74cc-4bf9-9ce1-657052d11baf",
+      "decision": "use_existing",
+      "reasonCode": "explicit_campaign_or_official_by_election_bridge",
+      "personId": "a2d3af1d-5d64-4ddf-9abb-4b1326873779",
+      "existingPersonIds": [
+        "a2d3af1d-5d64-4ddf-9abb-4b1326873779"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "屏東縣內埔鄉",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "4d90aedc-b4cf-4de7-ba06-5d2b006773a2",
+        "f0770181-597f-4bd1-b4a8-5d2f3077aa24"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://udn.com/vote2026/story/7327/9728180",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%85%A7%E5%9F%94%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_013_00_000_0000.json"
+      ],
+      "officialFile": "ptec-64654-01.xlsx",
+      "officialSha256": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87",
+      "reason": "2026年內埔鄉長登記報導明列曾任兩屆鄉代林吉善投入選戰，連結既有內埔第1選舉區鄉代紀錄。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "a4d94e32-2807-4cd3-b762-4a2bd3e0299c",
+      "externalEvidence": {
+        "name": "林吉善",
+        "url": "https://udn.com/vote2026/story/7327/9728180",
+        "statement": "2026年內埔鄉長登記報導明列曾任兩屆鄉代林吉善投入選戰，連結既有內埔第1選舉區鄉代紀錄。",
+        "historyPrefix": "屏東縣內埔鄉",
+        "access": "web_retrieved_content_or_index",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "a2d3af1d-5d64-4ddf-9abb-4b1326873779",
+        "names": [
+          "林吉善"
+        ],
+        "isPublic": true,
+        "birthDates": [],
+        "birthYears": [],
+        "genders": [
+          "male"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [],
+        "countyHistory": [
+          {
+            "id": "4d90aedc-b4cf-4de7-ba06-5d2b006773a2",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "屏東縣內埔鄉第1選舉區鄉民代表選舉",
+            "race_id": "8be0c79b-f3bb-495f-8d22-52c295800409",
+            "is_public": true,
+            "person_id": "a2d3af1d-5d64-4ddf-9abb-4b1326873779",
+            "race_type": "township_representative_district",
+            "vote_rate": 10.75,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": true,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%85%A7%E5%9F%94%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 1179,
+            "external_id": "votetw-candidate-9011fbc5b61f0706",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "7",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "a2d3af1d-5d64-4ddf-9abb-4b1326873779",
+            "registration_status": "elected"
+          },
+          {
+            "id": "f0770181-597f-4bd1-b4a8-5d2f3077aa24",
+            "year": 2018,
+            "party": "民主進步黨",
+            "title": "屏東縣內埔鄉第1選舉區鄉民代表選舉",
+            "race_id": "357d064b-1ae8-47ef-b386-3362a30b3788",
+            "is_public": true,
+            "person_id": "8c8718c1-6ef9-4289-9335-92066fe8bfef",
+            "race_type": "township_representative",
+            "vote_rate": 10.75,
+            "created_at": "2026-07-13T11:12:06.936049+00:00",
+            "is_elected": true,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_013_00_000_0000.json",
+            "updated_at": "2026-07-13T11:12:06.936049+00:00",
+            "vote_count": 1179,
+            "external_id": "cec-2018-local-subcounty-candidate-township-representative-regional-10013-130-01-120022",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "7",
+            "is_incumbent": true,
+            "election_result": "elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:12:06.936049+00:00",
+            "canonical_person_id": "a2d3af1d-5d64-4ddf-9abb-4b1326873779",
+            "registration_status": "elected"
+          }
+        ],
+        "claimIds": []
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-89917d2343e71b2cc113b73cff21a908",
+      "claimId": "5cc6d846-e54b-4fee-9043-f3bd47e66c7b",
+      "sourcePersonId": "c70702d3-a0ca-4eee-8ee2-2f6782ebbb5b",
+      "name": "林秀美 Rngos(cid:504)Ofo",
+      "county": "花蓮縣",
+      "district": "花蓮縣光復鄉大馬村",
+      "office": "village_chief",
+      "raceId": "59aa29a2-d760-4d01-a62f-efae356d81f4",
+      "decision": "use_existing",
+      "reasonCode": "visually_verified_name_separator_exact_local_history",
+      "personId": "1ccaa26e-ade6-4d09-9a41-ebcff453a482",
+      "existingPersonIds": [
+        "1ccaa26e-ade6-4d09-9a41-ebcff453a482"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": "花蓮縣光復鄉",
+      "evidenceClaimIds": [
+        "279b2a48-45f5-4f0e-835d-efb4bf4c1d0b",
+        "4087cafe-517a-446a-81a0-cd0bffd01be6",
+        "48a04540-8b3e-4e71-9af6-6e4cbc02c2e3"
+      ],
+      "evidenceCandidateIds": [
+        "74dd5cfe-8aa0-4345-8b52-5e4fd8d6f362",
+        "1b66080e-cbfb-4e4d-990d-6a2e6072ba35",
+        "fc4dcbbd-ccb1-4b53-86fa-7eedbaf74d37"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/10d15fc2-ad7f-480a-8260-b1f8f7546f3b.pdf",
+        "https://votetw.com/wiki/%E6%9E%97%E7%A7%80%E7%BE%8E",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/10_015_00_000_0000.json",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8A%B1%E8%93%AE%E7%B8%A3%E5%85%89%E5%BE%A9%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8A%B1%E8%93%AE%E7%B8%A3%E5%85%89%E5%BE%A9%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "officialFile": "hlec-64558-05.pdf",
+      "officialSha256": "1139fa9d1505ab2833a42889d8f2fe9346ab2ccfd45bde60b2ea05872003c820",
+      "reason": "目視官方 PDF 第3頁確認族名為 Rngos·Ofo，抽取文字的 (cid:504) 是中點；完整姓名、性別與2018及2022同村參選紀錄相符。 核對既有紀錄後無已知身分衝突，新增官方2026登記關係。",
+      "reviewedBy": "Codex official by-election/campaign and visual name review round 14",
+      "reviewedAt": "2026-09-05T07:37:08.646Z",
+      "candidateId": "5af5842b-c88b-4e9b-b910-88079aacf95d",
+      "externalEvidence": {
+        "name": "林秀美 Rngos(cid:504)Ofo",
+        "url": "https://web.cec.gov.tw/api/file/10d15fc2-ad7f-480a-8260-b1f8f7546f3b.pdf",
+        "statement": "目視官方 PDF 第3頁確認族名為 Rngos·Ofo，抽取文字的 (cid:504) 是中點；完整姓名、性別與2018及2022同村參選紀錄相符。",
+        "historyPrefix": "花蓮縣光復鄉大馬村",
+        "correctedName": "林秀美 Rngos·Ofo",
+        "access": "archived_pdf_visually_verified",
+        "checkedOn": "2026-09-05"
+      },
+      "identityComparison": {
+        "personId": "1ccaa26e-ade6-4d09-9a41-ebcff453a482",
+        "names": [
+          "林秀美Rngos‧Ofo",
+          "林秀美 Rngos·Ofo"
+        ],
+        "isPublic": true,
+        "birthDates": [
+          "1955-12-01"
+        ],
+        "birthYears": [
+          1955
+        ],
+        "genders": [
+          "female"
+        ],
+        "conflicts": [],
+        "current": [],
+        "exactLocal": [
+          {
+            "id": "74dd5cfe-8aa0-4345-8b52-5e4fd8d6f362",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "花蓮縣光復鄉大馬村村長選舉",
+            "race_id": "1a2a2656-5ff4-42d9-88b0-2938e8f99aa4",
+            "is_public": true,
+            "person_id": "d1e0519b-54ca-4f83-9665-e4c96c86a03f",
+            "race_type": "village_chief",
+            "vote_rate": 30.04,
+            "created_at": "2026-07-13T11:27:36.665607+00:00",
+            "is_elected": false,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/10_015_00_000_0000.json",
+            "updated_at": "2026-07-13T11:27:36.665607+00:00",
+            "vote_count": 201,
+            "external_id": "cec-2018-local-village-chief-candidate-10015-070-0004-85694",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:27:36.665607+00:00",
+            "canonical_person_id": "1ccaa26e-ade6-4d09-9a41-ebcff453a482",
+            "registration_status": "not_elected"
+          },
+          {
+            "id": "fc4dcbbd-ccb1-4b53-86fa-7eedbaf74d37",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "花蓮縣光復鄉大馬村村長選舉",
+            "race_id": "0275ed5a-687a-4daa-940d-706d700d71f0",
+            "is_public": true,
+            "person_id": "e8871211-c0f4-41da-bfe6-1f11f8c9ac5d",
+            "race_type": "village_chief",
+            "vote_rate": 35.71,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": false,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8A%B1%E8%93%AE%E7%B8%A3%E5%85%89%E5%BE%A9%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 215,
+            "external_id": "votetw-candidate-9b5d575e39e565e1",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "1ccaa26e-ade6-4d09-9a41-ebcff453a482",
+            "registration_status": "not_elected"
+          }
+        ],
+        "countyHistory": [
+          {
+            "id": "74dd5cfe-8aa0-4345-8b52-5e4fd8d6f362",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "花蓮縣光復鄉大馬村村長選舉",
+            "race_id": "1a2a2656-5ff4-42d9-88b0-2938e8f99aa4",
+            "is_public": true,
+            "person_id": "d1e0519b-54ca-4f83-9665-e4c96c86a03f",
+            "race_type": "village_chief",
+            "vote_rate": 30.04,
+            "created_at": "2026-07-13T11:27:36.665607+00:00",
+            "is_elected": false,
+            "source_url": "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/10_015_00_000_0000.json",
+            "updated_at": "2026-07-13T11:27:36.665607+00:00",
+            "vote_count": 201,
+            "external_id": "cec-2018-local-village-chief-candidate-10015-070-0004-85694",
+            "source_name": "中央選舉委員會選舉資料庫",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-13T11:27:36.665607+00:00",
+            "canonical_person_id": "1ccaa26e-ade6-4d09-9a41-ebcff453a482",
+            "registration_status": "not_elected"
+          },
+          {
+            "id": "1b66080e-cbfb-4e4d-990d-6a2e6072ba35",
+            "year": 2018,
+            "party": "無黨籍",
+            "title": "花蓮縣光復鄉大馬村（縣市）村里長選舉",
+            "race_id": "caf17240-676c-40dc-8263-0024bd706aa0",
+            "is_public": true,
+            "person_id": "1ccaa26e-ade6-4d09-9a41-ebcff453a482",
+            "race_type": "village_chief",
+            "vote_rate": 30.04,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": false,
+            "source_url": "https://votetw.com/wiki/2018%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8A%B1%E8%93%AE%E7%B8%A3%E5%85%89%E5%BE%A9%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 201,
+            "external_id": "votetw-candidate-24fe53b3fb6f51c4",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "1",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "1ccaa26e-ade6-4d09-9a41-ebcff453a482",
+            "registration_status": "not_elected"
+          },
+          {
+            "id": "fc4dcbbd-ccb1-4b53-86fa-7eedbaf74d37",
+            "year": 2022,
+            "party": "無黨籍",
+            "title": "花蓮縣光復鄉大馬村村長選舉",
+            "race_id": "0275ed5a-687a-4daa-940d-706d700d71f0",
+            "is_public": true,
+            "person_id": "e8871211-c0f4-41da-bfe6-1f11f8c9ac5d",
+            "race_type": "village_chief",
+            "vote_rate": 35.71,
+            "created_at": "2026-07-03T08:00:21.663835+00:00",
+            "is_elected": false,
+            "source_url": "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8A%B1%E8%93%AE%E7%B8%A3%E5%85%89%E5%BE%A9%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+            "updated_at": "2026-07-15T05:18:30.151+00:00",
+            "vote_count": 215,
+            "external_id": "votetw-candidate-9b5d575e39e565e1",
+            "source_name": "VoteTW historical election results",
+            "candidate_no": "2",
+            "is_incumbent": false,
+            "election_result": "not_elected",
+            "candidacy_status": "qualified",
+            "status_updated_at": "2026-07-15T05:18:30.151+00:00",
+            "canonical_person_id": "1ccaa26e-ade6-4d09-9a41-ebcff453a482",
+            "registration_status": "not_elected"
+          }
+        ],
+        "claimIds": [
+          "279b2a48-45f5-4f0e-835d-efb4bf4c1d0b",
+          "4087cafe-517a-446a-81a0-cd0bffd01be6"
+        ]
+      }
+    }
+  ]
+}

@@ -424,6 +424,12 @@ export const mockPublicDataProvider: PublicDataProvider = {
     return [];
   },
 
+  async loadPollingPlaces() {
+    return [];
+  },
+  async loadCandidateLifecycle() {
+    return [];
+  },
   async loadPartyPlatformHistory() {
     return [];
   },

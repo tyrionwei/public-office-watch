@@ -1,16 +1,17 @@
 import { Link } from 'react-router-dom';
 import { selectNextElectionVotingCycle } from '../data/electionVotingCycles';
 import { useI18n } from '../i18n';
-import { buildCecPollingPlaceLookupUrl } from '../lib/cecPollingPlaceLookup';
 import type { HomeTicker } from '../lib/publicDataProvider';
 import { useVotingRegion } from '../votingRegion';
 
 type DesktopVotingRegionInlineProps = {
   onOpenEditor: () => void;
+  onOpenPollingPlace?: () => void;
+  pollingPlaceOpen?: boolean;
   ticker: HomeTicker;
 };
 
-export function DesktopVotingRegionInline({ onOpenEditor, ticker }: DesktopVotingRegionInlineProps) {
+export function DesktopVotingRegionInline({ onOpenEditor, onOpenPollingPlace, pollingPlaceOpen = false, ticker }: DesktopVotingRegionInlineProps) {
   const { language } = useI18n();
   const { preference } = useVotingRegion();
   const isEnglish = language === 'en';
@@ -30,9 +31,9 @@ export function DesktopVotingRegionInline({ onOpenEditor, ticker }: DesktopVotin
     .filter(Boolean)
     .join(' ');
   const votingCycle = selectNextElectionVotingCycle(preference, ticker.date);
-  const pollingPlaceLookupUrl = votingCycle?.pollingPlaceStatus === 'lookup-available' && votingCycle.pollingPlaceLookupUrl
-    ? buildCecPollingPlaceLookupUrl(votingCycle.pollingPlaceLookupUrl, preference)
-    : null;
+  const canOpenPollingPlace = votingCycle?.pollingPlaceStatus === 'lookup-available'
+    && Boolean(votingCycle.pollingPlaceLookupUrl)
+    && Boolean(onOpenPollingPlace);
 
   return (
     <div data-desktop-voting-region className="hidden shrink-0 items-center gap-2 md:flex">
@@ -51,10 +52,10 @@ export function DesktopVotingRegionInline({ onOpenEditor, ticker }: DesktopVotin
       >
         {isEnglish ? `Browse ${preference.county.name}` : `切到${preference.county.name}`}
       </Link>
-      {pollingPlaceLookupUrl ? (
-        <a href={pollingPlaceLookupUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center border border-signal/60 bg-signal/8 px-2.5 text-xs font-semibold text-signal">
-          {isEnglish ? 'Polling place ↗' : '投票所 ↗'}
-        </a>
+      {canOpenPollingPlace ? (
+        <button type="button" onClick={onOpenPollingPlace} aria-expanded={pollingPlaceOpen} className="inline-flex min-h-9 items-center border border-signal/60 bg-signal/8 px-2.5 text-xs font-semibold text-signal">
+          {isEnglish ? 'View polling places' : '查看投開票所'}
+        </button>
       ) : null}
     </div>
   );

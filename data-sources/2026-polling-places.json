@@ -1,0 +1,146 @@
+{
+  "event_key": "2026-local-general-election-day",
+  "voting_date": "2026-11-28",
+  "checked_on": "2026-09-04",
+  "counties": [
+    {
+      "county_code": "63000",
+      "name": "臺北市",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/mect"
+    },
+    {
+      "county_code": "65000",
+      "name": "新北市",
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/tpcec",
+      "source_name": "新北市選舉委員會",
+      "source_url": "https://web.cec.gov.tw/tpcec/article/63508",
+      "file_url": "https://web.cec.gov.tw/api/file/9e400e54-2032-48a3-a502-4488e333fca9.ods",
+      "published_on": "2026-08-18",
+      "source_hash": "23858ceebfb00ffa4130761d0cb1864a9849377edadaa9cb6773c7f9011e0df1",
+      "format": "ods",
+      "adapter": "new-taipei-2026"
+    },
+    {
+      "county_code": "68000",
+      "name": "桃園市",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/tyec"
+    },
+    {
+      "county_code": "66000",
+      "name": "臺中市",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/tcec"
+    },
+    {
+      "county_code": "67000",
+      "name": "臺南市",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/tnec"
+    },
+    {
+      "county_code": "64000",
+      "name": "高雄市",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/khec"
+    },
+    {
+      "county_code": "10002",
+      "name": "宜蘭縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/ilec"
+    },
+    {
+      "county_code": "10004",
+      "name": "新竹縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/hccec"
+    },
+    {
+      "county_code": "10005",
+      "name": "苗栗縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/mlec"
+    },
+    {
+      "county_code": "10007",
+      "name": "彰化縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/chec"
+    },
+    {
+      "county_code": "10008",
+      "name": "南投縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/ntec"
+    },
+    {
+      "county_code": "10009",
+      "name": "雲林縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/ylec"
+    },
+    {
+      "county_code": "10010",
+      "name": "嘉義縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/cycec"
+    },
+    {
+      "county_code": "10013",
+      "name": "屏東縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/ptec"
+    },
+    {
+      "county_code": "10014",
+      "name": "臺東縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/ttec"
+    },
+    {
+      "county_code": "10015",
+      "name": "花蓮縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/hlec"
+    },
+    {
+      "county_code": "10016",
+      "name": "澎湖縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/phec"
+    },
+    {
+      "county_code": "10017",
+      "name": "基隆市",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/klec"
+    },
+    {
+      "county_code": "10018",
+      "name": "新竹市",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/hcec"
+    },
+    {
+      "county_code": "10020",
+      "name": "嘉義市",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/cyec"
+    },
+    {
+      "county_code": "09020",
+      "name": "金門縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/kmec"
+    },
+    {
+      "county_code": "09007",
+      "name": "連江縣",
+      "status": "not_checked",
+      "official_home": "https://web.cec.gov.tw/lcec"
+    }
+  ]
+}

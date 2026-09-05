@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "environment": "full-local",
+  "reviewedAt": "2026-09-04T19:31:10.237071Z",
+  "inputs": {
+    "tmp/cec-registration-identity-review-3/targets.json": "16c417c837215b767583b052ac3098f77f9ea537a586eb31c11a755bc45b94dd",
+    "tmp/cec-registration-identity-review-3/local-evidence.json": "c06621586805718fed890793dbfea2f7c864e6b43ab21ff6982cd35d90990793",
+    "tmp/cec-registration-identity-review-2/votetw-birth-evidence.json": "d4520dd6f4d81e71047970233a74761c1b4e0e494d481b53ad35c79f4e8aa2d3",
+    "tmp/cec-registration-identity-review/cec-2024-party-list.json": "7f162089ba94bf7b9ed4ee24f067709bb0944a640c878a6801322a4e46edc0f2",
+    "tmp/cec-registration-identity-review-3/review-manifest.json": "6d36a1a12bb1a40b96f3d0591a2a959a9ce105b36450d8c49aec8cf68a2af025",
+    "tmp/cec-registration-final/import-manifest.json": "e004d07cfd82306b26adc55ec6b230d2601d73ff5fb9b8bfa29c3a38a83cf1f3"
+  },
+  "baselinePending": 1233,
+  "reviewed": 7,
+  "resolved": 7,
+  "reusedPeople": 7,
+  "newPeople": 0,
+  "remainingPending": 1226,
+  "reasonCounts": {
+    "fetched_exact_birth_and_2022_history": 6,
+    "cec_2024_exact_birth_and_history": 1
+  },
+  "accepted": [
+    {
+      "candidateExternalId": "pow-cec-registration-2026-a48788ba70ec9eb900b5ec5d97e22429",
+      "candidateId": "280c39fc-d62e-54b4-92be-fde32fc75b6a",
+      "claimId": "15bccdc9-a29b-4da3-855a-3bb520b63318",
+      "personId": "763eb151-cccd-4cc0-9fa0-6e01fb945de9",
+      "raceId": "d7ca0406-b1c3-4ab2-a0e7-f9b7d5bffa54",
+      "name": "林振德",
+      "county": "桃園市",
+      "district": "桃園市復興區第3選舉區",
+      "office": "indigenous_district_representative",
+      "decision": "use_existing",
+      "reasonCode": "fetched_exact_birth_and_2022_history",
+      "evidenceCandidateIds": [
+        "04391773-7638-4828-b9a0-ee8dce781104"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/f512a9c4-6e3e-4379-939a-68e5d3778394.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%A1%83%E5%9C%92%E5%B8%82%E5%BE%A9%E8%88%88%E5%8D%80%E5%8D%80%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E6%9E%97%E6%8C%AF%E5%BE%B7"
+      ],
+      "externalBirthEvidence": {
+        "kind": "votetw_person_page",
+        "url": "https://votetw.com/wiki/%E6%9E%97%E6%8C%AF%E5%BE%B7",
+        "sha256": "b927bc2d05aae6d966642e0f6d0020e82bd7960c244875c9e8d118b74c6db9c2",
+        "retrievedAt": "2026-09-04T19:26:52.682Z",
+        "birthDate": "1955-04-20",
+        "gender": "male",
+        "text": "林振德 （1955年4月20日），男，生於桃園市，專科學歷。 林振德的參選經歷包括：2022年桃園市復興區區民代表選舉復興區第3選舉區（直轄市原住民）（當選）。"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-89c10479f41eb5e76342436ce7d68225",
+      "candidateId": "9daf078f-ed36-5e8e-99bd-2f00745dce0e",
+      "claimId": "83ebd8a3-69b6-4959-969e-bdbc45a30b93",
+      "personId": "16acfdf5-c5eb-4977-99d7-2d9441814663",
+      "raceId": "2b0a04dd-c279-4296-9400-51046f4ab9ac",
+      "name": "鄭宇翔",
+      "county": "新竹縣",
+      "district": "新竹縣竹東鎮第2選舉區",
+      "office": "township_representative",
+      "decision": "use_existing",
+      "reasonCode": "fetched_exact_birth_and_2022_history",
+      "evidenceCandidateIds": [
+        "3b47d8a0-d4c7-4f4e-8b35-fab3cb6bf234"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c25f6511-df2b-4c47-88b5-7e6c63d721e8.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E6%96%B0%E7%AB%B9%E7%B8%A3%E7%AB%B9%E6%9D%B1%E9%8E%AE%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%84%AD%E5%AE%87%E7%BF%94"
+      ],
+      "externalBirthEvidence": {
+        "kind": "votetw_person_page",
+        "url": "https://votetw.com/wiki/%E9%84%AD%E5%AE%87%E7%BF%94",
+        "sha256": "1d8887cf36d1381717ccc028587d5f8990652640d4e0e5a0d0021c4f0514db0d",
+        "retrievedAt": "2026-09-04T19:26:55.573Z",
+        "birthDate": "1989-10-17",
+        "gender": "male",
+        "text": "鄭宇翔 （1989年10月17日），男，生於臺灣省，大學學歷。 鄭宇翔的參選經歷包括：2022年新竹縣竹東鎮榮華里里長選舉（未當選）。"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-fc245484ab156ad9b6bb6c3545d92bf5",
+      "candidateId": "f81d870f-b935-539c-9fc9-e1dc09b279ab",
+      "claimId": "db72195f-77db-4942-a190-ed4df83a0cda",
+      "personId": "63930469-6983-454a-a8f8-c5c601cf0a00",
+      "raceId": "89c51fd0-1961-4b82-a1cf-e5309e2de190",
+      "name": "賴文龍",
+      "county": "新竹縣",
+      "district": "新竹縣尖石鄉第2選舉區",
+      "office": "township_representative",
+      "decision": "use_existing",
+      "reasonCode": "fetched_exact_birth_and_2022_history",
+      "evidenceCandidateIds": [
+        "cfc9050e-fdcf-4465-ba94-4feb2a3b7038"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c25f6511-df2b-4c47-88b5-7e6c63d721e8.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E6%96%B0%E7%AB%B9%E7%B8%A3%E5%B0%96%E7%9F%B3%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E8%B3%B4%E6%96%87%E9%BE%8D"
+      ],
+      "externalBirthEvidence": {
+        "kind": "votetw_person_page",
+        "url": "https://votetw.com/wiki/%E8%B3%B4%E6%96%87%E9%BE%8D",
+        "sha256": "96f84fbbb81de354d0bc78d89fc23bd18a10b14f8500ccffdce5165a9b52e330",
+        "retrievedAt": "2026-09-04T19:26:55.817Z",
+        "birthDate": "1964-10-08",
+        "gender": "male",
+        "text": "賴文龍 （1964年10月8日），男，生於臺灣省，高中(職)學歷。 賴文龍的參選經歷包括：2022年新竹縣尖石鄉梅花村村長選舉（未當選）。"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-c9b1c30344c1626e633f245d5b98646e",
+      "candidateId": "3fc07e14-bb82-5386-b656-b11f1ea537c4",
+      "claimId": "1700ab67-d397-4a59-a5e9-4a2f67461aae",
+      "personId": "1d5eecc2-c33e-4482-a264-623d30706823",
+      "raceId": "78e10730-a62a-4cdb-8681-b3e32ab4c97f",
+      "name": "陳志偉",
+      "county": "新竹縣",
+      "district": "新竹縣五峰鄉第3選舉區",
+      "office": "township_representative",
+      "decision": "use_existing",
+      "reasonCode": "fetched_exact_birth_and_2022_history",
+      "evidenceCandidateIds": [
+        "062a4ec4-8386-42a3-98b0-4906ebcd5328"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c25f6511-df2b-4c47-88b5-7e6c63d721e8.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E6%96%B0%E7%AB%B9%E7%B8%A3%E4%BA%94%E5%B3%B0%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%99%B3%E5%BF%97%E5%81%89"
+      ],
+      "externalBirthEvidence": {
+        "kind": "votetw_person_page",
+        "url": "https://votetw.com/wiki/%E9%99%B3%E5%BF%97%E5%81%89",
+        "sha256": "23efe5dbcf802258efec0759959b7e26e74aad34852e9f80b017fce402a70807",
+        "retrievedAt": "2026-09-04T19:26:55.902Z",
+        "birthDate": "1978-01-01",
+        "gender": "male",
+        "text": "陳志偉 （1978年1月1日），男，生於臺灣省，高中(職)學歷。 陳志偉的參選經歷包括：2022年新竹縣五峰鄉花園村村長選舉（未當選）。"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-30d69aa58087e67e4c8c77e2df5a5c10",
+      "candidateId": "a13b8f78-6d66-507f-b463-d204ee848993",
+      "claimId": "a6f573b5-1749-4174-800a-4e1e38f14242",
+      "personId": "d31477c1-6627-4e3c-8a0b-2a9427f6b132",
+      "raceId": "1e0f3e72-8c87-4ac1-b765-2d92b866b8f7",
+      "name": "林月琴",
+      "county": "新竹縣",
+      "district": "新竹縣新埔鎮旱坑里",
+      "office": "village_chief",
+      "decision": "use_existing",
+      "reasonCode": "fetched_exact_birth_and_2022_history",
+      "evidenceCandidateIds": [
+        "f74b7c88-14aa-4a3c-9230-09b45a01e3da"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/bb22bdcd-a71e-4906-8070-e90ccd6159aa.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%96%B0%E7%AB%B9%E7%B8%A3%E6%96%B0%E5%9F%94%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E6%9E%97%E6%9C%88%E7%90%B4"
+      ],
+      "externalBirthEvidence": {
+        "kind": "votetw_person_page",
+        "url": "https://votetw.com/wiki/%E6%9E%97%E6%9C%88%E7%90%B4",
+        "sha256": "b68f864be6f19561153e6bc14c489d32fafcba52c91b31f05a3497f6caf5ea3a",
+        "retrievedAt": "2026-09-04T19:26:56.645Z",
+        "birthDate": "1973-05-29",
+        "gender": "female",
+        "text": "林月琴 （1973年5月29日），女，生於臺灣省，專科學歷。 林月琴的參選經歷包括：2022年新竹縣新埔鎮鎮民代表選舉新埔鎮第1選舉區（區域）（未當選）。"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-0d1f6b1001dab6002dd83c57bf1cc38c",
+      "candidateId": "b78cb3a8-44e9-506f-b411-beaebbfb8500",
+      "claimId": "07bc33f4-78c4-4ec1-96f7-4198cee4bb54",
+      "personId": "552d5c69-0953-4b61-bda7-45b8f67527d3",
+      "raceId": "b539fb6f-e88f-4db2-91dd-c3fae171922b",
+      "name": "蔡坤達",
+      "county": "嘉義市",
+      "district": "嘉義市第2選舉區",
+      "office": "councilor",
+      "decision": "use_existing",
+      "reasonCode": "fetched_exact_birth_and_2022_history",
+      "evidenceCandidateIds": [
+        "a9c6b395-e5bc-4864-94e5-74ae93656fe8"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b53580e2-387f-450e-ad4f-25f966891c1e.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%98%89%E7%BE%A9%E5%B8%82%E8%A5%BF%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E8%94%A1%E5%9D%A4%E9%81%94"
+      ],
+      "externalBirthEvidence": {
+        "kind": "votetw_person_page",
+        "url": "https://votetw.com/wiki/%E8%94%A1%E5%9D%A4%E9%81%94",
+        "sha256": "e4af25215cb8f2ba3e03879440e2894f23211aeca811b59b980a043342f69b2e",
+        "retrievedAt": "2026-09-04T19:26:57.018Z",
+        "birthDate": "1976-02-17",
+        "gender": "male",
+        "text": "蔡坤達 （1976年2月17日），男，生於臺灣省，高中(職)學歷。 蔡坤達的參選經歷包括：2022年嘉義市西區慶安里里長選舉（未當選）。"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-55d493c77996b4570d2d09672cc3354f",
+      "candidateId": "d012d32a-09f1-54ae-bdde-8ed56825353d",
+      "claimId": "40a84837-9185-448e-abfd-cc4edd764763",
+      "personId": "f58f9bc1-d4a7-4c52-a3a5-77947f7f89cf",
+      "raceId": "faa43ba2-ffc2-4265-a687-235fcb597764",
+      "name": "李貞秀",
+      "county": "新竹縣",
+      "district": "新竹縣竹北市",
+      "office": "township_mayor",
+      "decision": "use_existing",
+      "reasonCode": "cec_2024_exact_birth_and_history",
+      "evidenceCandidateIds": [
+        "4a13cb1e-4593-4070-9a7b-0fd454cc5ab3"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ce0f22c7-0255-4184-9411-1302ec497eee.pdf",
+        "https://2024.cec.gov.tw/data/json/cand/L4/00000.json"
+      ],
+      "externalBirthEvidence": {
+        "kind": "cec_2024_party_list",
+        "url": "https://2024.cec.gov.tw/data/json/cand/L4/00000.json",
+        "file": "tmp/cec-registration-identity-review/cec-2024-party-list.json",
+        "sha256": "7f162089ba94bf7b9ed4ee24f067709bb0944a640c878a6801322a4e46edc0f2",
+        "birthDate": "1973-04-15",
+        "gender": "female",
+        "record": {
+          "gender": "女",
+          "name": "李貞秀",
+          "birth": "0620415",
+          "candNo": 15,
+          "home": "湖南省"
+        }
+      }
+    }
+  ]
+}

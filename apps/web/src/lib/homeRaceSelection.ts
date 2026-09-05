@@ -1,3 +1,5 @@
+import { isCurrentCountyRegion } from './countyRegions.ts';
+import type { StageRegionNode } from '../types/stageMap.ts';
 import type { HomePageData, UpcomingRace } from './publicDataProvider.ts';
 
 function isNationalRace(race: UpcomingRace) {
@@ -18,9 +20,9 @@ function isLocalChiefRace(race: UpcomingRace) {
     || race.raceType === 'local_chief';
 }
 
-export function selectHomeRegionId(regions: { id: string }[], requestedRegionId: string | null) {
+export function selectHomeRegionId(regions: Pick<StageRegionNode, 'id' | 'label' | 'level'>[], requestedRegionId: string | null) {
   if (requestedRegionId === 'national') return null;
-  return requestedRegionId && regions.some((region) => region.id === requestedRegionId)
+  return requestedRegionId && regions.some((region) => region.id === requestedRegionId && isCurrentCountyRegion(region))
     ? requestedRegionId
     : null;
 }

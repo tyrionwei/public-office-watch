@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react';
 
+import { validNeighborhood } from './lib/pollingPlace';
+
 export const votingRegionStorageKey = 'public-office-watch.voting-region-preference.v1';
 
 export type VotingRegionChoice = {
@@ -12,6 +14,7 @@ export type VotingRegionPreference = {
   county: VotingRegionChoice;
   district?: VotingRegionChoice;
   village?: VotingRegionChoice;
+  neighborhood?: number;
   source: 'manual' | 'confirmed-location';
   confirmedAt: string;
 };
@@ -49,7 +52,7 @@ function readStoredPreference(): VotingRegionPreference | null {
     if (value.village !== undefined && !isChoice(value.village)) return null;
     if (value.source !== 'manual' && value.source !== 'confirmed-location') return null;
     if (typeof value.confirmedAt !== 'string') return null;
-    return value as VotingRegionPreference;
+    return { ...value, neighborhood: value.village ? validNeighborhood(value.neighborhood) : undefined } as VotingRegionPreference;
   } catch {
     return null;
   }

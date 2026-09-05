@@ -1,0 +1,3577 @@
+{
+  "asOf": "2026-09-04",
+  "retrievedAt": "2026-09-04T13:56:11.825668+00:00",
+  "centralTotal": 19695,
+  "parsedRecords": 18417,
+  "verification": {
+    "sources": 18417,
+    "private_sources": 18417,
+    "claims_verified": 16822,
+    "claims_pending": 1595,
+    "private_claims": 18417,
+    "new_private_people": 5852,
+    "new_private_races": 38,
+    "registered_history_candidates": 16822,
+    "archived_snapshots": 145,
+    "unchanged_other_2026_candidates": 44,
+    "verified_candidate_rows": 16822,
+    "new_public_candidates": 0
+  },
+  "regions": [
+    {
+      "code": "mect",
+      "name": "臺北市選舉委員會",
+      "articles": [
+        {
+          "title": "臺北市第9屆市長選舉候選人登記情形",
+          "published_at_raw": "20260904000000",
+          "url": "https://web.cec.gov.tw/mect/article/64441",
+          "files": [
+            {
+              "name": "臺北市第9屆市長選舉候選人登記冊-登記日期8月31日",
+              "url": "https://web.cec.gov.tw/api/file/12ebd1eb-e435-4d55-b630-73f0047a7187.pdf",
+              "file": "mect-64441-01.pdf",
+              "sha256": "6fa723ebc9c4aec93d0bf0776192a2f0d7979c4ff0235f1efad72a516aaa4fc8"
+            },
+            {
+              "name": "臺北市第9屆市長選舉候選人登記每日統計表-登記日期8月31日",
+              "url": "https://web.cec.gov.tw/api/file/78a64190-eb7f-423f-aace-24530bc6b645.pdf",
+              "file": "mect-64441-02.pdf",
+              "sha256": "a633bd85bbb885ad18fb2a4548ccf354efdeaacb8a5a108baef4c4524d7bdeee"
+            },
+            {
+              "name": "臺北市第9屆市長選舉候選人登記每日統計表-登記日期8月31日至9月1日",
+              "url": "https://web.cec.gov.tw/api/file/ed3c758d-f5da-4b65-8fa9-7fd61cd32b65.pdf",
+              "file": "mect-64441-03.pdf",
+              "sha256": "23e46975c98e93db59504e304762ac34e731d522a105d60ad857ae967b2f77a1"
+            },
+            {
+              "name": "臺北市第9屆市長選舉候選人登記冊-登記日期8月31日至9月1日",
+              "url": "https://web.cec.gov.tw/api/file/98931b1c-24f2-451a-aad9-3f5e16a19032.pdf",
+              "file": "mect-64441-04.pdf",
+              "sha256": "8f97541c04eee28ae4847340c5dd4d27f24a7cc3d568ac869b0a62bb4956c06a"
+            },
+            {
+              "name": "臺北市第9屆市長選舉候選人登記每日統計表-登記日期8月31日至9月2日",
+              "url": "https://web.cec.gov.tw/api/file/932a570e-e40d-4950-98d4-27888af8b4c8.pdf",
+              "file": "mect-64441-05.pdf",
+              "sha256": "0a266afe209b4727d4aa2f82753ab088c47ebf77b5003b6b005cfac52dbd982f"
+            },
+            {
+              "name": "臺北市第9屆市長選舉候選人登記冊-登記日期8月31日至9月2日",
+              "url": "https://web.cec.gov.tw/api/file/5013c876-bf90-47c7-a34d-e08b0f8a478e.pdf",
+              "file": "mect-64441-06.pdf",
+              "sha256": "939bf6866c13ce3813bec56a391602d110fab2fd46be2f9cd75ab8ff8b4ea943"
+            },
+            {
+              "name": "臺北市第9屆市長選舉候選人登記每日統計表-登記日期8月31日至9月3日",
+              "url": "https://web.cec.gov.tw/api/file/652e18ba-d5f5-42aa-b095-61d0f6d6dff2.pdf",
+              "file": "mect-64441-07.pdf",
+              "sha256": "c611f062ec1d6935198612f6abf67a0107104e3ab1ec81bca198b7ca9500565b"
+            },
+            {
+              "name": "臺北市第9屆市長選舉候選人登記冊-登記日期8月31日至9月3日",
+              "url": "https://web.cec.gov.tw/api/file/1a8f87b3-ae9e-4d43-9e39-c442f7f94a98.pdf",
+              "file": "mect-64441-08.pdf",
+              "sha256": "2a0cfbc03d6a444db2f557306cb14bad9fbc5679c6de743aebc9a64d713257ec"
+            },
+            {
+              "name": "臺北市第9屆市長選舉候選人登記每日統計表-登記日期8月31日至9月4日",
+              "url": "https://web.cec.gov.tw/api/file/3efd21b0-557e-485c-a010-c3d2860dd75e.pdf",
+              "file": "mect-64441-09.pdf",
+              "sha256": "fd0cc6987a663efae0fe7728394810e64cdb72d6eeee04e9b4a5797edc4965b4"
+            },
+            {
+              "name": "臺北市第9屆市長選舉候選人登記冊-登記日期8月31日至9月4日",
+              "url": "https://web.cec.gov.tw/api/file/7d199a34-2eb9-47df-9059-4992778b0b8f.pdf",
+              "file": "mect-64441-10.pdf",
+              "sha256": "271cad000413eb0d9de99a5e0bd8dbd5aa71b8eea1330e5286f1ed5cb2ad26a8"
+            }
+          ]
+        },
+        {
+          "title": "臺北市第15屆里長選舉候選人登記情形",
+          "published_at_raw": "20260904000000",
+          "url": "https://web.cec.gov.tw/mect/article/64449",
+          "files": [
+            {
+              "name": "臺北市第15屆里長選舉候選人登記每日統計表-登記日期8月31日",
+              "url": "https://web.cec.gov.tw/api/file/f9d11123-992b-4702-8e32-a102ad8ad0d2.pdf",
+              "file": "mect-64449-01.pdf",
+              "sha256": "efcb4df44e8569eb421170550cdc64ebeac3d6f4d2397a8d8897afe71f77ca27"
+            },
+            {
+              "name": "臺北市第15屆里長選舉候選人登記冊-登記日期8月31日",
+              "url": "https://web.cec.gov.tw/api/file/529e01fb-40cc-4d0e-b76f-79d9cf3ac57e.pdf",
+              "file": "mect-64449-02.pdf",
+              "sha256": "f69e46ccac5cda435628b0f2579250e69f319cd3fd90714e66b7fb60f426edb3"
+            },
+            {
+              "name": "臺北市第15屆里長選舉候選人登記每日統計表-登記日期8月31日至9月1日",
+              "url": "https://web.cec.gov.tw/api/file/41f102ea-66c7-4638-b13d-26885320f022.pdf",
+              "file": "mect-64449-03.pdf",
+              "sha256": "1968abb241e3fa78989fd29f6d8c0c0631101754cb6cfc73736f73c5d9aa19f9"
+            },
+            {
+              "name": "臺北市第15屆里長選舉候選人登記冊-登記日期8月31日至9月1日",
+              "url": "https://web.cec.gov.tw/api/file/9af609e8-7909-4fd6-aa18-7598d18348e9.pdf",
+              "file": "mect-64449-04.pdf",
+              "sha256": "23e77bf280c73bb71a621ce7bb6b8a3bfe6bb6e9fbe70664768a68e4c54bd5c3"
+            },
+            {
+              "name": "臺北市第15屆里長選舉候選人登記每日統計表-登記日期8月31日至9月2日",
+              "url": "https://web.cec.gov.tw/api/file/88ca70ef-2f0d-433c-9eec-a08710845fcd.pdf",
+              "file": "mect-64449-05.pdf",
+              "sha256": "793247974eded29ec392ebb4a94ec74bf4260f63cb24b7c9d8b85b0b79ce8fec"
+            },
+            {
+              "name": "臺北市第15屆里長選舉候選人登記冊-登記日期8月31日至9月2日",
+              "url": "https://web.cec.gov.tw/api/file/4fa58f26-f1e3-4a7d-a82b-d71e4d41b0d6.pdf",
+              "file": "mect-64449-06.pdf",
+              "sha256": "748be64290f7e3648cbf45f7d65e3c2db8df411ceebcbe23263591f3f4c6496f"
+            },
+            {
+              "name": "臺北市第15屆里長選舉候選人登記每日統計表-登記日期8月31日至9月3日",
+              "url": "https://web.cec.gov.tw/api/file/57e8c37c-34e0-4791-abc1-721f2ae5afcb.pdf",
+              "file": "mect-64449-07.pdf",
+              "sha256": "b0a7daaf9f876860b3dfd8e8e3755b366aedb4f6014e949c2806b3fc01672e96"
+            },
+            {
+              "name": "臺北市第15屆里長選舉候選人登記冊-登記日期8月31日至9月3日",
+              "url": "https://web.cec.gov.tw/api/file/98ecc027-77a6-4e81-bf7c-e5d898550f36.pdf",
+              "file": "mect-64449-08.pdf",
+              "sha256": "a7c93f4fa48009decbc52b3fa876abfa994fbf04774b14b2fb0417a2c329ce3d"
+            },
+            {
+              "name": "臺北市第15屆里長選舉候選人登記每日統計表-登記日期8月31日至9月4日",
+              "url": "https://web.cec.gov.tw/api/file/40ecc275-6e1c-4078-81af-1b5f3b488f6a.pdf",
+              "file": "mect-64449-09.pdf",
+              "sha256": "44cd7ff2df5b26be2ca5f2f694117843781b0fc53cc1cc4ee75dab9b041bd4f2"
+            },
+            {
+              "name": "臺北市第15屆里長選舉候選人登記冊-登記日期8月31日至9月4日",
+              "url": "https://web.cec.gov.tw/api/file/bf127daf-8446-47f6-b3b9-87d97c58ee35.pdf",
+              "file": "mect-64449-10.pdf",
+              "sha256": "852c63606f8016e6ff4d2d6c5346b5171eb1421dfc8a882a0585ee26d3f8403f"
+            }
+          ]
+        },
+        {
+          "title": "臺北市第15屆議員選舉候選人登記情形",
+          "published_at_raw": "20260904000000",
+          "url": "https://web.cec.gov.tw/mect/article/64447",
+          "files": [
+            {
+              "name": "臺北市第15屆議員選舉候選人登記冊-登記日期8月31日",
+              "url": "https://web.cec.gov.tw/api/file/cbd5607a-cd0a-43e5-8086-a9726a52a273.pdf",
+              "file": "mect-64447-01.pdf",
+              "sha256": "ab08dd0693eb25f5bec1a1c98f54b93a17b7e52849e5341c1f820ce96baa62fc"
+            },
+            {
+              "name": "臺北市第15屆議員選舉候選人登記每日統計表-登記日期8月31日",
+              "url": "https://web.cec.gov.tw/api/file/d3a59af1-d55a-4d2e-85c1-ed13c6b659e3.pdf",
+              "file": "mect-64447-02.pdf",
+              "sha256": "d382ae69684cdaf9025ca11d51e61fda2f45de1c1e5dcbc23bc51d1e742657b3"
+            },
+            {
+              "name": "臺北市第15屆議員選舉候選人登記每日統計表-登記日期8月31日至9月1日",
+              "url": "https://web.cec.gov.tw/api/file/0ecc74f5-93d1-47e5-a916-0565b9a117c7.pdf",
+              "file": "mect-64447-03.pdf",
+              "sha256": "5bb16935b7ca1ff8e7de49539d2ef5ade9d74f570282a2057d4fb87ebbcc9295"
+            },
+            {
+              "name": "臺北市第15屆議員選舉候選人登記冊-登記日期8月31日至9月1日",
+              "url": "https://web.cec.gov.tw/api/file/dca1402d-a0a9-4ff7-9b77-c2f8a44219e5.pdf",
+              "file": "mect-64447-04.pdf",
+              "sha256": "f8ea263f157dec7788d02c61cb8689cb53604a8a94ff9db65edbaf5bf0421426"
+            },
+            {
+              "name": "臺北市第15屆議員選舉候選人登記冊-登記日期8月31日至9月2日",
+              "url": "https://web.cec.gov.tw/api/file/95243711-635b-4d05-932b-971cc947987a.pdf",
+              "file": "mect-64447-05.pdf",
+              "sha256": "527fd41a6b8792bc7a46c4fc6f51eb91138ee31956bedb9f1a12db88b8fe5afa"
+            },
+            {
+              "name": "臺北市第15屆議員選舉候選人登記每日統計表-登記日期8月31日至9月2日",
+              "url": "https://web.cec.gov.tw/api/file/daf265b0-8a88-43cf-9135-cfd3fd6a96d7.pdf",
+              "file": "mect-64447-06.pdf",
+              "sha256": "4fa790d0b1877261dfc715cff2be156645eb6469bf8861d6dcc7b1298ab1fe81"
+            },
+            {
+              "name": "臺北市第15屆議員選舉候選人登記冊-登記日期8月31日至9月3日",
+              "url": "https://web.cec.gov.tw/api/file/91a0bbd5-cc4e-4839-8664-c4cd55b201ce.pdf",
+              "file": "mect-64447-07.pdf",
+              "sha256": "b47299e1cb86ad952a02a25e2a95d5031f9b8efea3c2462bd6050482b67ee251"
+            },
+            {
+              "name": "臺北市第15屆議員選舉候選人登記每日統計表-登記日期8月31日至9月3日",
+              "url": "https://web.cec.gov.tw/api/file/6ac17c54-7cb5-401e-9ef1-f49fef6b5658.pdf",
+              "file": "mect-64447-08.pdf",
+              "sha256": "fcfca2c59a6688fcb3a8b728bc426e0a5765e0dfbbb09ed1bf44ae6b73977d02"
+            },
+            {
+              "name": "臺北市第15屆議員選舉候選人登記冊-登記日期8月31日至9月4日",
+              "url": "https://web.cec.gov.tw/api/file/b5a0a111-bbd9-4e1c-bce5-439da1777fcc.pdf",
+              "file": "mect-64447-09.pdf",
+              "sha256": "e89886098ae09f58087bdff96d4760fdb113824971b6d993d9b0c07896e47af5"
+            },
+            {
+              "name": "臺北市第15屆議員選舉候選人登記每日統計表-登記日期8月31日至9月4日",
+              "url": "https://web.cec.gov.tw/api/file/5a2a6af4-b670-42f6-8c63-aff9ea81585c.pdf",
+              "file": "mect-64447-10.pdf",
+              "sha256": "3e57446c366f527f61af9012865a33db69f4efb97e30548ea7fc166702266399"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "臺北市第9屆市長選舉候選人登記情形",
+          "published_at_raw": "20260904000000",
+          "url": "https://web.cec.gov.tw/mect/article/64441"
+        },
+        {
+          "title": "臺北市第15屆里長選舉候選人登記情形",
+          "published_at_raw": "20260904000000",
+          "url": "https://web.cec.gov.tw/mect/article/64449"
+        },
+        {
+          "title": "臺北市第15屆議員選舉候選人登記情形",
+          "published_at_raw": "20260904000000",
+          "url": "https://web.cec.gov.tw/mect/article/64447"
+        }
+      ]
+    },
+    {
+      "code": "tpcec",
+      "name": "新北市選舉委員會",
+      "articles": [
+        {
+          "title": "9/4 登記資料（由官網公告清單定位）",
+          "url": "https://web.cec.gov.tw/tpcec/article/64393",
+          "files": [
+            {
+              "name": "115年直轄市山地原住民區長選舉候選人登記情形一覽表（8月31日-9月4日）",
+              "url": "https://web.cec.gov.tw/api/file/abe57334-fc7b-4b7f-83af-2f3000b070be.pdf",
+              "file": "tpcec-64393-01.pdf",
+              "sha256": "883e4e5b21d1c8225c6fafb13f88b016a82baaf476def6d8f3e960e6a174419d"
+            },
+            {
+              "name": "115年直轄市長選舉候選人登記情形一覽表（8月31日-9月4日）",
+              "url": "https://web.cec.gov.tw/api/file/11c24147-de1e-4616-8524-6df28adb8510.pdf",
+              "file": "tpcec-64393-02.pdf",
+              "sha256": "87288a359522c7c757b8b96d52a39e5dcb2ac60f384f19fdb30ad99c51faf8c4"
+            },
+            {
+              "name": "115年直轄市山地原住民區民代表選舉候選人登記情形一覽表（8月31日-9月4日）",
+              "url": "https://web.cec.gov.tw/api/file/7627154b-f610-43a9-82f5-38d5163b1e45.pdf",
+              "file": "tpcec-64393-03.pdf",
+              "sha256": "7d67b9a9de09e838a59f49fd09a0e1d97f5acb700fc803255128703535aa247c"
+            },
+            {
+              "name": "115年直轄市議員選舉候選人登記情形一覽表（8月31日-9月4日）",
+              "url": "https://web.cec.gov.tw/api/file/669b82d7-7c65-4568-97a3-c7cc25046e6f.pdf",
+              "file": "tpcec-64393-04.pdf",
+              "sha256": "2e1003ea307cea1d9c0f7862770e55d9b025baf1c5676ad10205e4539d62820e"
+            },
+            {
+              "name": "115年村里長選舉候選人登記情形一覽表（8月31日-9月4日）",
+              "url": "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf",
+              "file": "tpcec-64393-05.pdf",
+              "sha256": "37c506ac82506139aa013389702c88520d73a3416d0608bcbb6d61aa45806bc0"
+            }
+          ]
+        },
+        {
+          "title": "9/4 登記資料（由官網公告清單定位）",
+          "url": "https://web.cec.gov.tw/tpcec/article/64628",
+          "files": []
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年新北市地方公職人員選舉候選人申請登記及姓名號次抽籤作業須知",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tpcec/article/63815"
+        },
+        {
+          "title": "新北市選委會完成115年新北市地方公職人員選舉候選人登記作業---新聞稿",
+          "published_at_raw": "20260904181751",
+          "url": "https://web.cec.gov.tw/tpcec/article/64628"
+        },
+        {
+          "title": "115年新北市地方公職人員選舉候選人登記作業即將展開---新聞稿",
+          "published_at_raw": "20260827080600",
+          "url": "https://web.cec.gov.tw/tpcec/article/63761"
+        },
+        {
+          "title": "新北市選委會完成115年新北市地方公職人員選舉候選人登記作業---新聞稿",
+          "published_at_raw": "20260904181751",
+          "url": "https://web.cec.gov.tw/tpcec/article/64629"
+        },
+        {
+          "title": "115年新北市地方公職人員選舉候選人登記作業即將展開---新聞稿",
+          "published_at_raw": "20260827080600",
+          "url": "https://web.cec.gov.tw/tpcec/article/63762"
+        }
+      ]
+    },
+    {
+      "code": "tyec",
+      "name": "桃園市選舉委員會",
+      "articles": [
+        {
+          "title": "115年8月31日至9月4日桃園市地方公職人員選舉候選人登記情形",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64665",
+          "files": [
+            {
+              "name": "1150904 桃園市選舉委員會新聞稿",
+              "url": "https://web.cec.gov.tw/api/file/ec968b00-2ba5-48c2-bbd4-a69fcaaece78.pdf",
+              "file": "tyec-64665-01.pdf",
+              "sha256": "97fc8391529b18081904bcef42702c437dd98cab92f1a1c8d617d91ef3f031f8"
+            },
+            {
+              "name": "(115年直轄市長選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/588192ed-df0f-4818-8dd6-0392a7b1c60e.pdf",
+              "file": "tyec-64665-02.pdf",
+              "sha256": "40c197c6da458570beed26c72da1c4b314ac666e487fd73eedd104ca10fe5d86"
+            },
+            {
+              "name": "(115年直轄市議員選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/334d7a37-3896-4f38-955f-6d0ec8810df7.pdf",
+              "file": "tyec-64665-03.pdf",
+              "sha256": "ba4b62f1bf54a5f3115673033ee69c224ddd8316d436b1ac87b95b2d737318bb"
+            },
+            {
+              "name": "(115年直轄市山地原住民區長選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/a4487eb2-d569-4039-98e5-10711a4d20a9.pdf",
+              "file": "tyec-64665-04.pdf",
+              "sha256": "b5ef6e47905423d55178af1a6aa9a21031b15488cd41a6b33fcf755c3b4bd6a6"
+            },
+            {
+              "name": "(115年直轄市山地原住民區民代表選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/f512a9c4-6e3e-4379-939a-68e5d3778394.pdf",
+              "file": "tyec-64665-05.pdf",
+              "sha256": "db3ba2b6c2f5ed54d74f7640f9585f5529d7296c00b1b4c724c17fc0f6299549"
+            },
+            {
+              "name": "(115年村里長選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf",
+              "file": "tyec-64665-06.pdf",
+              "sha256": "035f4438676589d49b996cd6a5e69d3d6c8bd5ff1281175c61ccdadcc10017da"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年8月31日復興區長、復興區民代表及里長選舉候選人登記每日統計",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64465"
+        },
+        {
+          "title": "115年8月31日桃園市市長及市議員選舉候選人登記情形",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64467"
+        },
+        {
+          "title": "115年9月1日復興區長、復興區民代表及里長選舉候選人登記每日統計",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64511"
+        },
+        {
+          "title": "115年9月1日桃園市市長及市議員選舉候選人登記情形",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64513"
+        },
+        {
+          "title": "115年9月2日復興區長、復興區民代表及里長選舉候選人登記每日統計",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64555"
+        },
+        {
+          "title": "115年9月2日桃園市市長及市議員選舉候選人登記情形",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64557"
+        },
+        {
+          "title": "115年9月3日復興區長、復興區民代表及里長選舉候選人登記每日統計",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64598"
+        },
+        {
+          "title": "115年9月3日桃園市市長及市議員選舉候選人登記情形",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64600"
+        },
+        {
+          "title": "115年8月31日至9月4日桃園市地方公職人員選舉候選人登記情形",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64665"
+        },
+        {
+          "title": "115年桃園市地方公職人員選舉候選人登記每日統計",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/tyec/article/64668"
+        }
+      ]
+    },
+    {
+      "code": "tcec",
+      "name": "臺中市選舉委員會",
+      "articles": [
+        {
+          "title": "臺中市第5屆里長選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904183125",
+          "url": "https://web.cec.gov.tw/tcec/article/64645",
+          "files": [
+            {
+              "name": "臺中市第5屆里長選舉候選人登記情形一覽表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/731a8baa-5afe-467f-9fd3-9b72bd58068b.pdf",
+              "file": "tcec-64645-01.pdf",
+              "sha256": "ba65363d70dd2ab1d35ff48d04e3f281fd8ebd28846ae188a911f5c0fe6b637d"
+            },
+            {
+              "name": "臺中市第5屆里長選舉候選人登記每日統計表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/cc59f576-c3e1-42c0-a308-258b12ed62c5.pdf",
+              "file": "tcec-64645-02.pdf",
+              "sha256": "df1a5dbcc3080ec49eeacd6fa187bc00ea270e81a1ed4e8551637c499ee0b659"
+            }
+          ]
+        },
+        {
+          "title": "臺中市和平區第4屆區民代表選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904182919",
+          "url": "https://web.cec.gov.tw/tcec/article/64643",
+          "files": [
+            {
+              "name": "臺中市和平區第4屆區民代表選舉候選人登記情形一覽表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/a6a11116-26bc-4639-8eb1-17e478678920.pdf",
+              "file": "tcec-64643-01.pdf",
+              "sha256": "ced6e65e5a19afcec87c890ded1725773c88e2337fd8993ab1c7b197bdef6a7f"
+            },
+            {
+              "name": "臺中市和平區第4屆區民代表選舉候選人登記每日統計表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/1548ea68-d156-46f4-85af-b84be68932f0.pdf",
+              "file": "tcec-64643-02.pdf",
+              "sha256": "771a795c2a841d962d724367595243264f01534210482de3b7d31c1496b0626a"
+            }
+          ]
+        },
+        {
+          "title": "臺中市和平區第4屆區長選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904181531",
+          "url": "https://web.cec.gov.tw/tcec/article/64625",
+          "files": [
+            {
+              "name": "臺中市和平區第4屆區長選舉候選人登記情形一覽表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/35cc8971-8fa2-4d2a-a4d4-6efaf3a83dd7.pdf",
+              "file": "tcec-64625-01.pdf",
+              "sha256": "d03a73450a0f589ec1a7d4eff3a3075ab1da5820f13a9b14bf65024dd00beea5"
+            },
+            {
+              "name": "臺中市和平區第4屆區長選舉候選人登記每日統計表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/d28fbfd2-2c90-4aba-b94e-577fcf79bb94.pdf",
+              "file": "tcec-64625-02.pdf",
+              "sha256": "7a3315c3684c846928f9c6b0a279245c9dc9053e5b3f1331bf359278eabc7487"
+            }
+          ]
+        },
+        {
+          "title": "臺中市議會第5屆議員選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904175907",
+          "url": "https://web.cec.gov.tw/tcec/article/64613",
+          "files": [
+            {
+              "name": "臺中市議會第5屆議員選舉候選人登記情形一覽表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/19b865cd-1164-4d93-8947-a86577a1ae95.pdf",
+              "file": "tcec-64613-01.pdf",
+              "sha256": "9aab383af2075e8964870563dcb7f592bbe5e879f0ead50b01fde361e63c7416"
+            },
+            {
+              "name": "臺中市議會第5屆議員選舉候選人登記每日統計表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/bf725945-fd25-41ea-ba1d-d41ae02604db.pdf",
+              "file": "tcec-64613-02.pdf",
+              "sha256": "5570bd79fc91d425322a14e88fab6161ee50d6b5d9b672ba17d4e05a2732cb5d"
+            }
+          ]
+        },
+        {
+          "title": "臺中市第5屆市長選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904175900",
+          "url": "https://web.cec.gov.tw/tcec/article/64618",
+          "files": [
+            {
+              "name": "臺中市第5屆市長選舉候選人登記情形一覽表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/21e67124-56f7-4abd-ade1-d9919df57808.pdf",
+              "file": "tcec-64618-01.pdf",
+              "sha256": "6825c533a1929a425480241d6c8d40f626f9e1dc0f0fd4569faadf29cddb7da7"
+            },
+            {
+              "name": "臺中市第5屆市長選舉候選人登記每日統計表-1150904",
+              "url": "https://web.cec.gov.tw/api/file/aaed3e61-d9ac-4a5c-ad21-6413eb3bf85b.pdf",
+              "file": "tcec-64618-02.pdf",
+              "sha256": "ba8578be3d5765bc85dffd92143cedca854885b2b95473dc78ea5dd471b3bdab"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "臺中市第5屆里長選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904183125",
+          "url": "https://web.cec.gov.tw/tcec/article/64645"
+        },
+        {
+          "title": "臺中市和平區第4屆區民代表選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904182919",
+          "url": "https://web.cec.gov.tw/tcec/article/64643"
+        },
+        {
+          "title": "臺中市和平區第4屆區長選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904181531",
+          "url": "https://web.cec.gov.tw/tcec/article/64625"
+        },
+        {
+          "title": "臺中市議會第5屆議員選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904175907",
+          "url": "https://web.cec.gov.tw/tcec/article/64613"
+        },
+        {
+          "title": "臺中市第5屆市長選舉候選人登記情形一覽表-115/08/31~115/09/04",
+          "published_at_raw": "20260904175900",
+          "url": "https://web.cec.gov.tw/tcec/article/64618"
+        },
+        {
+          "title": "公告115年直轄市長、縣（市）長、直轄市議員、縣（市）議員選舉候選人登記期間、地點、應備具之表件及應繳納之保證金數額等事項",
+          "published_at_raw": "20260827092159",
+          "url": "https://web.cec.gov.tw/tcec/article/64076"
+        }
+      ]
+    },
+    {
+      "code": "tnec",
+      "name": "臺南市選舉委員會",
+      "articles": [
+        {
+          "title": "9/4 登記資料（由官網公告清單定位）",
+          "url": "https://web.cec.gov.tw/tnec/article/64661",
+          "files": []
+        }
+      ],
+      "other_discoveries": []
+    },
+    {
+      "code": "khec",
+      "name": "高雄市選舉委員會",
+      "articles": [
+        {
+          "title": "115年高雄市第5屆市長、議員及里長暨第4屆原住民區區長及區民代表選舉候選人登記情形一覽表（115年9月4日止）",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/khec/article/64652",
+          "files": [
+            {
+              "name": "(115年直轄市長選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/ba8b3cab-a964-4b69-94c9-9d565e84273e.pdf",
+              "file": "khec-64652-01.pdf",
+              "sha256": "e3a7f62539543f24e9fadf3aea33866c9c640c3a48b930ba9caeaacf5c2fdb60"
+            },
+            {
+              "name": "(115年直轄市議員選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/a4375b10-995d-4ffe-867e-f58633a0355a.pdf",
+              "file": "khec-64652-02.pdf",
+              "sha256": "3928ef8fd3a45952c4e71aed40bb7617f00daade57b9ce3589c70f7b0f7f3336"
+            },
+            {
+              "name": "(115年直轄市山地原住民區長選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/370ac8ee-2d1f-4032-a4a9-de6f4a2a883f.pdf",
+              "file": "khec-64652-03.pdf",
+              "sha256": "76d88d31b6d7328272bedd0f5ef40ec036e6665cd906d05606b8a493ad138bcb"
+            },
+            {
+              "name": "(115年直轄市山地原住民區民代表選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf",
+              "file": "khec-64652-04.pdf",
+              "sha256": "5298da44272c850b371ae37ac9a25635896a74e52caf5a2e81c071cd7d374fb1"
+            },
+            {
+              "name": "(115年村里長選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf",
+              "file": "khec-64652-05.pdf",
+              "sha256": "a2cb6cd64dad93bc008a0c34d1e1b94ee3a43559ea5dbb2e5523d3d2601d4945"
+            }
+          ]
+        },
+        {
+          "title": "115年高雄市第5屆市長、議員及里長暨第4屆原住民區區長及區民代表選舉候選人登記情形一覽表（115年9月4日止）",
+          "published_at_raw": "20260904182132",
+          "url": "https://web.cec.gov.tw/khec/article/64634",
+          "files": [
+            {
+              "name": "(115年直轄市長選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/ba8b3cab-a964-4b69-94c9-9d565e84273e.pdf",
+              "file": "khec-64634-01.pdf",
+              "sha256": "e3a7f62539543f24e9fadf3aea33866c9c640c3a48b930ba9caeaacf5c2fdb60"
+            },
+            {
+              "name": "(115年直轄市議員選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/a4375b10-995d-4ffe-867e-f58633a0355a.pdf",
+              "file": "khec-64634-02.pdf",
+              "sha256": "3928ef8fd3a45952c4e71aed40bb7617f00daade57b9ce3589c70f7b0f7f3336"
+            },
+            {
+              "name": "(115年直轄市山地原住民區長選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/370ac8ee-2d1f-4032-a4a9-de6f4a2a883f.pdf",
+              "file": "khec-64634-03.pdf",
+              "sha256": "76d88d31b6d7328272bedd0f5ef40ec036e6665cd906d05606b8a493ad138bcb"
+            },
+            {
+              "name": "(115年直轄市山地原住民區民代表選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf",
+              "file": "khec-64634-04.pdf",
+              "sha256": "5298da44272c850b371ae37ac9a25635896a74e52caf5a2e81c071cd7d374fb1"
+            },
+            {
+              "name": "(115年村里長選舉)候選人登記情形一覽表(累計)0904",
+              "url": "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf",
+              "file": "khec-64634-05.pdf",
+              "sha256": "a2cb6cd64dad93bc008a0c34d1e1b94ee3a43559ea5dbb2e5523d3d2601d4945"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年地方公職人員選舉候選人登記書表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/khec/article/63994"
+        },
+        {
+          "title": "115年高雄市市長、議員選舉候選人登記情形一覽表（115年8月31日止）",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/khec/article/64436"
+        },
+        {
+          "title": "115年高雄市市長、議員選舉候選人登記情形一覽表（115年9月1日止）",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/khec/article/64483"
+        },
+        {
+          "title": "115年高雄市第5屆市長、議員及里長暨第4屆原住民區區長及區民代表選舉候選人登記情形一覽表（115年9月2日止）",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/khec/article/64541"
+        },
+        {
+          "title": "115年高雄市第5屆市長、議員及里長暨第4屆原住民區區長及區民代表選舉候選人登記情形一覽表（115年9月3日止）",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/khec/article/64593"
+        },
+        {
+          "title": "115年高雄市第5屆市長、議員及里長暨第4屆原住民區區長及區民代表選舉候選人登記情形一覽表（115年9月4日止）",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/khec/article/64652"
+        },
+        {
+          "title": "115年高雄市第5屆市長、議員及里長暨第4屆原住民區區長及區民代表選舉候選人登記情形一覽表（115年9月4日止）",
+          "published_at_raw": "20260904182132",
+          "url": "https://web.cec.gov.tw/khec/article/64634"
+        },
+        {
+          "title": "115年高雄市第5屆市長、議員及里長暨第4屆原住民區區長及區民代表選舉候選人登記情形一覽表（115年9月3日止）",
+          "published_at_raw": "20260903184214",
+          "url": "https://web.cec.gov.tw/khec/article/64592"
+        },
+        {
+          "title": "115年高雄市第5屆市長、議員及里長暨第4屆原住民區區長及區民代表選舉候選人登記情形一覽表（115年9月2日止）",
+          "published_at_raw": "20260902182525",
+          "url": "https://web.cec.gov.tw/khec/article/64540"
+        },
+        {
+          "title": "115年高雄市市長、議員選舉候選人登記情形一覽表（115年9月1日止）",
+          "published_at_raw": "20260901175450",
+          "url": "https://web.cec.gov.tw/khec/article/64482"
+        },
+        {
+          "title": "115年高雄市市長、議員選舉候選人登記情形一覽表（115年8月31日止）",
+          "published_at_raw": "20260831182609",
+          "url": "https://web.cec.gov.tw/khec/article/64471"
+        }
+      ]
+    },
+    {
+      "code": "ilec",
+      "name": "宜蘭縣選舉委員會",
+      "articles": [
+        {
+          "title": "9/4 登記資料（由官網公告清單定位）",
+          "url": "https://web.cec.gov.tw/ilec/article/64650",
+          "files": [
+            {
+              "name": "1150904宜蘭縣選舉委員會新聞稿-候選人登記D5",
+              "url": "https://web.cec.gov.tw/api/file/448c05af-369c-46c6-a895-5b7ae09ae909.pdf",
+              "file": "ilec-64650-01.pdf",
+              "sha256": "2f7ed8d7bd3b104a0fcfcce136a847873d4eb491bd382b59d215cd3fd3115191"
+            },
+            {
+              "name": "1150904[115年縣市長選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/28e4bec5-d992-4b18-a275-fa8b272c483a.pdf",
+              "file": "ilec-64650-02.pdf",
+              "sha256": "89ff61023343a5ed3af0cbc7c6dbc1aa6a1ba8577dd1983b94edc0b5cc0b4e7b"
+            },
+            {
+              "name": "1150904[115年縣市議員選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/3758d32c-80d3-402c-af5a-591458d65c47.pdf",
+              "file": "ilec-64650-03.pdf",
+              "sha256": "a73f1fd6b198020ffa9a5a501acc605579d8518c6e52e39584abed13f45fc0d7"
+            },
+            {
+              "name": "1150904[115年鄉鎮市長選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/d2e0a974-1b0d-436e-a450-bce63ae708d1.pdf",
+              "file": "ilec-64650-04.pdf",
+              "sha256": "1d701b36f857558e927d332d588ffa1ce2637f3c04930340f3b9b4e5bf391a27"
+            },
+            {
+              "name": "1150904[115年鄉鎮市民代表選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/83f3d8f4-ba18-4eae-9c1b-cfa51deecfeb.pdf",
+              "file": "ilec-64650-05.pdf",
+              "sha256": "d7600a5a143620c8eb36c5ea7b1e052a532bae5f3d06e9354291512d2bc6e59b"
+            },
+            {
+              "name": "1150904[115年村里長選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/5ef7176b-6287-47b0-9c4e-b4aa49dedcf2.pdf",
+              "file": "ilec-64650-06.pdf",
+              "sha256": "99fec2e3491baac01beea0e2ed6d66cde775304cb78a6ca042c50968dc548bad"
+            },
+            {
+              "name": "0831-0904[115年縣市長選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/a3fa3e1d-592c-47c7-be0f-0aec78638d42.pdf",
+              "file": "ilec-64650-07.pdf",
+              "sha256": "5987636c88ff23eb1ed13a32c071fa0ac2be924be686655efabe22ffb83a9afa"
+            },
+            {
+              "name": "0831-0904[115年縣市議員選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/28b4728c-3693-4f03-b7ad-ae050dd46b5a.pdf",
+              "file": "ilec-64650-08.pdf",
+              "sha256": "766276e7c4cf78e9ad04c5fd67fcc05e64eb179bcc1a816e879ad7263e5dcd47"
+            },
+            {
+              "name": "0831-0904[115年鄉鎮市長選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/5a545f62-573e-4e1f-b505-7f9350fffda9.pdf",
+              "file": "ilec-64650-09.pdf",
+              "sha256": "4ab31ac994d3703fb19dfbd26c11e0c2a4dc449e43dde157b73995dde9c32f7b"
+            },
+            {
+              "name": "0831-0904[115年鄉鎮市民代表選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/cd5a1add-e814-46d3-a6ff-e3ffc8dd07a2.pdf",
+              "file": "ilec-64650-10.pdf",
+              "sha256": "0b3f59b79ffe28aadabe0dd91f87aae796ce5baceeced063c49fd49d9484f5d8"
+            },
+            {
+              "name": "0831-0904[115年村里長選舉]候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/393f2e1b-f64d-47ae-adb0-d82e0853e9f2.pdf",
+              "file": "ilec-64650-11.pdf",
+              "sha256": "945465952dd7944361f8fa28deba0dd8009f9b64ce2975091da44e6bd872fb1f"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年地方公職人員選舉 宜蘭縣各候選人9月3日登記概況",
+          "published_at_raw": "20260903180532",
+          "url": "https://web.cec.gov.tw/ilec/article/64570"
+        },
+        {
+          "title": "115年地方公職人員選舉 宜蘭縣各候選人9月2日登記概況",
+          "published_at_raw": "20260902184050",
+          "url": "https://web.cec.gov.tw/ilec/article/64545"
+        },
+        {
+          "title": "115年地方公職人員選舉 宜蘭縣各候選人9月1日登記概況",
+          "published_at_raw": "20260901181455",
+          "url": "https://web.cec.gov.tw/ilec/article/64499"
+        },
+        {
+          "title": "115年地方公職人員選舉 宜蘭縣各候選人8月31日登記概況",
+          "published_at_raw": "20260831185358",
+          "url": "https://web.cec.gov.tw/ilec/article/64452"
+        },
+        {
+          "title": "公告115年地方公職人員選舉臺灣省宜蘭縣第20屆鄉(鎮、市)長選舉、第23屆鄉(鎮、市)民代表會代表選舉、第23屆村(里)長選舉候選人申請登記期間、地點、應備具之表件及份數、應繳納之保證金數額暨領取登記書表之期間、地點等事項",
+          "published_at_raw": "20260827080000",
+          "url": "https://web.cec.gov.tw/ilec/article/63942"
+        },
+        {
+          "title": "115年地方公職人員選舉 宜蘭縣各候選人9月3日登記概況",
+          "published_at_raw": "20260903180532",
+          "url": "https://web.cec.gov.tw/ilec/article/64571"
+        },
+        {
+          "title": "115年地方公職人員選舉 宜蘭縣各候選人9月2日登記概況",
+          "published_at_raw": "20260902184050",
+          "url": "https://web.cec.gov.tw/ilec/article/64546"
+        },
+        {
+          "title": "115年地方公職人員選舉 宜蘭縣各候選人9月1日登記概況",
+          "published_at_raw": "20260901181455",
+          "url": "https://web.cec.gov.tw/ilec/article/64500"
+        },
+        {
+          "title": "115年地方公職人員選舉 宜蘭縣各候選人8月31日登記概況",
+          "published_at_raw": "20260831185358",
+          "url": "https://web.cec.gov.tw/ilec/article/64453"
+        }
+      ]
+    },
+    {
+      "code": "hccec",
+      "name": "新竹縣選舉委員會",
+      "articles": [
+        {
+          "title": "115年五合一選舉 新竹縣候選人登記情形",
+          "published_at_raw": "20260904205855",
+          "url": "https://web.cec.gov.tw/hccec/article/64669",
+          "files": []
+        },
+        {
+          "title": "115年8月31日至9月4日候選人登記情形",
+          "published_at_raw": "20260904200524",
+          "url": "https://web.cec.gov.tw/hccec/article/64663",
+          "files": [
+            {
+              "name": "一0831-0904(115年縣市長選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/38acd645-2714-40d8-854b-34ac1367085c.pdf",
+              "file": "hccec-64663-01.pdf",
+              "sha256": "32995bae820d1162bdbaf8a2eedb848cd3720fac1abaedf71b3cb4382fc3f1de"
+            },
+            {
+              "name": "二0831-0904(115年縣市議員選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+              "file": "hccec-64663-02.pdf",
+              "sha256": "f92dd41e0c1413df767465bdeb70f10c46ee47c9161f7911257e619f0b2f314c"
+            },
+            {
+              "name": "三0831-0904(115年鄉鎮市長選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/ce0f22c7-0255-4184-9411-1302ec497eee.pdf",
+              "file": "hccec-64663-03.pdf",
+              "sha256": "5ea6a3f39635f971ffc338a0467e44c901ad791cbe738a81de38eb0dad51fcd4"
+            },
+            {
+              "name": "四0831-0904(115年鄉鎮市民代表選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/c25f6511-df2b-4c47-88b5-7e6c63d721e8.pdf",
+              "file": "hccec-64663-04.pdf",
+              "sha256": "134b1e04520cce9ea97235322a50a1918a3859f6b8db1b29e7ca66cb29433e58"
+            },
+            {
+              "name": "五0831-0904(115年村里長選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/bb22bdcd-a71e-4906-8070-e90ccd6159aa.pdf",
+              "file": "hccec-64663-05.pdf",
+              "sha256": "f8e5c2e1c9567d2bf2dc86614fa94698785b5fda722813b42a86c5fad0eab59e"
+            },
+            {
+              "name": "1（115年縣市長選舉）候選人登記每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/4dd36d6f-5730-4120-b53f-f12dd13ac02f.pdf",
+              "file": "hccec-64663-06.pdf",
+              "sha256": "0d35273f20b12168570eaa701de823a71de1a9f88a4cf543e2c542cebd67520c"
+            },
+            {
+              "name": "2（115年縣市議員選舉）候選人登記每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/130b3576-be96-410d-8380-389609a34a63.pdf",
+              "file": "hccec-64663-07.pdf",
+              "sha256": "220549a08eb28aeb5cac07aaaa62e01f1d5505688e744872a1ae7b1f72820b01"
+            },
+            {
+              "name": "3（115年鄉鎮市長選舉）候選人登記每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/abf88caa-7f2e-4c31-945f-60a5f541fe36.pdf",
+              "file": "hccec-64663-08.pdf",
+              "sha256": "908bba2e0a358040b3da33e210d17ad712a52eb5949ef1820e554e1daa02fbb4"
+            },
+            {
+              "name": "4（115年鄉鎮市民代表選舉）候選人登記每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/2d79a223-0796-4ea3-b4c7-5ff387454f48.pdf",
+              "file": "hccec-64663-09.pdf",
+              "sha256": "e3634160d24fdc101c54d1bb9c40ffea30af22f28e94b7fe5cce8fa3d0ce5f5a"
+            },
+            {
+              "name": "5（115年村里長選舉）候選人登記每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/b3de0e41-cb4f-4c73-bb87-f9414ea4e24c.pdf",
+              "file": "hccec-64663-10.pdf",
+              "sha256": "3e427b33e60e2f0155e13237bc750d2efd4350477b76f879cadc2b21bdb84553"
+            }
+          ]
+        },
+        {
+          "title": "115年9月４日候選人登記情形",
+          "published_at_raw": "20260904191134",
+          "url": "https://web.cec.gov.tw/hccec/article/64660",
+          "files": [
+            {
+              "name": "一0904(115年縣市議員選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/4a52c8b9-7329-4650-bc4b-94e08dd427e3.pdf",
+              "file": "hccec-64660-01.pdf",
+              "sha256": "240858362a62657eb30c1264956e422d09ceea7b3e4e414260e4a6a7700c2086"
+            },
+            {
+              "name": "二0904(115年鄉鎮市長選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/043dff71-d91c-4d4f-8f07-8917e628feeb.pdf",
+              "file": "hccec-64660-02.pdf",
+              "sha256": "75b7a20d23e668e0c5afe7e27f23e159b73013258024c28c6d5eb7463d05cd1b"
+            },
+            {
+              "name": "三0904(115年鄉鎮市民代表選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/b5a47ecf-1d52-46ac-82ff-d10240c91dd0.pdf",
+              "file": "hccec-64660-03.pdf",
+              "sha256": "91939802c68ea6a1f76fce3b2bbfc3465b6964097d84dfbeac534b4d287e4f26"
+            },
+            {
+              "name": "四0904(115年村里長選舉)候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/9ffa66f0-86a8-4f6d-81c2-ad06705ea648.pdf",
+              "file": "hccec-64660-04.pdf",
+              "sha256": "a990acc4d59f1e088b45149f92daa4eea01db4ed33c9ebdc618dba14b5c59bb4"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年五合一選舉 新竹縣候選人登記情形",
+          "published_at_raw": "20260904205855",
+          "url": "https://web.cec.gov.tw/hccec/article/64669"
+        },
+        {
+          "title": "115年8月31日至9月4日候選人登記情形",
+          "published_at_raw": "20260904200524",
+          "url": "https://web.cec.gov.tw/hccec/article/64663"
+        },
+        {
+          "title": "115年9月４日候選人登記情形",
+          "published_at_raw": "20260904191134",
+          "url": "https://web.cec.gov.tw/hccec/article/64660"
+        },
+        {
+          "title": "115年9月3日候選人登記情形",
+          "published_at_raw": "20260903185703",
+          "url": "https://web.cec.gov.tw/hccec/article/64596"
+        }
+      ]
+    },
+    {
+      "code": "mlec",
+      "name": "苗栗縣選舉委員會",
+      "articles": [
+        {
+          "title": "苗栗縣選舉委員會及各鄉鎮市選務作業中心候選人115年8月31日-9月4日登記情形統計表及各類選舉候選人登記概況彙整表",
+          "published_at_raw": "20260904180505",
+          "url": "https://web.cec.gov.tw/mlec/article/64615",
+          "files": [
+            {
+              "name": "苗栗縣選舉委員會候選人每日登記情形統計表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/85acf29a-0201-41da-b9dd-3259a6345f45.xlsx",
+              "file": "mlec-64615-01.xlsx",
+              "sha256": "2f7a4ec71608869f46c1f7c099371cf20bc7069ced8f9fdac748441131de8ba5"
+            },
+            {
+              "name": "[115年縣市長選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/9833fecb-b1d5-49a8-a7f9-63aa27530d66.xls",
+              "file": "mlec-64615-02.xls",
+              "sha256": "2adf51198a2198410c590629067f1f8c13a56cb785fd3c79a1d30e36d935fc7b"
+            },
+            {
+              "name": "[115年縣市議員選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/0e37e655-da6e-407e-a786-144dd1007dc8.xls",
+              "file": "mlec-64615-03.xls",
+              "sha256": "f6387c974fa3e4e41f51c25f09d7d492fa1857750340ce45f6813578ff4b1d8a"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+              "file": "mlec-64615-04.xls",
+              "sha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/3fb58698-8803-4784-92c6-af5098503fd1.xls",
+              "file": "mlec-64615-05.xls",
+              "sha256": "e1362afc6873c7f4d47aad7a979dd83cd960189553a3b24327448864581d7976"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/3b946f08-7ab6-4d6e-942a-af9a8d4c3aa9.xls",
+              "file": "mlec-64615-06.xls",
+              "sha256": "27b66880aa4f8fc1041e087c0ffc565dda081407a763bbd0befe7485cd3ecf0a"
+            }
+          ]
+        },
+        {
+          "title": "苗栗縣選舉委員會及各鄉鎮市選務作業中心候選人115年8月31日-9月4日登記情形統計表及各類選舉候選人登記概況彙整表",
+          "published_at_raw": "20260904180505",
+          "url": "https://web.cec.gov.tw/mlec/article/64616",
+          "files": [
+            {
+              "name": "苗栗縣選舉委員會候選人每日登記情形統計表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/85acf29a-0201-41da-b9dd-3259a6345f45.xlsx",
+              "file": "mlec-64616-01.xlsx",
+              "sha256": "2f7a4ec71608869f46c1f7c099371cf20bc7069ced8f9fdac748441131de8ba5"
+            },
+            {
+              "name": "[115年縣市長選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/9833fecb-b1d5-49a8-a7f9-63aa27530d66.xls",
+              "file": "mlec-64616-02.xls",
+              "sha256": "2adf51198a2198410c590629067f1f8c13a56cb785fd3c79a1d30e36d935fc7b"
+            },
+            {
+              "name": "[115年縣市議員選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/0e37e655-da6e-407e-a786-144dd1007dc8.xls",
+              "file": "mlec-64616-03.xls",
+              "sha256": "f6387c974fa3e4e41f51c25f09d7d492fa1857750340ce45f6813578ff4b1d8a"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+              "file": "mlec-64616-04.xls",
+              "sha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/3fb58698-8803-4784-92c6-af5098503fd1.xls",
+              "file": "mlec-64616-05.xls",
+              "sha256": "e1362afc6873c7f4d47aad7a979dd83cd960189553a3b24327448864581d7976"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記概況彙總表8月31日-9月4日",
+              "url": "https://web.cec.gov.tw/api/file/3b946f08-7ab6-4d6e-942a-af9a8d4c3aa9.xls",
+              "file": "mlec-64616-06.xls",
+              "sha256": "27b66880aa4f8fc1041e087c0ffc565dda081407a763bbd0befe7485cd3ecf0a"
+            }
+          ]
+        },
+        {
+          "title": "115地方公職人員選舉8/27起開始領表  8/31-9/4候選人申請登記",
+          "published_at_raw": "20260820100000",
+          "url": "https://web.cec.gov.tw/mlec/article/63536",
+          "files": []
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年苗栗縣地方公職人員選舉候選人登記須知",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/mlec/article/64261"
+        },
+        {
+          "title": "苗栗縣選舉委員會及各鄉鎮市選務作業中心候選人115年8月31日-9月4日登記情形統計表及各類選舉候選人登記概況彙整表",
+          "published_at_raw": "20260904180505",
+          "url": "https://web.cec.gov.tw/mlec/article/64615"
+        },
+        {
+          "title": "苗栗縣選舉委員會及各鄉鎮市選務作業中心候選人115年8月31日-9月2日登記情形統計表及各類選舉候選人登記概況彙整表",
+          "published_at_raw": "20260902184950",
+          "url": "https://web.cec.gov.tw/mlec/article/64548"
+        },
+        {
+          "title": "115年苗栗縣地方公職人員選舉候選人登記須知",
+          "published_at_raw": "20260827144844",
+          "url": "https://web.cec.gov.tw/mlec/article/64295"
+        },
+        {
+          "title": "苗栗縣選舉委員會及各鄉鎮市選務作業中心候選人115年8月31日-9月4日登記情形統計表及各類選舉候選人登記概況彙整表",
+          "published_at_raw": "20260904180505",
+          "url": "https://web.cec.gov.tw/mlec/article/64616"
+        },
+        {
+          "title": "苗栗縣選舉委員會及各鄉鎮市選務作業中心候選人115年8月31日-9月2日登記情形統計表及各類選舉候選人登記概況彙整表",
+          "published_at_raw": "20260902184950",
+          "url": "https://web.cec.gov.tw/mlec/article/64549"
+        },
+        {
+          "title": "115地方公職人員選舉8/27起開始領表  8/31-9/4候選人申請登記",
+          "published_at_raw": "20260820100000",
+          "url": "https://web.cec.gov.tw/mlec/article/63536"
+        }
+      ]
+    },
+    {
+      "code": "ntec",
+      "name": "南投縣選舉委員會",
+      "articles": [
+        {
+          "title": "115年南投縣縣長選舉及議員選舉候選人登記概況",
+          "published_at_raw": "20260904181601",
+          "url": "https://web.cec.gov.tw/ntec/article/64627",
+          "files": [
+            {
+              "name": "(115年縣市議員選舉)候選人登記概況彙總表 0831-0904",
+              "url": "https://web.cec.gov.tw/api/file/7e8c733d-8d57-418d-bed9-f35bf2dc68e6.pdf",
+              "file": "ntec-64627-01.pdf",
+              "sha256": "6d213603b3472cd8910762b55ac0c46d9273183ea23d64aed798d7d32497284e"
+            },
+            {
+              "name": "(115年縣市長選舉)候選人登記概況彙總表 0904",
+              "url": "https://web.cec.gov.tw/api/file/94022cc6-f807-4b1e-82e2-aed286f47c44.pdf",
+              "file": "ntec-64627-02.pdf",
+              "sha256": "c990f9126544119f80e9f1a73e2da3ed12b5b0429e8f3223b5bbdbcc7374a38b"
+            }
+          ]
+        },
+        {
+          "title": "115年南投縣鄉(鎮、市)長、鄉(鎮、市)民代表及村(里)長選舉候選人登記概況",
+          "published_at_raw": "20260904181324",
+          "url": "https://web.cec.gov.tw/ntec/article/64622",
+          "files": [
+            {
+              "name": "(115年鄉鎮市長選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/939b3f02-3783-4060-8f0b-1d32e04994ba.pdf",
+              "file": "ntec-64622-01.pdf",
+              "sha256": "67635275f8d429559ec961a90b9f2b4c860fc4f5a11a1505378c43f6fdeaaea0"
+            },
+            {
+              "name": "(115年鄉鎮市民代表選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/0217ef86-e0a0-4d05-b026-31dcbf0d2c57.pdf",
+              "file": "ntec-64622-02.pdf",
+              "sha256": "fc458af805356472a2880c24b9c3b3ee64389b935abed6722b7b7989ede25e2b"
+            },
+            {
+              "name": "(115年村里長選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/f279bd26-0572-40d4-8a95-19326ebe526a.pdf",
+              "file": "ntec-64622-03.pdf",
+              "sha256": "fa4df4cc0d087711f2f6d17d4042177240d926aa1d02790a2997be6bad6eba03"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "公告115年臺灣省南投縣鄉（鎮、市）長、鄉（鎮、市）民代表、村（里）長選舉候選人申請登記日期、時間、地點、應具備之表件及應繳納之保證金數額等事項",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/ntec/article/63856"
+        },
+        {
+          "title": "公告115年臺灣省南投縣鄉（鎮、市）長、鄉（鎮、市）民代表、村（里）長選舉候選人申請登記日期、時間、地點、應具備之表件及應繳納之保證金數額等事項",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/ntec/article/63861"
+        },
+        {
+          "title": "115年南投縣縣長選舉及議員選舉候選人登記概況",
+          "published_at_raw": "20260904181601",
+          "url": "https://web.cec.gov.tw/ntec/article/64627"
+        },
+        {
+          "title": "115年南投縣鄉(鎮、市)長、鄉(鎮、市)民代表及村(里)長選舉候選人登記概況",
+          "published_at_raw": "20260904181324",
+          "url": "https://web.cec.gov.tw/ntec/article/64622"
+        },
+        {
+          "title": "115年9月3日南投縣鄉(鎮、市)長、鄉(鎮、市)民代表及村(里)長選舉候選人登記概況",
+          "published_at_raw": "20260903175546",
+          "url": "https://web.cec.gov.tw/ntec/article/64564"
+        },
+        {
+          "title": "115年9月3日南投縣縣長選舉及議員選舉候選人登記概況",
+          "published_at_raw": "20260903174823",
+          "url": "https://web.cec.gov.tw/ntec/article/64563"
+        },
+        {
+          "title": "115年9月2日南投縣鄉(鎮、市)長、鄉(鎮、市)民代表及村(里)長選舉候選人登記概況",
+          "published_at_raw": "20260902181245",
+          "url": "https://web.cec.gov.tw/ntec/article/64533"
+        },
+        {
+          "title": "中央選舉委員會公告115年直轄市長、縣(市)長、直轄市議員、縣(市)議員選舉候選人登記時間、地點、應備具之表件及應繳納之保證金數額等事項",
+          "published_at_raw": "20260827131155",
+          "url": "https://web.cec.gov.tw/ntec/article/64234"
+        },
+        {
+          "title": "公告115年臺灣省南投縣鄉（鎮、市）長、鄉（鎮、市）民代表、村（里）長選舉候選人申請登記日期、時間、地點、應具備之表件及應繳納之保證金數額等事項",
+          "published_at_raw": "20260827000000",
+          "url": "https://web.cec.gov.tw/ntec/article/63860"
+        }
+      ]
+    },
+    {
+      "code": "chec",
+      "name": "彰化縣選舉委員會",
+      "articles": [
+        {
+          "title": "115年8月31日至9月4日彰化縣地方公職人員選舉候選人登記概況表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/chec/article/64647",
+          "files": [
+            {
+              "name": "1150904縣長選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/569c59b3-0b11-41e3-8ee9-f57ea1399763.pdf",
+              "file": "chec-64647-01.pdf",
+              "sha256": "3558491539d83756448eea18d0fd59e41c5ff8a96dcd0dffa6d33730c08b01fa"
+            },
+            {
+              "name": "1150904縣議員選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/0f035caf-13d2-4c4b-962d-008177a3944a.pdf",
+              "file": "chec-64647-02.pdf",
+              "sha256": "444fb3ae431d6c5ab45ed48a8a2ab7154195143299cfbee08fb3d6a2fe0ccd2a"
+            },
+            {
+              "name": "1150904鄉鎮市長選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+              "file": "chec-64647-03.pdf",
+              "sha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8"
+            },
+            {
+              "name": "1150904鄉鎮市民代表選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/a975d7ec-7471-42d3-9797-33ca6067e897.pdf",
+              "file": "chec-64647-04.pdf",
+              "sha256": "24145bff38546ab4780a31464b60784fb146ca2a50a0a71ae3d8f8e8e4f8d196"
+            },
+            {
+              "name": "1150904村里長選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/9e894899-1f46-497c-bd77-1e833af19e42.pdf",
+              "file": "chec-64647-05.pdf",
+              "sha256": "274fb01077ee52b9c4c7a6fdd90eca0b3efc6464140b338c1ee3956b6b19c347"
+            }
+          ]
+        },
+        {
+          "title": "115年8月31日至9月4日彰化縣地方公職人員選舉候選人登記概況表",
+          "published_at_raw": "20260904183318",
+          "url": "https://web.cec.gov.tw/chec/article/64648",
+          "files": [
+            {
+              "name": "1150904縣長選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/569c59b3-0b11-41e3-8ee9-f57ea1399763.pdf",
+              "file": "chec-64648-01.pdf",
+              "sha256": "3558491539d83756448eea18d0fd59e41c5ff8a96dcd0dffa6d33730c08b01fa"
+            },
+            {
+              "name": "1150904縣議員選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/0f035caf-13d2-4c4b-962d-008177a3944a.pdf",
+              "file": "chec-64648-02.pdf",
+              "sha256": "444fb3ae431d6c5ab45ed48a8a2ab7154195143299cfbee08fb3d6a2fe0ccd2a"
+            },
+            {
+              "name": "1150904鄉鎮市長選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+              "file": "chec-64648-03.pdf",
+              "sha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8"
+            },
+            {
+              "name": "1150904鄉鎮市民代表選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/a975d7ec-7471-42d3-9797-33ca6067e897.pdf",
+              "file": "chec-64648-04.pdf",
+              "sha256": "24145bff38546ab4780a31464b60784fb146ca2a50a0a71ae3d8f8e8e4f8d196"
+            },
+            {
+              "name": "1150904村里長選舉候選人登記概況表",
+              "url": "https://web.cec.gov.tw/api/file/9e894899-1f46-497c-bd77-1e833af19e42.pdf",
+              "file": "chec-64648-05.pdf",
+              "sha256": "274fb01077ee52b9c4c7a6fdd90eca0b3efc6464140b338c1ee3956b6b19c347"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "公告115年彰化縣鄉（鎮、市）長、鄉（鎮、市）民代表會代表、村（里）長選舉候選人登記時間、地點、應備具之表件及應繳納之保證金數額等事項。",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/chec/article/63805"
+        },
+        {
+          "title": "中選會公告 115 年直轄市長、縣(市)長、直轄市議員、縣(市) 議員選舉候選人登記期間、地點、應備具之表件及應繳納之保證金數額等事項。",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/chec/article/64241"
+        },
+        {
+          "title": "115年8月31日至9月4日彰化縣地方公職人員選舉候選人登記概況表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/chec/article/64647"
+        },
+        {
+          "title": "115年8月31日至9月4日彰化縣地方公職人員選舉候選人登記概況表",
+          "published_at_raw": "20260904183318",
+          "url": "https://web.cec.gov.tw/chec/article/64648"
+        },
+        {
+          "title": "中選會公告 115 年直轄市長、縣(市)長、直轄市議員、縣(市) 議員選舉候選人登記期間、地點、應備具之表件及應繳納之保證金數額等事項。",
+          "published_at_raw": "20260827135509",
+          "url": "https://web.cec.gov.tw/chec/article/64242"
+        },
+        {
+          "title": "中選會公告 115 年直轄市長、縣(市)長、直轄市議員、縣(市) 議員選舉候選人登記期間、地點、應備具之表件及應繳納之保證金數額等事項。",
+          "published_at_raw": "20260827135509",
+          "url": "https://web.cec.gov.tw/chec/article/64243"
+        },
+        {
+          "title": "公告115年彰化縣鄉（鎮、市）長、鄉（鎮、市）民代表會代表、村（里）長選舉候選人登記時間、地點、應備具之表件及應繳納之保證金數額等事項。",
+          "published_at_raw": "20260827070000",
+          "url": "https://web.cec.gov.tw/chec/article/63806"
+        }
+      ]
+    },
+    {
+      "code": "ylec",
+      "name": "雲林縣選舉委員會",
+      "articles": [
+        {
+          "title": "115年地方公職人員選舉候選人登記概況彙總表",
+          "published_at_raw": "20260904185529",
+          "url": "https://web.cec.gov.tw/ylec/article/64657",
+          "files": [
+            {
+              "name": "(115年縣市長選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/2f4e004c-f0e6-44e0-8026-b324ed57aff5.pdf",
+              "file": "ylec-64657-01.pdf",
+              "sha256": "cb92980263286049fb8c401b94450170c632023e8269898934630e3a3ff197ee"
+            },
+            {
+              "name": "(115年縣市議員選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/040f4ff6-4ddd-40be-b894-3bb09d4365d5.pdf",
+              "file": "ylec-64657-02.pdf",
+              "sha256": "e06fb9fc6c310d7f5bf974cc001a724f1531a7386c2893032bdd37eda2fc3bf7"
+            },
+            {
+              "name": "(115年鄉鎮市長選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/288f65c2-33bb-4aaa-810d-f947c95c6000.pdf",
+              "file": "ylec-64657-03.pdf",
+              "sha256": "7232b3060ddd7c5bea82dd464b16b8942b6f7b017de798e57ae7ea3815aba386"
+            },
+            {
+              "name": "(115年鄉鎮市民代表選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/132f05d2-243a-4ece-af28-3aba9f5f63df.pdf",
+              "file": "ylec-64657-04.pdf",
+              "sha256": "f77c91e9343da90316ff237cfd06a09c2f5499fe93861e1916632fb55549075c"
+            },
+            {
+              "name": "(115年村里長選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/368345c1-7e14-45f7-a8ba-24c767ae02e9.pdf",
+              "file": "ylec-64657-05.pdf",
+              "sha256": "2c920e6d9b938c9e7f6cda9758fc88f9ec66f42f30ae2f3777bf3ea6558653f0"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年地方公職人員選舉候選人登記概況彙總表",
+          "published_at_raw": "20260904185529",
+          "url": "https://web.cec.gov.tw/ylec/article/64657"
+        },
+        {
+          "title": "中央選舉委員會公告115年直轄市長、縣（市）長、直轄市議員、縣（市）議員選舉候選人登記期間、地點、應備具之表件及應繳納之保證金數額等事項",
+          "published_at_raw": "20260827112925",
+          "url": "https://web.cec.gov.tw/ylec/article/64230"
+        }
+      ]
+    },
+    {
+      "code": "cycec",
+      "name": "嘉義縣選舉委員會",
+      "articles": [
+        {
+          "title": "115年嘉義縣候選人登記每日統計表、登記概況彙總表",
+          "published_at_raw": "20260904000000",
+          "url": "https://web.cec.gov.tw/cycec/article/64443",
+          "files": [
+            {
+              "name": "0904嘉義縣候選人登記每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/5a7cea47-a661-40fe-9acc-b27317f92e51.pdf",
+              "file": "cycec-64443-01.pdf",
+              "sha256": "b30451965df070e27b8e4bfc162bd6beb5464c9af9993dd8f334c090e32a562c"
+            },
+            {
+              "name": "0904(115年縣市長選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/08b65846-2445-49bc-8d0b-8fa1324e06d3.pdf",
+              "file": "cycec-64443-02.pdf",
+              "sha256": "fe902cfddd77f931b31adf2c06ef43e80f0f55053e8e92700cad89095a1173f2"
+            },
+            {
+              "name": "0904(115年縣市議員選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/4c0c3569-8970-486d-a997-cf40abcc8993.pdf",
+              "file": "cycec-64443-03.pdf",
+              "sha256": "123505c3c648806b934cc317e492e5796a3da9eb7f701b3f1d8ae1811306b257"
+            },
+            {
+              "name": "0904(115年鄉鎮市長選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/6461bb26-1648-4134-9d63-44c75bbd69ac.pdf",
+              "file": "cycec-64443-04.pdf",
+              "sha256": "eed2d341bf537c4acb9d0b4c5ac05e8de017641023891ae3060f0ce7eb0dd3da"
+            },
+            {
+              "name": "0904(115年鄉鎮市民代表選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/a812c912-3ed0-4bae-a304-2aac8a533b05.pdf",
+              "file": "cycec-64443-05.pdf",
+              "sha256": "cec2e6659591eb1d3d352cc3a188a49d4f106e4de0923d72b600a25cef6413eb"
+            },
+            {
+              "name": "0904(115年村里長選舉)候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/9e6d6293-c727-4c4c-a039-4ba7f7d03adc.pdf",
+              "file": "cycec-64443-06.pdf",
+              "sha256": "aae3c04b090cff24f6ae438e2121e2ba193d5a183b8a8f266e006e92af6c546f"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "公告115年嘉義縣鄉（鎮、市）長、鄉（鎮、市）民代表、村（里）長選舉候選人申請登記期間、地點、應備具之表件及應繳納之保證金數額等事項",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/cycec/article/63769"
+        },
+        {
+          "title": "115年嘉義縣候選人登記每日統計表、登記概況彙總表",
+          "published_at_raw": "20260904000000",
+          "url": "https://web.cec.gov.tw/cycec/article/64443"
+        },
+        {
+          "title": "中央選舉委員會公告115年直轄市長、縣（市）長、直轄市議員、縣（市）議員選舉候選人登記期間、地點、應備具之表件及應繳納之保證金數額等事項",
+          "published_at_raw": "20260827092433",
+          "url": "https://web.cec.gov.tw/cycec/article/64087"
+        },
+        {
+          "title": "公告115年嘉義縣鄉（鎮、市）長、鄉（鎮、市）民代表、村（里）長選舉候選人申請登記期間、地點、應備具之表件及應繳納之保證金數額等事項",
+          "published_at_raw": "20260827000000",
+          "url": "https://web.cec.gov.tw/cycec/article/63768"
+        },
+        {
+          "title": "公告115年嘉義縣鄉（鎮、市）長、鄉（鎮、市）民代表、村（里）長選舉候選人申請登記期間、地點、應備具之表件及應繳納之保證金數額等事項",
+          "published_at_raw": "20260827000000",
+          "url": "https://web.cec.gov.tw/cycec/article/63770"
+        }
+      ]
+    },
+    {
+      "code": "ptec",
+      "name": "屏東縣選舉委員會",
+      "articles": [
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年8月31日至9月4日候選人登記情形如一覽表",
+          "published_at_raw": "20260904183757",
+          "url": "https://web.cec.gov.tw/ptec/article/64653",
+          "files": [
+            {
+              "name": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年8月31日至9月4日候選人登記情形如一覽表",
+              "url": "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+              "file": "ptec-64653-01.xlsx",
+              "sha256": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87"
+            }
+          ]
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月4日候選人登記情形如一覽表",
+          "published_at_raw": "20260904181325",
+          "url": "https://web.cec.gov.tw/ptec/article/64623",
+          "files": [
+            {
+              "name": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月4日候選人登記情形如一覽表",
+              "url": "https://web.cec.gov.tw/api/file/bef7d3dc-d6f7-48d9-9b59-4f921446b735.xlsx",
+              "file": "ptec-64623-01.xlsx",
+              "sha256": "29229ae79851087b529bf781e62325c31d1223d14e3f57d3875a3c81874b63f4"
+            },
+            {
+              "name": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月4日候選人登記情形如一覽表",
+              "url": "https://web.cec.gov.tw/api/file/265f5b25-3de1-4b5b-a8ca-d32b408f2c44.pdf",
+              "file": "ptec-64623-02.pdf",
+              "sha256": "821c411735fadaf22fb12e53c64420df61e054808f149428a9873f47955527f6"
+            }
+          ]
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年8月31日至9月4日候選人登記情形如一覽表",
+          "published_at_raw": "20260904183757",
+          "url": "https://web.cec.gov.tw/ptec/article/64654",
+          "files": [
+            {
+              "name": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年8月31日至9月4日候選人登記情形如一覽表",
+              "url": "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+              "file": "ptec-64654-01.xlsx",
+              "sha256": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87"
+            }
+          ]
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月4日候選人登記情形如一覽表",
+          "published_at_raw": "20260904181325",
+          "url": "https://web.cec.gov.tw/ptec/article/64624",
+          "files": [
+            {
+              "name": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月4日候選人登記情形如一覽表",
+              "url": "https://web.cec.gov.tw/api/file/bef7d3dc-d6f7-48d9-9b59-4f921446b735.xlsx",
+              "file": "ptec-64624-01.xlsx",
+              "sha256": "29229ae79851087b529bf781e62325c31d1223d14e3f57d3875a3c81874b63f4"
+            },
+            {
+              "name": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月4日候選人登記情形如一覽表",
+              "url": "https://web.cec.gov.tw/api/file/265f5b25-3de1-4b5b-a8ca-d32b408f2c44.pdf",
+              "file": "ptec-64624-02.pdf",
+              "sha256": "821c411735fadaf22fb12e53c64420df61e054808f149428a9873f47955527f6"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年8月31日至9月4日候選人登記情形如一覽表",
+          "published_at_raw": "20260904183757",
+          "url": "https://web.cec.gov.tw/ptec/article/64653"
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月4日候選人登記情形如一覽表",
+          "published_at_raw": "20260904181325",
+          "url": "https://web.cec.gov.tw/ptec/article/64623"
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月3日候選人登記情形如一覽表",
+          "published_at_raw": "20260903175538",
+          "url": "https://web.cec.gov.tw/ptec/article/64565"
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月2日候選人登記情形如一覽表",
+          "published_at_raw": "20260902180531",
+          "url": "https://web.cec.gov.tw/ptec/article/64528"
+        },
+        {
+          "title": "115年屏東縣鄉鎮市長代表村(里)長選舉候選人登記公告",
+          "published_at_raw": "20260827080000",
+          "url": "https://web.cec.gov.tw/ptec/article/63775"
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年8月31日至9月4日候選人登記情形如一覽表",
+          "published_at_raw": "20260904183757",
+          "url": "https://web.cec.gov.tw/ptec/article/64654"
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月4日候選人登記情形如一覽表",
+          "published_at_raw": "20260904181325",
+          "url": "https://web.cec.gov.tw/ptec/article/64624"
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月3日候選人登記情形如一覽表",
+          "published_at_raw": "20260903175538",
+          "url": "https://web.cec.gov.tw/ptec/article/64566"
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月2日候選人登記情形如一覽表",
+          "published_at_raw": "20260902180531",
+          "url": "https://web.cec.gov.tw/ptec/article/64529"
+        },
+        {
+          "title": "屏東縣選舉委員會及各鄉鎮市選務作業中心115年9月1日候選人登記情形如一覽表",
+          "published_at_raw": "20260901180008",
+          "url": "https://web.cec.gov.tw/ptec/article/64485"
+        }
+      ]
+    },
+    {
+      "code": "ttec",
+      "name": "臺東縣選舉委員會",
+      "articles": [
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0904)",
+          "published_at_raw": "20260904182729",
+          "url": "https://web.cec.gov.tw/ttec/article/64641",
+          "files": [
+            {
+              "name": "登記情形新聞稿0904",
+              "url": "https://web.cec.gov.tw/api/file/7e54f3a3-5937-45c2-ad3f-95c4fddb67f3.pdf",
+              "file": "ttec-64641-01.pdf",
+              "sha256": "16c4a6c26d166bc0d3e5358e4f77ea01c8d9c3479e2f0a5372c56c003a678298"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-縣長(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/3d87e46e-e31f-42cc-a178-946d444af581.pdf",
+              "file": "ttec-64641-02.pdf",
+              "sha256": "d7c2ed894a95f9fdc358a24a252d0bfcc01950c4dd130f089b3e32a007061771"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-縣議員(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+              "file": "ttec-64641-03.pdf",
+              "sha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-鄉鎮市長(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/2f68b219-db5d-4d2d-add3-2eda8306b104.pdf",
+              "file": "ttec-64641-04.pdf",
+              "sha256": "8e3e6afcefe3062535e69674d515413a9b3990a73d5e860ee28761ac2ffae64e"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-鄉鎮市民代表(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/ad6f26ea-8ca2-4c9f-b746-f467c4768230.pdf",
+              "file": "ttec-64641-05.pdf",
+              "sha256": "5d8754fac57f95a41fbee7c59ad483a00bc27151355357c71a8d5cc9648393aa"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-村里長(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/d1f90517-2239-475d-a9ed-fba93c43b96a.pdf",
+              "file": "ttec-64641-06.pdf",
+              "sha256": "4760145a539d7f64dfff7d23e1d73fa32e05b986e2133bc083f92780c8402df4"
+            }
+          ]
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0904)",
+          "published_at_raw": "20260904182729",
+          "url": "https://web.cec.gov.tw/ttec/article/64640",
+          "files": [
+            {
+              "name": "登記情形新聞稿0904",
+              "url": "https://web.cec.gov.tw/api/file/7e54f3a3-5937-45c2-ad3f-95c4fddb67f3.pdf",
+              "file": "ttec-64640-01.pdf",
+              "sha256": "16c4a6c26d166bc0d3e5358e4f77ea01c8d9c3479e2f0a5372c56c003a678298"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-縣長(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/3d87e46e-e31f-42cc-a178-946d444af581.pdf",
+              "file": "ttec-64640-02.pdf",
+              "sha256": "d7c2ed894a95f9fdc358a24a252d0bfcc01950c4dd130f089b3e32a007061771"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-縣議員(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+              "file": "ttec-64640-03.pdf",
+              "sha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-鄉鎮市長(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/2f68b219-db5d-4d2d-add3-2eda8306b104.pdf",
+              "file": "ttec-64640-04.pdf",
+              "sha256": "8e3e6afcefe3062535e69674d515413a9b3990a73d5e860ee28761ac2ffae64e"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-鄉鎮市民代表(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/ad6f26ea-8ca2-4c9f-b746-f467c4768230.pdf",
+              "file": "ttec-64640-05.pdf",
+              "sha256": "5d8754fac57f95a41fbee7c59ad483a00bc27151355357c71a8d5cc9648393aa"
+            },
+            {
+              "name": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表-村里長(至0904止)",
+              "url": "https://web.cec.gov.tw/api/file/d1f90517-2239-475d-a9ed-fba93c43b96a.pdf",
+              "file": "ttec-64640-06.pdf",
+              "sha256": "4760145a539d7f64dfff7d23e1d73fa32e05b986e2133bc083f92780c8402df4"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0904)",
+          "published_at_raw": "20260904182729",
+          "url": "https://web.cec.gov.tw/ttec/article/64641"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0903)",
+          "published_at_raw": "20260903181554",
+          "url": "https://web.cec.gov.tw/ttec/article/64584"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0902)",
+          "published_at_raw": "20260902182128",
+          "url": "https://web.cec.gov.tw/ttec/article/64536"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0901)",
+          "published_at_raw": "20260901182834",
+          "url": "https://web.cec.gov.tw/ttec/article/64504"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0831)",
+          "published_at_raw": "20260831191138",
+          "url": "https://web.cec.gov.tw/ttec/article/64455"
+        },
+        {
+          "title": "公告115年直轄市長、縣（市）長、直轄市議員、縣（市）議員選舉候選人登記期間、地點、應備具之表件及應繳納之保證金數額等事項",
+          "published_at_raw": "20260827094033",
+          "url": "https://web.cec.gov.tw/ttec/article/64130"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0904)",
+          "published_at_raw": "20260904182729",
+          "url": "https://web.cec.gov.tw/ttec/article/64640"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0903)",
+          "published_at_raw": "20260903181554",
+          "url": "https://web.cec.gov.tw/ttec/article/64583"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0902)",
+          "published_at_raw": "20260902182128",
+          "url": "https://web.cec.gov.tw/ttec/article/64535"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0901)",
+          "published_at_raw": "20260901182834",
+          "url": "https://web.cec.gov.tw/ttec/article/64503"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人在臺東縣登記情形一覽表(0831)",
+          "published_at_raw": "20260831191138",
+          "url": "https://web.cec.gov.tw/ttec/article/64454"
+        }
+      ]
+    },
+    {
+      "code": "hlec",
+      "name": "花蓮縣選舉委員會",
+      "articles": [
+        {
+          "title": "115年9月4日候選人登記概況",
+          "published_at_raw": "20260904210031",
+          "url": "https://web.cec.gov.tw/hlec/article/64670",
+          "files": [
+            {
+              "name": "115年花蓮縣地方公職人員選舉候選人登記情形一覽表_0904",
+              "url": "https://web.cec.gov.tw/api/file/c024131c-54ba-4e3d-93a5-20da7b7bb19a.pdf",
+              "file": "hlec-64670-01.pdf",
+              "sha256": "2f17b0bb3ddaa44b376a396b5dba9d8b3bd69d02fa0000e0627c4772686f0c43"
+            },
+            {
+              "name": "115年花蓮縣縣議員選舉9月4日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/03246571-a9e2-4726-971d-adc33d6fedb7.pdf",
+              "file": "hlec-64670-02.pdf",
+              "sha256": "8a597e981bc4b5eba0b337f681b90847fb73e3a35376d224d19031a4bada0e46"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市長選舉9月4日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/ec016ca6-c69d-432d-a910-62f2c87e14e2.pdf",
+              "file": "hlec-64670-03.pdf",
+              "sha256": "24049308bd8139900921888eab411fc37b5ed6c04daa44c4cc13f1d34373e9ba"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市民代表選舉9月4日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/4692671d-65d3-48fb-abc4-277d6f2aa729.pdf",
+              "file": "hlec-64670-04.pdf",
+              "sha256": "688d8885d06070ff498a7bded771aaee344e080d2dea4d3774015ac44977d099"
+            },
+            {
+              "name": "115年花蓮縣村里長選舉9月4日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/75920bc7-79de-4c13-b5ab-7d74e09ca09e.pdf",
+              "file": "hlec-64670-05.pdf",
+              "sha256": "9fff11cf10fd5349d4d18e92c3076ad6ddf8dd585f31ecbb1a0d374e7cbc95b5"
+            }
+          ]
+        },
+        {
+          "title": "115年9月4日候選人登記概況",
+          "published_at_raw": "20260904210031",
+          "url": "https://web.cec.gov.tw/hlec/article/64671",
+          "files": [
+            {
+              "name": "115年花蓮縣地方公職人員選舉候選人登記情形一覽表_0904",
+              "url": "https://web.cec.gov.tw/api/file/c024131c-54ba-4e3d-93a5-20da7b7bb19a.pdf",
+              "file": "hlec-64671-01.pdf",
+              "sha256": "2f17b0bb3ddaa44b376a396b5dba9d8b3bd69d02fa0000e0627c4772686f0c43"
+            },
+            {
+              "name": "115年花蓮縣縣議員選舉9月4日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/03246571-a9e2-4726-971d-adc33d6fedb7.pdf",
+              "file": "hlec-64671-02.pdf",
+              "sha256": "8a597e981bc4b5eba0b337f681b90847fb73e3a35376d224d19031a4bada0e46"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市長選舉9月4日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/ec016ca6-c69d-432d-a910-62f2c87e14e2.pdf",
+              "file": "hlec-64671-03.pdf",
+              "sha256": "24049308bd8139900921888eab411fc37b5ed6c04daa44c4cc13f1d34373e9ba"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市民代表選舉9月4日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/4692671d-65d3-48fb-abc4-277d6f2aa729.pdf",
+              "file": "hlec-64671-04.pdf",
+              "sha256": "688d8885d06070ff498a7bded771aaee344e080d2dea4d3774015ac44977d099"
+            },
+            {
+              "name": "115年花蓮縣村里長選舉9月4日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/75920bc7-79de-4c13-b5ab-7d74e09ca09e.pdf",
+              "file": "hlec-64671-05.pdf",
+              "sha256": "9fff11cf10fd5349d4d18e92c3076ad6ddf8dd585f31ecbb1a0d374e7cbc95b5"
+            }
+          ]
+        },
+        {
+          "title": "115年9月3日候選人登記概況",
+          "published_at_raw": "20260903203422",
+          "url": "https://web.cec.gov.tw/hlec/article/64601",
+          "files": [
+            {
+              "name": "115年花蓮縣地方公職人員選舉候選人登記情形一覽表_0903",
+              "url": "https://web.cec.gov.tw/api/file/9c9bda89-95d5-4a21-84cb-d936832f35cf.pdf",
+              "file": "hlec-64601-01.pdf",
+              "sha256": "5f91247a89a926467ec61a48f8b4ae2919a13bb40730b5d4950a6dd6a225f67f"
+            },
+            {
+              "name": "115年花蓮縣縣長選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/d9019823-6a75-42a8-a157-a94f6f418c61.pdf",
+              "file": "hlec-64601-02.pdf",
+              "sha256": "4bb2f36543e7908ff814a04715bd0df89b0c7f834312e9bb5b8718c8a3955c2b"
+            },
+            {
+              "name": "115年花蓮縣縣議員選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/b4857108-d0df-40c8-9054-a31915f526b8.pdf",
+              "file": "hlec-64601-03.pdf",
+              "sha256": "18076d3ba5633420d28a4d2fff582e28b797e90e56e321954c555033a39731af"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市長選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/1718be88-94da-488b-8330-a1b4b816e6bc.pdf",
+              "file": "hlec-64601-04.pdf",
+              "sha256": "3e19d20f2357fad8b99721fd11c3f2e72196ae7757a1d4695af33f7c0d57691a"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市民代表選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/de993b31-2594-471e-bc7e-525dcd0ab34e.pdf",
+              "file": "hlec-64601-05.pdf",
+              "sha256": "d9228499b36e2d5748b42a69a0d6ac5f083acc8f2766cf886bb2003cc3303374"
+            },
+            {
+              "name": "115年花蓮縣村里長選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/976b8d4b-1efa-4ab6-8428-dcb508051b73.pdf",
+              "file": "hlec-64601-06.pdf",
+              "sha256": "064ae1d8644ff33b7e9860e84cd79c530ac4db0ad48b4b758d430a0604558bda"
+            }
+          ]
+        },
+        {
+          "title": "115年9月2日候選人登記概況",
+          "published_at_raw": "20260902212058",
+          "url": "https://web.cec.gov.tw/hlec/article/64558",
+          "files": [
+            {
+              "name": "115年花蓮縣地方公職人員選舉候選人登記情形一覽表_0902",
+              "url": "https://web.cec.gov.tw/api/file/a18299dd-a95c-47a5-9b44-42d071cd1e96.pdf",
+              "file": "hlec-64558-01.pdf",
+              "sha256": "d063a9731761446b91a92e3b8f5bd01ffb0de231482c110f4f979ce63f7e88e1"
+            },
+            {
+              "name": "115年花蓮縣縣議員選舉9月2日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/7c431a1b-75d9-4bab-b143-81dc72855043.pdf",
+              "file": "hlec-64558-02.pdf",
+              "sha256": "e506b3e30c61d650ce2c0db49b20300d204e1c8d1096cd793d02c8e7ef0b2876"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市長選舉9月2日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/735e1e68-90bf-4aa1-82d1-fcf4b1cd4722.pdf",
+              "file": "hlec-64558-03.pdf",
+              "sha256": "c9669bdcd72056467fd6df36ba60cfa40a03e37773bc9d4515ab3731db9dd797"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市民代表選舉9月2日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/37ca2e17-9968-41aa-83d2-fd2055a90d9a.pdf",
+              "file": "hlec-64558-04.pdf",
+              "sha256": "e6a3cee81d88685245a0321f9bdb8bb5f716aabb405e42c914bd2a96e92b7069"
+            },
+            {
+              "name": "115年花蓮縣村里長選舉9月2日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/10d15fc2-ad7f-480a-8260-b1f8f7546f3b.pdf",
+              "file": "hlec-64558-05.pdf",
+              "sha256": "1139fa9d1505ab2833a42889d8f2fe9346ab2ccfd45bde60b2ea05872003c820"
+            }
+          ]
+        },
+        {
+          "title": "115年9月1日候選人登記概況",
+          "published_at_raw": "20260901201457",
+          "url": "https://web.cec.gov.tw/hlec/article/64514",
+          "files": [
+            {
+              "name": "115年花蓮縣地方公職人員選舉候選人登記情形一覽表_0901",
+              "url": "https://web.cec.gov.tw/api/file/b8838feb-8c0b-45d7-a5bf-0468291e8fc6.pdf",
+              "file": "hlec-64514-01.pdf",
+              "sha256": "fa0ac9db99c9f24feb3980ddf2a90e6aa96fca07b68ba903e9b591fa4e51641c"
+            },
+            {
+              "name": "115年花蓮縣縣議員選舉9月1日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/7df254d9-5357-48eb-bb8a-15fe0e8cbf26.pdf",
+              "file": "hlec-64514-02.pdf",
+              "sha256": "f9234904e5e77fe28224b699bd356671936b38da2f93a19e6a6a1b8a510e99b0"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市長選舉9月1日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/4d1d64f8-716e-4dff-934b-0c79e16447f8.pdf",
+              "file": "hlec-64514-03.pdf",
+              "sha256": "41031e923fd6917bdecdc3dd285cfa0c87ad9e33eedc7d8a89614604e2eaad75"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市民代表選舉9月1日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/028b74a6-996d-4db5-b781-7661a7ce384d.pdf",
+              "file": "hlec-64514-04.pdf",
+              "sha256": "7ee8b56ed5a84683541a532bfe00684b3e526e2ae64ae88e6c2e71cc42f0e0db"
+            },
+            {
+              "name": "115年花蓮縣村里長選舉9月1日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/facbd2f4-3d34-42af-bfd6-016b8339c2d7.pdf",
+              "file": "hlec-64514-05.pdf",
+              "sha256": "cf864b6361c5d1884773540103f09af65356278eadcc3781ea587a2eeba3192a"
+            }
+          ]
+        },
+        {
+          "title": "115年9月3日候選人登記概況",
+          "published_at_raw": "20260903203422",
+          "url": "https://web.cec.gov.tw/hlec/article/64602",
+          "files": [
+            {
+              "name": "115年花蓮縣地方公職人員選舉候選人登記情形一覽表_0903",
+              "url": "https://web.cec.gov.tw/api/file/9c9bda89-95d5-4a21-84cb-d936832f35cf.pdf",
+              "file": "hlec-64602-01.pdf",
+              "sha256": "5f91247a89a926467ec61a48f8b4ae2919a13bb40730b5d4950a6dd6a225f67f"
+            },
+            {
+              "name": "115年花蓮縣縣長選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/d9019823-6a75-42a8-a157-a94f6f418c61.pdf",
+              "file": "hlec-64602-02.pdf",
+              "sha256": "4bb2f36543e7908ff814a04715bd0df89b0c7f834312e9bb5b8718c8a3955c2b"
+            },
+            {
+              "name": "115年花蓮縣縣議員選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/b4857108-d0df-40c8-9054-a31915f526b8.pdf",
+              "file": "hlec-64602-03.pdf",
+              "sha256": "18076d3ba5633420d28a4d2fff582e28b797e90e56e321954c555033a39731af"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市長選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/1718be88-94da-488b-8330-a1b4b816e6bc.pdf",
+              "file": "hlec-64602-04.pdf",
+              "sha256": "3e19d20f2357fad8b99721fd11c3f2e72196ae7757a1d4695af33f7c0d57691a"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市民代表選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/de993b31-2594-471e-bc7e-525dcd0ab34e.pdf",
+              "file": "hlec-64602-05.pdf",
+              "sha256": "d9228499b36e2d5748b42a69a0d6ac5f083acc8f2766cf886bb2003cc3303374"
+            },
+            {
+              "name": "115年花蓮縣村里長選舉9月3日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/976b8d4b-1efa-4ab6-8428-dcb508051b73.pdf",
+              "file": "hlec-64602-06.pdf",
+              "sha256": "064ae1d8644ff33b7e9860e84cd79c530ac4db0ad48b4b758d430a0604558bda"
+            }
+          ]
+        },
+        {
+          "title": "115年9月2日候選人登記概況",
+          "published_at_raw": "20260902212058",
+          "url": "https://web.cec.gov.tw/hlec/article/64559",
+          "files": [
+            {
+              "name": "115年花蓮縣地方公職人員選舉候選人登記情形一覽表_0902",
+              "url": "https://web.cec.gov.tw/api/file/a18299dd-a95c-47a5-9b44-42d071cd1e96.pdf",
+              "file": "hlec-64559-01.pdf",
+              "sha256": "d063a9731761446b91a92e3b8f5bd01ffb0de231482c110f4f979ce63f7e88e1"
+            },
+            {
+              "name": "115年花蓮縣縣議員選舉9月2日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/7c431a1b-75d9-4bab-b143-81dc72855043.pdf",
+              "file": "hlec-64559-02.pdf",
+              "sha256": "e506b3e30c61d650ce2c0db49b20300d204e1c8d1096cd793d02c8e7ef0b2876"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市長選舉9月2日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/735e1e68-90bf-4aa1-82d1-fcf4b1cd4722.pdf",
+              "file": "hlec-64559-03.pdf",
+              "sha256": "c9669bdcd72056467fd6df36ba60cfa40a03e37773bc9d4515ab3731db9dd797"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市民代表選舉9月2日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/37ca2e17-9968-41aa-83d2-fd2055a90d9a.pdf",
+              "file": "hlec-64559-04.pdf",
+              "sha256": "e6a3cee81d88685245a0321f9bdb8bb5f716aabb405e42c914bd2a96e92b7069"
+            },
+            {
+              "name": "115年花蓮縣村里長選舉9月2日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/10d15fc2-ad7f-480a-8260-b1f8f7546f3b.pdf",
+              "file": "hlec-64559-05.pdf",
+              "sha256": "1139fa9d1505ab2833a42889d8f2fe9346ab2ccfd45bde60b2ea05872003c820"
+            }
+          ]
+        },
+        {
+          "title": "115年9月1日候選人登記概況",
+          "published_at_raw": "20260901201457",
+          "url": "https://web.cec.gov.tw/hlec/article/64515",
+          "files": [
+            {
+              "name": "115年花蓮縣地方公職人員選舉候選人登記情形一覽表_0901",
+              "url": "https://web.cec.gov.tw/api/file/b8838feb-8c0b-45d7-a5bf-0468291e8fc6.pdf",
+              "file": "hlec-64515-01.pdf",
+              "sha256": "fa0ac9db99c9f24feb3980ddf2a90e6aa96fca07b68ba903e9b591fa4e51641c"
+            },
+            {
+              "name": "115年花蓮縣縣議員選舉9月1日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/7df254d9-5357-48eb-bb8a-15fe0e8cbf26.pdf",
+              "file": "hlec-64515-02.pdf",
+              "sha256": "f9234904e5e77fe28224b699bd356671936b38da2f93a19e6a6a1b8a510e99b0"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市長選舉9月1日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/4d1d64f8-716e-4dff-934b-0c79e16447f8.pdf",
+              "file": "hlec-64515-03.pdf",
+              "sha256": "41031e923fd6917bdecdc3dd285cfa0c87ad9e33eedc7d8a89614604e2eaad75"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市民代表選舉9月1日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/028b74a6-996d-4db5-b781-7661a7ce384d.pdf",
+              "file": "hlec-64515-04.pdf",
+              "sha256": "7ee8b56ed5a84683541a532bfe00684b3e526e2ae64ae88e6c2e71cc42f0e0db"
+            },
+            {
+              "name": "115年花蓮縣村里長選舉9月1日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/facbd2f4-3d34-42af-bfd6-016b8339c2d7.pdf",
+              "file": "hlec-64515-05.pdf",
+              "sha256": "cf864b6361c5d1884773540103f09af65356278eadcc3781ea587a2eeba3192a"
+            }
+          ]
+        },
+        {
+          "title": "115年8月31日候選人登記概況",
+          "published_at_raw": "20260831211336",
+          "url": "https://web.cec.gov.tw/hlec/article/64470",
+          "files": [
+            {
+              "name": "115年花蓮縣地方公職人員選舉候選人登記情形一覽表_0831",
+              "url": "https://web.cec.gov.tw/api/file/9fb5127e-5015-476b-8cde-7f52d4276b6f.pdf",
+              "file": "hlec-64470-01.pdf",
+              "sha256": "0561c24ffe59eab9569e8ec7222e24ef55bc9b49cc6ead6497818719580368de"
+            },
+            {
+              "name": "115年花蓮縣縣議員選舉8月31日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/c933984b-2bbb-4fcf-9036-1d002d640ff2.pdf",
+              "file": "hlec-64470-02.pdf",
+              "sha256": "2dddf322b7adfc7b0db5292b09aa71d51469d570178d3383f950b28133ae9302"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市長選舉8月31日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/351648e6-78bd-42fa-b955-06eb4af59c5a.pdf",
+              "file": "hlec-64470-03.pdf",
+              "sha256": "5723fd8441a16a81eb3c7a40c73c54673e93552bfa13095e1a03e9fbffaed630"
+            },
+            {
+              "name": "115年花蓮縣鄉鎮市民代表選舉8月31日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/529b7b91-2e44-46ec-8295-a91f40a74ed0.pdf",
+              "file": "hlec-64470-04.pdf",
+              "sha256": "28ff6ce8ce18e10587a258b7b83e42212d12420a77273eb08139ed2ec1d283ab"
+            },
+            {
+              "name": "115年花蓮縣村里長選舉8月31日候選人登記冊",
+              "url": "https://web.cec.gov.tw/api/file/abd2ede5-f9ba-48a9-ac0e-09e19dffca00.pdf",
+              "file": "hlec-64470-05.pdf",
+              "sha256": "3cdf8e46a85cef28d9a0569ee71e1507ef2fd8da011e907da76825c0a1aca68b"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年9月4日候選人登記概況",
+          "published_at_raw": "20260904210031",
+          "url": "https://web.cec.gov.tw/hlec/article/64670"
+        },
+        {
+          "title": "115年9月3日候選人登記概況",
+          "published_at_raw": "20260903203422",
+          "url": "https://web.cec.gov.tw/hlec/article/64601"
+        },
+        {
+          "title": "115年9月2日候選人登記概況",
+          "published_at_raw": "20260902212058",
+          "url": "https://web.cec.gov.tw/hlec/article/64558"
+        },
+        {
+          "title": "115年9月1日候選人登記概況",
+          "published_at_raw": "20260901201457",
+          "url": "https://web.cec.gov.tw/hlec/article/64514"
+        },
+        {
+          "title": "115年9月4日候選人登記概況",
+          "published_at_raw": "20260904210031",
+          "url": "https://web.cec.gov.tw/hlec/article/64671"
+        },
+        {
+          "title": "115年9月3日候選人登記概況",
+          "published_at_raw": "20260903203422",
+          "url": "https://web.cec.gov.tw/hlec/article/64602"
+        },
+        {
+          "title": "115年9月2日候選人登記概況",
+          "published_at_raw": "20260902212058",
+          "url": "https://web.cec.gov.tw/hlec/article/64559"
+        },
+        {
+          "title": "115年9月1日候選人登記概況",
+          "published_at_raw": "20260901201457",
+          "url": "https://web.cec.gov.tw/hlec/article/64515"
+        },
+        {
+          "title": "115年8月31日候選人登記概況",
+          "published_at_raw": "20260831211336",
+          "url": "https://web.cec.gov.tw/hlec/article/64470"
+        }
+      ]
+    },
+    {
+      "code": "phec",
+      "name": "澎湖縣選舉委員會",
+      "articles": [
+        {
+          "title": "澎湖縣115年地方公職人員選舉候選人登記概況彙總表(115年8月31日至115年9月4日止)",
+          "published_at_raw": "20260904181905",
+          "url": "https://web.cec.gov.tw/phec/article/64633",
+          "files": [
+            {
+              "name": "115年縣市長選舉候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/65164d75-133d-467b-87b5-96e7a476e6ed.pdf",
+              "file": "phec-64633-01.pdf",
+              "sha256": "432a2ff25fafcbcf2d62abe02ce5a2659678d061a19b6ebbb7371cb273a8b285"
+            },
+            {
+              "name": "115年縣市議員選舉候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/cd72a8a9-3b96-46fa-9c33-125cd7745da1.pdf",
+              "file": "phec-64633-02.pdf",
+              "sha256": "7fa8b48ae65cd0789157ada60ed2a097ca56f024fabec665ebedf6d82ee0cb6e"
+            },
+            {
+              "name": "115年鄉鎮市長選舉候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/b3810e29-cfdc-4dc1-a21b-43713ff1928f.pdf",
+              "file": "phec-64633-03.pdf",
+              "sha256": "c315332378cff5dd5fa7a85e3f298ba9366219ea0229a1620c85034027da2923"
+            },
+            {
+              "name": "115年鄉鎮市民代表選舉候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/18b7f7f2-d4aa-4767-a072-060931e5effa.pdf",
+              "file": "phec-64633-04.pdf",
+              "sha256": "a7cec0581d56f8af584cd1d0d1e93d1ddfe54903e7c5d6b2fe01f7d6c23350ea"
+            },
+            {
+              "name": "115年村里長選舉候選人登記概況彙總表",
+              "url": "https://web.cec.gov.tw/api/file/9ecebf41-7523-4228-8bf2-0b4459be15de.pdf",
+              "file": "phec-64633-05.pdf",
+              "sha256": "84b3f4588baa867fdd8d77a8a7d9066e6cf4d4e9b96ccca035d5a32e1776c3a5"
+            }
+          ]
+        },
+        {
+          "title": "115年9月4日澎湖縣115年地方公職人員選舉候選人登記情形",
+          "published_at_raw": "20260904181759",
+          "url": "https://web.cec.gov.tw/phec/article/64631",
+          "files": [
+            {
+              "name": "115年縣市長選舉候選人登記情形一覽表0904",
+              "url": "https://web.cec.gov.tw/api/file/9a617a0d-e265-478b-a141-54959e93ebb3.pdf",
+              "file": "phec-64631-01.pdf",
+              "sha256": "8f9ddc9406c4e16d591b39cf13cf6331f2ae614deaccc064411388d0829d18ac"
+            },
+            {
+              "name": "115年縣市議員選舉候選人登記情形一覽表0904",
+              "url": "https://web.cec.gov.tw/api/file/3c36ca3e-d110-460e-97c2-656ff5c6520e.pdf",
+              "file": "phec-64631-02.pdf",
+              "sha256": "4915221391d8f6fa970cf9db760adc2ef45d340715e919e519c995df5a3641c1"
+            },
+            {
+              "name": "115年鄉鎮市長選舉候選人登記情形一覽表0904",
+              "url": "https://web.cec.gov.tw/api/file/ba51c1c9-4f42-49cc-a3f5-7fddbd4cbf33.pdf",
+              "file": "phec-64631-03.pdf",
+              "sha256": "11687dd3b27019b6c944aa83dc97fa0dd02cb82b61ed96d73f85a143c5adeb9f"
+            },
+            {
+              "name": "115年鄉鎮市民代表選舉候選人登記情形一覽表0904",
+              "url": "https://web.cec.gov.tw/api/file/9f8c47dc-2a0c-4b7f-83b6-052030e7e583.pdf",
+              "file": "phec-64631-04.pdf",
+              "sha256": "f4e554ba39cd8e80cc979da6178e4dbbff3392ad3132ad73ce1118f6ccf8418e"
+            },
+            {
+              "name": "115年村里長選舉候選人登記情形一覽表0904",
+              "url": "https://web.cec.gov.tw/api/file/30ecae12-d73d-49ea-ba13-dd64def815f2.pdf",
+              "file": "phec-64631-05.pdf",
+              "sha256": "ec7dd7322f1201cf6158b7f82177171d066674018b49119f622f5ddb96262f19"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "澎湖縣115年地方公職人員選舉候選人登記概況彙總表(115年8月31日至115年9月4日止)",
+          "published_at_raw": "20260904181905",
+          "url": "https://web.cec.gov.tw/phec/article/64633"
+        },
+        {
+          "title": "115年地方公職人員選舉候選人申請登記各種書件表冊格式",
+          "published_at_raw": "20260827080000",
+          "url": "https://web.cec.gov.tw/phec/article/63789"
+        },
+        {
+          "title": "澎湖縣115年地方公職人員選舉候選人登記每日人數統計表",
+          "published_at_raw": "20260904182603",
+          "url": "https://web.cec.gov.tw/phec/article/64639"
+        },
+        {
+          "title": "115年9月4日澎湖縣115年地方公職人員選舉候選人登記情形",
+          "published_at_raw": "20260904181759",
+          "url": "https://web.cec.gov.tw/phec/article/64631"
+        },
+        {
+          "title": "115年9月3日澎湖縣115年地方公職人員選舉候選人登記情形",
+          "published_at_raw": "20260903181325",
+          "url": "https://web.cec.gov.tw/phec/article/64582"
+        }
+      ]
+    },
+    {
+      "code": "klec",
+      "name": "基隆市選舉委員會",
+      "articles": [
+        {
+          "title": "基隆市第23屆里長選舉候選人登記情形",
+          "published_at_raw": "20260904184429",
+          "url": "https://web.cec.gov.tw/klec/article/64656",
+          "files": [
+            {
+              "name": "C00(115年村里長選舉)候選人登記情形一覽表",
+              "url": "https://web.cec.gov.tw/api/file/09deeafe-29ca-4d78-baa8-d8e84d37592b.pdf",
+              "file": "klec-64656-01.pdf",
+              "sha256": "dc39e3fc1eb3ba77ec57d0d1c3ae179e3c14cd8e75cf31af9d47d281a75080bd"
+            }
+          ]
+        },
+        {
+          "title": "基隆市議會第21屆議員選舉候選人登記情形",
+          "published_at_raw": "20260904183912",
+          "url": "https://web.cec.gov.tw/klec/article/64655",
+          "files": [
+            {
+              "name": "B00(115年縣市議員選舉)候選人登記情形一覽表 (總表)",
+              "url": "https://web.cec.gov.tw/api/file/91b2447a-768e-44f4-841a-892a7ddb35fc.pdf",
+              "file": "klec-64655-01.pdf",
+              "sha256": "5c56c7e5eeafb5623370d1529ac52788ebae0129b47091aa9b4895de5e381638"
+            }
+          ]
+        },
+        {
+          "title": "基隆市第20屆市長選舉候選人登記情形",
+          "published_at_raw": "20260904183614",
+          "url": "https://web.cec.gov.tw/klec/article/64649",
+          "files": [
+            {
+              "name": "A00(115年縣市長選舉)候選人登記情形一覽表(總表)",
+              "url": "https://web.cec.gov.tw/api/file/132e41e0-578c-49e6-bd0e-b2c41b388241.pdf",
+              "file": "klec-64649-01.pdf",
+              "sha256": "f09e7e7cdccf7c5856867a36a9cd69907ea3b074e7a07efd820253e72e8da68c"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "基隆市第23屆里長選舉候選人登記情形",
+          "published_at_raw": "20260904184429",
+          "url": "https://web.cec.gov.tw/klec/article/64656"
+        },
+        {
+          "title": "基隆市議會第21屆議員選舉候選人登記情形",
+          "published_at_raw": "20260904183912",
+          "url": "https://web.cec.gov.tw/klec/article/64655"
+        },
+        {
+          "title": "基隆市第20屆市長選舉候選人登記情形",
+          "published_at_raw": "20260904183614",
+          "url": "https://web.cec.gov.tw/klec/article/64649"
+        }
+      ]
+    },
+    {
+      "code": "hcec",
+      "name": "新竹市選舉委員會",
+      "articles": [
+        {
+          "title": "115年市長、市議員及里長選舉候選人登記概況彙總表",
+          "published_at_raw": "20260831175343",
+          "url": "https://web.cec.gov.tw/hcec/article/64402",
+          "files": [
+            {
+              "name": "(115年縣市長選舉)候選人登記概況彙總表 (0904)",
+              "url": "https://web.cec.gov.tw/api/file/6d3ef2fe-f9de-48cd-bcc5-984fa44c4dd9.pdf",
+              "file": "hcec-64402-01.pdf",
+              "sha256": "b9934f3ee18d5c06da798620492059c4b076b600296826c66d4f75fee0683cea"
+            },
+            {
+              "name": "(115年縣市議員選舉)候選人登記概況彙總表 (0904)",
+              "url": "https://web.cec.gov.tw/api/file/8cb864fd-5945-41ec-99e6-33c0ba574d74.pdf",
+              "file": "hcec-64402-02.pdf",
+              "sha256": "6d048486c5a77f91336fe1f31aa055b03b8596ad6a1813a52e36d9fa77b1f197"
+            },
+            {
+              "name": "(115年村里長選舉)候選人登記概況彙總表 (0904)",
+              "url": "https://web.cec.gov.tw/api/file/bd8686b9-fd43-49d6-9b1b-b43658c92cd4.pdf",
+              "file": "hcec-64402-03.pdf",
+              "sha256": "5c4cc9b4c186ba7a8f971fccd6df133a5b5b4b6fc3daf8177c5a6c6e3ad380d3"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年市長、市議員及里長選舉候選人登記概況彙總表",
+          "published_at_raw": "20260831175343",
+          "url": "https://web.cec.gov.tw/hcec/article/64402"
+        }
+      ]
+    },
+    {
+      "code": "cyec",
+      "name": "嘉義市選舉委員會",
+      "articles": [
+        {
+          "title": "嘉義市議會第12屆議員選舉候選人登記情形一覽表",
+          "published_at_raw": "20260904173000",
+          "url": "https://web.cec.gov.tw/cyec/article/64405",
+          "files": [
+            {
+              "name": "嘉義市議會第12屆議員選舉候選人登記情形一覽表",
+              "url": "https://web.cec.gov.tw/api/file/b53580e2-387f-450e-ad4f-25f966891c1e.pdf",
+              "file": "cyec-64405-01.pdf",
+              "sha256": "cde9d98b54c6d0159b2631f00e8f052d89776132533a89d007f6b28f36b60d14"
+            }
+          ]
+        },
+        {
+          "title": "嘉義市第12屆市長選舉候選人登記情形一覽表",
+          "published_at_raw": "20260904173000",
+          "url": "https://web.cec.gov.tw/cyec/article/64403",
+          "files": [
+            {
+              "name": "嘉義市第12屆市長選舉候選人登記情形一覽表",
+              "url": "https://web.cec.gov.tw/api/file/25ad87b9-7d01-4b97-82c5-005b5f89c591.pdf",
+              "file": "cyec-64403-01.pdf",
+              "sha256": "768e1013937b786bdb42ccde242b4d757354034942b688d3d47356730543b51a"
+            }
+          ]
+        },
+        {
+          "title": "嘉義市第12屆里長選舉候選人登記情形一覽表",
+          "published_at_raw": "20260904173000",
+          "url": "https://web.cec.gov.tw/cyec/article/64407",
+          "files": [
+            {
+              "name": "嘉義市第12屆里長選舉候選人登記情形一覽表",
+              "url": "https://web.cec.gov.tw/api/file/5d73b0fb-90d9-40e4-b285-fd246007a858.pdf",
+              "file": "cyec-64407-01.pdf",
+              "sha256": "ab3aebd54e3aae2e8d3425a11b86a0819161963487bf0df04131f57dd685fba3"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "嘉義市議會第12屆議員選舉候選人登記情形一覽表",
+          "published_at_raw": "20260904173000",
+          "url": "https://web.cec.gov.tw/cyec/article/64405"
+        },
+        {
+          "title": "嘉義市第12屆市長選舉候選人登記情形一覽表",
+          "published_at_raw": "20260904173000",
+          "url": "https://web.cec.gov.tw/cyec/article/64403"
+        },
+        {
+          "title": "嘉義市第12屆里長選舉候選人登記情形一覽表",
+          "published_at_raw": "20260904173000",
+          "url": "https://web.cec.gov.tw/cyec/article/64407"
+        }
+      ]
+    },
+    {
+      "code": "kmec",
+      "name": "金門縣選舉委員會",
+      "articles": [
+        {
+          "title": "[115年鄉鎮市長選舉]候選人登記每日統計表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64411",
+          "files": [
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記每日統計表8月31日",
+              "url": "https://web.cec.gov.tw/api/file/d92fd9b1-1d89-4ff9-9ed4-9202fcc5e918.xls",
+              "file": "kmec-64411-01.xls",
+              "sha256": "3a2e7554f8e441ce07d656c0afe88c69ed3864c01340d827d497b4e5f65fbd5d"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記每日統計表9月1日",
+              "url": "https://web.cec.gov.tw/api/file/a6d57349-28e9-4a7c-8d51-304b939785bd.xls",
+              "file": "kmec-64411-02.xls",
+              "sha256": "484311243b45159f6f3a088e31fd7192493712f37a5f5d4b1046ee646ed9a6a3"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記每日統計表0902",
+              "url": "https://web.cec.gov.tw/api/file/1e6002f1-7200-4140-9fa2-aa63b11a0ce9.xls",
+              "file": "kmec-64411-03.xls",
+              "sha256": "6ac3fc3e9dcada9ac588eb6a400aac59bb23513644bfa0640618ff2976720893"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記每日統計表0903",
+              "url": "https://web.cec.gov.tw/api/file/8bee6b4d-3108-4e4e-aac7-fe1db6762817.xls",
+              "file": "kmec-64411-04.xls",
+              "sha256": "d3a79113484ec7f516e927a6d4f5c94e75c20b51010ea113559daae08443fd1f"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記每日統計表0904",
+              "url": "https://web.cec.gov.tw/api/file/1250b6ae-b653-44e2-b380-42a05a7e236e.xls",
+              "file": "kmec-64411-05.xls",
+              "sha256": "50c74d89c0d0ffe7e23e57b2cc9e453a93ed4eba8b2b196a75ae791ffd6b8394"
+            }
+          ]
+        },
+        {
+          "title": "[115年鄉鎮市長選舉]候選人登記概況彙總表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64413",
+          "files": [
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記概況彙總表8月31日",
+              "url": "https://web.cec.gov.tw/api/file/1774977d-0d5c-4746-8243-9cc0e949f4c6.xls",
+              "file": "kmec-64413-01.xls",
+              "sha256": "9287adc457d8680a3cffe3c61ad3578399fd0be4e59f8b7d2a0473a1179012cb"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記概況彙總表9月1日",
+              "url": "https://web.cec.gov.tw/api/file/b9c9847e-70e8-458b-9a6d-584ba3146004.xls",
+              "file": "kmec-64413-02.xls",
+              "sha256": "e029a89aeed8ed9d6390c5345997ffdd1ecd513b50881f151359a17268c41720"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記概況彙總表0902",
+              "url": "https://web.cec.gov.tw/api/file/1102da1e-9794-4106-907f-1cc7921d92e9.xls",
+              "file": "kmec-64413-03.xls",
+              "sha256": "0e7c1620cabb35664cdffd132f76adc145497b9f52fb902b3c005a471568c7b5"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記概況彙總表0903",
+              "url": "https://web.cec.gov.tw/api/file/f594b14b-1beb-4ec9-b388-54ff0e2ed57d.xls",
+              "file": "kmec-64413-04.xls",
+              "sha256": "a10a21ca349fb8b7baecf7f6abf5fcef6f53bfc82893ae4b04dd5505980c6d70"
+            },
+            {
+              "name": "[115年鄉鎮市長選舉]候選人登記概況彙總表0904",
+              "url": "https://web.cec.gov.tw/api/file/d8e1625f-61ef-4d0e-9037-5f95ca6ad2c5.xls",
+              "file": "kmec-64413-05.xls",
+              "sha256": "41516ac11a31d734cbf5adb1289d375686447c547d4c2eae6b3b52ef77cea762"
+            }
+          ]
+        },
+        {
+          "title": "[115年鄉鎮市民代表選舉]候選人登記每日統計表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64422",
+          "files": [
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記每日統計表8月31日",
+              "url": "https://web.cec.gov.tw/api/file/a264a0ed-2bf6-4ec6-946f-b98767936081.xls",
+              "file": "kmec-64422-01.xls",
+              "sha256": "2af876e3493a5f1c582d9141b5ca72d708171e250924c53896f300b90c1c894a"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記每日統計表9月1日",
+              "url": "https://web.cec.gov.tw/api/file/c593ee5e-80b1-41ad-8206-aaa984b2a77f.xls",
+              "file": "kmec-64422-02.xls",
+              "sha256": "6e2d49cce30032ac935318b8394a034a66d308607227ae7cebc0c07280ed61c1"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記每日統計表0902",
+              "url": "https://web.cec.gov.tw/api/file/985b3ab3-ca0c-4632-b1f0-20adc1792961.xls",
+              "file": "kmec-64422-03.xls",
+              "sha256": "f23247177f3c0923f7506d82a265b3b2a4c3f684281c031b8ebebc115027b4ed"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記每日統計表0903",
+              "url": "https://web.cec.gov.tw/api/file/fd17de86-2299-4c46-a67a-9e798e523ff4.xls",
+              "file": "kmec-64422-04.xls",
+              "sha256": "f4dbc14b43e25d383c199161b3dbc657c5f092e447fabe91806842df1fbd634d"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記每日統計表0904",
+              "url": "https://web.cec.gov.tw/api/file/2623d3d2-507b-49ce-bd91-441fad8a3cc4.xls",
+              "file": "kmec-64422-05.xls",
+              "sha256": "926c9491753c69fc8043c34db9d5d7b6c48e2f157e9bd5d931571db54db4d0e6"
+            }
+          ]
+        },
+        {
+          "title": "[115年鄉鎮市民代表選舉]候選人登記概況彙總表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64424",
+          "files": [
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記概況彙總表8月31日",
+              "url": "https://web.cec.gov.tw/api/file/8401378c-c699-4788-9d45-aff7855bb17a.xls",
+              "file": "kmec-64424-01.xls",
+              "sha256": "c323e6edc57c3e6122c394def16c2af62ee3d08ecc09b93d204f847ae29f59c8"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記概況彙總表9月1日",
+              "url": "https://web.cec.gov.tw/api/file/62b9a2c9-791c-49f8-835a-64367bc82bfa.xls",
+              "file": "kmec-64424-02.xls",
+              "sha256": "e90efe378027d601aed08c298bab09afc0deca9d27d2ab45a4552321d27255a1"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記概況彙總表0902",
+              "url": "https://web.cec.gov.tw/api/file/b6251b40-072d-4921-af8a-a23862c2eeb6.xls",
+              "file": "kmec-64424-03.xls",
+              "sha256": "37a508c82304d3cdf07713edfdb8444bac827a43968374c2d85a65a651c1b887"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記概況彙總表0903",
+              "url": "https://web.cec.gov.tw/api/file/dfd39821-506e-4e6f-a4bd-65aebb0159f5.xls",
+              "file": "kmec-64424-04.xls",
+              "sha256": "d0a0bfc3f9e59a367392d62fa4019ea975259afa73322389314dd83452d1ce7e"
+            },
+            {
+              "name": "[115年鄉鎮市民代表選舉]候選人登記概況彙總表0904",
+              "url": "https://web.cec.gov.tw/api/file/914c5559-c27a-42bc-bc6f-131da31b4204.xls",
+              "file": "kmec-64424-05.xls",
+              "sha256": "9cb0336ca9ff9ab466e16159fb63691c7782ec08caad7e2ae090083d7aa86734"
+            }
+          ]
+        },
+        {
+          "title": "[115年村里長選舉]候選人登記每日統計表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64426",
+          "files": [
+            {
+              "name": "[115年村里長選舉]候選人登記每日統計表8月31日",
+              "url": "https://web.cec.gov.tw/api/file/10cd7dd8-066d-4a18-8f12-86d16685176b.xls",
+              "file": "kmec-64426-01.xls",
+              "sha256": "72eb1685bcafe5b14d1340c9c08451774d05476f46a946b27e60ced5597d471c"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記每日統計表9月1日",
+              "url": "https://web.cec.gov.tw/api/file/89ddb606-6611-44fc-aa91-c3ce71344c7c.xls",
+              "file": "kmec-64426-02.xls",
+              "sha256": "9ae860c5e75077dae4c9071df49bdf8b7e4f8a23769c21ffcac8e57e44f3f741"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記每日統計表0902",
+              "url": "https://web.cec.gov.tw/api/file/bf9992b5-1ec9-4b5f-8ed4-54391456c4f7.xls",
+              "file": "kmec-64426-03.xls",
+              "sha256": "796d1f1fed6c4a04289f89a0bfeb227e154cd2f975cecb550e955d77788343c1"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記每日統計表0903",
+              "url": "https://web.cec.gov.tw/api/file/878ad98e-1e1b-4ed8-9b0b-b68906b0c7d5.xls",
+              "file": "kmec-64426-04.xls",
+              "sha256": "aaeb174857c15616c9746c25c55029be605f48f02076a0265aba7acd788912c5"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記每日統計表0904",
+              "url": "https://web.cec.gov.tw/api/file/8dc4a7f0-8939-49d8-9588-af51fbcb7162.xls",
+              "file": "kmec-64426-05.xls",
+              "sha256": "9853005ded7bd5aa42f309030da3f879beb277408c3e707c5db5cf5568a33b3b"
+            }
+          ]
+        },
+        {
+          "title": "[115年村里長選舉]候選人登記概況彙總表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64428",
+          "files": [
+            {
+              "name": "[115年村里長選舉]候選人登記概況彙總表8月31日",
+              "url": "https://web.cec.gov.tw/api/file/f4f690d9-299a-4738-88f9-9e1f1362e0c1.xls",
+              "file": "kmec-64428-01.xls",
+              "sha256": "b072d5048442623fa7ab1b29b4cbd8f47b3df91e360e4cfb4591c3d2270ee631"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記概況彙總表9月1日",
+              "url": "https://web.cec.gov.tw/api/file/025859d5-5bc2-44eb-90c0-6781c1b08756.xls",
+              "file": "kmec-64428-02.xls",
+              "sha256": "8727152bc013036fb9749297be42866ac434a82258f81356fb4412921c8cc1a4"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記概況彙總表0902",
+              "url": "https://web.cec.gov.tw/api/file/7239b6c4-5467-4982-9a73-5a1e5cb79f49.xls",
+              "file": "kmec-64428-03.xls",
+              "sha256": "c81d57ea9495fc43a2663d4f7a77932580ffbd4bb0fab16d7a7c11972e3ca739"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記概況彙總表0903",
+              "url": "https://web.cec.gov.tw/api/file/7764b972-7966-4e87-9e88-b20d4e46a286.xls",
+              "file": "kmec-64428-04.xls",
+              "sha256": "84d686505b0867174ed295196249499cbe4e302bf2307f322e5e09ca07db1b3c"
+            },
+            {
+              "name": "[115年村里長選舉]候選人登記概況彙總表0904",
+              "url": "https://web.cec.gov.tw/api/file/ced2b348-9f9e-4ec5-b52f-6577bce41642.xls",
+              "file": "kmec-64428-05.xls",
+              "sha256": "3968a6aa476e79f009b71afec01ef69b2622f7c929c5ce3671d87d0cf56ea745"
+            }
+          ]
+        },
+        {
+          "title": "115年候選人登記概況",
+          "url": "https://web.cec.gov.tw/kmec/article/64396",
+          "files": [
+            {
+              "name": "[115年縣市長選舉]候選人登記概況彙總表9月1日",
+              "url": "https://web.cec.gov.tw/api/file/b90cfd98-2c04-4096-80ac-db3103ea14f9.xls",
+              "file": "kmec-64396-01.xls",
+              "sha256": "0eeb0c983b3a5338a1542df6d98b169cf4c150a0ff7a1d4815cebab752f84cc3"
+            },
+            {
+              "name": "[115年縣市長選舉]候選人登記概況表8月31日",
+              "url": "https://web.cec.gov.tw/api/file/aff7cc64-88db-45e0-abdd-2454668e3377.xls",
+              "file": "kmec-64396-02.xls",
+              "sha256": "3a99d93fc210a8cf6a761bee2c149f85cc98b7c921062a44bc6f295b0d63ac0a"
+            },
+            {
+              "name": "[115年縣市長選舉]候選人登記概況彙總表0902",
+              "url": "https://web.cec.gov.tw/api/file/4da9dd37-8abc-41da-a917-c4a34375448f.xls",
+              "file": "kmec-64396-03.xls",
+              "sha256": "694cdad4b3468958055e967ce8d94b99c4f21ab17defc641b39f086756f3c0ab"
+            },
+            {
+              "name": "[115年縣市長選舉]候選人登記概況彙總表0903",
+              "url": "https://web.cec.gov.tw/api/file/b873842f-4a1e-4e1c-a347-535ece371afd.xls",
+              "file": "kmec-64396-04.xls",
+              "sha256": "58c5f5bfda48ffa3016a2ee0bb0ba85b5d6159eb3a9098c589fe93b41814a38a"
+            },
+            {
+              "name": "[115年縣市長選舉]候選人登記概況彙總表0904",
+              "url": "https://web.cec.gov.tw/api/file/251f807a-fe75-47ad-9b07-a9f4ce0e8c60.xls",
+              "file": "kmec-64396-05.xls",
+              "sha256": "3c5c766ebf4b892fc42fbc5c7ea93ed51df6a446c47b96cafe6a4a0c614039d1"
+            }
+          ]
+        },
+        {
+          "title": "115年候選人登記概況",
+          "url": "https://web.cec.gov.tw/kmec/article/64494",
+          "files": [
+            {
+              "name": "[115年縣市議員選舉]候選人登記概況彙總表8月31日",
+              "url": "https://web.cec.gov.tw/api/file/3a4e4840-b16f-4f89-8a2b-c28d2e2c5061.xls",
+              "file": "kmec-64494-01.xls",
+              "sha256": "2b4ff7312d5ef18abd8b6131ab8900980f7bde9200769eae3aeac72186548d1c"
+            },
+            {
+              "name": "[115年縣市議員選舉]候選人登記概況彙總表9月1日",
+              "url": "https://web.cec.gov.tw/api/file/fe3ed438-cead-40d1-9dc5-9e304ec1eb80.xls",
+              "file": "kmec-64494-02.xls",
+              "sha256": "8e6f5f6adcb6d804fe5560bff11408b123c363ee66d0e83c6ee13be901045474"
+            },
+            {
+              "name": "[115年縣市議員選舉]候選人登記概況彙總表0902",
+              "url": "https://web.cec.gov.tw/api/file/61f03a61-4b29-41c7-ba95-d5f5ef475cdd.xls",
+              "file": "kmec-64494-03.xls",
+              "sha256": "7aabc9cae85515f0b7b5c3614cee3afe3e887c0fc7872458538f255d98f534eb"
+            },
+            {
+              "name": "[115年縣市議員選舉]候選人登記概況彙總表0903",
+              "url": "https://web.cec.gov.tw/api/file/30817478-f35d-47b0-bf17-8089556534b0.xls",
+              "file": "kmec-64494-04.xls",
+              "sha256": "113a831e0db5f62f215bc77a3e8393f13a58a5aee46fa6b3506aae3b76885a24"
+            },
+            {
+              "name": "[115年縣市議員選舉]候選人登記概況彙總表0904",
+              "url": "https://web.cec.gov.tw/api/file/381e1bf7-cd5b-49ed-8bcf-48460b6c4cad.xls",
+              "file": "kmec-64494-05.xls",
+              "sha256": "1b264a450169a8f0475209617f037045ff01dd65f241f721af7f89c9a4ab4a64"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年直轄市長、縣（市）長、直轄市議員、縣（市）議員選舉受理候選人登記公告",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/11667"
+        },
+        {
+          "title": "[115年鄉鎮市長選舉]候選人登記每日統計表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64411"
+        },
+        {
+          "title": "[115年鄉鎮市長選舉]候選人登記概況彙總表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64413"
+        },
+        {
+          "title": "[115年鄉鎮市民代表選舉]候選人登記每日統計表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64422"
+        },
+        {
+          "title": "[115年鄉鎮市民代表選舉]候選人登記概況彙總表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64424"
+        },
+        {
+          "title": "[115年村里長選舉]候選人登記每日統計表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64426"
+        },
+        {
+          "title": "[115年村里長選舉]候選人登記概況彙總表",
+          "published_at_raw": null,
+          "url": "https://web.cec.gov.tw/kmec/article/64428"
+        }
+      ]
+    },
+    {
+      "code": "lcec",
+      "name": "連江縣選舉委員會",
+      "articles": [
+        {
+          "title": "115年9月4日連江縣縣長、議員、鄉長、鄉民代表、村長選舉候選人登記概況彙總表",
+          "published_at_raw": "20260904181113",
+          "url": "https://web.cec.gov.tw/lcec/article/64620",
+          "files": [
+            {
+              "name": "(115年縣市長選舉)候選人登記概況彙總表 (3)",
+              "url": "https://web.cec.gov.tw/api/file/ebfd8831-359d-4c7d-bc3c-5eee64a44c59.xls",
+              "file": "lcec-64620-01.xls",
+              "sha256": "837397a3f8bb79d17b3fb8dd239032b26263a4e6b8a98898d43492811337964d"
+            },
+            {
+              "name": "(115年縣市議員選舉)候選人登記概況彙總表 (5)",
+              "url": "https://web.cec.gov.tw/api/file/80f5efcd-9280-48a9-b1f5-5a41c2e2bb77.xls",
+              "file": "lcec-64620-02.xls",
+              "sha256": "868bff4f3ef8570ed49d1c5fc704bcc7b67635bcc0700347626daf1342109115"
+            },
+            {
+              "name": "(115年鄉鎮市長選舉)候選人登記概況彙總表 (2)",
+              "url": "https://web.cec.gov.tw/api/file/1e59a352-9f11-42a6-a3c7-af626c69282f.xls",
+              "file": "lcec-64620-03.xls",
+              "sha256": "c06030f71e7f140beccf89c02941e162def89a0173d46f0d06524347d4a55fbf"
+            },
+            {
+              "name": "(115年鄉鎮市民代表選舉)候選人登記概況彙總表 (4)",
+              "url": "https://web.cec.gov.tw/api/file/1cb17916-7cf4-4437-8655-57452100289f.xls",
+              "file": "lcec-64620-04.xls",
+              "sha256": "df3b3a0b20299956921d91131d7d7050f7128ff7b00bf2a5a4532adc4f1b3270"
+            },
+            {
+              "name": "(115年村里長選舉)候選人登記概況彙總表 (2)",
+              "url": "https://web.cec.gov.tw/api/file/2a54d033-ea96-4c9f-8551-dd0c06bdd865.xls",
+              "file": "lcec-64620-05.xls",
+              "sha256": "a7ad65716e0381b678426dbfff64fbfdedec9db085de6a4e1b21d3bca9f4715b"
+            }
+          ]
+        }
+      ],
+      "other_discoveries": [
+        {
+          "title": "115年9月4日連江縣縣長、議員、鄉長、鄉民代表、村長選舉候選人登記概況彙總表",
+          "published_at_raw": "20260904181113",
+          "url": "https://web.cec.gov.tw/lcec/article/64620"
+        },
+        {
+          "title": "115年9月3日連江縣議員、鄉長、鄉民代表、村長選舉候選人登記概況彙總表",
+          "published_at_raw": "20260903181726",
+          "url": "https://web.cec.gov.tw/lcec/article/64586"
+        },
+        {
+          "title": "115年9月2日連江縣縣長、議員、鄉民代表、村長選舉候選人登記概況彙總表",
+          "published_at_raw": "20260902182601",
+          "url": "https://web.cec.gov.tw/lcec/article/64542"
+        },
+        {
+          "title": "115年9月1日連江縣議員、鄉長、鄉民代表、村長選舉候選人登記概況彙總表",
+          "published_at_raw": "20260901182727",
+          "url": "https://web.cec.gov.tw/lcec/article/64501"
+        },
+        {
+          "title": "115年8月31日連江縣縣長、鄉民代表、村長選舉候選人登記概況彙總表",
+          "published_at_raw": "20260831182545",
+          "url": "https://web.cec.gov.tw/lcec/article/64434"
+        }
+      ]
+    },
+    {
+      "code": "central",
+      "name": "中央選舉委員會",
+      "articles": [
+        {
+          "title": "115年9月4日候選人登記概況",
+          "url": "https://web.cec.gov.tw/central/article/64658",
+          "files": [
+            {
+              "name": "01-115年直轄市長選舉候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/94acec41-c949-4fd7-b6d8-81f525b72277.pdf",
+              "file": "central-64658-01.pdf",
+              "sha256": "d3198e457f5713ff39b032a29ccf423a7b55d0a9cac6f825a0c209a6507d04e8"
+            },
+            {
+              "name": "02-115年直轄市長選舉政黨推薦候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/395031d4-f52c-46bb-ad10-16650a649437.pdf",
+              "file": "central-64658-02.pdf",
+              "sha256": "6d0c4b0490121d41ba10d5179d1355d967a6fcdf71e25b8def323daaeb31d4c4"
+            },
+            {
+              "name": "03-115年直轄市議員選舉候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/81874bc5-e369-4334-9f26-b92c0d807858.pdf",
+              "file": "central-64658-03.pdf",
+              "sha256": "edf9289604ac1b491510a2d61135629f6892a3c14d63115eeb559cbebceefe2c"
+            },
+            {
+              "name": "04-115年直轄市議員選舉政黨推薦候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/10316f66-ff4c-49ce-9376-cd970b308444.pdf",
+              "file": "central-64658-04.pdf",
+              "sha256": "7a6298cc1f92ec36c425dfffbb0f3876aa98e19d1438acc7ab11908b6f53bf7d"
+            },
+            {
+              "name": "05-115年縣市長選舉候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/2d95276d-d49f-4e07-a215-c24252aaf561.pdf",
+              "file": "central-64658-05.pdf",
+              "sha256": "0e860907e844f5bbabefbb89899c4aaca9021a3534dcba1013488e86aa4667e5"
+            },
+            {
+              "name": "06-115年縣市長選舉政黨推薦候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/ef3f4222-a105-44a5-b694-38b90436acfc.pdf",
+              "file": "central-64658-06.pdf",
+              "sha256": "effd0b725ae3303dc1e1bc8f6f8548988657429a7f394f0630262e8155fd6dc8"
+            },
+            {
+              "name": "07-115年縣市議員選舉候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/d8de1580-b37f-48e2-bfc0-d8aa81c0d7cf.pdf",
+              "file": "central-64658-07.pdf",
+              "sha256": "93eee5440459917dd8ec0c283e5ac7517491a192de8b0346922c7c1b24d4c089"
+            },
+            {
+              "name": "08-115年縣市議員選舉政黨推薦候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/fff3f900-1843-4541-b352-d6d7d2cb05a9.pdf",
+              "file": "central-64658-08.pdf",
+              "sha256": "be3e5e95e302728ac43db3bd58af422cd805cdea68f9e2e8393a63b66d5d6b2a"
+            },
+            {
+              "name": "09-115年直轄市山地原住民區長選舉候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/ac4043af-22fe-424d-89ec-689b8b446509.pdf",
+              "file": "central-64658-09.pdf",
+              "sha256": "b9fadf3ac1faa615b09d1411b33267254707d82cca7ae2f2a9713cff875571b1"
+            },
+            {
+              "name": "10-115年直轄市山地原住民區民代表選舉候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/5d741f6d-e259-43f9-a301-03efe04b3e0d.pdf",
+              "file": "central-64658-10.pdf",
+              "sha256": "6982c0e887fb5e312dd75bf5be122fb7dfce9b5e8dccb74a61aebdaddd38f14a"
+            },
+            {
+              "name": "11-115年鄉鎮市長選舉候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/fdc36170-8e60-4b3d-a5b6-2a315e6d151d.pdf",
+              "file": "central-64658-11.pdf",
+              "sha256": "4762659bd7de342c45c41a4f98ebe1f49f39231e6d05a6c78fb837a1548fddf6"
+            },
+            {
+              "name": "12-115年鄉鎮市民代表選舉候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/77815a5b-c47c-46f9-96b0-6f356e06b6df.pdf",
+              "file": "central-64658-12.pdf",
+              "sha256": "b78f20fafe78376ba41864c32245158df4001205fe21674ad47ea8fd513c5a61"
+            },
+            {
+              "name": "13-115年村里長選舉候選人登記情形每日統計表",
+              "url": "https://web.cec.gov.tw/api/file/d2d1cb61-9663-4104-91fa-428a3bcc835c.pdf",
+              "file": "central-64658-13.pdf",
+              "sha256": "a2873f13353e5b9cd2f1628546830f46b2064032abad0c32de7721c817300443"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "county": "臺北市",
+      "office": "mayor",
+      "expected": 6,
+      "parsed": 6,
+      "difference": 0
+    },
+    {
+      "county": "臺北市",
+      "office": "councilor",
+      "expected": 98,
+      "parsed": 98,
+      "difference": 0
+    },
+    {
+      "county": "臺北市",
+      "office": "village_chief",
+      "expected": 818,
+      "parsed": 818,
+      "difference": 0
+    },
+    {
+      "county": "新北市",
+      "office": "mayor",
+      "expected": 3,
+      "parsed": 3,
+      "difference": 0
+    },
+    {
+      "county": "新北市",
+      "office": "councilor",
+      "expected": 112,
+      "parsed": 112,
+      "difference": 0
+    },
+    {
+      "county": "新北市",
+      "office": "indigenous_district_chief",
+      "expected": 3,
+      "parsed": 3,
+      "difference": 0
+    },
+    {
+      "county": "新北市",
+      "office": "indigenous_district_representative",
+      "expected": 15,
+      "parsed": 15,
+      "difference": 0
+    },
+    {
+      "county": "新北市",
+      "office": "village_chief",
+      "expected": 1659,
+      "parsed": 1659,
+      "difference": 0
+    },
+    {
+      "county": "桃園市",
+      "office": "mayor",
+      "expected": 2,
+      "parsed": 2,
+      "difference": 0
+    },
+    {
+      "county": "桃園市",
+      "office": "councilor",
+      "expected": 109,
+      "parsed": 109,
+      "difference": 0
+    },
+    {
+      "county": "桃園市",
+      "office": "indigenous_district_chief",
+      "expected": 1,
+      "parsed": 1,
+      "difference": 0
+    },
+    {
+      "county": "桃園市",
+      "office": "indigenous_district_representative",
+      "expected": 20,
+      "parsed": 20,
+      "difference": 0
+    },
+    {
+      "county": "桃園市",
+      "office": "village_chief",
+      "expected": 947,
+      "parsed": 947,
+      "difference": 0
+    },
+    {
+      "county": "臺中市",
+      "office": "mayor",
+      "expected": 3,
+      "parsed": 3,
+      "difference": 0
+    },
+    {
+      "county": "臺中市",
+      "office": "councilor",
+      "expected": 102,
+      "parsed": 102,
+      "difference": 0
+    },
+    {
+      "county": "臺中市",
+      "office": "indigenous_district_chief",
+      "expected": 6,
+      "parsed": 6,
+      "difference": 0
+    },
+    {
+      "county": "臺中市",
+      "office": "indigenous_district_representative",
+      "expected": 20,
+      "parsed": 20,
+      "difference": 0
+    },
+    {
+      "county": "臺中市",
+      "office": "village_chief",
+      "expected": 1121,
+      "parsed": 1121,
+      "difference": 0
+    },
+    {
+      "county": "臺南市",
+      "office": "mayor",
+      "expected": 4,
+      "parsed": 4,
+      "difference": 0
+    },
+    {
+      "county": "臺南市",
+      "office": "councilor",
+      "expected": 88,
+      "parsed": 0,
+      "difference": -88
+    },
+    {
+      "county": "臺南市",
+      "office": "village_chief",
+      "expected": 1187,
+      "parsed": 0,
+      "difference": -1187
+    },
+    {
+      "county": "高雄市",
+      "office": "mayor",
+      "expected": 5,
+      "parsed": 5,
+      "difference": 0
+    },
+    {
+      "county": "高雄市",
+      "office": "councilor",
+      "expected": 101,
+      "parsed": 101,
+      "difference": 0
+    },
+    {
+      "county": "高雄市",
+      "office": "indigenous_district_chief",
+      "expected": 6,
+      "parsed": 6,
+      "difference": 0
+    },
+    {
+      "county": "高雄市",
+      "office": "indigenous_district_representative",
+      "expected": 39,
+      "parsed": 39,
+      "difference": 0
+    },
+    {
+      "county": "高雄市",
+      "office": "village_chief",
+      "expected": 1657,
+      "parsed": 1657,
+      "difference": 0
+    },
+    {
+      "county": "宜蘭縣",
+      "office": "mayor",
+      "expected": 5,
+      "parsed": 5,
+      "difference": 0
+    },
+    {
+      "county": "宜蘭縣",
+      "office": "councilor",
+      "expected": 59,
+      "parsed": 59,
+      "difference": 0
+    },
+    {
+      "county": "宜蘭縣",
+      "office": "township_mayor",
+      "expected": 31,
+      "parsed": 31,
+      "difference": 0
+    },
+    {
+      "county": "宜蘭縣",
+      "office": "township_representative",
+      "expected": 233,
+      "parsed": 233,
+      "difference": 0
+    },
+    {
+      "county": "宜蘭縣",
+      "office": "village_chief",
+      "expected": 443,
+      "parsed": 443,
+      "difference": 0
+    },
+    {
+      "county": "新竹縣",
+      "office": "mayor",
+      "expected": 3,
+      "parsed": 3,
+      "difference": 0
+    },
+    {
+      "county": "新竹縣",
+      "office": "councilor",
+      "expected": 68,
+      "parsed": 68,
+      "difference": 0
+    },
+    {
+      "county": "新竹縣",
+      "office": "township_mayor",
+      "expected": 32,
+      "parsed": 32,
+      "difference": 0
+    },
+    {
+      "county": "新竹縣",
+      "office": "township_representative",
+      "expected": 252,
+      "parsed": 252,
+      "difference": 0
+    },
+    {
+      "county": "新竹縣",
+      "office": "village_chief",
+      "expected": 369,
+      "parsed": 369,
+      "difference": 0
+    },
+    {
+      "county": "苗栗縣",
+      "office": "mayor",
+      "expected": 2,
+      "parsed": 2,
+      "difference": 0
+    },
+    {
+      "county": "苗栗縣",
+      "office": "councilor",
+      "expected": 56,
+      "parsed": 56,
+      "difference": 0
+    },
+    {
+      "county": "苗栗縣",
+      "office": "township_mayor",
+      "expected": 40,
+      "parsed": 40,
+      "difference": 0
+    },
+    {
+      "county": "苗栗縣",
+      "office": "township_representative",
+      "expected": 319,
+      "parsed": 319,
+      "difference": 0
+    },
+    {
+      "county": "苗栗縣",
+      "office": "village_chief",
+      "expected": 542,
+      "parsed": 542,
+      "difference": 0
+    },
+    {
+      "county": "南投縣",
+      "office": "mayor",
+      "expected": 2,
+      "parsed": 2,
+      "difference": 0
+    },
+    {
+      "county": "南投縣",
+      "office": "councilor",
+      "expected": 61,
+      "parsed": 61,
+      "difference": 0
+    },
+    {
+      "county": "南投縣",
+      "office": "township_mayor",
+      "expected": 32,
+      "parsed": 32,
+      "difference": 0
+    },
+    {
+      "county": "南投縣",
+      "office": "township_representative",
+      "expected": 251,
+      "parsed": 250,
+      "difference": -1
+    },
+    {
+      "county": "南投縣",
+      "office": "village_chief",
+      "expected": 535,
+      "parsed": 534,
+      "difference": -1
+    },
+    {
+      "county": "彰化縣",
+      "office": "mayor",
+      "expected": 4,
+      "parsed": 4,
+      "difference": 0
+    },
+    {
+      "county": "彰化縣",
+      "office": "councilor",
+      "expected": 86,
+      "parsed": 86,
+      "difference": 0
+    },
+    {
+      "county": "彰化縣",
+      "office": "township_mayor",
+      "expected": 56,
+      "parsed": 56,
+      "difference": 0
+    },
+    {
+      "county": "彰化縣",
+      "office": "township_representative",
+      "expected": 517,
+      "parsed": 517,
+      "difference": 0
+    },
+    {
+      "county": "彰化縣",
+      "office": "village_chief",
+      "expected": 1040,
+      "parsed": 1040,
+      "difference": 0
+    },
+    {
+      "county": "雲林縣",
+      "office": "mayor",
+      "expected": 4,
+      "parsed": 4,
+      "difference": 0
+    },
+    {
+      "county": "雲林縣",
+      "office": "councilor",
+      "expected": 73,
+      "parsed": 73,
+      "difference": 0
+    },
+    {
+      "county": "雲林縣",
+      "office": "township_mayor",
+      "expected": 49,
+      "parsed": 49,
+      "difference": 0
+    },
+    {
+      "county": "雲林縣",
+      "office": "township_representative",
+      "expected": 372,
+      "parsed": 372,
+      "difference": 0
+    },
+    {
+      "county": "雲林縣",
+      "office": "village_chief",
+      "expected": 733,
+      "parsed": 732,
+      "difference": -1
+    },
+    {
+      "county": "嘉義縣",
+      "office": "mayor",
+      "expected": 2,
+      "parsed": 2,
+      "difference": 0
+    },
+    {
+      "county": "嘉義縣",
+      "office": "councilor",
+      "expected": 53,
+      "parsed": 53,
+      "difference": 0
+    },
+    {
+      "county": "嘉義縣",
+      "office": "township_mayor",
+      "expected": 34,
+      "parsed": 34,
+      "difference": 0
+    },
+    {
+      "county": "嘉義縣",
+      "office": "township_representative",
+      "expected": 283,
+      "parsed": 283,
+      "difference": 0
+    },
+    {
+      "county": "嘉義縣",
+      "office": "village_chief",
+      "expected": 625,
+      "parsed": 625,
+      "difference": 0
+    },
+    {
+      "county": "屏東縣",
+      "office": "mayor",
+      "expected": 2,
+      "parsed": 2,
+      "difference": 0
+    },
+    {
+      "county": "屏東縣",
+      "office": "councilor",
+      "expected": 87,
+      "parsed": 87,
+      "difference": 0
+    },
+    {
+      "county": "屏東縣",
+      "office": "township_mayor",
+      "expected": 83,
+      "parsed": 83,
+      "difference": 0
+    },
+    {
+      "county": "屏東縣",
+      "office": "township_representative",
+      "expected": 545,
+      "parsed": 545,
+      "difference": 0
+    },
+    {
+      "county": "屏東縣",
+      "office": "village_chief",
+      "expected": 841,
+      "parsed": 841,
+      "difference": 0
+    },
+    {
+      "county": "臺東縣",
+      "office": "mayor",
+      "expected": 4,
+      "parsed": 4,
+      "difference": 0
+    },
+    {
+      "county": "臺東縣",
+      "office": "councilor",
+      "expected": 56,
+      "parsed": 56,
+      "difference": 0
+    },
+    {
+      "county": "臺東縣",
+      "office": "township_mayor",
+      "expected": 36,
+      "parsed": 36,
+      "difference": 0
+    },
+    {
+      "county": "臺東縣",
+      "office": "township_representative",
+      "expected": 240,
+      "parsed": 240,
+      "difference": 0
+    },
+    {
+      "county": "臺東縣",
+      "office": "village_chief",
+      "expected": 293,
+      "parsed": 293,
+      "difference": 0
+    },
+    {
+      "county": "花蓮縣",
+      "office": "mayor",
+      "expected": 4,
+      "parsed": 4,
+      "difference": 0
+    },
+    {
+      "county": "花蓮縣",
+      "office": "councilor",
+      "expected": 55,
+      "parsed": 55,
+      "difference": 0
+    },
+    {
+      "county": "花蓮縣",
+      "office": "township_mayor",
+      "expected": 36,
+      "parsed": 36,
+      "difference": 0
+    },
+    {
+      "county": "花蓮縣",
+      "office": "township_representative",
+      "expected": 240,
+      "parsed": 240,
+      "difference": 0
+    },
+    {
+      "county": "花蓮縣",
+      "office": "village_chief",
+      "expected": 376,
+      "parsed": 376,
+      "difference": 0
+    },
+    {
+      "county": "澎湖縣",
+      "office": "mayor",
+      "expected": 6,
+      "parsed": 6,
+      "difference": 0
+    },
+    {
+      "county": "澎湖縣",
+      "office": "councilor",
+      "expected": 36,
+      "parsed": 36,
+      "difference": 0
+    },
+    {
+      "county": "澎湖縣",
+      "office": "township_mayor",
+      "expected": 13,
+      "parsed": 13,
+      "difference": 0
+    },
+    {
+      "county": "澎湖縣",
+      "office": "township_representative",
+      "expected": 86,
+      "parsed": 86,
+      "difference": 0
+    },
+    {
+      "county": "澎湖縣",
+      "office": "village_chief",
+      "expected": 154,
+      "parsed": 154,
+      "difference": 0
+    },
+    {
+      "county": "基隆市",
+      "office": "mayor",
+      "expected": 3,
+      "parsed": 3,
+      "difference": 0
+    },
+    {
+      "county": "基隆市",
+      "office": "councilor",
+      "expected": 60,
+      "parsed": 60,
+      "difference": 0
+    },
+    {
+      "county": "基隆市",
+      "office": "village_chief",
+      "expected": 276,
+      "parsed": 276,
+      "difference": 0
+    },
+    {
+      "county": "新竹市",
+      "office": "mayor",
+      "expected": 3,
+      "parsed": 3,
+      "difference": 0
+    },
+    {
+      "county": "新竹市",
+      "office": "councilor",
+      "expected": 56,
+      "parsed": 56,
+      "difference": 0
+    },
+    {
+      "county": "新竹市",
+      "office": "village_chief",
+      "expected": 215,
+      "parsed": 215,
+      "difference": 0
+    },
+    {
+      "county": "嘉義市",
+      "office": "mayor",
+      "expected": 5,
+      "parsed": 5,
+      "difference": 0
+    },
+    {
+      "county": "嘉義市",
+      "office": "councilor",
+      "expected": 37,
+      "parsed": 37,
+      "difference": 0
+    },
+    {
+      "county": "嘉義市",
+      "office": "village_chief",
+      "expected": 157,
+      "parsed": 157,
+      "difference": 0
+    },
+    {
+      "county": "金門縣",
+      "office": "mayor",
+      "expected": 7,
+      "parsed": 7,
+      "difference": 0
+    },
+    {
+      "county": "金門縣",
+      "office": "councilor",
+      "expected": 35,
+      "parsed": 35,
+      "difference": 0
+    },
+    {
+      "county": "金門縣",
+      "office": "township_mayor",
+      "expected": 18,
+      "parsed": 18,
+      "difference": 0
+    },
+    {
+      "county": "金門縣",
+      "office": "township_representative",
+      "expected": 72,
+      "parsed": 72,
+      "difference": 0
+    },
+    {
+      "county": "金門縣",
+      "office": "village_chief",
+      "expected": 75,
+      "parsed": 75,
+      "difference": 0
+    },
+    {
+      "county": "連江縣",
+      "office": "mayor",
+      "expected": 2,
+      "parsed": 2,
+      "difference": 0
+    },
+    {
+      "county": "連江縣",
+      "office": "councilor",
+      "expected": 14,
+      "parsed": 14,
+      "difference": 0
+    },
+    {
+      "county": "連江縣",
+      "office": "township_mayor",
+      "expected": 5,
+      "parsed": 5,
+      "difference": 0
+    },
+    {
+      "county": "連江縣",
+      "office": "township_representative",
+      "expected": 27,
+      "parsed": 27,
+      "difference": 0
+    },
+    {
+      "county": "連江縣",
+      "office": "village_chief",
+      "expected": 37,
+      "parsed": 37,
+      "difference": 0
+    }
+  ]
+}

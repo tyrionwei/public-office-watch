@@ -179,6 +179,11 @@ copy_runtime_data() {
   copy_table parties 'is_public = TRUE'
   copy_table people
   copy_table candidates
+  copy_table candidate_lifecycle_events 'is_public = TRUE'
+  copy_table registration_name_roster 'is_public = TRUE'
+  copy_table polling_place_sources 'is_public = TRUE AND is_current = TRUE'
+  copy_table polling_places 'source_id IN (SELECT id FROM public.polling_place_sources WHERE is_public AND is_current)'
+  copy_table polling_place_neighborhoods 'polling_place_id IN (SELECT id FROM public.polling_places WHERE source_id IN (SELECT id FROM public.polling_place_sources WHERE is_public AND is_current))'
   copy_table party_list_race_results 'is_public = TRUE'
   copy_table companies 'is_public = TRUE'
   # The publication layer needs the merge graph, not its private review evidence.

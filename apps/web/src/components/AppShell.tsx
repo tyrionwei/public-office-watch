@@ -14,9 +14,11 @@ type AppShellProps = PropsWithChildren<{
   headerRight?: ReactNode;
   ticker?: ComponentProps<typeof NextEventTicker>;
   tickerMobileHidden?: boolean;
+  onOpenPollingPlace?: () => void;
+  pollingPlaceOpen?: boolean;
 }>;
 
-export function AppShell({ headerRight, ticker, tickerMobileHidden = false, children }: AppShellProps) {
+export function AppShell({ headerRight, ticker, tickerMobileHidden = false, onOpenPollingPlace, pollingPlaceOpen = false, children }: AppShellProps) {
   const { t } = useI18n();
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>(null);
   const [votingRegionEditorOpen, setVotingRegionEditorOpen] = useState(false);
@@ -56,7 +58,7 @@ export function AppShell({ headerRight, ticker, tickerMobileHidden = false, chil
           <div className={`mt-3 ${tickerMobileHidden ? 'hidden md:block' : ''}`}>
             <NextEventTicker
               {...ticker}
-              rightSlot={<DesktopVotingRegionInline ticker={ticker} onOpenEditor={() => setVotingRegionEditorOpen(true)} />}
+              rightSlot={<DesktopVotingRegionInline ticker={ticker} onOpenEditor={() => setVotingRegionEditorOpen(true)} onOpenPollingPlace={onOpenPollingPlace} pollingPlaceOpen={pollingPlaceOpen} />}
             />
           </div>
         ) : null}

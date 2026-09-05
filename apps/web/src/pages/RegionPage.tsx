@@ -7,6 +7,7 @@ import { translateRaceStatus } from '../data/electionI18n';
 import { getRegionHighlightBackground, getRegionHighlightImageSources } from '../data/regionHighlights';
 import { compareUpcomingRacesForDisplay } from '../data/upcomingRaceSort';
 import { useI18n } from '../i18n';
+import { getCountyRegionLabel, isCurrentCountyRegion, isHistoricalCountyRegion } from '../lib/countyRegions';
 import { publicDataProvider } from '../lib/publicData';
 import { electionsPath, homePath, peoplePath, racePath, regionPath } from '../routes/routePaths';
 import { useSelectedRegion } from '../selectedRegion';
@@ -18,7 +19,7 @@ function getRegionHighlightKey(level: string) {
 }
 
 export function RegionPage() {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const { setSelectedRegionId } = useSelectedRegion();
   const { regionId } = useParams();
   const safeRegionId = regionId ?? '';
@@ -40,8 +41,8 @@ export function RegionPage() {
   const highlightImage = highlight ? getRegionHighlightImageSources(highlight.image) : null;
 
   useEffect(() => {
-    if (regionNode?.level === 'county_city') setSelectedRegionId(regionNode.id);
-  }, [regionNode?.id, regionNode?.level, setSelectedRegionId]);
+    if (regionNode && isCurrentCountyRegion(regionNode)) setSelectedRegionId(regionNode.id);
+  }, [regionNode, setSelectedRegionId]);
 
   useEffect(() => {
     let active = true;
@@ -97,12 +98,19 @@ export function RegionPage() {
               <div className="flex items-center gap-3 text-xs text-slate-400">
                 <Link to={homePath()} className="text-accent hover:text-white">{t('regionPage.guide')}</Link>
                 <span aria-hidden="true">/</span>
-                <span>{regionSummary.label}</span>
+                <span>{getCountyRegionLabel(regionNode, language)}</span>
               </div>
 
               <div className="py-8">
                 <p className="text-xs uppercase tracking-[0.22em] text-accent">{t(getRegionHighlightKey(regionNode.level))}</p>
-                <h1 className="mt-3 font-display text-4xl text-white sm:text-5xl">{regionSummary.label}</h1>
+                <h1 className="mt-3 font-display text-4xl text-white sm:text-5xl">{getCountyRegionLabel(regionNode, language)}</h1>
+                {isHistoricalCountyRegion(regionNode) ? (
+                  <p className="mt-3 text-sm text-signal">
+                    {language === 'en'
+                      ? 'This page preserves the former administrative area. Current county navigation uses the present-day areas.'
+                      : '本頁保留當年的行政區範圍與選舉紀錄；現行縣市導覽另依今日行政區呈現。'}
+                  </p>
+                ) : null}
                 <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300">
                   {highlight?.feature ?? regionCard?.tone ?? regionSummary.sourceNote}
                 </p>
@@ -125,7 +133,7 @@ export function RegionPage() {
             </div>
           </header>
 
-          <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(420px,0.8fr)]">
+          <div className={'grid items-start gap-5' + (isHistoricalCountyRegion(regionNode) ? '' : ' xl:grid-cols-[minmax(0,1.2fr)_minmax(420px,0.8fr)]')}>
             <main className="space-y-5">
               <SectionPanel
                 title={t('regionPage.relatedElections')}
@@ -187,9 +195,11 @@ export function RegionPage() {
               ) : null}
             </main>
 
-            <aside className="min-w-0">
-              <LocalOfficeSummaryPanel regionId={safeRegionId} />
-            </aside>
+            {!isHistoricalCountyRegion(regionNode) ? (
+              <aside className="min-w-0">
+                <LocalOfficeSummaryPanel regionId={safeRegionId} />
+              </aside>
+            ) : null}
           </div>
         </div>
       ) : loadStatus === 'loading' ? (

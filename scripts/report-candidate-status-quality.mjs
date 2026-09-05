@@ -10,6 +10,7 @@ const candidacyStatuses = new Set([
   'registered',
   'qualified',
   'withdrawn_or_disqualified',
+  'did_not_register',
   'unknown',
 ]);
 const electionResults = new Set(['pending', 'elected', 'not_elected', 'unknown']);

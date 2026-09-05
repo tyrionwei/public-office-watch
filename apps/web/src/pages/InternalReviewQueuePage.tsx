@@ -84,9 +84,24 @@ function textValue(value: unknown) {
 function reviewAuditReasons(claimJson: Record<string, unknown> | undefined) {
   const audit = recordValue(claimJson?.reviewAudit);
   const reasonCodes = Array.isArray(audit?.reasonCodes) ? audit.reasonCodes : [];
-  return reasonCodes
-    .filter((reason): reason is string => typeof reason === 'string' && reason.trim().length > 0)
-    .map((reason) => reviewAuditReasonLabels[reason] ?? reason);
+  const identityAudit = recordValue(claimJson?.identityReviewRound20Audit)
+    ?? recordValue(claimJson?.identityReviewRound19Audit)
+    ?? recordValue(claimJson?.identityReviewRound18Audit)
+    ?? recordValue(claimJson?.identityReviewRound17Audit)
+    ?? recordValue(claimJson?.identityReviewRound16Audit)
+    ?? recordValue(claimJson?.identityReviewRound15Audit)
+    ?? recordValue(claimJson?.identityReviewRound14Audit)
+    ?? recordValue(claimJson?.identityReviewRound13Audit)
+    ?? recordValue(claimJson?.identityReviewRound12Audit)
+    ?? recordValue(claimJson?.identityReviewRound11Audit)
+    ?? recordValue(claimJson?.identityReviewRound10Audit);
+  const identityIssues = Array.isArray(identityAudit?.issues) ? identityAudit.issues : [];
+  return [...new Set([
+    ...reasonCodes
+      .filter((reason): reason is string => typeof reason === 'string' && reason.trim().length > 0)
+      .map((reason) => reviewAuditReasonLabels[reason] ?? reason),
+    ...identityIssues.map((issue) => textValue(typeof issue === 'string' ? issue : recordValue(issue)?.detail)).filter((reason): reason is string => Boolean(reason)),
+  ])];
 }
 
 function includesQuery(values: unknown[], query: string) {

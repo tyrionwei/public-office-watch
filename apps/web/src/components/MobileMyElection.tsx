@@ -1,8 +1,8 @@
+import { MyPollingPlace } from './MyPollingPlace';
 import { Link } from 'react-router-dom';
 import { translateCandidateStatus } from '../data/electionI18n';
 import { selectNextElectionVotingCycle } from '../data/electionVotingCycles';
 import { useI18n } from '../i18n';
-import { buildCecPollingPlaceLookupUrl } from '../lib/cecPollingPlaceLookup';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { normalizeTaiwanText } from '../lib/taiwanText';
 import { electionsPath, personPath, racePath, regionPath } from '../routes/routePaths';
@@ -17,6 +17,9 @@ type MobileMyElectionProps = {
   candidateSummaries: HomeCandidateSummary[];
   loading: boolean;
   loadError: boolean;
+  pollingPlaceOpen: boolean;
+  onOpenPollingPlace: () => void;
+  onClosePollingPlace: () => void;
 };
 
 type RaceGroupKey = 'chief' | 'councilor' | 'village' | 'referendum' | 'other';
@@ -55,6 +58,9 @@ export function MobileMyElection({
   candidateSummaries,
   loading,
   loadError,
+  pollingPlaceOpen,
+  onOpenPollingPlace,
+  onClosePollingPlace,
 }: MobileMyElectionProps) {
   const { language, t } = useI18n();
   const isEnglish = language === 'en';
@@ -67,9 +73,6 @@ export function MobileMyElection({
   const nextVoteDate = votingCycle?.votingDate ?? (tickerIsRelated ? ticker.date : null);
   const hasOfficialPollingPlaceLookup = votingCycle?.pollingPlaceStatus === 'lookup-available'
     && Boolean(votingCycle.pollingPlaceLookupUrl);
-  const pollingPlaceLookupUrl = votingCycle?.pollingPlaceLookupUrl
-    ? buildCecPollingPlaceLookupUrl(votingCycle.pollingPlaceLookupUrl, preference)
-    : null;
   const votingHours = votingCycle?.votingHours
     ? `${votingCycle.votingHours.startsAt}–${votingCycle.votingHours.endsAt}`
     : null;
@@ -79,8 +82,10 @@ export function MobileMyElection({
     const key = getRaceGroupKey(race);
     groupedRaces.set(key, [...(groupedRaces.get(key) ?? []), race]);
   });
-  const relatedRaceIds = new Set(races.map((race) => race.id));
-  const candidates = uniqueCandidates(candidateSummaries, relatedRaceIds);
+  const homepageCandidateRaceIds = new Set(
+    races.filter((race) => getRaceGroupKey(race) !== 'village').map((race) => race.id),
+  );
+  const candidates = uniqueCandidates(candidateSummaries, homepageCandidateRaceIds);
 
   const raceCards: Array<{
     key: RaceGroupKey;
@@ -176,7 +181,7 @@ export function MobileMyElection({
                     {matchingRaces.length > 0
                       ? isEnglish
                         ? `${matchingRaces.length} published race(s) · ${candidateCount} recorded candidate(s)`
-                        : `已發布 ${matchingRaces.length} 個選區／項目 · 收錄 ${candidateCount} 位參選人物`
+                        : `已發布 ${matchingRaces.length} 個選區／項目 · 收錄 ${candidateCount} 筆參選紀錄`
                       : card.emptyHint}
                   </p>
                   {card.caution ? <p className="mt-2 text-[11px] leading-5 text-amber-200/80">{card.caution}</p> : null}
@@ -201,7 +206,7 @@ export function MobileMyElection({
 
       <section className="pixel-corners border border-line/80 bg-panel p-4" aria-labelledby="my-election-candidates-title">
         <div className="flex items-end justify-between gap-3 border-b border-line/70 pb-3">
-          <h2 id="my-election-candidates-title" className="font-display text-lg text-white">{isEnglish ? 'Recorded candidates' : '已收錄參選人物'}</h2>
+          <h2 id="my-election-candidates-title" className="font-display text-lg text-white">{isEnglish ? 'Recorded candidates' : '已收錄參選名單'}</h2>
           <span className="text-xs text-slate-400">{candidates.length}</span>
         </div>
         {candidates.length > 0 ? (
@@ -212,6 +217,32 @@ export function MobileMyElection({
             >
               {candidates.map(({ candidate, gender, birthDate, ageGroup }) => {
                 const party = normalizePartyLabel(candidate.party ?? candidate.person_party);
+                if (!candidate.person_id) {
+                  return (
+                    <div key={candidate.candidate_id} data-mobile-candidate-card data-registration-name
+                      className="min-w-0 snap-start border border-line/70 bg-bg/45 p-2">
+                      <PixelCandidateSprite
+                        displayName={normalizeTaiwanText(candidate.person_name)}
+                        personId={null}
+                        partyKey={toPartyThemeKey(party)}
+                        partyLabel={party}
+                        variant={candidate.candidate_id}
+                        gender={gender}
+                        birthDate={birthDate}
+                        ageGroup={ageGroup}
+                        useDemographicSprite
+                        compactOnMobile
+                        lazy
+                      />
+                      <span data-mobile-candidate-status className="mt-2 inline-flex border border-signal/45 bg-signal/10 px-1.5 py-1 text-[10px] text-signal">
+                        {translateCandidateStatus(candidate, t)}
+                      </span>
+                      <p className="mt-2 line-clamp-2 border-t border-line/60 pt-2 text-[11px] leading-5 text-slate-400">
+                        {normalizeTaiwanText(candidate.race_title)}
+                      </p>
+                    </div>
+                  );
+                }
                 return (
                   <Link
                     data-mobile-candidate-card
@@ -248,6 +279,11 @@ export function MobileMyElection({
             <p data-mobile-candidate-roster-hint className="mt-2 text-center text-[10px] text-slate-500">
               {isEnglish ? `All ${candidates.length} candidates · Swipe to browse` : `共 ${candidates.length} 位・左右滑動查看全部`}
             </p>
+            <p data-mobile-village-candidate-policy className="mt-2 text-center text-[10px] leading-5 text-slate-500">
+              {isEnglish
+                ? 'Browse village chief candidates by constituency above; the homepage does not show an arbitrary sample.'
+                : '村里長候選人請由上方選舉項目依選區查找，首頁不任意抽樣顯示。'}
+            </p>
           </>
         ) : (
           <p className="mt-3 border border-line/60 bg-bg/35 p-4 text-sm leading-6 text-slate-400">
@@ -264,11 +300,11 @@ export function MobileMyElection({
             <p className="text-[10px] uppercase tracking-[0.18em] text-accent">{isEnglish ? 'OFFICIAL CHECK' : '官方資料'}</p>
             <h2 id="my-election-info-title" className="mt-1 font-display text-lg text-white">{isEnglish ? 'Voting information' : '投票資訊'}</h2>
           </div>
-          <span className={`shrink-0 border px-2 py-1 text-[10px] ${hasOfficialPollingPlaceLookup ? 'border-emerald-400/55 bg-emerald-950/30 text-emerald-200' : 'border-line text-slate-400'}`}>
-            {hasOfficialPollingPlaceLookup
-              ? (isEnglish ? 'Official lookup available' : '官方查詢已開放')
-              : (isEnglish ? 'Not announced' : '尚未公告')}
-          </span>
+          {hasOfficialPollingPlaceLookup ? (
+            <button type="button" onClick={onOpenPollingPlace} aria-expanded={pollingPlaceOpen} className="min-h-11 shrink-0 border border-signal/60 bg-signal/8 px-3 text-xs font-semibold text-signal">
+              {isEnglish ? 'View polling places' : '查看投開票所'}
+            </button>
+          ) : <span className="shrink-0 border border-line px-2 py-1 text-[10px] text-slate-400">{isEnglish ? 'Not announced' : '尚未公告'}</span>}
         </div>
         <dl className="mt-3 divide-y divide-line/60 border-y border-line/60 text-sm">
           <div className="flex justify-between gap-4 py-3">
@@ -290,7 +326,7 @@ export function MobileMyElection({
             </dd>
           </div>
         </dl>
-        {hasOfficialPollingPlaceLookup && pollingPlaceLookupUrl ? (
+        {hasOfficialPollingPlaceLookup ? (
           <>
             <p className="mt-3 text-sm leading-6 text-slate-300">
               {isEnglish ? `Saved registered area: ${votingAreaLabel}` : `你儲存的戶籍投票地區：${votingAreaLabel}`}
@@ -299,21 +335,13 @@ export function MobileMyElection({
               <p className="mt-1 text-[11px] leading-5 text-slate-500">
                 {villageName
                   ? isEnglish
-                    ? `The CEC page will open with ${preference.county.name}, ${districtName}, ${villageName}, and its default general-voter category selected. Indigenous voters should adjust the voter category there and choose a neighborhood if needed.`
-                    : `開啟後會帶入「${preference.county.name}／${districtName}／${villageName}」及中選會預設的「一般」類別；具原住民投票資格者請在中選會頁面調整，鄰別仍請依需要選擇。`
+                    ? `The CEC link inside the polling-place panel will open with ${preference.county.name}, ${districtName}, ${villageName}, and its default general-voter category selected. Indigenous voters should adjust the voter category there and choose a neighborhood if needed.`
+                    : `區塊內的中選會官方查詢會帶入「${preference.county.name}／${districtName}／${villageName}」及中選會預設的「一般」類別；具原住民投票資格者請在中選會頁面調整，鄰別仍請依需要選擇。`
                   : isEnglish
-                    ? `The CEC page will open with ${preference.county.name}, ${districtName}, and its default general-voter category selected. Indigenous voters should adjust the voter category there; choose village and neighborhood there if needed.`
-                    : `開啟後會帶入「${preference.county.name}／${districtName}」及中選會預設的「一般」類別；具原住民投票資格者請在中選會頁面調整，村里鄰也請於該頁選擇。`}
+                    ? `The CEC link inside the polling-place panel will open with ${preference.county.name}, ${districtName}, and its default general-voter category selected. Indigenous voters should adjust the voter category there; choose village and neighborhood there if needed.`
+                    : `區塊內的中選會官方查詢會帶入「${preference.county.name}／${districtName}」及中選會預設的「一般」類別；具原住民投票資格者請在中選會頁面調整，村里鄰也請於該頁選擇。`}
               </p>
             ) : null}
-            <a
-              href={pollingPlaceLookupUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-3 flex min-h-12 items-center justify-center border border-signal bg-signal/12 px-4 text-center font-display text-sm text-signal focus:outline-none focus:ring-2 focus:ring-signal/40"
-            >
-              {isEnglish ? 'Open the CEC official polling-place lookup' : '前往中選會查投票所'} <span className="ml-2" aria-hidden="true">↗</span>
-            </a>
             <div className="mt-3 border border-line/70 bg-bg/35 p-3">
               <h3 className="font-display text-sm text-white">{isEnglish ? 'What to bring' : '投票要帶什麼'}</h3>
               <ul className="mt-2 grid grid-cols-3 gap-2 text-center text-[11px] text-slate-300">
@@ -344,6 +372,9 @@ export function MobileMyElection({
           </p>
         )}
       </section>
+      {pollingPlaceOpen && votingCycle?.pollingPlaceLookupUrl ? (
+        <MyPollingPlace eventKey={votingCycle.id} lookupUrl={votingCycle.pollingPlaceLookupUrl} onClose={onClosePollingPlace} />
+      ) : null}
     </section>
   );
 }

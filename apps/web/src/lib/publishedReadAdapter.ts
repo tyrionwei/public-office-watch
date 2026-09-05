@@ -1,3 +1,5 @@
+import type { PollingPlace } from '../types/pollingPlace';
+import type { CandidateLifecycleEvent } from '../types/candidateLifecycle';
 import type {
   PublicElection,
   PublicElectionEducationDistribution,
@@ -753,6 +755,8 @@ export type PublishedReadAdapter = {
   loadPartyCompanyContributionCounts(): Promise<PublicPartyCompanyContributionCount[]>;
   loadPartyCompanyContributionPage(partyId: string, page: number, pageSize: number): Promise<PublishedPartyCompanyContributionPage>;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
+  loadPollingPlaces(eventKey: string, villageCode: string): Promise<PollingPlace[]>;
+  loadCandidateLifecycle(candidateId: string): Promise<CandidateLifecycleEvent[]>;
   loadPartyPlatformHistory(partyId: string): Promise<PublicPartyPlatformHistory[]>;
   loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
   loadPartyLegalStatistics(partyName: string): Promise<PublicPartyLegalStatistics>;
@@ -837,6 +841,15 @@ function normalizeElectionRacePageIds(electionIds: string[]) {
 }
 
 export function createPublishedReadAdapter(client: PublishedSchemaClient): PublishedReadAdapter {
+  async function loadRegistrationNames(raceIds: string[]) {
+    if (raceIds.length === 0) return [];
+    const response = await client.schema('published').rpc<PublishedHomePageCandidateRow>(
+      'registration_names_for',
+      { p_race_ids: Array.from(new Set(raceIds)) },
+    );
+    return getBoundedRowsOrThrow(response, 'Published registration names', 2000);
+  }
+
   return {
     async loadHomePage(rawRegionSlug = null) {
       const regionSlug = rawRegionSlug?.trim() || null;
@@ -850,6 +863,11 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         throw new Error('Published home page returned an invalid payload.');
       }
       assertPayloadMetadata(payload, 'Published home page');
+
+      const raceRows = getBoundedPayloadRows<PublishedRaceRow>(
+        payload.race_rows, 'Published home races', HOME_RACE_LIMIT,
+      );
+      const registrationNames = await loadRegistrationNames(raceRows.filter((race) => race.voting_date?.startsWith('2026-')).map((race) => race.race_id));
 
       return {
         apiVersion: payload.api_version,
@@ -870,16 +888,15 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
           'Published home regions',
           HOME_REGION_LIMIT,
         ),
-        raceRows: getBoundedPayloadRows<PublishedRaceRow>(
-          payload.race_rows,
-          'Published home races',
-          HOME_RACE_LIMIT,
-        ),
-        candidateRows: getBoundedPayloadRows<PublishedHomePageCandidateRow>(
-          payload.candidate_rows,
-          'Published home candidates',
-          HOME_CANDIDATE_SUMMARY_LIMIT,
-        ),
+        raceRows,
+        candidateRows: [
+          ...getBoundedPayloadRows<PublishedHomePageCandidateRow>(
+            payload.candidate_rows,
+            'Published home candidates',
+            HOME_CANDIDATE_SUMMARY_LIMIT,
+          ),
+          ...registrationNames,
+        ],
         seatRows: getBoundedPayloadRows<PublishedHomeSeatRow>(
           payload.seat_rows,
           'Published home seat distribution',
@@ -1130,11 +1147,14 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       return {
         raceRow: payload.race_row ?? null,
         electionRow: payload.election_row ?? null,
-        candidateRows: getBoundedPayloadRows<PublicCandidate>(
-          payload.candidate_rows,
-          'Published race candidates',
-          candidateLimit,
-        ),
+        candidateRows: [
+          ...getBoundedPayloadRows<PublicCandidate>(
+            payload.candidate_rows,
+            'Published race candidates',
+            candidateLimit,
+          ),
+          ...await loadRegistrationNames(payload.race_row && payload.election_row?.year === 2026 ? [payload.race_row.race_id] : []),
+        ],
         partyAffiliationRows: getBoundedPayloadRows<PublicPersonPartyAffiliation>(
           payload.party_affiliation_rows,
           'Published race party affiliations',
@@ -1329,6 +1349,20 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         'Published party officers',
         PARTY_OFFICER_LIMIT,
       );
+    },
+    async loadPollingPlaces(eventKey, villageCode) {
+      if (!eventKey || !/^\d{11}$/.test(villageCode)) return [];
+      const response = await client.schema('published').rpc<PollingPlace>('polling_places_for_village', {
+        p_event_key: eventKey, p_village_code: villageCode,
+      });
+      return getBoundedRowsOrThrow(response, 'Published polling places', 100);
+    },
+    async loadCandidateLifecycle(candidateId) {
+      if (!candidateId.trim()) return [];
+      const response = await client.schema('published').rpc<CandidateLifecycleEvent>('candidate_lifecycle_for', {
+        p_candidate_id: candidateId,
+      });
+      return getBoundedRowsOrThrow(response, 'Published candidate lifecycle', 50);
     },
     async loadPartyPlatformHistory(rawPartyId) {
       const partyId = rawPartyId.trim();

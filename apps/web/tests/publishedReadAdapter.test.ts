@@ -252,15 +252,16 @@ test('adapter surfaces database errors', async () => {
   await assert.rejects(() => adapter.search('台北'), /Published search query failed: permission denied/);
 });
 
-test('home page uses one region-scoped RPC payload', async () => {
+test('home page adds plain registration names only for its 2026 races', async () => {
   const ticker = { election_id: 'election-1', election_name: '測試選舉' };
   const regionSummary = { region_id: 'region-taipei', region_name: '臺北市' };
   const region = { region_id: 'region-taipei', name: '臺北市', slug: 'taipei' };
-  const race = { race_id: 'race-1', title: '臺北市長' };
+  const race = { race_id: 'race-1', title: '臺北市長', voting_date: '2026-11-28' };
   const candidate = {
     candidate_id: 'candidate-1', race_id: 'race-1', person_id: 'person-1',
     person_name: '測試候選人', gender: 'female', age_group: '40-49',
   };
+  const nameOnly = { candidate_id: 'registration-1', race_id: 'race-1', person_id: '', person_name: '同名登記者' };
   const payload = {
     api_version: 1,
     release_id: 'release-1',
@@ -274,6 +275,7 @@ test('home page uses one region-scoped RPC payload', async () => {
   };
   const fake = createFakeClient({
     'rpc:home_page_for': { data: [{ payload }], error: null, count: null },
+    'rpc:registration_names_for': { data: [nameOnly], error: null, count: null },
     regions: { data: [region], error: null, count: null },
   });
   const adapter = createPublishedReadAdapter(fake.client);
@@ -286,12 +288,13 @@ test('home page uses one region-scoped RPC payload', async () => {
     regionSummaryRows: [regionSummary],
     regionRows: [region],
     raceRows: [race],
-    candidateRows: [candidate],
+    candidateRows: [candidate, nameOnly],
     seatRows: [{ party_name: '測試黨', seat_count: 3 }],
   });
   assert.deepEqual(await adapter.loadRegionDirectory(), [region]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc'), [
     ['rpc', 'home_page_for', { p_region_slug: 'taipei' }],
+    ['rpc', 'registration_names_for', { p_race_ids: ['race-1'] }],
   ]);
   assert.deepEqual(fake.calls.filter((call) => call[0] === 'limit'), [
     ['limit', HOME_REGION_LIMIT],
@@ -680,17 +683,19 @@ test('election race page surfaces function failures', async () => {
   );
 });
 
-test('race detail uses one bounded RPC payload', async () => {
+test('race detail combines linked candidates and unlinked registration names', async () => {
   const race = {
     race_id: 'race-1',
     election_id: 'election-1',
     race_type: 'municipality_mayor',
     title: '新北市長選舉',
   };
-  const election = { election_id: 'election-1', name: '地方公職人員選舉' };
+  const election = { election_id: 'election-1', name: '地方公職人員選舉', year: 2026 };
   const candidate = { candidate_id: 'candidate-1', person_id: 'person-1' };
   const partyAffiliation = { affiliation_id: 'affiliation-1', person_id: 'person-1' };
+  const nameOnly = { candidate_id: 'registration-1', person_id: '', person_name: '純姓名登記者' };
   const fake = createFakeClient({
+    'rpc:registration_names_for': { data: [nameOnly], error: null, count: null },
     'rpc:race_page_for': {
       data: [{ payload: { ...payloadMetadata,
         race_row: race,
@@ -710,7 +715,7 @@ test('race detail uses one bounded RPC payload', async () => {
   assert.deepEqual(await adapter.loadRaceDetail(' race-1 '), {
     raceRow: race,
     electionRow: election,
-    candidateRows: [candidate],
+    candidateRows: [candidate, nameOnly],
     partyAffiliationRows: [partyAffiliation],
     partyListResultRows: [],
     referendumQuestionRow: null,
@@ -720,6 +725,8 @@ test('race detail uses one bounded RPC payload', async () => {
   assert.deepEqual(fake.calls, [
     ['schema', 'published'],
     ['rpc', 'race_page_for', { p_race_id: 'race-1' }],
+    ['schema', 'published'],
+    ['rpc', 'registration_names_for', { p_race_ids: ['race-1'] }],
   ]);
 });
 

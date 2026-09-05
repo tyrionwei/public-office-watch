@@ -1,0 +1,362 @@
+{
+  "schemaVersion": 1,
+  "environment": "full-local",
+  "reviewedAt": "2026-09-05T05:49:33.832Z",
+  "baselinePending": 1156,
+  "reviewed": 1156,
+  "resolved": 8,
+  "remainingPending": 1148,
+  "reusedPeople": 8,
+  "newPeople": 0,
+  "correctedReviewPartyFields": 92,
+  "inputs": {
+    "tmp/cec-registration-identity-review-all/targets.json": "59c4d1e791948d50450507b63f8187705219f9ec035996c044db26132bffd12d",
+    "tmp/cec-registration-identity-review-all/local-evidence.json": "f2658b7883b2b6d4e74c2e807eed265975aab6057f90455b4da412aeb3f0d371",
+    "tmp/cec-registration-identity-review-all/review-manifest.json": "8d598cd56931f61f25e53c6e122988abb45dcd8079ddf1a9a093d8b9ffb9f133",
+    "tmp/cec-registration-identity-review-all/audit-manifest.json": "c4f11278ebcd87a44ebf5099578fd8a3577fe2fd8a5bdeb7b202d3094e14a26f",
+    "tmp/cec-registration-identity-review-all/baseline-claims.json": "d4a88ab8899d23f21ab7f384672cab943f3d4c5d7d431e50fbb6379a6d173ea5",
+    "tmp/cec-registration-identity-review-all/live-evidence.json": "fcf9f16735bc45f6e514cb308487a7e1b99967491e2046f525d36fa53a8a9092",
+    "tmp/cec-registration-identity-review-all/reference-attempts.json": "e4a505844e90f61f48d848cf0f6dc4f37443aaaa365cfa08bb822e67db98ab6a",
+    "tmp/cec-registration-final/import-manifest.json": "e004d07cfd82306b26adc55ec6b230d2601d73ff5fb9b8bfa29c3a38a83cf1f3"
+  },
+  "accepted": [
+    {
+      "candidateExternalId": "pow-cec-registration-2026-2fa7470593b9ab51051d6db9e3549bbd",
+      "claimId": "9b07965c-7113-4897-bee0-ff12e5ca65a9",
+      "sourcePersonId": "bc184f3e-9bf4-4b48-b56d-6fa47e2cdd91",
+      "name": "陳孟杰",
+      "county": "彰化縣",
+      "district": "彰化縣田尾鄉第3選舉區",
+      "office": "township_representative",
+      "raceId": "67eaf384-e1ee-401e-b871-7e859978dd75",
+      "decision": "use_existing",
+      "reasonCode": "normalized_full_name_gender_party_2022_local_history",
+      "personId": "0c3cca72-9d82-4533-8602-6be4f350bcfa",
+      "existingPersonIds": [
+        "0c3cca72-9d82-4533-8602-6be4f350bcfa"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "彰化縣田尾鄉",
+      "evidenceClaimIds": [
+        "29574a17-345a-4585-a2db-787ed51a8ede"
+      ],
+      "evidenceCandidateIds": [
+        "4625cd31-161b-408b-8ed2-18bd9ae3e22e"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a975d7ec-7471-42d3-9797-33ca6067e897.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E7%94%B0%E5%B0%BE%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%99%B3%E5%AD%9F%E6%9D%B0"
+      ],
+      "officialFile": "chec-64647-04.pdf",
+      "officialSha256": "24145bff38546ab4780a31464b60784fb146ca2a50a0a71ae3d8f8e8e4f8d196",
+      "reason": "完整姓名僅空白或分隔符差異，或從原表跨頁欄名補回政黨；2022 同鄉鎮同職務／同議員選區、性別及政黨只有一人吻合，且沒有其他 2026 參選關係。",
+      "reviewedBy": "Codex comprehensive CEC identity audit round 10",
+      "reviewedAt": "2026-09-05T05:49:33.832Z",
+      "candidateId": "528092c5-2c34-4ea5-b1eb-4bf51d197b70",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-c578925f7ce202f58e63c975b8d97aa8",
+      "claimId": "1ac72def-2528-42a3-a567-0b376f9d3df2",
+      "sourcePersonId": "b11d6385-fbd8-4375-9269-b406c10d08d7",
+      "name": "全文才 Balan‧Soqluman",
+      "county": "南投縣",
+      "district": "南投縣第7選舉區",
+      "office": "councilor",
+      "raceId": "16c40116-d2a2-4f78-be3c-6dfcb5bc4a24",
+      "decision": "use_existing",
+      "reasonCode": "normalized_full_name_gender_party_2022_local_history",
+      "personId": "0a915edb-81bd-44c2-84d4-02c9f01fafb4",
+      "existingPersonIds": [
+        "0a915edb-81bd-44c2-84d4-02c9f01fafb4"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "dbaf707d-1e8f-4383-af00-f5088ac3f717"
+      ],
+      "evidenceCandidateIds": [
+        "2f3d8f9e-69a8-47f1-86fd-f71e4a6dbc14"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/7e8c733d-8d57-418d-bed9-f35bf2dc68e6.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E5%85%A8%E6%96%87%E6%89%8D"
+      ],
+      "officialFile": "ntec-64627-01.pdf",
+      "officialSha256": "6d213603b3472cd8910762b55ac0c46d9273183ea23d64aed798d7d32497284e",
+      "reason": "完整姓名僅空白或分隔符差異，或從原表跨頁欄名補回政黨；2022 同鄉鎮同職務／同議員選區、性別及政黨只有一人吻合，且沒有其他 2026 參選關係。",
+      "reviewedBy": "Codex comprehensive CEC identity audit round 10",
+      "reviewedAt": "2026-09-05T05:49:33.832Z",
+      "candidateId": "d92eb360-79f9-48fc-9768-48bbf8963056",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-f5e0ecd295c26611ead637a17239f689",
+      "claimId": "813f90ae-8849-4e32-b61f-b7ae7d2a6b0d",
+      "sourcePersonId": "ab2a3675-3ce6-4041-b8da-16c3dbd658a2",
+      "name": "吳明修 Kaniu．Namoh",
+      "county": "花蓮縣",
+      "district": "花蓮縣光復鄉",
+      "office": "township_mayor",
+      "raceId": "40bf31de-8033-4da5-a254-0b6fef86e2cc",
+      "decision": "use_existing",
+      "reasonCode": "normalized_full_name_gender_party_2022_local_history",
+      "personId": "01436af5-05f5-40e5-82e5-69f1478a882f",
+      "existingPersonIds": [
+        "01436af5-05f5-40e5-82e5-69f1478a882f"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "花蓮縣光復鄉",
+      "evidenceClaimIds": [
+        "a939b8d6-2810-43dd-a3c2-1f8df5550fe3"
+      ],
+      "evidenceCandidateIds": [
+        "73cd6451-4124-4664-9750-7476c5987875"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/1718be88-94da-488b-8330-a1b4b816e6bc.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8A%B1%E8%93%AE%E7%B8%A3%E5%85%89%E5%BE%A9%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E5%90%B3%E6%98%8E%E4%BF%AE"
+      ],
+      "officialFile": "hlec-64601-04.pdf",
+      "officialSha256": "3e19d20f2357fad8b99721fd11c3f2e72196ae7757a1d4695af33f7c0d57691a",
+      "reason": "完整姓名僅空白或分隔符差異，或從原表跨頁欄名補回政黨；2022 同鄉鎮同職務／同議員選區、性別及政黨只有一人吻合，且沒有其他 2026 參選關係。",
+      "reviewedBy": "Codex comprehensive CEC identity audit round 10",
+      "reviewedAt": "2026-09-05T05:49:33.832Z",
+      "candidateId": "e5b9b71c-b866-4ccc-8d0b-4c2ff42a1b94",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-724c8479cf91d1cb345ed08bdd8160e8",
+      "claimId": "aaa2f0c0-6d38-42ce-8449-77ddcda85096",
+      "sourcePersonId": "d000069f-82cc-442e-a3bc-92dbc7e095b2",
+      "name": "陳正順 Tjanubak･Djuljapayan",
+      "county": "屏東縣",
+      "district": "屏東縣泰武鄉萬安村",
+      "office": "village_chief",
+      "raceId": "925f3704-8b9c-4ef3-b6ae-dc0bdc2fd07e",
+      "decision": "use_existing",
+      "reasonCode": "normalized_full_name_gender_party_2022_local_history",
+      "personId": "94bfe2df-cab2-458f-8a2a-72dfa24ff02c",
+      "existingPersonIds": [
+        "94bfe2df-cab2-458f-8a2a-72dfa24ff02c"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "屏東縣泰武鄉",
+      "evidenceClaimIds": [
+        "abd0b388-d302-49fc-a6be-81f474231e02"
+      ],
+      "evidenceCandidateIds": [
+        "c744e271-3bbc-4d88-8a62-7a971cd56905"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%B1%8F%E6%9D%B1%E7%B8%A3%E6%B3%B0%E6%AD%A6%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%99%B3%E6%AD%A3%E9%A0%86"
+      ],
+      "officialFile": "ptec-64654-01.xlsx",
+      "officialSha256": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87",
+      "reason": "完整姓名僅空白或分隔符差異，或從原表跨頁欄名補回政黨；2022 同鄉鎮同職務／同議員選區、性別及政黨只有一人吻合，且沒有其他 2026 參選關係。",
+      "reviewedBy": "Codex comprehensive CEC identity audit round 10",
+      "reviewedAt": "2026-09-05T05:49:33.832Z",
+      "candidateId": "35188d79-659f-4a3e-b54b-1f88ee09483f",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9839b4287031bec0fbb697e0147f2388",
+      "claimId": "6f7b9cb3-b30c-4149-911b-7037008f7d95",
+      "sourcePersonId": "4b2f3dff-3ec7-402a-bbab-70c62c65af3c",
+      "name": "吳俊樑",
+      "county": "彰化縣",
+      "district": "彰化縣田尾鄉第2選舉區",
+      "office": "township_representative",
+      "raceId": "1c270367-e4cb-4ef4-bf03-558bc50d8eb3",
+      "decision": "use_existing",
+      "reasonCode": "normalized_full_name_gender_party_2022_local_history",
+      "personId": "52a73dd9-19d6-4d24-a0c4-d05007e0129c",
+      "existingPersonIds": [
+        "52a73dd9-19d6-4d24-a0c4-d05007e0129c"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "彰化縣田尾鄉",
+      "evidenceClaimIds": [
+        "687ad241-48c4-40c5-b1d0-1d7ad78a8a24"
+      ],
+      "evidenceCandidateIds": [
+        "9b70c608-8646-49e3-ad51-59a765c2b16e"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a975d7ec-7471-42d3-9797-33ca6067e897.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E7%94%B0%E5%B0%BE%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E5%90%B3%E4%BF%8A%E6%A8%91"
+      ],
+      "officialFile": "chec-64647-04.pdf",
+      "officialSha256": "24145bff38546ab4780a31464b60784fb146ca2a50a0a71ae3d8f8e8e4f8d196",
+      "reason": "完整姓名僅空白或分隔符差異，或從原表跨頁欄名補回政黨；2022 同鄉鎮同職務／同議員選區、性別及政黨只有一人吻合，且沒有其他 2026 參選關係。",
+      "reviewedBy": "Codex comprehensive CEC identity audit round 10",
+      "reviewedAt": "2026-09-05T05:49:33.832Z",
+      "candidateId": "d68bd6af-ec63-4a11-ac7d-614708931200",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-b240a854bca0194235cab103aadc9974",
+      "claimId": "a18ade9f-b13d-4397-ae51-f59569c17c49",
+      "sourcePersonId": "8130be36-d326-4e46-8582-6ed86b8ce878",
+      "name": "陳振銘",
+      "county": "彰化縣",
+      "district": "彰化縣田尾鄉第3選舉區",
+      "office": "township_representative",
+      "raceId": "67eaf384-e1ee-401e-b871-7e859978dd75",
+      "decision": "use_existing",
+      "reasonCode": "normalized_full_name_gender_party_2022_local_history",
+      "personId": "51a1954b-d8a6-46e4-a7f8-d1cab931cacd",
+      "existingPersonIds": [
+        "51a1954b-d8a6-46e4-a7f8-d1cab931cacd"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "彰化縣田尾鄉",
+      "evidenceClaimIds": [
+        "3ff786c2-e2dc-43c3-9775-93f3ca043da4"
+      ],
+      "evidenceCandidateIds": [
+        "ed464446-6a13-4e3c-a2f4-e74a66b2bdda"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a975d7ec-7471-42d3-9797-33ca6067e897.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E7%94%B0%E5%B0%BE%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%99%B3%E6%8C%AF%E9%8A%98"
+      ],
+      "officialFile": "chec-64647-04.pdf",
+      "officialSha256": "24145bff38546ab4780a31464b60784fb146ca2a50a0a71ae3d8f8e8e4f8d196",
+      "reason": "完整姓名僅空白或分隔符差異，或從原表跨頁欄名補回政黨；2022 同鄉鎮同職務／同議員選區、性別及政黨只有一人吻合，且沒有其他 2026 參選關係。",
+      "reviewedBy": "Codex comprehensive CEC identity audit round 10",
+      "reviewedAt": "2026-09-05T05:49:33.832Z",
+      "candidateId": "57dee031-f161-4c79-b129-4df821375306",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-48673ea18236a683269feadd14df696e",
+      "claimId": "561343fc-d339-4488-9f89-7d7094bbaaad",
+      "sourcePersonId": "a83bac0e-4b9a-423e-a11c-5a093e73b999",
+      "name": "章正輝 Lemal jiz•Kusaza",
+      "county": "臺東縣",
+      "district": "臺東縣第14選舉區",
+      "office": "councilor",
+      "raceId": "217a6485-0be5-44c1-b48d-4d8fda67ac80",
+      "decision": "use_existing",
+      "reasonCode": "normalized_full_name_gender_party_2022_local_history",
+      "personId": "4411c235-0ef7-9be3-7e7f-1e964a85edda",
+      "existingPersonIds": [
+        "4411c235-0ef7-9be3-7e7f-1e964a85edda",
+        "f5351f73-2e17-4440-864a-baeb8687cf61"
+      ],
+      "registrationBirth": "052/**/**",
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": null,
+      "evidenceClaimIds": [
+        "34e18330-8cdf-48a7-ab71-eee19b71938e",
+        "a603dd74-c13e-4a87-b77c-d08a581802a7"
+      ],
+      "evidenceCandidateIds": [
+        "5eb45c9d-2517-459e-bde3-605e7fac4dbf"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/b8bddffb-2bcb-47fa-ad1e-4f4dc13b1eb1.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E7%AB%A0%E6%AD%A3%E8%BC%9D"
+      ],
+      "officialFile": "ttec-64641-03.pdf",
+      "officialSha256": "4dc5e5d411f7ea168f919fe630c031c30cf6745cc8eea9040a6c67595692e8c1",
+      "reason": "完整姓名僅空白或分隔符差異，或從原表跨頁欄名補回政黨；2022 同鄉鎮同職務／同議員選區、性別及政黨只有一人吻合，且沒有其他 2026 參選關係。",
+      "reviewedBy": "Codex comprehensive CEC identity audit round 10",
+      "reviewedAt": "2026-09-05T05:49:33.832Z",
+      "candidateId": "71c36133-3354-482d-a804-ea3382184b66",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-337bd0bb17077e4e756da4e6eb46c253",
+      "claimId": "1817a72d-a945-4cf0-a8c6-5b796dcf558c",
+      "sourcePersonId": "74a4d8de-c19e-423a-aad1-c22556c10a71",
+      "name": "張景舜",
+      "county": "彰化縣",
+      "district": "彰化縣埤頭鄉",
+      "office": "township_mayor",
+      "raceId": "53269df7-0769-4a29-ace8-8db1722ac255",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "66fa62d8-9c35-49cd-b709-55ba0be75dbd",
+      "existingPersonIds": [
+        "66fa62d8-9c35-49cd-b709-55ba0be75dbd"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "彰化縣埤頭鄉",
+      "evidenceClaimIds": [
+        "86366414-48e4-49f1-b3c9-2c703216c04c"
+      ],
+      "evidenceCandidateIds": [
+        "69ea732f-5d50-418b-a37e-d4f18275c406"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E5%9F%A4%E9%A0%AD%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E5%BC%B5%E6%99%AF%E8%88%9C",
+        "https://tw.news.yahoo.com/%E6%9D%9C%E6%87%BF%E5%BD%A92%E4%BB%BB%E5%B1%86%E6%BB%BF-%E5%85%A9%E5%BC%B7%E8%A1%A8%E6%85%8B%E5%8F%83%E9%81%B8-201000977.html"
+      ],
+      "officialFile": "chec-64647-03.pdf",
+      "officialSha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8",
+      "reason": "報導指名三連霸鄉代會主席張景舜表態參選埤頭鄉長，與既有同鄉鎮 2022 當選及性別紀錄一致。",
+      "reviewedBy": "Codex comprehensive CEC identity audit round 10",
+      "reviewedAt": "2026-09-05T05:49:33.832Z",
+      "candidateId": "b6224d99-1b77-442d-8f69-ac5da21be54b",
+      "externalEvidence": {
+        "url": "https://tw.news.yahoo.com/%E6%9D%9C%E6%87%BF%E5%BD%A92%E4%BB%BB%E5%B1%86%E6%BB%BF-%E5%85%A9%E5%BC%B7%E8%A1%A8%E6%85%8B%E5%8F%83%E9%81%B8-201000977.html",
+        "statement": "報導指名三連霸鄉代會主席張景舜表態參選埤頭鄉長，與既有同鄉鎮 2022 當選及性別紀錄一致。",
+        "retrieval": "web search indexed article excerpt; direct open returned 404",
+        "retrievedAt": "2026-09-05T05:49:33.832Z"
+      }
+    }
+  ],
+  "remainingReasonCounts": {
+    "same_name_has_2026_candidacy": 200,
+    "identity_bridge_missing": 625,
+    "registration_gender_missing": 110,
+    "multiple_canonical_people": 120,
+    "official_district_or_office_conflict": 1,
+    "same_batch_homonym": 67,
+    "no_verified_person_bridge": 5,
+    "unresolved_name_glyph": 4,
+    "parallel_name_bridge_missing": 7,
+    "registration_gender_conflict": 9
+  },
+  "coverage": {
+    "officialRowsCompared": 1156,
+    "livePersonRows": 3014,
+    "liveClaims": 18051,
+    "liveCandidates": 3370,
+    "externalAttempted": 670,
+    "external403": 670,
+    "officialArchiveFilesVerified": 108
+  },
+  "finalAudit": {
+    "path": "tmp/cec-registration-identity-review-all/audit-manifest-final.json",
+    "sha256": "845d444ed3dfcb3425fc43f147caf7e48018d6343399f0125855b012084e75de",
+    "clarifiedRecords": 76
+  }
+}

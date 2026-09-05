@@ -12,6 +12,9 @@ const migrationsRoot = path.join(repoRoot, 'supabase', 'migrations');
 const publicAccessMigration = 'supabase/migrations/202607280004_published_public_read_access.sql';
 const relationPrivilegeBaselineMigration = 'supabase/migrations/20260830144212_revoke_browser_relation_maintenance_privileges.sql';
 const supplementalPublicAccessMigrations = [
+  'supabase/migrations/20260905103228_add_registration_name_roster.sql',
+  'supabase/migrations/20260904145904_add_candidate_lifecycle_events.sql',
+  'supabase/migrations/20260904150704_add_polling_places.sql',
   'supabase/migrations/202607280005_published_ranked_search.sql',
   'supabase/migrations/202608010002_published_active_party_candidate_access.sql',
   'supabase/migrations/202608100014_add_election_party_performance.sql',
@@ -94,6 +97,7 @@ const reviewedAuxiliaryFunctions = [
   'submit_region_issue_response',
 ];
 const reviewedFunctions = [
+  'candidate_lifecycle_for',
   'election_education_distribution',
   'election_index_page',
   'election_party_performance',
@@ -105,8 +109,10 @@ const reviewedFunctions = [
   'party_people_statistics',
   'party_platform_history_for',
   'person_profiles_for',
+  'polling_places_for_village',
   'race_page_for',
   'region_page_for',
+  'registration_names_for',
   'search_public_records',
 ];
 const retiredFrontendFunctions = ['home_candidate_summaries_for', 'person_claims_for'];

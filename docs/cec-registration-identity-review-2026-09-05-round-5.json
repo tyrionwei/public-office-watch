@@ -1,0 +1,1097 @@
+{
+  "schemaVersion": 1,
+  "environment": "full-local",
+  "reviewedAt": "2026-09-04T19:56:58.938Z",
+  "inputs": {
+    "tmp/cec-registration-identity-review-5/targets.json": "839b944733c850999ccdcb0330901ec1fe54839b291ca2b004a7f8b95cbc50fe",
+    "tmp/cec-registration-identity-review-5/local-evidence.json": "d337951a7261dd150056678c89dbc33901f752c2ecef13ac42022540088ebff9",
+    "tmp/cec-registration-identity-review-5/external-evidence.json": "64c7c5c92c2e927b187594d7e4fe3692e7c3e92524ee473545b2f116c1ef21b5",
+    "tmp/cec-registration-identity-review-5/review-manifest.json": "31e90a24b46c1af16e5274ffd1fccacfc54481e439c4010297f0f42a18b84c4d",
+    "tmp/cec-registration-final/import-manifest.json": "e004d07cfd82306b26adc55ec6b230d2601d73ff5fb9b8bfa29c3a38a83cf1f3"
+  },
+  "baselinePending": 1224,
+  "reviewed": 26,
+  "resolved": 26,
+  "reusedPeople": 26,
+  "newPeople": 0,
+  "remainingPending": 1198,
+  "reasonCounts": {
+    "reported_current_role_transition_after_gender_normalization": 20,
+    "masked_birth_year_and_official_history_after_gender_normalization": 5,
+    "exact_2018_race_gender_party_unique_person": 1
+  },
+  "accepted": [
+    {
+      "candidateExternalId": "pow-cec-registration-2026-0860c90a7ffdb32d3c3bd4a7b5f0034e",
+      "claimId": "a9c0d2a1-f301-4bc8-9b4d-9be97cdcf3ef",
+      "sourcePersonId": "492b96fd-4826-4d6d-b37a-f9d82d3c6191",
+      "name": "簡賜勝",
+      "county": "南投縣",
+      "district": "南投縣草屯鎮",
+      "office": "township_mayor",
+      "raceId": "8173e43b-ae34-44d7-8e23-7e2aad176d31",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "b1fccea1-8014-4baa-bf42-ba203be8ec27",
+      "existingPersonIds": [
+        "b1fccea1-8014-4baa-bf42-ba203be8ec27"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "南投縣草屯鎮",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "da6ad82d-74fa-494a-a4ee-d3ab8a5df0c0"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/939b3f02-3783-4060-8f0b-1d32e04994ba.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://udn.com/news/story/7325/9729991"
+      ],
+      "officialFile": "ntec-64622-01.pdf",
+      "officialSha256": "67635275f8d429559ec961a90b9f2b4c860fc4f5a11a1505378c43f6fdeaaea0",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.910Z",
+      "candidateId": "97d44a5f-5c91-4856-b761-e95180cc29f3",
+      "externalEvidence": {
+        "url": "https://udn.com/news/story/7325/9729991",
+        "title": "藍綠搶攻全台最大鎮…張媛婷登記拚翻轉 簡賜勝承諾補助款全捐",
+        "publisher": "聯合報",
+        "statement": "報導明確指出現任草屯鎮長簡賜勝完成連任登記。",
+        "retrievedAt": "2026-09-04T19:56:58.910Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-0921ed7e9888383d76e392a48f5f1d11",
+      "claimId": "8744a9df-b56c-4efb-b98e-8f4e59feeac5",
+      "sourcePersonId": "09aa11e2-25ff-4e9d-96be-32474ed3ed1d",
+      "name": "盧玟欣",
+      "county": "屏東縣",
+      "district": "屏東縣恆春鎮",
+      "office": "township_mayor",
+      "raceId": "f89eb1b9-2322-4ece-8261-ac699ec518de",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "f131c5b1-10b8-41ba-aa1b-03f51fb40df8",
+      "existingPersonIds": [
+        "f131c5b1-10b8-41ba-aa1b-03f51fb40df8"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "中國國民黨",
+      "locality": "屏東縣恆春鎮",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "7aae5090-ce59-4bb3-9154-26eef2ed6d19"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://data.gov.tw/dataset/13119",
+        "https://udn.com/news/story/7327/9715069"
+      ],
+      "officialFile": "ptec-64654-01.xlsx",
+      "officialSha256": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.916Z",
+      "candidateId": "5a146011-c7cb-4fa6-acc7-f5308c44fbab",
+      "externalEvidence": {
+        "url": "https://udn.com/news/story/7327/9715069",
+        "title": "尤史經不拚連任國民黨徵召39歲盧玟欣戰恆春鎮長",
+        "publisher": "聯合報",
+        "statement": "報導明確指出現任屏東縣議員盧玟欣轉戰恆春鎮長。",
+        "retrievedAt": "2026-09-04T19:56:58.916Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-261308457cabadaefa75d3502eb37ca0",
+      "claimId": "0a614c46-53db-4334-8dbe-bb7214bae49e",
+      "sourcePersonId": "c1ddc246-ec3f-4bb8-8366-0e8989de531c",
+      "name": "孫湯玉惠 aly saku",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣第11選舉區",
+      "office": "councilor",
+      "raceId": "c5fc9616-436d-40b9-8671-ac0f275ffb4c",
+      "decision": "use_existing",
+      "reasonCode": "masked_birth_year_and_official_history_after_gender_normalization",
+      "personId": "2131a68a-7e93-4330-923e-2677a3450d5a",
+      "existingPersonIds": [
+        "2131a68a-7e93-4330-923e-2677a3450d5a"
+      ],
+      "registrationBirth": "056/**/**",
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": null,
+      "evidenceClaimIds": [
+        "d8c201a0-fb15-4cdd-8f0a-a412068f75a1",
+        "4d8d07e5-cb9a-43e7-8c0e-ff9556e3aa4f"
+      ],
+      "evidenceCandidateIds": [
+        "28117a0f-6024-4d97-b872-3134ca58ab05"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/28b4728c-3693-4f03-b7ad-ae050dd46b5a.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E5%AD%AB%E6%B9%AF%E7%8E%89%E6%83%A0"
+      ],
+      "officialFile": "ilec-64650-08.pdf",
+      "officialSha256": "766276e7c4cf78e9ad04c5fd67fcc05e64eb179bcc1a816e879ad7263e5dcd47",
+      "reason": "本次官方出生年與既有已核對完整生日年份一致；姓名、標準化後性別、政黨及同縣市歷史參選紀錄也一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.901Z",
+      "candidateId": "2b3853ec-0f67-4928-a664-33f05ba6f346",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-26b3bfa3a89c9d980f4ba67d4c47c9ab",
+      "claimId": "78691325-847b-4a1a-a152-a460a97a4157",
+      "sourcePersonId": "b22ad81a-6a98-4cff-bc00-a572150f6484",
+      "name": "游吉祥",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣南澳鄉",
+      "office": "township_mayor",
+      "raceId": "719a677b-e454-44aa-8ee7-ee848a1f44c7",
+      "decision": "use_existing",
+      "reasonCode": "masked_birth_year_and_official_history_after_gender_normalization",
+      "personId": "590a2360-b7ed-4239-be2f-c33f525482cb",
+      "existingPersonIds": [
+        "590a2360-b7ed-4239-be2f-c33f525482cb"
+      ],
+      "registrationBirth": "052/**/**",
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "宜蘭縣南澳鄉",
+      "evidenceClaimIds": [
+        "912a2225-660c-4943-afcb-c276aa152e84",
+        "0514d292-d543-4492-9997-bcb9109835e2"
+      ],
+      "evidenceCandidateIds": [
+        "1cb7d302-b166-4f02-9da0-2b61dfe0090a"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/5a545f62-573e-4e1f-b505-7f9350fffda9.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E6%B8%B8%E5%90%89%E7%A5%A5"
+      ],
+      "officialFile": "ilec-64650-09.pdf",
+      "officialSha256": "4ab31ac994d3703fb19dfbd26c11e0c2a4dc449e43dde157b73995dde9c32f7b",
+      "reason": "本次官方出生年與既有已核對完整生日年份一致；姓名、標準化後性別、政黨及同縣市歷史參選紀錄也一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.909Z",
+      "candidateId": "cd9f8b07-82ff-4f71-9951-11ca2d8a15aa",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-3396440e7d1cfacc3cf5aea4ea6d0f2f",
+      "claimId": "c1113c81-c4de-43cb-b310-a713fad69d2f",
+      "sourcePersonId": "e870524f-93e1-4ec7-baca-ffcc7c8a2a80",
+      "name": "楊妙月",
+      "county": "彰化縣",
+      "district": "彰化縣鹿港鎮",
+      "office": "township_mayor",
+      "raceId": "46c0fab0-c85f-4f19-ad36-b7d01521a965",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "3530d612-a413-4c4c-bff3-419dbe84b22c",
+      "existingPersonIds": [
+        "3530d612-a413-4c4c-bff3-419dbe84b22c"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "民主進步黨",
+      "locality": "彰化縣鹿港鎮",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "02eb6a40-da26-4498-9a10-5c5f1ad4ab24"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.chinatimes.com/newspapers/20260211000705-260107"
+      ],
+      "officialFile": "chec-64647-03.pdf",
+      "officialSha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.911Z",
+      "candidateId": "f836c28c-dfcf-4a7f-837c-48eee023ee9e",
+      "externalEvidence": {
+        "url": "https://www.chinatimes.com/newspapers/20260211000705-260107",
+        "title": "彰化9議員 擬轉戰鄉鎮市長",
+        "publisher": "中國時報",
+        "statement": "報導明確指出現任彰化縣議員楊妙月投入鹿港鎮長選舉。",
+        "retrievedAt": "2026-09-04T19:56:58.911Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-36ca15272fc05420810fde7451f2227b",
+      "claimId": "3227cd7f-04da-4979-9620-63473db50736",
+      "sourcePersonId": "5142a9dc-a5f6-4514-be5e-e10a6b27b03b",
+      "name": "洪明江",
+      "county": "屏東縣",
+      "district": "屏東縣潮州鎮",
+      "office": "township_mayor",
+      "raceId": "8fcee466-ba09-46fc-96e0-0eb077a70773",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "e3b2acd0-345b-4d4a-8ffd-e3112872891d",
+      "existingPersonIds": [
+        "e3b2acd0-345b-4d4a-8ffd-e3112872891d"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "民主進步黨",
+      "locality": "屏東縣潮州鎮",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "98042bcb-7518-4934-9867-643473f4d438"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0002&_PARENT_ID=ER11112TB00032&_TYP=REP&n=574"
+      ],
+      "officialFile": "ptec-64654-01.xlsx",
+      "officialSha256": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.915Z",
+      "candidateId": "bb84f58c-6043-4d49-9e55-40c4b0cc6f77",
+      "externalEvidence": {
+        "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0002&_PARENT_ID=ER11112TB00032&_TYP=REP&n=574",
+        "title": "縣市議員：洪明江",
+        "publisher": "內政部",
+        "statement": "內政部現任地方公職資料明列洪明江為屏東縣議員，簡歷含潮州鎮長。",
+        "retrievedAt": "2026-09-04T19:56:58.915Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-4768ee27e5108b90b249572d2fcb21a9",
+      "claimId": "3a10360d-2717-4b43-9890-335ed6502db0",
+      "sourcePersonId": "5c579d2f-fd76-43cf-ba8b-1dd3312a0413",
+      "name": "蔡宗智",
+      "county": "南投縣",
+      "district": "南投縣名間鄉",
+      "office": "township_mayor",
+      "raceId": "c345c6be-184e-4dd3-90bf-1ff25e1fa39d",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "4f45b517-22de-4b51-b0f4-88af10b8c600",
+      "existingPersonIds": [
+        "4f45b517-22de-4b51-b0f4-88af10b8c600"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "南投縣名間鄉",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "6a54f058-de34-4512-a679-b429e7726154"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/939b3f02-3783-4060-8f0b-1d32e04994ba.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.ntcc.gov.tw/tw/news/show.aspx?kind=17&num=36832"
+      ],
+      "officialFile": "ntec-64622-01.pdf",
+      "officialSha256": "67635275f8d429559ec961a90b9f2b4c860fc4f5a11a1505378c43f6fdeaaea0",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.911Z",
+      "candidateId": "ca49605f-34f8-4307-ba02-f25088ce462a",
+      "externalEvidence": {
+        "url": "https://www.ntcc.gov.tw/tw/news/show.aspx?kind=17&num=36832",
+        "title": "縣議員蔡宗智宣布參選名間鄉長",
+        "publisher": "南投縣議會",
+        "statement": "南投縣議會明確指出縣議員蔡宗智參選名間鄉長。",
+        "retrievedAt": "2026-09-04T19:56:58.911Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-59b4004de2f07431fefae1c5978d00b4",
+      "claimId": "7d6339ef-d5cc-4221-8a31-ace32019281c",
+      "sourcePersonId": "3b545abd-ccab-4545-8ab8-e26004ca24a0",
+      "name": "蔡孟娥",
+      "county": "南投縣",
+      "district": "南投縣竹山鎮",
+      "office": "township_mayor",
+      "raceId": "789b3581-24ba-43df-a6c1-fc40c3e1c9b6",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "8aae8c31-d907-48ec-803f-2b1a0b01abfc",
+      "existingPersonIds": [
+        "8aae8c31-d907-48ec-803f-2b1a0b01abfc"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "中國國民黨",
+      "locality": "南投縣竹山鎮",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "a30c7573-761a-480a-a38f-2d2df5114355"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/939b3f02-3783-4060-8f0b-1d32e04994ba.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.ntcc.gov.tw/tw/news/show.aspx?num=38014&page=1"
+      ],
+      "officialFile": "ntec-64622-01.pdf",
+      "officialSha256": "67635275f8d429559ec961a90b9f2b4c860fc4f5a11a1505378c43f6fdeaaea0",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.910Z",
+      "candidateId": "8ed956c5-8d71-420b-9de1-73f290d2b904",
+      "externalEvidence": {
+        "url": "https://www.ntcc.gov.tw/tw/news/show.aspx?num=38014&page=1",
+        "title": "縣議員蔡孟娥登記參選鎮長",
+        "publisher": "南投縣議會",
+        "statement": "南投縣議會明確指出縣議員蔡孟娥登記參選竹山鎮長。",
+        "retrievedAt": "2026-09-04T19:56:58.910Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-59d8d6a1d5e41d4b3d64ee4478bbc4f2",
+      "claimId": "6ab1f55b-fff0-4c5e-b01f-09a6522d03be",
+      "sourcePersonId": "7a563f40-5370-46d0-815c-f6b098a392fb",
+      "name": "陳一惇",
+      "county": "彰化縣",
+      "district": "彰化縣二林鎮",
+      "office": "township_mayor",
+      "raceId": "a873b7d8-51df-4346-8e89-de888146fd7a",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "3a4400ee-b81e-4c31-80e8-2a2629b6205b",
+      "existingPersonIds": [
+        "3a4400ee-b81e-4c31-80e8-2a2629b6205b"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "彰化縣二林鎮",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "e30cde49-7324-42c2-9aaf-80f4c612efba"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.chinatimes.com/newspapers/20260131000517-260107"
+      ],
+      "officialFile": "chec-64647-03.pdf",
+      "officialSha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.912Z",
+      "candidateId": "4b36a882-8f50-480f-aadc-45735c7150d3",
+      "externalEvidence": {
+        "url": "https://www.chinatimes.com/newspapers/20260131000517-260107",
+        "title": "彰縣二林鎮長選舉 3人競逐",
+        "publisher": "中國時報",
+        "statement": "報導明確指出四連霸彰化縣議員陳一惇參選二林鎮長。",
+        "retrievedAt": "2026-09-04T19:56:58.912Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-5fe2ec04a2ff269068a86fc9e6a4340b",
+      "claimId": "cb53b007-871c-4ecd-afbb-91dc6e115324",
+      "sourcePersonId": "0c9eadd8-4b82-4ee8-820d-69a375682ed0",
+      "name": "陳信文",
+      "county": "嘉義縣",
+      "district": "嘉義縣梅山鄉",
+      "office": "township_mayor",
+      "raceId": "87750446-d207-458c-8582-18387f90a399",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "6128a9e5-c36a-4035-aa40-149fc3384c80",
+      "existingPersonIds": [
+        "6128a9e5-c36a-4035-aa40-149fc3384c80"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "嘉義縣梅山鄉",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "d0fb5a95-8e9f-4cad-9a84-d0c3e3e7e876"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/6461bb26-1648-4134-9d63-44c75bbd69ac.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://tw.news.yahoo.com/%E9%99%B3%E4%BF%A1%E6%96%87-%E9%99%B3%E9%9D%96%E9%9B%85%E5%85%84%E5%A6%B9%E5%AE%8C%E6%88%90%E5%8F%82%E9%81%B8%E7%99%BB%E8%A8%98-%E8%BD%89%E6%8F%9B%E8%B7%91%E9%81%93%E6%94%9C%E6%89%8B%E8%BF%8E%E6%88%B0%E9%84%89%E9%95%B7%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89-%E6%94%B9%E9%80%A0%E6%A2%85%E5%B1%B1-%E6%AD%A3%E5%BC%8F%E8%B5%B7%E8%B7%91-120707628.html"
+      ],
+      "officialFile": "cycec-64443-04.pdf",
+      "officialSha256": "eed2d341bf537c4acb9d0b4c5ac05e8de017641023891ae3060f0ce7eb0dd3da",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.915Z",
+      "candidateId": "4f1e14bc-7a15-4f9e-8979-4b9eec4a0964",
+      "externalEvidence": {
+        "url": "https://tw.news.yahoo.com/%E9%99%B3%E4%BF%A1%E6%96%87-%E9%99%B3%E9%9D%96%E9%9B%85%E5%85%84%E5%A6%B9%E5%AE%8C%E6%88%90%E5%8F%82%E9%81%B8%E7%99%BB%E8%A8%98-%E8%BD%89%E6%8F%9B%E8%B7%91%E9%81%93%E6%94%9C%E6%89%8B%E8%BF%8E%E6%88%B0%E9%84%89%E9%95%B7%E7%B8%A3%E8%AD%B0%E5%93%A1%E9%81%B8%E8%88%89-%E6%94%B9%E9%80%A0%E6%A2%85%E5%B1%B1-%E6%AD%A3%E5%BC%8F%E8%B5%B7%E8%B7%91-120707628.html",
+        "title": "陳信文、陳靖雅兄妹完成參選登記",
+        "publisher": "Yahoo 新聞",
+        "statement": "報導明確指出現任嘉義縣議員陳信文轉戰梅山鄉長。",
+        "retrievedAt": "2026-09-04T19:56:58.915Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-6123b0744a2799f58687183dc6bb0398",
+      "claimId": "5a4296dd-3164-47a3-b406-e4f634a8e0b5",
+      "sourcePersonId": "50ecf165-e8e4-4df5-9d73-7ad8be0503ea",
+      "name": "嚴惠美 Simoy．Sapod",
+      "county": "臺東縣",
+      "district": "臺東縣長濱鄉",
+      "office": "township_mayor",
+      "raceId": "18cc50fc-8ed9-49fe-be04-7040b9443c15",
+      "decision": "use_existing",
+      "reasonCode": "masked_birth_year_and_official_history_after_gender_normalization",
+      "personId": "5ddf21c3-0166-8fa4-87f5-1ec76b87ba15",
+      "existingPersonIds": [
+        "5ddf21c3-0166-8fa4-87f5-1ec76b87ba15"
+      ],
+      "registrationBirth": "054/**/**",
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": "臺東縣長濱鄉",
+      "evidenceClaimIds": [
+        "fa1300bc-3035-458b-980b-fbd18039059b",
+        "219bd8e2-e737-41e2-991e-34943f9c0c27"
+      ],
+      "evidenceCandidateIds": [
+        "3256527f-3d29-4e87-b210-9f8de0bea5c3"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/2f68b219-db5d-4d2d-add3-2eda8306b104.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E5%9A%B4%E6%83%A0%E7%BE%8E"
+      ],
+      "officialFile": "ttec-64641-04.pdf",
+      "officialSha256": "8e3e6afcefe3062535e69674d515413a9b3990a73d5e860ee28761ac2ffae64e",
+      "reason": "本次官方出生年與既有已核對完整生日年份一致；姓名、標準化後性別、政黨及同縣市歷史參選紀錄也一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.904Z",
+      "candidateId": "e7278687-5217-4f51-ad5e-e738af1983be",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-73d1a67be31f509d1bfe487cce8496a8",
+      "claimId": "a9241a21-84be-4464-b257-f86730ee6837",
+      "sourcePersonId": "35471b97-61ec-4d3d-8d87-17bdeeb1a08d",
+      "name": "謝燦輝",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣冬山鄉",
+      "office": "township_mayor",
+      "raceId": "6e73c1dd-b06e-410c-9c86-34b17a2010fe",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "8805fb19-e1b2-4767-a8f9-8f8d93b85f19",
+      "existingPersonIds": [
+        "8805fb19-e1b2-4767-a8f9-8f8d93b85f19"
+      ],
+      "registrationBirth": "047/**/**",
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "宜蘭縣冬山鄉",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "b8609469-c8f6-41af-a338-50b36369ac87"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/5a545f62-573e-4e1f-b505-7f9350fffda9.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.cna.com.tw/news/aloc/202605170092.aspx"
+      ],
+      "officialFile": "ilec-64650-09.pdf",
+      "officialSha256": "4ab31ac994d3703fb19dfbd26c11e0c2a4dc449e43dde157b73995dde9c32f7b",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.908Z",
+      "candidateId": "2cdf20e2-2e0f-47e3-be3c-c141f8886f7c",
+      "externalEvidence": {
+        "url": "https://www.cna.com.tw/news/aloc/202605170092.aspx",
+        "title": "謝燦輝宣布參選宜蘭冬山鄉長　綠營盼以大局為重",
+        "publisher": "中央社",
+        "statement": "報導明確指出宜蘭縣議員謝燦輝參選冬山鄉長。",
+        "retrievedAt": "2026-09-04T19:56:58.908Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-7e8a9167674e7979a9cfd49564423d6b",
+      "claimId": "0b316026-e5e5-4756-9a9b-92f787201f51",
+      "sourcePersonId": "053c733c-d714-4c7f-aace-7205a2de575c",
+      "name": "凃俊任",
+      "county": "彰化縣",
+      "district": "彰化縣員林市",
+      "office": "township_mayor",
+      "raceId": "39253bce-f87a-4172-9106-ba6345ed54dd",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "dc2e498b-d1a3-4a95-918f-e10592693981",
+      "existingPersonIds": [
+        "dc2e498b-d1a3-4a95-918f-e10592693981"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "彰化縣員林市",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "fdce3f4c-71af-41b9-b12f-c1ee56065ae7"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://udn.com/news/story/7325/9531900"
+      ],
+      "officialFile": "chec-64647-03.pdf",
+      "officialSha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.911Z",
+      "candidateId": "a0ea71c9-92d7-47fc-aaa9-9ceb6759a568",
+      "externalEvidence": {
+        "url": "https://udn.com/news/story/7325/9531900",
+        "title": "國民黨彰化8鄉鎮市長10人登記 彰化、員林將先協調",
+        "publisher": "聯合報",
+        "statement": "報導明確指出彰化縣議員凃俊任登記爭取員林市長提名。",
+        "retrievedAt": "2026-09-04T19:56:58.911Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-88a4ff001c27ef43e179bf7ab1be776f",
+      "claimId": "ed4c88fd-ee4b-4eea-b9ee-384c9462be1a",
+      "sourcePersonId": "3fc93ff9-36bd-460c-9336-b25bd2222f60",
+      "name": "何子凡",
+      "county": "嘉義縣",
+      "district": "嘉義縣竹崎鄉",
+      "office": "township_mayor",
+      "raceId": "fb085358-b8ff-408d-a6ad-9a62d6130147",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "9e2d12f6-85d1-412d-aaf9-970145044afc",
+      "existingPersonIds": [
+        "9e2d12f6-85d1-412d-aaf9-970145044afc"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "嘉義縣竹崎鄉",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "303f6e93-baee-4dc4-94fb-6b4fe8f0ddbe"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/6461bb26-1648-4134-9d63-44c75bbd69ac.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://udn.com/news/story/7326/9664682"
+      ],
+      "officialFile": "cycec-64443-04.pdf",
+      "officialSha256": "eed2d341bf537c4acb9d0b4c5ac05e8de017641023891ae3060f0ce7eb0dd3da",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.915Z",
+      "candidateId": "d08a639a-62fd-4621-8639-f11654de9d9c",
+      "externalEvidence": {
+        "url": "https://udn.com/news/story/7326/9664682",
+        "title": "嘉義縣竹崎鄉長選舉再添變局 議員何子凡宣布轉戰參選鄉長",
+        "publisher": "聯合報",
+        "statement": "報導明確指出嘉義縣議員何子凡轉戰竹崎鄉長。",
+        "retrievedAt": "2026-09-04T19:56:58.915Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9d3624612cfb7e107e231cf6a245a4ca",
+      "claimId": "dd99bc5a-21f4-41c5-a1fd-2b83373f53a7",
+      "sourcePersonId": "c8d85a46-09e7-425b-9bc6-3e5e91010b16",
+      "name": "黃世芳",
+      "county": "南投縣",
+      "district": "南投縣埔里鎮",
+      "office": "township_mayor",
+      "raceId": "c0bdb0d4-6039-4793-8995-10b860a3cc95",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "34e0b08d-eaae-4888-a8de-04f52c2f978b",
+      "existingPersonIds": [
+        "34e0b08d-eaae-4888-a8de-04f52c2f978b"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "南投縣埔里鎮",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "ea97a570-efa7-4214-8b03-b09cf08b4716"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/939b3f02-3783-4060-8f0b-1d32e04994ba.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://focus.586.com.tw/2026/09/03/p402102/"
+      ],
+      "officialFile": "ntec-64622-01.pdf",
+      "officialSha256": "67635275f8d429559ec961a90b9f2b4c860fc4f5a11a1505378c43f6fdeaaea0",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.910Z",
+      "candidateId": "85244974-6e9c-4842-bcf5-5668673d763a",
+      "externalEvidence": {
+        "url": "https://focus.586.com.tw/2026/09/03/p402102/",
+        "title": "葉仁創和黃世芳　登記參選埔里鎮長",
+        "publisher": "焦點時報",
+        "statement": "報導明確連結黃世芳的鎮民代表、縣議員經歷與本次埔里鎮長登記。",
+        "retrievedAt": "2026-09-04T19:56:58.910Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-a7ae9efba04969d8136af631bdb38851",
+      "claimId": "7a58209d-ff51-4137-a7bc-191253446a20",
+      "sourcePersonId": "163248ea-4c90-4fe4-b444-18d6fa925451",
+      "name": "沈夙崢",
+      "county": "南投縣",
+      "district": "南投縣南投市",
+      "office": "township_mayor",
+      "raceId": "9f39a499-dce0-4446-9418-188a27ea7f16",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "fbf965f5-1cc0-4026-9530-a75acb0c719f",
+      "existingPersonIds": [
+        "fbf965f5-1cc0-4026-9530-a75acb0c719f"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "民主進步黨",
+      "locality": "南投縣南投市",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "a25ec746-647a-4100-90e6-6f4ee0f0e40d"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/939b3f02-3783-4060-8f0b-1d32e04994ba.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.ntcc.gov.tw/tw/news/show.aspx?num=37786&page=1"
+      ],
+      "officialFile": "ntec-64622-01.pdf",
+      "officialSha256": "67635275f8d429559ec961a90b9f2b4c860fc4f5a11a1505378c43f6fdeaaea0",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.909Z",
+      "candidateId": "58d26976-b76f-4fad-8b38-2135cb01c2df",
+      "externalEvidence": {
+        "url": "https://www.ntcc.gov.tw/tw/news/show.aspx?num=37786&page=1",
+        "title": "縣議員沈夙崢轉戰參選南投市長",
+        "publisher": "南投縣議會",
+        "statement": "南投縣議會明確指出縣議員沈夙崢轉戰南投市長。",
+        "retrievedAt": "2026-09-04T19:56:58.909Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-aa9938095c3057ea3661b2c5e3439ff1",
+      "claimId": "46cb8ddf-0559-449e-8877-133b9d402abd",
+      "sourcePersonId": "30c35cb5-a1d6-4738-9907-2271e27ae1be",
+      "name": "林源富",
+      "county": "花蓮縣",
+      "district": "花蓮縣吉安鄉",
+      "office": "township_mayor",
+      "raceId": "b68f5542-c4ee-4884-aaed-3f7ffed94ce5",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "ea469dd4-7908-4bca-9951-c31b680ca406",
+      "existingPersonIds": [
+        "ea469dd4-7908-4bca-9951-c31b680ca406"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "花蓮縣吉安鄉",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "1db49a58-d51a-489e-a07c-85461b5821fa"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/735e1e68-90bf-4aa1-82d1-fcf4b1cd4722.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0002&_PARENT_ID=ER11112UB00016&_TYP=REP&n=574"
+      ],
+      "officialFile": "hlec-64558-03.pdf",
+      "officialSha256": "c9669bdcd72056467fd6df36ba60cfa40a03e37773bc9d4515ab3731db9dd797",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.917Z",
+      "candidateId": "f18a91d0-f0ca-4c9e-9e9e-0bd5eaf6b78c",
+      "externalEvidence": {
+        "url": "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0002&_PARENT_ID=ER11112UB00016&_TYP=REP&n=574",
+        "title": "縣市議員：林源富",
+        "publisher": "內政部",
+        "statement": "內政部現任地方公職資料明列林源富為花蓮縣議員，簡歷含吉安鄉地方經歷。",
+        "retrievedAt": "2026-09-04T19:56:58.917Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-b103c7f196525349c3a9cc3c05a6f769",
+      "claimId": "24a15271-016a-410f-80a5-98770ff8bd75",
+      "sourcePersonId": "05cdabb7-49ab-4271-b0f7-6bd2d1c8e738",
+      "name": "簡松樹",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣五結鄉",
+      "office": "township_mayor",
+      "raceId": "c24e8752-a1f4-4d18-87f2-4a8912b64e14",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "b62282ad-9822-4402-bb84-ca64fa085eb1",
+      "existingPersonIds": [
+        "b62282ad-9822-4402-bb84-ca64fa085eb1"
+      ],
+      "registrationBirth": "054/**/**",
+      "registrationGender": "男",
+      "registrationParty": "民主進步黨",
+      "locality": "宜蘭縣五結鄉",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "7da63fc0-7d7a-40f8-90ad-8bf8ea5afbe1"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/5a545f62-573e-4e1f-b505-7f9350fffda9.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.thehubnews.net/archives/660981"
+      ],
+      "officialFile": "ilec-64650-09.pdf",
+      "officialSha256": "4ab31ac994d3703fb19dfbd26c11e0c2a4dc449e43dde157b73995dde9c32f7b",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.908Z",
+      "candidateId": "7ff688c4-77a8-422f-bbc9-95c10d7259dc",
+      "externalEvidence": {
+        "url": "https://www.thehubnews.net/archives/660981",
+        "title": "與7鄉代12村長聯合登記參選 簡松樹高呼「互助護樹、團結向前」",
+        "publisher": "新頭條",
+        "statement": "報導明確指出現任議員簡松樹再次投入五結鄉長選戰。",
+        "retrievedAt": "2026-09-04T19:56:58.908Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-b3eb9984a29ac859a4438b77c0674428",
+      "claimId": "cc42e42e-fe89-4537-a2a3-66aecce6d985",
+      "sourcePersonId": "319422b0-d829-4ec3-98a6-9841894429c6",
+      "name": "賴淑娞",
+      "county": "雲林縣",
+      "district": "雲林縣斗六市",
+      "office": "township_mayor",
+      "raceId": "111fe2a0-8792-4053-8579-d49b163ca5d3",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "29dd7f76-b3b5-42b7-9852-bd71bf6889d5",
+      "existingPersonIds": [
+        "29dd7f76-b3b5-42b7-9852-bd71bf6889d5"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": "雲林縣斗六市",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "2cb7fec8-5ea2-40ae-bf6a-01721d7b0dc4"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/288f65c2-33bb-4aaa-810d-f947c95c6000.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.cna.com.tw/news/aloc/202607140166.aspx"
+      ],
+      "officialFile": "ylec-64657-03.pdf",
+      "officialSha256": "7232b3060ddd7c5bea82dd464b16b8942b6f7b017de798e57ae7ea3815aba386",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.913Z",
+      "candidateId": "09825c1e-4727-4edd-a942-ae41a71c9a43",
+      "externalEvidence": {
+        "url": "https://www.cna.com.tw/news/aloc/202607140166.aspx",
+        "title": "賴淑娞以無黨參選斗六市長　國民黨：將依黨紀辦理",
+        "publisher": "中央社",
+        "statement": "報導明確指出雲林縣議員賴淑娞以無黨籍參選斗六市長。",
+        "retrievedAt": "2026-09-04T19:56:58.913Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e7a2d3c3fdf98326661fb0033d03fc9a",
+      "claimId": "b90ca69a-c412-464b-a862-6323b6d41064",
+      "sourcePersonId": "3a43b1e4-ad16-46e9-ab40-5e753263971a",
+      "name": "黃嫈珺",
+      "county": "嘉義縣",
+      "district": "嘉義縣朴子市",
+      "office": "township_mayor",
+      "raceId": "14169181-9a52-487a-a4d7-3a4014bff12e",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "e3e48732-f072-4ee1-8a41-6d883bcacd31",
+      "existingPersonIds": [
+        "e3e48732-f072-4ee1-8a41-6d883bcacd31"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": "嘉義縣朴子市",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "9f54e1b2-bf32-46f1-8706-47cffc62777e"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/6461bb26-1648-4134-9d63-44c75bbd69ac.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://udn.com/vote2026/story/124652/9729304"
+      ],
+      "officialFile": "cycec-64443-04.pdf",
+      "officialSha256": "eed2d341bf537c4acb9d0b4c5ac05e8de017641023891ae3060f0ce7eb0dd3da",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.913Z",
+      "candidateId": "05a7d62d-e2cd-43a6-a96c-227ce04d5289",
+      "externalEvidence": {
+        "url": "https://udn.com/vote2026/story/124652/9729304",
+        "title": "嘉義朴子市長選舉競爭激烈 黃嫈珺、王如經今同日登記拚市長",
+        "publisher": "聯合報",
+        "statement": "報導明確指出現任嘉義縣議員黃嫈珺轉戰朴子市長。",
+        "retrievedAt": "2026-09-04T19:56:58.913Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e860cb246d183622e1b69467d6c51905",
+      "claimId": "3509db3c-9af4-445c-ab40-315e416066e3",
+      "sourcePersonId": "b9ca5171-762c-4017-b078-eec8b8f043a6",
+      "name": "張秀霞",
+      "county": "新北市",
+      "district": "新北市坪林區石𥕢里",
+      "office": "village_chief",
+      "raceId": "045938f9-f7be-4d3f-b80d-c171b5a3748f",
+      "decision": "use_existing",
+      "reasonCode": "exact_2018_race_gender_party_unique_person",
+      "personId": "1897dbcc-c42b-4c52-8828-842679506fed",
+      "existingPersonIds": [
+        "1897dbcc-c42b-4c52-8828-842679506fed"
+      ],
+      "registrationBirth": "049/10/18",
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": "新北市坪林區",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "48c65480-26dc-48d0-8913-542c2c7ba6c9"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/65_000_00_000_0000.json"
+      ],
+      "officialFile": "tpcec-64393-05.pdf",
+      "officialSha256": "37c506ac82506139aa013389702c88520d73a3416d0608bcbb6d61aa45806bc0",
+      "reason": "2018 年中選會候選紀錄與本次為同一里、同一職務、同姓名、同性別及同政黨，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.905Z",
+      "candidateId": "ea2e51ec-cc93-4bb5-9c0a-0d9bbc94eeb4",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-eb2dc612ab6175affeb281bb7e310a6e",
+      "claimId": "6293f5b8-0ddd-4968-ba07-c69b56f40320",
+      "sourcePersonId": "d01b8298-4145-49cb-8adc-63a30b69556e",
+      "name": "劉雅文",
+      "county": "嘉義縣",
+      "district": "嘉義縣溪口鄉",
+      "office": "township_mayor",
+      "raceId": "13f08aed-53ca-4b1d-94d8-cca5012991cd",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "8861f065-474c-4902-86a1-c60acd9d1e3e",
+      "existingPersonIds": [
+        "8861f065-474c-4902-86a1-c60acd9d1e3e"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "民主進步黨",
+      "locality": "嘉義縣溪口鄉",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "2cf5c52b-c319-459c-8274-444eac5c42ec"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/6461bb26-1648-4134-9d63-44c75bbd69ac.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.cna.com.tw/news/aipl/202606010138.aspx"
+      ],
+      "officialFile": "cycec-64443-04.pdf",
+      "officialSha256": "eed2d341bf537c4acb9d0b4c5ac05e8de017641023891ae3060f0ce7eb0dd3da",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.914Z",
+      "candidateId": "9584e333-9860-4d23-b4f2-6bba8aa7d2e5",
+      "externalEvidence": {
+        "url": "https://www.cna.com.tw/news/aipl/202606010138.aspx",
+        "title": "民進黨公布嘉義縣鄉鎮市長參選人　鹿草鄉長放棄連任",
+        "publisher": "中央社",
+        "statement": "報導明確指出嘉義縣議員劉雅文轉戰溪口鄉長。",
+        "retrievedAt": "2026-09-04T19:56:58.914Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-f0c903e60593fa7162237bf3eeb21031",
+      "claimId": "47caabf4-d4b9-478a-974e-bce7d413a407",
+      "sourcePersonId": "bd2d7c46-72fd-4868-a4df-036bae3f1970",
+      "name": "黃柏瑜",
+      "county": "彰化縣",
+      "district": "彰化縣彰化市",
+      "office": "township_mayor",
+      "raceId": "d3910571-7891-488d-9344-2ae4666b5034",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "7de835ef-20a9-448c-a034-7551a16d31c2",
+      "existingPersonIds": [
+        "7de835ef-20a9-448c-a034-7551a16d31c2"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "民主進步黨",
+      "locality": "彰化縣彰化市",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "fa01dc5e-d5a5-46e8-859b-6770969285a6"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.cna.com.tw/news/aloc/202601160307.aspx"
+      ],
+      "officialFile": "chec-64647-03.pdf",
+      "officialSha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.902Z",
+      "candidateId": "0514ac59-9a6d-4a18-9d73-6ed5563ae148",
+      "externalEvidence": {
+        "url": "https://www.cna.com.tw/news/aloc/202601160307.aspx",
+        "title": "彰化地方選舉綠營截止登記　黃柏瑜參選彰化市長",
+        "publisher": "中央社",
+        "statement": "報導明確指出現任彰化縣議員黃柏瑜轉戰彰化市長。",
+        "retrievedAt": "2026-09-04T19:56:58.902Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-f9c8db45e5bede2958d9c934193bbe62",
+      "claimId": "87d5ad91-5e6c-422d-8e90-e65e2ee95427",
+      "sourcePersonId": "38c3242a-a381-4a1c-9566-b5c774ab6e9d",
+      "name": "蔡玉玲",
+      "county": "臺東縣",
+      "district": "臺東縣達仁鄉",
+      "office": "township_mayor",
+      "raceId": "4e9793d1-6a74-476c-8223-98225667f975",
+      "decision": "use_existing",
+      "reasonCode": "masked_birth_year_and_official_history_after_gender_normalization",
+      "personId": "05cea7c9-b430-4d3c-8d9f-a88725a2073c",
+      "existingPersonIds": [
+        "05cea7c9-b430-4d3c-8d9f-a88725a2073c"
+      ],
+      "registrationBirth": "058/**/**",
+      "registrationGender": "女",
+      "registrationParty": "中國國民黨",
+      "locality": "臺東縣達仁鄉",
+      "evidenceClaimIds": [
+        "46d55e59-9a65-4410-91f5-c5e22c595483",
+        "fd5b5292-f29f-4097-8c6a-78a9865cef1a"
+      ],
+      "evidenceCandidateIds": [
+        "ba17df0e-a620-40b3-b457-9277db3265aa"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/2f68b219-db5d-4d2d-add3-2eda8306b104.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E8%94%A1%E7%8E%89%E7%8E%B2",
+        "https://www.taitungcc.gov.tw/api/member/16?lg=1&desk=front"
+      ],
+      "officialFile": "ttec-64641-04.pdf",
+      "officialSha256": "8e3e6afcefe3062535e69674d515413a9b3990a73d5e860ee28761ac2ffae64e",
+      "reason": "本次官方出生年與既有已核對完整生日年份一致；姓名、標準化後性別、政黨及同縣市歷史參選紀錄也一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.917Z",
+      "candidateId": "e225415f-5aef-4dbe-846b-54ba6985c0f8",
+      "externalEvidence": null
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-fb6fbbd355c6b6a3b7246005275ef3de",
+      "claimId": "040361cf-3a89-4988-a7b3-28c9dc3a20a6",
+      "sourcePersonId": "fc7535a6-35ab-4073-974d-b35aa07677fb",
+      "name": "陳鴻禧",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣羅東鎮",
+      "office": "township_mayor",
+      "raceId": "149f70a9-9949-42f7-ad6d-ec3cc44cd5c9",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_role_transition_after_gender_normalization",
+      "personId": "0d419cea-a8f2-4619-86ee-00b18a3aaa0d",
+      "existingPersonIds": [
+        "0d419cea-a8f2-4619-86ee-00b18a3aaa0d"
+      ],
+      "registrationBirth": "048/**/**",
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "宜蘭縣羅東鎮",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "a152c35a-d7eb-48c6-9817-0ff47056e754"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/5a545f62-573e-4e1f-b505-7f9350fffda9.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://www.kamalan-news.com/political/23/18911"
+      ],
+      "officialFile": "ilec-64650-09.pdf",
+      "officialSha256": "4ab31ac994d3703fb19dfbd26c11e0c2a4dc449e43dde157b73995dde9c32f7b",
+      "reason": "當期公開來源明確連接既有公職身分與本次參選職務；姓名、標準化後性別及既有歷史候選紀錄一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.906Z",
+      "candidateId": "420b970e-9dd0-414b-91cb-4b5662119d54",
+      "externalEvidence": {
+        "url": "https://www.kamalan-news.com/political/23/18911",
+        "title": "藍營鄉鎮市長布局再推進～陳美玲、陳鴻禧、黃雯如完成登記",
+        "publisher": "葛瑪蘭新聞網",
+        "statement": "報導明確指出宜蘭縣議員陳鴻禧轉戰羅東鎮長。",
+        "retrievedAt": "2026-09-04T19:56:58.906Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-ff0ef04c9b229b567811d9d0510bc61a",
+      "claimId": "fc468de0-d617-4753-9bd8-738db9e309fe",
+      "sourcePersonId": "13952958-ba14-4197-ada4-aa7016459669",
+      "name": "張全馨嵐",
+      "county": "臺東縣",
+      "district": "臺東縣海端鄉",
+      "office": "township_mayor",
+      "raceId": "a7fcfe41-992a-4f02-a703-77af13c51118",
+      "decision": "use_existing",
+      "reasonCode": "masked_birth_year_and_official_history_after_gender_normalization",
+      "personId": "095721dc-e64b-4792-9dd1-e5f550d4dfe1",
+      "existingPersonIds": [
+        "095721dc-e64b-4792-9dd1-e5f550d4dfe1"
+      ],
+      "registrationBirth": "074/**/**",
+      "registrationGender": "女",
+      "registrationParty": "中國國民黨",
+      "locality": "臺東縣海端鄉",
+      "evidenceClaimIds": [
+        "5e008ed7-aa00-43f2-bad5-d8ed0bc5e0c7",
+        "96b802d4-3ecc-4450-80a9-b9c91ed6ba54"
+      ],
+      "evidenceCandidateIds": [
+        "91b91ef8-6674-4d1c-893a-f38f0de0a8e4"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/2f68b219-db5d-4d2d-add3-2eda8306b104.pdf",
+        "https://data.gov.tw/dataset/13119",
+        "https://votetw.com/wiki/%E5%BC%B5%E5%85%A8%E9%A6%A8%E5%B5%90",
+        "https://www.taitungcc.gov.tw/api/member/14?lg=1&desk=front"
+      ],
+      "officialFile": "ttec-64641-04.pdf",
+      "officialSha256": "8e3e6afcefe3062535e69674d515413a9b3990a73d5e860ee28761ac2ffae64e",
+      "reason": "本次官方出生年與既有已核對完整生日年份一致；姓名、標準化後性別、政黨及同縣市歷史參選紀錄也一致，且只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 5",
+      "reviewedAt": "2026-09-04T19:56:58.916Z",
+      "candidateId": "37dfa822-7d80-4f4a-b32b-c476dc99bd4b",
+      "externalEvidence": null
+    }
+  ]
+}

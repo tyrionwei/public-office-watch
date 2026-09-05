@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HomeElectionSpotlight } from '../components/HomeElectionSpotlight';
+import { MyPollingPlace } from '../components/MyPollingPlace';
+import { selectNextElectionVotingCycle } from '../data/electionVotingCycles';
 import { MobileMyElection } from '../components/MobileMyElection';
 import { MobileRegionBrowser } from '../components/MobileRegionBrowser';
 import { PartySeatDistributionPanel } from '../components/PartySeatDistributionPanel';
@@ -23,14 +25,19 @@ export function HomePage() {
   const { preference: votingRegionPreference } = useVotingRegion();
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedRegionId = searchParams.get('region');
+  const pollingCycle = votingRegionPreference ? selectNextElectionVotingCycle(votingRegionPreference, new Date().toISOString().slice(0, 10)) : null;
   const showMobileBrowse = !votingRegionPreference || requestedRegionId !== null;
-  const requestedHomeRegionId = requestedRegionId ?? storedRegionId;
+  const requestedHomeRegionKey = requestedRegionId ?? storedRegionId;
+  const requestedHomeRegionId = requestedHomeRegionKey?.startsWith('historical-')
+    ? NATIONAL_REGION_QUERY
+    : requestedHomeRegionKey;
   const [homeData, setHomeData] = useState(() => publicDataProvider.getHomePageData());
   const [homeLoading, setHomeLoading] = useState(true);
   const [homeLoadError, setHomeLoadError] = useState(false);
   const [myElectionData, setMyElectionData] = useState(() => publicDataProvider.getHomePageData());
   const [myElectionLoading, setMyElectionLoading] = useState(Boolean(votingRegionPreference));
   const [myElectionLoadError, setMyElectionLoadError] = useState(false);
+  const [pollingPlaceOpen, setPollingPlaceOpen] = useState(false);
   useEffect(() => {
     let active = true;
     const regionId = !requestedHomeRegionId || requestedHomeRegionId === NATIONAL_REGION_QUERY
@@ -139,7 +146,7 @@ export function HomePage() {
   }, [searchParams, setSearchParams, setSelectedRegionId, startTransition, votingCountyId]);
 
   return (
-    <AppShell ticker={homeData.ticker} tickerMobileHidden>
+    <AppShell ticker={homeData.ticker} tickerMobileHidden onOpenPollingPlace={() => setPollingPlaceOpen(true)} pollingPlaceOpen={pollingPlaceOpen}>
       <div className="mb-3 space-y-3 md:contents">
         <MobileRegionBrowser
           selectedRegionId={selectedRegionId}
@@ -148,6 +155,7 @@ export function HomePage() {
           onSelectRegion={handleSelectRegion}
           onReturnToMyArea={votingRegionPreference ? handleReturnToMyArea : undefined}
         />
+        {pollingPlaceOpen && votingRegionPreference && pollingCycle?.pollingPlaceLookupUrl ? <div data-desktop-polling-place className="hidden md:block"><MyPollingPlace eventKey={pollingCycle.id} lookupUrl={pollingCycle.pollingPlaceLookupUrl} onClose={() => setPollingPlaceOpen(false)} /></div> : null}
         {votingRegionPreference && !showMobileBrowse ? (
           <MobileMyElection
             preference={votingRegionPreference}
@@ -156,6 +164,9 @@ export function HomePage() {
             candidateSummaries={myElectionData.candidateSummaries ?? []}
             loading={myElectionLoading}
             loadError={myElectionLoadError}
+            pollingPlaceOpen={pollingPlaceOpen}
+            onOpenPollingPlace={() => setPollingPlaceOpen(true)}
+            onClosePollingPlace={() => setPollingPlaceOpen(false)}
           />
         ) : null}
       </div>

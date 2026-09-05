@@ -10,6 +10,7 @@
 
 1. 登記狀態改為「已申請登記」。2026 起的人物參選卡片新增公開時間線，登記者顯示「尚待選舉委員會資格審定」。
 2. 新增投票事件、官方來源、投開票所與整數鄰號對應；首頁手機及桌面可依戶籍村里、選填鄰別查詢，提供地址、原始適用條件與 Google Maps 連結。
+3. 確認正式站既有 Cloudflare Web Analytics 自動載入正常；資料說明頁新增統計與本機地區設定的隱私說明。
 
 本次只修改本機程式及完整本機 Supabase。正式網站、Cloudflare 設定與正式 Supabase 均未寫入或部署。
 
@@ -78,7 +79,7 @@ node --test scripts/polling-place-normalization.test.mjs
 node scripts/verify-election-features-local.mjs
 ~~~
 
-新增 schema 已在完整本機建立；這些 migration 留供後續正式發布審核，這次未變更正式 migration history。
+新增 schema 已在完整本機建立；兩份 migration 留供後續正式發布審核，這次未變更正式 migration history。
 
 驗證結果：
 

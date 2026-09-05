@@ -2088,6 +2088,68 @@ function getLegislatorCodeFromPhotoUrl(picUrl) {
   return match?.[1] ?? '';
 }
 
+function buildCurrentOfficeholders(payload, source) {
+  const rows = Array.isArray(payload.dataList) ? payload.dataList : [];
+  const officeholders = rows
+    .filter((row) => pickField(row, ['leaveFlag']) === '否')
+    .map((row) => {
+      const term = pickField(row, ['term']) || '11';
+      const name = pickField(row, ['name']);
+      const party = pickField(row, ['party', 'partyGroup']);
+      const areaName = pickField(row, ['areaName']);
+      const onboardDate = pickField(row, ['onboardDate']);
+      const legislatorCode = getLegislatorCodeFromPhotoUrl(pickField(row, ['picUrl']));
+      const degree = pickField(row, ['degree']);
+      const experience = pickField(row, ['experience']);
+      const birthDateText = pickField(row, ['birthday', 'birthDate', 'birth_date', '出生日期']);
+      return {
+        externalId: `ly-legislator-${term}-${legislatorCode || hashId([name, party, areaName, onboardDate].join('|'))}`,
+        name,
+        alias: pickField(row, ['ename']) || null,
+        gender: normalizeGender(pickField(row, ['sex'])),
+        party,
+        position: `第${term}屆立法委員`,
+        electionYear: 2024,
+        district: areaName,
+        birthDate: normalizeDateText(birthDateText),
+        birthDateText: birthDateText || null,
+        education: degree || null,
+        experience: experience || null,
+        sourceUrl: source.url,
+        isPublic: true,
+        sourceId: 'ly-current-legislators',
+        sourcePayload: {
+          isCurrent: true,
+          term,
+          onboardDate: onboardDate || null,
+          leaveFlag: pickField(row, ['leaveFlag']) || null,
+        },
+      };
+    })
+    .filter((person) => person.name);
+
+  if (officeholders.length === 0) {
+    throw new Error('JSON parsed successfully but no current legislators were found.');
+  }
+  return officeholders;
+}
+
+async function loadCurrentOfficeholders(source, {
+  statePath = path.join(repoRoot, 'tmp', 'monitor-source-health.json'),
+  fetchPayload = async () => parseJsonPayload(await fetchText(source.downloadUrl)),
+  now,
+  sleep,
+} = {}) {
+  return withSourceRetry({
+    key: source.id,
+    url: source.downloadUrl,
+    statePath,
+    ...(now ? { now } : {}),
+    ...(sleep ? { sleep } : {}),
+    operation: async () => buildCurrentOfficeholders(await fetchPayload(), source),
+  });
+}
+
 async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
   const source = seed.sources.find((item) => item.id === 'ly-current-legislators');
 
@@ -2103,54 +2165,7 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
   }
 
   try {
-    const payload = await withSourceRetry({
-      key: source.id,
-      url: source.downloadUrl,
-      statePath: path.join(repoRoot, 'tmp', 'monitor-source-health.json'),
-      operation: async () => parseJsonPayload(await fetchText(source.downloadUrl)),
-    });
-    const rows = Array.isArray(payload.dataList) ? payload.dataList : [];
-    const officeholders = rows
-      .filter((row) => pickField(row, ['leaveFlag']) === '否')
-      .map((row) => {
-        const term = pickField(row, ['term']) || '11';
-        const name = pickField(row, ['name']);
-        const party = pickField(row, ['party', 'partyGroup']);
-        const areaName = pickField(row, ['areaName']);
-        const onboardDate = pickField(row, ['onboardDate']);
-        const legislatorCode = getLegislatorCodeFromPhotoUrl(pickField(row, ['picUrl']));
-        const degree = pickField(row, ['degree']);
-        const experience = pickField(row, ['experience']);
-        const birthDateText = pickField(row, ['birthday', 'birthDate', 'birth_date', '出生日期']);
-        return {
-          externalId: `ly-legislator-${term}-${legislatorCode || hashId([name, party, areaName, onboardDate].join('|'))}`,
-          name,
-          alias: pickField(row, ['ename']) || null,
-          gender: normalizeGender(pickField(row, ['sex'])),
-          party,
-          position: `第${term}屆立法委員`,
-          electionYear: 2024,
-          district: areaName,
-          birthDate: normalizeDateText(birthDateText),
-          birthDateText: birthDateText || null,
-          education: degree || null,
-          experience: experience || null,
-          sourceUrl: source.url,
-          isPublic: true,
-          sourceId: 'ly-current-legislators',
-          sourcePayload: {
-            isCurrent: true,
-            term,
-            onboardDate: onboardDate || null,
-            leaveFlag: pickField(row, ['leaveFlag']) || null,
-          },
-        };
-      })
-      .filter((person) => person.name);
-
-    if (officeholders.length === 0) {
-      throw new Error('JSON parsed successfully but no current legislators were found.');
-    }
+    const officeholders = await loadCurrentOfficeholders(source);
 
     return {
       seed: {
@@ -4629,6 +4644,7 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
 }
 
 export {
+  buildCurrentOfficeholders,
   buildPartyRegistryProfile,
   buildSourcePersonRows,
   buildEnrichmentPartyAffiliationRows,
@@ -4637,6 +4653,7 @@ export {
   darkGuideFamilyReferenceNames,
   describeFetchError,
   enrichSeedWithPlannedLocalElections,
+  loadCurrentOfficeholders,
   loadPlannedLocalRaceOverrides,
   scoreClaim,
   summarizeLiveSourceHealth,

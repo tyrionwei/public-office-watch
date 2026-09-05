@@ -25,10 +25,13 @@ function fixture(t) {
       ...write(archivePath, { leads: [] }) };
   });
   const logPath = runId + '/logs/command.log';
-  const manifest = { runId, artifactCount: 2, artifacts, logs: [{ path: logPath, ...write(logPath, {
+  const manifest = { runId, artifactCount: 2, artifacts, logs: [{
+    path: logPath, mtime: '2026-09-04T10:01:30Z', ...write(logPath, {
     steps: [
-      { scriptName: 'discover:daily-person-news', exitCode: 0, status: 'ok' },
-      { scriptName: 'sync:real-data:daily', exitCode: 0, status: 'degraded' },
+      { scriptName: 'discover:daily-person-news', exitCode: 0, status: 'ok',
+        startedAt: '2026-09-04T10:00:05Z', finishedAt: '2026-09-04T10:01:00Z' },
+      { scriptName: 'sync:real-data:daily', exitCode: 0, status: 'degraded',
+        startedAt: '2026-09-04T10:00:05Z', finishedAt: '2026-09-04T10:01:00Z' },
     ],
   }) }] };
   const summary = { runId, kind: 'daily', startedAt: '2026-09-04T10:00:00Z',
@@ -95,12 +98,39 @@ test('run identity, final counts, stale time and environment conflicts block who
   f.summary.steps.environment.status = 'failed';
   f.save();
   assert.match(planMonitorReview(f.runDir, f).errors.join(), /Environment/);
-  f.summary.steps.environment.status = 'ok';
+  delete f.summary.steps.environment;
+  f.save();
+  assert.match(planMonitorReview(f.runDir, f).errors.join(), /Environment/);
+  f.summary.steps.environment = { status: 'ok' };
   f.save();
   assert.match(planMonitorReview(f.runDir, { ...f, now: f.now + 8 * 86400_000 }).errors.join(), /stale/);
   f.manifest.runId = 'different';
   f.save();
   assert.match(planMonitorReview(f.runDir, f).errors.join(), /runId/);
+});
+
+
+test('blocked dependencies propagate to otherwise valid artifacts', (t) => {
+  const f = fixture(t);
+  f.manifest.artifacts[0].dependencies = [f.manifest.artifacts[1].path];
+  f.save();
+  const plan = planMonitorReview(f.runDir, f);
+  assert.equal(plan.eligibleArtifacts.length, 0);
+  assert.match(plan.blockedArtifacts.find((item) => item.path.endsWith('daily-person-news.json')).reason, /Dependency/);
+});
+
+test('stale or mismatched log evidence blocks the run', (t) => {
+  const f = fixture(t);
+  Object.assign(f.manifest.logs[0], f.write(f.manifest.logs[0].path, {
+    runId: '20260801T100000Z',
+    startedAt: '2026-08-01T10:00:00Z',
+    finishedAt: '2026-08-01T10:01:00Z',
+    steps: [],
+  }));
+  f.save();
+  const plan = planMonitorReview(f.runDir, f);
+  assert.equal(plan.eligibleArtifacts.length, 0);
+  assert.match(plan.errors.join(), /runId|outside this run/);
 });
 
 test('command-stage artifact count is not confused with final supplemental count', (t) => {
@@ -124,8 +154,12 @@ test('weekly degraded sync does not block independently successful news', (t) =>
   const f = fixture(t);
   f.summary.kind = 'weekly';
   f.summary.steps = [
-    { name: 'weekly-person-news', status: 'ok', exitCode: 0 },
-    { name: 'real-public-data', status: 'ok', exitCode: 0, result: { status: 'degraded' } },
+    { name: 'environment', status: 'ok' },
+    { name: 'weekly-person-news', status: 'ok', exitCode: 0,
+      startedAt: '2026-09-04T10:00:05Z', finishedAt: '2026-09-04T10:01:00Z' },
+    { name: 'real-public-data', status: 'ok', exitCode: 0,
+      startedAt: '2026-09-04T10:00:05Z', finishedAt: '2026-09-04T10:01:00Z',
+      result: { status: 'degraded' } },
   ];
   f.manifest.artifacts[0].path = 'tmp/weekly-monitor/weekly-person-news.json';
   Object.assign(f.manifest.logs[0], f.write(f.manifest.logs[0].path, { steps: f.summary.steps }));

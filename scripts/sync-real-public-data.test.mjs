@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {
   applyReviewedCandidateResultOverride,
+  buildCurrentOfficeholders,
   buildPartyRegistryProfile,
   buildEnrichmentPartyAffiliationRows,
   buildSourcePersonRows,
@@ -13,6 +16,7 @@ import {
   historicalCecAggregateResultKey,
   isHistoricalCecAggregateResultRow,
   isHistoricalCecNationalResult,
+  loadCurrentOfficeholders,
   scoreClaim,
   summarizeLiveSourceHealth,
   supabaseRequest,
@@ -59,6 +63,40 @@ assert.deepEqual(
     degradedSources: [{ name: 'LY current officeholders', status: 'fallback', error: 'TLS failed' }],
   },
 );
+
+const currentOfficeholderSource = {
+  id: 'ly-current-legislators',
+  url: 'https://www.ly.gov.tw/',
+  downloadUrl: 'https://example.test/legislators.json',
+};
+assert.throws(
+  () => buildCurrentOfficeholders({ dataList: [] }, currentOfficeholderSource),
+  /no current legislators/,
+);
+
+const sourceStateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pow-current-officeholders-'));
+const sourceStatePath = path.join(sourceStateDir, 'source-health.json');
+let invalidRosterFetches = 0;
+const fixedNow = () => Date.parse('2026-09-04T10:00:00Z');
+try {
+  const options = {
+    statePath: sourceStatePath,
+    now: fixedNow,
+    sleep: async () => {},
+    fetchPayload: async () => {
+      invalidRosterFetches += 1;
+      return { dataList: [] };
+    },
+  };
+  await assert.rejects(loadCurrentOfficeholders(currentOfficeholderSource, options), /no current legislators/);
+  const sourceState = JSON.parse(fs.readFileSync(sourceStatePath, 'utf8'));
+  assert.equal(sourceState.sources['ly-current-legislators'].status, 'blocked');
+  assert.ok(sourceState.sources['ly-current-legislators'].nextCheckAt);
+  await assert.rejects(loadCurrentOfficeholders(currentOfficeholderSource, options), /deferred/);
+  assert.equal(invalidRosterFetches, 1);
+} finally {
+  fs.rmSync(sourceStateDir, { recursive: true, force: true });
+}
 
 const originalFetch = globalThis.fetch;
 let publishedRpcRequest;

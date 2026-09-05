@@ -1,10 +1,14 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import test from 'node:test';
 
 import {
   compactStepResult,
   parseArgs,
   parseJsonOutput,
+  runNodeStep,
   summarizeWeeklyResults,
 } from './run-weekly-monitor.mjs';
 
@@ -15,6 +19,20 @@ test('uses a local ignored weekly output directory by default', () => {
 test('parses structured step output without guessing mixed logs', () => {
   assert.deepEqual(parseJsonOutput('{"status":"ok","count":2}'), { status: 'ok', count: 2 });
   assert.equal(parseJsonOutput('progress\n{"status":"ok"}'), null);
+});
+
+
+test('records the execution window for weekly step provenance', async (t) => {
+  const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pow-weekly-step-'));
+  t.after(() => fs.rmSync(outputDir, { recursive: true, force: true }));
+  const before = Date.now();
+  const result = await runNodeStep('timestamp-evidence', ['-e', "console.log('{}')"], outputDir);
+  const after = Date.now();
+  assert.equal(result.status, 'ok');
+  assert.ok(Date.parse(result.startedAt) >= before && Date.parse(result.startedAt) <= after);
+  assert.ok(Date.parse(result.finishedAt) >= Date.parse(result.startedAt));
+  assert.ok(Date.parse(result.finishedAt) <= after);
+  assert.ok(fs.existsSync(path.join(outputDir, 'logs', 'timestamp-evidence.log')));
 });
 
 test('weekly summary preserves failed step names for review', () => {

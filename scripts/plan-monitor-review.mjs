@@ -30,6 +30,18 @@ const weeklyProducers = {
 };
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
+function normalizeSteps(value) {
+  if (Array.isArray(value)) return value;
+  return value && typeof value === 'object'
+    ? Object.entries(value).map(([name, step]) => ({ name, ...step }))
+    : [];
+}
+
+function timestampBelongsToRun(value, started, archived) {
+  const timestamp = Date.parse(value);
+  return Number.isFinite(timestamp) && timestamp >= started && timestamp <= archived;
+}
+
 function readVerifiedFile(root, runDir, entry, archived) {
   const file = fs.realpathSync(path.resolve(root, archived ? entry.archivePath : entry.path));
   const relative = path.relative(fs.realpathSync(runDir), file);
@@ -59,28 +71,50 @@ export function planMonitorReview(runDir, { root = repoRoot, now = Date.now() } 
   if (!['daily', 'weekly'].includes(summary.kind)) result.errors.push('Unknown run kind');
   if (!Array.isArray(manifest.artifacts) || manifest.artifactCount !== manifest.artifacts.length
     || summary.artifactCount !== manifest.artifacts.length) result.errors.push('Final manifest/summary artifact count mismatch');
+  const steps = normalizeSteps(summary.steps);
+  const findStep = (name) => steps.find((step) => (step.name ?? step.scriptName) === name);
+  result.blockedSteps = steps.filter((step) => resultNeedsAttention(step) || resultNeedsAttention(step.result))
+    .map((step) => ({ name: step.name ?? step.scriptName, status: step.status, reason: step.error ?? step.reason ?? step.blocker ?? null }));
+  const environmentStep = findStep('environment');
+  if (!environmentStep || environmentStep.status !== 'ok') result.errors.push('Environment preflight evidence is missing or failed');
+
   const logResults = [];
   if (!manifest.logs?.length) result.errors.push('No hashed logs; provenance needs manual reconstruction');
   for (const log of manifest.logs ?? []) {
     try {
+      if (!timestampBelongsToRun(log.mtime, started, archived)) throw new Error('Log mtime is outside this run');
       const parsed = parseLastJsonOutput(readVerifiedFile(root, runDir, log, false));
-      if (parsed) logResults.push(parsed);
+      if (!parsed) continue;
+      if (parsed.runId && parsed.runId !== summary.runId) throw new Error('Log runId does not match this run');
+      for (const key of ['startedAt', 'finishedAt', 'generatedAt', 'checkedAt', 'fetchedAt']) {
+        if (parsed[key] && !timestampBelongsToRun(parsed[key], started, archived)) {
+          throw new Error('Log ' + key + ' is outside this run');
+        }
+      }
+      for (const step of normalizeSteps(parsed.steps)) {
+        if (step.runId && step.runId !== summary.runId) throw new Error('Log step runId does not match this run');
+        if (step.startedAt && !timestampBelongsToRun(step.startedAt, started, archived)) throw new Error('Log step startedAt is outside this run');
+        if (step.finishedAt && !timestampBelongsToRun(step.finishedAt, started, archived)) throw new Error('Log step finishedAt is outside this run');
+      }
+      logResults.push(parsed);
     } catch (error) { result.errors.push('Log: ' + error.message); }
   }
-  const steps = Array.isArray(summary.steps) ? summary.steps
-    : Object.entries(summary.steps ?? {}).map(([name, value]) => ({ name, ...value }));
-  const findStep = (name) => steps.find((step) => (step.name ?? step.scriptName) === name);
-  result.blockedSteps = steps.filter((step) => resultNeedsAttention(step) || resultNeedsAttention(step.result))
-    .map((step) => ({ name: step.name ?? step.scriptName, status: step.status, reason: step.error ?? step.reason ?? step.blocker ?? null }));
-  if (findStep('environment') && findStep('environment').status !== 'ok') result.errors.push('Environment preflight failed');
-  const terminalSteps = logResults.flatMap((log) => Array.isArray(log.steps) ? log.steps
-    : log.scriptName || log.name ? [log] : []);
+  const terminalSteps = logResults.flatMap((log) => {
+    const nested = normalizeSteps(log.steps);
+    return nested.length ? nested : log.scriptName || log.name ? [log] : [];
+  });
   if (result.errors.length) return result;
   const seen = new Set();
   for (const entry of manifest.artifacts) {
-    const item = { path: entry.path, archivePath: entry.archivePath, sha256: entry.sha256 };
+    const item = {
+      path: entry.path,
+      archivePath: entry.archivePath,
+      sha256: entry.sha256,
+      dependencies: Array.isArray(entry.dependencies) ? entry.dependencies : [],
+    };
     try {
       if (seen.has(entry.archivePath) || seen.has(entry.path)) throw new Error('Duplicate manifest entry');
+      if (entry.dependencies != null && !Array.isArray(entry.dependencies)) throw new Error('Malformed artifact dependencies');
       seen.add(entry.archivePath);
       seen.add(entry.path);
       const payload = JSON.parse(readVerifiedFile(root, runDir, entry, true));
@@ -94,6 +128,11 @@ export function planMonitorReview(runDir, { root = repoRoot, now = Date.now() } 
       const declared = findStep(producer) ?? findStep(parent);
       const logged = terminalSteps.find((step) => (step.scriptName ?? step.name) === parent);
       if (!producer || !declared || !logged) throw new Error('Missing producer/log evidence; manual verification required');
+      if (!timestampBelongsToRun(logged.startedAt, started, archived)
+        || !timestampBelongsToRun(logged.finishedAt, started, archived)
+        || Date.parse(logged.startedAt) > Date.parse(logged.finishedAt)) {
+        throw new Error('Producer log is not tied to this run time window');
+      }
       if (declared.status !== 'ok' || resultNeedsAttention(declared) || resultNeedsAttention(declared.result)
         || logged.status !== 'ok' || logged.exitCode !== 0 || resultNeedsAttention(logged)
         || resultNeedsAttention(logged.result)) throw new Error('Producer failed/degraded or log disagrees');
@@ -104,6 +143,22 @@ export function planMonitorReview(runDir, { root = repoRoot, now = Date.now() } 
       result.blockedArtifacts.push({ ...item, reason: error.message });
     }
   }
+  let dependencyChanged = true;
+  while (dependencyChanged) {
+    dependencyChanged = false;
+    const eligiblePaths = new Set(result.eligibleArtifacts.map((item) => item.path));
+    for (const item of [...result.eligibleArtifacts]) {
+      const blockedDependency = item.dependencies.find((dependency) => !eligiblePaths.has(dependency));
+      if (!blockedDependency) continue;
+      result.eligibleArtifacts = result.eligibleArtifacts.filter((candidate) => candidate !== item);
+      result.blockedArtifacts.push({
+        ...item,
+        reason: 'Dependency is missing or blocked: ' + blockedDependency,
+      });
+      dependencyChanged = true;
+    }
+  }
+
   if (fs.existsSync(path.join(runDir, 'command-result.json'))) {
     const command = JSON.parse(fs.readFileSync(path.join(runDir, 'command-result.json'), 'utf8'));
     if (command.artifactCount !== manifest.artifactCount) result.warnings.push('Command-stage count differs from final manifest; supplemental artifacts need their own provenance, not a rewritten command log');

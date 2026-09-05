@@ -60,7 +60,8 @@ function compactStepResult(payload) {
 }
 
 function runNodeStep(name, args, outputDir) {
-  const startedAt = Date.now();
+  const startedAtMs = Date.now();
+  const startedAt = new Date(startedAtMs).toISOString();
   return new Promise((resolve) => {
     const child = spawn(process.execPath, args, {
       cwd: repoRoot,
@@ -73,7 +74,15 @@ function runNodeStep(name, args, outputDir) {
     child.stdout.on('data', (chunk) => { stdout += chunk; });
     child.stderr.on('data', (chunk) => { stderr += chunk; });
     child.on('error', (error) => {
-      resolve({ name, status: 'failed', exitCode: null, durationMs: Date.now() - startedAt, error: error.message });
+      resolve({
+        name,
+        status: 'failed',
+        exitCode: null,
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        durationMs: Date.now() - startedAtMs,
+        error: error.message,
+      });
     });
     child.on('close', (exitCode) => {
       const logsDir = path.join(outputDir, 'logs');
@@ -83,7 +92,9 @@ function runNodeStep(name, args, outputDir) {
         name,
         status: exitCode === 0 ? 'ok' : 'failed',
         exitCode,
-        durationMs: Date.now() - startedAt,
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        durationMs: Date.now() - startedAtMs,
         result: compactStepResult(parseJsonOutput(stdout)),
         error: exitCode === 0 ? null : stderr.trim() || stdout.trim() || `Exited with ${exitCode}`,
       });
@@ -223,4 +234,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { compactStepResult, parseArgs, parseJsonOutput, summarizeWeeklyResults };
+export { compactStepResult, parseArgs, parseJsonOutput, runNodeStep, summarizeWeeklyResults };

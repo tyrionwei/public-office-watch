@@ -41,47 +41,53 @@ function expandStationNumberRanges(value: string) {
 }
 
 export function dedupePollingPlaces(places: PollingPlace[]) {
-  const venues = new Map<string, PollingPlace>();
+  const venues = new Map<string, PollingPlace[]>();
 
   for (const place of places) {
     const key = venueKey(place);
-    const existing = venues.get(key);
-    if (!existing) {
-      venues.set(key, { ...place, neighborhoods: [...place.neighborhoods] });
-      continue;
-    }
+    const matches = venues.get(key);
+    if (matches) matches.push(place);
+    else venues.set(key, [place]);
+  }
 
+  return Array.from(venues.values()).map((matches) => {
+    const first = matches[0];
     const stationNumbers = Array.from(new Set(
-      [...expandStationNumberRanges(existing.station_no), ...expandStationNumberRanges(place.station_no)],
+      matches.flatMap((place) => expandStationNumberRanges(place.station_no)),
     )).sort((left, right) => left.localeCompare(right, 'zh-Hant-TW', { numeric: true }));
     const numericStationNumbers = stationNumbers.every((value) => /^\d+$/.test(value))
       ? stationNumbers.map(Number)
       : null;
-    const neighborhoods = Array.from(new Set([...existing.neighborhoods, ...place.neighborhoods]))
+    const neighborhoods = Array.from(new Set(matches.flatMap((place) => place.neighborhoods)))
       .sort((left, right) => left - right);
-    const rawNeighborhoods = Array.from(new Set(
-      [existing.raw_neighborhoods, place.raw_neighborhoods].map((value) => value.trim()).filter(Boolean),
-    ));
-    const coverageKind = existing.coverage_kind === 'ambiguous' || place.coverage_kind === 'ambiguous'
+    const coverageKind: PollingPlace['coverage_kind'] = matches.some((place) => place.coverage_kind === 'ambiguous')
       ? 'ambiguous'
-      : existing.coverage_kind === 'whole_village' || place.coverage_kind === 'whole_village'
+      : matches.some((place) => place.coverage_kind === 'whole_village')
         ? 'whole_village'
-        : existing.coverage_kind === 'unpartitioned' || place.coverage_kind === 'unpartitioned'
+        : matches.some((place) => place.coverage_kind === 'unpartitioned')
           ? 'unpartitioned'
           : 'neighborhoods';
+    const rawNeighborhoods = coverageKind === 'ambiguous'
+      ? matches
+        .map((place) => place.raw_neighborhoods.trim()
+          ? `${place.station_no}：${place.raw_neighborhoods.trim()}`
+          : '')
+        .filter(Boolean)
+        .join('\n')
+      : neighborhoods.length > 0
+        ? formatNumberRanges(neighborhoods) + '鄰'
+        : Array.from(new Set(matches.map((place) => place.raw_neighborhoods.trim()).filter(Boolean))).join('、');
 
-    venues.set(key, {
-      ...existing,
+    return {
+      ...first,
       station_no: numericStationNumbers
         ? formatNumberRanges(numericStationNumbers, Math.max(...stationNumbers.map((value) => value.length)))
         : stationNumbers.join('、'),
       coverage_kind: coverageKind,
       neighborhoods,
-      raw_neighborhoods: neighborhoods.length > 0 ? formatNumberRanges(neighborhoods) + '鄰' : rawNeighborhoods.join('、'),
-    });
-  }
-
-  return Array.from(venues.values());
+      raw_neighborhoods: rawNeighborhoods,
+    };
+  });
 }
 
 export function matchPollingPlaces(places: PollingPlace[], neighborhood?: number) {

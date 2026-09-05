@@ -36,6 +36,22 @@ test('same polling venue is shown once with station numbers and neighborhoods me
  assert.equal(range.station_no,'0001–0004');
 });
 
+test('ambiguous polling venues preserve each station-specific official condition', () => {
+ const [merged]=dedupePollingPlaces([
+  {...place,station_no:'0073',neighborhoods:[1,2,3,4,5],raw_neighborhoods:'1-5'},
+  {...place,id:'b',station_no:'0074',coverage_kind:'ambiguous',neighborhoods:[],raw_neighborhoods:'6-8\n(8\u9130\u4e0d\u542b\u9015\u9077\u6236\u53e3)'},
+  {...place,id:'c',station_no:'0075',coverage_kind:'ambiguous',neighborhoods:[],raw_neighborhoods:'8-10\n(8\u9130\u50c5\u542b\u9015\u9077\u6236\u53e3)'},
+ ]);
+ assert.equal(merged.station_no,'0073\u20130075');
+ assert.equal(merged.coverage_kind,'ambiguous');
+ assert.deepEqual(merged.neighborhoods,[1,2,3,4,5]);
+ assert.equal(
+  merged.raw_neighborhoods,
+  '0073\uFF1A1-5\n0074\uFF1A6-8\n(8\u9130\u4e0d\u542b\u9015\u9077\u6236\u53e3)\n0075\uFF1A8-10\n(8\u9130\u50c5\u542b\u9015\u9077\u6236\u53e3)',
+ );
+ assert.equal(matchPollingPlaces([merged],5).exact,false);
+});
+
 test('polling RPC sends only event and village; oversized responses fail closed', async () => {
  const calls: unknown[]=[];
  let rows: unknown[]=[place];

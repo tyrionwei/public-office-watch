@@ -14,7 +14,7 @@ const reconciledPersonIds = new Map([
 ]);
 const cohort=manifest.filter(x=>x.candidateId).map(x=>{
  const originalPersonId=prepared.get(x.candidateExternalId).decision.personId??x.personId;
- return {...x,canonicalPersonId:rehearsal?originalPersonId:(reconciledPersonIds.get(originalPersonId)??originalPersonId),raceId:prepared.get(x.candidateExternalId).race.id};
+ return {...x,canonicalPersonId:reconciledPersonIds.get(originalPersonId)??originalPersonId,raceId:prepared.get(x.candidateExternalId).race.id};
 });
 const env=Object.fromEntries(fs.readFileSync(rehearsal?'apps/web/.env.rehearsal.local':'apps/web/.env.local','utf8').split(/\r?\n/).filter(x=>x.includes('=')&&!x.startsWith('#')).map(x=>[x.slice(0,x.indexOf('=')),x.slice(x.indexOf('=')+1).trim().replace(/^["']|["']$/g,'')]));
 const origin=env.VITE_SUPABASE_URL;

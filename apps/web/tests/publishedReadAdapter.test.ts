@@ -32,6 +32,7 @@ import {
   PERSON_PROFILE_BATCH_LIMIT,
   PUBLIC_UPDATE_COLUMNS,
   PUBLIC_UPDATE_LIMIT,
+  REGION_RACE_LIMIT,
   RACE_DETAIL_CANDIDATE_LIMIT,
   RACE_DETAIL_PARTY_LIST_CANDIDATE_LIMIT,
   RACE_DETAIL_PARTY_LIST_RESULT_LIMIT,
@@ -369,6 +370,28 @@ test('region page uses one slug-scoped RPC and bounds payload collections', asyn
     ['schema', 'published'],
     ['rpc', 'region_page_for', { p_region_slug: 'taipei' }],
   ]);
+});
+
+test('region page accepts the database 25-race cap and rejects larger payloads', async () => {
+  const payloadFor = (count: number) => ({
+    ...payloadMetadata,
+    region_row: null,
+    summary_row: null,
+    child_region_rows: [],
+    race_rows: Array.from({ length: count }, (_, index) => ({ race_id: `race-${index + 1}` })),
+  });
+  const accepted = createFakeClient({
+    'rpc:region_page_for': { data: [{ payload: payloadFor(REGION_RACE_LIMIT) }], error: null, count: null },
+  });
+  const oversized = createFakeClient({
+    'rpc:region_page_for': { data: [{ payload: payloadFor(REGION_RACE_LIMIT + 1) }], error: null, count: null },
+  });
+
+  assert.equal((await createPublishedReadAdapter(accepted.client).loadRegionPage('kaohsiung-city')).raceRows.length, REGION_RACE_LIMIT);
+  await assert.rejects(
+    createPublishedReadAdapter(oversized.client).loadRegionPage('kaohsiung-city'),
+    /Published region races exceeded the 25-row batch limit/,
+  );
 });
 
 test('election index uses one bounded RPC payload', async () => {

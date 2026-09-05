@@ -39,7 +39,7 @@ import {
 } from './publicReadContracts.ts';
 
 export const HOME_REGION_LIMIT = 32;
-export const HOME_RACE_LIMIT = 24;
+export const HOME_RACE_LIMIT = 25;
 export const HOME_CANDIDATE_SUMMARY_LIMIT = 400;
 export const REGION_CHILD_LIMIT = 64;
 export const REGION_RACE_LIMIT = 24;

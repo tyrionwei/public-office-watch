@@ -7,6 +7,7 @@ import {
   ELECTION_PARTY_PERFORMANCE_LIMIT,
   ELECTION_RACE_PAGE_ELECTION_LIMIT,
   ELECTION_RACE_PAGE_SIZE,
+  HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
   LOCAL_OFFICE_PERSON_LIMIT,
   LEGISLATOR_PARTY_SUMMARY_COLUMNS,
@@ -303,6 +304,30 @@ test('home page adds plain registration names only for its 2026 races', async ()
     ['in', 'region_type', ['country', 'municipality', 'county', 'city']],
   ]);
   assert.equal(JSON.stringify(payload).includes('birth_date'), false);
+});
+
+test('home page accepts the database 25-race cap and rejects larger payloads', async () => {
+  const payloadFor = (count: number) => ({
+    ...payloadMetadata,
+    ticker_rows: [],
+    region_summary_rows: [],
+    region_rows: [],
+    race_rows: Array.from({ length: count }, (_, index) => ({ race_id: `race-${index + 1}`, title: `選舉 ${index + 1}` })),
+    candidate_rows: [],
+    seat_rows: [],
+  });
+  const accepted = createFakeClient({
+    'rpc:home_page_for': { data: [{ payload: payloadFor(HOME_RACE_LIMIT) }], error: null, count: null },
+  });
+  const oversized = createFakeClient({
+    'rpc:home_page_for': { data: [{ payload: payloadFor(HOME_RACE_LIMIT + 1) }], error: null, count: null },
+  });
+
+  assert.equal((await createPublishedReadAdapter(accepted.client).loadHomePage()).raceRows.length, HOME_RACE_LIMIT);
+  await assert.rejects(
+    createPublishedReadAdapter(oversized.client).loadHomePage(),
+    /Published home races exceeded the 25-row batch limit/,
+  );
 });
 
 test('region page uses one slug-scoped RPC and bounds payload collections', async () => {

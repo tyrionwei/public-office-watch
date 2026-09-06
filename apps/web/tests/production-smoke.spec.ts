@@ -100,7 +100,9 @@ test('production routes load real public data without application failures', asy
   await expect(page.getByRole('heading', { name: '大選總覽' })).toBeVisible();
 
   await page.goto(knownRacePath);
-  const raceBadgeLabels = await page.locator('[data-race-badges] > span').allTextContents();
+  const raceBadges = page.locator('[data-race-badges]');
+  await expect(raceBadges).toBeVisible();
+  const raceBadgeLabels = await raceBadges.locator(':scope > span').allTextContents();
   expect(raceBadgeLabels.length).toBeGreaterThan(1);
   expect(new Set(raceBadgeLabels).size).toBe(raceBadgeLabels.length);
 

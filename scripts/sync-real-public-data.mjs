@@ -2135,7 +2135,8 @@ function buildCurrentOfficeholders(payload, source) {
 }
 
 async function loadCurrentOfficeholders(source, {
-  statePath = path.join(repoRoot, 'tmp', 'monitor-source-health.json'),
+  stateDirectory = path.join(repoRoot, 'tmp', 'monitor-source-health'),
+  legacyStatePath = path.join(repoRoot, 'tmp', 'monitor-source-health.json'),
   fetchPayload = async () => parseJsonPayload(await fetchText(source.downloadUrl)),
   now,
   sleep,
@@ -2143,7 +2144,8 @@ async function loadCurrentOfficeholders(source, {
   return withSourceRetry({
     key: source.id,
     url: source.downloadUrl,
-    statePath,
+    stateDirectory,
+    legacyStatePath,
     ...(now ? { now } : {}),
     ...(sleep ? { sleep } : {}),
     operation: async () => buildCurrentOfficeholders(await fetchPayload(), source),

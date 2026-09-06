@@ -1,9 +1,11 @@
 import { spawn } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const defaultLockPath = path.join(repoRoot, 'tmp', 'monitor-locks', 'weekly.lock');
 const taiwanForwardSlugs = [
   'new-power-party',
   'taiwan-statebuilding-party',
@@ -21,14 +23,132 @@ function parseArgs(argv) {
   return options;
 }
 
-function parseJsonOutput(stdout) {
-  const text = String(stdout ?? '').trim();
-  if (!text) return null;
+function isProcessAlive(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
   try {
-    return JSON.parse(text);
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return error?.code === 'EPERM';
+  }
+}
+
+function readRunLock(lockPath) {
+  try {
+    const lock = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+    const pid = Number(lock?.pid);
+    return Number.isInteger(pid) && pid > 0 && typeof lock?.token === 'string' ? lock : null;
   } catch {
     return null;
   }
+}
+
+function tryCreateRunLock(lockPath, lock) {
+  const temporary = lockPath + '.' + process.pid + '.' + lock.token + '.tmp';
+  try {
+    fs.writeFileSync(temporary, `${JSON.stringify(lock)}\n`, { flag: 'wx' });
+    try {
+      fs.linkSync(temporary, lockPath);
+      return true;
+    } catch (error) {
+      if (error?.code === 'EEXIST') return false;
+      throw error;
+    }
+  } finally {
+    fs.rmSync(temporary, { force: true });
+  }
+}
+
+function ensureLockCanBeReclaimed(lockPath, label) {
+  const existing = readRunLock(lockPath);
+  if (existing && isProcessAlive(Number(existing.pid))) {
+    throw new Error(`${label} monitor is already running with PID ${existing.pid}.`);
+  }
+  if (existing) return true;
+
+  let ageMs;
+  try {
+    ageMs = Date.now() - fs.statSync(lockPath).mtimeMs;
+  } catch (error) {
+    if (error?.code === 'ENOENT') return false;
+    throw error;
+  }
+  if (ageMs < 30_000) {
+    throw new Error(`${label} monitor lock is still being acquired.`);
+  }
+  return true;
+}
+
+function acquireRunLock(lockPath = defaultLockPath) {
+  fs.mkdirSync(path.dirname(lockPath), { recursive: true });
+  const label = 'Weekly';
+  const lock = {
+    pid: process.pid,
+    token: randomUUID(),
+    startedAt: new Date().toISOString(),
+  };
+  const recoveryPath = lockPath + '.reclaim';
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    if (fs.existsSync(recoveryPath)) {
+      const recovery = readRunLock(recoveryPath);
+      if (recovery && isProcessAlive(Number(recovery.pid))) {
+        throw new Error(`${label} monitor lock recovery is already running with PID ${recovery.pid}.`);
+      }
+      if (fs.existsSync(recoveryPath)) {
+        throw new Error(`${label} monitor has a stale lock recovery marker: ${recoveryPath}`);
+      }
+      continue;
+    }
+
+    if (tryCreateRunLock(lockPath, lock)) return lock;
+    if (!ensureLockCanBeReclaimed(lockPath, label)) continue;
+
+    const recoveryLock = {
+      pid: process.pid,
+      token: randomUUID(),
+      startedAt: new Date().toISOString(),
+    };
+    if (!tryCreateRunLock(recoveryPath, recoveryLock)) continue;
+
+    try {
+      if (!ensureLockCanBeReclaimed(lockPath, label)) continue;
+      fs.rmSync(lockPath, { force: true });
+      if (tryCreateRunLock(lockPath, lock)) return lock;
+
+      const replacement = readRunLock(lockPath);
+      if (replacement && isProcessAlive(Number(replacement.pid))) {
+        throw new Error(`${label} monitor is already running with PID ${replacement.pid}.`);
+      }
+      throw new Error(`Unable to acquire the ${label.toLowerCase()} monitor lock after reclaiming it.`);
+    } finally {
+      releaseRunLock(recoveryPath, recoveryLock.token);
+    }
+  }
+
+  throw new Error(`Unable to acquire the ${label.toLowerCase()} monitor lock.`);
+}
+
+function releaseRunLock(lockPath = defaultLockPath, token) {
+  const existing = readRunLock(lockPath);
+  if (!existing || existing.token !== token) return false;
+  fs.rmSync(lockPath, { force: true });
+  return true;
+}
+
+function parseJsonOutput(stdout) {
+  const text = String(stdout ?? '').trim();
+  let index = text.lastIndexOf('{');
+  while (index >= 0) {
+    try {
+      return JSON.parse(text.slice(index));
+    } catch {
+      // Child steps may print progress before their final structured result.
+    }
+    if (index === 0) break;
+    index = text.lastIndexOf('{', index - 1);
+  }
+  return null;
 }
 
 function compactStepResult(payload) {
@@ -125,8 +245,7 @@ function previousArgs(filePath) {
   return fs.existsSync(filePath) ? ['--previous', filePath] : [];
 }
 
-async function main() {
-  const options = parseArgs(process.argv.slice(2));
+async function runWeeklyMonitor(options = parseArgs(process.argv.slice(2))) {
   fs.mkdirSync(options.outputDir, { recursive: true });
   const steps = [];
   const run = async (name, args) => {
@@ -225,6 +344,16 @@ async function main() {
   fs.writeFileSync(path.join(options.outputDir, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
   console.log(JSON.stringify(summary, null, 2));
   if (summary.needsAttention) process.exitCode = 1;
+  return summary;
+}
+
+async function main() {
+  const lock = acquireRunLock();
+  try {
+    return await runWeeklyMonitor();
+  } finally {
+    releaseRunLock(defaultLockPath, lock.token);
+  }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
@@ -234,4 +363,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { compactStepResult, parseArgs, parseJsonOutput, runNodeStep, summarizeWeeklyResults };
+export {
+  acquireRunLock,
+  compactStepResult,
+  parseArgs,
+  parseJsonOutput,
+  releaseRunLock,
+  runNodeStep,
+  runWeeklyMonitor,
+  summarizeWeeklyResults,
+};

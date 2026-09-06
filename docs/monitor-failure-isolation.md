@@ -5,15 +5,15 @@
 ## 蒐集
 
 - 每日四個獨立主步驟依序執行；來源失敗不阻止其他獨立步驟。人物研究內部有相依性的準備、搜尋、Wikidata、輪替記錄仍維持原本順序與失敗門檻。
-- 環境衝突、併行寫入、程序仍在執行及無法保存證據仍是整批停止條件。
+- 環境衝突、併行寫入、程序仍在執行及無法保存證據仍是整批停止條件。每日與每週分別使用 `tmp/monitor-locks/daily.lock`、`tmp/monitor-locks/weekly.lock`，同一週期已有存活程序時拒絕重疊執行；回收失效主鎖前先取得獨立的原子回收鎖並重新驗證，避免刪除其他程序剛建立的新鎖。回收程序中斷留下的 `.reclaim` 標記採保守停止，須確認沒有存活程序後再人工清理。
 - `tmp/daily-monitor/summary.json` 保存機器產生的主步驟結果；`tmp/daily-monitor/logs/` 保存逐步 log。每週沿用 `tmp/weekly-monitor/summary.json` 與 logs。
-- 不把降級改成成功：每日與每週有失敗／降級仍以非零狀態結束；每週 passedCount 不包含 degradedCount。
+- 不把降級改成成功：每日與每週有失敗／降級仍以非零狀態結束；每週會從進度文字後方解析最後一段結構化 JSON，因此子步驟即使以 0 結束，回報 degraded／needs_attention 仍會被列入注意；每週 passedCount 不包含 degradedCount。
 - 每個 run 封存時，將主命令 summary、逐步 logs 及其 SHA-256 一起保存。manifest 每項標記 `producerStep`、`commandStep`；兩者分別對應 run summary 的步驟名稱與命令 log 中的原始步驟名稱，不能自行宣稱成功。已存在的歷史 manifest 不回寫。
 - 補充司法／到期追蹤查詢有獨立 producer、開始／完成時間、log 與結果，不能冒用主命令的成功狀態。最後才計算 manifest 與 summary 的 artifactCount；主命令當時的數量另外保留為 commandArtifactCount。不得為湊數修改原始 log 或混入上次產物。
 
 ## 來源重試
 
-立法院現任名冊的安全 HTTPS 查詢使用 `scripts/monitor-source-retry.mjs`，狀態保存在 `tmp/monitor-source-health.json`，每日／每週共同遵守：
+立法院現任名冊的安全 HTTPS 查詢使用 `scripts/monitor-source-retry.mjs`。每個來源各自把狀態原子寫入 `tmp/monitor-source-health/<source-key>.json`，避免同時更新不同來源時互相覆蓋；既有 `tmp/monitor-source-health.json` 只在個別來源檔尚未建立時讀取，以保留原有 cooldown。每日／每週共同遵守：
 
 - 暫時錯誤最多額外重試一次，至少間隔 5 秒並遵守 Retry-After；等待超過 30 秒則不占住程序，保留下一次可查時間。持續暫時失敗最早 30 分鐘後才可再次查，沒有新增高頻排程。
 - TLS 相容性、404/410、403/CAPTCHA 等持續問題只嘗試一次，記錄分類與原網址，七天後才重新探測；期間依然回報來源不可用，不當成成功。網址改動須另行核實官方出處，不猜網址。

@@ -26,6 +26,33 @@ jobs:
       - name: Test polling-place data tools
         run: npm run test:polling-places
 
+  monitor-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test monitor reliability
+        run: |
+          node --test \
+            scripts/monitor-source-retry.test.mjs \
+            scripts/plan-monitor-review.test.mjs \
+            scripts/run-daily-monitor.test.mjs \
+            scripts/run-weekly-monitor.test.mjs \
+            scripts/sync-real-public-data.test.mjs
+
   web-checks:
     runs-on: ubuntu-latest
     defaults:

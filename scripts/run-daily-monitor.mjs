@@ -25,40 +25,98 @@ function isProcessAlive(pid) {
 
 function readRunLock(lockPath) {
   try {
-    return JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+    const lock = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+    const pid = Number(lock?.pid);
+    return Number.isInteger(pid) && pid > 0 && typeof lock?.token === 'string' ? lock : null;
   } catch {
     return null;
   }
 }
 
+function tryCreateRunLock(lockPath, lock) {
+  const temporary = lockPath + '.' + process.pid + '.' + lock.token + '.tmp';
+  try {
+    fs.writeFileSync(temporary, `${JSON.stringify(lock)}\n`, { flag: 'wx' });
+    try {
+      fs.linkSync(temporary, lockPath);
+      return true;
+    } catch (error) {
+      if (error?.code === 'EEXIST') return false;
+      throw error;
+    }
+  } finally {
+    fs.rmSync(temporary, { force: true });
+  }
+}
+
+function ensureLockCanBeReclaimed(lockPath, label) {
+  const existing = readRunLock(lockPath);
+  if (existing && isProcessAlive(Number(existing.pid))) {
+    throw new Error(`${label} monitor is already running with PID ${existing.pid}.`);
+  }
+  if (existing) return true;
+
+  let ageMs;
+  try {
+    ageMs = Date.now() - fs.statSync(lockPath).mtimeMs;
+  } catch (error) {
+    if (error?.code === 'ENOENT') return false;
+    throw error;
+  }
+  if (ageMs < 30_000) {
+    throw new Error(`${label} monitor lock is still being acquired.`);
+  }
+  return true;
+}
+
 function acquireRunLock(lockPath = defaultLockPath) {
   fs.mkdirSync(path.dirname(lockPath), { recursive: true });
+  const label = 'Daily';
   const lock = {
     pid: process.pid,
     token: randomUUID(),
     startedAt: new Date().toISOString(),
   };
+  const recoveryPath = lockPath + '.reclaim';
 
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    if (fs.existsSync(recoveryPath)) {
+      const recovery = readRunLock(recoveryPath);
+      if (recovery && isProcessAlive(Number(recovery.pid))) {
+        throw new Error(`${label} monitor lock recovery is already running with PID ${recovery.pid}.`);
+      }
+      if (fs.existsSync(recoveryPath)) {
+        throw new Error(`${label} monitor has a stale lock recovery marker: ${recoveryPath}`);
+      }
+      continue;
+    }
+
+    if (tryCreateRunLock(lockPath, lock)) return lock;
+    if (!ensureLockCanBeReclaimed(lockPath, label)) continue;
+
+    const recoveryLock = {
+      pid: process.pid,
+      token: randomUUID(),
+      startedAt: new Date().toISOString(),
+    };
+    if (!tryCreateRunLock(recoveryPath, recoveryLock)) continue;
+
     try {
-      const descriptor = fs.openSync(lockPath, 'wx');
-      try {
-        fs.writeFileSync(descriptor, `${JSON.stringify(lock)}\n`);
-      } finally {
-        fs.closeSync(descriptor);
-      }
-      return lock;
-    } catch (error) {
-      if (error?.code !== 'EEXIST') throw error;
-      const existing = readRunLock(lockPath);
-      if (existing && isProcessAlive(Number(existing.pid))) {
-        throw new Error(`Daily monitor is already running with PID ${existing.pid}.`);
-      }
+      if (!ensureLockCanBeReclaimed(lockPath, label)) continue;
       fs.rmSync(lockPath, { force: true });
+      if (tryCreateRunLock(lockPath, lock)) return lock;
+
+      const replacement = readRunLock(lockPath);
+      if (replacement && isProcessAlive(Number(replacement.pid))) {
+        throw new Error(`${label} monitor is already running with PID ${replacement.pid}.`);
+      }
+      throw new Error(`Unable to acquire the ${label.toLowerCase()} monitor lock after reclaiming it.`);
+    } finally {
+      releaseRunLock(recoveryPath, recoveryLock.token);
     }
   }
 
-  throw new Error('Unable to acquire the daily monitor lock.');
+  throw new Error(`Unable to acquire the ${label.toLowerCase()} monitor lock.`);
 }
 
 function releaseRunLock(lockPath = defaultLockPath, token) {
@@ -70,12 +128,15 @@ function releaseRunLock(lockPath = defaultLockPath, token) {
 
 function parseLastJsonOutput(output) {
   const value = String(output ?? '').trim();
-  for (let index = value.lastIndexOf('{'); index >= 0; index = value.lastIndexOf('{', index - 1)) {
+  let index = value.lastIndexOf('{');
+  while (index >= 0) {
     try {
       return JSON.parse(value.slice(index));
     } catch {
       // npm can print banners before the final structured result.
     }
+    if (index === 0) break;
+    index = value.lastIndexOf('{', index - 1);
   }
   return null;
 }

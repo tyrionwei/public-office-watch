@@ -21,6 +21,7 @@ import {
   summarizeLiveSourceHealth,
   supabaseRequest,
 } from './sync-real-public-data.mjs';
+import { sourceHealthStatePath } from './monitor-source-retry.mjs';
 
 const realPublicDataSeed = JSON.parse(fs.readFileSync('data-sources/real-public-data.seed.json', 'utf8'));
 const moiPartyRegistry = realPublicDataSeed.sources.find((source) => source.id === 'moi-party-registry');
@@ -75,12 +76,13 @@ assert.throws(
 );
 
 const sourceStateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pow-current-officeholders-'));
-const sourceStatePath = path.join(sourceStateDir, 'source-health.json');
+const sourceStateDirectory = path.join(sourceStateDir, 'source-health');
 let invalidRosterFetches = 0;
 const fixedNow = () => Date.parse('2026-09-04T10:00:00Z');
 try {
   const options = {
-    statePath: sourceStatePath,
+    stateDirectory: sourceStateDirectory,
+    legacyStatePath: path.join(sourceStateDir, 'legacy-source-health.json'),
     now: fixedNow,
     sleep: async () => {},
     fetchPayload: async () => {
@@ -89,9 +91,12 @@ try {
     },
   };
   await assert.rejects(loadCurrentOfficeholders(currentOfficeholderSource, options), /no current legislators/);
-  const sourceState = JSON.parse(fs.readFileSync(sourceStatePath, 'utf8'));
-  assert.equal(sourceState.sources['ly-current-legislators'].status, 'blocked');
-  assert.ok(sourceState.sources['ly-current-legislators'].nextCheckAt);
+  const sourceState = JSON.parse(fs.readFileSync(
+    sourceHealthStatePath(sourceStateDirectory, 'ly-current-legislators'),
+    'utf8',
+  )).source;
+  assert.equal(sourceState.status, 'blocked');
+  assert.ok(sourceState.nextCheckAt);
   await assert.rejects(loadCurrentOfficeholders(currentOfficeholderSource, options), /deferred/);
   assert.equal(invalidRosterFetches, 1);
 } finally {

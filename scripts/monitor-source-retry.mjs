@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 
 export function classifySourceFailure(error) {
   const parts = [];
@@ -17,21 +18,52 @@ export function classifySourceFailure(error) {
   return 'unknown';
 }
 
+export function sourceHealthStatePath(stateDirectory, key) {
+  if (!/^[a-z0-9][a-z0-9._-]*$/i.test(key)) {
+    throw new Error('Unsafe monitor source key: ' + key);
+  }
+  return path.join(stateDirectory, key + '.json');
+}
+
+function readSourceState(filePath, key, legacyStatePath) {
+  if (fs.existsSync(filePath)) {
+    const state = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    if (state?.schemaVersion !== 1 || state?.source?.key !== key) {
+      throw new Error('Invalid monitor source health state for ' + key);
+    }
+    return state.source;
+  }
+
+  if (!legacyStatePath || !fs.existsSync(legacyStatePath)) return null;
+  const legacyState = JSON.parse(fs.readFileSync(legacyStatePath, 'utf8'));
+  if (legacyState?.schemaVersion !== 1 || typeof legacyState?.sources !== 'object') {
+    throw new Error('Invalid legacy monitor source health state');
+  }
+  return legacyState.sources[key] ?? null;
+}
+
+function saveSourceState(filePath, entry) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  const temporary = filePath + '.' + process.pid + '.' + randomUUID() + '.tmp';
+  try {
+    fs.writeFileSync(temporary, JSON.stringify({ schemaVersion: 1, source: entry }, null, 2) + '\n');
+    fs.renameSync(temporary, filePath);
+  } finally {
+    fs.rmSync(temporary, { force: true });
+  }
+}
+
 // Source health is separate from person cooldowns and never rejects a person.
-export async function withSourceRetry({ key, url, statePath, operation, now = () => Date.now(),
+// Each source owns one atomic state file so unrelated monitor processes cannot
+// overwrite one another's retry status.
+export async function withSourceRetry({ key, url, stateDirectory, legacyStatePath, operation, now = () => Date.now(),
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)) }) {
-  const state = fs.existsSync(statePath) ? JSON.parse(fs.readFileSync(statePath, 'utf8')) : { schemaVersion: 1, sources: {} };
-  const previous = state.sources[key];
+  const filePath = sourceHealthStatePath(stateDirectory, key);
+  const previous = readSourceState(filePath, key, legacyStatePath);
   if (previous?.url === url && previous.status === 'blocked' && Date.parse(previous.nextCheckAt) > now()) {
     throw Object.assign(new Error('Source retry deferred until ' + previous.nextCheckAt + ': ' + previous.error), { sourceRetry: previous });
   }
-  const save = (entry) => {
-    state.sources[key] = entry;
-    fs.mkdirSync(path.dirname(statePath), { recursive: true });
-    const temporary = statePath + '.' + process.pid + '.tmp';
-    fs.writeFileSync(temporary, JSON.stringify(state, null, 2) + '\n');
-    fs.renameSync(temporary, statePath);
-  };
+  const save = (entry) => saveSourceState(filePath, entry);
   let result;
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {

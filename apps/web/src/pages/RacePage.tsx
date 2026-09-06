@@ -237,6 +237,8 @@ export function RacePage() {
     : referendumQuestion?.result_status === 'not_passed'
       ? t('race.referendumNotPassed')
       : t('race.referendumPending');
+  const raceStatusLabel = translateRaceStatus(race.status, t);
+  const electionStatusLabel = election ? translateElectionStatus(election.status, t) : null;
 
   return (
     <AppShell>
@@ -260,10 +262,12 @@ export function RacePage() {
               <p className="mt-3 text-sm leading-6 text-slate-300">
                 {eventTitle} · {translateRaceCategory(category.key, t)} · {region.label}
               </p>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
+              <div data-race-badges className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
                 <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{translateRaceType(race.race_type, t)}</span>
-                <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{translateRaceStatus(race.status, t)}</span>
-                {election ? <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{translateElectionStatus(election.status, t)}</span> : null}
+                <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{raceStatusLabel}</span>
+                {electionStatusLabel && electionStatusLabel !== raceStatusLabel ? (
+                  <span className="pixel-corners border border-line/70 bg-bg/35 px-2 py-1">{electionStatusLabel}</span>
+                ) : null}
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n';
 import { buildCecPollingPlaceLookupUrl } from '../lib/cecPollingPlaceLookup';
-import { dedupePollingPlaces, matchPollingPlaces, pollingPlaceMapUrl, validNeighborhood } from '../lib/pollingPlace';
+import { pollingPlaceMapUrl, pollingPlacesForDisplay, validNeighborhood } from '../lib/pollingPlace';
 import { publicDataProvider } from '../lib/publicData';
 import type { PollingPlace } from '../types/pollingPlace';
 import { useVotingRegion } from '../votingRegion';
@@ -23,8 +23,8 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose }: { eventKey: str
   }, [eventKey, villageCode, key]);
   if (!preference) return null;
   const current = state?.key === key ? state : null;
-  const places = dedupePollingPlaces(current?.places ?? []);
-  const matching = matchPollingPlaces(places, preference.neighborhood);
+  const places = current?.places ?? [];
+  const matching = pollingPlacesForDisplay(places, preference.neighborhood);
   return (
     <section data-my-polling-place className="pixel-corners border border-line/80 bg-panel p-4">
       <div className="flex items-start justify-between gap-3">

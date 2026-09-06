@@ -98,6 +98,11 @@ export function matchPollingPlaces(places: PollingPlace[], neighborhood?: number
   return matches.length === 1 ? { exact: true, places: matches } : { exact: false, places };
 }
 
+export function pollingPlacesForDisplay(places: PollingPlace[], neighborhood?: number) {
+  const matching = matchPollingPlaces(places, neighborhood);
+  return { ...matching, places: dedupePollingPlaces(matching.places) };
+}
+
 export function pollingPlaceMapUrl(place: Pick<PollingPlace, 'station_name' | 'address'>) {
   return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(place.station_name + ' ' + place.address);
 }

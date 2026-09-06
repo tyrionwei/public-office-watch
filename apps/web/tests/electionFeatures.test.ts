@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { dedupePollingPlaces, matchPollingPlaces, pollingPlaceMapUrl, validNeighborhood } from '../src/lib/pollingPlace.ts';
+import { dedupePollingPlaces, matchPollingPlaces, pollingPlaceMapUrl, pollingPlacesForDisplay, validNeighborhood } from '../src/lib/pollingPlace.ts';
 import { createPublishedReadAdapter, type PublishedSchemaClient } from '../src/lib/publishedReadAdapter.ts';
 import type { PollingPlace } from '../src/types/pollingPlace.ts';
 const place = { id:'a', station_no:'0001', village_code:'65000280003', station_name:'老梅市民活動中心',
@@ -26,7 +26,11 @@ test('same polling venue is shown once with station numbers and neighborhoods me
  assert.equal(merged.station_no,'0001、0002');
  assert.deepEqual(merged.neighborhoods,[1,2,3,4,5,6]);
  assert.equal(merged.raw_neighborhoods,'1–6鄰');
- assert.equal(matchPollingPlaces([merged],6).exact,true);
+ const precise=pollingPlacesForDisplay([{...place,raw_neighborhoods:'1至4鄰'},duplicate],6);
+ assert.equal(precise.exact,true);
+ assert.equal(precise.places.length,1);
+ assert.equal(precise.places[0].station_no,'0002');
+ assert.deepEqual(precise.places[0].neighborhoods,[5,6]);
  const [range]=dedupePollingPlaces([
   {...place,station_no:'0001',neighborhoods:[1]},
   {...place,id:'b',station_no:'0002',neighborhoods:[2]},

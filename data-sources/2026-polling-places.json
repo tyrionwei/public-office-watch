@@ -1,13 +1,21 @@
 {
   "event_key": "2026-local-general-election-day",
   "voting_date": "2026-11-28",
-  "checked_on": "2026-09-04",
+  "checked_on": "2026-09-06",
   "counties": [
     {
       "county_code": "63000",
       "name": "臺北市",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/mect"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/mect",
+      "source_name": "臺北市選舉委員會",
+      "source_url": "https://web.cec.gov.tw/mect/article/64338",
+      "file_url": "https://web.cec.gov.tw/api/file/928007a0-606a-472d-94e7-407c26e93f4c.pdf",
+      "published_on": "2026-08-31",
+      "source_hash": "b70436e036626535d59bf241bc888f1a6de848a81fabc6903f7105e782667a4c",
+      "format": "pdf",
+      "adapter": "cec-pdf-layout-2026",
+      "slug": "taipei"
     },
     {
       "county_code": "65000",
@@ -20,127 +28,377 @@
       "published_on": "2026-08-18",
       "source_hash": "23858ceebfb00ffa4130761d0cb1864a9849377edadaa9cb6773c7f9011e0df1",
       "format": "ods",
-      "adapter": "new-taipei-2026"
+      "adapter": "cec-ods-2026",
+      "slug": "new-taipei",
+      "village_aliases": {
+        "坪林區:石𥕢里": "石曹里",
+        "瑞芳區:濓洞里": "濂洞里",
+        "瑞芳區:濓新里": "濂新里"
+      }
     },
     {
       "county_code": "68000",
       "name": "桃園市",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/tyec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/tyec",
+      "source_name": "桃園市選舉委員會",
+      "source_url": "https://web.cec.gov.tw/tyec/article/64306",
+      "file_url": "https://web.cec.gov.tw/api/file/e8853648-65b8-44e7-b397-085fb3f23c5c.pdf",
+      "published_on": "2026-08-31",
+      "source_hash": "3b7fa307bd810690c61a0a70264835c7b13485889d1a3971c68c7f63b8ee2736",
+      "format": "pdf",
+      "adapter": "cec-pdf-layout-2026",
+      "slug": "taoyuan",
+      "regression_expectations": [
+        {
+          "station_no": "0001",
+          "station_name": "建德國小一年一班",
+          "address": "桃園區大樹里３鄰延平路２６５號",
+          "village_name": "大林里",
+          "raw_neighborhoods": "1-5",
+          "neighborhoods": [1, 2, 3, 4, 5]
+        },
+        {
+          "station_no": "0060",
+          "raw_neighborhoods": "10,14-19,21,22,24-26",
+          "neighborhoods": [10, 14, 15, 16, 17, 18, 19, 21, 22, 24, 25, 26]
+        },
+        {
+          "station_no": "0500",
+          "raw_neighborhoods": "17-19,25,29-32",
+          "neighborhoods": [17, 18, 19, 25, 29, 30, 31, 32]
+        },
+        {
+          "station_no": "0869",
+          "raw_neighborhoods": "1,3-6,9-10,13,16-19,27",
+          "neighborhoods": [1, 3, 4, 5, 6, 9, 10, 13, 16, 17, 18, 19, 27]
+        },
+        {
+          "station_no": "1070",
+          "raw_neighborhoods": "6,7,12-16,30,32,34",
+          "neighborhoods": [6, 7, 12, 13, 14, 15, 16, 30, 32, 34]
+        },
+        {
+          "station_no": "1089",
+          "raw_neighborhoods": "15-16,18-19,21-23,27,30-31",
+          "neighborhoods": [15, 16, 18, 19, 21, 22, 23, 27, 30, 31]
+        }
+      ]
     },
     {
       "county_code": "66000",
       "name": "臺中市",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/tcec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/tcec",
+      "source_name": "臺中市選舉委員會",
+      "source_url": "https://web.cec.gov.tw/tcec/article/64299",
+      "file_url": "https://web.cec.gov.tw/api/file/d7fae9ca-1e54-4e13-b4ac-2ff8b1ba1188.pdf",
+      "published_on": "2026-08-31",
+      "source_hash": "3f66802f43034c8e1108e0c2944b94951a41eabb3b8974449c93df93a6bcb16a",
+      "format": "pdf",
+      "village_aliases": {
+        "大安區:龜里": "龜壳里"
+      },
+      "adapter": "cec-pdf-layout-2026",
+      "slug": "taichung",
+      "regression_expectations": [
+        {
+          "station_no": "1501",
+          "station_name": "中興活動中心",
+          "address": "臺中市南區積善里復新街８９號",
+          "village_name": "德義里",
+          "raw_neighborhoods": "1,6-7,15-18,22",
+          "neighborhoods": [1, 6, 7, 15, 16, 17, 18, 22]
+        }
+      ]
     },
     {
       "county_code": "67000",
       "name": "臺南市",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/tnec"
+      "status": "needs_supplemental_provenance",
+      "official_home": "https://web.cec.gov.tw/tnec",
+      "source_name": "臺南市選舉委員會",
+      "source_url": "https://web.cec.gov.tw/tnec/article/64377",
+      "file_url": "https://web.cec.gov.tw/api/file/688aa7c2-e301-4414-865c-5277cd2aa7c5.pdf",
+      "published_on": "2026-08-31",
+      "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+      "format": "pdf",
+      "reason": "選舉 PDF 第 0366 所地址欄空白；臺南市活動中心官方頁可補地址，但目前資料模型無法保存單列補充來源",
+      "supplemental_address_source": {
+        "station_no": "0366",
+        "station_name": "永樂里活動中心",
+        "address": "臺南市西港區永樂里7鄰大塭寮59之35號",
+        "source_name": "臺南市里社區活動中心",
+        "source_url": "https://tnda.tainan.gov.tw/acthouse/actpage.asp?mainid=%7B6348B09B-0431-4548-9180-DF917C2330D9%7D"
+      }
     },
     {
       "county_code": "64000",
       "name": "高雄市",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/khec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/khec",
+      "source_name": "高雄市選舉委員會",
+      "source_url": "https://web.cec.gov.tw/khec/article/64369",
+      "file_url": "https://web.cec.gov.tw/api/file/f549bc0f-7f25-4087-9070-858db1f188a7.ods",
+      "published_on": "2026-08-31",
+      "source_hash": "71df9f73027be3ab97fa302e80fe93d67cd90bbfc9249ef0936305c8991c6d41",
+      "format": "ods",
+      "adapter": "cec-ods-2026",
+      "slug": "kaohsiung"
     },
     {
       "county_code": "10002",
       "name": "宜蘭縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/ilec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/ilec",
+      "source_name": "宜蘭縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/ilec/article/64288",
+      "file_url": "https://web.cec.gov.tw/api/file/9b59fe90-0265-4006-8214-af4e2d205811.ods",
+      "published_on": "2026-08-31",
+      "source_hash": "84723cc8ed17fab4fb2b131d77bf4c2627ede65ca40aeef611ef4f231afed7ac",
+      "format": "ods",
+      "adapter": "cec-ods-2026",
+      "slug": "yilan"
     },
     {
       "county_code": "10004",
       "name": "新竹縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/hccec"
+      "status": "needs_ocr_review",
+      "official_home": "https://web.cec.gov.tw/hccec",
+      "source_name": "新竹縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/hccec/article/64326",
+      "file_url": "https://web.cec.gov.tw/api/file/dd6db986-fb04-4e7a-9e01-a263ec9c80b6.pdf",
+      "published_on": "2026-08-31",
+      "source_hash": "9a8aafe93ff321ce01d189481ce511fd6b8ee5e39353122d93c6c6b18f0cde54",
+      "format": "pdf",
+      "reason": "官方 PDF 是掃描圖，沒有可擷取文字，需 OCR 與逐列人工覆核"
     },
     {
       "county_code": "10005",
       "name": "苗栗縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/mlec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/mlec",
+      "source_name": "苗栗縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/mlec/article/64365",
+      "file_url": "https://web.cec.gov.tw/api/file/e85b1599-1a1b-410d-a419-8ac5ec5051cb.ods",
+      "published_on": "2026-08-31",
+      "source_hash": "a61854e9e8f7ab19bdc0d4ea142a570a77f2212c0a1e1ed023c6507e6078c2f4",
+      "format": "ods",
+      "adapter": "cec-ods-2026",
+      "slug": "miaoli",
+      "ambiguous_station_numbers": [
+        "0345",
+        "0346"
+      ]
     },
     {
       "county_code": "10007",
       "name": "彰化縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/chec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/chec",
+      "source_name": "彰化縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/chec/article/64324",
+      "file_url": "https://web.cec.gov.tw/api/file/81a0e1ba-70e5-4cb5-8932-3d9753b628a7.ods",
+      "published_on": "2026-08-31",
+      "source_hash": "2e1267099020691f79034cdfd7e7a3c5de61a08b5882fdd36e427ec0f1e2dd61",
+      "format": "ods",
+      "adapter": "cec-ods-2026",
+      "slug": "changhua",
+      "district_aliases": {
+        "線西線": "線西鄉"
+      }
     },
     {
       "county_code": "10008",
       "name": "南投縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/ntec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/ntec",
+      "source_name": "南投縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/ntec/article/64301",
+      "file_url": "https://web.cec.gov.tw/api/file/9db7dc08-2e35-4b15-a36a-fd372674ef5f.ods",
+      "published_on": "2026-08-31",
+      "source_hash": "f40e925011b86a6519369f514d73763c6044263011781c612b79b448ae3b1eb7",
+      "format": "ods",
+      "adapter": "cec-ods-2026",
+      "slug": "nantou",
+      "ambiguous_station_numbers": [
+        "0475",
+        "0476"
+      ]
     },
     {
       "county_code": "10009",
       "name": "雲林縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/ylec"
+      "status": "needs_ocr_review",
+      "official_home": "https://web.cec.gov.tw/ylec",
+      "source_name": "雲林縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/ylec/article/64366",
+      "file_url": "https://web.cec.gov.tw/api/file/f70ecbe9-51ac-4f3e-9c23-1e4d245fb78b.pdf",
+      "published_on": "2026-08-31",
+      "source_hash": "42da441a83cd99b972b0e91578d4f0f157f608316b148b79e7bdda56a4de4129",
+      "format": "pdf",
+      "reason": "官方 PDF 是掃描圖，沒有可擷取文字，需 OCR 與逐列人工覆核"
     },
     {
       "county_code": "10010",
       "name": "嘉義縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/cycec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/cycec",
+      "source_name": "嘉義縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/cycec/article/63846",
+      "file_url": "https://web.cec.gov.tw/api/file/ff9ee718-06fc-453c-b627-55b47fd60918.pdf",
+      "published_on": "2026-08-26",
+      "source_hash": "2e650162c5aba9f656628506649b4fd9bd321606a092c5a7af1d355b8abbe3bb",
+      "format": "pdf",
+      "adapter": "cec-pdf-layout-2026",
+      "slug": "chiayi-county",
+      "regression_expectations": [
+        {
+          "station_no": "0023",
+          "station_name": "舊埤洪地基主公廟",
+          "address": "嘉義縣太保市舊埤里１９鄰新安六街６６號後方(一二三幼兒園後方)",
+          "village_name": "舊埤里",
+          "raw_neighborhoods": "19-21",
+          "neighborhoods": [19, 20, 21]
+        },
+        {
+          "station_no": "0280",
+          "address": "嘉義縣朴子市永和里４鄰𧃽菜埔３６號之１"
+        }
+      ]
     },
     {
       "county_code": "10013",
       "name": "屏東縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/ptec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/ptec",
+      "source_name": "屏東縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/ptec/article/64388",
+      "file_url": "https://web.cec.gov.tw/api/file/58ef98e1-da3c-4321-8607-393743f37078.ods",
+      "published_on": "2026-08-31",
+      "source_hash": "e3b03d53d432a2d77256bd3e4d9ee2f5c6c350600995a7f297bbd181cf0af0c4",
+      "format": "ods",
+      "adapter": "cec-ods-2026",
+      "slug": "pingtung"
     },
     {
       "county_code": "10014",
       "name": "臺東縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/ttec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/ttec",
+      "source_name": "臺東縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/ttec/article/63929",
+      "file_url": "https://web.cec.gov.tw/api/file/3b6c9596-ff9a-4d9f-8167-39b17f5b2e8d.pdf",
+      "published_on": "2026-08-27",
+      "source_hash": "bb039cbd624cb4ae108eda7adde0fb4c7a13378860c85b5aaadb345fc25bf610",
+      "format": "pdf",
+      "adapter": "cec-pdf-layout-2026",
+      "slug": "taitung"
     },
     {
       "county_code": "10015",
       "name": "花蓮縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/hlec"
+      "status": "needs_ocr_review",
+      "official_home": "https://web.cec.gov.tw/hlec",
+      "source_name": "花蓮縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/hlec/article/64361",
+      "file_url": "https://web.cec.gov.tw/api/file/f436325b-adf2-4c49-b3a8-8b802897a1bd.pdf",
+      "published_on": "2026-08-31",
+      "source_hash": "7b5801111f0740944fe5fa1e9094470f436942325f2ac28aa8a38d735997ada3",
+      "format": "pdf",
+      "reason": "官方 PDF 是掃描圖，沒有可擷取文字，需 OCR 與逐列人工覆核"
     },
     {
       "county_code": "10016",
       "name": "澎湖縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/phec"
+      "status": "blocked_missing_addresses",
+      "official_home": "https://web.cec.gov.tw/phec",
+      "source_name": "澎湖縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/phec/article/63671",
+      "file_url": "https://web.cec.gov.tw/api/file/d9fe4d71-33d8-4bfb-9c3f-5905cfd58869.pdf",
+      "published_on": "2026-08-24",
+      "source_hash": "bea39983a2ba20101f92568bad8e5139fc6f61fab8d34aad14c9c79189dfa631",
+      "format": "pdf",
+      "reason": "官方附件列出鄉市、村里、鄰別與場所名稱，但沒有場所地址"
     },
     {
       "county_code": "10017",
       "name": "基隆市",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/klec"
+      "status": "blocked_missing_assignments",
+      "official_home": "https://web.cec.gov.tw/klec",
+      "source_name": "基隆市選舉委員會",
+      "source_url": "https://web.cec.gov.tw/klec/article/64352",
+      "file_url": "https://web.cec.gov.tw/api/file/070ff97c-0456-44d5-ad56-71399cb6eda6.ods",
+      "published_on": "2026-08-31",
+      "source_hash": "174998f680dfab38f305ddf9aff1311915eac5074aae327b41bc414bd3a74b3c",
+      "format": "ods",
+      "reason": "官方附件只有投開票所編號、名稱與地址，沒有村里及鄰別對應欄位"
     },
     {
       "county_code": "10018",
       "name": "新竹市",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/hcec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/hcec",
+      "source_name": "新竹市選舉委員會",
+      "source_url": "https://web.cec.gov.tw/hcec/article/64293",
+      "file_url": "https://web.cec.gov.tw/api/file/ae2c9883-114f-4134-9fd9-55a5682b3612.pdf",
+      "published_on": "2026-08-31",
+      "source_hash": "1265a69db335a917c4cf8c6b68aec9104397e6f184526b9d0085a61a05e0cdd3",
+      "format": "pdf",
+      "adapter": "cec-pdf-layout-2026",
+      "slug": "hsinchu-city",
+      "regression_expectations": [
+        {
+          "station_no": "0200",
+          "station_name": "大鵬里里民文康中心",
+          "address": "新竹市北區大鵬里２８鄰延平路一段４５２巷底(慈恩八村００７號)",
+          "village_name": "大鵬里",
+          "raw_neighborhoods": "全里",
+          "neighborhoods": []
+        }
+      ]
     },
     {
       "county_code": "10020",
       "name": "嘉義市",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/cyec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/cyec",
+      "source_name": "嘉義市選舉委員會",
+      "source_url": "https://web.cec.gov.tw/cyec/article/64371",
+      "file_url": "https://web.cec.gov.tw/api/file/5eda2fd9-f9bf-4010-a6e5-1afb02ff07b1.ods",
+      "published_on": "2026-08-31",
+      "source_hash": "8cdc11ff85dadbe3019326d2f376679f5a6e6402a38441353950e7b86306e809",
+      "format": "ods",
+      "adapter": "cec-ods-2026",
+      "slug": "chiayi-city"
     },
     {
       "county_code": "09020",
       "name": "金門縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/kmec"
+      "status": "ready",
+      "official_home": "https://web.cec.gov.tw/kmec",
+      "source_name": "金門縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/kmec/article/63777",
+      "file_url": "https://web.cec.gov.tw/api/file/4a5dd3c8-e072-4981-9f75-24a3bb0d6165.ods",
+      "published_on": "2026-08-31",
+      "source_hash": "c3998fd5e727c6f3a8e352b9558b68e9d398eb75fac37b7b77f436932e4b4d23",
+      "format": "ods",
+      "adapter": "cec-ods-2026",
+      "slug": "kinmen"
     },
     {
       "county_code": "09007",
       "name": "連江縣",
-      "status": "not_checked",
-      "official_home": "https://web.cec.gov.tw/lcec"
+      "status": "needs_ocr_review",
+      "official_home": "https://web.cec.gov.tw/lcec",
+      "source_name": "連江縣選舉委員會",
+      "source_url": "https://web.cec.gov.tw/lcec/article/64373",
+      "file_url": "https://web.cec.gov.tw/api/file/e57360fe-140d-43e6-a951-3ae22e7547ad.pdf",
+      "published_on": "2026-08-31",
+      "source_hash": "6ad9204b20c297fb3e21af0809b8edf633d14997799be2197665a4ee2ed958f1",
+      "format": "pdf",
+      "reason": "官方 PDF 是掃描圖，沒有可擷取文字，需 OCR 與逐列人工覆核"
     }
-  ]
+  ],
+  "official_index_url": "https://web.cec.gov.tw/central/article/64374"
 }

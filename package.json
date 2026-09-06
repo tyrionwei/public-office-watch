@@ -13,6 +13,7 @@
     "check": "npm run test:script-suite && npm --prefix apps/web run test:read-contracts && npm --prefix apps/web run lint && npm --prefix apps/web run build && npm --prefix apps/web run check:data-boundary && npm --prefix apps/web run check:published-exposure && npm --prefix apps/web run check:public-view-contracts",
     "test": "npm run check",
     "test:script-suite": "node --test scripts/*.test.mjs scripts/lib/*.test.mjs && python3 scripts/cec-profile-card-geometry.test.py && python3 scripts/cec-profile-ocr-crop.test.py && python3 scripts/cec-profile-table-geometry.test.py && python3 scripts/cec-platform-table-crop.test.py",
+    "test:polling-places": "node --experimental-strip-types --test scripts/polling-place-normalization.test.mjs scripts/import-2026-polling-places.test.mjs && python3 scripts/polling_place_pdf_layout_test.py && python3 -m py_compile scripts/extract-polling-places-ods.py scripts/extract-polling-places-pdf.py scripts/polling_place_pdf_layout.py scripts/polling_place_pdf_layout_test.py",
     "test:auto-review-person-claims": "node --test scripts/auto-review-person-claims.test.mjs",
     "test:party-candidate-source-freshness": "node --test scripts/report-party-candidate-source-freshness.test.mjs",
     "test:legal-record-policy": "node --test scripts/legal-record-review-policy.test.mjs",

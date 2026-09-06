@@ -914,6 +914,15 @@ test('detail routes use bounded page payloads with only reviewed supplemental re
   expect(apiRequests).toEqual(['rpc/region_page_for']);
 });
 
+test('race heading omits duplicate translated status badges', { tag: '@mobile-ci' }, async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/elections/races/race-example-council');
+
+  await expect(page.getByRole('heading', { name: '範例議員選舉' })).toBeVisible();
+  const badgeLabels = await page.locator('[data-race-badges] > span').allTextContents();
+  expect(badgeLabels).toEqual(['市議員', '已公告']);
+});
+
 test('race load failures remain errors instead of becoming not-found pages', async ({ page }) => {
   await page.route('**/rest/v1/rpc/race_page_for', async (route) => {
     await route.fulfill({

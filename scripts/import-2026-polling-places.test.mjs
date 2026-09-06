@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildPollingPlaceSyncSql, parseOdsPollingPlaces } from './import-2026-polling-places.mjs';
+import {
+  buildPollingPlaceSyncSql,
+  parseOdsPollingPlaces,
+  validatePollingPlaceExpectations,
+} from './import-2026-polling-places.mjs';
 
 const source = {
   county_code: '10007',
@@ -110,4 +114,27 @@ test("keeps the official PDF text for audit but shows a readable review label", 
   assert.deepEqual(place.neighborhoods, []);
   assert.equal(place.raw_neighborhoods, "官方鄰別條件需人工覆核");
   assert.equal(place.source_raw_neighborhoods, "需覆核:1-3，");
+});
+
+
+test("fails when a reviewed official PDF regression row changes", () => {
+  const places = [{
+    station_no: "1501",
+    station_name: "中興活動中心",
+    raw_neighborhoods: "1,6-7,15-18,22",
+  }];
+  const reviewedSource = {
+    name: "臺中市",
+    regression_expectations: [{
+      station_no: "1501",
+      station_name: "中興活動中心",
+      raw_neighborhoods: "1,6-7,15-18,22",
+    }],
+  };
+  assert.doesNotThrow(() => validatePollingPlaceExpectations(places, reviewedSource));
+  places[0].raw_neighborhoods = "19,23,27-281,6-7,15-18,22";
+  assert.throws(
+    () => validatePollingPlaceExpectations(places, reviewedSource),
+    /Polling-place regression/,
+  );
 });

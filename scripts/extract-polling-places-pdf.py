@@ -8,6 +8,14 @@ import tempfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
+from polling_place_pdf_layout import (
+    first_row_lower_bound,
+    is_page_footer_word,
+    last_row_upper_bound,
+    page_footer_bounds,
+    station_anchor_bounds,
+)
+
 CONFIGS = {
     "63000": {
         "anchor": re.compile(r"^臺北市.+第(\d{4})$"),
@@ -95,15 +103,22 @@ station_numbers = []
 
 for page in root.findall(".//x:page", namespace):
     words = []
+    page_width = float(page.get("width"))
+    page_height = float(page.get("height"))
     for word in page.findall(".//x:word", namespace):
         text = "".join(word.itertext()).strip()
         if not text:
             continue
-        words.append({
-            "text": text,
-            "x": (float(word.get("xMin")) + float(word.get("xMax"))) / 2,
-            "y": (float(word.get("yMin")) + float(word.get("yMax"))) / 2,
-        })
+        x = (float(word.get("xMin")) + float(word.get("xMax"))) / 2
+        y = (float(word.get("yMin")) + float(word.get("yMax"))) / 2
+        words.append({"text": text, "x": x, "y": y})
+
+    footer_bounds = page_footer_bounds(words, page_width, page_height)
+    page_content_bottom = last_row_upper_bound(words, page_width, page_height)
+    words = [
+        word for word in words
+        if not is_page_footer_word(word, footer_bounds, page_width)
+    ]
 
     anchors = []
     for word in words:
@@ -113,21 +128,29 @@ for page in root.findall(".//x:page", namespace):
         if args.county_code == "68000" and not 75 <= word["x"] < 110:
             continue
         number = int(next(group for group in match.groups() if group is not None))
-        anchor_y = word["y"]
-        if args.county_code in ("66000", "10018", "10010"):
-            prefixes = [
-                candidate for candidate in words
-                if candidate["text"].startswith("臺中市") and candidate["text"].endswith("第")
-                and candidate["y"] <= word["y"] and word["y"] - candidate["y"] < 12
-            ]
-            if prefixes:
-                anchor_y = (anchor_y + min(prefixes, key=lambda candidate: abs(candidate["y"] - word["y"]))["y"]) / 2
-        anchors.append({"number": number, "label": word["text"], "y": anchor_y})
-    anchors.sort(key=lambda anchor: anchor["y"])
+        anchor_top, anchor_bottom = station_anchor_bounds(
+            word,
+            words,
+            args.county_code,
+            config["columns"]["name"][0],
+        )
+        anchors.append({
+            "number": number,
+            "label": word["text"],
+            "top": anchor_top,
+            "bottom": anchor_bottom,
+        })
+    anchors.sort(key=lambda anchor: anchor["top"])
     station_numbers.extend(anchor["number"] for anchor in anchors)
     for index, anchor in enumerate(anchors):
-        lower = (anchors[index - 1]["y"] + anchor["y"]) / 2 if index else anchor["y"] - 7
-        upper = (anchor["y"] + anchors[index + 1]["y"]) / 2 if index + 1 < len(anchors) else anchor["y"] + 14
+        lower = (
+            (anchors[index - 1]["bottom"] + anchor["top"]) / 2
+            if index else first_row_lower_bound(words, anchor["top"])
+        )
+        upper = (
+            (anchor["bottom"] + anchors[index + 1]["top"]) / 2
+            if index + 1 < len(anchors) else page_content_bottom
+        )
         row_words = [word for word in words if lower <= word["y"] < upper]
 
         def collect(column):

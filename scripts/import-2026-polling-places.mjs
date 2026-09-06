@@ -156,6 +156,23 @@ export function parseOdsPollingPlaces(sheets, source, {
   return mergedPlaces;
 }
 
+export function validatePollingPlaceExpectations(places, source) {
+  for (const expected of source.regression_expectations ?? []) {
+    const matches = places.filter((place) => place.station_no === expected.station_no);
+    if (matches.length !== 1) {
+      throw new Error(`Expected one polling-place row for ${source.name} station ${expected.station_no}`);
+    }
+    const place = matches[0];
+    for (const [field, value] of Object.entries(expected)) {
+      if (JSON.stringify(place[field]) !== JSON.stringify(value)) {
+        throw new Error(
+          `Polling-place regression for ${source.name} station ${expected.station_no} field ${field}`,
+        );
+      }
+    }
+  }
+}
+
 const quote = (value) => "'" + String(value).replaceAll("'", "''") + "'";
 const sqlDate = (value) => value ? quote(value) + '::date' : 'NULL';
 
@@ -256,6 +273,7 @@ async function loadSnapshot(source) {
     throw new Error("Unsupported polling-place adapter: " + source.adapter);
   }
   const places = parseOdsPollingPlaces(readJson(rowsPath), source);
+  validatePollingPlaceExpectations(places, source);
   const summary = {
     county_code: source.county_code,
     name: source.name,

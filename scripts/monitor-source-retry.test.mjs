@@ -104,6 +104,51 @@ test('concurrent sources update independent health files without losing state', 
   assert.equal(fs.readdirSync(options.stateDirectory).length, 2);
 });
 
+test('same source operations serialize read-operation-write state updates', async (t) => {
+  const options = setup(t, 'ly-current-legislators');
+  let firstEnteredResolve;
+  let releaseFirstResolve;
+  let secondWaitObservedResolve;
+  const firstEntered = new Promise((resolve) => { firstEnteredResolve = resolve; });
+  const releaseFirst = new Promise((resolve) => { releaseFirstResolve = resolve; });
+  const secondWaitObserved = new Promise((resolve) => { secondWaitObservedResolve = resolve; });
+  const order = [];
+
+  const first = withSourceRetry({
+    ...options,
+    operation: async () => {
+      order.push('first-entered');
+      firstEnteredResolve();
+      await releaseFirst;
+      order.push('first-finished');
+      return 'first-ok';
+    },
+  });
+  await firstEntered;
+
+  let secondEntered = false;
+  const second = withSourceRetry({
+    ...options,
+    lockSleep: async () => {
+      secondWaitObservedResolve();
+      await new Promise((resolve) => setTimeout(resolve, 5));
+    },
+    operation: async () => {
+      secondEntered = true;
+      order.push('second-entered');
+      return 'second-ok';
+    },
+  });
+  await secondWaitObserved;
+  assert.equal(secondEntered, false);
+
+  releaseFirstResolve();
+  assert.deepEqual(await Promise.all([first, second]), ['first-ok', 'second-ok']);
+  assert.deepEqual(order, ['first-entered', 'first-finished', 'second-entered']);
+  assert.equal(readSaved(options).status, 'ok');
+  assert.equal(fs.existsSync(path.join(options.stateDirectory, options.key + '.lock')), false);
+});
+
 test('source keys cannot escape the health-state directory', () => {
   assert.throws(() => sourceHealthStatePath('/tmp/health', '../other'), /Unsafe monitor source key/);
 });

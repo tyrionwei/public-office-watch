@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   buildPollingPlaceSyncSql,
   parseOdsPollingPlaces,
+  validatePdfSourceExpectations,
   validatePollingPlaceExpectations,
 } from './import-2026-polling-places.mjs';
 
@@ -20,6 +21,28 @@ const directories = {
   districtsByCountyCode: { '10007': [{ code: '10007190', name: '線西鄉' }] },
   villagesByDistrictCode: { '10007190': [{ code: '10007190001', name: '磚[磘]村' }] },
 };
+
+test('reviewed PDF sources require an independently verified count and last station', () => {
+  const reviewed = {
+    adapter: 'cec-pdf-layout-2026',
+    name: '測試縣',
+    expected_station_count: 540,
+    expected_last_station_no: '0540',
+  };
+  assert.doesNotThrow(() => validatePdfSourceExpectations(reviewed));
+  assert.throws(
+    () => validatePdfSourceExpectations({ ...reviewed, expected_station_count: undefined }),
+    /Missing expected PDF station count/,
+  );
+  assert.throws(
+    () => validatePdfSourceExpectations({ ...reviewed, expected_last_station_no: undefined }),
+    /Missing expected PDF last station number/,
+  );
+  assert.throws(
+    () => validatePdfSourceExpectations({ ...reviewed, expected_last_station_no: '0539' }),
+    /count and last station number disagree/,
+  );
+});
 
 test('parses repeated headers, reviewed district typos and bracketed village variants', () => {
   const sheets = [{ rows: [

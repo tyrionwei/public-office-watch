@@ -14,6 +14,7 @@ from polling_place_pdf_layout import (
     last_row_upper_bound,
     page_footer_bounds,
     station_anchor_bounds,
+    validate_station_sequence,
 )
 
 CONFIGS = {
@@ -86,6 +87,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("input")
 parser.add_argument("output")
 parser.add_argument("--county-code", required=True)
+parser.add_argument("--expected-station-count", required=True, type=int)
+parser.add_argument("--expected-last-station-no", required=True)
 args = parser.parse_args()
 config = CONFIGS.get(args.county_code)
 if not config:
@@ -202,7 +205,13 @@ for page in root.findall(".//x:page", namespace):
             collect("neighborhood"),
         ])
 
-if station_numbers != list(range(1, len(station_numbers) + 1)):
-    raise SystemExit("Polling-place anchors are not a complete sequential series")
+try:
+    validate_station_sequence(
+        station_numbers,
+        args.expected_station_count,
+        args.expected_last_station_no,
+    )
+except ValueError as error:
+    raise SystemExit(str(error)) from error
 Path(args.output).write_text(json.dumps([{"name": "pdf", "rows": rows}], ensure_ascii=False), encoding="utf-8")
 print(len(station_numbers))

@@ -7,6 +7,7 @@ from polling_place_pdf_layout import (
     last_row_upper_bound,
     page_footer_bounds,
     station_anchor_bounds,
+    validate_station_sequence,
 )
 
 
@@ -88,6 +89,23 @@ class StationAnchorBoundsTests(unittest.TestCase):
         self.assertLess(766.45, upper)
         self.assertEqual(upper, 812.78)
         self.assertGreater(upper, 751.45 + 14)
+
+
+class StationSequenceTests(unittest.TestCase):
+    def test_accepts_verified_count_last_station_and_continuity(self):
+        validate_station_sequence([1, 2, 3, 4], 4, "0004")
+
+    def test_rejects_a_complete_missing_trailing_page(self):
+        with self.assertRaisesRegex(ValueError, "anchor count mismatch"):
+            validate_station_sequence([1, 2, 3], 4, "0004")
+
+    def test_rejects_the_wrong_final_station(self):
+        with self.assertRaisesRegex(ValueError, "last station mismatch"):
+            validate_station_sequence([1, 2, 3, 5], 4, "0004")
+
+    def test_rejects_an_interior_gap_even_when_count_and_last_match(self):
+        with self.assertRaisesRegex(ValueError, "complete sequential series"):
+            validate_station_sequence([1, 2, 2, 4], 4, "0004")
 
 
 if __name__ == "__main__":

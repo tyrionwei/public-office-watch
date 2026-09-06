@@ -156,6 +156,19 @@ export function parseOdsPollingPlaces(sheets, source, {
   return mergedPlaces;
 }
 
+export function validatePdfSourceExpectations(source) {
+  if (source.adapter !== 'cec-pdf-layout-2026') return;
+  if (!Number.isInteger(source.expected_station_count) || source.expected_station_count <= 0) {
+    throw new Error('Missing expected PDF station count for ' + source.name);
+  }
+  if (typeof source.expected_last_station_no !== 'string' || !/^\d{4}$/.test(source.expected_last_station_no)) {
+    throw new Error('Missing expected PDF last station number for ' + source.name);
+  }
+  if (Number(source.expected_last_station_no) !== source.expected_station_count) {
+    throw new Error('PDF station count and last station number disagree for ' + source.name);
+  }
+}
+
 export function validatePollingPlaceExpectations(places, source) {
   for (const expected of source.regression_expectations ?? []) {
     const matches = places.filter((place) => place.station_no === expected.station_no);
@@ -260,6 +273,7 @@ async function ensureSourceFile(source) {
 }
 
 async function loadSnapshot(source) {
+  validatePdfSourceExpectations(source);
   const filePath = await ensureSourceFile(source);
   const rowsPath = path.join(outputDirectory, source.slug + '.rows.json');
   if (source.adapter === "cec-ods-2026") {
@@ -267,7 +281,10 @@ async function loadSnapshot(source) {
   } else if (source.adapter === "cec-pdf-layout-2026") {
     execFileSync("python3", [
       path.join(repoRoot, "scripts", "extract-polling-places-pdf.py"),
-      filePath, rowsPath, "--county-code", source.county_code,
+      filePath, rowsPath,
+      "--county-code", source.county_code,
+      "--expected-station-count", String(source.expected_station_count),
+      "--expected-last-station-no", source.expected_last_station_no,
     ]);
   } else {
     throw new Error("Unsupported polling-place adapter: " + source.adapter);

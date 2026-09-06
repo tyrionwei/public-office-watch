@@ -108,3 +108,23 @@ def is_page_number(text, x, y, page_width, page_height):
         and y > page_height - 30
         and abs(x - page_width / 2) < page_width * 0.1
     )
+
+def validate_station_sequence(station_numbers, expected_count, expected_last_station_no):
+    # Fail when a PDF omits anchors, including a complete trailing page.
+    if not isinstance(expected_count, int) or expected_count <= 0:
+        raise ValueError("Expected station count must be a positive integer")
+    try:
+        expected_last = int(expected_last_station_no)
+    except (TypeError, ValueError) as error:
+        raise ValueError("Expected last station number must be numeric") from error
+    if len(station_numbers) != expected_count:
+        raise ValueError(
+            f"Polling-place anchor count mismatch: expected {expected_count}, got {len(station_numbers)}"
+        )
+    if not station_numbers or station_numbers[-1] != expected_last:
+        actual_last = station_numbers[-1] if station_numbers else "none"
+        raise ValueError(
+            f"Polling-place last station mismatch: expected {expected_last:04d}, got {actual_last}"
+        )
+    if station_numbers != list(range(1, expected_last + 1)):
+        raise ValueError("Polling-place anchors are not a complete sequential series")

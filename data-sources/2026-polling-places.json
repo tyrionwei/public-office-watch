@@ -15,7 +15,9 @@
       "source_hash": "b70436e036626535d59bf241bc888f1a6de848a81fabc6903f7105e782667a4c",
       "format": "pdf",
       "adapter": "cec-pdf-layout-2026",
-      "slug": "taipei"
+      "slug": "taipei",
+      "expected_station_count": 1790,
+      "expected_last_station_no": "1790"
     },
     {
       "county_code": "65000",
@@ -49,6 +51,8 @@
       "format": "pdf",
       "adapter": "cec-pdf-layout-2026",
       "slug": "taoyuan",
+      "expected_station_count": 1479,
+      "expected_last_station_no": "1479",
       "regression_expectations": [
         {
           "station_no": "0001",
@@ -101,6 +105,8 @@
       },
       "adapter": "cec-pdf-layout-2026",
       "slug": "taichung",
+      "expected_station_count": 1980,
+      "expected_last_station_no": "1980",
       "regression_expectations": [
         {
           "station_no": "1501",
@@ -252,6 +258,8 @@
       "format": "pdf",
       "adapter": "cec-pdf-layout-2026",
       "slug": "chiayi-county",
+      "expected_station_count": 540,
+      "expected_last_station_no": "0540",
       "regression_expectations": [
         {
           "station_no": "0023",
@@ -293,7 +301,9 @@
       "source_hash": "bb039cbd624cb4ae108eda7adde0fb4c7a13378860c85b5aaadb345fc25bf610",
       "format": "pdf",
       "adapter": "cec-pdf-layout-2026",
-      "slug": "taitung"
+      "slug": "taitung",
+      "expected_station_count": 236,
+      "expected_last_station_no": "0236"
     },
     {
       "county_code": "10015",
@@ -347,6 +357,8 @@
       "format": "pdf",
       "adapter": "cec-pdf-layout-2026",
       "slug": "hsinchu-city",
+      "expected_station_count": 359,
+      "expected_last_station_no": "0359",
       "regression_expectations": [
         {
           "station_no": "0200",

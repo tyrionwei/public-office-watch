@@ -9,6 +9,7 @@ import {
   parseLastJsonOutput,
   releaseRunLock,
   resultNeedsAttention,
+  runDailySteps,
   summarizeDailyResults,
 } from './run-daily-monitor.mjs';
 
@@ -33,6 +34,15 @@ test('daily monitor lock replaces a stale process and releases only its own toke
   assert.equal(fs.existsSync(lockPath), false);
 });
 
+test('daily monitor does not delete a freshly created incomplete lock', (t) => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'pow-daily-incomplete-lock-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const lockPath = path.join(directory, 'daily.lock');
+  fs.writeFileSync(lockPath, '');
+  assert.throws(() => acquireRunLock(lockPath), /still being acquired/);
+  assert.equal(fs.existsSync(lockPath), true);
+});
+
 test('parses the final structured result after npm output', () => {
   const result = parseLastJsonOutput(`> sync:real-data:daily
 > node scripts/sync-real-data.mjs
@@ -45,6 +55,10 @@ test('parses the final structured result after npm output', () => {
 
   assert.equal(result.status, 'degraded');
   assert.equal(result.needsAttention, true);
+});
+
+test('returns null for truncated JSON that starts at index zero', () => {
+  assert.equal(parseLastJsonOutput('{broken'), null);
 });
 
 test('marks a zero-exit degraded result as needing scheduler attention', () => {
@@ -69,4 +83,16 @@ test('keeps hard failures distinct from degraded results', () => {
   assert.equal(summary.status, 'failed');
   assert.equal(summary.needsAttention, true);
   assert.equal(summary.failedCount, 1);
+});
+
+test('a failed independent source does not prevent news or person research', async () => {
+  const called = [];
+  const results = await runDailySteps(async (scriptName) => {
+    called.push(scriptName);
+    return { scriptName, status: scriptName === 'sync:real-data:daily' ? 'failed' : 'ok' };
+  });
+  assert.deepEqual(called, ['monitor:cec-election-sources', 'sync:real-data:daily',
+    'discover:daily-person-news', 'run:daily-person-enrichment']);
+  assert.equal(summarizeDailyResults(results).passedCount, 3);
+  assert.equal(summarizeDailyResults(results).needsAttention, true);
 });

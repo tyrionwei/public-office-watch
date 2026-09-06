@@ -8,6 +8,7 @@ export type VotingCycleArea = {
 
 export type ElectionVotingCycle = {
   id: string;
+  electionEventKey?: string;
   title: {
     'zh-TW': string;
     en: string;
@@ -28,6 +29,7 @@ export type ElectionVotingCycle = {
 export const electionVotingCycles: readonly ElectionVotingCycle[] = [
   {
     id: '2026-local-general-election-day',
+    electionEventKey: '2026-2026-11-28-local',
     title: {
       'zh-TW': '2026 地方公職人員選舉',
       en: '2026 Local Elections',

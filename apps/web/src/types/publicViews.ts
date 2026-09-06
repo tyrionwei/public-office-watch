@@ -290,8 +290,8 @@ export type PublicCandidate = {
   region_name: string | null;
   party: string | null;
   candidate_no: string | null;
-  registration_status: 'pending' | 'registered' | 'qualified' | 'disqualified' | 'withdrawn' | 'elected' | 'not_elected' | 'unknown';
-  candidacy_status: 'potential' | 'party_nominee' | 'officially_announced' | 'registered' | 'qualified' | 'withdrawn_or_disqualified' | 'unknown';
+  registration_status: 'pending' | 'registered' | 'qualified' | 'disqualified' | 'withdrawn' | 'not_registered' | 'elected' | 'not_elected' | 'unknown';
+  candidacy_status: 'potential' | 'party_nominee' | 'officially_announced' | 'registered' | 'qualified' | 'withdrawn_or_disqualified' | 'did_not_register' | 'unknown';
   election_result: 'pending' | 'elected' | 'not_elected' | 'unknown';
   status_updated_at: string | null;
   candidate_updated_at: string | null;

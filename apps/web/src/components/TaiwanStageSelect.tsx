@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef } from 'react';
-import { compareElectionRegionLabels } from '../data/electionLabels';
 import { useI18n } from '../i18n';
-import { isCurrentCountyName, normalizeTaiwanText, toCurrentCountyName } from '../lib/taiwanText';
+import { getCurrentCountyRegions } from '../lib/countyRegions';
+import { normalizeTaiwanText } from '../lib/taiwanText';
 import type { StageRegionNode } from '../types/stageMap';
 
 type TaiwanStageSelectProps = {
@@ -22,29 +22,7 @@ const primaryRegionLabels = new Set([
 ]);
 
 function isPrimaryRegion(region: StageRegionNode) {
-  return primaryRegionLabels.has(toCurrentCountyName(region.label));
-}
-function isCurrentCountyRecord(region: StageRegionNode) {
-  return normalizeTaiwanText(region.label) === toCurrentCountyName(region.label);
-}
-
-function getCurrentCountyRegions(regions: StageRegionNode[], selectedRegionId: string | null) {
-  const regionMap = new Map<string, StageRegionNode>();
-  for (const region of regions.filter((item) => item.level === 'county_city')) {
-    const key = toCurrentCountyName(region.label);
-    if (!isCurrentCountyName(key)) continue;
-    const current = regionMap.get(key);
-    if (!current
-      || (!isCurrentCountyRecord(current) && isCurrentCountyRecord(region))
-      || (region.id === selectedRegionId && current.id !== selectedRegionId)) {
-      regionMap.set(key, region);
-    }
-  }
-
-  return Array.from(regionMap.values()).sort((left, right) => compareElectionRegionLabels(
-    toCurrentCountyName(left.label),
-    toCurrentCountyName(right.label),
-  ));
+  return primaryRegionLabels.has(normalizeTaiwanText(region.label));
 }
 
 const LazyTaiwanCountyMap = lazy(() => import('./TaiwanCountyMap').then((module) => ({ default: module.TaiwanCountyMap })));
@@ -85,7 +63,7 @@ export function CompactCountyQuickSelect({
   onSelectRegion,
 }: CompactCountyQuickSelectProps) {
   const { t } = useI18n();
-  const topLevelRegions = getCurrentCountyRegions(regions, selectedRegionId);
+  const topLevelRegions = getCurrentCountyRegions(regions);
   const primaryRegions = topLevelRegions.filter(isPrimaryRegion);
   const additionalRegions = topLevelRegions.filter((region) => !isPrimaryRegion(region));
   const selectedAdditionalRegion = additionalRegions.find((region) => region.id === selectedRegionId);
@@ -122,14 +100,14 @@ export function CompactCountyQuickSelect({
         {primaryRegions.map((region) => (
           <RegionButton
             key={region.id}
-            label={toCurrentCountyName(region.label)}
+            label={normalizeTaiwanText(region.label)}
             selected={selectedRegionId === region.id}
             onClick={() => onSelectRegion(region.id)}
           />
         ))}
         {selectedAdditionalRegion ? (
           <RegionButton
-            label={toCurrentCountyName(selectedAdditionalRegion.label)}
+            label={normalizeTaiwanText(selectedAdditionalRegion.label)}
             selected
             onClick={() => onSelectRegion(selectedAdditionalRegion.id)}
           />
@@ -143,7 +121,7 @@ export function CompactCountyQuickSelect({
             {additionalRegions.map((region) => (
               <RegionButton
                 key={region.id}
-                label={toCurrentCountyName(region.label)}
+                label={normalizeTaiwanText(region.label)}
                 selected={selectedRegionId === region.id}
                 onClick={() => selectAdditionalRegion(region.id)}
                 solidSelected
@@ -162,7 +140,7 @@ export function TaiwanStageSelect({
   onSelectRegion,
 }: TaiwanStageSelectProps) {
   const { t } = useI18n();
-  const topLevelRegions = getCurrentCountyRegions(regions, selectedRegionId);
+  const topLevelRegions = getCurrentCountyRegions(regions);
 
   return (
     <div className="pixel-corners min-w-0 border border-line/70 p-3 [background:var(--theme-panel-gradient)] sm:p-4 xl:flex xl:h-full xl:flex-col">

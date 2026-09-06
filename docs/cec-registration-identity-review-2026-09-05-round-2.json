@@ -1,0 +1,2338 @@
+{
+  "schemaVersion": 1,
+  "environment": "full-local",
+  "reviewedAt": "2026-09-04T19:13:47.911217Z",
+  "inputs": {
+    "tmp/cec-registration-identity-review-2/targets.json": "656d8db0c01d0ed828bf977791343fedf7ca22aa549c9d4c982bc678d5f7bae2",
+    "tmp/cec-registration-identity-review-2/local-evidence.json": "f59dca4362383aff14a062a565a781dbff4d84e2d09b51bdd4fd67c996777139",
+    "tmp/cec-registration-identity-review-2/draft-classification.json": "cdf66bb7660f24bc4e71efee5cfaef2978f043801f068647b113f3b2c1f76bf7",
+    "tmp/cec-registration-identity-review-2/review-manifest.json": "c52db7de07dc9b5588584e39818c078e88c6677ceeccae0442cdb9c9c588ad6a",
+    "tmp/cec-registration-final/import-manifest.json": "e004d07cfd82306b26adc55ec6b230d2601d73ff5fb9b8bfa29c3a38a83cf1f3"
+  },
+  "baselinePending": 1349,
+  "reviewed": 1349,
+  "resolved": 116,
+  "reusedPeople": 78,
+  "newPeople": 38,
+  "remainingPending": 1233,
+  "reasonCounts": {
+    "same_batch_homonym_without_identity_details": 67,
+    "multiple_same_name_people": 96,
+    "same_name_already_has_other_2026_candidacy": 214,
+    "missing_registration_identity_details": 594,
+    "exact_birth_date_unique": 46,
+    "full_birth_not_unique_among_same_name_profiles": 108,
+    "official_full_birth_new_person": 31,
+    "same_locality_gender_party_history": 19,
+    "unresolved_name_glyph": 3,
+    "same_race_gender_party_history": 3,
+    "masked_birth_insufficient_bridge": 93,
+    "gender_conflict": 38,
+    "birth_year_gender_local_history": 10,
+    "no_existing_person_and_no_full_birth": 19,
+    "official_district_or_office_conflict": 1,
+    "distinct_full_birth_date": 7
+  },
+  "accepted": [
+    {
+      "candidateExternalId": "pow-cec-registration-2026-c44ed25c8fc92997682c1ea36d5654da",
+      "candidateId": "9fd56eee-da37-5706-9222-f60e49e25f00",
+      "personId": "a0891736-4285-49d3-b621-0269d09ed794",
+      "name": "吳承翰",
+      "county": "新北市",
+      "district": "新北市烏來區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "be26b1cb-7407-49cb-a99a-c442e6aa9e9d",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "f6a47a97-0510-4e79-8017-94f5afaf9e84"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/7627154b-f610-43a9-82f5-38d5163b1e45.pdf",
+        "https://votetw.com/wiki/%E5%90%B3%E6%89%BF%E7%BF%B0"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-45f9de2f69b38691d1b05a0a03b6cb07",
+      "candidateId": "4dbd7024-9fe8-5605-956a-c4228412b042",
+      "personId": "a1c2d209-465f-491e-bd19-559a23296fc2",
+      "name": "沈常福",
+      "county": "新北市",
+      "district": "新北市烏來區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "be26b1cb-7407-49cb-a99a-c442e6aa9e9d",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "ac8ee106-ddba-4450-a693-7f8be2071f7c"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/7627154b-f610-43a9-82f5-38d5163b1e45.pdf",
+        "https://votetw.com/wiki/%E6%B2%88%E5%B8%B8%E7%A6%8F"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e687f8266bb6a3b2914a6e470aeb7b84",
+      "candidateId": "ae8d844c-87d5-5cd9-a6a1-df3c5704643f",
+      "personId": "d026862d-a641-4367-b522-a3dabd91315d",
+      "name": "王文炳",
+      "county": "新北市",
+      "district": "新北市烏來區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "be26b1cb-7407-49cb-a99a-c442e6aa9e9d",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "2ee9b9e9-78fb-433d-b7fd-991639115eaf"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/7627154b-f610-43a9-82f5-38d5163b1e45.pdf",
+        "https://votetw.com/wiki/%E7%8E%8B%E6%96%87%E7%82%B3"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-194c2c2ee2d1b4763e31f1732fa820b6",
+      "candidateId": "e589f406-2c0d-5f7e-8b3a-e348132ba314",
+      "personId": "f1e0fc4c-448f-4fa4-840d-2739e1929027",
+      "name": "黃清波",
+      "county": "新北市",
+      "district": "新北市烏來區第3選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "15281235-fa84-401e-884b-c21ec1dc23ef",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "16b3482b-b892-45fb-8ed6-375320730ed8"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/7627154b-f610-43a9-82f5-38d5163b1e45.pdf",
+        "https://votetw.com/wiki/%E9%BB%83%E6%B8%85%E6%B3%A2"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-57ee1141141e4dc2eb6b03744ce0d617",
+      "candidateId": "32b69528-5a91-57c2-bce6-ca504d4d090b",
+      "personId": "72a3e598-8a16-4069-a5a3-079acf330a26",
+      "name": "蔡成雄",
+      "county": "新北市",
+      "district": "新北市烏來區第4選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "73c1a4e0-1917-4151-bb1a-f1eb8537b0ed",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "8425a3c4-150f-447a-a2ef-f3c39c2f36ff"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/7627154b-f610-43a9-82f5-38d5163b1e45.pdf",
+        "https://votetw.com/wiki/%E8%94%A1%E6%88%90%E9%9B%84"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-57ce037c5d135d631e43af39708d6e02",
+      "candidateId": "9695e514-2f4f-5978-818c-bb18c4aedd18",
+      "personId": "5d5363a4-79c7-4f3d-8721-c34cf3c38e42",
+      "name": "黃淑珍",
+      "county": "新北市",
+      "district": "新北市第5選舉區",
+      "office": "councilor",
+      "raceId": "b4a490a0-5b90-436e-933f-fffdb378adfa",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "dc51fb51-021c-418e-a1ce-7580437484a7",
+        "30a6fde4-4738-4505-8578-16e6a933c73f",
+        "4e1e171b-2bc9-469c-9617-964d8f3e90c4"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/669b82d7-7c65-4568-97a3-c7cc25046e6f.pdf",
+        "https://2024.cec.gov.tw/data/json/cand/L1/65000.json"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-28381450d7879aab5dbb8674164591c5",
+      "candidateId": "48a8b310-32c4-5207-9556-e62a037590f4",
+      "personId": "b8dc2398-2fc6-40c6-8daf-0f2e43d0957c",
+      "name": "陳玉鳳",
+      "county": "新北市",
+      "district": "新北市板橋區文翠里",
+      "office": "village_chief",
+      "raceId": "f9ee7192-b784-4e03-aaf0-5522ab655b3d",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "ed1f27ca-c9bc-4912-8c6b-afe6bd0a37ce"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf",
+        "https://votetw.com/wiki/%E9%99%B3%E7%8E%89%E9%B3%B3"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-3101d84c4108090a4ceafb2821c7c772",
+      "candidateId": "3a5c95d8-ca5c-5bca-86ab-49894b48ec89",
+      "personId": "0c94bb69-65e1-5b16-aa8d-aaa83c95289a",
+      "name": "謝宗翰",
+      "county": "新北市",
+      "district": "新北市板橋區長壽里",
+      "office": "village_chief",
+      "raceId": "db9ec89f-1ff7-4c04-91ad-506bccb908ed",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-6df9d891efc919bb6fafd3783acca8c7",
+      "candidateId": "ef40ea13-12b3-5fae-8d3a-d58acfc1146c",
+      "personId": "563e8487-fd26-5206-891e-4d84306ce295",
+      "name": "陳嘉祥",
+      "county": "新北市",
+      "district": "新北市板橋區新海里",
+      "office": "village_chief",
+      "raceId": "c41080de-16e7-4211-ae8a-0f3b9107f0ab",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-4a2be35734c9332b022e8348cbd4b6d3",
+      "candidateId": "b5d5ad52-cb23-5d32-9503-82f6fc4598cf",
+      "personId": "77a8896a-3e58-50ee-94f3-26037c3b83b9",
+      "name": "黃淑琴",
+      "county": "新北市",
+      "district": "新北市中和區清穗里",
+      "office": "village_chief",
+      "raceId": "a747605a-942a-4d41-8d6f-0c77dee72d68",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-be7f3c7952daa979f98b2770f9375aa4",
+      "candidateId": "9fd4fdca-60a9-5bc8-b952-a507e4121818",
+      "personId": "8f235321-d378-5fae-9b71-623de7da4444",
+      "name": "陳惠玲",
+      "county": "新北市",
+      "district": "新北市中和區宜安里",
+      "office": "village_chief",
+      "raceId": "0ff6346c-bf18-415c-a9b4-f578abfa6263",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-725471060804c1528958863e5d0fb12f",
+      "candidateId": "aa8650a2-4c04-5f4c-a887-1495204260c5",
+      "personId": "85ba8893-cc88-512e-9a91-d40a6e25ef29",
+      "name": "陳建全",
+      "county": "新北市",
+      "district": "新北市永和區網溪里",
+      "office": "village_chief",
+      "raceId": "2b11b529-a53b-4a05-9064-e24db95d6bb2",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-2f248049f132f32433a61f14fe5c56f4",
+      "candidateId": "b4cb0345-4dfd-5a1d-9cea-cc12aaec7612",
+      "personId": "30951902-cf85-4cc4-9160-f8ea18fcda45",
+      "name": "陳玉章",
+      "county": "新北市",
+      "district": "新北市新莊區立德里",
+      "office": "village_chief",
+      "raceId": "f53ac0dd-4837-4e08-8765-e25ba1c328c2",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "73530247-2a47-4919-a41d-46e7d01c8fc2",
+        "550e53aa-9b2d-41bf-9024-23e37c9bdd46",
+        "55ff5f9b-a573-4fd3-b9c2-615fd9b8a4df"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/65_000_00_000_0000.json",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E6%96%B0%E5%8C%97%E5%B8%82%E6%96%B0%E8%8E%8A%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E6%96%B0%E5%8C%97%E5%B8%82%E6%96%B0%E8%8E%8A%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-31b2e301f8946ad786c079ad64eb74e5",
+      "candidateId": "5261d031-7fac-529a-95d6-ca4bb0fa3fdf",
+      "personId": "cd8a2343-7360-534f-97a7-3f83493247e2",
+      "name": "陳金昌",
+      "county": "新北市",
+      "district": "新北市新莊區光華里",
+      "office": "village_chief",
+      "raceId": "2830159f-cba9-4b15-ad20-401001456a98",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-2763c70abc6a3763c8543f3363bc58a0",
+      "candidateId": "04e4b6c4-2403-5d9a-8e51-792d1c300262",
+      "personId": "0f07c152-a3f8-5ed1-be0a-02dc0b19f570",
+      "name": "陳嘉祥",
+      "county": "新北市",
+      "district": "新北市新店區寶興里",
+      "office": "village_chief",
+      "raceId": "c79d4023-dc64-4cbe-b4e4-cf723f57f810",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-62e36b9cacb6b4f1884356c06156150a",
+      "candidateId": "721bb67c-636f-5b4e-9bbf-1a0c46b38600",
+      "personId": "6841b451-672a-5c2a-9c89-fa4d34c562ee",
+      "name": "黃詩涵",
+      "county": "新北市",
+      "district": "新北市淡水區八勢里",
+      "office": "village_chief",
+      "raceId": "ce0051cc-edd8-463f-954e-e5b8c629fdd1",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-caa118677eb3a038722359967022892d",
+      "candidateId": "6a1e5c7f-bdce-5455-8a9c-685e3e0a6cb4",
+      "personId": "9da57387-0376-4d7a-bd45-35c006e2a873",
+      "name": "王俊雄",
+      "county": "新北市",
+      "district": "新北市烏來區福山里",
+      "office": "village_chief",
+      "raceId": "5f5ddca8-17eb-4e88-81d3-2aa932e61f41",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "7d9027ab-2eb1-4ac9-9ca4-c73b2bc591e2"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf",
+        "https://votetw.com/wiki/%E7%8E%8B%E4%BF%8A%E9%9B%84"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-ecde3f9536307a3b45e98f766dc014a7",
+      "candidateId": "88b78bc4-aa6a-5c76-9fb0-6cfa15035a79",
+      "personId": "5c6758b4-24f5-46b4-b1b2-83b7b4c63ba3",
+      "name": "楊夢萍",
+      "county": "桃園市",
+      "district": "桃園市復興區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "75916e3c-2690-4732-9f19-ae19aa3f016c",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "67fd447b-b29f-46e4-9e37-97ba06861874"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/f512a9c4-6e3e-4379-939a-68e5d3778394.pdf",
+        "https://votetw.com/wiki/%E6%A5%8A%E5%A4%A2%E8%90%8D"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-d6829f09ae3de1ba4ae9def96872a00c",
+      "candidateId": "fed82426-7743-56e2-aca7-276762f96ea0",
+      "personId": "9ad690c9-3b73-4bc3-9679-1b615fd5ec96",
+      "name": "柯玉明",
+      "county": "桃園市",
+      "district": "桃園市復興區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "e4274f42-bd6d-4722-bdb5-57c00b33f49e",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "10989763-c848-4bb9-9b01-73472549a808"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/f512a9c4-6e3e-4379-939a-68e5d3778394.pdf",
+        "https://votetw.com/wiki/%E6%9F%AF%E7%8E%89%E6%98%8E"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-0459a3445c6a3d0e4b9d7783b03dab7a",
+      "candidateId": "d2dbeac9-c17b-588e-a377-d65448e09eb1",
+      "personId": "969d708e-33b0-4340-9499-349738b70155",
+      "name": "簡明仁",
+      "county": "桃園市",
+      "district": "桃園市復興區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "e4274f42-bd6d-4722-bdb5-57c00b33f49e",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "d3721d62-0eea-4ee3-b032-3cab237c9526"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/f512a9c4-6e3e-4379-939a-68e5d3778394.pdf",
+        "https://votetw.com/wiki/%E7%B0%A1%E6%98%8E%E4%BB%81"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-72a5c2a7b4f70ed1319e5a20e56f3440",
+      "candidateId": "caec5cdd-4b0b-52bb-8ec3-392186ca64f1",
+      "personId": "6e86e86f-82f5-472b-8dd3-3cf6499bb469",
+      "name": "姜清國",
+      "county": "桃園市",
+      "district": "桃園市復興區第3選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "d7ca0406-b1c3-4ab2-a0e7-f9b7d5bffa54",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "31438d41-f37e-473b-9375-af77c8794f8c"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/f512a9c4-6e3e-4379-939a-68e5d3778394.pdf",
+        "https://votetw.com/wiki/%E5%A7%9C%E6%B8%85%E5%9C%8B"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-8f1f5a107ffefe5f5f05a8981b416825",
+      "candidateId": "6f99aa28-31d2-5026-be33-7abeb9843a61",
+      "personId": "39349654-b19d-5509-ab7a-e69593216b31",
+      "name": "陳保源",
+      "county": "桃園市",
+      "district": "桃園市桃園區泰山里",
+      "office": "village_chief",
+      "raceId": "9681f187-5968-4b77-b780-232d1cd07007",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-f140887bc4e683cc50f695c97737bd07",
+      "candidateId": "0aff30c5-6a8f-5f5b-9a33-862ad249417e",
+      "personId": "7e48bd4f-8314-4c1a-a9e3-a4991346b22a",
+      "name": "林國政",
+      "county": "桃園市",
+      "district": "桃園市桃園區中信里",
+      "office": "village_chief",
+      "raceId": "52d02405-95ae-4da6-8f49-bf59b407b911",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "d7862a4d-d3fa-4c12-ab1c-90e907f37a0e"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf",
+        "https://votetw.com/wiki/%E6%9E%97%E5%9C%8B%E6%94%BF"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-65c7a06f443e60c63091449035d8def5",
+      "candidateId": "c9dd0070-aca4-5d7c-b085-003a2bcfbf29",
+      "personId": "94a4ca64-4a24-49b7-9e78-4846f3c6335a",
+      "name": "官正平",
+      "county": "桃園市",
+      "district": "桃園市桃園區經國里",
+      "office": "village_chief",
+      "raceId": "67da94b6-9596-4b49-9c07-0e23462479a7",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "5d4d3576-3e07-437c-a8db-8c724e4760ce"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf",
+        "https://votetw.com/wiki/%E5%AE%98%E6%AD%A3%E5%B9%B3"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-2aaecfc2326764ddb553bbc7a9a56ab3",
+      "candidateId": "13cdf931-7bbf-5e52-8551-8d09bb2f732e",
+      "personId": "134fb825-7de4-5259-8d28-af57167f19f8",
+      "name": "許勝傑",
+      "county": "桃園市",
+      "district": "桃園市中壢區青航里",
+      "office": "village_chief",
+      "raceId": "55cb9aff-430a-50fd-b708-50f59c5cf66e",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-5647c817360f9ea7e540d72512bae6f0",
+      "candidateId": "1f4bdbe3-ee2c-5ef9-95cf-1fe1ba529ce8",
+      "personId": "14abc45f-4ac3-4821-bc43-e538fe7f65eb",
+      "name": "謝偉孝",
+      "county": "桃園市",
+      "district": "桃園市中壢區青航里",
+      "office": "village_chief",
+      "raceId": "55cb9aff-430a-50fd-b708-50f59c5cf66e",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "93e27f21-7ec4-4b56-bdc8-3e81dc8c7795"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf",
+        "https://votetw.com/wiki/%E8%AC%9D%E5%81%89%E5%AD%9D"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-22f3c5a4e785706cfb8125ba75dd53f9",
+      "candidateId": "7a2378db-d158-5e8c-85b5-d5b67e53c5bc",
+      "personId": "44abbe4a-9d2b-5535-a90e-2a912206b13a",
+      "name": "張麗雲",
+      "county": "桃園市",
+      "district": "桃園市大溪區光明里",
+      "office": "village_chief",
+      "raceId": "91032bca-3851-444c-bf9c-2d14e7d66023",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-c1d6dbc0ecfc4556434e54aa7a71d3a6",
+      "candidateId": "8da2ab8c-fe80-5276-afe3-4b0aef98a51a",
+      "personId": "9ea3678f-fdf1-4504-b55a-e2e8300b0d24",
+      "name": "簡僑亨",
+      "county": "桃園市",
+      "district": "桃園市龜山區文藝里",
+      "office": "village_chief",
+      "raceId": "39181cf6-65e2-54ae-8b65-a918ae1d5d33",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "0bc0a6d3-91f7-471b-b822-54c2eb4eba79"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf",
+        "https://votetw.com/wiki/%E7%B0%A1%E5%83%91%E4%BA%A8"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9735f4b6b65f8e1d254ca9c76b832560",
+      "candidateId": "bb54a1c5-1dfc-5d16-8f77-88916af89328",
+      "personId": "44029cb3-177d-5499-b26a-0c637ce6ed1a",
+      "name": "李麗珍",
+      "county": "桃園市",
+      "district": "桃園市龍潭區三和里",
+      "office": "village_chief",
+      "raceId": "5d2bc1ef-46a3-43c8-a7d6-f44e7024f838",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-69babe06022d1aaa3d0c80d89b056725",
+      "candidateId": "cd3360f0-fd30-58e4-83ed-073e51eb68ac",
+      "personId": "69856eeb-bd9b-5a84-84ac-09013556ead6",
+      "name": "梁信文",
+      "county": "桃園市",
+      "district": "桃園市觀音區草新里",
+      "office": "village_chief",
+      "raceId": "ec5fc57a-2a8f-4eb3-8250-d6ca8cef9135",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-81d5b76b4e7fb8ccad7925013714855e",
+      "candidateId": "ccdc0fd5-2f92-572b-85bd-3b32764c4c5a",
+      "personId": "e2eebc31-0cc4-4f94-ba9c-6ef224cb41f5",
+      "name": "黃再福",
+      "county": "桃園市",
+      "district": "桃園市復興區長興里",
+      "office": "village_chief",
+      "raceId": "85052038-3cce-401f-9829-292e9087c01c",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "ebb5332d-f3df-4d6f-ab89-0a1ee77f6da1"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf",
+        "https://votetw.com/wiki/%E9%BB%83%E5%86%8D%E7%A6%8F"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-b2fded55d40e3e9a857b723133dae179",
+      "candidateId": "61d317ec-28b0-542f-9264-034f9d7f74d3",
+      "personId": "fae50ce2-13a0-4f07-8400-7e16f8537e6d",
+      "name": "李學益",
+      "county": "桃園市",
+      "district": "桃園市復興區奎輝里",
+      "office": "village_chief",
+      "raceId": "efaa93ee-5de5-4d6b-a816-0def6415a9c4",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "6fac0e0e-4bf1-4a15-bf89-f6f82abf1d5f"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf",
+        "https://votetw.com/wiki/%E6%9D%8E%E5%AD%B8%E7%9B%8A"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-cf72af80aaf61db1b6bbe31f1fb4d9ff",
+      "candidateId": "a0b4f541-09e3-57ff-91d9-1014912b4a42",
+      "personId": "cc752c31-3b73-43ae-84b8-df7677e2b322",
+      "name": "蔡余祿",
+      "county": "臺中市",
+      "district": "臺中市東區東勢里",
+      "office": "village_chief",
+      "raceId": "88f77371-e2b3-41cb-9efb-9fa1b2fd0966",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "73febd59-92d0-416e-9beb-6e0d8c7d64ac",
+        "5b0f7e04-0d4e-495b-8594-d9debcf69bed",
+        "ad53fbfd-48bf-411b-bd2c-95384e2c61a5"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/731a8baa-5afe-467f-9fd3-9b72bd58068b.pdf",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/66_000_00_000_0000.json",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%87%BA%E4%B8%AD%E5%B8%82%E6%9D%B1%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%87%BA%E4%B8%AD%E5%B8%82%E6%9D%B1%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-656d6ee99eb4dd500abdf90607f9cb06",
+      "candidateId": "73bbde4b-7656-582e-8708-bf87f7114a86",
+      "personId": "783c379b-9592-448a-aaff-6e102ad178da",
+      "name": "管慧莉",
+      "county": "臺中市",
+      "district": "臺中市和平區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "9d88e5ff-e818-497a-890d-c4aa1d359bac",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "1fdf1344-f52b-4df9-835f-52d581023f02"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a6a11116-26bc-4639-8eb1-17e478678920.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E4%B8%AD%E5%B8%82%E5%92%8C%E5%B9%B3%E5%8D%80%E5%8D%80%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-0f036624d76126d2e000e30461532480",
+      "candidateId": "fe47eea5-270b-520e-a839-55f95eaff85d",
+      "personId": "4b05a56d-9fdd-48c6-b6f9-20c4c71421b5",
+      "name": "蕭有祥",
+      "county": "臺中市",
+      "district": "臺中市和平區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "9d88e5ff-e818-497a-890d-c4aa1d359bac",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "417d1393-494a-4fbd-8a19-034de95c9416"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a6a11116-26bc-4639-8eb1-17e478678920.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E4%B8%AD%E5%B8%82%E5%92%8C%E5%B9%B3%E5%8D%80%E5%8D%80%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-14e8ef502638414f96ff30f9f38a64e8",
+      "candidateId": "555c377a-cce5-5c00-9d89-6554cc18f2b6",
+      "personId": "d51f7037-561e-400d-8346-66a7900c655c",
+      "name": "徐裕傑",
+      "county": "臺中市",
+      "district": "臺中市和平區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "9d88e5ff-e818-497a-890d-c4aa1d359bac",
+      "decision": "use_existing",
+      "reasonCode": "same_race_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "c6adfcd6-3ad8-4ec8-b1d1-da971fcb2361"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a6a11116-26bc-4639-8eb1-17e478678920.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E4%B8%AD%E5%B8%82%E5%92%8C%E5%B9%B3%E5%8D%80%E5%8D%80%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-6b6d01818d9883c656cd3d6281df51c3",
+      "candidateId": "0fa20078-0af3-5ec0-9f2b-3cb432b70d91",
+      "personId": "f9398ffa-beed-462c-93e2-9363c6095f1a",
+      "name": "陳志勇",
+      "county": "臺中市",
+      "district": "臺中市和平區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "9d88e5ff-e818-497a-890d-c4aa1d359bac",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "8453fcc8-89ed-40bc-99b6-63aa89feffd4"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a6a11116-26bc-4639-8eb1-17e478678920.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E4%B8%AD%E5%B8%82%E5%92%8C%E5%B9%B3%E5%8D%80%E5%8D%80%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-70ff74902428db17b2913673fe186f55",
+      "candidateId": "03fafe2f-12e5-5caf-9d60-001e00c15cbc",
+      "personId": "f6e5adaa-5693-4e24-8a9b-aecafd43da20",
+      "name": "葛榮正",
+      "county": "臺中市",
+      "district": "臺中市和平區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "9d88e5ff-e818-497a-890d-c4aa1d359bac",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "9ef4fe25-804a-4804-a0ad-ce60ab5a26a3"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a6a11116-26bc-4639-8eb1-17e478678920.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E4%B8%AD%E5%B8%82%E5%92%8C%E5%B9%B3%E5%8D%80%E5%8D%80%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-5487e6465e01aaacb411d982053d3456",
+      "candidateId": "1fce1cef-109a-56ed-9cd3-9692fd04cb7c",
+      "personId": "10637806-cf10-4a11-a35c-02e6555cda8f",
+      "name": "楊淑青",
+      "county": "臺中市",
+      "district": "臺中市和平區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "a1f34536-9ee5-419a-9d12-4d4c6e3acf9a",
+      "decision": "use_existing",
+      "reasonCode": "same_race_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "acd7c5f6-645d-44e4-afb7-b5a5a5a3fb53"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a6a11116-26bc-4639-8eb1-17e478678920.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E4%B8%AD%E5%B8%82%E5%92%8C%E5%B9%B3%E5%8D%80%E5%8D%80%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9ede3308e1980ab44cd6a1cd277d3b3b",
+      "candidateId": "1a7c12e2-a018-512e-9447-04703874aff3",
+      "personId": "62ed54e0-e66c-4c7f-afda-08333a1922ad",
+      "name": "林永富",
+      "county": "臺中市",
+      "district": "臺中市和平區第3選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "bbc7ddeb-1634-4b27-9f75-d5395491bdc2",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "8b7d5dd1-9b5e-4f78-9850-ba7576816728"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a6a11116-26bc-4639-8eb1-17e478678920.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E4%B8%AD%E5%B8%82%E5%92%8C%E5%B9%B3%E5%8D%80%E5%8D%80%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-172fcd74793d0258ed9222cb4014b67d",
+      "candidateId": "fc5c68be-45b3-53f7-9782-53e471a8bc83",
+      "personId": "ddfe5983-cfbd-4f15-87cf-ecaa1559698e",
+      "name": "黃裕庭",
+      "county": "高雄市",
+      "district": "高雄市第8選舉區",
+      "office": "councilor",
+      "raceId": "85996e9c-2866-4eb6-9b5d-3c257533b861",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "9ee9fcc4-6091-4995-b7de-2b18591fa8cf"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a4375b10-995d-4ffe-867e-f58633a0355a.pdf",
+        "https://votetw.com/wiki/%E9%BB%83%E8%A3%95%E5%BA%AD"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-d500eb1b5cc5639b7ab74b4fc3778b60",
+      "candidateId": "67fddb56-871d-5fe8-a272-eda044fb45a2",
+      "personId": "83ccc674-52c6-4e39-810e-b09613c60cd4",
+      "name": "李政憲",
+      "county": "高雄市",
+      "district": "高雄市第10選舉區",
+      "office": "councilor",
+      "raceId": "1e22eff7-a384-4f65-98ed-e8f9203f4f76",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "7a7d0790-da55-40f4-87a5-0aab44c344c7",
+        "f7bf0b68-cec9-40b3-9aeb-d7ccc53843ed",
+        "7964732c-37fc-418f-9149-85c8cbefa3c9"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/a4375b10-995d-4ffe-867e-f58633a0355a.pdf",
+        "https://2024.cec.gov.tw/data/json/cand/L1/64000.json",
+        "https://votetw.com/wiki/%E6%9D%8E%E6%94%BF%E6%86%B2"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-79aa672730ba645ad579e0e28697f419",
+      "candidateId": "4b517146-fa33-508c-ad32-35f25aa2ce94",
+      "personId": "4ee9f0d7-77fd-4671-9255-5f8be13e5448",
+      "name": "藍建雄",
+      "county": "高雄市",
+      "district": "高雄市茂林區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "40d9f105-1574-4ef0-8e95-586f97014bd2",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "768d4d09-bb43-43df-b60f-82594759ede4"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf",
+        "https://votetw.com/wiki/%E8%97%8D%E5%BB%BA%E9%9B%84"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-d3256dde54fc38c7ca986d79aba50c47",
+      "candidateId": "58ca1fb3-9b46-53aa-b289-abc04aad3f9a",
+      "personId": "ec0cd99d-f42c-4daa-ab5e-527bff60c61f",
+      "name": "孫佩馨",
+      "county": "高雄市",
+      "district": "高雄市茂林區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "40d9f105-1574-4ef0-8e95-586f97014bd2",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "bb68407c-0008-45c6-bfe4-9c48f33a70f5"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf",
+        "https://votetw.com/wiki/%E5%AD%AB%E4%BD%A9%E9%A6%A8"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-6ef4860050e560d8f03403bf19e540d3",
+      "candidateId": "6efd6cb6-3d59-5c1e-b3bd-cb27d2bda9f6",
+      "personId": "721c28f1-3feb-4e3b-9b59-7c3f7b1472c7",
+      "name": "江世平",
+      "county": "高雄市",
+      "district": "高雄市茂林區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "4f263fbf-9d24-4941-b5b0-901d025d71e7",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "06d0a6f7-9dd9-405c-a227-656ee5f31ca6"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf",
+        "https://votetw.com/wiki/%E6%B1%9F%E4%B8%96%E5%B9%B3"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-58758b7e7440b33a57f52e09178d2cd0",
+      "candidateId": "b444ffdc-3ffc-5da8-8deb-83b3d7106f5c",
+      "personId": "dc5057c0-abe6-52a4-b73e-a4bfddb50a44",
+      "name": "陳良興",
+      "county": "高雄市",
+      "district": "高雄市桃源區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "3f6c3ced-85a4-4e30-9d03-82ec7647b996",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-f746876e25e9b7713f58a1945efe8dcc",
+      "candidateId": "265c672a-ef8f-5eb0-b8d0-df8383ea996f",
+      "personId": "88dae102-451c-4bbd-acdf-01e990d0e7ee",
+      "name": "陳啟明",
+      "county": "高雄市",
+      "district": "高雄市桃源區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "3f6c3ced-85a4-4e30-9d03-82ec7647b996",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "647907d0-af32-4d7f-83a0-28d2e869b916"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf",
+        "https://votetw.com/wiki/%E9%99%B3%E5%95%9F%E6%98%8E"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-7b8e1d9161f451918b0b7402ecd9fd34",
+      "candidateId": "b48f9b2f-a0de-59e4-92d5-29b0db0f3890",
+      "personId": "c04d6698-efbc-4dab-8c57-55b7b42fc495",
+      "name": "賴金龍",
+      "county": "高雄市",
+      "district": "高雄市桃源區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "3f6c3ced-85a4-4e30-9d03-82ec7647b996",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "2d78f081-c7cb-4119-9708-8a3c2812bac9"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf",
+        "https://votetw.com/wiki/%E8%B3%B4%E9%87%91%E9%BE%8D"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-94968308f548065367d8f034ab193839",
+      "candidateId": "dd852388-f40b-52c9-91bf-b49970baea26",
+      "personId": "67d1f13a-26c0-4851-853d-39f352733c1f",
+      "name": "彭孫美雲",
+      "county": "高雄市",
+      "district": "高雄市那瑪夏區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "a394160a-34e1-432f-a90a-3845be9fe1a1",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "d43e962d-e56f-4118-821a-99afacfacd4c"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf",
+        "https://votetw.com/wiki/%E5%BD%AD%E5%AD%AB%E7%BE%8E%E9%9B%B2"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-ee566d2086ab85dd72eba834a464c5f9",
+      "candidateId": "3298ebe1-d9e8-525f-83b4-281757e5ec29",
+      "personId": "02144803-5306-4979-aec0-693ec91b0082",
+      "name": "李順德",
+      "county": "高雄市",
+      "district": "高雄市那瑪夏區第2選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "f126c4cc-14a8-47d9-9e40-132ac1f6a5a4",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "6ebd632a-8c7e-4fcd-aa55-d09d27293756"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/94bee9e4-4f88-4fa1-8e47-43c7fabf3996.pdf",
+        "https://votetw.com/wiki/%E6%9D%8E%E9%A0%86%E5%BE%B7"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-59d482d3145ac3d4c8eb3eabef0056dd",
+      "candidateId": "97f941c4-ae47-5a1a-af82-0eb2d0314ba7",
+      "personId": "620a1732-9c42-57ec-bff1-108aac83da16",
+      "name": "許瓊月",
+      "county": "高雄市",
+      "district": "高雄市鹽埕區南端里",
+      "office": "village_chief",
+      "raceId": "b6eff5ce-d8e1-45ea-8d85-1612b5e1a933",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-8bba9b601bfa32d8e5b422ed45553c1d",
+      "candidateId": "60b4ab25-a773-52d2-801e-687708a044e5",
+      "personId": "ceb07014-8f20-53ff-ac71-6e47303a49b8",
+      "name": "張家馨",
+      "county": "高雄市",
+      "district": "高雄市鼓山區華豐里",
+      "office": "village_chief",
+      "raceId": "bcbb9529-f76c-486f-a718-807d1c8d4d89",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-0ae5b250b17d107d99676444daf54bad",
+      "candidateId": "208fc97a-874e-579c-8f4c-44b409a46d24",
+      "personId": "8173b77d-c72d-4c36-af94-41d8c5b43824",
+      "name": "劉德文",
+      "county": "高雄市",
+      "district": "高雄市左營區屏山里",
+      "office": "village_chief",
+      "raceId": "d34eaa7c-8052-4f89-83bd-be41e6b66b27",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "70be356e-7f47-4173-a1c6-4422fc888b70",
+        "aeac9be8-6f10-4ec1-a05f-68ff4a1a221b",
+        "addb0ba5-1992-4456-a714-59516acd800f"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/64_000_00_000_0000.json",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E9%AB%98%E9%9B%84%E5%B8%82%E5%B7%A6%E7%87%9F%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E9%AB%98%E9%9B%84%E5%B8%82%E5%B7%A6%E7%87%9F%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-181d7d6175d062df0939631b51d8b374",
+      "candidateId": "31968ef3-6447-56b3-a0c4-c583eb1b41db",
+      "personId": "90093e8b-ce1e-4edc-906f-d3f9a6f3291c",
+      "name": "朱冠奕",
+      "county": "高雄市",
+      "district": "高雄市左營區菜福里",
+      "office": "village_chief",
+      "raceId": "45cae8fb-f135-5fc9-899e-8f4ba5ceeb50",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "324b2b11-d37c-407c-9f45-07b9f58011ba"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf",
+        "https://votetw.com/wiki/%E6%9C%B1%E5%86%A0%E5%A5%95"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-cd584e63354194893e584e56c2b902d9",
+      "candidateId": "dad42944-aa0c-5d56-88d0-172a8a2e508e",
+      "personId": "022e3619-e3ff-4249-a1ec-cce91dd9febd",
+      "name": "陳美惠",
+      "county": "高雄市",
+      "district": "高雄市左營區廍後里",
+      "office": "village_chief",
+      "raceId": "9401f628-0752-59f0-932c-ef7b0ca63d2b",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "3ed78abc-0937-4032-aac1-8969547cd9ad",
+        "adc9a146-951c-4820-b269-955eb3042ed5",
+        "8dac9aed-7bbb-4dd8-83bc-c8954eaa5c1c"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/64_000_00_000_0000.json",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E9%AB%98%E9%9B%84%E5%B8%82%E5%B7%A6%E7%87%9F%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E9%AB%98%E9%9B%84%E5%B8%82%E5%B7%A6%E7%87%9F%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-786296cb17c932e528d857754e11dc88",
+      "candidateId": "bbd26955-2dc5-541f-9d78-ca74067ed323",
+      "personId": "9b2e177c-689b-5f66-87f7-ee7e0a4afeb4",
+      "name": "林志諺",
+      "county": "高雄市",
+      "district": "高雄市三民區本武里",
+      "office": "village_chief",
+      "raceId": "eb8d2050-1a98-4217-aef0-462eecf77c2e",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e960d4914eafb8f823a567dc37821eb5",
+      "candidateId": "bee564ff-d98a-5b3b-aa2c-c3220f0b36e2",
+      "personId": "1bdd8faf-6dcd-5a9c-95f9-ca7c3f0f50fb",
+      "name": "林哲緯",
+      "county": "高雄市",
+      "district": "高雄市三民區博惠里",
+      "office": "village_chief",
+      "raceId": "5bfb7220-8711-4585-97b5-5a9bba46a1bc",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-02b5902e83363b557c6367104988bf69",
+      "candidateId": "4660394e-b3d0-5be2-bb54-16bb9f362747",
+      "personId": "6773e0ce-7002-45c5-b91f-722595ede87d",
+      "name": "張麗惠",
+      "county": "高雄市",
+      "district": "高雄市三民區豐裕里",
+      "office": "village_chief",
+      "raceId": "9e468f3e-70d9-4a8d-a1fe-847594a91b62",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "1dfc5618-634c-4bef-903e-5461011b1f0e"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf",
+        "https://votetw.com/wiki/%E5%BC%B5%E9%BA%97%E6%83%A0"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-c7d9190125c167e4a048158edcff2557",
+      "candidateId": "ba6b0a73-462b-559f-9bbc-495d8207522e",
+      "personId": "5068f7d1-7d1f-4be9-ae8a-9152d31a2d34",
+      "name": "黃玉英",
+      "county": "高雄市",
+      "district": "高雄市前金區社東里",
+      "office": "village_chief",
+      "raceId": "ba3f3002-3f7e-4788-be8d-0b128e21c8bc",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "dbf63eb2-82a9-438c-901e-d49eaeaa3416",
+        "8846a72a-5138-455c-a0d1-5dfd89f84bcb"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf",
+        "https://votetw.com/wiki/%E9%BB%83%E7%8E%89%E8%8B%B1"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-c2951814fffb8efd2cd2c8e4f5372106",
+      "candidateId": "faa68dff-5ef7-521b-aba8-e57e4dfdd0d3",
+      "personId": "a4173264-754d-49b6-92a3-c049647045ca",
+      "name": "蔡媽福",
+      "county": "高雄市",
+      "district": "高雄市前鎮區瑞北里",
+      "office": "village_chief",
+      "raceId": "152bfda5-133d-43dd-94ae-6e11bbc7ede0",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "ee517ce1-78a2-4130-833c-14767c5eae8d"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf",
+        "https://votetw.com/wiki/%E8%94%A1%E5%AA%BD%E7%A6%8F"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-fb88905e1e55f6422360cbccc10659a1",
+      "candidateId": "7a2c1f70-df4b-5006-8fbf-cb2e82266512",
+      "personId": "b1109e27-e2ad-56fe-b514-e7110ec06336",
+      "name": "梁文德",
+      "county": "高雄市",
+      "district": "高雄市小港區松山里",
+      "office": "village_chief",
+      "raceId": "bb197b40-63aa-47ee-8229-7d10d984cf12",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-cc2b68c44cfca6d67218423ce5eb0565",
+      "candidateId": "a9d24a5c-63fc-544e-a336-8a88cbecd11f",
+      "personId": "15691572-c921-5ad2-84d2-1e240eec843b",
+      "name": "張瓊文",
+      "county": "高雄市",
+      "district": "高雄市大樹區井腳里",
+      "office": "village_chief",
+      "raceId": "39c2245b-0c53-4283-ab25-e483e5948be1",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-c72938f0e64e919a4d6f3ff609c40cb4",
+      "candidateId": "9258cb6c-0ab2-5633-ab01-c1d06e4313b9",
+      "personId": "b52401f6-785b-5dd2-8b0b-04c355ecf4e7",
+      "name": "陳保源",
+      "county": "高雄市",
+      "district": "高雄市田寮區田寮里",
+      "office": "village_chief",
+      "raceId": "6c43760e-4b9e-4b5b-9ebc-7d71bdee98de",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-65c8af83e99940eac6591c48872bd17e",
+      "candidateId": "1e56ca98-0a9a-5695-b073-9ad854b68725",
+      "personId": "1ef52489-4cc6-531e-9703-eb798b78c240",
+      "name": "張文良",
+      "county": "高雄市",
+      "district": "高雄市六龜區新發里",
+      "office": "village_chief",
+      "raceId": "fb1fb74f-6989-4155-9a4f-280281dae43b",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-0bd0c051c3988afc130e55ebfdcc5887",
+      "candidateId": "cd93e2e9-c9f8-587f-b37e-69004b896109",
+      "personId": "92223ecb-4c58-595b-887c-289ef4164463",
+      "name": "陳世宏",
+      "county": "高雄市",
+      "district": "高雄市六龜區中興里",
+      "office": "village_chief",
+      "raceId": "9f18a5b7-88cb-46cb-bc04-872add99a141",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-4104551653f1ba783dfbd31a16a6117e",
+      "candidateId": "81061b64-02bf-55d3-92ad-c842bacd7004",
+      "personId": "705fd9ac-39bd-5c84-b179-64fc3b3db7ba",
+      "name": "林振興",
+      "county": "高雄市",
+      "district": "高雄市那瑪夏區瑪星哈蘭里",
+      "office": "village_chief",
+      "raceId": "4f37e828-4a9e-5973-9d0a-c0dfc1c382c4",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-d295ef5ed71faa987d5d806e1828ef50",
+      "candidateId": "206267b0-336f-5918-a60e-bc8802995008",
+      "personId": "0d09e9ba-8e6d-491f-8284-bfac7c33a272",
+      "name": "游見璋",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣礁溪鄉",
+      "office": "township_mayor",
+      "raceId": "e63e0ad2-f955-4816-a043-e7dce69bc4e0",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "e336cdab-94ea-484f-9ac2-60163a6dd587"
+      ],
+      "evidenceCandidateIds": [
+        "1c874f7f-62a1-409a-bcbe-f4e34d71f449",
+        "dcaa5b7e-b256-4fa2-9d95-0d6095d6e705",
+        "2fa33bed-9fbc-4c07-a9fa-e9f8a8095fe5"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/5a545f62-573e-4e1f-b505-7f9350fffda9.pdf",
+        "https://votetw.com/wiki/%E6%B8%B8%E8%A6%8B%E7%92%8B",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%A4%81%E6%BA%AA%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%A4%81%E6%BA%AA%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_002_00_000_0000.json"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-7b83490472d9a8514e59aad619369948",
+      "candidateId": "6cda9313-b573-5040-b337-3642bb970b64",
+      "personId": "e673ce5c-2f61-44c7-96cf-a9537e7a1b3c",
+      "name": "林松根",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣冬山鄉",
+      "office": "township_mayor",
+      "raceId": "6e73c1dd-b06e-410c-9c86-34b17a2010fe",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "fc21f429-a578-4d0c-a855-4529e701aae0"
+      ],
+      "evidenceCandidateIds": [
+        "ae316c82-c7fe-4851-aa04-399e63b58706"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/5a545f62-573e-4e1f-b505-7f9350fffda9.pdf",
+        "https://votetw.com/wiki/%E6%9E%97%E6%9D%BE%E6%A0%B9",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%86%AC%E5%B1%B1%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-200a74bdc11a2fdc345071d7cba7e869",
+      "candidateId": "651fb6f9-6992-5e6a-9701-258356f73450",
+      "personId": "3abddbab-4ee3-46b5-957f-3ac6a1665bd9",
+      "name": "張明昌",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣員山鄉第4選舉區",
+      "office": "township_representative",
+      "raceId": "a8d5c010-1184-472d-9fc7-1fd91f51b520",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "adc83391-2a30-48a4-83b7-4ed641e637f6"
+      ],
+      "evidenceCandidateIds": [
+        "dd8b3d36-527d-424d-81d2-2d6f4c50993b",
+        "c118b255-8dd9-46a5-94f0-fa36df17085e",
+        "ff87dfd2-1233-4982-aa8e-3afb4c269f30"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/cd5a1add-e814-46d3-a6ff-e3ffc8dd07a2.pdf",
+        "https://votetw.com/wiki/%E5%BC%B5%E6%98%8E%E6%98%8C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/10_002_00_000_0000.json",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%93%A1%E5%B1%B1%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%93%A1%E5%B1%B1%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-b22ae759f8ac5538c078691974ebb558",
+      "candidateId": "404c2963-d061-511f-b8cc-9323b81ab925",
+      "personId": "020c5493-b92a-4c7c-aeeb-7f530d9e149f",
+      "name": "黃聰明",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣南澳鄉第4選舉區",
+      "office": "township_representative",
+      "raceId": "1c6e7502-133e-40ff-941c-4eb8e3184439",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "20ff2d93-d852-49b4-b122-899ad51be0e7"
+      ],
+      "evidenceCandidateIds": [
+        "34e1682b-e23b-42d6-a558-04ce72f9676d",
+        "e8924db3-12b7-4774-856e-2be04946a9b0",
+        "1a75dc40-46a3-44d2-b228-bb7f3a8b4c7d"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/cd5a1add-e814-46d3-a6ff-e3ffc8dd07a2.pdf",
+        "https://votetw.com/wiki/%E9%BB%83%E8%81%B0%E6%98%8E",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/V0/00/80325f73197f1d752b987778c725d20d/L/10_002_00_000_0000.json",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%8D%97%E6%BE%B3%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%8D%97%E6%BE%B3%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e9c509844b6f4e11effd01bbb0bbca9f",
+      "candidateId": "072505a7-8cf7-5204-bde5-413bb1dc3ae0",
+      "personId": "0f2525a9-8484-4885-a0b6-156a4b4880ea",
+      "name": "江聰明",
+      "county": "宜蘭縣",
+      "district": "宜蘭縣宜蘭市孝廉里",
+      "office": "village_chief",
+      "raceId": "33c18fff-2fbe-405f-8384-18f60a0c5ee7",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "31f9338f-5ccf-480b-957a-5c2013d20e33",
+        "1b4fa507-8f62-41df-b3a3-2ecd40dd4771"
+      ],
+      "evidenceCandidateIds": [
+        "57596ad7-aeb5-426c-a38a-d3847bbf6e75"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/393f2e1b-f64d-47ae-adb0-d82e0853e9f2.pdf",
+        "https://votetw.com/wiki/%E6%B1%9F%E8%81%B0%E6%98%8E",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%AE%9C%E8%98%AD%E7%B8%A3%E5%AE%9C%E8%98%AD%E5%B8%82%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-38a75ab3d386bde642c42e924238c403",
+      "candidateId": "45a8c9d7-c7c7-566e-9dfd-42e0fa454ad3",
+      "personId": "b26c8b35-014a-41bc-a1c2-380fe2c6b87b",
+      "name": "歐陽霆",
+      "county": "新竹縣",
+      "district": "新竹縣第2選舉區",
+      "office": "councilor",
+      "raceId": "f060ff5f-5b9c-4389-b4ec-c78040e48eaf",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "5b74f4bc-7118-4d2a-a066-f1e91b2c0b5e"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://www.wikidata.org/wiki/Q85881655"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9eff6cae612cb07d98a04644e8c92eb9",
+      "candidateId": "1b7feaa2-7da7-556f-af99-e36f9791f8f0",
+      "personId": "7748a12a-a34e-4495-9a9a-7288e6cbba7f",
+      "name": "蔡蕥鍹",
+      "county": "新竹縣",
+      "district": "新竹縣第2選舉區",
+      "office": "councilor",
+      "raceId": "f060ff5f-5b9c-4389-b4ec-c78040e48eaf",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "33c12269-9ce8-488c-be25-9ced27c24786"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://data.gov.tw/dataset/13119"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-bc439b1f0e2de55eac513dd5bc54388c",
+      "candidateId": "d30d4904-4c07-5b5c-ad72-25075e0f14a9",
+      "personId": "12966958-dff2-4576-a2da-340acf6aef16",
+      "name": "朱健銘",
+      "county": "新竹縣",
+      "district": "新竹縣第2選舉區",
+      "office": "councilor",
+      "raceId": "f060ff5f-5b9c-4389-b4ec-c78040e48eaf",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "4a8f3650-2c77-4773-9237-ed627e2a4cea"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://data.gov.tw/dataset/13119"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-fd5a9676c07a31bfc9e8aa9570f1bc19",
+      "candidateId": "0a2e4cce-9273-5ebb-add5-102bed83dfe6",
+      "personId": "ba3f7dd8-5f26-4a88-9df4-9bb518c2909a",
+      "name": "邱靖雅",
+      "county": "新竹縣",
+      "district": "新竹縣第2選舉區",
+      "office": "councilor",
+      "raceId": "f060ff5f-5b9c-4389-b4ec-c78040e48eaf",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "5a7f8b32-a904-4d61-b13e-cee6a6c64d6a"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://www.wikidata.org/wiki/Q18119253"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-52f1d50274496f9af276ee2f46c49058",
+      "candidateId": "944ac2e1-759b-5dc4-bcbc-335e9ca2984c",
+      "personId": "54709b82-1761-4aa8-aec2-6a1eb704aef2",
+      "name": "余筱菁",
+      "county": "新竹縣",
+      "district": "新竹縣第3選舉區",
+      "office": "councilor",
+      "raceId": "29fd64ea-7a5b-49b6-9ced-8a9884d73a8f",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "56c8b2df-3459-45f1-a8aa-08f7de51d42b"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://2024.cec.gov.tw/data/json/cand/L1/10004.json"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-08e72710d0b112dd1d9de2420303b184",
+      "candidateId": "caeb949c-6d40-50aa-82dc-5082131ef193",
+      "personId": "7bfe259a-5a98-4b8c-ac75-40a056e0a7e6",
+      "name": "陳栢誠",
+      "county": "新竹縣",
+      "district": "新竹縣第3選舉區",
+      "office": "councilor",
+      "raceId": "29fd64ea-7a5b-49b6-9ced-8a9884d73a8f",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "b7fd9011-7a5c-4dec-8183-3f4d3f649342"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://votetw.com/wiki/%E9%99%B3%E6%A0%A2%E8%AA%A0"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-89881c6c2fa1bd22642819c6855101a4",
+      "candidateId": "24d562d5-745c-561d-936e-d9ee0356042d",
+      "personId": "ddd21931-9e36-4740-a301-1ae11b395973",
+      "name": "戴翊如",
+      "county": "新竹縣",
+      "district": "新竹縣第3選舉區",
+      "office": "councilor",
+      "raceId": "29fd64ea-7a5b-49b6-9ced-8a9884d73a8f",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "1dc0ed7a-edaf-4c3a-8d31-ff639be87dcd"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://votetw.com/wiki/%E6%88%B4%E7%BF%8A%E5%A6%82"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-5d554c2184c91a3a41ba9800ad065ffa",
+      "candidateId": "47e1ceab-b296-5b88-afec-2ec322c389ac",
+      "personId": "f4df2e87-4dd0-4bfd-921b-52184cb451b8",
+      "name": "陳新源",
+      "county": "新竹縣",
+      "district": "新竹縣第6選舉區",
+      "office": "councilor",
+      "raceId": "7f0f87d7-3cb2-4dac-9625-18ebd8039794",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "19ce0483-05c9-45c2-88e7-aa20af8ba669"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://votetw.com/wiki/%E9%99%B3%E6%96%B0%E6%BA%90"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9a6dd179bb8102bec123f12b241cf6ba",
+      "candidateId": "7202441f-dc59-578f-b5d9-1e9f53ff5cd2",
+      "personId": "9a7cd6ad-f0e8-461a-94e9-6223f3d0ea79",
+      "name": "邱坤桶",
+      "county": "新竹縣",
+      "district": "新竹縣第10選舉區",
+      "office": "councilor",
+      "raceId": "2067bd6f-4e66-40bd-a78b-2f3437e2aed1",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "32ca8be4-37d4-4c15-a69e-2a0c1b8cae51"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://data.gov.tw/dataset/13119"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-0f1b5ebda59ddbbd409b2783aa40b7c0",
+      "candidateId": "d0c8f7f2-e709-541c-af8d-5bfd9b030d22",
+      "personId": "4d6e1358-39cb-4f6f-a61c-7091b2e6f548",
+      "name": "王辰翔",
+      "county": "新竹縣",
+      "district": "新竹縣第11選舉區",
+      "office": "councilor",
+      "raceId": "fea6ee1a-ddd2-4027-b204-de00bbb01677",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "a639fd58-e617-43d2-8210-65048a30e58e"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://data.gov.tw/dataset/13119"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-79816bfe3725590a2ce17eb59fcaea7d",
+      "candidateId": "ec12c81b-5a6c-5785-bba2-b29cf0d35fed",
+      "personId": "ecf58985-2921-527d-b865-956de1db7e3e",
+      "name": "林秉君 kaying． kuying． kalang",
+      "county": "新竹縣",
+      "district": "新竹縣第12選舉區",
+      "office": "councilor",
+      "raceId": "f2de2386-e6e9-46a0-a87f-ac0bd0a1cf19",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-cabe88141bd774982816a058f1a45945",
+      "candidateId": "a62b2170-1af4-5b1f-93ed-9131e29d1983",
+      "personId": "c7ac800a-05fc-4c30-b1dc-5400450c1a3d",
+      "name": "林世偉",
+      "county": "新竹縣",
+      "district": "新竹縣第13選舉區",
+      "office": "councilor",
+      "raceId": "a11b43a5-523c-4f7e-a394-410725a1ec53",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "0d201a98-482f-47a7-858a-401ebcbc93f6",
+        "f2556447-6c33-453e-bb6d-64d71d33dc16"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/30927dca-f200-425f-b462-281a353c8ec7.pdf",
+        "https://2024.cec.gov.tw/data/json/cand/L3/00000.json"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-633636441fac1326ab8c662a156b92f7",
+      "candidateId": "f74307e7-ff01-5b95-bd12-1f7a25a52d26",
+      "personId": "1041f74e-e433-4c11-be69-fbcca4a84c63",
+      "name": "吳旭智",
+      "county": "新竹縣",
+      "district": "新竹縣竹北市",
+      "office": "township_mayor",
+      "raceId": "faa43ba2-ffc2-4265-a687-235fcb597764",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "b47359d6-9db2-4bf3-82c6-28ba57ed9d3e"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ce0f22c7-0255-4184-9411-1302ec497eee.pdf",
+        "https://data.gov.tw/dataset/13119"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-020a34981065576666ea3a3ade9fe50a",
+      "candidateId": "9d39a474-3f1b-5e46-bc94-951bdd9bf301",
+      "personId": "6b7ee7e7-4c78-40da-bbef-1f2937c41ee5",
+      "name": "林子丞",
+      "county": "新竹縣",
+      "district": "新竹縣竹東鎮第3選舉區",
+      "office": "township_representative",
+      "raceId": "2c84170b-526f-48dd-82a4-c95b1d39d77d",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "bc920d8e-7987-4eaa-834f-f4194c8d4c11"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c25f6511-df2b-4c47-88b5-7e6c63d721e8.pdf",
+        "https://votetw.com/wiki/%E6%9E%97%E5%AD%90%E4%B8%9E"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-263702911c337fbda352f779ea11448f",
+      "candidateId": "375c23b5-8af0-5f14-9798-c6da2c5eb1dc",
+      "personId": "44c5688c-901f-4cba-98a0-e873eabee3bc",
+      "name": "吳國禎",
+      "county": "新竹縣",
+      "district": "新竹縣新豐鄉第3選舉區",
+      "office": "township_representative",
+      "raceId": "1ad5c7b2-49c8-4df0-81e5-04b6ac00d055",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "7aa54692-eb1e-491b-9801-c3063172e665"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c25f6511-df2b-4c47-88b5-7e6c63d721e8.pdf",
+        "https://votetw.com/wiki/%E5%90%B3%E5%9C%8B%E7%A6%8E"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-c17b457d4fedbb6146f692b99ca94958",
+      "candidateId": "2141e97a-2654-51ee-9ad0-fd1dfe18ec7e",
+      "personId": "b1c939d7-4454-5a9c-9264-2a3418b76f90",
+      "name": "林昱安",
+      "county": "新竹縣",
+      "district": "新竹縣竹東鎮頭重里",
+      "office": "village_chief",
+      "raceId": "2d469ca5-b974-4f2e-922c-a86914f8e091",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/bb22bdcd-a71e-4906-8070-e90ccd6159aa.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-36fc7d0832a57d08b7014c5b6c9a990a",
+      "candidateId": "5ab1c49e-3515-5dae-86b5-2fb304020a0e",
+      "personId": "4aa9d2c0-244e-5ee4-8e67-0083af62dace",
+      "name": "陳建全",
+      "county": "新竹縣",
+      "district": "新竹縣湖口鄉德盛村",
+      "office": "village_chief",
+      "raceId": "5c34c117-b397-4390-b206-6c778a874507",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/bb22bdcd-a71e-4906-8070-e90ccd6159aa.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-78b541111d7ddb18747cf6026c17d80a",
+      "candidateId": "8a80960b-686d-58d1-ba54-7a50c87e494d",
+      "personId": "67c34713-cf97-5e1d-9a19-cd7ebb21fcba",
+      "name": "張凱傑",
+      "county": "新竹縣",
+      "district": "新竹縣湖口鄉中正村",
+      "office": "village_chief",
+      "raceId": "88658623-90be-40e8-ac97-55a607433192",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/bb22bdcd-a71e-4906-8070-e90ccd6159aa.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-b750807a372d9847d4fc58bc413e87b6",
+      "candidateId": "10f5ee09-fe5e-5b6e-8b92-3a256958b2f8",
+      "personId": "8790220a-fcd3-5ab5-a1e1-58069e881f93",
+      "name": "林振興",
+      "county": "新竹縣",
+      "district": "新竹縣橫山鄉大肚村",
+      "office": "village_chief",
+      "raceId": "f87d0655-7171-4247-a7d4-4447262c138f",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/bb22bdcd-a71e-4906-8070-e90ccd6159aa.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-cad14d8629b488822cb6ba752ccd6e19",
+      "candidateId": "747d9862-d5e1-5081-b0f9-efb53d2cd2fe",
+      "personId": "efebbd9f-c544-5045-a9f4-531b5dfacc23",
+      "name": "林鴻鈞",
+      "county": "新竹縣",
+      "district": "新竹縣北埔鄉水磜村",
+      "office": "village_chief",
+      "raceId": "eeb48d41-c765-47c3-a9df-591a182b15c6",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/bb22bdcd-a71e-4906-8070-e90ccd6159aa.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9bdf8d240b524f21f5c695ecf686fe04",
+      "candidateId": "77c416d0-8fb6-5e30-b1bf-0ada99c98df4",
+      "personId": "df7dba2c-0cd9-4aa2-9367-70922be901ac",
+      "name": "黃連 Sauniyaw.Ruveljeng",
+      "county": "屏東縣",
+      "district": "屏東縣春日鄉第2選舉區",
+      "office": "township_representative",
+      "raceId": "007c3741-9f70-44f7-a355-970d212873b6",
+      "decision": "use_existing",
+      "reasonCode": "same_race_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "00ed2cb7-1d46-486a-8926-e916fcc07215"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E6%98%A5%E6%97%A5%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-bcc12ee71b105a9fdc00dfb284d45351",
+      "candidateId": "15484a44-e3e0-5b74-9611-941b6d2ae664",
+      "personId": "dc552a7c-9f3e-4f30-bc51-1da64bf0644e",
+      "name": "王景昌",
+      "county": "臺東縣",
+      "district": "臺東縣大武鄉",
+      "office": "township_mayor",
+      "raceId": "ddd06ba5-8115-47b8-bd12-f15e85c98f83",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "480b58c7-2ed6-4688-9529-6b4c0c4956fb"
+      ],
+      "evidenceCandidateIds": [
+        "6d4d7e02-f89d-46c8-bb5c-25d1a693bcc3",
+        "cf889eb5-7095-4954-ac37-9d8041b14f3e",
+        "157ca621-e5d6-43eb-821f-7749bff04c96"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/2f68b219-db5d-4d2d-add3-2eda8306b104.pdf",
+        "https://votetw.com/wiki/%E7%8E%8B%E6%99%AF%E6%98%8C",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%A4%A7%E6%AD%A6%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%A4%A7%E6%AD%A6%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-4b5ce9cd9478059b71b97a43d5d45ae6",
+      "candidateId": "f4b2d02a-722b-5604-849d-92e77d42d881",
+      "personId": "fdc119c9-d28a-4508-99c2-3a926ee15630",
+      "name": "王崑亮",
+      "county": "臺東縣",
+      "district": "臺東縣長濱鄉第1選舉區",
+      "office": "township_representative",
+      "raceId": "ff3254c1-d3d3-4761-b5e2-71c3b071b20c",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "949b6f30-31c1-425c-9428-1e7fb4727473"
+      ],
+      "evidenceCandidateIds": [
+        "0cdc85eb-21ff-4b7c-a19a-d480fcfc0e94"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ad6f26ea-8ca2-4c9f-b746-f467c4768230.pdf",
+        "https://votetw.com/wiki/%E7%8E%8B%E5%B4%91%E4%BA%AE",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E9%95%B7%E6%BF%B1%E9%84%89%E9%84%89%E9%95%B7%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-310660ddb3792b60f7c88557e1ad81c6",
+      "candidateId": "91869089-8ac4-5a51-a16a-ca4a0d819283",
+      "personId": "11383f3d-4444-4508-a8b5-54b749676f95",
+      "name": "趙韋童",
+      "county": "臺東縣",
+      "district": "臺東縣臺東市豐年里",
+      "office": "village_chief",
+      "raceId": "0ddda088-7538-4cb1-8d92-9e57357aac2a",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "5d1015d3-d233-427e-9137-88e592610609"
+      ],
+      "evidenceCandidateIds": [
+        "5902a262-b21b-4690-a008-7c012da20dd7"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/d1f90517-2239-475d-a9ed-fba93c43b96a.pdf",
+        "https://votetw.com/wiki/%E8%B6%99%E9%9F%8B%E7%AB%A5",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%87%BA%E6%9D%B1%E5%B8%82%E5%B8%82%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-6462d1155e32440c5236be9be0bd357a",
+      "candidateId": "4b197e1c-8247-555e-af2e-8371e19420b0",
+      "personId": "829e9ab2-6442-43a6-b800-1a1d68b4a686",
+      "name": "劉春美",
+      "county": "臺東縣",
+      "district": "臺東縣臺東市豐盛里",
+      "office": "village_chief",
+      "raceId": "d31523fd-ca5d-4639-81b8-297619ceeb14",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "f646911f-4562-45bf-8b31-50a8d974961a"
+      ],
+      "evidenceCandidateIds": [
+        "c5dcc7ad-98bc-4c8c-bb6f-711bfc2384c4"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/d1f90517-2239-475d-a9ed-fba93c43b96a.pdf",
+        "https://votetw.com/wiki/%E5%8A%89%E6%98%A5%E7%BE%8E",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E8%87%BA%E6%9D%B1%E5%B8%82%E5%B8%82%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-bb915b601f6cb7ab646280c3e2b9e1e1",
+      "candidateId": "785729fb-9c8f-5e94-99db-d827614f5f22",
+      "personId": "b958fe23-0394-43a2-b6f8-5e23f4174cf9",
+      "name": "黃萬吉",
+      "county": "臺東縣",
+      "district": "臺東縣大武鄉大武村",
+      "office": "village_chief",
+      "raceId": "c7514e22-acca-4455-b6ea-08ab10bea4c3",
+      "decision": "use_existing",
+      "reasonCode": "birth_year_gender_local_history",
+      "evidenceClaimIds": [
+        "3e7bfffc-c0ce-47f7-8131-7191cce141b6"
+      ],
+      "evidenceCandidateIds": [
+        "984a0b9b-c26e-4719-80eb-40ca7df95da3",
+        "61dc451e-4db0-4a28-8b1e-f7763019dc0d",
+        "3301ff2f-460d-40e4-a5f3-4dd9048d1876"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/d1f90517-2239-475d-a9ed-fba93c43b96a.pdf",
+        "https://votetw.com/wiki/%E9%BB%83%E8%90%AC%E5%90%89",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%A4%A7%E6%AD%A6%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_014_00_000_0000.json",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%87%BA%E6%9D%B1%E7%B8%A3%E5%A4%A7%E6%AD%A6%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-afa0db6be5765a4f15f233914ff7cdb3",
+      "candidateId": "a193a43b-c829-5e57-b188-5bbaa245e395",
+      "personId": "365bd4d7-3fd7-53a6-93f8-70b771d462ec",
+      "name": "陳彥良",
+      "county": "嘉義市",
+      "district": "嘉義市西區大溪里",
+      "office": "village_chief",
+      "raceId": "5628ea5b-f488-42c9-98c1-5422ec6b7ba7",
+      "decision": "create_new",
+      "reasonCode": "official_full_birth_new_person",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/5d73b0fb-90d9-40e4-b285-fd246007a858.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-558c84f0f29bc1b050fa644292fda327",
+      "candidateId": "87e03934-1586-54d7-9053-44ccdc241479",
+      "personId": "fe12b6bd-ca14-54d9-83b4-f3d2c89c8ccc",
+      "name": "吳進義",
+      "county": "新北市",
+      "district": "新北市蘆洲區長安里",
+      "office": "village_chief",
+      "raceId": "73d557f9-ae7b-4e0c-9110-724710290ca6",
+      "decision": "create_new",
+      "reasonCode": "distinct_full_birth_date",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-a667244b4ebb0d0beb76eaac0287c042",
+      "candidateId": "cb65dfd6-4d13-5bdd-ac57-91b08772bf91",
+      "personId": "08ed0e56-6d14-557f-8620-effead712c89",
+      "name": "張智鈞",
+      "county": "新北市",
+      "district": "新北市五股區成州里",
+      "office": "village_chief",
+      "raceId": "8270e202-1002-42a2-8be6-030f5ef7d7a9",
+      "decision": "create_new",
+      "reasonCode": "distinct_full_birth_date",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-95963577a97bd669e639e1730facf6ae",
+      "candidateId": "dfa3a698-febd-56a9-ad19-edf64657a2ff",
+      "personId": "b70d5327-ca6e-5e26-802c-f5686f24e1f6",
+      "name": "陳雅萍",
+      "county": "新北市",
+      "district": "新北市深坑區阿柔里",
+      "office": "village_chief",
+      "raceId": "f249cb85-947d-4442-aead-5f000be41c85",
+      "decision": "create_new",
+      "reasonCode": "distinct_full_birth_date",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/472d2f18-af27-4d33-9f1c-8ab548311f52.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-84e1ffd2fd754a2c3ad463a3f2c1b1fb",
+      "candidateId": "b667003d-6b19-54d3-9ea8-860195826909",
+      "personId": "84052aa8-4794-45c9-bb47-02cc49890575",
+      "name": "王曉貞",
+      "county": "桃園市",
+      "district": "桃園市復興區第1選舉區",
+      "office": "indigenous_district_representative",
+      "raceId": "75916e3c-2690-4732-9f19-ae19aa3f016c",
+      "decision": "use_existing",
+      "reasonCode": "exact_birth_date_unique",
+      "evidenceClaimIds": [
+        "0a71dfc5-907b-4fbd-89a2-1b8f6d7a7b59"
+      ],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/f512a9c4-6e3e-4379-939a-68e5d3778394.pdf",
+        "https://votetw.com/wiki/%E7%8E%8B%E6%9B%89%E8%B2%9E"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-58dee30c7317124e16ad24c5a3e0ed75",
+      "candidateId": "84456bfe-9fa3-545b-8ada-9b14e2cbef35",
+      "personId": "b0934ddb-1cb5-5701-bc99-a8c9811d1347",
+      "name": "陳清榮",
+      "county": "桃園市",
+      "district": "桃園市大園區竹圍里",
+      "office": "village_chief",
+      "raceId": "be3ef91c-3f43-4018-816e-72b835ddeb0e",
+      "decision": "create_new",
+      "reasonCode": "distinct_full_birth_date",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/051b1f8a-b649-4135-bc35-4b9f0192ab7c.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-a6d1678192532944ce2b46d165bcd673",
+      "candidateId": "ade8c99a-96a9-59d0-823f-7cf0187b93e6",
+      "personId": "41e6659f-e39e-5af5-b9d1-909202270235",
+      "name": "楊賜濱",
+      "county": "高雄市",
+      "district": "高雄市苓雅區福隆里",
+      "office": "village_chief",
+      "raceId": "1780839a-59ca-4178-8da5-8f000932d27a",
+      "decision": "create_new",
+      "reasonCode": "distinct_full_birth_date",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-a4f5efc6a52d0541c019d670e396572c",
+      "candidateId": "4929a622-3886-59c7-8494-40111de1d938",
+      "personId": "7741715b-e45f-5a1a-a780-7b0e89054c8e",
+      "name": "郭淑玲",
+      "county": "高雄市",
+      "district": "高雄市岡山區竹圍里",
+      "office": "village_chief",
+      "raceId": "0fc6bd6d-43f5-47bc-93d1-c2a8727655ae",
+      "decision": "create_new",
+      "reasonCode": "distinct_full_birth_date",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e672a05c6342dd5f86fc151b17305726",
+      "candidateId": "b04964c8-9631-5e45-9e68-dc329591966d",
+      "personId": "40d2c50c-0536-53a5-b760-05eaa497f859",
+      "name": "曾秋月",
+      "county": "新竹縣",
+      "district": "新竹縣竹北市中崙里",
+      "office": "village_chief",
+      "raceId": "b6277aef-a71b-41a3-ae64-417fabf012bd",
+      "decision": "create_new",
+      "reasonCode": "distinct_full_birth_date",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/bb22bdcd-a71e-4906-8070-e90ccd6159aa.pdf"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-91535cb01d57c70b8b637a1577b67123",
+      "candidateId": "ee0dcecd-4ad2-52a4-98ce-66140df9c079",
+      "personId": "88ad0c23-8d95-4c0c-9beb-6c624510799e",
+      "name": "張修銘",
+      "county": "苗栗縣",
+      "district": "苗栗縣頭份市第4選舉區",
+      "office": "township_representative",
+      "raceId": "7046e829-b2c2-404a-864e-a36122f01ac7",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "3f566e5f-5862-453f-bce4-cdacc04d9594"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/3fb58698-8803-4784-92c6-af5098503fd1.xls",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E9%A0%AD%E4%BB%BD%E5%B8%82%E5%B8%82%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-cb7d2b30bcf43eab512008ec725c1351",
+      "candidateId": "9be919dc-82a9-573f-b098-cd63ecfc381c",
+      "personId": "8b6a71c0-9fee-47e2-92c1-c965e9b2407d",
+      "name": "劉湧輝",
+      "county": "苗栗縣",
+      "district": "苗栗縣銅鑼鄉朝陽村",
+      "office": "village_chief",
+      "raceId": "632a452d-0683-4a42-9e8e-64ee29795d0f",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "b60ab26d-063e-4c26-ab95-693e228e664d"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/3b946f08-7ab6-4d6e-942a-af9a8d4c3aa9.xls",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8B%97%E6%A0%97%E7%B8%A3%E9%8A%85%E9%91%BC%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-4e95b33623f51dbd39df2bd102c63883",
+      "candidateId": "90a211f8-2a28-5fcc-9f4d-332ef463271f",
+      "personId": "c0d3fa95-a79f-4fb3-ab07-5a2fc01b3995",
+      "name": "張宏洲",
+      "county": "雲林縣",
+      "district": "雲林縣林內鄉第1選舉區",
+      "office": "township_representative",
+      "raceId": "11394054-ddae-42c5-9ed7-e932145daddf",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "83283f0d-72f8-44c7-9cdc-4a5dc5967524"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/132f05d2-243a-4ece-af28-3aba9f5f63df.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%9E%97%E5%85%A7%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-0c59db8a23e20c5f7905d270bceca914",
+      "candidateId": "9d2e46d6-c3bf-5fa8-aa5e-75bda526bba1",
+      "personId": "5aa16da0-18b9-4424-a8b3-6d592a08bbb1",
+      "name": "邱敏慧",
+      "county": "屏東縣",
+      "district": "屏東縣南州鄉第1選舉區",
+      "office": "township_representative",
+      "raceId": "6fe0fde0-39a5-4cf3-9dc0-c49077e9de90",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "bc22ba1e-6858-4474-9f80-51d146ae7924",
+        "322e16f8-5110-46f0-9f57-e3c0e8dd1fe0",
+        "2d58e91f-3167-4ad3-be2a-f7228231e800"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_013_00_000_0000.json"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-738bbda1504db106bf5dd813074e5e24",
+      "candidateId": "5b05afa7-12fc-5896-8eaa-3f65d4ad9690",
+      "personId": "808f7cfa-4859-4693-b5a8-332c7ec3242f",
+      "name": "張江豪",
+      "county": "屏東縣",
+      "district": "屏東縣南州鄉第1選舉區",
+      "office": "township_representative",
+      "raceId": "6fe0fde0-39a5-4cf3-9dc0-c49077e9de90",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "92f8b632-4a0e-4671-b6a4-9441fc5d5855",
+        "b5446ea5-9470-470a-89ce-d1ba4b0678ee",
+        "bc57b027-6ad5-43ab-8009-56e2038c5ce9"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_013_00_000_0000.json"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-378499aa3405c91cbe8d8408e90e82b0",
+      "candidateId": "ad53e2da-6c62-56a1-909d-e6d5f0dc95f4",
+      "personId": "cff639e0-0ec0-4c70-be11-f9572b08f033",
+      "name": "潘林素月",
+      "county": "屏東縣",
+      "district": "屏東縣南州鄉第2選舉區",
+      "office": "township_representative",
+      "raceId": "0abc154e-c47b-4bca-aa74-7ea596bacb68",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "3b9ebfbf-8ade-4525-b398-ff2dbc312004",
+        "e705800b-eeda-4fb7-966d-174e7ab771ad",
+        "0ac721a9-dedf-463d-bade-44ca5776dc0f"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_013_00_000_0000.json"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e53e609b5d597319789229f9c03bc124",
+      "candidateId": "4f6c4be7-34ec-5e53-badc-8bf3a952fb77",
+      "personId": "6dfff2d7-76a5-4fdb-b257-5ed8122cebe7",
+      "name": "林逢宜",
+      "county": "屏東縣",
+      "district": "屏東縣南州鄉第2選舉區",
+      "office": "township_representative",
+      "raceId": "0abc154e-c47b-4bca-aa74-7ea596bacb68",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "e0fac327-d532-4df6-8a15-51f18146f0b8",
+        "57c1fbe1-cd92-459a-a5c0-e015efd82d07",
+        "19dbbcf0-e062-42ff-9dad-46b44435e934"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_013_00_000_0000.json"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-d71aeded6676e3ab3df83030b42a1daa",
+      "candidateId": "7b2342b2-5ea3-5a37-a646-42b033f15f82",
+      "personId": "e472f011-4fba-4a0b-b40a-de2de1dfa882",
+      "name": "陳茂民",
+      "county": "屏東縣",
+      "district": "屏東縣南州鄉第2選舉區",
+      "office": "township_representative",
+      "raceId": "0abc154e-c47b-4bca-aa74-7ea596bacb68",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "0fe09fc7-af7e-451c-ba3c-606f9f57ff31"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-541a0565aba1e6eb0b91076515606d7c",
+      "candidateId": "babd1bdf-fe8c-5574-a545-ff8b2edb5b38",
+      "personId": "0117fc65-543b-4759-a322-d319e762833b",
+      "name": "黃登凱",
+      "county": "屏東縣",
+      "district": "屏東縣南州鄉第3選舉區",
+      "office": "township_representative",
+      "raceId": "7037f6c1-deb3-4b51-b34c-c94adcc2ec40",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "98311e5b-e880-4eb5-9233-69bacff75a2b",
+        "636fe216-35d1-4fc8-afba-4d3fac963dc1",
+        "496773e1-caa9-4273-80d4-31df65e7323b"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2018%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%8D%97%E5%B7%9E%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://db.cec.gov.tw/static/elections/data/tickets/ELC/R2/R1/ce8e721f94e70dca972a09b71fc4058b/A/10_013_00_000_0000.json"
+      ]
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-15737b1de26f945415058a85e555ea6d",
+      "candidateId": "8bbef4f9-81ec-50b1-bdd4-127ecdea4e30",
+      "personId": "6cb612bd-3110-4d7d-8b65-42b9a13ca4ed",
+      "name": "曾煜超",
+      "county": "屏東縣",
+      "district": "屏東縣東港鎮共和里",
+      "office": "village_chief",
+      "raceId": "02bea718-6634-45f5-b61d-0e2e21db3e1e",
+      "decision": "use_existing",
+      "reasonCode": "same_locality_gender_party_history",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "60809083-bda3-4a2f-a4c1-2317450488ad"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E5%B1%8F%E6%9D%B1%E7%B8%A3%E6%9D%B1%E6%B8%AF%E9%8E%AE%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ]
+    }
+  ]
+}

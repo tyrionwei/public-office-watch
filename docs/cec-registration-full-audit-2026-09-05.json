@@ -1,0 +1,147 @@
+{
+  "environment": "full-local",
+  "auditedAt": "2026-09-05T14:14:45.519617+00:00",
+  "sourceRecords": 18417,
+  "distinctClaimKeys": 18417,
+  "distinctSourcePeople": 18417,
+  "reviewStatuses": {
+    "pending": 916,
+    "rejected": 1,
+    "verified": 17500
+  },
+  "officeBreakdown": [
+    {
+      "reviewStatus": "pending",
+      "office": "councilor",
+      "records": 136
+    },
+    {
+      "reviewStatus": "pending",
+      "office": "indigenous_district_chief",
+      "records": 5
+    },
+    {
+      "reviewStatus": "pending",
+      "office": "indigenous_district_representative",
+      "records": 2
+    },
+    {
+      "reviewStatus": "pending",
+      "office": "mayor",
+      "records": 3
+    },
+    {
+      "reviewStatus": "pending",
+      "office": "township_mayor",
+      "records": 61
+    },
+    {
+      "reviewStatus": "pending",
+      "office": "township_representative",
+      "records": 279
+    },
+    {
+      "reviewStatus": "pending",
+      "office": "village_chief",
+      "records": 430
+    },
+    {
+      "reviewStatus": "rejected",
+      "office": "township_mayor",
+      "records": 1
+    },
+    {
+      "reviewStatus": "verified",
+      "office": "councilor",
+      "records": 1278
+    },
+    {
+      "reviewStatus": "verified",
+      "office": "indigenous_district_chief",
+      "records": 11
+    },
+    {
+      "reviewStatus": "verified",
+      "office": "indigenous_district_representative",
+      "records": 92
+    },
+    {
+      "reviewStatus": "verified",
+      "office": "mayor",
+      "records": 78
+    },
+    {
+      "reviewStatus": "verified",
+      "office": "township_mayor",
+      "records": 403
+    },
+    {
+      "reviewStatus": "verified",
+      "office": "township_representative",
+      "records": 3157
+    },
+    {
+      "reviewStatus": "verified",
+      "office": "village_chief",
+      "records": 12481
+    }
+  ],
+  "linkedRegistrations": 17500,
+  "linkedPeople": 17500,
+  "linkedRaces": 8221,
+  "nameOnlyRegistrations": 916,
+  "visibleRegistrations": 18416,
+  "qualificationEvents": 0,
+  "checks": {
+    "verifiedWithoutPerson": 0,
+    "pendingWithPerson": 0,
+    "publicEvidenceLeaks": 0,
+    "sourcePersonMissing": 0,
+    "nonRejectedRaceMissingOrPrivate": 0,
+    "verifiedClaimMatchFailures": 0,
+    "registeredLifecycleFailures": 0,
+    "registeredSourceFailures": 0,
+    "eventHashMismatches": 0,
+    "eventUrlMismatches": 0,
+    "eventDateMismatches": 0,
+    "registeredNameMarkup": 0,
+    "registeredNamePrivateUseChars": 0,
+    "duplicatePublicPersonRace": 0,
+    "samePersonMultipleRaces": 0,
+    "candidateNumbersPrematurelyPublished": 0,
+    "nameRosterClaimFailures": 0,
+    "pendingWithoutNameRoster": 0,
+    "remainingPartyNominees2026": 0,
+    "confirmedDidNotRegister": 2,
+    "verifiedNomineePersonMerges": 4,
+    "withheldTainanNominees": 38,
+    "malformedHsiehNamePublic": 0
+  },
+  "officialCentralTotal": 19695,
+  "namedSourceGap": 1278,
+  "rejectedRecord": {
+    "name": "倪進文",
+    "reason": "屏東官方試算表重複錯列於鄉鎮市長區段；市民代表列保留並顯示。"
+  },
+  "nomineeReconciliation": {
+    "linkedToOfficialRegistration": [
+      "謝龍介",
+      "徐尚裕（徐尙裕）",
+      "布落‧馬信",
+      "蘇錦雄Paylang ‧Caya"
+    ],
+    "confirmedDidNotRegister": [
+      "翁壽良",
+      "陳政慈"
+    ],
+    "withheldPendingNamedTainanRoster": 38
+  },
+  "sourceCoverageLimit": {
+    "total": 1278,
+    "detail": {
+      "tainanCouncilor": 88,
+      "tainanVillageChief": 1187,
+      "otherImageOnlyNames": 3
+    }
+  }
+}

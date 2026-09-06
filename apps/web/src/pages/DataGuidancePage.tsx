@@ -92,6 +92,11 @@ export function DataGuidancePage() {
           </div>
         </PixelFrame>
 
+        <SectionPanel title={t('dataGuidance.analyticsTitle')} eyebrow="PRIVACY">
+          <p className="max-w-4xl text-sm leading-6 text-slate-300">{t('dataGuidance.analyticsDescription')}</p>
+          <p className="mt-3 max-w-4xl text-sm leading-6 text-slate-300">{t('dataGuidance.analyticsLocalPreference')}</p>
+          <a href="https://developers.cloudflare.com/web-analytics/about/" target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-11 items-center text-xs text-accent underline underline-offset-4">{t('dataGuidance.analyticsSource')} ↗</a>
+        </SectionPanel>
         <SectionPanel title={t('dataGuidance.principlesTitle')} eyebrow={t('dataGuidance.principlesEyebrow')}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
             {principleKeys.map((key) => (

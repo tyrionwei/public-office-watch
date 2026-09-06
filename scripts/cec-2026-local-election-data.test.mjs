@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import test from 'node:test';
 import {
   enrichSeedWithPlannedLocalElections,
@@ -75,4 +76,14 @@ test('planned 2026 races replace changed regions with official district metadata
   assert.equal(hsinchuFourteenth.campaignExpenseLimit, 6177000);
   assert.equal(hsinchuFourteenth.sourceId, 'cec-2026-local-election-calendar');
   assert.equal(result.plannedLocalElections.officialDistrictCount, 48);
+});
+
+test('new 2026 village races use their current county instead of an unspecified region', () => {
+  const sql = fs.readFileSync(new URL('./import-cec-2026-local-grassroots-races.sql', import.meta.url), 'utf8');
+  const newVillageCatalog = sql.match(/new_villages[\s\S]+?INSERT INTO races/)?.[0] ?? '';
+
+  assert.match(newVillageCatalog, /new_villages\(jurisdiction, title, source_url\)/);
+  assert.match(newVillageCatalog, /county\.name = nv\.jurisdiction/);
+  assert.match(newVillageCatalog, /county\.region_type = 'county'/);
+  assert.doesNotMatch(newVillageCatalog, /NULL::uuid/);
 });

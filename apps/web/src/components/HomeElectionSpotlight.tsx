@@ -191,6 +191,7 @@ export function HomeElectionSpotlight({
     : 0;
   const [activeCandidateIndex, setActiveCandidateIndex] = useState(restoredCandidateIndex);
   const [carouselPaused, setCarouselPaused] = useState(false);
+  const candidateCarouselRef = useRef<HTMLDivElement | null>(null);
   const candidateRefs = useRef<(HTMLAnchorElement | HTMLDivElement | null)[]>([]);
   const updateHomeParams = useCallback((updates: Record<string, string | null>) => {
     setSearchParams((current) => {
@@ -365,11 +366,10 @@ export function HomeElectionSpotlight({
 
   useEffect(() => {
     if (candidates.length <= 2) return;
-    candidateRefs.current[activeCandidateIndex]?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'start',
-    });
+    const carousel = candidateCarouselRef.current;
+    const candidate = candidateRefs.current[activeCandidateIndex];
+    if (!carousel || !candidate) return;
+    carousel.scrollTo({ left: candidate.offsetLeft - carousel.offsetLeft, behavior: 'smooth' });
   }, [activeCandidateIndex, candidates.length]);
   useEffect(() => {
     if (candidates.length === 0) return;
@@ -430,6 +430,9 @@ export function HomeElectionSpotlight({
       : national
         ? getNationalCategoryEventPath(activeCategory, activeRace)
         : getCategoryEventPath(activeCategory, activeRace, regionLabel)
+    : null;
+  const villageCandidateDirectoryPath = !national && activeRace
+    ? getCategoryEventPath('village_chief', activeRace, regionLabel)
     : null;
   const displayedCandidateCount = selectedCouncilorRaceId
     ? candidates.length
@@ -600,6 +603,18 @@ export function HomeElectionSpotlight({
             {t('homeSpotlight.candidateRosterDisclaimer')}
           </p>
         ) : null}
+        {!showReferendumContent && villageCandidateDirectoryPath ? (
+          <div className="mb-3 flex flex-col gap-2 rounded-sm border border-line/70 bg-bg/35 px-3 py-2 text-xs sm:flex-row sm:items-center sm:justify-between" data-village-candidate-directory>
+            <p className="leading-5 text-slate-400">
+              {language === 'en'
+                ? 'Village chief candidates are listed by constituency so the homepage does not show an arbitrary sample.'
+                : '村里長候選人依選區查找，首頁不任意抽樣顯示。'}
+            </p>
+            <Link to={villageCandidateDirectoryPath} className="shrink-0 font-display text-[10px] text-accent transition hover:text-signal focus:outline-none focus:ring-2 focus:ring-accent/35">
+              {language === 'en' ? 'Browse village chief races ›' : '查看村里長選區 ›'}
+            </Link>
+          </div>
+        ) : null}
         {showReferendumContent ? (
           referendumRaces.length > 0 ? (
             <div
@@ -656,26 +671,33 @@ export function HomeElectionSpotlight({
             onFocusCapture={() => setCarouselPaused(true)}
             onBlurCapture={() => setCarouselPaused(false)}
           >
-            <div className={useCandidateGrid ? 'grid gap-3 sm:grid-cols-2' : 'flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:thin]'}>
+            <div ref={candidateCarouselRef} data-candidate-carousel className={useCandidateGrid ? 'grid gap-3 sm:grid-cols-2' : 'flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:thin]'}>
               {candidates.map((candidate, index) => {
                 const party = normalizePartyLabel(candidate.party ?? candidate.person_party);
                 const demographics = candidateDemographics.get(candidate.person_id);
                 const themeKey = toPartyThemeKey(party);
                 const theme = partyTheme[themeKey];
                 const raceContext = getCandidateRaceContext(candidate, activeCategory, regionLabel);
+                const candidateSprite = (
+                  <PixelCandidateSprite
+                    displayName={candidate.person_name}
+                    personId={candidate.person_id || null}
+                    partyKey={themeKey}
+                    gender={demographics?.gender}
+                    birthDate={demographics?.birthDate}
+                    ageGroup={demographics?.ageGroup}
+                    useDemographicSprite
+                    partyLabel={party}
+                    variant={candidate.candidate_id}
+                  />
+                );
                 const content = (
                   <>
-                    <PixelCandidateSprite
-                      displayName={candidate.person_name}
-                      personId={candidate.person_id}
-                      partyKey={themeKey}
-                      gender={demographics?.gender}
-                      birthDate={demographics?.birthDate}
-                      ageGroup={demographics?.ageGroup}
-                      useDemographicSprite
-                      partyLabel={party}
-                      variant={candidate.candidate_id}
-                    />
+                    {candidate.person_id ? candidateSprite : (
+                      <div data-registration-name>
+                        {candidateSprite}
+                      </div>
+                    )}
                     <div className="mt-2 border-t border-line/60 pt-2">
                       <span className="theme-party-chip inline-flex rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}28`, color: theme.text }}>
                         {translateCandidateStatus(candidate, t)}

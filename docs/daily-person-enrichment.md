@@ -37,6 +37,8 @@ npm run monitor:daily
 
 若任一步驟回報 `degraded`、`partial`、`failed` 或 `needsAttention: true`，流程仍會輸出完整摘要，但最後以非零狀態結束，讓排程器發出通知。
 
+獨立主步驟會繼續執行，成功產物可在逐項驗證後部分審核；依 [來源失敗隔離流程](monitor-failure-isolation.md) 保存逐步 logs、重試時間與產物進度，不因整批 partial 就擋住所有線索。
+
 只執行每日 25 人持續研究：
 
 ```bash

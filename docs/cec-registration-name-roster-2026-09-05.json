@@ -1,0 +1,200 @@
+{
+  "environment": "full-local",
+  "plainNameRegistrations": 916,
+  "linkedRegistrations": 17500,
+  "totalVisibleRegistrations": 18416,
+  "withheldRegistrations": 0,
+  "identityPending": 916,
+  "newPeople": 0,
+  "apply": {
+    "mode": "apply-local",
+    "plain_names": 913,
+    "withheld": 4,
+    "identity_pending": 917,
+    "new_people": 0,
+    "manifest_sha256": "c96a3a8a8c21cce8aff3a5996858ae358a60056b3ef2e888b2b3745d7184c807",
+    "migration_sha256": "8b68651df45478c8c81df70cb605225af5390105842490c2343fa36b14cc37a9",
+    "at": "2026-09-05T10:37:04.766Z"
+  },
+  "localVerification": {
+    "environment": "full-local",
+    "names": 916,
+    "races": 746,
+    "emptyPersonIds": true,
+    "privateFieldsAbsent": true,
+    "oversizedRequestRejected": true,
+    "boundary": {
+      "table_readable": false,
+      "table_writable": false,
+      "rls": true,
+      "new_people": 0,
+      "new_candidates": 0
+    },
+    "samples": [
+      {
+        "id": "c8f1155e-7986-47eb-9ffd-f86cc5992d09",
+        "name": "周倪安",
+        "raceId": "a38ee9c0-0d8d-4cf9-a3f6-e806386a374f",
+        "race": "澎湖縣縣長選舉"
+      },
+      {
+        "id": "ba55783b-6f06-425e-95e7-dd5dc88a962e",
+        "name": "林志成",
+        "raceId": "1ddcde35-f1ed-4e38-8652-ceb5e616f91a",
+        "race": "臺北市市長選舉"
+      },
+      {
+        "id": "57a92084-27d8-4d6f-80aa-044eec127d62",
+        "name": "洪銨X",
+        "raceId": "53c74d20-468f-473b-8662-8be99c24a50b",
+        "race": "屏東縣東港鎮第3選舉區鎮民代表選舉"
+      },
+      {
+        "id": "0aa44b9e-2c96-4f3b-8522-d329b82ad032",
+        "name": "陳聰X",
+        "raceId": "a7baa5a8-9ab0-4d5c-9d56-1cb8afe14a7d",
+        "race": "臺東縣臺東市豐原里里長選舉"
+      },
+      {
+        "id": "f085d078-d50e-4f0b-b57e-88684411be56",
+        "name": "曾銪X",
+        "raceId": "f19d5a9a-97f0-46b7-b1ca-0cc4a1a90db1",
+        "race": "臺中市后里區聯合里里長選舉"
+      }
+    ]
+  },
+  "rehearsalVerification": {
+    "environment": "rehearsal",
+    "names": 913,
+    "races": 743,
+    "emptyPersonIds": true,
+    "privateFieldsAbsent": true,
+    "oversizedRequestRejected": true,
+    "boundary": {
+      "table_readable": false,
+      "table_writable": false,
+      "rls": true,
+      "new_people": 0,
+      "new_candidates": 0
+    },
+    "samples": [
+      {
+        "id": "c8f1155e-7986-47eb-9ffd-f86cc5992d09",
+        "name": "周倪安",
+        "raceId": "a38ee9c0-0d8d-4cf9-a3f6-e806386a374f",
+        "race": "澎湖縣縣長選舉"
+      },
+      {
+        "id": "ba55783b-6f06-425e-95e7-dd5dc88a962e",
+        "name": "林志成",
+        "raceId": "1ddcde35-f1ed-4e38-8652-ceb5e616f91a",
+        "race": "臺北市市長選舉"
+      }
+    ]
+  },
+  "browserVerification": {
+    "race": {
+      "plainName": true,
+      "noCheckbox": true,
+      "linkedCandidatesPreserved": true
+    },
+    "home": {
+      "plainName": true,
+      "noPortrait": true
+    },
+    "mobile": {
+      "plainNames": 1,
+      "noLinks": true,
+      "noPortraits": true
+    },
+    "myElection": {
+      "plainName": true,
+      "noLink": true,
+      "noPortrait": true
+    },
+    "pageErrors": [],
+    "niJinwen": {
+      "occurrences": 1,
+      "raceTitleVisible": true,
+      "noPersonLink": true,
+      "pageErrors": []
+    },
+    "placeholderNames": [
+      {
+        "name": "陳聰X",
+        "occurrences": 1,
+        "raceTitleVisible": true,
+        "noPersonLink": true
+      },
+      {
+        "name": "曾銪X",
+        "occurrences": 1,
+        "raceTitleVisible": true,
+        "noPersonLink": true
+      },
+      {
+        "name": "洪銨X",
+        "occurrences": 1,
+        "raceTitleVisible": true,
+        "noPersonLink": true
+      }
+    ],
+    "placeholderPageErrors": []
+  },
+  "excluded": [],
+  "duplicateCorrection": {
+    "mode": "apply-local",
+    "name": "倪進文",
+    "decision": "rejected_duplicate_source_row",
+    "published_names": 913,
+    "published_occurrences": 1,
+    "batch_pending": 916,
+    "new_people": 0,
+    "new_candidates": 0,
+    "reviewedAt": "2026-09-05T11:16:57.120Z",
+    "sourceHash": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87"
+  },
+  "resolvedSourceDuplicates": [
+    {
+      "name": "倪進文",
+      "duplicateClaimId": "436fd0c7-6b71-4194-828a-c5288b3ccb09",
+      "canonicalClaimId": "1a925474-ff0a-48f6-98b9-7e42e04211d9",
+      "duplicateRow": 104,
+      "canonicalRow": 190,
+      "raceId": "e76bc705-bca4-4c12-961e-4dc9a63802e4",
+      "race": "屏東縣屏東市第1選舉區市民代表選舉",
+      "decision": "rejected_duplicate_source_row"
+    }
+  ],
+  "placeholderRegistrations": 3,
+  "placeholderApply": {
+    "mode": "apply-local",
+    "placeholder_names": 3,
+    "plain_names": 916,
+    "withheld": 0,
+    "identity_pending": 916,
+    "new_people": 0,
+    "new_candidates": 0,
+    "reviewedAt": "2026-09-05T11:27:03.779Z"
+  },
+  "placeholderNames": [
+    {
+      "claimId": "609bafd4-0ab0-487c-904d-1f6c868281c5",
+      "displayName": "陳聰X",
+      "raceId": "a7baa5a8-9ab0-4d5c-9d56-1cb8afe14a7d",
+      "sourceUrl": "https://web.cec.gov.tw/api/file/d1f90517-2239-475d-a9ed-fba93c43b96a.pdf"
+    },
+    {
+      "claimId": "e31e9863-8b42-4076-9b75-08e5ebdfb869",
+      "displayName": "曾銪X",
+      "raceId": "f19d5a9a-97f0-46b7-b1ca-0cc4a1a90db1",
+      "sourceUrl": "https://web.cec.gov.tw/api/file/731a8baa-5afe-467f-9fd3-9b72bd58068b.pdf"
+    },
+    {
+      "claimId": "340a73e0-4fc3-42fc-b34a-d58302c6c322",
+      "displayName": "洪銨X",
+      "raceId": "53c74d20-468f-473b-8662-8be99c24a50b",
+      "sourceUrl": "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx"
+    }
+  ]
+}

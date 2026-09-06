@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { CandidateLifecycle } from '../components/CandidateLifecycle';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
@@ -486,6 +487,11 @@ export function PersonPage() {
   const familyClaims = sensitivePublicClaims(rawFamilyClaims);
   const displayPosition = person ? getPersonDisplayPosition(person) : t('person.publicRecord');
   const profilePosition = person ? getPersonDisplayPosition(person, t('person.toBeAdded')) : t('person.toBeAdded');
+  const profilePositionLabel = person?.current_office_label
+    ? t('person.currentPosition')
+    : person?.upcoming_candidate_label || person?.status === 'candidate'
+      ? t('person.candidacyPosition')
+      : t('person.publicIdentity');
   const educationItems = person ? educationProfileItems(person.education) : [];
   const experienceItems = person ? experienceProfileItems(person.experience, displayPosition) : [];
   const profileSources = profile && person
@@ -510,7 +516,7 @@ export function PersonPage() {
         person.alias ? [t('person.alias'), person.alias] : null,
         person.gender && person.gender !== 'unknown' ? [t('person.gender'), t(genderLabels[person.gender])] : null,
         birthDateClaim?.claim_value ? [t('person.birthDate'), birthDateClaim.claim_value] : null,
-        [t('person.currentPosition'), profilePosition],
+        [profilePositionLabel, profilePosition],
         person.region_name || person.district ? [t('person.location'), person.region_name ?? person.district ?? ''] : null,
       ].filter((fact): fact is [string, string] => fact !== null)
     : [];
@@ -526,7 +532,7 @@ export function PersonPage() {
   const platformClaims = profile ? claimsByType(profile.public_claims, 'platform') : [];
   const sectionStates: Array<{ label: string; status: 'complete' | 'uncollected' | 'pending' }> = [
     {
-      label: t('person.currentPosition'),
+      label: profilePositionLabel,
       status: person && (person.current_office_label || person.position || person.upcoming_candidate_label) ? 'complete' : 'uncollected',
     },
     { label: t('person.party'), status: person?.party ? 'complete' : 'uncollected' },
@@ -741,6 +747,7 @@ export function PersonPage() {
                           </div>
                         ))}
                       </dl>
+                      {(candidate.election_year ?? 0) >= 2026 ? <CandidateLifecycle candidateId={candidate.candidate_id} registered={candidate.candidacy_status === 'registered'} /> : null}
                       <div className="mt-auto pt-4" data-candidacy-platform>
                         {candidatePlatforms.length > 0 ? (
                           <div className="border-t border-line/60 pt-4">

@@ -5,6 +5,7 @@ import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
+import { getCountyRegionLabel } from '../lib/countyRegions';
 import { publicDataProvider } from '../lib/publicData';
 import { PUBLIC_PEOPLE_PAGE_SIZE as PAGE_SIZE } from '../lib/publicReadContracts';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
@@ -171,7 +172,7 @@ function KeywordFilter({
 }
 
 export function PeoplePage() {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = getFilters(searchParams);
   const { party, query, regionId, role, status } = filters;
@@ -229,7 +230,7 @@ export function PeoplePage() {
   const regionOptions = publicDataProvider
     .getStageRegions()
     .filter((region) => region.level === 'county_city')
-    .map((region) => ({ value: region.id, label: region.label }));
+    .map((region) => ({ value: region.id, label: getCountyRegionLabel(region, language) }));
   const roleOptions = useMemo(
     () => roleOptionDefinitions.map((option) => ({ value: option.value, label: t(option.labelKey) })),
     [t],

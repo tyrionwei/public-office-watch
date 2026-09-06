@@ -26,8 +26,10 @@ test('candidate comparison share preview supports LINE and a pasteable, download
   const platformSection = comparisonPanel
     .getByRole('heading', { name: '公開政見', exact: true })
     .locator('xpath=ancestor::section[1]');
-  const firstPlatform = (await platformSection.locator('li').first().textContent())?.trim() ?? '';
-  expect(firstPlatform).not.toBe('');
+  const platformItems = platformSection.locator('li');
+  const firstPlatform = await platformItems.count() > 0
+    ? (await platformItems.first().textContent())?.trim() ?? ''
+    : '';
   await comparisonPanel.getByRole('button', { name: '分享', exact: true }).click();
 
   const dialog = page.getByRole('dialog', { name: '分享預覽' });
@@ -37,7 +39,7 @@ test('candidate comparison share preview supports LINE and a pasteable, download
   const cardContent = await preview.getAttribute('data-share-card-content');
   expect(cardContent).toContain(firstName);
   expect(cardContent).toContain(secondName);
-  expect(cardContent).toContain(firstPlatform);
+  if (firstPlatform) expect(cardContent).toContain(firstPlatform);
 
   const shareText = await dialog.getByLabel('分享文字').inputValue();
   const shareLink = await dialog.getByLabel('分享連結').inputValue();

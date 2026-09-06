@@ -13,6 +13,7 @@ import {
   buildEditableProfileClaimRevision,
   canUpdateProfileField,
   claimApprovalBlockReason,
+  claimReviewStatusFilters,
   isEditableProfileClaimType,
 } from './build/internalClaimReview';
 import { buildPlatformApprovalPatch } from './build/internalPlatformReview';
@@ -397,9 +398,9 @@ function internalReviewApiPlugin(): Plugin {
             ?.trim()
             .replace(/[*,().]/g, '')
             .slice(0, 50);
-          const allowedStatuses = new Set(['pending', 'needs_more_evidence']);
+          const statusFilters = claimReviewStatusFilters(reviewStatus);
 
-          if (reviewStatus && !allowedStatuses.has(reviewStatus)) {
+          if (!statusFilters) {
             jsonResponse(response, 400, { error: 'Unsupported review status.' });
             return;
           }
@@ -411,7 +412,7 @@ function internalReviewApiPlugin(): Plugin {
           });
           if (sourceName) params.set('source_name', `eq.${sourceName}`);
           if (claimType) params.set('claim_type', `eq.${claimType}`);
-          if (reviewStatus) params.set('review_status', `eq.${reviewStatus}`);
+          for (const [key, value] of Object.entries(statusFilters)) params.set(key, value);
 
           const claims = await supabaseRest(`person_claim_review_queue?${params.toString()}`) as { claim_id: string }[];
           if (!personName) {

@@ -6,6 +6,7 @@ import zlib from 'node:zlib';
 import { assessLegalRecordMatch } from './legal-record-review-policy.mjs';
 import { normalizeElectionDistrict } from './normalize-election-district.mjs';
 import { canonicalPartyName } from './lib/party-name-normalization.mjs';
+import { withSourceRetry } from './monitor-source-retry.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultSeedPath = path.join(repoRoot, 'data-sources', 'real-public-data.seed.json');
@@ -101,6 +102,7 @@ function candidateCandidacyStatus(candidate) {
   if (legacyStatus === 'pending') return 'potential';
   if (legacyStatus === 'registered' || legacyStatus === 'qualified') return legacyStatus;
   if (legacyStatus === 'disqualified' || legacyStatus === 'withdrawn') return 'withdrawn_or_disqualified';
+  if (legacyStatus === 'not_registered') return 'did_not_register';
   if (legacyStatus === 'elected' || legacyStatus === 'not_elected') return 'qualified';
   return 'unknown';
 }
@@ -399,7 +401,10 @@ async function fetchText(url) {
   const response = await fetch(url, { signal: AbortSignal.timeout(30000) });
 
   if (!response.ok) {
-    throw new Error(`${response.status} ${response.statusText}`);
+    const retryAfter = response.headers.get('retry-after');
+    const retryAfterMs = /^\d+$/.test(retryAfter ?? '') ? Number(retryAfter) * 1000
+      : Math.max(0, Date.parse(retryAfter) - Date.now()) || 0;
+    throw Object.assign(new Error(`${response.status} ${response.statusText}`), { retryAfterMs });
   }
 
   const bytes = await response.arrayBuffer();
@@ -424,6 +429,7 @@ function summarizeLiveSourceHealth(sources) {
       name,
       status: result.status,
       error: result.error ?? null,
+      ...(result.sourceRetry ? { sourceRetry: result.sourceRetry } : {}),
     }));
 
   return {
@@ -2082,6 +2088,70 @@ function getLegislatorCodeFromPhotoUrl(picUrl) {
   return match?.[1] ?? '';
 }
 
+function buildCurrentOfficeholders(payload, source) {
+  const rows = Array.isArray(payload.dataList) ? payload.dataList : [];
+  const officeholders = rows
+    .filter((row) => pickField(row, ['leaveFlag']) === '否')
+    .map((row) => {
+      const term = pickField(row, ['term']) || '11';
+      const name = pickField(row, ['name']);
+      const party = pickField(row, ['party', 'partyGroup']);
+      const areaName = pickField(row, ['areaName']);
+      const onboardDate = pickField(row, ['onboardDate']);
+      const legislatorCode = getLegislatorCodeFromPhotoUrl(pickField(row, ['picUrl']));
+      const degree = pickField(row, ['degree']);
+      const experience = pickField(row, ['experience']);
+      const birthDateText = pickField(row, ['birthday', 'birthDate', 'birth_date', '出生日期']);
+      return {
+        externalId: `ly-legislator-${term}-${legislatorCode || hashId([name, party, areaName, onboardDate].join('|'))}`,
+        name,
+        alias: pickField(row, ['ename']) || null,
+        gender: normalizeGender(pickField(row, ['sex'])),
+        party,
+        position: `第${term}屆立法委員`,
+        electionYear: 2024,
+        district: areaName,
+        birthDate: normalizeDateText(birthDateText),
+        birthDateText: birthDateText || null,
+        education: degree || null,
+        experience: experience || null,
+        sourceUrl: source.url,
+        isPublic: true,
+        sourceId: 'ly-current-legislators',
+        sourcePayload: {
+          isCurrent: true,
+          term,
+          onboardDate: onboardDate || null,
+          leaveFlag: pickField(row, ['leaveFlag']) || null,
+        },
+      };
+    })
+    .filter((person) => person.name);
+
+  if (officeholders.length === 0) {
+    throw new Error('JSON parsed successfully but no current legislators were found.');
+  }
+  return officeholders;
+}
+
+async function loadCurrentOfficeholders(source, {
+  stateDirectory = path.join(repoRoot, 'tmp', 'monitor-source-health'),
+  legacyStatePath = path.join(repoRoot, 'tmp', 'monitor-source-health.json'),
+  fetchPayload = async () => parseJsonPayload(await fetchText(source.downloadUrl)),
+  now,
+  sleep,
+} = {}) {
+  return withSourceRetry({
+    key: source.id,
+    url: source.downloadUrl,
+    stateDirectory,
+    legacyStatePath,
+    ...(now ? { now } : {}),
+    ...(sleep ? { sleep } : {}),
+    operation: async () => buildCurrentOfficeholders(await fetchPayload(), source),
+  });
+}
+
 async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
   const source = seed.sources.find((item) => item.id === 'ly-current-legislators');
 
@@ -2097,49 +2167,7 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
   }
 
   try {
-    const payload = parseJsonPayload(await fetchText(source.downloadUrl));
-    const rows = Array.isArray(payload.dataList) ? payload.dataList : [];
-    const officeholders = rows
-      .filter((row) => pickField(row, ['leaveFlag']) === '否')
-      .map((row) => {
-        const term = pickField(row, ['term']) || '11';
-        const name = pickField(row, ['name']);
-        const party = pickField(row, ['party', 'partyGroup']);
-        const areaName = pickField(row, ['areaName']);
-        const onboardDate = pickField(row, ['onboardDate']);
-        const legislatorCode = getLegislatorCodeFromPhotoUrl(pickField(row, ['picUrl']));
-        const degree = pickField(row, ['degree']);
-        const experience = pickField(row, ['experience']);
-        const birthDateText = pickField(row, ['birthday', 'birthDate', 'birth_date', '出生日期']);
-        return {
-          externalId: `ly-legislator-${term}-${legislatorCode || hashId([name, party, areaName, onboardDate].join('|'))}`,
-          name,
-          alias: pickField(row, ['ename']) || null,
-          gender: normalizeGender(pickField(row, ['sex'])),
-          party,
-          position: `第${term}屆立法委員`,
-          electionYear: 2024,
-          district: areaName,
-          birthDate: normalizeDateText(birthDateText),
-          birthDateText: birthDateText || null,
-          education: degree || null,
-          experience: experience || null,
-          sourceUrl: source.url,
-          isPublic: true,
-          sourceId: 'ly-current-legislators',
-          sourcePayload: {
-            isCurrent: true,
-            term,
-            onboardDate: onboardDate || null,
-            leaveFlag: pickField(row, ['leaveFlag']) || null,
-          },
-        };
-      })
-      .filter((person) => person.name);
-
-    if (officeholders.length === 0) {
-      throw new Error('JSON parsed successfully but no current legislators were found.');
-    }
+    const officeholders = await loadCurrentOfficeholders(source);
 
     return {
       seed: {
@@ -2161,6 +2189,7 @@ async function enrichSeedWithLiveCurrentOfficeholders(seed, args) {
         count: seed.people?.length ?? 0,
         url: source?.downloadUrl ?? null,
         error: message,
+        sourceRetry: error.sourceRetry ?? null,
         fallbackFreshness: 'unknown',
       },
     };
@@ -4617,6 +4646,7 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
 }
 
 export {
+  buildCurrentOfficeholders,
   buildPartyRegistryProfile,
   buildSourcePersonRows,
   buildEnrichmentPartyAffiliationRows,
@@ -4625,6 +4655,7 @@ export {
   darkGuideFamilyReferenceNames,
   describeFetchError,
   enrichSeedWithPlannedLocalElections,
+  loadCurrentOfficeholders,
   loadPlannedLocalRaceOverrides,
   scoreClaim,
   summarizeLiveSourceHealth,

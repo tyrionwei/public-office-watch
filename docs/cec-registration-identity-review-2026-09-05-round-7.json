@@ -1,0 +1,607 @@
+{
+  "schemaVersion": 1,
+  "environment": "full-local",
+  "reviewedAt": "2026-09-04T20:40:01.681Z",
+  "inputs": {
+    "tmp/cec-registration-identity-review-7/targets.json": "aee4dc8d636a5c5511a7e5b1b0058c2a675a2fd6410682d0810339a060528010",
+    "tmp/cec-registration-identity-review-7/local-evidence.json": "c31b7c0557f89d44016443073c8acd1ac82627288149d3827319f3021db4d68e",
+    "tmp/cec-registration-identity-review-7/external-evidence.json": "5a270b8fb4258ecce1a3d97aec46834d1a8eeae75c10a28e454b503ff51ccc34",
+    "tmp/cec-registration-identity-review-7/review-manifest.json": "c7a36b594c6e1575d39a57e7067679f3a5f64064fe63cd28cbd2e3e4a100e24f",
+    "tmp/cec-registration-final/import-manifest.json": "e004d07cfd82306b26adc55ec6b230d2601d73ff5fb9b8bfa29c3a38a83cf1f3"
+  },
+  "baselinePending": 1192,
+  "reviewed": 10,
+  "resolved": 10,
+  "reusedPeople": 10,
+  "newPeople": 0,
+  "remainingPending": 1182,
+  "reasonCounts": {
+    "reported_current_local_role_and_2022_elected_record_unique_person": 10
+  },
+  "accepted": [
+    {
+      "candidateExternalId": "pow-cec-registration-2026-090a6a7619fa2498db4d94cec15fe175",
+      "claimId": "75745f7f-f15f-48ee-bc99-e09cbde91e46",
+      "sourcePersonId": "a7942bea-4ae1-4cc3-b3f3-52751ac69798",
+      "name": "謝見德",
+      "county": "苗栗縣",
+      "district": "苗栗縣大湖鄉",
+      "office": "township_mayor",
+      "raceId": "c7a405a6-9a1d-4c64-b476-727064674256",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "5601863c-98c6-41fc-8aa5-8bb01fbcbacc",
+      "existingPersonIds": [
+        "5601863c-98c6-41fc-8aa5-8bb01fbcbacc"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "苗栗縣大湖鄉",
+      "evidenceClaimIds": [
+        "f9fa0de4-308b-4f69-8ac9-2120f65966ee"
+      ],
+      "evidenceCandidateIds": [
+        "c8027b90-6a25-4ef8-886e-c81c753c0cd0"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E5%A4%A7%E6%B9%96%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E8%AC%9D%E8%A6%8B%E5%BE%B7",
+        "https://tw.news.yahoo.com/%E9%BB%83%E6%83%A0%E7%90%B4%E7%88%AD%E9%80%A3%E4%BB%BB-%E8%AC%9D%E8%A6%8B%E5%BE%B7%E6%8B%9A%E5%8B%9D%E5%87%BA-201000292.html",
+        "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0003&_PARENT_ID=ER11112KC00105&_TYP=REP&n=575"
+      ],
+      "officialFile": "mlec-64615-04.xls",
+      "officialSha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.659Z",
+      "matches": [
+        {
+          "id": "c8027b90-6a25-4ef8-886e-c81c753c0cd0",
+          "title": "苗栗縣大湖鄉第1選舉區鄉民代表選舉",
+          "party": "無黨籍",
+          "raceType": "township_representative_district",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E5%A4%A7%E6%B9%96%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "7b937761-d974-41d2-8793-6376bf452e1c",
+      "externalEvidence": {
+        "url": "https://tw.news.yahoo.com/%E9%BB%83%E6%83%A0%E7%90%B4%E7%88%AD%E9%80%A3%E4%BB%BB-%E8%AC%9D%E8%A6%8B%E5%BE%B7%E6%8B%9A%E5%8B%9D%E5%87%BA-201000292.html",
+        "title": "黃惠琴爭連任 謝見德拚勝出",
+        "publisher": "中國時報／Yahoo 新聞",
+        "statement": "報導指出現任大湖鄉代會主席謝見德參選大湖鄉長，並說明其連任三屆鄉代、兩屆主席。",
+        "supportingUrls": [
+          "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0003&_PARENT_ID=ER11112KC00105&_TYP=REP&n=575"
+        ],
+        "retrievedAt": "2026-09-04T20:40:01.659Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-1e5da0cb4aee93582ad10e5fcf2b3283",
+      "claimId": "7f003e01-e30a-498a-b70c-707fe795ebd2",
+      "sourcePersonId": "59dbfa35-21c3-4f65-ac07-eb0d206c5fe2",
+      "name": "鄭倫杰",
+      "county": "彰化縣",
+      "district": "彰化縣秀水鄉",
+      "office": "township_mayor",
+      "raceId": "6e2846d0-ce58-44a7-b7f6-151153afca6c",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "7310090f-3c54-42d7-8e1c-d29b77229e88",
+      "existingPersonIds": [
+        "7310090f-3c54-42d7-8e1c-d29b77229e88"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "彰化縣秀水鄉",
+      "evidenceClaimIds": [
+        "e4470430-b2a0-4d37-bef8-bb862bd56915"
+      ],
+      "evidenceCandidateIds": [
+        "2b328858-f3e6-4ea0-9cff-23c22beac445"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E7%A7%80%E6%B0%B4%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%84%AD%E5%80%AB%E6%9D%B0",
+        "https://udn.com/news/story/7325/9531900",
+        "https://ctrl.chcg.gov.tw/main/main_act3/main.aspx?act_id=410&main_id=38580"
+      ],
+      "officialFile": "chec-64647-03.pdf",
+      "officialSha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.660Z",
+      "matches": [
+        {
+          "id": "2b328858-f3e6-4ea0-9cff-23c22beac445",
+          "title": "彰化縣秀水鄉第1選舉區鄉民代表選舉",
+          "party": "中國國民黨",
+          "raceType": "township_representative_district",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E7%A7%80%E6%B0%B4%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "3af5ec5f-0b26-4592-bb4e-78e9628a5cec",
+      "externalEvidence": {
+        "url": "https://udn.com/news/story/7325/9531900",
+        "title": "國民黨彰化8鄉鎮市長10人登記 彰化、員林將先協調",
+        "publisher": "聯合報",
+        "statement": "報導明列秀水鄉代會副主席鄭倫杰完成國民黨鄉長提名登記。",
+        "supportingUrls": [
+          "https://ctrl.chcg.gov.tw/main/main_act3/main.aspx?act_id=410&main_id=38580"
+        ],
+        "retrievedAt": "2026-09-04T20:40:01.660Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-55fcf09a02633ad78af4a5effc28b737",
+      "claimId": "ad6a9e61-1334-4795-86de-80152fadb473",
+      "sourcePersonId": "abe980ca-ce1f-4f23-8ce6-45f0fca38271",
+      "name": "詹秉憲",
+      "county": "苗栗縣",
+      "district": "苗栗縣卓蘭鎮",
+      "office": "township_mayor",
+      "raceId": "28396761-94f5-4fa7-bd9d-327de26869eb",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "2441cceb-fd32-4661-b580-b104098e6ae7",
+      "existingPersonIds": [
+        "2441cceb-fd32-4661-b580-b104098e6ae7"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "苗栗縣卓蘭鎮",
+      "evidenceClaimIds": [
+        "8c9ec8d6-9e20-4eca-8382-e0a61b3cffdb"
+      ],
+      "evidenceCandidateIds": [
+        "6ebe9dbb-5332-4818-95ab-a041a0a86937"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E5%8D%93%E8%98%AD%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E8%A9%B9%E7%A7%89%E6%86%B2",
+        "https://udn.com/vote2026/story/7324/9732139"
+      ],
+      "officialFile": "mlec-64615-04.xls",
+      "officialSha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.659Z",
+      "matches": [
+        {
+          "id": "6ebe9dbb-5332-4818-95ab-a041a0a86937",
+          "title": "苗栗縣卓蘭鎮第1選舉區鎮民代表選舉",
+          "party": "無黨籍",
+          "raceType": "township_representative_district",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E5%8D%93%E8%98%AD%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "73331e56-25db-4d23-bddb-d85c3795a5be",
+      "externalEvidence": {
+        "url": "https://udn.com/vote2026/story/7324/9732139",
+        "title": "苗栗縣下屆卓蘭鎮長選局「藍綠對決」 詹秉憲提6大施政主軸",
+        "publisher": "聯合報",
+        "statement": "報導明確指出卓蘭鎮民代表會副主席詹秉憲完成卓蘭鎮長參選登記。",
+        "retrievedAt": "2026-09-04T20:40:01.659Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-5b7ec285bf3d3218e81408b97e13f033",
+      "claimId": "899e6c48-5b59-480a-b65e-079e3476f388",
+      "sourcePersonId": "5b47dae5-ad71-48b8-a227-6795f077155d",
+      "name": "沈文盛",
+      "county": "彰化縣",
+      "district": "彰化縣花壇鄉",
+      "office": "township_mayor",
+      "raceId": "57747798-a586-403f-8a40-fd3b828363eb",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "246680c2-1975-4ad2-8b11-0ab4fc7c493b",
+      "existingPersonIds": [
+        "246680c2-1975-4ad2-8b11-0ab4fc7c493b"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "彰化縣花壇鄉",
+      "evidenceClaimIds": [
+        "fc38ebd7-cafa-4399-b4dc-0036616d6283"
+      ],
+      "evidenceCandidateIds": [
+        "28bf35da-825e-401c-ad71-21292a72d6b6"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E8%8A%B1%E5%A3%87%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E6%B2%88%E6%96%87%E7%9B%9B",
+        "https://udn.com/news/story/7325/9531900",
+        "https://civil.chcg.gov.tw/files/2_20240926113827879_113.09.26_%E4%B8%BB%E5%B8%AD%E5%89%AF%E4%B8%BB%E5%B8%AD.pdf"
+      ],
+      "officialFile": "chec-64647-03.pdf",
+      "officialSha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.660Z",
+      "matches": [
+        {
+          "id": "28bf35da-825e-401c-ad71-21292a72d6b6",
+          "title": "彰化縣花壇鄉第1選舉區鄉民代表選舉",
+          "party": "無黨籍",
+          "raceType": "township_representative_district",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E8%8A%B1%E5%A3%87%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "f5d50236-e8cf-4047-a4fe-d49ea2ec7bb8",
+      "externalEvidence": {
+        "url": "https://udn.com/news/story/7325/9531900",
+        "title": "國民黨彰化8鄉鎮市長10人登記 彰化、員林將先協調",
+        "publisher": "聯合報",
+        "statement": "報導明列花壇鄉代會主席沈文盛完成國民黨鄉長提名登記。",
+        "supportingUrls": [
+          "https://civil.chcg.gov.tw/files/2_20240926113827879_113.09.26_%E4%B8%BB%E5%B8%AD%E5%89%AF%E4%B8%BB%E5%B8%AD.pdf"
+        ],
+        "retrievedAt": "2026-09-04T20:40:01.660Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-7dd2299a0c21eb7114a3cad1b0d418ff",
+      "claimId": "d6caf271-0a7a-4bca-9271-6db3333e404d",
+      "sourcePersonId": "de31b3be-483b-4517-af14-d8ac5034cd01",
+      "name": "何秀綿",
+      "county": "苗栗縣",
+      "district": "苗栗縣竹南鎮",
+      "office": "township_mayor",
+      "raceId": "20521c23-034c-4e6e-8d35-297d94e7ff3d",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "96264219-0c3c-4bef-9895-aa915fff3a76",
+      "existingPersonIds": [
+        "96264219-0c3c-4bef-9895-aa915fff3a76"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "無",
+      "locality": "苗栗縣竹南鎮",
+      "evidenceClaimIds": [
+        "596ce0a0-53ad-4b98-b2b0-69e8923c2119"
+      ],
+      "evidenceCandidateIds": [
+        "ce4ca3db-1a14-466d-ac59-8009ba853750"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E7%AB%B9%E5%8D%97%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E4%BD%95%E7%A7%80%E7%B6%BF",
+        "https://udn.com/vote2026/story/7324/9680196",
+        "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0003&_PARENT_ID=ER11112KC00013&_TYP=REP&n=575"
+      ],
+      "officialFile": "mlec-64615-04.xls",
+      "officialSha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.658Z",
+      "matches": [
+        {
+          "id": "ce4ca3db-1a14-466d-ac59-8009ba853750",
+          "title": "苗栗縣竹南鎮第2選舉區鎮民代表選舉",
+          "party": "無黨籍",
+          "raceType": "township_representative_district",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E7%AB%B9%E5%8D%97%E9%8E%AE%E9%8E%AE%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "efd85c40-17ec-44fa-8206-b07d0706cda1",
+      "externalEvidence": {
+        "url": "https://udn.com/vote2026/story/7324/9680196",
+        "title": "何秀綿參選竹南鎮長起手式喊「縣鎮合一」 鍾東錦背書",
+        "publisher": "聯合報",
+        "statement": "報導明確指出無黨籍竹南鎮民代表會主席何秀綿宣布參選竹南鎮長。",
+        "supportingUrls": [
+          "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0003&_PARENT_ID=ER11112KC00013&_TYP=REP&n=575"
+        ],
+        "retrievedAt": "2026-09-04T20:40:01.657Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-9509c068fa8b7e9ba6e028538db6b8f8",
+      "claimId": "b4f32a73-0c83-4ade-82bc-05777edfcda9",
+      "sourcePersonId": "292fe8ca-eda8-4ed8-92ab-20a86cdb6a15",
+      "name": "黃漢皇",
+      "county": "彰化縣",
+      "district": "彰化縣線西鄉",
+      "office": "township_mayor",
+      "raceId": "76764675-1024-4f49-a6d6-e7aa84e6aa36",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "2fd6f8ff-6877-4214-bd2b-bd6e169ca62e",
+      "existingPersonIds": [
+        "2fd6f8ff-6877-4214-bd2b-bd6e169ca62e"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "彰化縣線西鄉",
+      "evidenceClaimIds": [
+        "1319b101-fdaa-436a-9c63-9399ae66646c"
+      ],
+      "evidenceCandidateIds": [
+        "9826aef9-63d6-4ae8-b718-d13a2dc88547"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/98e08d62-1e87-458c-9799-a60141c268d9.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E7%B7%9A%E8%A5%BF%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%BB%83%E6%BC%A2%E7%9A%87",
+        "https://udn.com/news/story/7325/9531900",
+        "https://ctrl.chcg.gov.tw/main/main_act3/mainV2.aspx?act_id=452&main_id=34116"
+      ],
+      "officialFile": "chec-64647-03.pdf",
+      "officialSha256": "a42e6d517804cc70f2d6fbae7db8c1500e498a6b04ed6edb27e2d7c365d021b8",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.660Z",
+      "matches": [
+        {
+          "id": "9826aef9-63d6-4ae8-b718-d13a2dc88547",
+          "title": "彰化縣線西鄉第2選舉區鄉民代表選舉",
+          "party": "無黨籍",
+          "raceType": "township_representative_district",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E5%BD%B0%E5%8C%96%E7%B8%A3%E7%B7%9A%E8%A5%BF%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "c0b1a11e-bccb-4671-a4c7-87641d1fb181",
+      "externalEvidence": {
+        "url": "https://udn.com/news/story/7325/9531900",
+        "title": "國民黨彰化8鄉鎮市長10人登記 彰化、員林將先協調",
+        "publisher": "聯合報",
+        "statement": "報導明列線西鄉代黃漢皇完成國民黨鄉長提名登記；彰化縣政府名冊也列其為現任線西鄉民代表。",
+        "supportingUrls": [
+          "https://ctrl.chcg.gov.tw/main/main_act3/mainV2.aspx?act_id=452&main_id=34116"
+        ],
+        "retrievedAt": "2026-09-04T20:40:01.660Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-d53dcad2e309a615accc2c16531a6034",
+      "claimId": "05bbbc71-94fc-4cc5-86a1-a9d908f3f4cf",
+      "sourcePersonId": "6341d942-53d0-45f1-8203-a4c63a14577c",
+      "name": "邱佳娟",
+      "county": "屏東縣",
+      "district": "屏東縣長治鄉",
+      "office": "township_mayor",
+      "raceId": "fddeaefb-cdec-41ff-a429-66e29998eb92",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "192fd660-7ae5-4525-9446-733481f51343",
+      "existingPersonIds": [
+        "192fd660-7ae5-4525-9446-733481f51343"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "民主進步黨",
+      "locality": "屏東縣長治鄉",
+      "evidenceClaimIds": [
+        "96dc1ed6-179a-4d7b-804a-1a684838062b"
+      ],
+      "evidenceCandidateIds": [
+        "ddc23e9a-1014-4dfe-8bbd-c83d07aa4255"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/c6988c7b-6593-43e1-a986-d1e995a39666.xlsx",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E9%95%B7%E6%B2%BB%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E9%82%B1%E4%BD%B3%E5%A8%9F",
+        "https://udn.com/vote2026/story/7327/9729844",
+        "https://votetw.com/data/election/20221101F2D2?%E7%9C%81%E5%B8%82=10&%E7%B8%A3%E5%B8%82=013&%E9%84%89%E9%8E%AE%E5%B8%82%E5%8D%80=060"
+      ],
+      "officialFile": "ptec-64654-01.xlsx",
+      "officialSha256": "ede9d13c65ddb86e1d9e90f59af857f18f4dd4c382d985af3761a738191afd87",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.660Z",
+      "matches": [
+        {
+          "id": "ddc23e9a-1014-4dfe-8bbd-c83d07aa4255",
+          "title": "屏東縣長治鄉第1選舉區鄉民代表選舉",
+          "party": "民主進步黨",
+          "raceType": "township_representative_district",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E5%B1%8F%E6%9D%B1%E7%B8%A3%E9%95%B7%E6%B2%BB%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "59807327-4b68-42f0-86cf-d7b1d1276c81",
+      "externalEvidence": {
+        "url": "https://udn.com/vote2026/story/7327/9729844",
+        "title": "79票之差再戰！邱佳娟登記長治鄉長 喊年輕上場推出六大願景",
+        "publisher": "聯合報",
+        "statement": "報導明確指出民進黨長治鄉民代表邱佳娟完成長治鄉長登記，並回溯其先前鄉長選舉經歷。",
+        "supportingUrls": [
+          "https://votetw.com/data/election/20221101F2D2?%E7%9C%81%E5%B8%82=10&%E7%B8%A3%E5%B8%82=013&%E9%84%89%E9%8E%AE%E5%B8%82%E5%8D%80=060"
+        ],
+        "retrievedAt": "2026-09-04T20:40:01.660Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e2080b7e4bbd8a85d1c30fc2cfb1716a",
+      "claimId": "098c1068-94f2-4c8c-885f-2cebc8698a1e",
+      "sourcePersonId": "0c0f3e64-2b7e-4289-befd-f605f7ac1d9f",
+      "name": "王若嵐",
+      "county": "南投縣",
+      "district": "南投縣魚池鄉",
+      "office": "township_mayor",
+      "raceId": "4c1fb9bb-b760-4c7e-a2b2-ab3380940cf0",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "4b375f46-f284-41f1-a9ee-b79e0b034a0d",
+      "existingPersonIds": [
+        "4b375f46-f284-41f1-a9ee-b79e0b034a0d"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "女",
+      "registrationParty": "中國國民黨",
+      "locality": "南投縣魚池鄉",
+      "evidenceClaimIds": [
+        "4b045cd7-f817-4e9a-8847-4421c2339398"
+      ],
+      "evidenceCandidateIds": [
+        "35465843-3cac-45c2-8b57-7f9a09e3e137"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/939b3f02-3783-4060-8f0b-1d32e04994ba.pdf",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E5%8D%97%E6%8A%95%E7%B8%A3%E9%AD%9A%E6%B1%A0%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E7%8E%8B%E8%8B%A5%E5%B5%90",
+        "https://udn.com/news/story/6656/9252298",
+        "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0003&_PARENT_ID=ER11112MC00002&_TYP=REP&n=575"
+      ],
+      "officialFile": "ntec-64622-01.pdf",
+      "officialSha256": "67635275f8d429559ec961a90b9f2b4c860fc4f5a11a1505378c43f6fdeaaea0",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.660Z",
+      "matches": [
+        {
+          "id": "35465843-3cac-45c2-8b57-7f9a09e3e137",
+          "title": "南投縣魚池鄉第1選舉區鄉民代表選舉",
+          "party": "無黨籍",
+          "raceType": "township_representative_district",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E5%8D%97%E6%8A%95%E7%B8%A3%E9%AD%9A%E6%B1%A0%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "bcc4e790-fc9a-4156-af0b-01b3b118a55f",
+      "externalEvidence": {
+        "url": "https://udn.com/news/story/6656/9252298",
+        "title": "魚池鄉長選戰升溫 國民黨初選王若嵐出線、綠營劉啟行備戰",
+        "publisher": "聯合報",
+        "statement": "報導明確指出魚池鄉民代表會副主席王若嵐取得國民黨提名、投入魚池鄉長選舉。",
+        "supportingUrls": [
+          "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0003&_PARENT_ID=ER11112MC00002&_TYP=REP&n=575"
+        ],
+        "retrievedAt": "2026-09-04T20:40:01.660Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-e944d024e47be2f2245167a7a4fdd04d",
+      "claimId": "678431ac-38ba-429a-9a86-7903939ba9c2",
+      "sourcePersonId": "3be792c6-95f0-45ef-a319-56d8e3637100",
+      "name": "蕭正燕",
+      "county": "苗栗縣",
+      "district": "苗栗縣南庄鄉",
+      "office": "township_mayor",
+      "raceId": "e3a2fe08-9784-413a-b558-bd82ebeac88c",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "43dc6d9c-117f-4aa0-9cc4-6beb525f7efd",
+      "existingPersonIds": [
+        "43dc6d9c-117f-4aa0-9cc4-6beb525f7efd"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "無",
+      "locality": "苗栗縣南庄鄉",
+      "evidenceClaimIds": [
+        "8640fa39-5c35-4526-bdf5-3640bb48694b"
+      ],
+      "evidenceCandidateIds": [
+        "613490e4-e13b-4a26-98d2-60d120dc6304"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8B%97%E6%A0%97%E7%B8%A3%E5%8D%97%E5%BA%84%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E8%95%AD%E6%AD%A3%E7%87%95",
+        "https://tw.news.yahoo.com/%E5%8D%97%E5%BA%84%E5%89%8D%E9%84%89%E9%95%B7%E5%9B%9E%E9%8D%8B-%E4%B8%89%E7%81%A32%E5%BC%B7%E7%9B%B8%E7%88%AD-201000875.html"
+      ],
+      "officialFile": "mlec-64615-04.xls",
+      "officialSha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.660Z",
+      "matches": [
+        {
+          "id": "613490e4-e13b-4a26-98d2-60d120dc6304",
+          "title": "苗栗縣南庄鄉南富村村長選舉",
+          "party": "無黨籍",
+          "raceType": "village_chief",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%8B%97%E6%A0%97%E7%B8%A3%E5%8D%97%E5%BA%84%E9%84%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "1fb4731c-e914-4159-a3b4-f330ad6b16d5",
+      "externalEvidence": {
+        "url": "https://tw.news.yahoo.com/%E5%8D%97%E5%BA%84%E5%89%8D%E9%84%89%E9%95%B7%E5%9B%9E%E9%8D%8B-%E4%B8%89%E7%81%A32%E5%BC%B7%E7%9B%B8%E7%88%AD-201000875.html",
+        "title": "南庄前鄉長回鍋 三灣2強相爭",
+        "publisher": "中國時報／Yahoo 新聞",
+        "statement": "報導明確指出已連任三屆的南富村長蕭正燕投入南庄鄉長選舉。",
+        "retrievedAt": "2026-09-04T20:40:01.660Z"
+      }
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-edfa533c6394c41c516d991f556c1a1d",
+      "claimId": "343ca264-c93a-48dc-85f4-0ccc656360d3",
+      "sourcePersonId": "22430ac8-baad-4957-acd8-bdecc03d351d",
+      "name": "林九炲",
+      "county": "苗栗縣",
+      "district": "苗栗縣銅鑼鄉",
+      "office": "township_mayor",
+      "raceId": "c86e1020-ce2c-4cbe-8bb4-c4148dcf2f24",
+      "decision": "use_existing",
+      "reasonCode": "reported_current_local_role_and_2022_elected_record_unique_person",
+      "personId": "202b585f-aaa9-4b12-8c5c-c705ea4821b3",
+      "existingPersonIds": [
+        "202b585f-aaa9-4b12-8c5c-c705ea4821b3"
+      ],
+      "registrationBirth": null,
+      "registrationGender": "男",
+      "registrationParty": "中國國民黨",
+      "locality": "苗栗縣銅鑼鄉",
+      "evidenceClaimIds": [
+        "8079ce00-90d7-4ea2-9405-21edd40977ac"
+      ],
+      "evidenceCandidateIds": [
+        "03dd2ef4-7484-44fe-94b6-451086644708"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/ae5b25db-e81a-4ef1-bcf1-0d1d61b3eac5.xls",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E9%8A%85%E9%91%BC%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/%E6%9E%97%E4%B9%9D%E7%82%B2",
+        "https://money.udn.com/money/story/7307/9505453",
+        "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0003&_PARENT_ID=ER11112KC00076&_TYP=REP&n=575",
+        "https://www.miaoli.gov.tw/News_Content2.aspx?n=285&s=964019"
+      ],
+      "officialFile": "mlec-64615-04.xls",
+      "officialSha256": "4ebac5010e430f0cde7952347e9291c9a22b9b92e7c8f15f3f57d559acb1370a",
+      "reason": "當期公開來源明確連接現任地方公職與本次鄉鎮市長參選；姓名、性別、同一鄉鎮的 2022 當選紀錄一致，且本站只有一位既有同名標準人物。",
+      "reviewedBy": "Codex CEC registration identity review round 7",
+      "reviewedAt": "2026-09-04T20:40:01.659Z",
+      "matches": [
+        {
+          "id": "03dd2ef4-7484-44fe-94b6-451086644708",
+          "title": "苗栗縣銅鑼鄉第1選舉區鄉民代表選舉",
+          "party": "無黨籍",
+          "raceType": "township_representative_district",
+          "isElected": true,
+          "sourceUrl": "https://votetw.com/wiki/2022%E5%B9%B4%E8%8B%97%E6%A0%97%E7%B8%A3%E9%8A%85%E9%91%BC%E9%84%89%E9%84%89%E6%B0%91%E4%BB%A3%E8%A1%A8%E9%81%B8%E8%88%89%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+        }
+      ],
+      "candidateId": "764a932e-ac86-4eec-8482-c915d8a1ba60",
+      "externalEvidence": {
+        "url": "https://money.udn.com/money/story/7307/9505453",
+        "title": "鍾東錦當最強母雞 國民黨苗縣鄉鎮市長、縣議員黨內提名21人完成登記",
+        "publisher": "經濟日報",
+        "statement": "報導列出林九炲完成國民黨銅鑼鄉長黨內提名登記；苗栗縣政府資料同時明列其為現任銅鑼鄉民代表會主席。",
+        "supportingUrls": [
+          "https://www.moi.gov.tw/LocalOfficial_Content.aspx?TYP=KND0003&_PARENT_ID=ER11112KC00076&_TYP=REP&n=575",
+          "https://www.miaoli.gov.tw/News_Content2.aspx?n=285&s=964019"
+        ],
+        "retrievedAt": "2026-09-04T20:40:01.659Z"
+      }
+    }
+  ]
+}

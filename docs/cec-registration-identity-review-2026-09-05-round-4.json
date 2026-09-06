@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "environment": "full-local",
+  "reviewedAt": "2026-09-04T19:37:07.147149Z",
+  "inputs": {
+    "tmp/cec-registration-identity-review-4/targets.json": "45b555f735ab989fb7f73356858ed0196b166f8ab7d7a0f24c8c30235ef65b27",
+    "tmp/cec-registration-identity-review-4/local-evidence.json": "f146f52de17be875cbf7a5d4adebb0b8d133e6db3061a99ab017d614d95426a7",
+    "tmp/cec-registration-identity-review-2/votetw-birth-evidence.json": "d4520dd6f4d81e71047970233a74761c1b4e0e494d481b53ad35c79f4e8aa2d3",
+    "tmp/cec-registration-identity-review-4/review-manifest.json": "73b0fe8f19442296fc7416a0b5215cd53adc732452d380f9c1717f675357a07d",
+    "tmp/cec-registration-final/import-manifest.json": "e004d07cfd82306b26adc55ec6b230d2601d73ff5fb9b8bfa29c3a38a83cf1f3"
+  },
+  "baselinePending": 1226,
+  "reviewed": 2,
+  "resolved": 2,
+  "reusedPeople": 0,
+  "newPeople": 2,
+  "remainingPending": 1224,
+  "reasonCounts": {
+    "fetched_distinct_births_cover_all_same_name_people": 2
+  },
+  "accepted": [
+    {
+      "candidateExternalId": "pow-cec-registration-2026-4c197e0a25641f7ede6899625db43a40",
+      "candidateId": "5605fc35-5176-5ec0-a5ac-f8b3abc80e46",
+      "claimId": "690cf74f-d717-4548-9a52-6e38b42d0b27",
+      "sourcePersonId": "cf67ffeb-80bb-4497-835d-f3d9fa3aff43",
+      "personId": "a5ca5838-dd42-5d67-9afb-aefc3a05889f",
+      "raceId": "b07c45af-e180-400b-94d4-b064946d8685",
+      "name": "賴文義",
+      "county": "高雄市",
+      "district": "高雄市桃源區高中里",
+      "office": "village_chief",
+      "decision": "create_new",
+      "reasonCode": "fetched_distinct_births_cover_all_same_name_people",
+      "reason": "本次官方登記提供完整生日；補查人物頁所列人物數與所有既有同名標準人物一致，2022 選區可逐一對回，且每一人的生日均與本次官方生日不同，因此建立獨立人物。",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "08ac98ed-9af4-4fdf-ad87-edb9eff61148",
+        "ec3a1977-fea6-4869-9cc9-8213e8edb234"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/8e55b44f-b30c-4948-ab61-8e1ff37efe1f.pdf",
+        "https://votetw.com/wiki/%E8%B3%B4%E6%96%87%E7%BE%A9",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E6%96%B0%E5%8C%97%E5%B8%82%E6%A8%B9%E6%9E%97%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%87%BA%E5%8D%97%E5%B8%82%E6%A5%A0%E8%A5%BF%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "externalBirthEvidence": {
+        "kind": "votetw_person_page",
+        "url": "https://votetw.com/wiki/%E8%B3%B4%E6%96%87%E7%BE%A9",
+        "sha256": "fdabfd8b3841b091638ae7308152080916c1cfe9c41d0829848702c0dc73f2cb",
+        "retrievedAt": "2026-09-04T19:26:55.082Z",
+        "profiles": [
+          {
+            "birthDate": "1961-06-22",
+            "gender": "male",
+            "text": "賴文義 （1961年6月22日），男，生於臺南市，高中(職)以下學歷。 賴文義的參選經歷包括：2022年臺南市楠西區密枝里里長選舉（未當選）。"
+          },
+          {
+            "birthDate": "1952-12-13",
+            "gender": "male",
+            "text": "賴文義 （1952年12月13日），男，生於臺灣省，高中(職)以下學歷。 賴文義的參選經歷包括：2022年新北市樹林區彭興里里長選舉（當選）。"
+          }
+        ]
+      },
+      "exclusionEvidence": [
+        {
+          "personId": "50c9dfae-78f4-45ad-9614-8f11d95830d0",
+          "candidateId": "08ac98ed-9af4-4fdf-ad87-edb9eff61148",
+          "birthDate": "1952-12-13",
+          "profile": {
+            "birthDate": "1952-12-13",
+            "gender": "male",
+            "text": "賴文義 （1952年12月13日），男，生於臺灣省，高中(職)以下學歷。 賴文義的參選經歷包括：2022年新北市樹林區彭興里里長選舉（當選）。"
+          }
+        },
+        {
+          "personId": "849b19d3-290e-431a-85b1-8d6e615c8751",
+          "candidateId": "ec3a1977-fea6-4869-9cc9-8213e8edb234",
+          "birthDate": "1961-06-22",
+          "profile": {
+            "birthDate": "1961-06-22",
+            "gender": "male",
+            "text": "賴文義 （1961年6月22日），男，生於臺南市，高中(職)以下學歷。 賴文義的參選經歷包括：2022年臺南市楠西區密枝里里長選舉（未當選）。"
+          }
+        }
+      ],
+      "reviewedBy": "Codex CEC registration identity review round 4",
+      "reviewedAt": "2026-09-04T19:37:07.147149Z"
+    },
+    {
+      "candidateExternalId": "pow-cec-registration-2026-587efb19931523aa73c74dac98060406",
+      "candidateId": "8464c920-445a-52ff-a534-accac3ae5259",
+      "claimId": "a2887ade-d0bf-4552-a8e3-0c1a33fa2812",
+      "sourcePersonId": "80217995-2bd7-451e-8e6f-a7f88cebc25c",
+      "personId": "2aad39ca-4311-5c70-9cbe-ea852808309d",
+      "raceId": "626938fa-3257-4408-adfe-6078494c4323",
+      "name": "黃國棟",
+      "county": "新竹縣",
+      "district": "新竹縣新豐鄉員山村",
+      "office": "village_chief",
+      "decision": "create_new",
+      "reasonCode": "fetched_distinct_births_cover_all_same_name_people",
+      "reason": "本次官方登記提供完整生日；補查人物頁所列人物數與所有既有同名標準人物一致，2022 選區可逐一對回，且每一人的生日均與本次官方生日不同，因此建立獨立人物。",
+      "evidenceClaimIds": [],
+      "evidenceCandidateIds": [
+        "46d8812f-4178-4af8-b71e-91d5c2e29ff5",
+        "bb891940-e0ca-4a43-bb54-dab4f47033c4",
+        "a9314557-19e7-4575-a2c5-cdabd7e4bd52"
+      ],
+      "evidenceUrls": [
+        "https://web.cec.gov.tw/api/file/bb22bdcd-a71e-4906-8070-e90ccd6159aa.pdf",
+        "https://votetw.com/wiki/%E9%BB%83%E5%9C%8B%E6%A3%9F",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E8%87%BA%E5%8D%97%E5%B8%82%E6%AD%B8%E4%BB%81%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E9%AB%98%E9%9B%84%E5%B8%82%E5%B7%A6%E7%87%9F%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C",
+        "https://votetw.com/wiki/2022%E5%B9%B4%E6%9D%91%E9%87%8C%E9%95%B7%E9%81%B8%E8%88%89%E6%A1%83%E5%9C%92%E5%B8%82%E6%96%B0%E5%B1%8B%E5%8D%80%E6%8A%95%E7%A5%A8%E7%B5%90%E6%9E%9C"
+      ],
+      "externalBirthEvidence": {
+        "kind": "votetw_person_page",
+        "url": "https://votetw.com/wiki/%E9%BB%83%E5%9C%8B%E6%A3%9F",
+        "sha256": "3805ab4c1396f2ee4dbf7d4f4dc279f271576be44cbcf41e4311c40ed05b66a4",
+        "retrievedAt": "2026-09-04T19:26:56.759Z",
+        "profiles": [
+          {
+            "birthDate": "1974-04-09",
+            "gender": "male",
+            "text": "黃國棟 （1974年4月9日），男，生於高雄市，專科學歷。 黃國棟的參選經歷包括：2022年高雄市左營區福山里里長選舉（未當選）。"
+          },
+          {
+            "birthDate": "1953-05-06",
+            "gender": "male",
+            "text": "黃國棟 （1953年5月6日），男，生於桃園市，高中(職)以下學歷。 黃國棟的參選經歷包括：2022年桃園市新屋區槺榔里里長選舉（未當選）。"
+          },
+          {
+            "birthDate": "1943-11-25",
+            "gender": "male",
+            "text": "黃國棟 （1943年11月25日），男，生於臺南市，高中(職)學歷。 黃國棟的參選經歷包括：2022年臺南市歸仁區文化里里長選舉（當選）。"
+          }
+        ]
+      },
+      "exclusionEvidence": [
+        {
+          "personId": "2ab4ee35-fb52-4285-9519-a32c3dc29dc3",
+          "candidateId": "46d8812f-4178-4af8-b71e-91d5c2e29ff5",
+          "birthDate": "1943-11-25",
+          "profile": {
+            "birthDate": "1943-11-25",
+            "gender": "male",
+            "text": "黃國棟 （1943年11月25日），男，生於臺南市，高中(職)學歷。 黃國棟的參選經歷包括：2022年臺南市歸仁區文化里里長選舉（當選）。"
+          }
+        },
+        {
+          "personId": "7769255b-85a3-4414-83ab-0419bcb6f78e",
+          "candidateId": "bb891940-e0ca-4a43-bb54-dab4f47033c4",
+          "birthDate": "1974-04-09",
+          "profile": {
+            "birthDate": "1974-04-09",
+            "gender": "male",
+            "text": "黃國棟 （1974年4月9日），男，生於高雄市，專科學歷。 黃國棟的參選經歷包括：2022年高雄市左營區福山里里長選舉（未當選）。"
+          }
+        },
+        {
+          "personId": "87a897d6-69dd-4b3c-8a12-41d27f12d360",
+          "candidateId": "a9314557-19e7-4575-a2c5-cdabd7e4bd52",
+          "birthDate": "1953-05-06",
+          "profile": {
+            "birthDate": "1953-05-06",
+            "gender": "male",
+            "text": "黃國棟 （1953年5月6日），男，生於桃園市，高中(職)以下學歷。 黃國棟的參選經歷包括：2022年桃園市新屋區槺榔里里長選舉（未當選）。"
+          }
+        }
+      ],
+      "reviewedBy": "Codex CEC registration identity review round 4",
+      "reviewedAt": "2026-09-04T19:37:07.147149Z"
+    }
+  ]
+}

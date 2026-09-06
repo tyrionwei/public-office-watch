@@ -69,6 +69,7 @@ const candidacyStatusKeys: Record<PublicCandidate['candidacy_status'], Translati
   registered: 'candidacy.status.registered',
   qualified: 'candidacy.status.qualified',
   withdrawn_or_disqualified: 'candidacy.status.withdrawnOrDisqualified',
+  did_not_register: 'candidacy.status.didNotRegister',
   unknown: 'candidacy.status.unknown',
 };
 

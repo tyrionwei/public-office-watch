@@ -432,7 +432,7 @@ export function RacePage() {
                   const rowContent = (
                     <>
                       <div className="flex flex-col items-center gap-1 max-lg:row-span-4">
-                        {group.members.map((member) => {
+                        {group.members.filter((member) => member.person_id).map((member) => {
                           const isSelected = selectedPersonIds.includes(member.person_id);
                           const selectionDisabled = !member.person_id || (!isSelected && selectedPersonIds.length >= comparisonLimit);
                           return (
@@ -465,7 +465,7 @@ export function RacePage() {
                                 <Link to={personPath(member.person_id)} className="truncate font-display text-lg text-white hover:text-accent">
                                   {member.person_name}
                                 </Link>
-                              ) : <span className="truncate font-display text-lg text-white">{member.person_name}</span>}
+                              ) : <span data-registration-name className="truncate font-display text-lg text-white">{member.person_name}</span>}
                               {index < group.members.length - 1 ? <span className="text-slate-600">/</span> : null}
                             </span>
                           ))}
@@ -520,7 +520,7 @@ export function RacePage() {
               <p>{t('race.emptyCandidates')}</p>
             </div>
           )}
-          {candidateGroups.length > 0 ? (
+          {candidatePersonIds.size > 0 ? (
             <div className="mt-4 flex flex-col gap-2 border-t border-line/50 pt-4 text-sm sm:flex-row sm:items-center sm:justify-between">
               <p className="text-slate-400"><span className="md:hidden">{t('race.compareMobileHint')}</span><span className="hidden md:inline">{t('race.compareHint')}</span></p>
               <p className={selectedPersonIds.length >= 2 ? 'text-signal' : 'text-accent'}>

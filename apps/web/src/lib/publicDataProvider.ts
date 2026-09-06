@@ -1,3 +1,5 @@
+import type { PollingPlace } from '../types/pollingPlace';
+import type { CandidateLifecycleEvent } from '../types/candidateLifecycle';
 import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
 import type { PollComparison } from '../types/polling';
 import type {
@@ -171,6 +173,8 @@ export interface PublicDataProvider {
   loadPartyFinanceData(): Promise<void>;
   getPartyBySlug(partySlug: string): PublicParty | null;
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
+  loadPollingPlaces(eventKey: string, villageCode: string): Promise<PollingPlace[]>;
+  loadCandidateLifecycle(candidateId: string): Promise<CandidateLifecycleEvent[]>;
   loadPartyPlatformHistory(partyId: string): Promise<PublicPartyPlatformHistory[]>;
   loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
   loadPartyLegalStatistics(partyName: string): Promise<PublicPartyLegalStatistics>;

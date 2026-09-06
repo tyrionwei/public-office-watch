@@ -55,3 +55,22 @@ test('candidate status audit flags final results before a race is completed', ()
   assert.equal(report.issues.finalResultBeforeCompletion.count, 1);
   assert.equal(report.blockingIssueCount, 1);
 });
+
+test('candidate status audit accepts a nominee who did not file before registration closed', () => {
+  const report = auditCandidateStatuses([
+    {
+      id: 'candidate-did-not-register',
+      race_id: 'race-upcoming',
+      candidacy_status: 'did_not_register',
+      election_result: 'pending',
+      status_updated_at: '2026-09-05T00:00:00Z',
+      registration_status: 'not_registered',
+      is_elected: null,
+      source_name: 'CEC',
+      source_url: 'https://example.test/final-registration-list',
+    },
+  ], [{ id: 'race-upcoming', status: 'upcoming' }]);
+
+  assert.equal(report.candidacyStatusCounts.did_not_register, 1);
+  assert.equal(report.blockingIssueCount, 0);
+});

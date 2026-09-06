@@ -25,40 +25,98 @@ function isProcessAlive(pid) {
 
 function readRunLock(lockPath) {
   try {
-    return JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+    const lock = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+    const pid = Number(lock?.pid);
+    return Number.isInteger(pid) && pid > 0 && typeof lock?.token === 'string' ? lock : null;
   } catch {
     return null;
   }
 }
 
+function tryCreateRunLock(lockPath, lock) {
+  const temporary = lockPath + '.' + process.pid + '.' + lock.token + '.tmp';
+  try {
+    fs.writeFileSync(temporary, `${JSON.stringify(lock)}\n`, { flag: 'wx' });
+    try {
+      fs.linkSync(temporary, lockPath);
+      return true;
+    } catch (error) {
+      if (error?.code === 'EEXIST') return false;
+      throw error;
+    }
+  } finally {
+    fs.rmSync(temporary, { force: true });
+  }
+}
+
+function ensureLockCanBeReclaimed(lockPath, label) {
+  const existing = readRunLock(lockPath);
+  if (existing && isProcessAlive(Number(existing.pid))) {
+    throw new Error(`${label} monitor is already running with PID ${existing.pid}.`);
+  }
+  if (existing) return true;
+
+  let ageMs;
+  try {
+    ageMs = Date.now() - fs.statSync(lockPath).mtimeMs;
+  } catch (error) {
+    if (error?.code === 'ENOENT') return false;
+    throw error;
+  }
+  if (ageMs < 30_000) {
+    throw new Error(`${label} monitor lock is still being acquired.`);
+  }
+  return true;
+}
+
 function acquireRunLock(lockPath = defaultLockPath) {
   fs.mkdirSync(path.dirname(lockPath), { recursive: true });
+  const label = 'Daily';
   const lock = {
     pid: process.pid,
     token: randomUUID(),
     startedAt: new Date().toISOString(),
   };
+  const recoveryPath = lockPath + '.reclaim';
 
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    if (fs.existsSync(recoveryPath)) {
+      const recovery = readRunLock(recoveryPath);
+      if (recovery && isProcessAlive(Number(recovery.pid))) {
+        throw new Error(`${label} monitor lock recovery is already running with PID ${recovery.pid}.`);
+      }
+      if (fs.existsSync(recoveryPath)) {
+        throw new Error(`${label} monitor has a stale lock recovery marker: ${recoveryPath}`);
+      }
+      continue;
+    }
+
+    if (tryCreateRunLock(lockPath, lock)) return lock;
+    if (!ensureLockCanBeReclaimed(lockPath, label)) continue;
+
+    const recoveryLock = {
+      pid: process.pid,
+      token: randomUUID(),
+      startedAt: new Date().toISOString(),
+    };
+    if (!tryCreateRunLock(recoveryPath, recoveryLock)) continue;
+
     try {
-      const descriptor = fs.openSync(lockPath, 'wx');
-      try {
-        fs.writeFileSync(descriptor, `${JSON.stringify(lock)}\n`);
-      } finally {
-        fs.closeSync(descriptor);
-      }
-      return lock;
-    } catch (error) {
-      if (error?.code !== 'EEXIST') throw error;
-      const existing = readRunLock(lockPath);
-      if (existing && isProcessAlive(Number(existing.pid))) {
-        throw new Error(`Daily monitor is already running with PID ${existing.pid}.`);
-      }
+      if (!ensureLockCanBeReclaimed(lockPath, label)) continue;
       fs.rmSync(lockPath, { force: true });
+      if (tryCreateRunLock(lockPath, lock)) return lock;
+
+      const replacement = readRunLock(lockPath);
+      if (replacement && isProcessAlive(Number(replacement.pid))) {
+        throw new Error(`${label} monitor is already running with PID ${replacement.pid}.`);
+      }
+      throw new Error(`Unable to acquire the ${label.toLowerCase()} monitor lock after reclaiming it.`);
+    } finally {
+      releaseRunLock(recoveryPath, recoveryLock.token);
     }
   }
 
-  throw new Error('Unable to acquire the daily monitor lock.');
+  throw new Error(`Unable to acquire the ${label.toLowerCase()} monitor lock.`);
 }
 
 function releaseRunLock(lockPath = defaultLockPath, token) {
@@ -70,12 +128,15 @@ function releaseRunLock(lockPath = defaultLockPath, token) {
 
 function parseLastJsonOutput(output) {
   const value = String(output ?? '').trim();
-  for (let index = value.lastIndexOf('{'); index >= 0; index = value.lastIndexOf('{', index - 1)) {
+  let index = value.lastIndexOf('{');
+  while (index >= 0) {
     try {
       return JSON.parse(value.slice(index));
     } catch {
       // npm can print banners before the final structured result.
     }
+    if (index === 0) break;
+    index = value.lastIndexOf('{', index - 1);
   }
   return null;
 }
@@ -105,16 +166,24 @@ function summarizeDailyResults(results, scheduledStepCount = dailySteps.length) 
   };
 }
 
-function runNpmScript(scriptName, extraArgs = []) {
+function runNpmScript(scriptName, extraArgs = [], outputDir = path.join(repoRoot, 'tmp', 'daily-monitor')) {
   const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-  return new Promise((resolve) => {
+  const startedAt = new Date().toISOString();
+  return new Promise((resolve, reject) => {
     let stdout = '';
     let stderr = '';
     let settled = false;
     const finish = (result) => {
       if (settled) return;
       settled = true;
-      resolve(result);
+      try {
+        const logPath = path.join(outputDir, 'logs', scriptName.replaceAll(':', '-') + '.log');
+        fs.mkdirSync(path.dirname(logPath), { recursive: true });
+        fs.writeFileSync(logPath, stdout + (stderr ? '\nSTDERR\n' + stderr : ''));
+        resolve({ ...result, startedAt, finishedAt: new Date().toISOString(), logPath });
+      } catch (error) {
+        reject(error); // Do not continue when evidence cannot be saved.
+      }
     };
     const child = spawn(npmCommand, ['run', scriptName, ...extraArgs], {
       cwd: repoRoot,
@@ -149,27 +218,36 @@ function runNpmScript(scriptName, extraArgs = []) {
         needsAttention: exitCode !== 0 || needsAttention,
         reportedStatus: reportedResult?.status ?? null,
         reportedNeedsAttention: reportedResult?.needsAttention === true,
+        sourceHealth: reportedResult?.sourceHealth ?? null,
         error: exitCode === 0 ? null : stderr.trim() || `${scriptName} exited with code ${exitCode}.`,
       });
     });
   });
 }
 
+async function runDailySteps(run = runNpmScript) {
+  const results = [];
+  // These steps do not consume each other's output. A source failure must not
+  // suppress unrelated collection; environment/lock checks remain run-wide.
+  for (const [scriptName, extraArgs] of dailySteps) {
+    results.push(await run(scriptName, extraArgs));
+  }
+  return results;
+}
+
 async function main() {
   const lock = acquireRunLock();
-  const results = [];
   try {
-    for (const [scriptName, extraArgs] of dailySteps) {
-      const result = await runNpmScript(scriptName, extraArgs);
-      results.push(result);
-      if (result.status === 'failed') break;
-    }
+    const results = await runDailySteps();
     const summary = {
       schemaVersion: 1,
       generatedAt: new Date().toISOString(),
       ...summarizeDailyResults(results),
       steps: results,
     };
+    const summaryPath = path.join(repoRoot, 'tmp', 'daily-monitor', 'summary.json');
+    fs.mkdirSync(path.dirname(summaryPath), { recursive: true });
+    fs.writeFileSync(summaryPath, JSON.stringify(summary, null, 2) + '\n');
     console.log(JSON.stringify(summary, null, 2));
     if (summary.needsAttention) process.exitCode = 1;
     return summary;
@@ -190,5 +268,6 @@ export {
   parseLastJsonOutput,
   releaseRunLock,
   resultNeedsAttention,
+  runDailySteps,
   summarizeDailyResults,
 };

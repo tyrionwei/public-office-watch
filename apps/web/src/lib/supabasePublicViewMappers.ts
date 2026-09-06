@@ -156,6 +156,7 @@ function asCandidateRegistrationStatus(value: unknown): PublicCandidate['registr
     'qualified',
     'disqualified',
     'withdrawn',
+    'not_registered',
     'elected',
     'not_elected',
     'unknown',
@@ -173,6 +174,7 @@ function asCandidateCandidacyStatus(value: unknown): PublicCandidate['candidacy_
     'registered',
     'qualified',
     'withdrawn_or_disqualified',
+    'did_not_register',
     'unknown',
   ];
   return typeof value === 'string' && allowed.includes(value as PublicCandidate['candidacy_status'])
@@ -191,6 +193,7 @@ function candidacyStatusFromLegacy(status: PublicCandidate['registration_status'
   if (status === 'pending') return 'potential';
   if (status === 'registered' || status === 'qualified') return status;
   if (status === 'disqualified' || status === 'withdrawn') return 'withdrawn_or_disqualified';
+  if (status === 'not_registered') return 'did_not_register';
   if (status === 'elected' || status === 'not_elected') return 'qualified';
   return 'unknown';
 }

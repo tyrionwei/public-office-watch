@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {
   applyReviewedCandidateResultOverride,
+  buildCurrentOfficeholders,
   buildPartyRegistryProfile,
   buildEnrichmentPartyAffiliationRows,
   buildSourcePersonRows,
@@ -13,10 +16,12 @@ import {
   historicalCecAggregateResultKey,
   isHistoricalCecAggregateResultRow,
   isHistoricalCecNationalResult,
+  loadCurrentOfficeholders,
   scoreClaim,
   summarizeLiveSourceHealth,
   supabaseRequest,
 } from './sync-real-public-data.mjs';
+import { sourceHealthStatePath } from './monitor-source-retry.mjs';
 
 const realPublicDataSeed = JSON.parse(fs.readFileSync('data-sources/real-public-data.seed.json', 'utf8'));
 const moiPartyRegistry = realPublicDataSeed.sources.find((source) => source.id === 'moi-party-registry');
@@ -59,6 +64,44 @@ assert.deepEqual(
     degradedSources: [{ name: 'LY current officeholders', status: 'fallback', error: 'TLS failed' }],
   },
 );
+
+const currentOfficeholderSource = {
+  id: 'ly-current-legislators',
+  url: 'https://www.ly.gov.tw/',
+  downloadUrl: 'https://example.test/legislators.json',
+};
+assert.throws(
+  () => buildCurrentOfficeholders({ dataList: [] }, currentOfficeholderSource),
+  /no current legislators/,
+);
+
+const sourceStateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pow-current-officeholders-'));
+const sourceStateDirectory = path.join(sourceStateDir, 'source-health');
+let invalidRosterFetches = 0;
+const fixedNow = () => Date.parse('2026-09-04T10:00:00Z');
+try {
+  const options = {
+    stateDirectory: sourceStateDirectory,
+    legacyStatePath: path.join(sourceStateDir, 'legacy-source-health.json'),
+    now: fixedNow,
+    sleep: async () => {},
+    fetchPayload: async () => {
+      invalidRosterFetches += 1;
+      return { dataList: [] };
+    },
+  };
+  await assert.rejects(loadCurrentOfficeholders(currentOfficeholderSource, options), /no current legislators/);
+  const sourceState = JSON.parse(fs.readFileSync(
+    sourceHealthStatePath(sourceStateDirectory, 'ly-current-legislators'),
+    'utf8',
+  )).source;
+  assert.equal(sourceState.status, 'blocked');
+  assert.ok(sourceState.nextCheckAt);
+  await assert.rejects(loadCurrentOfficeholders(currentOfficeholderSource, options), /deferred/);
+  assert.equal(invalidRosterFetches, 1);
+} finally {
+  fs.rmSync(sourceStateDir, { recursive: true, force: true });
+}
 
 const originalFetch = globalThis.fetch;
 let publishedRpcRequest;

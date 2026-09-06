@@ -53,6 +53,8 @@ npm run monitor:weekly -- --output-dir tmp/weekly-monitor-preview
 
 任一來源失敗時，流程仍會繼續檢查其他來源，最後以 `needs_attention` 結束，並在 `failedSteps` 列出失敗項目。這種狀態代表需要查看對應的 `logs/*.log`，不代表既有公開資料已損壞。
 
+降級來源也會以非零狀態通知，成功、降級與失敗數分開計算。審核按 [來源失敗隔離流程](monitor-failure-isolation.md) 逐項驗證，來源失敗不阻擋無相依關係的完整產物。
+
 民眾黨網站目前有瀏覽器安全檢測，因此每週流程只比對已保存的瀏覽器快照，不聲稱已取得最新頁面。需要更新時，仍須由可正常開啟該網站的瀏覽器重新擷取。
 
 ## 發布邊界

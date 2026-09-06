@@ -43,6 +43,6 @@ export function toCurrentCountyName(value: string) {
 }
 
 export function isCurrentCountyName(value: string) {
-  return countyOrder.has(toCurrentCountyName(value) as (typeof currentCountyNames)[number]);
+  return countyOrder.has(normalizeTaiwanText(value) as (typeof currentCountyNames)[number]);
 }
 

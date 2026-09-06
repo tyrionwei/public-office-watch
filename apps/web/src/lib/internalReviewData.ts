@@ -114,7 +114,7 @@ export type PersonFeedbackReviewAction = 'start' | 'verify' | 'reject';
 type ReviewClaimFilters = {
   sourceName?: string;
   claimType?: string;
-  reviewStatus?: 'pending' | 'needs_more_evidence' | '';
+  reviewStatus?: 'pending' | 'needs_more_evidence' | 'ready_for_publication' | '';
   personName?: string;
 };
 

@@ -106,6 +106,8 @@ export type PublishedPublicDataBridge = Pick<
   | 'loadCurrentLegislatorPartySummary'
   | 'loadPublicUpdates'
   | 'loadPartyOfficers'
+  | 'loadPollingPlaces'
+  | 'loadCandidateLifecycle'
   | 'loadPartyPlatformHistory'
   | 'loadPartyPeopleStatistics'
   | 'loadPartyLegalStatistics'
@@ -528,6 +530,12 @@ export function createPublishedPublicDataBridge(
       return adapter.loadPartyOfficers(partyId);
     },
 
+    loadPollingPlaces(eventKey, villageCode) {
+      return adapter.loadPollingPlaces(eventKey, villageCode);
+    },
+    loadCandidateLifecycle(candidateId) {
+      return adapter.loadCandidateLifecycle(candidateId);
+    },
     loadPartyPlatformHistory(partyId) {
       return adapter.loadPartyPlatformHistory(partyId);
     },

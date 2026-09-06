@@ -30,19 +30,24 @@ SELECT published.promote(NULL);
 
 DO $$
 BEGIN
-    -- This row is present in the full local research database and may not yet
-    -- exist in every deployment that receives the schema migration.
+    -- The schema migration must also apply before the reviewed 2026 data is
+    -- loaded. Only assert the row-level outcome when that candidacy is already
+    -- present; the production release migration verifies that it appears after
+    -- loading the reviewed cohort.
     IF EXISTS (
-        SELECT 1 FROM public.people
-        WHERE id = '96c49dbf-21a1-467d-8acf-2e5f3b9a933f'::UUID
-    ) AND NOT EXISTS (
         SELECT 1
         FROM public.public_people_list
         WHERE person_id = '96c49dbf-21a1-467d-8acf-2e5f3b9a933f'::UUID
-          AND position IS NULL
-          AND current_office_label IS NULL
           AND upcoming_candidate_label = '臺北市市長'
-          AND list_status = 'candidate'
+    ) AND EXISTS (
+        SELECT 1
+        FROM public.public_people_list
+        WHERE person_id = '96c49dbf-21a1-467d-8acf-2e5f3b9a933f'::UUID
+          AND (
+              position IS NOT NULL
+              OR current_office_label IS NOT NULL
+              OR list_status IS DISTINCT FROM 'candidate'
+          )
     ) THEN
         RAISE EXCEPTION 'Candidate office is still projected as Guo Xi current position';
     END IF;

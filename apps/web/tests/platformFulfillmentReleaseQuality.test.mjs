@@ -70,6 +70,20 @@ test('keeps future commitments that share an item with past achievements', () =>
   assert.ok(!decision.excludedReasonCodes.includes('past_achievement'));
 });
 
+test('excludes pure past achievements even when the achievement phrase contains an action verb', () => {
+  const achievements = [
+    '二十四年成績單：成功推動「五股、泰山輕軌捷運」並獲得國家發展研究院審核通過。',
+    '養得起孩子／完成：成功推動台中市公托公幼倍增。',
+  ];
+
+  for (const achievement of achievements) {
+    const decision = classifyPlatformFulfillmentRelease(claim([achievement]));
+    assert.equal(decision.releaseable, false, achievement);
+    assert.deepEqual(decision.items, []);
+    assert.ok(decision.excludedReasonCodes.includes('past_achievement'));
+  }
+});
+
 test('withholds the whole split when an item has abnormal structure', () => {
   const decision = classifyPlatformFulfillmentRelease(claim([
     '推動地方公共建設。',

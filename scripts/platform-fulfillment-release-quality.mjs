@@ -79,8 +79,9 @@ function hasUnbalancedClosingDelimiter(value) {
 }
 
 function looksLikePurePastAchievement(value) {
-  const withoutPastPhrases = value.replace(/成功爭取/gu, '');
   const hasPast = pastAchievementPattern.test(value);
+  const withoutPastPhrases = value.replace(
+    /(?:(?:已|己)(?:經)?(?:完成|動工|完工|啟用)|成功(?:爭取|推動|促成)|爭取到|任內(?:完成|促成)|過去.*?(?:完成|促成)|曾經.*?(?:完成|促成)|重大成果)/gu, '');
   if (/(?:已|己)(?:經)?(?:完成|動工|完工|啟用)[。！？!?]?\s*$/u.test(value)) return true;
   const hasCommitment = /(?:未來|將|繼續|持續|續促|督促|落實|改善|增加|建立|打造|保障|應予|任內將|爭取|推動|要求|監督|加速|規劃|增設|促進|提升|強化|維護|支持)/u
     .test(withoutPastPhrases);

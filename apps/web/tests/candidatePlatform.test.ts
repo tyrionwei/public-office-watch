@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { platformClaimsForCandidate, platformItemsForClaim } from '../src/lib/candidatePlatform.ts';
+import { platformClaimsForCandidate, platformItemsForCandidate, platformItemsForClaim } from '../src/lib/candidatePlatform.ts';
 import type { PublicPersonClaim } from '../src/types/publicViews.ts';
 
 function platformClaim(claimId: string, electionContext?: Record<string, string>, candidateId?: string): PublicPersonClaim {
@@ -40,6 +40,17 @@ test('does not guess the election for legacy unscoped platform claims', () => {
   assert.deepEqual(
     platformClaimsForCandidate([platformClaim('legacy-unscoped')], 'candidate-1', 'race-1'),
     [],
+  );
+});
+
+test('keeps every reviewed platform item for a candidate beyond the generic five-value limit', () => {
+  const claim = platformClaim('complete-platform', { candidateId: 'candidate-1', raceId: 'race-1' });
+  claim.claim_json.items = Array.from({ length: 10 }, (_, index) => `第${index + 1}項政見`);
+  claim.claim_json.contentSplit = { reviewStatus: 'reviewed' };
+
+  assert.deepEqual(
+    platformItemsForCandidate([claim], 'candidate-1', 'race-1'),
+    Array.from({ length: 10 }, (_, index) => `第${index + 1}項政見`),
   );
 });
 

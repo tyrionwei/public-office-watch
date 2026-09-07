@@ -59,3 +59,20 @@ export function platformItemsForClaim(claim: PublicPersonClaim) {
     : claim.claim_value;
   return splitPlatformContent(platformText).items.map(normalizePlatformItem).filter(Boolean);
 }
+
+export function platformItemsForCandidate(
+  claims: PublicPersonClaim[],
+  candidateId: string,
+  raceId: string,
+) {
+  const seen = new Set<string>();
+  const items: string[] = [];
+  for (const item of platformClaimsForCandidate(claims, candidateId, raceId)
+    .flatMap(platformItemsForClaim)) {
+    const key = item.replace(/\s+/gu, '').toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    items.push(item);
+  }
+  return items;
+}

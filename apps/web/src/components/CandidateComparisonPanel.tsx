@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
-import { platformClaimsForCandidate, platformItemsForClaim } from '../lib/candidatePlatform';
+import { platformItemsForCandidate } from '../lib/candidatePlatform';
 import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { buildCandidateComparisonShareUrl, comparisonAnchorId } from '../lib/socialSharing';
 import { personPath } from '../routes/routePaths';
@@ -56,10 +56,7 @@ function candidatePlatformValues(
   raceId: string,
 ) {
   if (!profile) return [];
-  return uniqueValues(
-    platformClaimsForCandidate(profile.public_claims, candidateId, raceId)
-      .flatMap(platformItemsForClaim),
-  );
+  return platformItemsForCandidate(profile.public_claims, candidateId, raceId);
 }
 
 function profileSources(profile: PublicPersonProfile | null) {

@@ -189,6 +189,18 @@ const relatedPersonDescriptors = [
   '愛將', '發言人', '市府', '團隊', '子弟兵', '幕僚', '辦公室', '助理', '顧問', '旗下',
 ];
 
+// Candidate registration is synchronized from the CEC publication schedule.
+// Keep this guard for legacy/custom manifests so RSS registration coverage does
+// not re-enter the review queue even if old query terms are supplied.
+const cecRegistrationOnlyTerms = new Set([
+  '登記參選', '完成登記', '正式登記', '撤回登記',
+].map(normalizeName));
+
+function isCecRegistrationNews(categoryKey, matchedTerms) {
+  if (categoryKey !== 'candidacy_status' || matchedTerms.length === 0) return false;
+  return matchedTerms.every((term) => cecRegistrationOnlyTerms.has(normalizeName(term)));
+}
+
 function directEventMatch(title, personName, eventTerms, categoryKey) {
   const normalizedTitle = normalizeName(title);
   const normalizedPersonName = normalizeName(personName);
@@ -246,6 +258,7 @@ function buildEventLeads(itemsByCategory, watchlist, manifest, now = new Date())
         normalizedTitle.includes(normalizeName(term)) || normalizedSummary.includes(normalizeName(term))
       ));
       if (matchedTerms.length === 0) continue;
+      if (isCecRegistrationNews(category.key, matchedTerms)) continue;
       let matchedKnownPerson = false;
       for (const person of watchlist) {
         const inTitle = normalizedTitle.includes(person.normalizedName);
@@ -462,6 +475,7 @@ export {
   buildFeedUrl,
   directEventMatch,
   groupEventLeads,
+  isCecRegistrationNews,
   normalizeWatchlist,
   parseArgs,
   parseRssItems,

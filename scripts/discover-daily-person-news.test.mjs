@@ -6,6 +6,7 @@ import {
   buildFeedUrl,
   directEventMatch,
   groupEventLeads,
+  isCecRegistrationNews,
   normalizeWatchlist,
   parseRssItems,
   validateManifest,
@@ -116,6 +117,39 @@ test('drops articles outside the lookback window or without event terms', () => 
     ],
   }], watchlist, manifest, new Date('2026-08-11T00:00:00Z'));
   assert.equal(leads.length, 0);
+});
+
+test('drops CEC registration news even when a legacy manifest still requests it', () => {
+  const legacyCandidacyManifest = validateManifest({
+    schemaVersion: 1,
+    lookbackHours: 36,
+    feed: manifest.feed,
+    categories: [{
+      key: 'candidacy_status',
+      label: '參選狀態',
+      queryTerms: ['完成登記', '退選'],
+      eventTerms: ['完成登記', '退選'],
+    }],
+    trustedPublishers: ['中央社'],
+  });
+  const watchlist = normalizeWatchlist([{ person_id: 'person-1', name: '王小明', election_year: 2026 }]);
+  const leads = buildEventLeads([{
+    category: legacyCandidacyManifest.categories[0],
+    items: [{
+      title: '王小明完成登記參選市議員',
+      url: 'https://news.google.com/registration',
+      publishedAt: '2026-08-10T08:00:00Z',
+      summary: '',
+      publisherName: '中央社',
+    }],
+  }], watchlist, legacyCandidacyManifest, new Date('2026-08-11T00:00:00Z'));
+  assert.equal(leads.length, 0);
+  assert.equal(isCecRegistrationNews('candidacy_status', ['完成登記']), true);
+});
+
+test('keeps non-registration candidacy changes and party changes', () => {
+  assert.equal(isCecRegistrationNews('candidacy_status', ['退選']), false);
+  assert.equal(isCecRegistrationNews('party_affiliation', ['加入']), false);
 });
 
 test('rejects longer-name and commentator-context false positives', () => {

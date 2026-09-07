@@ -1,6 +1,6 @@
 const releaseQualityVersion = 'platform-fulfillment-release-v2';
 
-const actionPattern = /(?:爭取|推動|改善|增設|加速|建立|支持|保障|監督|落實|提升|促進|強化|維護|興建|整建|補助|制定|訂定|修法|反對|要求|取消|開放|整合|規劃|活化|打造|完善|擴大|降低|提高|增加|倍增|確保|督促|檢討|協助|輔導|提供|設置|設立|建置|發展|保護|捍衛|解決|鼓勵|充實|優化|保存|杜絕|重啟|放寬|暫緩|編列|清查|嚴查|普設|籌措|改建|重建|照顧|培育|引進|減輕|廣設|增建|研議|推廣|結合|升級|維持|建構|實施|延長|繼續|力促|力拚|布建|打通|關懷|檢視|納入|合理化|恢復|創造|成立|更新|新建|推展|促請|守護|審議)/u;
+const actionPattern = /(?:爭取|推動|改善|增設|加速|建立|支持|保障|監督|落實|提升|促進|強化|維護|興建|整建|補助|制定|訂定|修法|反對|要求|取消|開放|整合|規劃|活化|打造|完善|完成|擴大|降低|提高|增加|倍增|確保|督促|檢討|協助|輔導|提供|設置|設立|建置|發展|保護|捍衛|解決|鼓勵|充實|優化|保存|杜絕|重啟|放寬|暫緩|編列|清查|嚴查|普設|籌措|改建|重建|照顧|培育|引進|減輕|廣設|增建|研議|推廣|結合|升級|維持|建構|實施|延長|繼續|力促|力拚|布建|打通|關懷|檢視|納入|合理化|恢復|創造|成立|更新|新建|推展|促請|守護|審議)/u;
 const webPromotionPattern = /(?:https?:\/\/|www\.|更多(?:政見|訊息)|請搜尋|輸入網址|掃\s*QR(?:-?CODE)?|[a-z0-9-]+\.(?:tw|com|org|net)(?:\b|\/))/iu;
 const biographyPattern = /(?:政見如下|候選人(?:簡介|介紹)|懇請.*(?:支持|機會)|請投|票投|我(?:是|叫|參選|投入這場選舉|願意承擔)|本人(?:出生|參選)|當選以來|這四年我|從政.*(?:初衷|目標))/u;
 const resumePattern = /(?:【\s*(?:經歷|學歷|現任|曾任)\s*】|^(?:經歷|學歷|現任|曾任)\s*[：:])/u;
@@ -79,13 +79,15 @@ function hasUnbalancedClosingDelimiter(value) {
 }
 
 function looksLikePurePastAchievement(value) {
-  const hasPast = pastAchievementPattern.test(value);
-  const withoutPastPhrases = value.replace(
-    /(?:(?:已|己)(?:經)?(?:完成|動工|完工|啟用)|成功(?:爭取|推動|促成)|爭取到|任內(?:完成|促成)|過去.*?(?:完成|促成)|曾經.*?(?:完成|促成)|重大成果)/gu, '');
-  if (/(?:已|己)(?:經)?(?:完成|動工|完工|啟用)[。！？!?]?\s*$/u.test(value)) return true;
-  const hasCommitment = /(?:未來|將|繼續|持續|續促|督促|落實|改善|增加|建立|打造|保障|應予|任內將|爭取|推動|要求|監督|加速|規劃|增設|促進|提升|強化|維護|支持)/u
-    .test(withoutPastPhrases);
-  return hasPast && !hasCommitment;
+  const clauses = value
+    .split(/[，,。；;！？!?\n]+/u)
+    .map((clause) => clause.trim())
+    .filter(Boolean);
+  const hasPastAchievementClause = clauses.some((clause) => pastAchievementPattern.test(clause));
+  if (!hasPastAchievementClause) return false;
+
+  const explicitFutureCuePattern = /(?:未來|將|繼續|持續|續促|後續|下一步|承諾|應予|任內將)/u;
+  return !clauses.some((clause) => explicitFutureCuePattern.test(clause));
 }
 
 export function platformFulfillmentItemReasonCodes(value) {

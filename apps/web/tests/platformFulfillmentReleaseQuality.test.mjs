@@ -62,18 +62,24 @@ test('keeps short actionable promises instead of treating them as headings', () 
 });
 
 test('keeps future commitments that share an item with past achievements', () => {
-  const mixedItem = '成功爭取設立 YouBike 據點，持續爭取廣設據點，串聯大眾運輸工具。';
-  const decision = classifyPlatformFulfillmentRelease(claim([mixedItem]));
+  const mixedItems = [
+    '成功爭取設立 YouBike 據點，持續爭取廣設據點，串聯大眾運輸工具。',
+    '過去進度落後，未來將完成捷運建設。',
+  ];
 
-  assert.equal(decision.releaseable, true);
-  assert.deepEqual(decision.items, [mixedItem]);
-  assert.ok(!decision.excludedReasonCodes.includes('past_achievement'));
+  for (const mixedItem of mixedItems) {
+    const decision = classifyPlatformFulfillmentRelease(claim([mixedItem]));
+    assert.equal(decision.releaseable, true, mixedItem);
+    assert.deepEqual(decision.items, [mixedItem]);
+    assert.ok(!decision.excludedReasonCodes.includes('past_achievement'));
+  }
 });
 
 test('excludes pure past achievements even when the achievement phrase contains an action verb', () => {
   const achievements = [
     '二十四年成績單：成功推動「五股、泰山輕軌捷運」並獲得國家發展研究院審核通過。',
     '養得起孩子／完成：成功推動台中市公托公幼倍增。',
+    '二十四年成績單：成功推動林口交流道立體化，增設引道紓解龜山、林口車流。',
   ];
 
   for (const achievement of achievements) {

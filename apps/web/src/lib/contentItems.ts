@@ -24,7 +24,7 @@ function normalizeSourceText(value: string | null | undefined) {
 
 function stripListPrefix(value: string) {
   return value
-    .replace(/^[\s\-–—•●○▪◆◇★※◎‧“”‘’"'＋+.]+/u, '')
+    .replace(/^[\s\-–—*•●○▪◆◇★※◎‧“”‘’"'＋+.]+/u, '')
     .replace(new RegExp(`^(?:${numberedMarkerSource})\\s*`, 'u'), '')
     .replace(/\s+/gu, ' ')
     .trim();
@@ -44,21 +44,26 @@ function splitMarkedItems(value: string) {
   const marked = value.replace(
     new RegExp(`(^|[\\n。；;])\\s*(?:${numberedMarkerSource})\\s*`, 'gmu'),
     '$1\u001e',
-  ).replace(/(^|\n)\s*[•●○▪◆◇★※]+\s*/gmu, '$1\u001e');
+  ).replace(/(^|\n)\s*[*•●○▪◆◇★※]+\s*/gmu, '$1\u001e');
   const markerCount = marked.split('\u001e').length - 1;
   if (markerCount < 2) return null;
   return uniqueItems(marked.split('\u001e').map(stripListPrefix).filter(Boolean));
 }
 
-const bulletPrefixPattern = /^[•●○▪◆◇★※◎]\s*/u;
-const numberedLinePattern = new RegExp(`^(?:${numberedMarkerSource})\\s*`, 'u');
+const bulletPrefixPattern = /^[*•●○▪◆◇★※◎]\s*/u;
 
 function explicitSectionHeading(lines: string[], index: number) {
   const line = lines[index]?.trim() ?? '';
   if (!line) return null;
   const nextLine = lines.slice(index + 1).find((candidate) => candidate.trim())?.trim() ?? '';
+  const markdownHeading = line.match(/^#{1,6}\s+(.+)$/u)?.[1]?.trim() ?? null;
+  if (markdownHeading && bulletPrefixPattern.test(nextLine)) return stripListPrefix(markdownHeading);
+  const numberedHeading = /^[一二三四五六七八九十百]+[.、．）)]\s*/u.test(line) && bulletPrefixPattern.test(nextLine)
+    ? stripListPrefix(line)
+    : null;
+  if (numberedHeading) return numberedHeading;
   const bulletHeading = line.match(/^[•●○▪◆◇★※◎]\s*(.+)$/u)?.[1]?.trim() ?? null;
-  if (bulletHeading && numberedLinePattern.test(nextLine)) return stripListPrefix(bulletHeading);
+  if (bulletHeading && /^(?:\d{1,3}[.、．）)]|\(\d{1,3}\)|（\d{1,3}）|[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])\s*/u.test(nextLine)) return stripListPrefix(bulletHeading);
   if (/[>＞]\s*$/u.test(line)) return stripListPrefix(line.replace(/[>＞]\s*$/u, ''));
   if (
     /^[\p{Script=Han}]{2,8}$/u.test(line)
@@ -83,8 +88,11 @@ function splitExplicitSectionItems(source: string) {
       continue;
     }
     if (!heading || !lines[index].trim()) continue;
-    const item = stripListPrefix(lines[index]);
-    if (item) items.push(`${heading}：${item}`);
+    const lineItems = lines[index]
+      .split(/\s+\*\s+/gu)
+      .map(stripListPrefix)
+      .filter(Boolean);
+    for (const item of lineItems) items.push(`${heading}：${item}`);
   }
 
   if (headingCount < 2 || items.length < 2) return null;
@@ -139,7 +147,7 @@ function splitSectionedPlatform(paragraphs: string[]) {
 function platformHeading(value: string) {
   const heading = stripListPrefix(value).replace(/[：:—–\-\s]+$/gu, '').trim();
   if (!heading || heading.length > 20) return null;
-  if (/^(?:爭取|推動|監督|落實|改善|增設|加速|建立|支持|保障|關懷|重視|堅持|督促|促進|提升)/u.test(heading)) return null;
+  if (/^(?:爭取|推動|監督|落實|改善|增設|加速|建立|支持|保障|關懷|重視|堅持|督促|促進|提升|推展|協助|優化|開發|加值|打造|力促|力拚|布建|更新|新建|訂定|恢復)/u.test(heading)) return null;
   if (/^【[^】]{2,18}】$/u.test(heading)) return heading.slice(1, -1);
   if (/^[^，,。！？!?；;：:]{1,12}篇$/u.test(heading)) return heading;
   if (/^(?:\d{4}\s*)?[^，,。！？!?；;：:]{0,12}(?:政見|政策|建設|福利|照護|交通|教育|觀光|農業|文化|環境|家園|青年|民生|經濟|食安|醫療|主權|社福|空間|長者|托育|發展|問政|監督|服務|願景|照顧|就業|生活|創生|遊憩|安全|青創|動保|優先)$/u.test(heading)) return heading;
@@ -149,7 +157,7 @@ function platformHeading(value: string) {
 function purePastAchievement(value: string) {
   const withoutPastPhrases = value.replace(/成功爭取/gu, '');
   const hasPast = /(?:成功爭取|獲評|評鑑|獲獎|貢獻獎|已促成|已完成|三讀通過|任內完成|連續\d+會期|\d{3}年政見共推)/u.test(value);
-  const hasCommitment = /(?:未來|將|持續|續促|督促|落實|改善|增加|建立|打造|保障|應予|任內將)/u.test(withoutPastPhrases);
+  const hasCommitment = /(?:未來|將|繼續|持續|續促|督促|落實|改善|增加|建立|打造|保障|應予|任內將|爭取|推動|要求|監督|加速|規劃|增設|促進|提升|強化|維護|支持)/u.test(withoutPastPhrases);
   return hasPast && !hasCommitment;
 }
 

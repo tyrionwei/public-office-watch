@@ -46,6 +46,30 @@ test('removes clear non-platform items without withholding the remaining promise
   }
 });
 
+test('keeps short actionable promises instead of treating them as headings', () => {
+  const promises = [
+    '公托公幼海線倍增',
+    '力促新莊第二運動中心成立。',
+    '訂定中共代理人法，嚇阻中國滲透。',
+    '合理化大眾運輸月票價格',
+  ];
+
+  for (const promise of promises) {
+    const decision = classifyPlatformFulfillmentRelease(claim([promise]));
+    assert.equal(decision.releaseable, true, promise);
+    assert.deepEqual(decision.items, [promise]);
+  }
+});
+
+test('keeps future commitments that share an item with past achievements', () => {
+  const mixedItem = '成功爭取設立 YouBike 據點，持續爭取廣設據點，串聯大眾運輸工具。';
+  const decision = classifyPlatformFulfillmentRelease(claim([mixedItem]));
+
+  assert.equal(decision.releaseable, true);
+  assert.deepEqual(decision.items, [mixedItem]);
+  assert.ok(!decision.excludedReasonCodes.includes('past_achievement'));
+});
+
 test('withholds the whole split when an item has abnormal structure', () => {
   const decision = classifyPlatformFulfillmentRelease(claim([
     '推動地方公共建設。',

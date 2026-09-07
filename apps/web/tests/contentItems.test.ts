@@ -57,6 +57,59 @@ test('recognizes angle-bracket section headings without releasing the headings a
   ]);
 });
 
+test('keeps bullet promises under numbered Chinese section headings', () => {
+  const result = splitPlatformContent([
+    '一、發展大武',
+    '• 改善道路基礎建設。',
+    '• 提升觀光價值。',
+    '二、幸福大武',
+    '• 推動銀髮族福利政策。',
+  ].join('\n'));
+
+  assert.deepEqual(result.items, [
+    '發展大武：改善道路基礎建設。',
+    '發展大武：提升觀光價值。',
+    '幸福大武：推動銀髮族福利政策。',
+  ]);
+});
+
+test('splits markdown headings and repeated star bullets into platform items', () => {
+  const result = splitPlatformContent([
+    '### 教育品質提升',
+    '* 發展特色教育。 * 推動幼老共園。',
+    '### 社福政策落實',
+    '* 提升心理衛教資源。 * 整合關懷據點。',
+  ].join('\n'));
+
+  assert.deepEqual(result.items, [
+    '教育品質提升：發展特色教育。',
+    '教育品質提升：推動幼老共園。',
+    '社福政策落實：提升心理衛教資源。',
+    '社福政策落實：整合關懷據點。',
+  ]);
+});
+
+test('keeps short numbered commitments that begin with action verbs', () => {
+  const result = splitPlatformContent([
+    '一、全力爭取鄉親權益',
+    '二、專業監督政府施政',
+    '三、督促政府發展產業',
+    '四、爭取實列原鄉預算',
+    '五、推展原鄉傳統文化',
+    '六、協助扶持培力青年',
+  ].join('\n'));
+
+  assert.equal(result.reviewStatus, 'auto_approved');
+  assert.deepEqual(result.items, [
+    '全力爭取鄉親權益',
+    '專業監督政府施政',
+    '督促政府發展產業',
+    '爭取實列原鄉預算',
+    '推展原鄉傳統文化',
+    '協助扶持培力青年',
+  ]);
+});
+
 test('marks clearly corrupted mixed-script OCR as needs review', () => {
   const result = splitPlatformContent([
     'ᑫӥНӥЎϯൺᑫၮ୏਒Шᑫ୔ࠔޜᇂ!',

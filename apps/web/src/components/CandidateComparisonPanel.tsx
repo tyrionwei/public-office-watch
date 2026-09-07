@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
-import { platformClaimsForCandidate } from '../lib/candidatePlatform';
+import { platformClaimsForCandidate, platformItemsForClaim } from '../lib/candidatePlatform';
 import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { buildCandidateComparisonShareUrl, comparisonAnchorId } from '../lib/socialSharing';
 import { personPath } from '../routes/routePaths';
@@ -47,6 +47,18 @@ function profileValues(profile: PublicPersonProfile | null, claimType: PublicPer
     profile.public_claims
       .filter((claim) => claim.claim_type === claimType)
       .map(claimText),
+  );
+}
+
+function candidatePlatformValues(
+  profile: PublicPersonProfile | null,
+  candidateId: string,
+  raceId: string,
+) {
+  if (!profile) return [];
+  return uniqueValues(
+    platformClaimsForCandidate(profile.public_claims, candidateId, raceId)
+      .flatMap(platformItemsForClaim),
   );
 }
 
@@ -117,9 +129,11 @@ export function CandidateComparisonPanel({
   const candidateNames = candidates.map((candidate) => candidate.person_name).join(language === 'en' ? ', ' : '、');
   const comparisonImageBody = candidates.map((candidate) => {
     const profile = profilesByPersonId.get(candidate.person_id) ?? null;
-    const platform = profile
-      ? uniqueValues(platformClaimsForCandidate(profile.public_claims, candidate.candidate_id, currentRaceId).map(claimText), 1)[0]
-      : null;
+    const platform = candidatePlatformValues(
+      profile,
+      candidate.candidate_id,
+      currentRaceId,
+    )[0] ?? null;
     return `${candidate.person_name}｜${platform ?? t('race.compareNoData')}`;
   }).join('\n');
   const shareUrl = candidates.length >= 2
@@ -244,10 +258,12 @@ export function CandidateComparisonPanel({
             <ComparisonRow label={t('race.comparePlatform')} candidates={candidates}>
               {(candidate) => {
                 const profile = profilesByPersonId.get(candidate.person_id) ?? null;
-                const claims = profile
-                  ? platformClaimsForCandidate(profile.public_claims, candidate.candidate_id, currentRaceId)
-                  : [];
-                return <TextList values={uniqueValues(claims.map(claimText))} emptyLabel={t('race.compareNoData')} />;
+                return (
+                  <TextList
+                    values={candidatePlatformValues(profile, candidate.candidate_id, currentRaceId)}
+                    emptyLabel={t('race.compareNoData')}
+                  />
+                );
               }}
             </ComparisonRow>
 
@@ -258,7 +274,7 @@ export function CandidateComparisonPanel({
                   [t('race.compareExperience'), profile?.experience_status === 'available'],
                   [
                     t('race.comparePlatform'),
-                    Boolean(profile && platformClaimsForCandidate(profile.public_claims, candidate.candidate_id, currentRaceId).length > 0),
+                    candidatePlatformValues(profile ?? null, candidate.candidate_id, currentRaceId).length > 0,
                   ],
                   [t('person.financeTitle'), Boolean(profile && profile.contribution_status !== 'todo')],
                   [t('person.legalTitle'), profile?.public_claims.some((claim) => claim.claim_type === 'legal_case')],

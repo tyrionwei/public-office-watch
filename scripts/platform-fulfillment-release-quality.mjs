@@ -83,11 +83,20 @@ function looksLikePurePastAchievement(value) {
     .split(/[，,。；;！？!?\n]+/u)
     .map((clause) => clause.trim())
     .filter(Boolean);
-  const hasPastAchievementClause = clauses.some((clause) => pastAchievementPattern.test(clause));
-  if (!hasPastAchievementClause) return false;
+  const firstPastAchievementIndex = clauses.findIndex((clause) => pastAchievementPattern.test(clause));
+  if (firstPastAchievementIndex < 0) return false;
 
   const explicitFutureCuePattern = /(?:未來|將|繼續|持續|續促|後續|下一步|承諾|應予|任內將)/u;
-  return !clauses.some((clause) => explicitFutureCuePattern.test(clause));
+  if (clauses.some((clause) => explicitFutureCuePattern.test(clause))) return false;
+
+  const firstPastAchievementClause = clauses[firstPastAchievementIndex];
+  const firstPastAchievementMatch = firstPastAchievementClause.match(pastAchievementPattern);
+  const textBeforeAchievement = [
+    ...clauses.slice(0, firstPastAchievementIndex),
+    firstPastAchievementClause.slice(0, firstPastAchievementMatch?.index ?? 0),
+  ].join('，');
+  const commitmentIntentPattern = /(?:督促|爭取|要求|主張|支持|反對|力促|力拚|促請|研議|規劃)/u;
+  return !commitmentIntentPattern.test(textBeforeAchievement);
 }
 
 export function platformFulfillmentItemReasonCodes(value) {

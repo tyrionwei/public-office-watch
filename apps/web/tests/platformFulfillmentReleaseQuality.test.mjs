@@ -75,6 +75,23 @@ test('keeps future commitments that share an item with past achievements', () =>
   }
 });
 
+test('keeps commitment main clauses when a nested or later clause reports progress', () => {
+  const mixedItems = [
+    '督促縣府爭取158乙永光路拓寬工程經費（已完成可行性評估，約7.5億）',
+    '督促市府4年任內完成8千户社會住宅，地點平均分配、讓年輕人有房子住，宜居宜業，不再為高房價煩惱。',
+    '爭取南屯區國中小全面設置智慧教室。(成功爭取永春、大墩國小，大墩、大業國中)。',
+  ];
+
+  for (const reviewStatus of ['reviewed', 'auto_approved']) {
+    for (const mixedItem of mixedItems) {
+      const decision = classifyPlatformFulfillmentRelease(claim([mixedItem], reviewStatus));
+      assert.equal(decision.releaseable, true, `${reviewStatus}: ${mixedItem}`);
+      assert.deepEqual(decision.items, [mixedItem]);
+      assert.ok(!decision.excludedReasonCodes.includes('past_achievement'));
+    }
+  }
+});
+
 test('excludes pure past achievements even when the achievement phrase contains an action verb', () => {
   const achievements = [
     '二十四年成績單：成功推動「五股、泰山輕軌捷運」並獲得國家發展研究院審核通過。',

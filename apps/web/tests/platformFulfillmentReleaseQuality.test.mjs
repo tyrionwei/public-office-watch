@@ -66,6 +66,8 @@ test('keeps future commitments that share an item with past achievements', () =>
     '成功爭取設立 YouBike 據點，持續爭取廣設據點，串聯大眾運輸工具。',
     '過去進度落後，未來將完成捷運建設。',
     '已完成可行性評估，爭取工程經費。',
+    '改善道路，已完成可行性評估。',
+    '已完成可行性評估，改善道路。',
     '成功爭取第一期預算，要求編列第二期經費。',
   ];
 
@@ -142,7 +144,7 @@ test('still applies hard-safety filtering to explicitly reviewed splits', () => 
   const decision = classifyPlatformFulfillmentRelease(claim([
     '推動地方公共建設。',
     '更多政見請上 http://example.tw/',
-    '落實居住正義，推動社會住宅-開南安居己動工',
+    '已完成改善工程。',
   ], 'reviewed'));
 
   assert.equal(decision.releaseable, true);
@@ -209,4 +211,15 @@ test('releases auto-approved items when every explicit source section is preserv
 
   assert.equal(decision.releaseable, true);
   assert.deepEqual(decision.items, items);
+});
+
+test('keeps ambiguous mixed action clauses for reviewed and automatic splits', () => {
+  for (const status of ['reviewed', 'auto_approved']) {
+    for (const item of ['改善道路，已完成可行性評估。', '已完成可行性評估，改善道路。', '落實居住正義，推動社會住宅-開南安居己動工']) {
+      assert.deepEqual(classifyPlatformFulfillmentRelease(claim([item], status)).items, [item]);
+    }
+    for (const item of ['成功爭取工程經費。', '已完成改善工程。', '成功爭取預算，已完成改善工程。']) {
+      assert.deepEqual(classifyPlatformFulfillmentRelease(claim([item], status)).items, []);
+    }
+  }
 });

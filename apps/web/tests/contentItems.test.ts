@@ -1,3 +1,4 @@
+import { classifyPlatformFulfillmentRelease } from '../../../scripts/platform-fulfillment-release-quality.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
@@ -124,4 +125,17 @@ test('marks clearly corrupted mixed-script OCR as needs review', () => {
 
   assert.equal(result.splitConfidence, 85);
   assert.equal(result.reviewStatus, 'needs_review');
+});
+
+test('parser and release gate share section heading recognition', () => {
+  for (const headings of [['一、教育', '二、交通'], ['## 教育', '## 交通'], ['教育', '交通'], ['教育＞', '交通＞']]) {
+    const source = [headings[0], '• 增設資源。', headings[1], '• 改善道路。'].join('\n');
+    const parsed = splitPlatformContent(source);
+    assert.deepEqual(parsed.items, ['教育：增設資源。', '交通：改善道路。']);
+    const check = (items: string[]) => classifyPlatformFulfillmentRelease({
+      claim_json: { platformText: source, items, contentSplit: { reviewStatus: 'auto_approved' } },
+    });
+    assert.equal(check(parsed.items).releaseable, true);
+    assert.ok(check(['增設資源。', '改善道路。']).reasonCodes.includes('section_heading_mismatch'));
+  }
 });

@@ -1,3 +1,5 @@
+import { explicitSectionHeading } from './platformSectionHeading.mjs';
+
 const numberedMarkerSource = String.raw`(?:\d{1,3}[.、．）)]|\(\d{1,3}\)|（\d{1,3}）|[一二三四五六七八九十百]+[.、．）)]|[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])`;
 const educationSchoolNameFragmentSource = String.raw`(?:(?!大學|大学|學院|学院|系|所|部|班|碩士|博士|學士|畢業|附設)[^\s,，、;；。()（）])`;
 const conservativeEducationStartSource = String.raw`(?:(?:國立|私立|市立|縣立|省立|美國|英國|日本|澳洲|德國|法國|加拿大|中國|臺灣|台灣)?${educationSchoolNameFragmentSource}{2,32}(?:大學|大学|科大|專校|工專|商專|師專|高中|高職|高职|高級中學|國民中學|國中|国中|國民小學|國小|国小|小學|女中|中學|農工|高工|商職|工校|家商|高商|士商|商工|工商|附小|附中|附工|附農|一中)|[\p{Script=Han}]{1,4}(?:家商|高商|士商|商工|工商|女中|附小|附中|附工|附農|一中)|${educationSchoolNameFragmentSource}{2,24}(?:科技|技術|師範|藝術|醫護|商業)學院|${educationSchoolNameFragmentSource}{2,24}(?:國際|警察|預備)學校|[A-Za-z][^\s,，、;；。]{1,39}(?:University|College|School))`;
@@ -48,30 +50,6 @@ function splitMarkedItems(value: string) {
   const markerCount = marked.split('\u001e').length - 1;
   if (markerCount < 2) return null;
   return uniqueItems(marked.split('\u001e').map(stripListPrefix).filter(Boolean));
-}
-
-const bulletPrefixPattern = /^[*•●○▪◆◇★※◎]\s*/u;
-
-function explicitSectionHeading(lines: string[], index: number) {
-  const line = lines[index]?.trim() ?? '';
-  if (!line) return null;
-  const nextLine = lines.slice(index + 1).find((candidate) => candidate.trim())?.trim() ?? '';
-  const markdownHeading = line.match(/^#{1,6}\s+(.+)$/u)?.[1]?.trim() ?? null;
-  if (markdownHeading && bulletPrefixPattern.test(nextLine)) return stripListPrefix(markdownHeading);
-  const numberedHeading = /^[一二三四五六七八九十百]+[.、．）)]\s*/u.test(line) && bulletPrefixPattern.test(nextLine)
-    ? stripListPrefix(line)
-    : null;
-  if (numberedHeading) return numberedHeading;
-  const bulletHeading = line.match(/^[•●○▪◆◇★※◎]\s*(.+)$/u)?.[1]?.trim() ?? null;
-  if (bulletHeading && /^(?:\d{1,3}[.、．）)]|\(\d{1,3}\)|（\d{1,3}）|[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])\s*/u.test(nextLine)) return stripListPrefix(bulletHeading);
-  if (/[>＞]\s*$/u.test(line)) return stripListPrefix(line.replace(/[>＞]\s*$/u, ''));
-  if (
-    /^[\p{Script=Han}]{2,8}$/u.test(line)
-    && bulletPrefixPattern.test(nextLine)
-  ) {
-    return line;
-  }
-  return null;
 }
 
 function splitExplicitSectionItems(source: string) {

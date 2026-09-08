@@ -1,6 +1,8 @@
+import { explicitSectionHeading } from '../apps/web/src/lib/platformSectionHeading.mjs';
+
 const releaseQualityVersion = 'platform-fulfillment-release-v2';
 
-const actionPattern = /(?:爭取|推動|改善|增設|加速|建立|支持|保障|監督|落實|提升|促進|強化|維護|興建|整建|補助|制定|訂定|修法|反對|要求|取消|開放|整合|規劃|活化|打造|完善|完成|擴大|降低|提高|增加|倍增|確保|督促|檢討|協助|輔導|提供|設置|設立|建置|發展|保護|捍衛|解決|鼓勵|充實|優化|保存|杜絕|重啟|放寬|暫緩|編列|清查|嚴查|普設|籌措|改建|重建|照顧|培育|引進|減輕|廣設|增建|研議|推廣|結合|升級|維持|建構|實施|延長|繼續|力促|力拚|布建|打通|關懷|檢視|納入|合理化|恢復|創造|成立|更新|新建|推展|促請|守護|審議)/u;
+const actionPattern = /(?:爭取|推動|改善|增設|加速|建立|支持|保障|監督|落實|提升|促進|強化|維護|興建|整建|補助|制定|訂定|修法|反對|要求|取消|開放|整合|規劃|活化|打造|完善|完成|擴大|降低|提高|增加|倍增|確保|督促|檢討|協助|輔導|提供|設置|設立|建置|發展|保護|捍衛|解決|鼓勵|充實|優化|保存|杜絕|重啟|放寬|暫緩|編列|清查|嚴查|普設|籌措|改建|重建|照顧|培育|引進|減輕|廣設|增建|研議|推廣|結合|升級|維持|建構|實施|延長|繼續|力促|力拚|布建|打通|關懷|檢視|納入|合理化|恢復|創造|成立|更新|新建|推展|促請|守護|審議|主張)/u;
 const webPromotionPattern = /(?:https?:\/\/|www\.|更多(?:政見|訊息)|請搜尋|輸入網址|掃\s*QR(?:-?CODE)?|[a-z0-9-]+\.(?:tw|com|org|net)(?:\b|\/))/iu;
 const biographyPattern = /(?:政見如下|候選人(?:簡介|介紹)|懇請.*(?:支持|機會)|請投|票投|我(?:是|叫|參選|投入這場選舉|願意承擔)|本人(?:出生|參選)|當選以來|這四年我|從政.*(?:初衷|目標))/u;
 const resumePattern = /(?:【\s*(?:經歷|學歷|現任|曾任)\s*】|^(?:經歷|學歷|現任|曾任)\s*[：:])/u;
@@ -27,25 +29,8 @@ function hasUnreadableScriptMix(value) {
 }
 
 function sourceSectionHeadings(value) {
-  const lines = value.split(/\r?\n/gu);
-  const headings = [];
-  for (let index = 0; index < lines.length; index += 1) {
-    const line = lines[index].trim();
-    if (!line) continue;
-    const nextLine = lines.slice(index + 1).find((candidate) => candidate.trim())?.trim() ?? '';
-    const bulletHeading = line.match(/^[•●○▪◆◇★※◎]\s*(.+)$/u)?.[1]?.trim() ?? null;
-    if (bulletHeading && /^(?:\d{1,3}[.、．）)]|\(\d{1,3}\)|（\d{1,3}）)\s*/u.test(nextLine)) {
-      headings.push(bulletHeading);
-    } else if (/[>＞]\s*$/u.test(line)) {
-      headings.push(line.replace(/[>＞]\s*$/u, ''));
-    } else if (
-      /^[\p{Script=Han}]{2,8}$/u.test(line)
-      && /^[•●○▪◆◇★※◎]\s*/u.test(nextLine)
-    ) {
-      headings.push(line);
-    }
-  }
-  return headings;
+  const lines = value.normalize('NFC').replace(/<br\s*\/?>/giu, '\n').split(/\r?\n/gu);
+  return lines.map((_, index) => explicitSectionHeading(lines, index)).filter(Boolean);
 }
 
 function hasSectionHeadingMismatch(source, items) {
@@ -83,23 +68,19 @@ function looksLikePurePastAchievement(value) {
     .split(/[，,。；;！？!?\n]+/u)
     .map((clause) => clause.trim())
     .filter(Boolean);
-  const firstPastAchievementIndex = clauses.findIndex((clause) => pastAchievementPattern.test(clause));
-  if (firstPastAchievementIndex < 0) return false;
-
+  if (!clauses.some((clause) => pastAchievementPattern.test(clause))) return false;
   const explicitFutureCuePattern = /(?:未來|將|繼續|持續|續促|後續|下一步|承諾|應予|任內將)/u;
   if (clauses.some((clause) => explicitFutureCuePattern.test(clause))) return false;
 
-  const firstPastAchievementClause = clauses[firstPastAchievementIndex];
-  const firstPastAchievementMatch = firstPastAchievementClause.match(pastAchievementPattern);
-  const textBeforeAchievement = [
-    ...clauses.slice(0, firstPastAchievementIndex),
-    firstPastAchievementClause.slice(0, firstPastAchievementMatch?.index ?? 0),
-  ].join('，');
-  const commitmentIntentPattern = /(?:督促|爭取|要求|主張|支持|反對|力促|力拚|促請|研議|規劃)/u;
-  const laterCommitment = clauses.slice(firstPastAchievementIndex + 1)
-    .some((clause) => !pastAchievementPattern.test(clause)
-      && commitmentIntentPattern.test(clause));
-  return !commitmentIntentPattern.test(textBeforeAchievement) && !laterCommitment;
+  // Explicit achievement headings scope the whole item, including result clauses.
+  if (/^[^：:]*?(?:成績單|完成)[：:]/u.test(value)) return true;
+
+  // Use the same action vocabulary as the release gate. Unmarked action clauses
+  // may be commitments; do not discard them solely because another clause is past tense.
+  return !clauses.some((clause) => {
+    const past = clause.match(pastAchievementPattern);
+    return actionPattern.test(past ? clause.slice(0, past.index) : clause);
+  });
 }
 
 export function platformFulfillmentItemReasonCodes(value) {

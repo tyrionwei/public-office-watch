@@ -118,10 +118,10 @@ let failure = null;
 try {
   run(['exec', container, 'dropdb', '--if-exists', '--force', '-U', 'postgres', testDb]);
   run(['exec', container, 'rm', '-f', dump]);
-  run(['exec', container, 'pg_dump', '-U', 'postgres', '-d', sourceDb, '-Fc', '--schema=public', '--no-owner', '--no-privileges', '-f', dump]);
+  run(['exec', container, 'pg_dump', '-U', 'postgres', '-d', sourceDb, '-Fc', '--schema=public', '--schema=published', '--no-owner', '--no-privileges', '-f', dump]);
   const authUserIds = sql(sourceDb, 'SELECT id FROM auth.users ORDER BY id;').split('\n').filter(Boolean);
   run(['exec', container, 'createdb', '-U', 'postgres', testDb]);
-  sql(testDb, `DROP SCHEMA public CASCADE; CREATE SCHEMA auth; CREATE TABLE auth.users(id uuid PRIMARY KEY); INSERT INTO auth.users(id) VALUES ${authUserIds.map((id) => `(${literal(id)}::uuid)`).join(',')};`);
+  sql(testDb, `DROP SCHEMA public CASCADE; CREATE SCHEMA extensions; CREATE EXTENSION pg_trgm WITH SCHEMA extensions; CREATE SCHEMA auth; CREATE TABLE auth.users(id uuid PRIMARY KEY); INSERT INTO auth.users(id) VALUES ${authUserIds.map((id) => `(${literal(id)}::uuid)`).join(',')};`);
   run(['exec', container, 'pg_restore', '-U', 'postgres', '-d', testDb, '--no-owner', '--no-privileges', dump]);
   const rows = migrationScan.map((entry) => {
     const before = beforeById.get(entry.id);
@@ -207,7 +207,22 @@ BEGIN
 END $test$;
 ROLLBACK;
 `);
-  sql(testDb, 'CREATE SCHEMA IF NOT EXISTS published;');
+  // Match the existing publication order, exclusively in the disposable database.
+  sql(testDb, `REFRESH MATERIALIZED VIEW published.candidate_election_office_facts;
+    REFRESH MATERIALIZED VIEW public.public_people_list_cached;
+    SELECT published.promote(NULL);`);
+  const publicProfile = JSON.parse(sql(testDb, `SELECT jsonb_build_object(
+    'person', (SELECT to_jsonb(p) FROM published.people p WHERE person_id='3702a343-8c9c-410e-865d-63e7ec36b78e'),
+    'directoryCount', (SELECT count(*) FROM published.people_directory WHERE person_id='3702a343-8c9c-410e-865d-63e7ec36b78e'),
+    'candidateCount', (SELECT count(*) FROM published.candidate_facts WHERE candidate_id='8a08cdd3-d6b7-4968-815a-fd4c429ba75a'),
+    'hiddenCandidateCount', (SELECT count(*) FROM published.candidate_facts WHERE candidate_id='3945f08c-8668-44af-b85b-6be92f1ca691')
+  );`));
+  if (publicProfile.person?.education !== '高中畢業'
+      || !publicProfile.person?.experience?.includes('第19屆市民代表會主席')
+      || publicProfile.directoryCount !== 1 || publicProfile.candidateCount !== 1
+      || publicProfile.hiddenCandidateCount !== 0) {
+    throw new Error('Refreshed public profile/candidate contract failed: ' + JSON.stringify(publicProfile));
+  }
   sql(testDb, readFileSync(resolve('supabase/migrations/202607280002_published_person_claims_function.sql'), 'utf8'));
   const rpcClaims = sql(testDb, `SELECT coalesce(jsonb_agg(c),'[]'::jsonb) FROM published.person_claims_for(ARRAY['3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid]) c;`);
   const frontendCheck = spawnSync('node', ['--experimental-strip-types', '--input-type=module', '-e', `
@@ -223,7 +238,7 @@ ROLLBACK;
     assert.deepEqual(items,claim.claim_json.items);
   `], { input: rpcClaims, encoding: 'utf8' });
   if (frontendCheck.status !== 0) throw new Error(frontendCheck.stderr || frontendCheck.stdout);
-  results.push({ migration: 'runtime-contracts', passed: true, checks: ['direct-vote-guard', 'shared-ticket-vote-guard', 'public-rpc-to-frontend-three-items'] });
+  results.push({ migration: 'runtime-contracts', passed: true, checks: ['direct-vote-guard', 'shared-ticket-vote-guard', 'public-rpc-to-frontend-three-items', 'refreshed-public-profile-and-directory', 'public-candidate-visibility'] });
   rehearsalResult = snapshot(testDb);
   currentResult = snapshot(sourceDb);
   const currentById = new Map(platformRows(sourceDb).map((row) => [row.id, row]));

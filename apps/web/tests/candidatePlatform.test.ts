@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { platformClaimsForCandidate, platformItemsForClaim } from '../src/lib/candidatePlatform.ts';
+import { platformClaimsForCandidate, platformItemsForCandidate, platformItemsForClaim } from '../src/lib/candidatePlatform.ts';
 import type { PublicPersonClaim } from '../src/types/publicViews.ts';
 
 function platformClaim(claimId: string, electionContext?: Record<string, string>, candidateId?: string): PublicPersonClaim {
@@ -43,6 +43,17 @@ test('does not guess the election for legacy unscoped platform claims', () => {
   );
 });
 
+test('keeps every reviewed platform item for a candidate beyond the generic five-value limit', () => {
+  const claim = platformClaim('complete-platform', { candidateId: 'candidate-1', raceId: 'race-1' });
+  claim.claim_json.items = Array.from({ length: 10 }, (_, index) => `第${index + 1}項政見`);
+  claim.claim_json.contentSplit = { reviewStatus: 'reviewed' };
+
+  assert.deepEqual(
+    platformItemsForCandidate([claim], 'candidate-1', 'race-1'),
+    Array.from({ length: 10 }, (_, index) => `第${index + 1}項政見`),
+  );
+});
+
 test('uses stored platform items and safely splits explicit numbered originals', () => {
   const stored = platformClaim('stored');
   stored.claim_json.items = ['第一項', '第二項'];
@@ -57,6 +68,20 @@ test('uses stored platform items and safely splits explicit numbered originals',
   ]);
 });
 
+test('normalizes deterministic punctuation and private-use glyph artifacts', () => {
+  const claim = platformClaim('formatting-artifacts');
+  claim.claim_json.items = [
+    '\uF06C 推動公共托育。',
+    '居住正義。：增設社會住宅。',
+  ];
+  claim.claim_json.contentSplit = { reviewStatus: 'reviewed' };
+
+  assert.deepEqual(platformItemsForClaim(claim), [
+    '推動公共托育。',
+    '居住正義：增設社會住宅。',
+  ]);
+});
+
 test('falls back to the original platform text when stored items are empty', () => {
   const claim = platformClaim('empty-stored-items');
   claim.claim_value = '一、增設公共托育據點。二、改善市場周邊交通。';
@@ -68,13 +93,25 @@ test('falls back to the original platform text when stored items are empty', () 
   ]);
 });
 
-test('ignores stored platform items that still need review', () => {
+test('withholds platform content that still needs review instead of falling back to raw text', () => {
   const claim = platformClaim('needs-review');
   claim.claim_value = '原始完整政見內容';
   claim.claim_json.items = ['尚未確認的切分項目'];
   claim.claim_json.contentSplit = { reviewStatus: 'needs_review' };
 
-  assert.deepEqual(platformItemsForClaim(claim), ['原始完整政見內容']);
+  assert.deepEqual(platformItemsForClaim(claim), []);
+});
+
+test('uses reviewed items instead of a corrupted raw platform text', () => {
+  const claim = platformClaim('reviewed-items');
+  claim.claim_json.platformText = 'ᑫӥНӥЎϯൺᑫၮ୏';
+  claim.claim_json.items = ['已人工確認的第一項政見', '已人工確認的第二項政見'];
+  claim.claim_json.contentSplit = { reviewStatus: 'reviewed' };
+
+  assert.deepEqual(platformItemsForClaim(claim), [
+    '已人工確認的第一項政見',
+    '已人工確認的第二項政見',
+  ]);
 });
 
 test('does not remove candidate-specific text from the generic platform parser', () => {

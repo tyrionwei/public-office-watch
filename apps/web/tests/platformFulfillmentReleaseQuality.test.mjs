@@ -46,6 +46,71 @@ test('removes clear non-platform items without withholding the remaining promise
   }
 });
 
+test('keeps short actionable promises instead of treating them as headings', () => {
+  const promises = [
+    '公托公幼海線倍增',
+    '力促新莊第二運動中心成立。',
+    '訂定中共代理人法，嚇阻中國滲透。',
+    '合理化大眾運輸月票價格',
+  ];
+
+  for (const promise of promises) {
+    const decision = classifyPlatformFulfillmentRelease(claim([promise]));
+    assert.equal(decision.releaseable, true, promise);
+    assert.deepEqual(decision.items, [promise]);
+  }
+});
+
+test('keeps future commitments that share an item with past achievements', () => {
+  const mixedItems = [
+    '成功爭取設立 YouBike 據點，持續爭取廣設據點，串聯大眾運輸工具。',
+    '過去進度落後，未來將完成捷運建設。',
+    '已完成可行性評估，爭取工程經費。',
+    '改善道路，已完成可行性評估。',
+    '已完成可行性評估，改善道路。',
+    '成功爭取第一期預算，要求編列第二期經費。',
+  ];
+
+  for (const mixedItem of mixedItems) {
+    const decision = classifyPlatformFulfillmentRelease(claim([mixedItem]));
+    assert.equal(decision.releaseable, true, mixedItem);
+    assert.deepEqual(decision.items, [mixedItem]);
+    assert.ok(!decision.excludedReasonCodes.includes('past_achievement'));
+  }
+});
+
+test('keeps commitment main clauses when a nested or later clause reports progress', () => {
+  const mixedItems = [
+    '督促縣府爭取158乙永光路拓寬工程經費（已完成可行性評估，約7.5億）',
+    '督促市府4年任內完成8千户社會住宅，地點平均分配、讓年輕人有房子住，宜居宜業，不再為高房價煩惱。',
+    '爭取南屯區國中小全面設置智慧教室。(成功爭取永春、大墩國小，大墩、大業國中)。',
+  ];
+
+  for (const reviewStatus of ['reviewed', 'auto_approved']) {
+    for (const mixedItem of mixedItems) {
+      const decision = classifyPlatformFulfillmentRelease(claim([mixedItem], reviewStatus));
+      assert.equal(decision.releaseable, true, `${reviewStatus}: ${mixedItem}`);
+      assert.deepEqual(decision.items, [mixedItem]);
+      assert.ok(!decision.excludedReasonCodes.includes('past_achievement'));
+    }
+  }
+});
+
+test('excludes pure past achievements even when the achievement phrase contains an action verb', () => {
+  const achievements = [
+    '二十四年成績單：成功推動「五股、泰山輕軌捷運」並獲得國家發展研究院審核通過。',
+    '養得起孩子／完成：成功推動台中市公托公幼倍增。',
+    '二十四年成績單：成功推動林口交流道立體化，增設引道紓解龜山、林口車流。',
+  ];
+
+  for (const achievement of achievements) {
+    const decision = classifyPlatformFulfillmentRelease(claim([achievement]));
+    assert.equal(decision.releaseable, false, achievement);
+    assert.deepEqual(decision.items, []);
+    assert.ok(decision.excludedReasonCodes.includes('past_achievement'));
+  }
+});
+
 test('withholds the whole split when an item has abnormal structure', () => {
   const decision = classifyPlatformFulfillmentRelease(claim([
     '推動地方公共建設。',
@@ -79,7 +144,7 @@ test('still applies hard-safety filtering to explicitly reviewed splits', () => 
   const decision = classifyPlatformFulfillmentRelease(claim([
     '推動地方公共建設。',
     '更多政見請上 http://example.tw/',
-    '落實居住正義，推動社會住宅-開南安居己動工',
+    '已完成改善工程。',
   ], 'reviewed'));
 
   assert.equal(decision.releaseable, true);
@@ -146,4 +211,29 @@ test('releases auto-approved items when every explicit source section is preserv
 
   assert.equal(decision.releaseable, true);
   assert.deepEqual(decision.items, items);
+});
+
+test('keeps ambiguous mixed action clauses for reviewed and automatic splits', () => {
+  for (const status of ['reviewed', 'auto_approved']) {
+    for (const item of ['改善道路，已完成可行性評估。', '已完成可行性評估，改善道路。', '落實居住正義，推動社會住宅-開南安居己動工']) {
+      assert.deepEqual(classifyPlatformFulfillmentRelease(claim([item], status)).items, [item]);
+    }
+    for (const item of ['成功爭取工程經費。', '已完成改善工程。', '成功爭取預算，已完成改善工程。']) {
+      assert.deepEqual(classifyPlatformFulfillmentRelease(claim([item], status)).items, []);
+    }
+  }
+});
+
+test('preserves same-clause commitments following completed work', () => {
+  for (const status of ['reviewed', 'auto_approved']) {
+    for (const item of [
+      '成功爭取第一期預算並要求編列第二期經費。',
+      '已完成可行性評估並爭取工程經費。',
+      '已完成第一期工程且改善周邊道路。',
+    ]) assert.deepEqual(classifyPlatformFulfillmentRelease(claim([item], status)).items, [item]);
+    for (const item of [
+      '成功爭取第一期預算並已完成工程。',
+      '成功推動捷運並獲得審核通過。',
+    ]) assert.deepEqual(classifyPlatformFulfillmentRelease(claim([item], status)).items, []);
+  }
 });

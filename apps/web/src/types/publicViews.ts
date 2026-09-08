@@ -281,6 +281,8 @@ export type PublicCandidate = {
   person_name: string;
   person_party: string | null;
   person_position: string | null;
+  current_office_label?: string | null;
+  former_office_label?: string | null;
   race_id: string;
   race_title: string;
   election_id: string;

@@ -5,6 +5,8 @@ import { buildElectionEventKey } from '../data/electionEvents';
 import { getRaceCategoryByType, getRaceStatusLabel } from '../data/electionLabels';
 import { getRegionHighlightBackground, getRegionHighlightImageSources } from '../data/regionHighlights';
 import { useI18n } from '../i18n';
+import { getHomeCandidateOfficeTitle } from '../lib/homeCandidateOfficeTitle';
+import { getHomeCandidateParty } from '../lib/homeCandidateParty';
 import { publicDataProvider } from '../lib/publicData';
 import type { HomeCandidateSummary, UpcomingRace } from '../lib/publicDataProvider';
 import { normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
@@ -673,11 +675,24 @@ export function HomeElectionSpotlight({
           >
             <div ref={candidateCarouselRef} data-candidate-carousel className={useCandidateGrid ? 'grid gap-3 sm:grid-cols-2' : 'flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:thin]'}>
               {candidates.map((candidate, index) => {
-                const party = normalizePartyLabel(candidate.party ?? candidate.person_party);
+                const partyInfo = getHomeCandidateParty(candidate);
+                const party = partyInfo.affiliationParty
+                  ? normalizePartyLabel(partyInfo.affiliationParty)
+                  : t('homeSpotlight.unknownParty');
+                const partyLabel = t('homeSpotlight.partyAffiliation', { party: normalizeTaiwanText(party) });
+                const recommendationLabel = partyInfo.recommendation?.kind === 'party'
+                  ? t('homeSpotlight.recommendedBy', { party: normalizeTaiwanText(partyInfo.recommendation.party) })
+                  : partyInfo.recommendation?.kind === 'unendorsed'
+                    ? t('homeSpotlight.unendorsed')
+                    : null;
                 const demographics = candidateDemographics.get(candidate.person_id);
-                const themeKey = toPartyThemeKey(party);
+                const themeKey = toPartyThemeKey(partyInfo.affiliationParty);
                 const theme = partyTheme[themeKey];
                 const raceContext = getCandidateRaceContext(candidate, activeCategory, regionLabel);
+                const officeTitle = getHomeCandidateOfficeTitle(candidate);
+                const officeTitleLabel = officeTitle?.kind === 'former'
+                  ? t('homeSpotlight.formerOffice', { office: normalizeTaiwanText(officeTitle.label) })
+                  : officeTitle ? normalizeTaiwanText(officeTitle.label) : null;
                 const candidateSprite = (
                   <PixelCandidateSprite
                     displayName={candidate.person_name}
@@ -687,7 +702,7 @@ export function HomeElectionSpotlight({
                     birthDate={demographics?.birthDate}
                     ageGroup={demographics?.ageGroup}
                     useDemographicSprite
-                    partyLabel={party}
+                    partyLabel={partyLabel}
                     variant={candidate.candidate_id}
                   />
                 );
@@ -702,9 +717,12 @@ export function HomeElectionSpotlight({
                       <span className="theme-party-chip inline-flex rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}28`, color: theme.text }}>
                         {translateCandidateStatus(candidate, t)}
                       </span>
+                      {recommendationLabel ? (
+                        <p className="mt-2 text-[10px] text-slate-400" data-candidate-recommendation>{recommendationLabel}</p>
+                      ) : null}
                       {raceContext ? <p className="mt-2 font-display text-xs text-accent" data-candidate-race-context>{raceContext}</p> : null}
-                      {candidate.person_position || !raceContext ? (
-                        <p className="mt-1 line-clamp-2 min-h-4 text-xs text-slate-400">{normalizeTaiwanText(candidate.person_position ?? candidate.race_title)}</p>
+                      {officeTitleLabel ? (
+                        <p className="mt-1 line-clamp-2 min-h-4 text-xs text-slate-400" data-candidate-office-title>{officeTitleLabel}</p>
                       ) : null}
                     </div>
                   </>

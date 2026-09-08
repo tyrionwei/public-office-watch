@@ -6,6 +6,14 @@ type ElectionContext = {
   raceId: string | null;
 };
 
+function normalizePlatformItem(value: string) {
+  return value
+    .normalize('NFC')
+    .replace(/[\uE000-\uF8FF]/gu, '')
+    .replace(/[。．]\s*[：:]/gu, '：')
+    .trim();
+}
+
 function electionContext(claim: PublicPersonClaim): ElectionContext | null {
   const value = claim.claim_json.electionContext;
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
@@ -37,15 +45,34 @@ export function platformItemsForClaim(claim: PublicPersonClaim) {
   const storedItemsNeedReview = contentSplit !== null
     && typeof contentSplit === 'object'
     && (contentSplit as { reviewStatus?: unknown }).reviewStatus === 'needs_review';
+  if (storedItemsNeedReview) return [];
+
   const storedItems = Array.isArray(claim.claim_json.items)
     ? claim.claim_json.items
-      .map((item) => typeof item === 'string' ? item.trim() : '')
+      .map((item) => typeof item === 'string' ? normalizePlatformItem(item) : '')
       .filter(Boolean)
     : [];
-  if (!storedItemsNeedReview && storedItems.length > 0) return Array.from(new Set(storedItems));
+  if (storedItems.length > 0) return Array.from(new Set(storedItems));
 
   const platformText = typeof claim.claim_json.platformText === 'string'
     ? claim.claim_json.platformText
     : claim.claim_value;
-  return splitPlatformContent(platformText).items;
+  return splitPlatformContent(platformText).items.map(normalizePlatformItem).filter(Boolean);
+}
+
+export function platformItemsForCandidate(
+  claims: PublicPersonClaim[],
+  candidateId: string,
+  raceId: string,
+) {
+  const seen = new Set<string>();
+  const items: string[] = [];
+  for (const item of platformClaimsForCandidate(claims, candidateId, raceId)
+    .flatMap(platformItemsForClaim)) {
+    const key = item.replace(/\s+/gu, '').toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    items.push(item);
+  }
+  return items;
 }

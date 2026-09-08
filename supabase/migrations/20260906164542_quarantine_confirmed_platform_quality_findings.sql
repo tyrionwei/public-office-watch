@@ -1,5 +1,34 @@
 BEGIN;
 
+CREATE OR REPLACE FUNCTION public.guard_platform_item_changes_with_votes()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path = ''
+AS $$
+BEGIN
+    IF OLD.claim_json -> 'items' IS DISTINCT FROM NEW.claim_json -> 'items'
+       AND EXISTS (
+           SELECT 1
+           FROM public.platform_fulfillment_votes AS vote
+           WHERE vote.claim_id = OLD.id
+       ) THEN
+        RAISE EXCEPTION
+            'Cannot change platform items for claim % while fulfillment votes exist',
+            OLD.id
+            USING ERRCODE = '55000';
+    END IF;
+
+    RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS guard_platform_item_changes_with_votes
+    ON public.person_claims;
+CREATE TRIGGER guard_platform_item_changes_with_votes
+BEFORE UPDATE OF claim_json ON public.person_claims
+FOR EACH ROW
+EXECUTE FUNCTION public.guard_platform_item_changes_with_votes();
+
 DO $quarantine$
 DECLARE
     affected_count INTEGER;

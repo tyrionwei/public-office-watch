@@ -158,14 +158,15 @@ former_offices AS MATERIALIZED (
                 'city_councilor', 'county_councilor', 'councilor_district'
             ) THEN COALESCE(prior.region_name || '議員', '議員')
             WHEN prior_race.race_type IN (
-                'municipality_mayor', 'county_mayor', 'local_chief',
-                'township_mayor'
+                'municipality_mayor', 'county_mayor', 'local_chief'
             ) THEN COALESCE(prior.region_name || '長', '地方首長')
+            WHEN prior_race.race_type = 'township_mayor'
+                THEN '鄉鎮市長'
             WHEN prior_race.race_type IN (
                 'township_representative', 'township_representative_district'
-            ) THEN COALESCE(prior.region_name || '民代表', '鄉鎮市民代表')
+            ) THEN '鄉鎮市民代表'
             WHEN prior_race.race_type = 'village_chief'
-                THEN COALESCE(prior.region_name || '長', '村里長')
+                THEN '村里長'
             ELSE NULL
         END AS former_office_label
     FROM candidate_people target

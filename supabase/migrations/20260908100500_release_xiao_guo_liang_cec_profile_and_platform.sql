@@ -51,6 +51,11 @@ BEGIN
           'reviewStatus','reviewed',
           'releaseQuality',pg_catalog.jsonb_build_object('version','verified-high-omission-platforms-22-20260908','reasonCodes','[]'::JSONB)
         ),
+        'electionContext',pg_catalog.jsonb_build_object(
+          'candidateId','8a08cdd3-d6b7-4968-815a-fd4c429ba75a',
+          'raceId','e09788a1-6d10-4e52-8e46-2104630d8d12',
+          'electionId','1d63585f-87eb-4817-abc9-0d010839bf4d'
+        ),
         'platformQualityAudit',pg_catalog.jsonb_build_object(
           'version','platform-quality-audit-20260907-round-2',
           'repairVersion','verified-high-omission-platforms-22-20260908',
@@ -215,6 +220,9 @@ BEGIN
       AND review_status='verified' AND visibility='public' AND is_public IS TRUE
       AND pg_catalog.jsonb_array_length(claim_json->'items')=3
       AND claim_json#>>'{contentSplit,reviewStatus}'='reviewed'
+      AND claim_json#>>'{electionContext,candidateId}'='8a08cdd3-d6b7-4968-815a-fd4c429ba75a'
+      AND claim_json#>>'{electionContext,raceId}'='e09788a1-6d10-4e52-8e46-2104630d8d12'
+      AND claim_json#>>'{electionContext,electionId}'='1d63585f-87eb-4817-abc9-0d010839bf4d'
       AND claim_json#>>'{platformQualityAudit,classification}'='verified_repair'
   ) THEN RAISE EXCEPTION 'Xiao Guo-liang official platform validation failed'; END IF;
 

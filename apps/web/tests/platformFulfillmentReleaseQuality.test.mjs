@@ -223,3 +223,17 @@ test('keeps ambiguous mixed action clauses for reviewed and automatic splits', (
     }
   }
 });
+
+test('preserves same-clause commitments following completed work', () => {
+  for (const status of ['reviewed', 'auto_approved']) {
+    for (const item of [
+      '成功爭取第一期預算並要求編列第二期經費。',
+      '已完成可行性評估並爭取工程經費。',
+      '已完成第一期工程且改善周邊道路。',
+    ]) assert.deepEqual(classifyPlatformFulfillmentRelease(claim([item], status)).items, [item]);
+    for (const item of [
+      '成功爭取第一期預算並已完成工程。',
+      '成功推動捷運並獲得審核通過。',
+    ]) assert.deepEqual(classifyPlatformFulfillmentRelease(claim([item], status)).items, []);
+  }
+});

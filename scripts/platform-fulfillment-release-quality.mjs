@@ -66,6 +66,7 @@ function hasUnbalancedClosingDelimiter(value) {
 function looksLikePurePastAchievement(value) {
   const clauses = value
     .split(/[，,。；;！？!?\n]+/u)
+    .flatMap((clause) => clause.split(new RegExp(`(?:並且|並|而且|且|同時|以及)(?=${actionPattern.source})`, 'u')))
     .map((clause) => clause.trim())
     .filter(Boolean);
   if (!clauses.some((clause) => pastAchievementPattern.test(clause))) return false;

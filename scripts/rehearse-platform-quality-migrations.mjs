@@ -121,8 +121,11 @@ try {
   run(['exec', container, 'rm', '-f', dump]);
   run(['exec', container, 'pg_dump', '-U', 'postgres', '-d', sourceDb, '-Fc', '--schema=public', '--schema=published', '--no-owner', '--no-privileges', '-f', dump]);
   const authUserIds = sql(sourceDb, 'SELECT id FROM auth.users ORDER BY id;').split('\n').filter(Boolean);
+  // Validate the no-user SQL shape as well as the actual local fixture below.
+
   run(['exec', container, 'createdb', '-U', 'postgres', testDb]);
-  sql(testDb, `DROP SCHEMA public CASCADE; CREATE SCHEMA extensions; CREATE EXTENSION pg_trgm WITH SCHEMA extensions; CREATE SCHEMA auth; CREATE TABLE auth.users(id uuid PRIMARY KEY); INSERT INTO auth.users(id) VALUES ${authUserIds.map((id) => `(${literal(id)}::uuid)`).join(',')};`);
+  sql(testDb, 'BEGIN; CREATE TEMP TABLE rehearsal_empty_auth(id uuid PRIMARY KEY); INSERT INTO rehearsal_empty_auth(id) SELECT unnest(ARRAY[]::uuid[]); ROLLBACK;');
+  sql(testDb, `DROP SCHEMA public CASCADE; CREATE SCHEMA extensions; CREATE EXTENSION pg_trgm WITH SCHEMA extensions; CREATE SCHEMA auth; CREATE TABLE auth.users(id uuid PRIMARY KEY); INSERT INTO auth.users(id) SELECT unnest(ARRAY[${authUserIds.map(literal).join(',')}]::uuid[]);`);
   run(['exec', container, 'pg_restore', '-U', 'postgres', '-d', testDb, '--no-owner', '--no-privileges', dump]);
   const rows = migrationScan.map((entry) => {
     const before = beforeById.get(entry.id);
@@ -231,7 +234,7 @@ ROLLBACK;`);
   sql(testDb, `
 BEGIN;
 DO $test$
-DECLARE peer_id uuid; main_id uuid; target_id uuid;
+DECLARE peer_id uuid; main_id uuid; target_id uuid; field_name text;
 BEGIN
   SELECT id, public.platform_fulfillment_vote_claim_id(id)
   INTO peer_id, main_id
@@ -252,6 +255,37 @@ BEGIN
       IF SQLERRM NOT LIKE 'Cannot change platform items for claim %' THEN RAISE; END IF;
     END;
   END LOOP;
+  FOREACH target_id IN ARRAY ARRAY[main_id,peer_id] LOOP
+    FOREACH field_name IN ARRAY ARRAY['sharedPlatform','ticketNo','candidateRole'] LOOP
+      BEGIN
+        UPDATE public.person_claims SET claim_json=jsonb_set(claim_json,
+          ARRAY['presidentialTicket',field_name],to_jsonb('Regression changed route'::text))
+        WHERE id=target_id;
+        RAISE EXCEPTION 'Vote metadata guard failed open for %/%',target_id,field_name;
+      EXCEPTION WHEN object_not_in_prerequisite_state THEN
+        IF SQLERRM NOT LIKE 'Cannot change platform items for claim %' THEN RAISE; END IF;
+      END;
+    END LOOP;
+    BEGIN
+      UPDATE public.person_claims SET candidate_id=NULL WHERE id=target_id;
+      RAISE EXCEPTION 'Vote candidate guard failed open';
+    EXCEPTION WHEN object_not_in_prerequisite_state THEN
+      IF SQLERRM NOT LIKE 'Cannot change platform items for claim %' THEN RAISE; END IF;
+    END;
+    -- Unrelated metadata remains editable without moving existing votes.
+    UPDATE public.person_claims SET claim_json=claim_json||'{"regressionNote":"allowed"}'::jsonb WHERE id=target_id;
+  END LOOP;
+  DELETE FROM public.platform_fulfillment_votes WHERE participant_hash=repeat('b',64);
+  -- Changing routing without votes is permitted; moving into a voted target is not.
+  UPDATE public.person_claims SET claim_json=jsonb_set(claim_json,'{presidentialTicket,sharedPlatform}','false') WHERE id=peer_id;
+  INSERT INTO public.platform_fulfillment_votes(claim_id,item_key,participant_hash,vote_status)
+  VALUES (main_id,repeat('a',64),repeat('b',64),'fulfilled');
+  BEGIN
+    UPDATE public.person_claims SET claim_json=jsonb_set(claim_json,'{presidentialTicket,sharedPlatform}','true') WHERE id=peer_id;
+    RAISE EXCEPTION 'Destination ticket vote guard failed open';
+  EXCEPTION WHEN object_not_in_prerequisite_state THEN
+    IF SQLERRM NOT LIKE 'Cannot change platform items for claim %' THEN RAISE; END IF;
+  END;
 END $test$;
 ROLLBACK;
 `);
@@ -286,7 +320,7 @@ ROLLBACK;
     assert.deepEqual(items,claim.claim_json.items);
   `], { input: rpcClaims, encoding: 'utf8' });
   if (frontendCheck.status !== 0) throw new Error(frontendCheck.stderr || frontendCheck.stdout);
-  results.push({ migration: 'runtime-contracts', passed: true, checks: ['direct-vote-guard', 'shared-ticket-vote-guard', 'public-rpc-to-frontend-three-items', 'refreshed-public-profile-and-directory', 'public-candidate-visibility'] });
+  results.push({ migration: 'runtime-contracts', passed: true, checks: ['empty-auth-users-sql', 'direct-vote-guard', 'shared-ticket-vote-guard', 'vote-routing-metadata-guard', 'destination-ticket-vote-guard', 'unrelated-metadata-edit', 'public-rpc-to-frontend-three-items', 'refreshed-public-profile-and-directory', 'public-candidate-visibility'] });
   rehearsalResult = snapshot(testDb);
   currentResult = snapshot(sourceDb);
   const currentById = new Map(platformRows(sourceDb).map((row) => [row.id, row]));

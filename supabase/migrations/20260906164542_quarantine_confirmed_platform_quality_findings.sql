@@ -6,13 +6,42 @@ LANGUAGE plpgsql
 SET search_path = ''
 AS $$
 BEGIN
-    IF OLD.claim_json -> 'items' IS DISTINCT FROM NEW.claim_json -> 'items'
+    -- Freeze vote-routing inputs as well as item text once votes exist.
+    -- Other metadata (e.g. review notes) may still be corrected.
+    IF (OLD.claim_json -> 'items' IS DISTINCT FROM NEW.claim_json -> 'items'
+        OR ROW(OLD.candidate_id, OLD.claim_type, OLD.review_status, OLD.visibility, OLD.is_public,
+               OLD.claim_json #>> '{presidentialTicket,sharedPlatform}',
+               OLD.claim_json #>> '{presidentialTicket,ticketNo}',
+               OLD.claim_json #>> '{presidentialTicket,candidateRole}')
+           IS DISTINCT FROM
+           ROW(NEW.candidate_id, NEW.claim_type, NEW.review_status, NEW.visibility, NEW.is_public,
+               NEW.claim_json #>> '{presidentialTicket,sharedPlatform}',
+               NEW.claim_json #>> '{presidentialTicket,ticketNo}',
+               NEW.claim_json #>> '{presidentialTicket,candidateRole}'))
        AND EXISTS (
            SELECT 1
            FROM public.platform_fulfillment_votes AS vote
            WHERE vote.claim_id IN (
                OLD.id,
-               public.platform_fulfillment_vote_claim_id(OLD.id)
+               public.platform_fulfillment_vote_claim_id(OLD.id),
+               -- Also protect a destination ticket that already has votes.
+               (SELECT peer_claim.id
+                FROM public.candidates input_candidate
+                JOIN public.races input_race ON input_race.id=input_candidate.race_id
+                JOIN public.elections election ON election.id=input_race.election_id
+                JOIN public.candidates peer_candidate ON peer_candidate.race_id=input_race.id
+                  AND peer_candidate.election_result='elected'
+                JOIN public.person_claims peer_claim ON peer_claim.candidate_id=peer_candidate.id
+                  AND peer_claim.claim_type='platform' AND peer_claim.review_status='verified'
+                  AND peer_claim.visibility='public' AND peer_claim.is_public IS TRUE
+                WHERE input_candidate.id=NEW.candidate_id
+                  AND election.year=2024 AND input_race.race_type='president'
+                  AND NEW.claim_json #>> '{presidentialTicket,sharedPlatform}'='true'
+                  AND peer_claim.claim_json #>> '{presidentialTicket,sharedPlatform}'='true'
+                  AND peer_claim.claim_json #>> '{presidentialTicket,ticketNo}'
+                      =NEW.claim_json #>> '{presidentialTicket,ticketNo}'
+                  AND peer_claim.claim_json #>> '{presidentialTicket,candidateRole}'='president'
+                ORDER BY peer_claim.id LIMIT 1)
            )
        ) THEN
         RAISE EXCEPTION
@@ -28,7 +57,7 @@ $$;
 DROP TRIGGER IF EXISTS guard_platform_item_changes_with_votes
     ON public.person_claims;
 CREATE TRIGGER guard_platform_item_changes_with_votes
-BEFORE UPDATE OF claim_json ON public.person_claims
+BEFORE UPDATE OF claim_json, candidate_id, claim_type, review_status, visibility, is_public ON public.person_claims
 FOR EACH ROW
 EXECUTE FUNCTION public.guard_platform_item_changes_with_votes();
 

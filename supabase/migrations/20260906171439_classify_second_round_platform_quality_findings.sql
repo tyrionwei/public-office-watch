@@ -351,6 +351,18 @@ BEGIN
                 )
         ) AS groups(classification, reason_code, finding_ids)
     LOOP
+        -- This archived local-only claim is absent in the production preflight.
+        -- The later 20260908100500 migration creates the approved CEC replacement.
+        -- All other missing IDs (and a present but non-platform row) still fail.
+        IF NOT EXISTS (
+            SELECT 1 FROM public.person_claims
+            WHERE id='aca9b005-8604-4cfc-b903-3f7caba1d9a1'::UUID
+        ) THEN
+            finding_group.finding_ids := pg_catalog.array_remove(
+                finding_group.finding_ids,
+                'aca9b005-8604-4cfc-b903-3f7caba1d9a1'::UUID
+            );
+        END IF;
         UPDATE public.person_claims AS claim
         SET
             claim_json = pg_catalog.jsonb_set(

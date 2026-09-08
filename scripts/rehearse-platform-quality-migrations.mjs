@@ -9,7 +9,8 @@ const testDb = 'pow_migration_pre_fix_rehearsal';
 const dump = '/tmp/pow-migration-pre-fix-rehearsal.dump';
 const keepFailedRehearsal = process.env.KEEP_FAILED_REHEARSAL === '1';
 const dir = resolve('tmp/platform-quality-audit-20260907');
-const report = resolve(dir, 'migration-rehearsal-from-pre-fix.json');
+const missingXiaoBaseline = process.argv.includes('--xiao-platform-absent');
+const report = resolve(dir, missingXiaoBaseline ? 'migration-rehearsal-missing-xiao.json' : 'migration-rehearsal-from-pre-fix.json');
 const migrations = [
   '20260906164542_quarantine_confirmed_platform_quality_findings.sql',
   '20260906171439_classify_second_round_platform_quality_findings.sql',
@@ -171,8 +172,55 @@ DO $v$ BEGIN IF NOT EXISTS(SELECT 1 FROM public.person_claims WHERE id='c3687480
 COMMIT;`);
   baseline = snapshot(testDb);
   if (baseline.releasedProfileClaims !== 0 || baseline.zhangChiKaiExperienceCandidateId !== null) throw new Error(`Baseline check failed: ${JSON.stringify(baseline)}`);
+  if (missingXiaoBaseline) {
+    sql(testDb, "DELETE FROM public.person_claims WHERE id='aca9b005-8604-4cfc-b903-3f7caba1d9a1';");
+    baseline = snapshot(testDb);
+  }
   for (const migration of migrations) {
     const host = resolve('supabase/migrations', migration);
+    if (migration === '20260906171439_classify_second_round_platform_quality_findings.sql') {
+      const body = readFileSync(host, 'utf8').replace(/^BEGIN;/u, '').replace(/COMMIT;\s*$/u, '');
+      let rejected = false;
+      try {
+        sql(testDb, `BEGIN;
+DELETE FROM public.person_claims WHERE id='a905aabc-ec7f-49d6-bc0f-6f3bbf7bac3b';
+${body}
+ROLLBACK;`);
+      } catch (error) {
+        if (!String(error).includes('Expected to classify')) throw error;
+        rejected = true;
+      }
+      if (!rejected) throw new Error('Unrelated missing classification target was accepted');
+      results.push({ migration: 'unrelated-missing-target-rejected', passed: true });
+    }
+    if (!missingXiaoBaseline && migration === '20260908100500_release_xiao_guo_liang_cec_profile_and_platform.sql') {
+      const body = readFileSync(host, 'utf8').replace(/^BEGIN;/u, '').replace(/COMMIT;\s*$/u, '');
+      const id = 'aca9b005-8604-4cfc-b903-3f7caba1d9a1';
+      const cases = [
+        { name: 'missing-platform', setup: `DELETE FROM public.person_claims WHERE id='${id}';` },
+        { name: 'old-value-conflict', setup: `UPDATE public.person_claims SET claim_value='Regression conflicting text' WHERE id='${id}';`, error: 'platform old-state conflict' },
+        { name: 'official-key-conflict', setup: `INSERT INTO public.person_claims SELECT (jsonb_populate_record(NULL::public.person_claims,to_jsonb(c)||jsonb_build_object('id','11111111-2222-4333-8444-555555555555','claim_key','official-platform:cec-2022-bulletin:xiao-guo-liang'))).* FROM public.person_claims c WHERE id='${id}';`, error: 'platform identity conflict' },
+      ];
+      for (const fixture of cases) {
+        let failure = null;
+        try {
+          sql(testDb, `BEGIN;
+${fixture.setup}
+${body}
+
+DO $assert$ BEGIN
+  IF (SELECT count(*) FROM published.person_claims_for(ARRAY['3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid])
+      WHERE claim_id='${id}' AND jsonb_array_length(claim_json->'items')=3)<>1
+  THEN RAISE EXCEPTION 'Missing-platform public RPC regression'; END IF;
+END $assert$;
+ROLLBACK;`);
+        } catch (error) { failure = String(error); }
+        if (fixture.error ? !failure?.includes(fixture.error) : failure) {
+          throw new Error(`Xiao fixture ${fixture.name} failed: ${failure ?? 'expected conflict was accepted'}`);
+        }
+        results.push({ migration: fixture.name, passed: true });
+      }
+    }
     const target = `/tmp/${migration}`;
     run(['cp', host, `${container}:${target}`]);
     const output = run(['exec', container, 'psql', '-X', '-v', 'ON_ERROR_STOP=1', '-U', 'postgres', '-d', testDb, '-f', target]);
@@ -263,7 +311,7 @@ ROLLBACK;
     failure = [failure, `Cleanup failed: ${error instanceof Error ? error.message : String(error)}`].filter(Boolean).join('\n');
     passed = false;
   }
-  writeFileSync(report, JSON.stringify({ version: 1, startedAt, finishedAt: new Date().toISOString(), sourceDatabase: sourceDb, rehearsalDatabase: testDb, migrations: results, baseline, rehearsalResult, currentResult, differenceDetails, passed, failure }, null, 2) + '\n');
+  writeFileSync(report, JSON.stringify({ version: 1, missingXiaoBaseline, startedAt, finishedAt: new Date().toISOString(), sourceDatabase: sourceDb, rehearsalDatabase: testDb, migrations: results, baseline, rehearsalResult, currentResult, differenceDetails, passed, failure }, null, 2) + '\n');
 }
 if (!passed) {
   console.error(failure);

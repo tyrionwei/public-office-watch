@@ -102,6 +102,8 @@ Codex 用於本專案的核心維護工作，包括理解程式與資料流程�
 
 本專案預計申請 [Codex for Open Source](https://openai.com/form/codex-for-oss/)，以支援公共資料專案的日常維護、審查、品質檢查與發布流程。此說明不代表本專案已獲 OpenAI 接受、贊助或背書。
 
+申請定位、維護證據與送件前檢查整理於 [申請準備](docs/codex-for-open-source-application.md)。使用情況分別以 Cloudflare Web Analytics 的瀏覽／造訪估計與 Google Search Console 的搜尋曝光／點擊說明；兩者不相加，也不視為獨立使用人數。每次引用均須附日期區間、篩選條件與資料限制。
+
 ## 本機啟動
 
 需求：Node.js 22（或 Node.js 20.19 以上）與 npm。

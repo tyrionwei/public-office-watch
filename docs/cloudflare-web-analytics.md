@@ -27,3 +27,7 @@
 - [隱私與產品說明](https://developers.cloudflare.com/web-analytics/about/)
 
 現行官方文件說明 SPA 自動偵測已內建；不必自行追蹤 React 路由。日後僅在確認自動載入失效時才評估手動載入，以免重複計數。
+
+## 2026-09-08 申請用途
+
+已透過唯讀 API 核對 pow4vote.org 的 Web Analytics 設定仍啟用，並取得固定 28 天窗口的瀏覽／造訪估計、bot 篩選及抽樣資訊。完整數據、日別核對、查詢方法與限制見 [Codex 申請使用證據](oss-application-evidence-2026-09-08.md)。此查詢不改動 beacon、追蹤設定或正式網站；上方 2026-09-04 部署／瀏覽器紀錄保留為歷史快照。

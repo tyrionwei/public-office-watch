@@ -73,6 +73,12 @@ test('keeps bullet promises under numbered Chinese section headings', () => {
   ]);
 });
 
+test('preserves inline multiplication within a section bullet', () => {
+  assert.deepEqual(splitPlatformContent('### 教育福利\n* 每月補助 1000 元 * 12 個月。\n### 交通改善\n* 改善道路。').items, [
+    '教育福利：每月補助 1000 元 * 12 個月。', '交通改善：改善道路。',
+  ]);
+});
+
 test('splits markdown headings and repeated star bullets into platform items', () => {
   const result = splitPlatformContent([
     '### 教育品質提升',

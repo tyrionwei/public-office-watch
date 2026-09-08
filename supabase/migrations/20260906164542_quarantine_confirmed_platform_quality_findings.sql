@@ -10,7 +10,10 @@ BEGIN
        AND EXISTS (
            SELECT 1
            FROM public.platform_fulfillment_votes AS vote
-           WHERE vote.claim_id = OLD.id
+           WHERE vote.claim_id IN (
+               OLD.id,
+               public.platform_fulfillment_vote_claim_id(OLD.id)
+           )
        ) THEN
         RAISE EXCEPTION
             'Cannot change platform items for claim % while fulfillment votes exist',

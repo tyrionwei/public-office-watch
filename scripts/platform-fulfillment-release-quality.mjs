@@ -96,7 +96,10 @@ function looksLikePurePastAchievement(value) {
     firstPastAchievementClause.slice(0, firstPastAchievementMatch?.index ?? 0),
   ].join('，');
   const commitmentIntentPattern = /(?:督促|爭取|要求|主張|支持|反對|力促|力拚|促請|研議|規劃)/u;
-  return !commitmentIntentPattern.test(textBeforeAchievement);
+  const laterCommitment = clauses.slice(firstPastAchievementIndex + 1)
+    .some((clause) => !pastAchievementPattern.test(clause)
+      && commitmentIntentPattern.test(clause));
+  return !commitmentIntentPattern.test(textBeforeAchievement) && !laterCommitment;
 }
 
 export function platformFulfillmentItemReasonCodes(value) {

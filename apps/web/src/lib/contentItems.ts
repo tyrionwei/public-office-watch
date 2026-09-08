@@ -89,7 +89,7 @@ function splitExplicitSectionItems(source: string) {
     }
     if (!heading || !lines[index].trim()) continue;
     const lineItems = lines[index]
-      .split(/\s+\*\s+/gu)
+      .split(/(?<=[。！？!?；;])\s+\*\s+/gu)
       .map(stripListPrefix)
       .filter(Boolean);
     for (const item of lineItems) items.push(`${heading}：${item}`);

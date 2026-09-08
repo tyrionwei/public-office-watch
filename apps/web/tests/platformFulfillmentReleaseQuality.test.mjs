@@ -65,6 +65,8 @@ test('keeps future commitments that share an item with past achievements', () =>
   const mixedItems = [
     '成功爭取設立 YouBike 據點，持續爭取廣設據點，串聯大眾運輸工具。',
     '過去進度落後，未來將完成捷運建設。',
+    '已完成可行性評估，爭取工程經費。',
+    '成功爭取第一期預算，要求編列第二期經費。',
   ];
 
   for (const mixedItem of mixedItems) {

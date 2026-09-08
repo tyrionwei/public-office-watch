@@ -8,7 +8,7 @@ export type HomeCandidateOfficeTitle = {
 type CandidateOfficeFields = Pick<PublicCandidate, 'current_office_label' | 'former_office_label'>;
 
 const candidacyOnlyPattern = /候選人|參選|擬參選|candidate/iu;
-const formerPrefixPattern = /^(?:曾任|前任?|卸任)\s*/u;
+const formerPrefixPattern = /^(?:曾任|前任|卸任)\s*/u;
 
 function cleanOfficeLabel(value: string | null | undefined) {
   const label = value?.trim();

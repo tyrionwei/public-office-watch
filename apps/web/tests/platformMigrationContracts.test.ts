@@ -28,7 +28,7 @@ test('submunicipal former offices never reuse a county or city name as the offic
 test('platform item changes fail closed when fulfillment votes already exist', () => {
   assert.match(platformQuarantineMigration, /CREATE OR REPLACE FUNCTION public\.guard_platform_item_changes_with_votes\(\)/u);
   assert.match(platformQuarantineMigration, /OLD\.claim_json -> 'items' IS DISTINCT FROM NEW\.claim_json -> 'items'/u);
-  assert.match(platformQuarantineMigration, /FROM public\.platform_fulfillment_votes AS vote[\s\S]*vote\.claim_id = OLD\.id/u);
+  assert.match(platformQuarantineMigration, /FROM public\.platform_fulfillment_votes AS vote[\s\S]*vote\.claim_id IN \(\s*OLD\.id,\s*public\.platform_fulfillment_vote_claim_id\(OLD\.id\)/u);
   assert.match(platformQuarantineMigration, /BEFORE UPDATE OF claim_json ON public\.person_claims/u);
 });
 

@@ -179,6 +179,51 @@ COMMIT;`);
     results.push({ migration, passed: true, output: output.split('\n').filter(Boolean).slice(-8) });
     run(['exec', container, 'rm', '-f', target]);
   }
+  // Exercise the trigger installed by the replay, including the shared vote target.
+  sql(testDb, `
+BEGIN;
+DO $test$
+DECLARE peer_id uuid; main_id uuid; target_id uuid;
+BEGIN
+  SELECT id, public.platform_fulfillment_vote_claim_id(id)
+  INTO peer_id, main_id
+  FROM public.person_claims
+  WHERE claim_type='platform'
+    AND public.platform_fulfillment_vote_claim_id(id)<>id
+  LIMIT 1;
+  IF peer_id IS NULL THEN RAISE EXCEPTION 'Missing shared-ticket regression fixture'; END IF;
+  INSERT INTO public.platform_fulfillment_votes(claim_id,item_key,participant_hash,vote_status)
+  VALUES (main_id,repeat('a',64),repeat('b',64),'fulfilled');
+  FOREACH target_id IN ARRAY ARRAY[main_id,peer_id] LOOP
+    BEGIN
+      UPDATE public.person_claims SET claim_json=jsonb_set(claim_json,'{items}',
+        (claim_json->'items')||jsonb_build_array('Regression changed item'))
+      WHERE id=target_id;
+      RAISE EXCEPTION 'Vote guard failed open for %',target_id;
+    EXCEPTION WHEN object_not_in_prerequisite_state THEN
+      IF SQLERRM NOT LIKE 'Cannot change platform items for claim %' THEN RAISE; END IF;
+    END;
+  END LOOP;
+END $test$;
+ROLLBACK;
+`);
+  sql(testDb, 'CREATE SCHEMA IF NOT EXISTS published;');
+  sql(testDb, readFileSync(resolve('supabase/migrations/202607280002_published_person_claims_function.sql'), 'utf8'));
+  const rpcClaims = sql(testDb, `SELECT coalesce(jsonb_agg(c),'[]'::jsonb) FROM published.person_claims_for(ARRAY['3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid]) c;`);
+  const frontendCheck = spawnSync('node', ['--experimental-strip-types', '--input-type=module', '-e', `
+    import assert from 'node:assert/strict';
+    import { readFileSync } from 'node:fs';
+    import { platformItemsForCandidate } from './apps/web/src/lib/candidatePlatform.ts';
+    const claims=JSON.parse(readFileSync(0,'utf8'));
+    const claim=claims.find(c=>c.claim_id==='aca9b005-8604-4cfc-b903-3f7caba1d9a1');
+    assert.ok(claim, 'RPC must return Xiao platform');
+    assert.equal(claim.candidate_id, undefined);
+    const items=platformItemsForCandidate(claims,'8a08cdd3-d6b7-4968-815a-fd4c429ba75a','e09788a1-6d10-4e52-8e46-2104630d8d12');
+    assert.equal(items.length,3);
+    assert.deepEqual(items,claim.claim_json.items);
+  `], { input: rpcClaims, encoding: 'utf8' });
+  if (frontendCheck.status !== 0) throw new Error(frontendCheck.stderr || frontendCheck.stdout);
+  results.push({ migration: 'runtime-contracts', passed: true, checks: ['direct-vote-guard', 'shared-ticket-vote-guard', 'public-rpc-to-frontend-three-items'] });
   rehearsalResult = snapshot(testDb);
   currentResult = snapshot(sourceDb);
   const currentById = new Map(platformRows(sourceDb).map((row) => [row.id, row]));

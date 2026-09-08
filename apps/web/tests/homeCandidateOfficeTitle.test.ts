@@ -42,6 +42,10 @@ test('never presents a candidacy label as an office title', () => {
   );
 });
 
+test('preserves the place name Qianzhen in former offices', () => {
+  assert.deepEqual(getHomeCandidateOfficeTitle({ current_office_label: null, former_office_label: '前鎮區里長' }), { kind: 'former', label: '前鎮區里長' });
+});
+
 test('leaves the title blank when neither office is confirmed', () => {
   assert.equal(
     getHomeCandidateOfficeTitle({ current_office_label: null, former_office_label: null }),

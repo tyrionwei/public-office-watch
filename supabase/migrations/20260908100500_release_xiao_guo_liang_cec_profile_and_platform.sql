@@ -50,8 +50,27 @@ SELECT
   pg_catalog.now() AS auto_reviewed_at,
   pg_catalog.now() AS updated_at;
 
+CREATE TEMP TABLE xiao_archive_targets (id uuid PRIMARY KEY, person_id uuid NOT NULL, claim_key text NOT NULL, source_name text NOT NULL, claim_type text NOT NULL, production_public boolean NOT NULL) ON COMMIT DROP;
+INSERT INTO xiao_archive_targets VALUES
+('f1fa3603-b6dc-4603-afa8-6b18dc3a3f95'::uuid,'393996c0-60b0-4889-851f-7d4c68f25af9'::uuid,'votetw-election-history:votetw-person-491f9d88d3f8c054:external_id','VoteTW historical election results','external_id',false),
+('d45a690c-d705-4fcc-9f60-ec49b09e7fa1'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-election-history:votetw-person-c7b9ef1c2496b3ef:name','VoteTW historical election results','name',false),
+('39ad2148-80a4-40b0-9fa1-6e9cc26940f3'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-election-history:votetw-person-c7b9ef1c2496b3ef:district','VoteTW historical election results','district',false),
+('ece500a3-2a18-4dc5-bb15-2396d8998b90'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-election-history:votetw-person-c7b9ef1c2496b3ef:external_id','VoteTW historical election results','external_id',false),
+('0c0c0cbe-dde0-44c2-9df7-4a2305d648ad'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-election-history:votetw-person-c7b9ef1c2496b3ef:party','VoteTW historical election results','party',false),
+('93923a50-1200-4c59-910e-6953e6917a67'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-election-history:votetw-person-c7b9ef1c2496b3ef:position','VoteTW historical election results','position',false),
+('c05f51e3-cb10-4fab-83b4-d8362e3b9a10'::uuid,'393996c0-60b0-4889-851f-7d4c68f25af9'::uuid,'votetw-election-history:votetw-person-491f9d88d3f8c054:name','VoteTW historical election results','name',false),
+('aa44c5f9-ba50-4f04-aa34-d846eab791e5'::uuid,'393996c0-60b0-4889-851f-7d4c68f25af9'::uuid,'votetw-election-history:votetw-person-491f9d88d3f8c054:party','VoteTW historical election results','party',false),
+('6ad902b0-8b70-4606-a173-f7ddd26a9aca'::uuid,'393996c0-60b0-4889-851f-7d4c68f25af9'::uuid,'votetw-election-history:votetw-person-491f9d88d3f8c054:position','VoteTW historical election results','position',false),
+('3a3f0801-bcb7-4708-bed8-ea5abd9893a8'::uuid,'393996c0-60b0-4889-851f-7d4c68f25af9'::uuid,'votetw-election-history:votetw-person-491f9d88d3f8c054:district','VoteTW historical election results','district',false),
+('1894e29d-7957-4263-93c0-a3ef8621c2c7'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-person-enrichment:蕭國亮:external_id:ff78ab589bdcd488','VoteTW','external_id',false),
+('a80d5e69-aaea-4a47-bdb3-87a685b1e934'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-person-enrichment:蕭國亮:birth_date:b6b934f667e271d2','VoteTW','birth_date',true),
+('e158bdfa-4b32-4418-aef8-12e91d5a53e5'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-person-enrichment:蕭國亮:gender:e80dcf5712f9c6b3','VoteTW','gender',false),
+('8c78cf9d-7d35-4228-a491-2d0e680f50fc'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-person-enrichment:蕭國亮:education:5d7dfdcadf6a60e5','VoteTW','education',true),
+('e0f46984-64d9-4d53-9e4c-b7d2d2c7dc49'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-person-enrichment:蕭國亮:party_affiliation:b7c9e6ec8c5fc046','VoteTW','party_affiliation',false),
+('fa0308c5-9e54-49f2-9f9f-cdccb0aa91ad'::uuid,'3702a343-8c9c-410e-865d-63e7ec36b78e'::uuid,'votetw-person-enrichment:蕭國亮:experience:9224cd3f1d5256af','VoteTW','experience',true);
+
 DO $replace$
-DECLARE affected_count INTEGER;
+DECLARE affected_count INTEGER; archive_ids UUID[]; expected_archive_count INTEGER;
 BEGIN
   -- Validate the known candidate -> race -> election chain, never infer by name.
   IF NOT EXISTS (
@@ -145,6 +164,21 @@ BEGIN
   END IF;
   IF affected_count<>1 THEN RAISE EXCEPTION 'Xiao Guo-liang platform old-state conflict, found % matching rows',affected_count; END IF;
 
+  -- Accept only the exact full-local or production public source roster.
+  SELECT array_agg(id ORDER BY id) INTO archive_ids FROM public.person_claims
+  WHERE person_id IN ('3702a343-8c9c-410e-865d-63e7ec36b78e','393996c0-60b0-4889-851f-7d4c68f25af9') AND source_name IN ('VoteTW','VoteTW historical election results') AND is_public IS TRUE;
+  IF archive_ids IS DISTINCT FROM (SELECT array_agg(id ORDER BY id) FROM xiao_archive_targets)
+     AND archive_ids IS DISTINCT FROM (SELECT array_agg(id ORDER BY id) FROM xiao_archive_targets WHERE production_public) THEN
+    RAISE EXCEPTION 'Unexpected Xiao VoteTW public archive roster';
+  END IF;
+  IF EXISTS (SELECT 1 FROM public.person_claims c LEFT JOIN xiao_archive_targets t ON c.id=t.id
+    WHERE c.id=ANY(archive_ids) AND (t.id IS NULL OR c.person_id IS DISTINCT FROM t.person_id
+    OR c.claim_key IS DISTINCT FROM t.claim_key OR c.source_name IS DISTINCT FROM t.source_name
+    OR c.claim_type IS DISTINCT FROM t.claim_type)) THEN
+    RAISE EXCEPTION 'Xiao VoteTW archive identity conflict';
+  END IF;
+  expected_archive_count=cardinality(archive_ids);
+
   UPDATE public.person_claims
   SET review_status='archived',
       visibility='private',
@@ -164,7 +198,7 @@ BEGIN
     AND source_name IN ('VoteTW','VoteTW historical election results')
     AND is_public IS TRUE;
   GET DIAGNOSTICS affected_count=ROW_COUNT;
-  IF affected_count<>16 THEN RAISE EXCEPTION 'Expected to archive 16 superseded VoteTW claims, found %',affected_count; END IF;
+  IF affected_count<>expected_archive_count THEN RAISE EXCEPTION 'Expected to archive % exact superseded VoteTW claims, found %',expected_archive_count,affected_count; END IF;
 
   UPDATE public.candidates
   SET is_public=FALSE,updated_at=pg_catalog.now()

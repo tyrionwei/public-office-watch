@@ -1,5 +1,69 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('883dd346-ad09-49a4-8be3-c9804677343b'::uuid,'f7f9f5ef-5906-4e4d-95f9-35cdb76c4c77'::uuid,'2b753682-8ead-4110-9de4-06c115c9abdc'::uuid,'cec-platform:2022:votetw-candidate-00706466d37ae9c0','一、 教育優先 : 活化教育內涵、 適性揚才
+二、 文化多元 : 彰顯多元文化、 在地融合
+三、 產業發展 : 促進農業永續、 工商協進
+四、 婦幼關懷 : 構築安全家園、 婦幼安心
+五、 長者照護 : 爭取長照 20、 老有所養
+六、 環境永續 : 把關自然資源、 宜家宜居
+七、 青年創業 : 打造友善環境、 青創圓夢
+八、 宗教觀光 : 推廣宗教文化、 行銷雲林
+FB、LINE、I( 請搜尋關鍵字 「蔡岳儒」
+YT 請搜尋黃儒 + 蔡
+回好好回 [ERA ARE] EEE
+1s
+和 Sian','一、教育優先：活化教育內涵、適性揚才
+二、文化多元：彰顯多元文化、在地融合
+三、產業發展：促進農業永續、工商協進
+四、婦幼關懷：構築安全家園、婦幼安心
+五、長者照護：爭取長照2.0、老有所養
+六、環境永續：把關自然資源、宜家宜居
+七、青年創業：打造友善環境、青創圓夢
+八、宗教觀光：推廣宗教文化、行銷雲林'),
+('9943d1ca-112e-4124-b25b-705b0bf15b03'::uuid,'2fda7100-b6f8-41e9-953c-dd7efe371fd4'::uuid,'3d1a72f2-9b7a-47ba-a013-a05131c443b8'::uuid,'cec-platform:2022:votetw-candidate-cd86c386824d1d9c','1. 繼續推動小東工業區休閒運動中心 (設計已進入審查 A
+階段約6億) —~A Size
+2. 爭取五福公園地下化停車場及街內六里的活動中心 “SHSRTA Ags
+(納入前瞻計劃)
+3. 督促縣府爭取 158乙永光路拓寬工程經費 (已完成可 V\ -- Sate
+行性評估約7.5億) —\ =) Ee
+4. 爭取經費改善斗南火車站前,閒置10多年的地下停_ SP Syl
+車空間,成為機慢車停車場 (已進入設計階段) Y 和回
+5. 爭取經費改善大埤農水路問題 Rs
+6. 推動華山觀光基礎建設','1. 繼續推動小東工業區休閒運動中心（設計已進入審查階段，約6億）
+2. 爭取五福公園地下化停車場及街內六里的活動中心（納入前瞻計劃）
+3. 督促縣府爭取158乙永光路拓寬工程經費（已完成可行性評估，約7.5億）
+4. 爭取經費改善斗南火車站前閒置10多年的地下停車空間，成為機慢車停車場（已進入設計階段）
+5. 爭取經費改善大埤農水路問題
+6. 推動華山觀光基礎建設'),
+('d886f0f8-a16b-49a4-ab33-8ff0cc822c9b'::uuid,'17c9f3e3-d292-42c3-a418-8a76883a8a8f'::uuid,'9e7894a1-8563-4eb6-8707-0c1463979be3'::uuid,'cec-platform:2022:votetw-candidate-2bb0fbb8775e1bf0','ELECT ice annie Esme
+EXE] =cacsnas a ny
+EEE) susscmuagn | ve (4
+ECE) cians >
+EXIT IL) iisknasnmnse nN
+BEET TL a titas crams 和
+爭取機車路權用四和 NL
+CREE EEE REE PE RS','1. 安心移居竹北：讓年輕人能夠安心定居竹北。
+2. 公共托育：減輕年輕父母的負擔。
+3. 打造孩童的空間：爭取更多公園與婦幼館。
+4. 安心回家的路：全面監督路平。
+5. 大眾運輸提升：加速推動公車與輕軌路網。
+6. 人本交通城市：讓竹北成為步行友善城市。
+7. 爭取機車路權：消弭車種歧視。');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 DO $review$
 DECLARE repair RECORD; affected_count INTEGER;
 BEGIN
@@ -111,5 +175,16 @@ BEGIN
     IF validated_count<>5 THEN RAISE EXCEPTION 'Expected five validated platform repairs, found %',validated_count; END IF;
 END
 $validate$;
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair') THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair';
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

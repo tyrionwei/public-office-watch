@@ -1,5 +1,86 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('b2b41815-66b9-4083-b3b0-ecb890f48407'::uuid,'f9860a9c-7ba3-45cc-bc9d-3269d60d4548'::uuid,'af457c66-eeb9-4384-8371-9c7d63f4f8ce'::uuid,'official-profile:tainan-city-council-current-councilors:d75568dc48f5:f9860a9c-7ba3-45cc-bc9d-3269d60d4548:platform','一、打造宜居安南：遊子返南！定居樂業！年輕城鄉！翻轉安南區！
+二、推動「便捷交通網」，發展安南區大眾捷運系統：
+1. 「安南直達專車」：往返直達沙崙高鐵站、南科。
+2. 「護長顧學公車」：長者照護專車、學生通學專車。
+3. 「綠色交通佈點」：爭取共享電動機車進入安南區。
+三、產業品牌化發展，共創永續家園：
+1. 「製鞋產業優化」：爭取全國鞋展在台南舉辦，催生「鞋藝創新據點」，向下扎根並推廣製鞋職人精神，推進台南鞋業為世界級精品的目標努力。
+2. 「農漁產業升級」：推動智慧漁業，促進養殖產業升級與提高產值，爭取延伸冷鏈公共建設、加強產銷調節能力，有效改善及提升農漁民生活品質，改善地方投資環境、實現區域均衡發展。
+3. 「特色商圈營造」：打造安南區專屬的特色商圈，帶動安南區商業經濟發展，使安南區生活機能更加完善。
+四、衡量市府財政狀況，爭取逐步增加65歲以上年長者之健保費至全額補助、提高各項老年醫療補助。
+五、爭取增設安南區特色公園以及溪畔休閒空間。
+六、減輕房租、買房經濟壓力，並確保住宅消防安全。
+七、長期耕耘基層運動隊伍，呼應112年台南全運會：
+1. 「提高奪牌獎金」：參加全運會、全中運選手的奪牌獎金增加。
+2. 「導入運動科學」：強化基層運動隊伍訓練品質，以運動科學為基礎，提供運動傷害防護員、物理治療師、專業體能訓練等，照顧基層選手的身體。
+發布日期','一、打造宜居安南：遊子返南！定居樂業！年輕城鄉！翻轉安南區！
+二、推動「便捷交通網」，發展安南區大眾捷運系統：
+1. 「安南直達專車」：往返直達沙崙高鐵站、南科。
+2. 「護長顧學公車」：長者照護專車、學生通學專車。
+3. 「綠色交通佈點」：爭取共享電動機車進入安南區。
+三、產業品牌化發展，共創永續家園：
+1. 「製鞋產業優化」：爭取全國鞋展在台南舉辦，催生「鞋藝創新據點」，向下扎根並推廣製鞋職人精神，推進台南鞋業為世界級精品的目標努力。
+2. 「農漁產業升級」：推動智慧漁業，促進養殖產業升級與提高產值，爭取延伸冷鏈公共建設、加強產銷調節能力，有效改善及提升農漁民生活品質，改善地方投資環境、實現區域均衡發展。
+3. 「特色商圈營造」：打造安南區專屬的特色商圈，帶動安南區商業經濟發展，使安南區生活機能更加完善。
+四、衡量市府財政狀況，爭取逐步增加65歲以上年長者之健保費至全額補助、提高各項老年醫療補助。
+五、爭取增設安南區特色公園以及溪畔休閒空間。
+六、減輕房租、買房經濟壓力，並確保住宅消防安全。
+七、長期耕耘基層運動隊伍，呼應112年台南全運會：
+1. 「提高奪牌獎金」：參加全運會、全中運選手的奪牌獎金增加。
+2. 「導入運動科學」：強化基層運動隊伍訓練品質，以運動科學為基礎，提供運動傷害防護員、物理治療師、專業體能訓練等，照顧基層選手的身體。'),
+('f8efab6c-8056-4018-9d50-79498ba1ae86'::uuid,'77171388-00f0-4dcd-a709-db4496b1d3f4'::uuid,'b570ad7f-50c9-4646-b011-377eb7c77452'::uuid,'official-profile:tainan-city-council-current-councilors:092cce357f0c:77171388-00f0-4dcd-a709-db4496b1d3f4:platform','交通:
+1. 監督確保忠孝路擴寬20米計畫道路如期完工，並延伸至中興街五叉路口，提前結合二王公墓市地重劃計畫。
+2. 監督永康次17-1號新闢道路完工並加速17-2號、17-3號計畫道路開闢，以利區域整體規劃發展。
+3. 大橋三街優先開闢直通東橋一路。
+4. 爭取自強路經永科北路至王行東路跨橋連接許縣溪對岸新化永新路，打通除台一線、台二十線外，增加第三連結道，以利永康、新化區域發展。
+5. 加速開闢已列入都市計劃但未開闢之道路徵收及公園綠地，爭取預算編列收購私人既成巷道，減少民眾權益受損。
+6. 南下大灣交流道高速二街右轉復興路增設右轉道與機慢車專用道；另復興路右轉高速二街、迴轉道，徵收路邊五米作為正式右轉專用道，取代現有暫時性S型右轉道。
+建設:
+1. 延續監督成功里立體停車塔(一、二樓為活動中心)進度，再續爭取忠孝運動公園全民運動館與風雨球場設置，及納骨塔新設電梯與立體停車塔(一、二樓為活動中心)。
+2. 監督光復里活動中心施作進度，爭取大灣里活動中心用地取得與預算編列
+3. 保留修護永康奇美醫院旁的飛雁新村歷史建築，打造成為華山文創產業園區
+治水:
+1. 下水道是一個城市的主動脈，加強水利局、工務局水溝巡檢與淤積排除列為緊急業務。
+2. 協助已申請中央經費核撥效率，以加速永康易淹水區域整體改善與健診(中正路歐洲世界、中山南路吉村飯店、大灣交流道、裕農路交流道下方等)。
+居住:
+1. 監督社會住宅(只租不售)興建品質、數量提升與生活機能強化，協助社會住宅申請資格條件制定，增強包租代管、租屋補助、安心成家貸款效能，實現居住正義。
+教育與社會福利:
+1. 國中小營養午餐免費、65歲以上長輩健保費全額補助、減少流浪教師數額、提供代理教師完整聘期、落實特教生就學權益降低師生比保障師資。
+發布日期','交通:
+1. 監督確保忠孝路擴寬20米計畫道路如期完工，並延伸至中興街五叉路口，提前結合二王公墓市地重劃計畫。
+2. 監督永康次17-1號新闢道路完工並加速17-2號、17-3號計畫道路開闢，以利區域整體規劃發展。
+3. 大橋三街優先開闢直通東橋一路。
+4. 爭取自強路經永科北路至王行東路跨橋連接許縣溪對岸新化永新路，打通除台一線、台二十線外，增加第三連結道，以利永康、新化區域發展。
+5. 加速開闢已列入都市計劃但未開闢之道路徵收及公園綠地，爭取預算編列收購私人既成巷道，減少民眾權益受損。
+6. 南下大灣交流道高速二街右轉復興路增設右轉道與機慢車專用道；另復興路右轉高速二街、迴轉道，徵收路邊五米作為正式右轉專用道，取代現有暫時性S型右轉道。
+建設:
+1. 延續監督成功里立體停車塔(一、二樓為活動中心)進度，再續爭取忠孝運動公園全民運動館與風雨球場設置，及納骨塔新設電梯與立體停車塔(一、二樓為活動中心)。
+2. 監督光復里活動中心施作進度，爭取大灣里活動中心用地取得與預算編列
+3. 保留修護永康奇美醫院旁的飛雁新村歷史建築，打造成為華山文創產業園區
+治水:
+1. 下水道是一個城市的主動脈，加強水利局、工務局水溝巡檢與淤積排除列為緊急業務。
+2. 協助已申請中央經費核撥效率，以加速永康易淹水區域整體改善與健診(中正路歐洲世界、中山南路吉村飯店、大灣交流道、裕農路交流道下方等)。
+居住:
+1. 監督社會住宅(只租不售)興建品質、數量提升與生活機能強化，協助社會住宅申請資格條件制定，增強包租代管、租屋補助、安心成家貸款效能，實現居住正義。
+教育與社會福利:
+1. 國中小營養午餐免費、65歲以上長輩健保費全額補助、減少流浪教師數額、提供代理教師完整聘期、落實特教生就學權益降低師生比保障師資。');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 DO $review$
 DECLARE
     review RECORD;
@@ -131,5 +212,16 @@ BEGIN
     }$expected$::JSONB THEN RAISE EXCEPTION 'Unexpected item counts: %',actual; END IF;
 END
 $validate$;
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair') THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair';
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

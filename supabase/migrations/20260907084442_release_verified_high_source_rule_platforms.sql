@@ -1,5 +1,112 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('54cf673e-03be-4b8c-a58c-737121e48d66'::uuid,'df1c38fd-2041-4c67-8404-ad8f094dc4d7'::uuid,'18e79806-7ea9-478d-b77e-3a7a0e80fdbe'::uuid,'cec-platform:2022:votetw-candidate-0a4cb139174c41b2','1. 積極傾聽民意爭取地方建設
+2. 關懷弱勢團體協助爭取補助
+3. 推動長照政策健全樂齡服務
+4. 推動婦幼政策生產教育補貼
+9. 強化農業政策改善灌溉溝江
+6,. 保障藻涌人員值勤安全權盆
+了. 監督縣政不分黨派','1. 積極傾聽民意　爭取地方建設
+2. 關懷弱勢團體　協助爭取補助
+3. 推動長照政策　健全樂齡服務
+4. 推動婦幼政策　生產教育補貼
+5. 強化農業政策　改善灌溉溝渠
+6. 保障警消人員　值勤安全權益
+7. 監督縣政不分黨派'),
+('82d849f6-38ee-4101-aac1-ec41b4065ca3'::uuid,'7dda3f82-9377-4ecc-a9aa-74b7397533c4'::uuid,'274223f8-51a3-40f2-9f87-0b7406402e23'::uuid,'cec-platform:2022:votetw-candidate-ea841953beff2f9d','飛 表 已 爭取 到 興建 抽水 站 解決 鹽 埔 共和 潮汐 水 患 之 經 費 。
+
+戰 房 村 地 下 道 排水 箱 涵 建設 之 經 費 。
+
+比 化 環境 成 為 適宜 居住 之 鄉鎮 。
+
+REE (CLS EEG) © B
+
+{5358101 J Ei SC 2 SI 5 es PSB 3 。
+
+i LB HE DE Gr EB BLT + ARIE -
+
+EC FT AL SATB EE EE +
+
+(FTE EA rE ET MRS IR TREE EL RHE ET A EE BE ALE» SHOR SR BDL RE » BI BDL SUE -
+貴 極 發 展 新 園 產業 園區 , 增 加 就 業 機 會 , 帶 動 地 方 發 展 。
+
+建 身 俱樂部 。
+
+當當
+
+鞭 文 活動 , 提 升 鄉 的 文 化 素質 , 如 美 展 、 藝 文 比 賽 、 音 樂 會 、 邀 請 知名 的 表 演 團體 及 講座 。
+軍 動 賽事 及 長 者 文 康 聯誼 等 活動 。
+
+變 新 園 六 件 事 :
+
+Lh4dHmEg','一步一腳印，腳踏實地推動鄉政，持續打造新園為神農之鄉，提升新園的能見度
+一、建設
+1.已向自來水公司極力爭取改善長期缺水之惡夢，並已向自來水公司建議爭取到4千多萬元的淨水池設備，提升鄉親的用水品質。
+2.監督圖書館及第二座納骨塔興建之施工品質。
+3.協同民意代表已爭取到興建抽水站解決鹽埔共和潮汐水患之經費。
+4.已爭取到五房村地下道排水箱涵建設之經費。
+5.持續美化綠化環境成為適宜居住之鄉鎮。
+6.重建行政大樓（已呈報內政部）。
+7.爭取仙吉市場以及烏龍市場改建為多功能的市集暨室內運動場所。
+8.南龍重劃區規劃公有地增設多功能集會暨運動場所，如風雨球場。
+9.協助爭取戶政事務所新園辦事處及新園分駐所之重建。
+二、經濟
+1.積極向縣府爭取已陸續建設中的鹽埔漁港內增設多功能遊具設施及推展新園農漁特產與美食專區，結合花旗木與綠蔭步道為觀光景點，帶動地方的觀光與繁榮。
+2.配合縣府積極發展新園產業園區，增加就業機會，帶動地方發展。
+三、福利
+1.建構銀髮健身俱樂部。
+2.視鄉政財源補助關懷據點長輩與學校學童營養午餐之費用。
+四、藝文活動
+1.持續推展藝文活動，提升鄉的文化素質，如美展、藝文比賽、音樂會、邀請知名的表演團體及講座。
+2.舉辦各類運動賽事及長者文康聯誼等活動。'),
+('98d9b65f-0482-4980-b7b8-4d77501fe6f2'::uuid,'7d7d856d-a5de-40ae-800d-07dcb320bf8a'::uuid,'2b5fbaef-abc7-43be-bc66-da5230459af6'::uuid,'cec-platform:2022:votetw-candidate-ef605dc738f24485','1. 健全社會福利。
+2. 建立農業新典範 , 發展農業特色。
+3. 均衡農工商發展。
+4. 改善行政效能。','1.健全社會福利。
+2.建立農業新典範，發展農業特色。
+3.均衡農工商發展。
+4.改善行政效能。'),
+('a0d81e50-375f-4c03-84df-bc0a051f6c80'::uuid,'c9b60512-33d1-47fe-98fa-4cbf90b5964b'::uuid,'1a0445f3-33e3-4116-9d62-4ceeb8972e22'::uuid,'cec-platform:2022:votetw-candidate-6083ce0ee0258566','嚴格監督 : 縣政府各項政策透明。
+2) 給人民有知的權利。
+(3 配合政府施政建設。
+熱情服務 : 0 服務縣民。
+女取福利。
+(3) 為弱勢代言。','嚴格監督：
+①縣政府各項政策透明。
+②給人民有知的權利。
+③配合政府施政建設。
+
+熱情服務：
+①服務縣民。
+②爭取福利。
+③為弱勢代言。'),
+('a2fa74d7-4170-4ae0-ab07-d405c367fb0e'::uuid,'990fcf7b-07bf-4cf3-82bc-27c708161222'::uuid,'bc61dd6f-2ca2-4353-a554-19e5292ef3b9'::uuid,'cec-platform:2022:votetw-candidate-7e72849fe2353f7b','1. 監督市政
+2. 監督預算
+3. 反應民意
+4. 為民服務','1.監督市政
+2.監督預算
+3.反應民意
+4.為民服務'),
+('d2a91c3a-e7d8-4091-b321-009dc211f4ba'::uuid,'c3b948da-4ce2-4988-a0a7-9a7401943533'::uuid,'52c458c2-f254-4389-8d60-8b2eeed04ce1'::uuid,'cec-platform:2022:votetw-candidate-bf80f7d1f54a340b','一、 監督縣政
+二、 爭取建設
+三、 專業服務','一、監督縣政
+二、爭取建設
+三、專業服務');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 DO $review$
 DECLARE
     review RECORD;
@@ -80,5 +187,16 @@ BEGIN
     END IF;
 END
 $review$;
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair') THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair';
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

@@ -1,5 +1,107 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('53292131-e90e-48d1-a0b8-cbaf1d3e3229'::uuid,'3168e677-72cf-479e-b530-133f77721bf0'::uuid,'1192c20e-e14d-4b3b-b4ef-cc641e5da8c5'::uuid,'cec-platform:2022:votetw-candidate-8f656a90f62df4fb','Po ‧ 串連各大眾運輸工具與汽機車道打造海線交通路網
+‧ 打造海線觀光廊道 ‧ 公園遊憩設施規劃體檢革新
+選壬瑟加 |。 訕山截水溝第三期 ‧ 加速活化台中港特定區
+點。 公托公幼海線倍增點。 督促持續興建社會住宅
+紀購。 推動寶貝照顧者喘息支援 | JRE. EEHRATEE IER
+EA» 照顧教保員爭取福利 Sf © EEE ETE
+主轉。 營養午餐品質把關說 ‧ 青創單一窗口天使計畫
+了點。 老人健保持續補助 oY - EES RIE EAD
+= BES Et PN Tm REN de
+記罩。 推動公辦青銀共居住宅 | 賂計量。 空氣品質持續改善
+久書。 擴大推動長照關懷據點 | Boge 研議推廣垃圾減量獎冊
+努力為每一個你做得更好 , 懇請支持顏莉敏。','為你做更好
+1. 串連各大眾運輸工具與汽機車道，打造海線交通路網
+2. 打造海線觀光廊道
+3. 公園遊憩設施規劃體檢革新
+4. 南山截水溝第三期
+5. 加速活化台中港特定區
+
+為孩童
+1. 公托公幼海線倍增
+2. 推動寶貝照顧者喘息支援
+3. 照顧教保員，爭取福利
+4. 營養午餐品質把關
+
+為長輩
+1. 老人健保持續補助
+2. 愛心卡補助升級、服務擴大
+3. 推動公辦青銀共居住宅
+4. 擴大推動長照關懷據點
+
+為青年
+1. 督促持續興建社會住宅
+2. 倡議社會住宅多元房源
+3. 推動青年社宅回饋計畫
+4. 青創單一窗口天使計畫
+
+為環境
+1. 因應氣候打造韌性城市
+2. 台中淨零碳排路徑規劃
+3. 空氣品質持續改善
+4. 研議推廣垃圾減量獎勵'),
+('ad175882-b92f-45da-b903-78b3a379d937'::uuid,'2e48b2ea-642b-4217-87a1-a6f9a06a1980'::uuid,'ee682e37-9f94-4061-adbe-71d5ec110cfc'::uuid,'cec-platform:2022:votetw-candidate-138cc5ad206049f3','南投市民代表
+立法委員湯火聖助理
+南投縣議員賴燕雪助理
+南投縣議員陳昭煜助理
+南投縣體育會田徑委員會常務委員','雙語教育：給孩子更好的
+
+讓年輕人放心把孩子留在南投
+
+推動國中、小雙語教育。
+強化線上教學與其配套措施。
+爭取國民運動中心與親子共融公園。
+推動流浪貓狗生命教育。
+安心長照：南投養老的好地方
+
+讓年輕人放心外出工作
+
+增加日間照顧長照機構量能。
+提升居家照顧量能與品質。
+活化中興新村的省府宿舍，保留歷史人文景觀，推動長照養生村。
+推動照服員教育分級徽章。
+低污染輕工業區：青年就業沒煩惱
+
+讓年輕人留在南投工作
+
+擴大南投市都市計畫，讓新街變成南投市的衛星城市。
+往名間交流道方向，進行南投市都市計畫擴大，建設輕工業區、長照中心、假日小農市集，增加工作機會，不讓污染給下一代。
+往南投交流道方向，擴大生活機能，建設青年住宅與社會住宅。'),
+('f557442f-2e17-47f3-9f4f-c89c896f60ad'::uuid,'f209a422-1032-4725-a2c6-22a7db8c8288'::uuid,'5bab54d7-f374-45d2-a1e7-2217ed58a990'::uuid,'cec-platform:2022:votetw-candidate-180aa111557eca54','1、 簡化長照申請流程
+2、 廣設托育 , 減輕家長的負擔
+3、 推廣藝文活動 , 支持在地藝術家
+4、 加速推行地方 / 行政機關支付 e 化
+5、 解決 「月經貧船」, 守護婦女權益
+6、 整合社會資源 , 洛實弱勢族群之生活
+7、 增設完善人行道、 目行車道 , 增加用路安全
+8、 推行南投旅遊電子套票、 促進觀光 , 增加觀光財
+9、 青銀共生 , 創造新世代
+10、 推展創客 , 提升南投軟實力','1. 簡化長照申請流程
+2. 廣設托育，減輕家長的負擔
+3. 推廣藝文活動，支持在地藝術家
+4. 加速推行地方／行政機關支付e化
+5. 解決「月經貧窮」，守護婦女權益
+6. 整合社會資源，落實弱勢族群之生活
+7. 增設完善人行道、自行車道，增加用路安全
+8. 推行南投旅遊電子套票、促進觀光，增加觀光財
+9. 青銀共生，創造新世代
+10. 推展創客，提升南投軟實力');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 DO $review$
 DECLARE repair RECORD; affected_count INTEGER;
 BEGIN
@@ -167,5 +269,16 @@ BEGIN
     IF validated_count<>5 THEN RAISE EXCEPTION 'Expected five validated platform repairs, found %',validated_count; END IF;
 END
 $validate$;
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair') THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair';
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

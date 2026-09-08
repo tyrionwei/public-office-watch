@@ -1,5 +1,76 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('0e904b1b-f02c-48fc-bef2-ef9698b2c327'::uuid,'4f75873b-c72c-4d30-8c45-b9a14affc86a'::uuid,'fe78022b-73ee-4b21-8705-f90b6db09708'::uuid,'cec-platform:2024:votetw-candidate-9ceb6f26343538a4','一、發展谷慧農業,推動農業轉型升級
+1.保障農民福利,爭取各種補助。 2.導人智慧農工,提高農業產值。
+3.打通農業產銷國際及兩岸通路。 4.加速及擴大農業廢棄物再利用。
+二、持續整治東螺溪,展現豐富的水岸風華
+在立委任內爭取到 7.66 億元的「東螺溪水環境改善計畫」 ,東螺溪不只是生態候鳥的廊道 ,
+也是畜牧廢水循環利用的場域,更是智慧農業升級的示範點,末來東螺溪有豐富的水岸風華。
+三、活絡地方經濟,促進勞工就業
+1.推動循環經濟,讓經濟環境雙贏。 2.推動產業園區恬勃發展,吸引民眾返鄉就業。
+3.透過地方創生,活絡在地經濟。 4.結合地方特色,打造觀光新亮點。
+四、重視偏鄉教育,照顧弱勢與關懷社會
+1.修正「教師待遇條例」 、落實「偏遠地區學校教育發展條例」 ,充實偏鄉教育的師資與資源。
+2.持續推動關懷據點,強化在地照顧服務。 3,.協助減輕弱勢家庭的負擔。
+4.推動銀髮族適用的福利設備與服務。 5.打造友善生育環境。
+衣鳳在任內關注智慧農業、循環經濟的發展,並致力於推動青年返鄉、產業升級,為地方爭取
+各項建設,為民眾爭取各種福利,衣鳳有能力、有信心,跟鄉親一起建立更半好的家園。','一、發展智慧農業，推動農業轉型升級
+1. 保障農民福利，爭取各種補助。
+2. 導入智慧農工，提高農業產值。
+3. 打通農業產銷國際及兩岸通路。
+4. 加速及擴大農業廢棄物再利用。
+
+二、持續整治東螺溪，展現豐富的水岸風華
+在立委任內爭取到7.66億元的「東螺溪水環境改善計畫」，東螺溪不只是生態候鳥的廊道，也是畜牧廢水循環利用的場域，更是智慧農業升級的示範點，未來東螺溪有豐富的水岸風華。
+
+三、活絡地方經濟，促進勞工就業
+1. 推動循環經濟，讓經濟環境雙贏。
+2. 推動產業園區蓬勃發展，吸引民眾返鄉就業。
+3. 透過地方創生，活絡在地經濟。
+4. 結合地方特色，打造觀光新亮點。
+
+四、重視偏鄉教育，照顧弱勢與關懷社會
+1. 修正《教師待遇條例》、落實《偏遠地區學校教育發展條例》，充實偏鄉教育的師資與資源。
+2. 持續推動關懷據點，強化在地照顧服務。
+3. 協助減輕弱勢家庭的負擔。
+4. 推動銀髮族適用的福利設備與服務。
+5. 打造友善生育環境。
+
+衣鳯在任內關注智慧農業、循環經濟的發展，並致力於推動青年返鄉、產業升級，為地方爭取各項建設，為民眾爭取各種福利；衣鳯有能力、有信心，跟鄉親一起建立更美好的家園。'),
+('41236b3c-8036-4e4e-909e-c266122f8a25'::uuid,'83c02535-6d15-4203-8d94-11bbbf4d653c'::uuid,'0c3d5e20-eb70-4cbb-92c3-c24cf9544bee'::uuid,'cec-platform:2022:votetw-candidate-6f11907bf5fe7e12','社頭、田中、二水有山有水有人人情味。
+但這裡少了年輕人的聲音!少了年輕人共同參政
+妤百願意為鄉親請願與發聲,頁獻年輕的熱情與創意
+監督政府,建議政府,全心照顧這片土地
+1.交通運輸、環境生態、社區設施。硬體要用心
+2. 社會安全、婦女權益、育兒教養軟體要貼心
+9. 產業招商、青年創業、投資環境經營要有心
+4. 長者照顧、弱勢福利、長照發展服務要愛心
+小女子大心願 60!彰化更好 !
+蕭妤瑟懇請鄉親全力支持”謝謝您!','社頭、田中、二水有山有水有人情味。
+但這裡少了年輕人的聲音！少了年輕人共同參政。
+妤亘願意為鄉親請願與發聲，貢獻年輕的熱情與創意。
+監督政府，建議政府，全心照顧這片土地。
+1. 交通運輸、環境生態、社區設施，硬體要用心。
+2. 社會安全、婦女權益、育兒教養，軟體要貼心。
+3. 產業招商、青年創業、投資環境，經營要有心。
+4. 長者照顧、弱勢福利、長照發展，服務要愛心。
+小女子大心願　GO！彰化更好！
+蕭妤亘懇請鄉親全力支持，謝謝您！');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 DO $review$
 DECLARE repair RECORD; affected_count INTEGER;
 BEGIN
@@ -114,5 +185,16 @@ BEGIN
     IF validated_count<>5 THEN RAISE EXCEPTION 'Expected five validated platform repairs, found %',validated_count; END IF;
 END
 $validate$;
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair') THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair';
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

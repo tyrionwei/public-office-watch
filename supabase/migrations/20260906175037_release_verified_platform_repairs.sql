@@ -220,6 +220,56 @@ EHH'::TEXT,
      '["全心全意為村民服務","關懷獨居老人","認真為社區整理環境，改善生活品質","幫助弱勢申請補助","推行政令爭取經費建設村里"]'::JSONB,
      'manual_image_and_second_ocr_transcription'::TEXT);
 
+-- Exact production pre-repair variants verified from the 2026-09-08 backup.
+-- Local research had already corrected these texts outside the migration chain.
+-- Keep the original baseline valid; never accept arbitrary changed source text.
+CREATE TEMPORARY TABLE production_platform_baselines (
+    id UUID PRIMARY KEY,
+    person_id UUID NOT NULL,
+    candidate_id UUID,
+    claim_key TEXT NOT NULL,
+    source_text TEXT NOT NULL
+) ON COMMIT DROP;
+INSERT INTO production_platform_baselines VALUES
+    ('d50b80a9-02d3-4c62-987d-0ca6559300b7'::UUID, '0315a8ac-f8b2-46c8-9f36-b738ab0f10d6'::UUID, '409cd2cd-f7e4-4a47-a9d0-5f9dfb6bde6c'::UUID,
+     'official-profile:tainan-city-council-current-councilors:a776670a2041:0315a8ac-f8b2-46c8-9f36-b738ab0f10d6:platform',
+     ' 全面整治防洪、打造親水無災，讓民眾免於淹水之患，保障生命財產安全。
+ 啟動希望城市、關懷基層弱勢，挹注社會資源、建置安全防護網，落實政策保障。
+ 建構濱海觀光、活化海線經濟，結合自然、宗教與人文，連結農漁特產品，促進發展。
+ 滿足產業需求、規劃整體開發，擴編工業區，營造優質環境，鏈結產業聚落，振興經濟。
+ 捍衛土城權益、守護環境永續，要求城西焚化廠更新案後，不得增設處理設施；優先處理掩埋場垃圾，造林規劃綠林公園；明年度，增加回饋金及周圍6 所學校營養午餐全額補助。
+ 守護生命財產、居民過得安心，啟動和順國宅公辦都市更新，改善整體生活品質與環境。
+ 樂活健康安南、建構城市美學，全民運動館建設於九份子綠帶河道，提供優質的運動場域。
+ 尋找合適地點、規劃設立泳池，完善運動設施，增進民眾健康與運動好習慣。
+ 建構完整路網、推動海線發展，加速曾文溪大橋完工、規劃台61 線南延專線。
+ 串聯交通網路、帶動區域發展，北汕尾三路至公學路六段道路開闢。
+ 保障學生就學、解決跨區就讀，爭取九份子第二期校舍、PU跑道及操場，提供完善的校園。
+發布日期'),
+    ('987d1197-7508-40a0-aa03-b2639f095892'::UUID, '5ef912b0-15e7-4942-a4fb-9081b4644c01'::UUID, '1433c10a-fd60-410c-9de4-5c1bdaab192d'::UUID,
+     'cec-platform:2022:votetw-candidate-f3f7a0c60aa42b22',
+     '一 、 人 和 發展 入 武
+‧ 打 造 良好 的 生 活 環境 , 持 續 改善 道路 ... 等 基礎 建設 。
+‧ 改 善 鄉 內 各 景點 周邊 環境 , 提 升 觀 光 價 值 。
+BIAS ERAGE , 鼓 勵 青 年 積極 參與 鄉 內 公眾 事務 。
+— Zam
+‧ 改 善 鄉 內 各 景點 , 對 內 提供 良好 休閒 場 域 , 對 外 提高 本 鄉 能 見 度 。
+‧ 結 合 各 項 產業 總 體 發 展 , 創 造 附 加 新 價 值 , 提 升 經 濟 效 益 。
+‧ 定 期 舉辦 各 類 型 之 大 型 活動 , 凝 聚 鄉 民 共 識 , 活 絡 本 鄉 朝 氣 , 提 高 本 鄉 能 見 度 。
+‧ 持 續 打 造 「 太 平 洋 大 武 廊 道 」。
+三 、 幸 福 大 武
+‧ 配 合 政府 長 照 計 畫 , 積 極 協 助 推 動 銀 髮 族 相 關 福利 政策 。
+‧ 改 善 鄉 內 殯 莽 設 施 , 提 拱 優 質 殯 葬 管 理 環 境 。
+‧ 整 合 公務 機 關 , 提 升 便民 服務 。
+四 、 優 化 大 武 。
+‧ 簡 化 行 政 程 序 , 提 昇 服務 品 質 。
+‧ 推 動 文 化 傳承 , 協 助 部 落 祭 典 自 主 化 。
+‧ 落 實 政府 採購 法 , 公 開 辦理 招標 , 確 保 採 購 品 質 。
+‧ IA TEAL 2 XE (JL STAIR ERE BAK Ay « BIR LF hh ISR) 3 = opr ve Zvi RK PF Eh AE ICH SFE o'),
+    ('debbde04-80c2-4d13-b2b4-4fb461495360'::UUID, 'feac1366-b149-4f8e-8851-7068cf64f5d8'::UUID, '535ee8c2-98ee-4be6-a796-8ed9199db5cf'::UUID,
+     'cec-platform:2022:votetw-candidate-021dcefad9a9fc90',
+     '臣持 「有事來找我 , 沒事來泡茶」 全天候為鄉親服務。
+爭取國姓、 埔里、 仁愛地方建設 , 做鄉親和政府機關的最好橋樑。');
+
 DO $repair$
 DECLARE
     affected_count INTEGER;
@@ -271,7 +321,18 @@ BEGIN
     FROM verified_platform_repairs AS repair
     WHERE claim.id = repair.id
       AND claim.claim_type = 'platform'
-      AND COALESCE(claim.claim_json ->> 'platformText', claim.claim_value) = repair.old_source
+      AND (
+          COALESCE(claim.claim_json ->> 'platformText', claim.claim_value) = repair.old_source
+          OR EXISTS (
+              SELECT 1 FROM production_platform_baselines AS baseline
+              WHERE baseline.id = claim.id
+                AND baseline.person_id = claim.person_id
+                AND baseline.candidate_id IS NOT DISTINCT FROM claim.candidate_id
+                AND baseline.claim_key = claim.claim_key
+                AND baseline.source_text = claim.claim_value
+                AND baseline.source_text = claim.claim_json ->> 'platformText'
+          )
+      )
       AND claim.claim_json #>> '{contentSplit,reviewStatus}' = 'needs_review';
 
     GET DIAGNOSTICS affected_count = ROW_COUNT;
@@ -283,11 +344,12 @@ BEGIN
         SELECT 1
         FROM verified_platform_repairs AS repair
         LEFT JOIN public.person_claims AS claim ON claim.id = repair.id
-        WHERE claim.claim_value <> repair.repaired_source
-           OR claim.claim_json ->> 'platformText' <> repair.repaired_source
-           OR claim.claim_json -> 'items' <> repair.repaired_items
-           OR claim.claim_json #>> '{contentSplit,reviewStatus}' <> 'reviewed'
-           OR claim.claim_json #>> '{platformQualityAudit,classification}' <> 'verified_repair'
+        WHERE claim.id IS NULL
+           OR claim.claim_value IS DISTINCT FROM repair.repaired_source
+           OR claim.claim_json ->> 'platformText' IS DISTINCT FROM repair.repaired_source
+           OR claim.claim_json -> 'items' IS DISTINCT FROM repair.repaired_items
+           OR claim.claim_json #>> '{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+           OR claim.claim_json #>> '{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair'
     ) THEN
         RAISE EXCEPTION 'A verified platform repair failed validation';
     END IF;

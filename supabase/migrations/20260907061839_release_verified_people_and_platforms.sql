@@ -1,5 +1,81 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('92125e61-820d-4403-a106-0e4b2f67038b'::uuid,'62d79cbd-48e4-4c0a-b936-ef1ce3673fbd'::uuid,'36dafa04-d36c-4a31-a2ad-787e568c91f6'::uuid,'cec-platform:2022:votetw-candidate-c15f655c303360a6','1. 落 實 基礎 建設 , 路 平 、 燈 亮 、 水 溝通 。
+
+2. 提 升 金 色 雙 島 串 連 澎 南 旅 線 , 為 馬公 觀光 發 展 注 入 新 生 力 。
+
+3. 市 場 改造 、 振 興 漁港 、 調 和 商 圈 、 推 廣 廟 乎 , 打 造 馬公 人 文 新 文 化 。
+4. 改 善 市 立 幼兒 園 教學 設施 空間 , 營 造 安全 優質 幼兒 學 習 環境 。','做事'),
+('ddfab220-fa61-45f9-bfb3-8bf9edff7529'::uuid,'75967696-d559-4570-bb92-706960800883'::uuid,'55788941-aa26-48c7-a701-88279e8629d8'::uuid,'cec-platform:2022:votetw-candidate-58bf02c7120490ae','「 政 」 要 改變 安居 嘉 南 「 傑 」 出 為 民樂
+業 義 竹
+銀髮 照護 : 建 立 長 照 智慧 服務 網 提高 重
+陽 敬老 金 1,200 元 , 資 深 1 萬 元
+創造 就 業 : 規 劃 工業 區 擴展 , 促 成 台 糖 農
+Sn RBH
+幸福 宜 居 : 鼓 勵 生 育 , 提 高 補助 總 額 至 三
+萬 , 補 助 學 童 營養 午餐 、 點 心
+校園 重生 : 推 動 廢棄 校園 成 為 老人 學 堂 、
+親子 共 學 與 特 色 在 職 進 修 場 域
+創 生 社區 : 設 置 青年 中 心 , 舉 辦 青年 論壇
+| BEE ALES
+居住 升級 : 重 新 都 市 計劃 、 交 通 建設 、 醫
+療 網 絡 、 灌 溉 防洪 設施 、 青 銀
+共 居 , 建 立 嘉 南 生 活 圈 最 合宜
+(CP 值 ) 住 宅 區 。
+便民 科技 : 推 廣 智慧 生 活 網 (例如 路 燈 、
+環保 、 浪 浪 通報 ), 結 合 農 會
+漁 會 推 動 義 竹 好 物 電子 商 務 平
+台 , 協 助 農 漁民 產品 行 銷 。
+RU
+文 化 , 建 立 義 竹 特 色 市 集 、 商
+圈 、 藝 文 活動 ; 與 週邊 市 鎮 共
+辦 節慶 , 擴 大 舉辦 義 竹 人 市 集
+並 結 合 宗教 、 路 跑 等 行 銷 活 生','「政」要改變 安居嘉南 「傑」出為民 樂
+業義竹
+銀髮照護：建立長照智慧服務網；提高重
+     陽敬老金1,200元，資深1萬元
+     。
+創造就業：規劃工業區擴展，促成台糖農
+     場轉型，推動科技觀光農漁產
+     業。
+幸福宜居：鼓勵生育，提高補助總額至三
+     萬，補助學童營養午餐、點心
+     。
+校園重生：推動廢棄校園成為老人學堂、
+     親子共學與特色在職進修場域
+     。
+創生社區：設置青年中心，舉辦青年論壇
+     、藝文展覽，創生知識科技義
+     竹。
+居住升級：重新都市計劃、交通建設、醫
+     療網絡、灌溉防洪設施、青銀
+     共居，建立嘉南生活圈最合宜
+     (CP值)住宅區。
+便民科技：推廣智慧生活網(例如路燈、
+     環保、浪浪通報)，結合農會
+     漁會推動義竹好物電子商務平
+     台，協助農漁民產品行銷。
+特色聚落：整合農漁、古厝三合院及廟宇
+     文化，建立義竹特色市集、商
+     圈、藝文活動；與週邊市鎮共
+     辦節慶，擴大舉辦義竹人市集
+     並結合宗教、路跑等行銷活動
+     ！');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 -- Consolidated from 20260906181120_release_verified_wu_li_hua_platform.sql
 
 DO $repair$
@@ -109,8 +185,19 @@ BEGIN
         updated_at = pg_catalog.now()
     WHERE claim.id = '5bda03ae-f1cf-425b-aa07-79ed2c65483b'::UUID
       AND claim.claim_type = 'platform'
-      AND pg_catalog.md5(claim.claim_value) = '15fc5d55770a8a9cd9d7839eed5fac3e'
-      AND pg_catalog.length(claim.claim_value) = 379
+      -- Both audited pre-repair variants contain Savungaz's misattributed text.
+      -- The production backup differs in punctuation, whitespace and wording.
+      AND claim.person_id = '8b6641f7-cdf6-4fc7-9e9b-348cf6c3cda9'::UUID
+      AND claim.candidate_id = 'a60d25d9-c06f-4801-b56d-0d2d0725500c'::UUID
+      AND claim.claim_key = 'cec-platform:2024:votetw-candidate-bdb05cca26bd9824'
+      AND (
+          (pg_catalog.md5(claim.claim_value) = '15fc5d55770a8a9cd9d7839eed5fac3e'
+           AND pg_catalog.length(claim.claim_value) = 379)
+          OR
+          (pg_catalog.md5(claim.claim_value) = '8b36e7b1db6fc6fdb03aab117bee7073'
+           AND pg_catalog.length(claim.claim_value) = 380
+           AND claim.claim_json ->> 'platformText' = claim.claim_value)
+      )
       AND claim.claim_json #>> '{contentSplit,reviewStatus}' = 'needs_review'
       AND claim.claim_json #>> '{platformQualityAudit,classification}' = 'confirmed_content_or_split_issue';
 
@@ -2536,5 +2623,16 @@ BEGIN
 END
 $validate$;
 
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM CASE WHEN b.id='92125e61-820d-4403-a106-0e4b2f67038b'::uuid THEN 'verified_short_platform' ELSE 'verified_repair' END) THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair: %', (SELECT jsonb_agg(jsonb_build_object('id',b.id,'expectedPerson',b.person_id,'person',c.person_id,'expectedCandidate',b.candidate_id,'candidate',c.candidate_id,'keyMatches',c.claim_key=b.claim_key,'split',c.claim_json#>>'{contentSplit,reviewStatus}','class',c.claim_json#>>'{platformQualityAudit,classification}')) FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id);
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

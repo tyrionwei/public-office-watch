@@ -1,5 +1,63 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('cc03cdf1-b263-4a07-ba63-c6ed2863c637'::uuid,'27268e9a-f252-4f2d-8443-b4d7eab0cfbc'::uuid,'d2229293-7ef9-407c-aef4-ee1588edb5b5'::uuid,'cec-platform:2022:votetw-candidate-540d3f17c656effd','法治精神
+_"^ª\>_" Y;© ® >
+{@v2&
+_"t >MjD
+\¡$­d°K71< _"ty!u#O <¯A§
+%
+R¯F+8@O k
+Y;© ¤°BrGXa O
+¬T
+1<>2v _"q°B«x­
+w¬T
+!''Lz¨/¯q im¦)WP¯¦`sR
+Z>*(¥4S- ¯f>]S|E
+im¦)WPnQ¯¦`sQ°0
+I¯z¨b=cSf5 H 2&¦)°UlJ6bZ1<
+¬T¯V§h[9 _"tx~S°B«x
+S£w°?¬Th ]Sop
+福利，創造安心環境。舉辦親子活動與親職教育課程，','通苑有品安、進步又平安
+長輩、親子平安
+政績：協助社區爭取長照資源；成功爭取設置3處公共托育家園
+政見：
+• 監督長照資源妥善運用，長輩晚年安心健康、有尊嚴
+• 推動好孕專案、擴大公共幼托服務及相關補助，家長安心成家育兒
+民生、交通進步
+政績：協助法律諮詢超過1,500件；成功爭取設置YouBike；促成議會直播
+政見：
+• 爭取設置苗南聯合服務中心、持續協助法律諮詢及陳情，推動縣政治理及服務進步
+• 爭取海線鐵路雙軌化，推動通苑公共運輸量能進步
+文化觀光、就業進步
+政績：促成苗南海地景藝術季、海線鐵路百年通車活動；促成多場次就業媒合活動
+政見：
+• 推動海線人文、藝術生態產業發展及整體計畫，打造進步、永續的深度觀光
+• 推動提升就業輔導能量，打造進步的勞動環境
+環境永續、農漁業平安
+政績：監督環境污染、環保犯罪案件及光電、風電開發造成之農漁業衝擊
+政見：
+• 監督環境污染稽查、環保犯罪查辦，守護家園環境，民眾日常生活安心
+• 爭取設置苑裡休閒農業區，推動通苑農漁業冷鏈系統'),
+('ef3620c0-7d3c-4c29-8c55-6f3688123fb5'::uuid,'620b889e-f625-4061-ba93-bf7dda9de6f8'::uuid,'710ec475-7d3f-4f79-bb36-b330dea32b1d'::uuid,'cec-platform:2022:votetw-candidate-7e3396d73e98841d','1.強化社區營造
+2.為各村爭取觀光特色產業
+3.創造經濟收盆和工作機會','1.強化社區營造
+2.為各村爭取觀光特色產業
+3.創造經濟收益和工作機會');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 DO $review$
 DECLARE
     review RECORD;
@@ -85,5 +143,16 @@ BEGIN
     END IF;
 END
 $review$;
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair') THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair';
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

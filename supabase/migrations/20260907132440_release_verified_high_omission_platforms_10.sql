@@ -1,5 +1,109 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('0593d0c5-e868-4460-850a-6df9c6e4d35e'::uuid,'518bf5cd-e4be-4824-90a0-942b14efcca7'::uuid,'753cdbd7-f8fb-49df-aa19-a4fcc2eb35c4'::uuid,'cec-platform:2022:votetw-candidate-7cd92cc746e20171','一、 候車空間改善 : 安樂沿線候車空間 , 過去四年 , 顯著改善 , 長庚醫院站擴建 , 友善人行道 , 之豪將繼續監督改善。
+二、 路平品質改善 : 麥金路示範道路計畫 , 基金一二三路改善計畫 , 皆在過去四年內陸續推動完工 , 之豪將繼續監督推動地下管線更換與路面
+改善。
+三、 親子特色公園 : 過去四年 , 成功催生安樂三期 (四維 ) 親子公園 , 基隆市內尚有眾多公園空間安全、 品質、 可玩性 , 有提升之空間 , 之豪將
+持續監督改善。
+四、 監督基隆捷運 : 基隆捷運計畫在過去四年內 , 升級為中運量捷運 , 目前已在綜合規畫階段預計近期可完成報部報院進行核定。 屆時 , 捷運與
+基隆各區之間的接駁方案 , 將會決定基隆市未來之通勤模式 , 之豪將持續監督捷運進度。
+五、 推動國際交流 : 過去四年 , 台灣躍升國際過目焦點 , 基隆市在後疫情時代 , 需要積極拓展國際交流 , 不僅是商機 , 更是城市發展之關鍵。 之
+豪將持續監督基隆的國際交流。
+六、 推動行政改革 : 基隆市行政制度需要在國土規劃與區域整合下 , 審慎重新思考各種可能性。 基隆未來發展之利基了關鍵為能否有效創建有效
+率之機構單位 , 吸引優質行政辟劃官僚 , 處理捷運與新市鎮發展之複雜課題 , 之豪將持續監督行政改革。','一、候車空間改善：安樂沿線候車空間，過去四年，顯著改善，長庚醫院站擴建，友善人行道，之豪將繼續監督改善。
+二、路平品質改善：麥金路示範道路計畫，基金一二三路改善計畫，皆在過去四年內陸續推動完工，之豪將繼續監督推動地下管線更換與路面改善。
+三、親子特色公園：過去四年，成功催生安樂三期（四維）親子公園，基隆市內尚有眾多公園空間安全、品質、可玩性，有提升之空間，之豪將持續監督改善。
+四、監督基隆捷運：基隆捷運計畫在過去四年內，升級為中運量捷運，目前已在綜合規畫階段，預計近期可完成報部報院進行核定。屆時，捷運與基隆各區之間的接駁方案，將會決定基隆市未來之通勤模式，之豪將持續監督捷運進度。
+五、推動國際交流：過去四年，台灣躍升國際矚目焦點，基隆市在後疫情時代，需要積極拓展國際交流，不僅是商機，更是城市發展之關鍵。之豪將持續監督基隆的國際交流。
+六、推動行政改革：基隆市行政制度需要在國土規劃與區域整合下，審慎重新思考各種可能性。基隆未來發展之利基關鍵為能否有效創建有效率之機構單位，吸引優質行政擘劃官僚，處理捷運與新市鎮發展之複雜課題，之豪將持續監督行政改革。'),
+('297e28ec-4cc0-4ba0-9624-9350f0b25f44'::uuid,'e2920a30-0b27-430d-b644-3b5cb5601ce6'::uuid,'f4a7a161-ffe9-43b5-9c27-223ee8af8977'::uuid,'cec-platform:2022:votetw-candidate-6099ed3d14f6ff64','|. 爭取全縣生痛補助津貼。
+2. 爭取弱勢老年人社會福利補助。
+3. (1) 萬髓、 新園區域排水規劃改善。
+(2) 東港第一排水渠道規劃整修。
+4. 推廣有機農濕業邁向國際化。
+5. 即早完成鳥龍大排、 改善南龍大橋橋面低陷 , 儘速改造完成。
+6. 發展海灣城市觀光文化交流 , 增加年輕人就業機會。
+7. Bf FE 園、 東港三鄉鎮地方建設末完成部份繼續爭取。
+8. 爭取大人烏龍、 港西西線低實地區增設大型排水溝再匯入台 17 線下水道。','1.爭取全縣生育補助津貼。
+2.爭取弱勢老年人社會福利補助。
+3.（1）萬丹、新園區域排水規劃改善。
+（2）東港第一排水渠道規劃整修。
+4.推廣有機農漁業邁向國際化。
+5.即早完成烏龍大排、改善南龍大橋橋面低陷，儘速改造完成。
+6.發展海灣城市觀光文化交流，增加年輕人就業機會。
+7.萬丹、新園、東港三鄉鎮地方建設未完成部份繼續爭取。
+8.爭取大烏龍、港西西線低窪地區增設大型排水溝再匯入台17線下水道。'),
+('30312a75-dd49-4d1c-9351-4e2b48e803f7'::uuid,'3072766a-5917-44fc-94ad-89477bb0ec84'::uuid,'ead9f8cf-245a-42fe-845d-b8bb0358126f'::uuid,'cec-platform:2022:votetw-candidate-388ef64c76e38315','一、 監督縣政。
+二、 推動彰化市東區盡速完成擴大都市計劃。
+三、 推動彰化鐵路高架化工程早曰動工。
+四、 人台中市捷運延伸至彰化市。
+五、 支持警政、 消防及防災預算 , 打擊犯罪 , 強化防炎。
+六、 老舊社區盡速更新。
+七、 盡速解除高速公路特定區之限制。
+八、 爭取婦女朋友福利 , 提升生育率 , 並支持增加婦女第二、 第三胎生痛補助
+及幼兒教育補助金。
+九、 督促政府關懷婦幼安全及權益 , 弱勢族群照護 , 銀髮族身心保健。','一、監督縣政。
+二、推動彰化市東區盡速完成擴大都市計劃。
+三、推動彰化鐵路高架化工程早日動工。
+四、台中市捷運延伸至彰化市。
+五、支持警政、消防及防災預算，打擊犯罪，強化防災。
+六、老舊社區盡速更新。
+七、盡速解除高速公路特定區之限制。
+八、爭取婦女朋友福利，提升生育率，並支持增加婦女第二、第三胎生育補助及幼兒教育補助金。
+九、督促政府關懷婦幼安全及權益，弱勢族群照護，銀髮族身心保健。'),
+('4cd0e0ca-8782-4858-a067-468e19d7a9ec'::uuid,'e978b4be-4f90-4c87-812a-cdb162b71be1'::uuid,'3d10a17a-c025-4eec-b945-0e78caea225d'::uuid,'cec-platform:2022:votetw-candidate-029dc02c8e428df1','一、 成功爭取建置寶業滯洪池遊戲場。
+持續推動鄰里公園成為特色公園 , 兼顧長募與兒童發展與社區運動的共融理念。
+二、 監督交通建設 (輕軌、 黃線捷運 ) 不要有交通黑暗期。
+督促市府提出周延交通計劃、 提供足夠停車空間 , 並與市民溝通。
+三、 成功監督市府還債 71 億 , 持續監督市府減債績效。
+四、 高雄要有好空氣 , 監督中區焚化廠如期於 2025 年除役。
+五、 關心年輕人就業與創業 , 持續監督市府表創績效 , 協助在地表年圓夢。
+六、 關心弱勢
+] . 持續督促市府將閒置空間轉為老人長照及幼兒托育的據點。
+2. 持續督促市府扶助弱勢家庭 , 法規鬆綁並整合公私資源落實之。
+七、 反毒政見
+持續打造無毒高雄 , 為毒品防制擔任反毒志工。','一、成功爭取建置寶業滯洪池遊戲場。
+持續推動鄰里公園成為特色公園,兼顧長輩與兒童發展與社區運動的共融理念。
+二、監督交通建設(輕軌、黃線捷運)不要有交通黑暗期。
+督促市府提出周延交通計劃、提供足夠停車空間,並與市民溝通。
+三、成功監督市府還債 71 億,持續監督市府減債績效。
+四、高雄要有好空氣,監督中區焚化廠如期於 2025 年除役。
+五、關心年輕人就業與創業,持續監督市府青創績效,協助在地青年圓夢。
+六、關心弱勢
+1. 持續督促市府將閒置空間轉為老人長照及幼兒托育的據點。
+2. 持續督促市府扶助弱勢家庭,法規鬆綁並整合公私資源落實之。
+七、反毒政見
+持續打造無毒高雄,為毒品防制擔任反毒志工。'),
+('52978743-36d0-4f5b-a8ae-6a92d9b9eff0'::uuid,'0c0232df-8fed-42ef-b806-c271a327e14d'::uuid,'9b26a58f-23fb-41c3-ab31-39ef97967c01'::uuid,'cec-platform:2022:votetw-candidate-16d518b3d0c97d0e','一、 落實老人長期照護、 日間照護及社區老人食堂開辦。
+二、 振興山區觀光產業 , 建設經濟、 特色之旅遊動線規劃。
+三、 保護農民特殊產業推廣 , 青年返鄉種植各項優惠方案。
+四、 推行閒弟空間再利用 , 創造更多生活學省運動空間。
+五、 推廣公共托崗政策, 減輕青年成家負擔。
+六、 選區內路平、 排水、 平坦順暢 , 讓回家之路安全 , 讓生命財產 , 得以保障。
+七、 融入地方文化 , 推廣 13 庄頭嘉年華會。
+八、 關懷弱勢權益 , 保障勞工權利。','一、落實老人長期照護、日間照護及社區老人食堂開辦。
+二、振興山區觀光產業，建設經濟、特色之旅遊動線規劃。
+三、保護農民特殊產業推廣，青年返鄉種植各項優惠方案。
+四、推行閒置空間再利用，創造更多生活學習運動空間。
+五、推廣公共托嬰政策，減輕青年成家負擔。
+六、選區內路平、排水、平坦順暢，讓回家之路安全，讓生命財產，得以保障。
+七、融入地方文化，推廣13庄頭嘉年華會。
+八、關懷弱勢權益，保障勞工權利。');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 DO $review$
 DECLARE repair RECORD; affected_count INTEGER;
 BEGIN
@@ -102,5 +206,16 @@ BEGIN
     IF validated_count<>5 THEN RAISE EXCEPTION 'Expected five validated platform repairs, found %',validated_count; END IF;
 END
 $validate$;
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair') THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair';
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

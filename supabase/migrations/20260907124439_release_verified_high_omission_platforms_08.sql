@@ -1,5 +1,113 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('168fbd35-c28f-4cbf-86c2-171c8954babe'::uuid,'24d90f21-d167-44ec-b677-90815f62b4d0'::uuid,'91f67ca4-2407-4119-a77f-194c626ad57f'::uuid,'cec-platform:2022:votetw-candidate-8a4a648a4244f79b','LAL! Se Pa TA ES a 5B JO * JER a Za FTO SS * Em FTO SAE RO ATO廚"”
+道,維護孩子上下學[行的安全J。 ‧爭取托育補助、育兒津貼再加碼,
+設置打造各年齡層皆合適的使用環境。 讓桃園成為最適合年輕家庭居住的城市。
+化再利用。 ‧廣設圖書館之親子閱讀區,提升共讀共學風氣。
+空間以友善身障人士。 ‧爭取增加兒童病床床數、專科醫院、兒科夜間急診。
+‧爭取口服輪狀病壽疫苗/自費疫苗補助。
+道之替代道路計劃,舒緩車流。 環境慧更好
+J.桃-北公車路線擴增及站點新增。 ‧加強監督汙水下水道設置之進度、爭取提高補償比率。
+遭停車空間檢討、爭取各區停車格擴增。 熱點常駐車輛噪音監控管制還給市民安靜生活品質。
+UBike站點設置、公車站點之配合。 ‧分區增設寵物公園,增加寵物奔跑綠地。
+黑暗期,替代道路設置的方案。 ‧落實寵物普查、晶睛管理,從源頭控管
+以避免衫物流落街頭。
+‧媒合市府與民間資源,協助新住民
+畫(關懷據點設置/獨居老人定時關心) 降低語言溝通的障礙與文化上的差異性。
+福利。
+輩驗光及老花眼鏡補助。 aa zif!
+輩助聽器補助。 ha。
+年政策
+善用每年2億2千餘萬元預算,落實照顧青年
+:整合青年社團和大專校院學生團隊,對接公部門、企業和傳統產業。','1. 推動綠色捷運一站一特色，G06站美術館、G07站九九經濟大樓、G08站臺灣傳統美食館、G09站步行街、G10站兒童館、G11站國際光雕館、G12站創意商圈，讓桃園經濟起飛
+2. 推動公設安親班
+3. 推動0~3歲公托家園
+4. 爭取老人三節獎金恢復2500元
+5. 爭取環保志工辦理常年訓練經費每人500元
+6. 爭取鄰長報紙免費，另也可轉換看電視
+生活慧更好
+• 優化陳情管道、設立「網路陳情資料庫」。
+• 廣設學童通學步道，維護孩子上下學「行的安全」。
+• 全齡共融公園之設置，打造各年齡層皆合適的使用環境。
+• 國道橋下空間活化再利用。
+• 全面檢討無障礙空間以友善身障人士。
+育兒慧更好
+• 廣設公辦托嬰、臨時托育、定點臨時托育。
+• 爭取托育補助、育兒津貼再加碼，讓桃園成為最適合年輕家庭居住的城市。
+• 廣設圖書館之親子閱讀區，提升共讀共學風氣。
+• 爭取增加兒童病床床數、專科醫院、兒科夜間急診。
+• 爭取口服輪狀病毒疫苗/自費疫苗補助。
+交通慧更好
+• 爭取南桃園交流道之替代道路計劃，舒緩車流。
+• 連結桃-北生活圈、桃-北公車路線擴增及站點新增。
+• 中路/藝文特區周遭停車空間檢討、爭取各區停車格擴增。
+• 捷運站點沿線之UBike站點設置、公車站點之配合。
+• 捷運建置之交通黑暗期，替代道路設置的方案。
+環境慧更好
+• 加強監督汙水下水道設置之進度、爭取提高補償比率。
+• 熱點常駐車輛噪音監控管制，還給市民安靜生活品質。
+• 分區增設寵物公園，增加寵物奔跑綠地。
+• 落實寵物普查、晶片管理，從源頭控管以避免寵物流落街頭。
+• 媒合市府與民間資源，協助新住民降低語言溝通的障礙與文化上的差異性。
+樂齡慧更好
+• 完善社區關懷計畫（關懷據點設置/獨居老人定時關心）
+• 完善敬老愛心卡福利。
+• 爭取65歲以上長輩驗光及老花眼鏡補助。
+• 爭取65歲以上長輩助聽器補助。'),
+('95a3110b-10c4-42e5-980a-30ec46d3528e'::uuid,'4a509962-1bb7-4153-8100-4c912752a1a6'::uuid,'c165c358-db82-4d8f-a0b5-156a2b87da31'::uuid,'cec-platform:2022:votetw-candidate-6b86fe3bf78380ec','FES th. ee pepe mba! 掃描加入
+持續監督道路改善計畫。/ 基隆市公車營運改革/ R86班次補足/ = Line® =
+‧監督暖暖區道路改善計畫,保障行人、 HERE EeASReRneamen TEE TOO?
+機車族路權,串聯人行道,盤點閒置公 ,提高市區公共運輸使用率。 “tug
+有地設置停車空間,回應停車需求。 ‧續推市公車補足86路線班次,增加八培“庫夫8直一
+穩定國道客運車站接駁載客運能 !
+*強力監上市府扛起責任 ,積極慮理,研 [捷運八增站落實公車接駁系統 / Bee et
+議改善班次路線問題,甚至評估其他業 ‧納入通勤族使用經驗,規劃「公車-台
+者進場的方案。 鐵/捷運」轉乘動線及合理票價。 現任王醒之議員辦公室研究員
+了主責民眾法律諮詢400人次
+KEE. JEveL ARES! eget RIB Ft
+解決青年三難題:租屋、長照、幼托 / 暖暖好街區好生態好生活/ 協助新冠肺炎個人紓困補貼168件
+‧提升暖暖區包租代管社宅數量,監督市府”_‧青創基地一起來 !續推過港路及暖經濟部炎業店家紓困補貼50件
+陸續興建社會住宅,小家庭住/租沒問題暖街市有閒置宿舍活化方案,民眾補助金額高達500邁
+‧續推市府成立長照專責單位、補足專業人 [提案來改造。
+力、布建日照中心。 ‧續推暖暖淡蘭古道、暖暖溪散步 2B 我們一起
+38 > | 步》 i SSE PSs 品徑了一
+守護未來醒棵,兒童教育/遊戲權不可少/ Ma DIS fee MEL 3 末了
+‧續推市府重視參與式設計,邀請親子參與 ye ere eae、 yay 5%!
+鄰里空間改造,重視兒童遊戲權 ! esunaiptmaiamian JL PRPRITITE SS!
+‧守護 「教育基金」直接用於教育,提高教。 要這個了! 加 :','持續監督道路改善計畫
+• 監督暖暖區道路改善計畫，保障行人、機車族路權，串聯人行道，盤點閒置公有地設置停車空間，回應停車需求。
+穩定國道客運
+• 強力監督市府扛起責任，積極處理，研議改善班次路線問題，甚至評估其他業者進場的方案。
+基隆市公車營運改革／R86班次補足
+• 續推跨區、醫療公車路線及動態系統檢討，提高市區公共運輸使用率。
+• 續推市公車補足R86路線班次，增加八堵車站接駁載客運能！
+捷運八堵站落實公車接駁系統
+• 納入通勤族使用經驗，規劃「公車－台鐵／捷運」轉乘動線及合理票價。
+解決青年三難題：租屋、長照、幼托
+• 提升暖暖區包租代管社宅數量，監督市府陸續興建社會住宅，小家庭住／租沒問題。
+• 續推市府成立長照專責單位、補足專業人力、布建日照中心。
+守護未來棟樑，兒童教育／遊戲權不可少
+• 續推市府重視參與式設計，邀請親子參與鄰里空間改造，重視兒童遊戲權！
+• 守護「教育基金」直接用於教育，提高教師合格率。
+暖暖好街區 好生態 好生活
+• 青創基地一起來！續推過港路及暖暖街市有閒置宿舍活化方案，民眾提案來改造。
+• 續推暖暖淡蘭古道、暖暖溪散步道，以手作步道串聯暖暖區山徑系統。
+• 持續陪伴社區討論空間規劃、改造方案，告訴市府「我們要這個」！');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 DO $review$
 DECLARE affected_count INTEGER;
 BEGIN
@@ -285,5 +393,16 @@ BEGIN
     IF profile_count<>15 THEN RAISE EXCEPTION 'Expected fifteen normalized profile claims, found %',profile_count; END IF;
 END
 $validate$;
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair') THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair';
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

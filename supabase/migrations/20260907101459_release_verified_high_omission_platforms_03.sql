@@ -1,5 +1,61 @@
 BEGIN;
 
+-- Bridge exact production pre-repair texts to the audited migration baseline.
+-- This stays inside the release transaction: the final repair must succeed.
+CREATE TEMP TABLE release_source_baselines (id uuid PRIMARY KEY, person_id uuid NOT NULL, candidate_id uuid, claim_key text NOT NULL, production_text text NOT NULL, audited_text text NOT NULL) ON COMMIT DROP;
+INSERT INTO release_source_baselines VALUES
+('408da69e-9e37-42e3-892c-ec5498c1517c'::uuid,'1daa1817-3963-41cb-aa6a-e570e0f1d635'::uuid,'78cd5eed-5522-4067-b785-40591540801a'::uuid,'cec-platform:2022:votetw-candidate-41fe147b9017731a','一、主張安全與環境最少破壞下興建外環道改善關西交通問題。
+二、督促縣府加強查緝遏止環境污染事件發生。
+三、爭取關西地區急重症醫療機構。
+四、推銷關西休閒觀光、傳承客家多元文化。
+五、打造創生機會、鼓勵青年返鄉創業。
+六、加強高齡化照顧及社區關懷據點服務。
+七、落實社會福利提高育兒津貼及學齡前教育補助。
+八、爭取監視系統建置釐清交通事故責任、打擊不法。
+九、提倡社區營造及農村再生，打造關西為宜居鄉鎮。
+十、建立與縣府良好溝通機制，監督把關縣府各項施政。','1. 爭取風雨球場建設；讓運動民眾更便利提昇運動人口
+2. 推動寵物友善空間
+3. 公園景點增設洗手台及廁所
+4. 協助爭取自來水資源普及化
+5. 新住民友善就業環境
+6. 捍衛勞工權益
+7. 閒置校園空間轉型活化為銀髮日照中心
+8. 推動新埔產業打造特色鄉鎮
+9. 爭取早期療育服務'),
+('f098cca2-0d71-4b5c-8b8a-a043a9b8fe8f'::uuid,'b423857b-aaf0-4414-99e8-a0071859d18e'::uuid,'28fce42c-139a-42cf-8803-c7b2037297f3'::uuid,'cec-platform:2022:votetw-candidate-9824e22d55d13d81','一、主張安全與環境最少破壞下興建外環道改善關西交通問題。
+二、督促縣府加強查緝遏止環境污染事件發生。
+三、爭取關西地區急重症醫療機構。
+四、推銷關西休閒觀光、傳承客家多元文化。
+五、打造創生機會、鼓勵青年返鄉創業。
+六、加強高齡化照顧及社區關懷據點服務。
+七、落實社會福利提高育兒津貼及學齡前教育補助。
+八、爭取監視系統建置釐清交通事故責任、打擊不法。
+九、提倡社區營造及農村再生，打造關西為宜居鄉鎮。
+十、建立與縣府良好溝通機制，監督把關縣府各項施政。','1. 持續協助改善教育環境。
+2. 協助強化公共運輸貼合民眾需求。
+3. 提高生活環境質感。
+• 運動（提高運動風氣、健全運動環境、舉辦運動活動）。
+• 環境保護。
+• 排解各式糾紛。
+• 舉辦引進藝文運動活動。
+4. 照顧銀髮族生活各面向。
+5. 持續爭取縣府相關資源挹注芎林鄉。
+6. 協助鄉內人民團體爭取資源舉辦公益活動。
+7. 關懷新住民生活各面向。
+8. 協助改善五華工業區環境。
+9. 監督芎林鄉衛生所興建，平衡芎林鄉各村醫療資源。
+10. 協助照顧芎林農業與農民。');
+UPDATE public.person_claims AS c
+SET claim_value=b.audited_text, claim_json=jsonb_set(c.claim_json,'{platformText}',to_jsonb(b.audited_text))
+FROM release_source_baselines b
+WHERE c.id=b.id AND c.person_id=b.person_id
+  AND c.candidate_id IS NOT DISTINCT FROM b.candidate_id
+  AND c.claim_key=b.claim_key AND c.claim_type='platform'
+  AND c.claim_value=b.production_text
+  AND c.claim_json->>'platformText'=b.production_text
+  AND c.claim_json#>>'{contentSplit,reviewStatus}'='needs_review';
+
+
 DO $review$
 DECLARE
     review RECORD;
@@ -79,5 +135,16 @@ BEGIN
     END IF;
 END
 $review$;
+
+
+DO $baseline_completion$ BEGIN
+ IF EXISTS (SELECT 1 FROM release_source_baselines b LEFT JOIN public.person_claims c ON c.id=b.id
+ WHERE c.id IS NULL OR c.person_id IS DISTINCT FROM b.person_id
+ OR c.candidate_id IS DISTINCT FROM b.candidate_id OR c.claim_key IS DISTINCT FROM b.claim_key
+ OR c.claim_json#>>'{contentSplit,reviewStatus}' IS DISTINCT FROM 'reviewed'
+ OR c.claim_json#>>'{platformQualityAudit,classification}' IS DISTINCT FROM 'verified_repair') THEN
+ RAISE EXCEPTION 'Production baseline bridge did not finish an identity-matched verified repair';
+ END IF;
+END $baseline_completion$;
 
 COMMIT;

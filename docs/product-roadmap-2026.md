@@ -1,9 +1,53 @@
 # Public Office Watch — 2026 Product Roadmap
 
-Last updated: 2026-08-12
-Status: Approved planning baseline
+Last updated: 2026-09-08
+Status: Current priorities confirmed by the maintainer; delivery dates remain open.
 
-Current implementation audit and prioritized backlog:
+## Current direction — 2026-09-08
+
+Next, prioritize exploration of a fuller PWA experience and records of activity in public office. These are planning priorities, not completed features or a commitment to fixed delivery dates.
+
+The delivery statuses below reflect the maintainer's 2026-09-08 update. The PWA foundation was also inspected in the repository: `apps/web/public/site.webmanifest`, `apps/web/public/service-worker.js`, and `apps/web/src/main.tsx`. This documentation update does not independently re-audit production coverage.
+
+| Direction | Current status | Next step / dependency |
+|---|---|---|
+| PWA | Manifest, service worker, and offline fallback foundations exist | Prioritize installation, update, and offline-state usability assessment; a fallback page is not offline access to the full dataset |
+| Mobile My elections | Phase 1 completed and live | Continue UX refinements |
+| 2026 candidate registration lifecycle | First stage complete | Add qualification, ballot numbers, and final lists as election authorities publish them |
+| Polling places and precise neighborhood mapping | Main flow complete; 15/22 counties and cities live | Verify sources and cover the remaining 7; keep unsupported mappings unavailable |
+| Cloudflare Web Analytics | Enabled | Accumulate observed traffic and use it to inform UX work; account for sampling and maintainer/test traffic |
+| Search quality / production smoke | Additional hardening complete | Refine search ranking when justified by usage and evidence |
+| Candidate comparison 2.0 | Not started; existing basic comparison remains available | Reconsider later |
+| Changes since the last visit | Not started | Reconsider after candidate lifecycle updates stabilize |
+| Records of activity in public office | Formal PoC not started | Prioritize research and a central/national legislator pilot with source-backed records |
+| Pledge fulfilment evidence timeline | Community participation foundations exist; factual tracking is not implemented | Depends on the office-activity data layer; community votes are not proof of fulfilment |
+| Candidate questionnaires | On hold | No implementation planned now |
+| User-facing AI | Deliberately outside the current plan | Maintain UI/UX-first priorities; Codex-assisted development and review remain separate |
+| Political contributions / company relationships | Ongoing | Long-term, source-backed data coverage |
+| Judicial synchronization / takedown workflow | Existing records and review foundations | Develop dedicated judicial synchronization, update, and takedown handling; retain human review |
+| Local council activity API | Feasibility researched | Revisit after the national legislator pilot |
+
+## Near-term exploration boundaries
+
+### PWA
+
+Improve the experience around the existing foundation. Assess installation, updates, and offline messaging before setting an implementation scope. The current service worker caches a small shell and falls back to an offline notice; do not describe this as full offline election or people data. Any future caching of public records needs a separate design for freshness and stale-data visibility.
+
+### Records of activity in public office
+
+Start by planning a national legislator pilot and identifying reliable activity sources. A formal PoC has not begun. Establish provenance, dates, identity matching, coverage limits, and correction paths before extending to local councils or pledge fulfilment evidence. The feasibility of local council APIs does not mean an integration is complete.
+
+## Continuing commitments
+
+Keep official-source verification, conservative identity matching, private review for sensitive records, bilingual UI, and corrections in scope. Registration comes from election authorities; party announcements and news leads do not establish qualification. A source outage or unparseable neighborhood mapping stays unknown instead of being guessed.
+
+The public summary is maintained in `apps/web/src/pages/AboutPage.tsx` and the Traditional Chinese / English `about.*` entries in `apps/web/src/i18n.tsx`; [README](../README.md) summarizes the same priorities.
+
+## Historical planning baseline — 2026-08-12
+
+The sections below preserve the earlier planning record. Their target dates and statements about implementation or availability describe the August baseline, not current delivery status. The September status table above supersedes that historical delivery list. Historical options are not authorization to introduce new product rules or integrations.
+
+Original implementation inventory:
 [`project-inventory-and-backlog-2026-08-12.md`](./project-inventory-and-backlog-2026-08-12.md)
 
 ## 1. Product objective
@@ -114,7 +158,7 @@ Candidate records should distinguish:
 Do not describe a person as an official candidate before the relevant
 election authority has officially established that status.
 
-## 8. Target release schedule
+## 8. Historical target release schedule (2026-08-12)
 
 - July to mid-August: development and closed testing
 - Around August 20: public beta
@@ -188,7 +232,7 @@ Do not publish individual names, wallet addresses, individual amounts or
 the monetary support associated with a particular political figure or
 improvement suggestion.
 
-## 13. Current priority additions
+## 13. Historical priority additions (2026-08-12)
 
 The 2026-08-12 implementation audit adds these items to the delivery list:
 

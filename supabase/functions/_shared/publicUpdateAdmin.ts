@@ -6,6 +6,12 @@ export type PublicUpdateType = typeof publicUpdateTypes[number];
 export type PublicUpdateEntityType = typeof publicUpdateEntityTypes[number];
 export type PublicUpdateReviewAction = typeof publicUpdateReviewActions[number];
 
+export function normalizeBirthDateDisplay(payload: Record<string, unknown>) {
+  if (typeof payload.yearOnly !== 'boolean' || !Number.isInteger(payload.expectedRevision)
+    || (payload.expectedRevision as number) < 0 || (payload.expectedRevision as number) > 2_147_483_647) return null;
+  return { yearOnly: payload.yearOnly, expectedRevision: payload.expectedRevision as number };
+}
+
 type DraftPayload = {
   updateType: PublicUpdateType;
   title: string;

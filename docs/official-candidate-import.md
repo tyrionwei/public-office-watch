@@ -25,6 +25,15 @@ their filenames, so unchanged pages do not create duplicate files. A source
 adapter should only be added after the CEC publishes an actual candidate-list
 format; the discovery step never guesses candidate records from headlines.
 
+The persisted report separates fresh `sources` and `latestAttempts` from
+`lastSuccessfulSources`. Failed attempts keep the last successful baseline;
+after recovery, additions and removals are compared against that baseline.
+Retained data is never counted as a fresh success. Reports are replaced atomically.
+Existing v1 reports remain readable; an already-lost baseline cannot be recovered
+without a saved successful report. Changing a source URL, or the candidate
+monitor's election year or matching rules, starts a new comparison baseline.
+The referendum monitor follows the same last-success and latest-attempt contract.
+
 ## Input contract
 
 ```json
@@ -80,6 +89,21 @@ in local Supabase:
 npm run import:official-candidates:stage -- --input path/to/snapshot.json
 ```
 
+Staged source records and claims use a SHA-256 content revision under the stable
+candidate external ID. Official name, party, status, ballot-number information,
+race and source changes create a new private review revision. Fetch/publication
+timestamps and local identity suggestions do not create revisions. Each claim
+stores its `baseClaimKey` and `revision`, and retains its corresponding source
+evidence. Prior revisions are preserved, without automatically superseding a
+reviewed decision or publishing the new one.
+
+Restaging uses conflict-ignore inserts, preserving existing review status,
+visibility, person association and reviewer evidence even if another reviewer
+finishes during staging. Identical legacy v1 claims are reused when their source
+and official content match. A changed legacy record produces a new revision.
+`stagedClaims` counts inserted claims; `preservedClaims` counts claims found before
+the insertion (concurrent inserts can make these counts differ from the input).
+
 Review decisions use this shape:
 
 ```json
@@ -89,6 +113,7 @@ Review decisions use this shape:
   "decisions": [
     {
       "candidateExternalId": "cec-2026-candidate-stable-id",
+      "contentRevision": "copy-the-64-character-hash-from-the-current-review-template",
       "personName": "姓名",
       "decision": "use_existing",
       "personId": "existing-person-uuid",
@@ -108,12 +133,25 @@ npm run import:official-candidates:apply-reviewed -- \
   --apply-reviewed path/to/review.json
 ```
 
+Every decision must include the current template's `contentRevision`. Missing or
+stale revisions fail validation before staging or applying. Older review files
+must be regenerated and reviewed against the current content; a stable candidate
+ID alone does not authorize new source content.
+
 Both staging and applying are restricted to local Supabase. Newly created people
 and candidates remain private. If an already-public candidate is confirmed, its
 existing visibility is preserved while official status, source, party, and an
 explicitly supplied ballot number are updated. The database trigger records
 status changes in `candidate_status_history`. A later, separate release migration
 is still required to publish new candidates.
+
+Applying a subset leaves other review decisions intact. Replaying a revision
+already marked `verified`, `rejected` or `archived` skips its writes and reports
+`preservedTerminalClaims`. Correcting a terminal decision requires an explicit
+review workflow; this importer does not reopen it. Applying reviewed people,
+candidates and identity matches still uses separate REST operations rather than
+a single transaction; concurrent apply operations and partial-write recovery
+require separate database integration validation.
 
 For the 2026 local election, reviewed records cannot be applied before candidate
 registration opens on 2026-08-31. Ballot numbers are rejected before the

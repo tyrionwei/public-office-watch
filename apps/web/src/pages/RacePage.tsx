@@ -71,8 +71,8 @@ export function RacePage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [loadAttempt, setLoadAttempt] = useState(0);
-  const [comparisonProfiles, setComparisonProfiles] = useState<PublicPersonProfile[]>([]);
-  const [comparisonLoading, setComparisonLoading] = useState(false);
+  const [comparisonResult, setComparisonResult] = useState<{ key: string; status: 'loading' | 'ready' | 'error'; profiles: PublicPersonProfile[] } | null>(null);
+  const [comparisonAttempt, setComparisonAttempt] = useState(0);
   const [isMobileViewport, setIsMobileViewport] = useState(() => window.matchMedia('(max-width: 767px)').matches);
 
   useEffect(() => {
@@ -141,35 +141,36 @@ export function RacePage() {
     .map((personId) => candidates.find((candidate) => candidate.person_id === personId))
     .filter((candidate): candidate is PublicCandidate => Boolean(candidate));
   const comparisonKey = selectedPersonIds.join(',');
+  const comparisonRequestKey = `${safeRaceId}:${comparisonKey}`;
+  const comparisonMatches = comparisonResult?.key === comparisonRequestKey;
+  const comparisonProfiles = comparisonMatches ? comparisonResult.profiles : [];
+  const comparisonLoading = selectedPersonIds.length >= 2 && (!comparisonMatches || comparisonResult.status === 'loading');
+  const comparisonError = comparisonMatches && comparisonResult.status === 'error';
   const electedCount = candidateGroups.filter((group) => group.isElected).length;
   useEffect(() => {
     let active = true;
     const personIds = comparisonKey ? comparisonKey.split(',') : [];
     if (personIds.length < 2) {
-      setComparisonProfiles([]);
-      setComparisonLoading(false);
+      setComparisonResult(null);
       return () => {
         active = false;
       };
     }
 
-    setComparisonLoading(true);
+    setComparisonResult({ key: comparisonRequestKey, status: 'loading', profiles: [] });
     void publicDataProvider.loadPersonProfiles(personIds)
       .then((profiles) => {
-        if (active) setComparisonProfiles(profiles);
+        if (active) setComparisonResult({ key: comparisonRequestKey, status: 'ready', profiles });
       })
       .catch((error: unknown) => {
-        if (active) setComparisonProfiles([]);
+        if (active) setComparisonResult({ key: comparisonRequestKey, status: 'error', profiles: [] });
         if (import.meta.env.DEV) console.warn('Failed to load candidate comparison profiles', error);
-      })
-      .finally(() => {
-        if (active) setComparisonLoading(false);
       });
 
     return () => {
       active = false;
     };
-  }, [comparisonKey]);
+  }, [comparisonKey, comparisonRequestKey, comparisonAttempt]);
 
   const events = buildElectionEvents(election ? [election] : [], race ? [race] : []);
   const event = getElectionEventForRace(events, race);
@@ -539,6 +540,8 @@ export function RacePage() {
             candidates={selectedCandidates}
             profiles={comparisonProfiles}
             loading={comparisonLoading}
+            error={comparisonError}
+            onRetry={() => setComparisonAttempt(value => value + 1)}
             currentRaceId={race.race_id}
             raceTitle={race.title}
             onRemove={(personId) => updateComparison(personId, false)}

@@ -8,6 +8,7 @@ import {
 } from './import-official-candidate-snapshot.mjs';
 import {
   applyReviewedOfficialCandidates,
+  buildStagingRows,
   stageOfficialCandidateReview,
   validateReviewFile,
 } from './official-candidate-review.mjs';
@@ -140,13 +141,15 @@ async function fetchByValues(config, tableName, select, column, values) {
   return rows;
 }
 
-function reviewTemplate(plan) {
-  return plan.matched.map((item) => {
+function reviewTemplate(plan, snapshot) {
+  const { claims } = buildStagingRows(snapshot, plan);
+  return plan.matched.map((item, index) => {
     const suggestedPersonId = item.candidate?.person_id
       ?? item.person?.id
       ?? (item.identityCandidates.length === 1 ? item.identityCandidates[0].id : null);
     return {
       candidateExternalId: item.record.candidateExternalId,
+      contentRevision: claims[index].claim_json.revision,
       personName: item.record.personName,
       suggestedDecision: suggestedPersonId ? 'use_existing' : item.identityCandidates.length === 0 ? 'create_new' : 'manual_review',
       suggestedPersonId,
@@ -189,7 +192,7 @@ async function main() {
     reviewableCount: plan.matched.length,
     blockingCount: plan.blocking.length,
     blocking: plan.blocking,
-    reviewTemplate: reviewTemplate(plan),
+    reviewTemplate: reviewTemplate(plan, snapshot),
   };
   if (plan.blocking.length > 0) {
     console.log(JSON.stringify(summary, null, 2));

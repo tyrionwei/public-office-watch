@@ -7,7 +7,7 @@ import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { getCountyRegionLabel } from '../lib/countyRegions';
 import { publicDataProvider } from '../lib/publicData';
-import { PUBLIC_PEOPLE_PAGE_SIZE as PAGE_SIZE } from '../lib/publicReadContracts';
+import { PUBLIC_PEOPLE_PAGE_SIZE as PAGE_SIZE, PublicPageOutOfRangeError } from '../lib/publicReadContracts';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { peoplePath, personPath } from '../routes/routePaths';
@@ -82,7 +82,7 @@ function getFilters(searchParams: URLSearchParams): PublicPersonFilters {
 
 function getPage(searchParams: URLSearchParams) {
   const page = Number.parseInt(searchParams.get('page') ?? '1', 10);
-  return Number.isFinite(page) && page > 0 ? page : 1;
+  return Number.isSafeInteger(page) && page > 0 ? page : 1;
 }
 
 function getVisiblePageNumbers(currentPage: number, pageCount: number) {
@@ -197,18 +197,35 @@ export function PeoplePage() {
     setPeoplePage({ items: [], total: 0 });
 
     const requestFilters = { party, query, regionId, role, status };
+    const restoreFirstPage = () => {
+      setSearchParams((currentParams) => {
+        const nextParams = new URLSearchParams(currentParams);
+        nextParams.delete('page');
+        return nextParams;
+      }, { replace: true });
+    };
 
     void refreshConfiguredPublicDataProvider()
       .then(() => regionId ? publicDataProvider.loadRegionDirectory() : undefined)
       .then(() => publicDataProvider.loadPeoplePage(requestFilters, requestedPage, PAGE_SIZE))
       .then((nextPage) => {
         if (active) {
+          if (requestedPage > 1 && nextPage.items.length === 0
+            && Number.isFinite(nextPage.total) && nextPage.total >= 0
+            && (requestedPage - 1) * PAGE_SIZE >= nextPage.total) {
+            restoreFirstPage();
+            return;
+          }
           setPeoplePage(nextPage);
           setLoading(false);
         }
       })
       .catch((error: unknown) => {
         if (active) {
+          if (requestedPage > 1 && error instanceof PublicPageOutOfRangeError) {
+            restoreFirstPage();
+            return;
+          }
           setLoading(false);
           setLoadError(true);
           if (import.meta.env.DEV) {
@@ -220,7 +237,7 @@ export function PeoplePage() {
     return () => {
       active = false;
     };
-  }, [party, query, regionId, role, status, requestedPage, requestVersion]);
+  }, [party, query, regionId, role, status, requestedPage, requestVersion, setSearchParams]);
 
   const people = peoplePage.items;
   const pageCount = Math.max(1, Math.ceil(peoplePage.total / PAGE_SIZE));

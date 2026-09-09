@@ -27,7 +27,8 @@ ON CONFLICT (id) DO UPDATE SET
     position = COALESCE(people.position, EXCLUDED.position),
     source_url = EXCLUDED.source_url,
     is_public = TRUE,
-    updated_at = NOW();
+    updated_at = NOW()
+WHERE people.name = EXCLUDED.name;
 
 INSERT INTO source_people (
     source_person_key, source_type, source_id, source_name, source_url,
@@ -72,6 +73,14 @@ ON CONFLICT (source_person_key) DO UPDATE SET
     ingest_batch_key = EXCLUDED.ingest_batch_key,
     is_public = EXCLUDED.is_public,
     updated_at = NOW();
+
+-- Preserve source snapshots even when a previously reviewed person was never
+-- imported into this database. Only exact UUID/name matches can receive links.
+DELETE FROM _tpp_official_profiles AS profile
+WHERE NOT EXISTS (
+    SELECT 1 FROM people AS person
+    WHERE person.id = profile.person_id AND person.name = profile.name
+);
 
 INSERT INTO person_identity_matches (
     source_person_id, person_id, match_status, score, match_method, match_reason,
@@ -160,7 +169,8 @@ ON CONFLICT (claim_key) DO UPDATE SET
     scoring_version = EXCLUDED.scoring_version,
     scoring_reasons = EXCLUDED.scoring_reasons,
     auto_reviewed_at = EXCLUDED.auto_reviewed_at,
-    updated_at = NOW();
+    updated_at = NOW()
+WHERE person_claims.person_id = EXCLUDED.person_id;
 
 WITH role_rows AS (
     SELECT profile.*, role.*
@@ -232,7 +242,8 @@ ON CONFLICT (affiliation_key) DO UPDATE SET
     source_url = EXCLUDED.source_url,
     source_payload = EXCLUDED.source_payload,
     is_public = EXCLUDED.is_public,
-    updated_at = NOW();
+    updated_at = NOW()
+WHERE person_party_affiliations.person_id = EXCLUDED.person_id;
 
 UPDATE people person
 SET party = '台灣民眾黨', updated_at = NOW()

@@ -1,4 +1,5 @@
 import { getSupabaseChatAdminClient } from './supabasePublicClient.ts';
+import { parsePublicDisplaySettings } from './publicBirthDate.ts';
 
 export type PublicUpdateType = 'candidate' | 'person' | 'party' | 'election' | 'correction' | 'site';
 export type PublicUpdateEntityType = 'person' | 'party' | 'election' | 'race' | 'region';
@@ -109,6 +110,16 @@ export async function signOutPublicUpdateAdmin() {
 
 export function loadPublicUpdateAdminDashboard() {
   return invoke<PublicUpdateAdminDashboard>({ action: 'dashboard' });
+}
+
+export async function loadAdminDisplaySettings() {
+  const result = await invoke<{ settings: unknown }>({ action: 'display-settings' });
+  return parsePublicDisplaySettings(result.settings);
+}
+
+export async function setAdminBirthDateDisplay(yearOnly: boolean, expectedRevision: number) {
+  const result = await invoke<{ settings: unknown }>({ action: 'set-birth-date-display', yearOnly, expectedRevision });
+  return parsePublicDisplaySettings(result.settings);
 }
 
 export async function createPublicUpdateDraft(input: PublicUpdateDraftInput) {

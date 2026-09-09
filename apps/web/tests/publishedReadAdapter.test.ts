@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { PublicPageOutOfRangeError } from '../src/lib/publicReadContracts.ts';
 import {
   ELECTION_EDUCATION_DISTRIBUTION_LIMIT,
   ELECTION_FACET_BATCH_LIMIT,
@@ -48,8 +49,9 @@ const payloadMetadata = {
 
 type FakeResponse = {
   data: unknown[] | null;
-  error: { message: string } | null;
+  error: { message: string; code?: string } | null;
   count: number | null;
+  status?: number;
 };
 
 type RecordedCall = [string, ...unknown[]];
@@ -180,6 +182,37 @@ test('people directory applies published filters without hiding party officers',
     ['eq', 'list_status', 'current'],
   ]);
   assert.equal(fake.calls.some((call) => call[0] === 'eq' && call[1] === 'list_is_party_only'), false);
+});
+
+test('people directory identifies a confirmed out-of-range page without retrying the request', async () => {
+  const fake = createFakeClient({
+    people_directory: {
+      data: null, error: { code: 'PGRST103', message: 'Requested range not satisfiable' },
+      count: null, status: 416,
+    },
+  });
+  await assert.rejects(
+    createPublishedReadAdapter(fake.client).loadPeoplePage({ page: 99 }),
+    PublicPageOutOfRangeError,
+  );
+  assert.equal(fake.calls.filter(([name]) => name === 'range').length, 1);
+});
+
+test('people directory preserves service errors and unconfirmed range failures', async () => {
+  for (const [status, code, page] of [
+    [500, 'XX000', 2], [503, 'PGRST000', 2], [416, 'unexpected', 2],
+    [500, 'PGRST103', 2], [416, 'PGRST103', 1],
+  ] as const) {
+    const fake = createFakeClient({ people_directory: {
+      data: null, error: { code, message: 'upstream failure' }, count: null, status,
+    } });
+    await assert.rejects(createPublishedReadAdapter(fake.client).loadPeoplePage({ page }), (error: unknown) => {
+      assert.ok(error instanceof Error);
+      assert.equal(error instanceof PublicPageOutOfRangeError, false);
+      assert.match(error.message, /Published people directory query failed: upstream failure/);
+      return true;
+    });
+  }
 });
 
 test('candidate status includes current officeholders who are also upcoming candidates', async () => {

@@ -1,3 +1,5 @@
+import { patchExpected } from './party-candidate-review.mjs';
+import { partyCandidateBaseKey, assertPartyCandidateRevision, selectPartyCandidateSources } from './party-candidate-revision.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -32,22 +34,24 @@ function readLocalEnv() {
 function parseArgs(argv) {
   let write = false;
   let party = null;
+  let revisionSelectionPath = null;
   for (let index = 0; index < argv.length; index += 1) {
     if (argv[index] === '--write') {
       write = true;
       continue;
     }
+    if (argv[index] === '--revisions' && argv[index + 1]) { revisionSelectionPath = path.resolve(argv[++index]); continue; }
     if (argv[index] === '--party' && argv[index + 1]) {
       party = argv[index + 1];
       index += 1;
       continue;
     }
-    throw new Error('Usage: node scripts/preview-publish-reviewed-party-candidates.mjs [--write] [--party <name>]');
+    throw new Error('Usage: node scripts/preview-publish-reviewed-party-candidates.mjs [--write] [--party <name>] [--revisions <json-path>]');
   }
   if (party && !partyPublicationExpectations.has(party)) {
     throw new Error(`No reviewed publication expectations are configured for party: ${party}`);
   }
-  return { write, party };
+  return { write, party, revisionSelectionPath };
 }
 
 function objectValue(value) {
@@ -91,10 +95,13 @@ function planReviewedPartyCandidatePublication(dataset, options = {}) {
   const racesById = new Map(dataset.races.map((row) => [row.id, row]));
   const eligible = [];
   const excluded = [];
-  const blocking = [];
+  let selection;
+  try { selection = selectPartyCandidateSources(dataset.sources, options.revisionSelections); }
+  catch (error) { return { eligible, excluded, blocking: [{ errors: [error.message] }] }; }
+  const blocking = [...selection.blocking];
 
-  for (const source of dataset.sources) {
-    const candidate = candidatesByExternalId.get(source.source_person_key);
+  for (const source of selection.selected) {
+    const candidate = candidatesByExternalId.get(partyCandidateBaseKey(source));
     const sourceMatches = matchesBySource.get(source.id) ?? [];
     const sourceClaims = claimsBySource.get(source.id) ?? [];
     const candidacyClaims = sourceClaims.filter((claim) => claim.claim_type === 'candidacy');
@@ -133,6 +140,8 @@ function planReviewedPartyCandidatePublication(dataset, options = {}) {
     }
 
     const errors = [];
+    try { assertPartyCandidateRevision(source, candidacyClaims[0]); } catch (error) { errors.push(error.message); }
+    if (source.source_payload?.requiresManualReview === true && candidacyClaims[0]?.scoring_version !== 'party-candidate-manual-review-v2') errors.push('changed revision has no new manual content review');
     const targetRace = objectValue(objectValue(source.source_payload)?.targetRace);
     const confirmedMatches = sourceMatches.filter((match) => match.match_status === 'auto_matched');
     const claim = candidacyClaims[0];
@@ -184,7 +193,10 @@ function planReviewedPartyCandidatePublication(dataset, options = {}) {
     blocking.push({ errors: [`expected ${expectedExcludedCount} reviewed exclusion, found ${excluded.length}`] });
   }
 
-  return { eligible, excluded, blocking };
+  const chosen = new Map(eligible.map(item => [partyCandidateBaseKey(item.source), item.source.id]));
+  const superseded = dataset.sources.filter(source => chosen.has(partyCandidateBaseKey(source)) && chosen.get(partyCandidateBaseKey(source)) !== source.id)
+    .map(source => ({ source, claims: (claimsBySource.get(source.id) ?? []).filter(claim => claim.claim_type === 'candidacy') }));
+  return { eligible, excluded, blocking, superseded };
 }
 
 function profileItems(sourcePayload, field) {
@@ -199,7 +211,7 @@ function buildProfileClaimRows(plan, publishedAt) {
     if (items.length === 0) return [];
     const claimValue = items.join('；');
     return [{
-      claim_key: `${item.source.source_person_key}:${field}`,
+      claim_key: `${partyCandidateBaseKey(item.source)}:${field}`,
       person_id: item.candidate.person_id,
       source_person_id: item.source.id,
       candidate_id: field === 'platform' ? item.candidate.id : null,
@@ -208,6 +220,7 @@ function buildProfileClaimRows(plan, publishedAt) {
       claim_json: {
         schemaVersion: 1,
         sourcePersonKey: item.source.source_person_key,
+        contentRevision: item.source.source_payload?.revision ?? null,
         sourceCandidateKey: objectValue(item.source.source_payload)?.sourceCandidateKey ?? null,
         field,
         items,
@@ -347,26 +360,39 @@ async function refreshPublicPeopleList(config) {
   return responseJson(response, 'Failed to refresh public people list');
 }
 
+function obsoleteProfileClaims(plan, existingClaims) {
+  const desired = new Set(buildProfileClaimRows(plan, '').map(row => row.claim_key));
+  const candidates = new Map(plan.eligible.flatMap(item => profileFields.map(field => [`${partyCandidateBaseKey(item.source)}:${field}`, item.candidate])));
+  return existingClaims.filter(claim => {
+    const candidate = candidates.get(claim.claim_key);
+    if (!candidate || desired.has(claim.claim_key) || claim.is_public !== true) return false;
+    if (claim.person_id !== candidate.person_id) throw new Error('Prior profile claim belongs to another person');
+    return true;
+  });
+}
+
 async function applyPublication(config, plan, publishedAt) {
+  if (plan.blocking.length) throw new Error('Cannot publish blocked party plan');
   const profileClaims = buildProfileClaimRows(plan, publishedAt);
+  const profileKeys = plan.eligible.flatMap(item => profileFields.map(field => `${partyCandidateBaseKey(item.source)}:${field}`));
+  const previousProfiles = await fetchRowsByValues(config, 'person_claims', '*', 'claim_key', profileKeys);
+  for (const claim of obsoleteProfileClaims(plan, previousProfiles)) {
+    await patchExpected(config, 'person_claims', claim, { is_public: false, visibility: 'review_only', updated_at: publishedAt }, ['review_status', 'person_id', 'claim_json', 'visibility', 'is_public']);
+  }
+  for (const previous of plan.superseded ?? []) {
+    for (const claim of previous.claims) {
+      if (!claim.is_public) continue;
+      await patchExpected(config, 'person_claims', claim, { is_public: false, visibility: 'review_only', updated_at: publishedAt }, ['review_status', 'person_id', 'claim_json', 'visibility', 'is_public']);
+    }
+    if (previous.source.is_public) await patchExpected(config, 'source_people', previous.source, { is_public: false, updated_at: publishedAt }, ['source_payload', 'is_public']);
+  }
   const writtenProfileClaims = await upsertRows(config, 'person_claims', profileClaims, 'claim_key');
-  await patchRowsByIds(config, 'source_people', plan.eligible.map((item) => item.source.id), {
-    is_public: true,
-    updated_at: publishedAt,
-  });
-  await patchRowsByIds(config, 'person_claims', plan.eligible.map((item) => item.claim.id), {
-    visibility: 'public',
-    is_public: true,
-    updated_at: publishedAt,
-  });
-  await patchRowsByIds(config, 'candidates', plan.eligible.map((item) => item.candidate.id), {
-    is_public: true,
-    updated_at: publishedAt,
-  });
-  await patchRowsByIds(config, 'people', plan.eligible.map((item) => item.person.id), {
-    is_public: true,
-    updated_at: publishedAt,
-  });
+  for (const item of plan.eligible) {
+    if (!item.source.is_public) await patchExpected(config, 'source_people', item.source, { is_public: true, updated_at: publishedAt }, ['source_payload', 'is_public']);
+    if (!item.claim.is_public || item.claim.visibility !== 'public') await patchExpected(config, 'person_claims', item.claim, { visibility: 'public', is_public: true, updated_at: publishedAt }, ['review_status', 'person_id', 'claim_json', 'visibility', 'is_public']);
+    if (!item.candidate.is_public) await patchExpected(config, 'candidates', item.candidate, { is_public: true, updated_at: publishedAt }, ['person_id', 'race_id', 'candidacy_status', 'registration_status', 'election_result', 'is_public']);
+  }
+  await patchRowsByIds(config, 'people', plan.eligible.map((item) => item.person.id), { is_public: true, updated_at: publishedAt });
   await refreshPublicPeopleList(config);
   const releaseId = await promotePublishedLayer(config);
   return { releaseId, profileClaimCount: writtenProfileClaims.length };
@@ -376,14 +402,14 @@ async function loadDataset(config) {
   const sources = await fetchRows(
     config,
     'source_people',
-    'id,source_person_key,raw_name,party,is_public,source_payload',
+    'id,source_person_key,raw_name,party,election_year,source_name,source_url,is_public,source_payload,updated_at',
     { source_person_key: 'like.party-candidate:*' },
   );
   const sourceIds = sources.map((row) => row.id);
   const [matches, claims, candidates] = await Promise.all([
     fetchRowsByValues(config, 'person_identity_matches', 'id,source_person_id,person_id,match_status', 'source_person_id', sourceIds),
-    fetchRowsByValues(config, 'person_claims', 'id,source_person_id,person_id,claim_type,review_status,visibility,is_public,source_name,source_url,observed_at', 'source_person_id', sourceIds),
-    fetchRows(config, 'candidates', 'id,external_id,person_id,race_id,party,registration_status,candidacy_status,election_result,is_public', {
+    fetchRowsByValues(config, 'person_claims', 'id,claim_key,claim_json,source_person_id,person_id,claim_type,review_status,visibility,is_public,scoring_version,source_name,source_url,observed_at,updated_at', 'source_person_id', sourceIds),
+    fetchRows(config, 'candidates', 'id,external_id,person_id,race_id,party,registration_status,candidacy_status,election_result,is_public,updated_at', {
       external_id: 'like.party-candidate:*',
     }),
   ]);
@@ -435,6 +461,7 @@ async function main() {
     : { candidates: expectedCandidateCount, excludedSources: expectedExcludedSourceCount };
   const dataset = scopeDatasetToParty(await loadDataset(config), options.party);
   const plan = planReviewedPartyCandidatePublication(dataset, {
+    revisionSelections: options.revisionSelectionPath ? JSON.parse(fs.readFileSync(options.revisionSelectionPath, 'utf8')) : [],
     expectedCount: expectations.candidates,
     expectedExcludedCount: expectations.excludedSources,
   });
@@ -475,6 +502,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 
 export {
   buildProfileClaimRows,
+  obsoleteProfileClaims,
   partyPublicationExpectations,
   planReviewedPartyCandidatePublication,
   scopeDatasetToParty,

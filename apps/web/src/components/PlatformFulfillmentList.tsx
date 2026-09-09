@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useI18n, type TranslationKey } from '../i18n';
 import { platformItemsForClaim } from '../lib/candidatePlatform';
 import { buildPolicyShareUrl, policyShareAnchorId } from '../lib/socialSharing';
@@ -226,6 +226,7 @@ function ResultControls({
   visible,
   hasOwnVote,
   withdrawing,
+  busy,
   votingIsOpen,
   onToggle,
   onWithdraw,
@@ -234,6 +235,7 @@ function ResultControls({
   visible: boolean;
   hasOwnVote: boolean;
   withdrawing: boolean;
+  busy: boolean;
   votingIsOpen: boolean;
   onToggle: () => void;
   onWithdraw: () => void;
@@ -262,7 +264,7 @@ function ResultControls({
       {hasOwnVote ? (
         <button
           type="button"
-          disabled={withdrawing || !votingIsOpen}
+          disabled={busy || !votingIsOpen}
           onClick={onWithdraw}
           className="shrink-0 text-[11px] text-slate-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:cursor-wait disabled:opacity-50"
         >
@@ -298,6 +300,12 @@ type PlatformFulfillmentListProps = {
 };
 
 export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
+  const targetId = 'targetId' in props ? props.targetId : props.claim.claim_id;
+  return <TargetPlatformFulfillmentList key={targetId} {...props} />;
+}
+
+// Loaded results, controls and ongoing operations belong to one target lifetime.
+function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
   const { title, shareContext } = props;
   const targetId = 'targetId' in props ? props.targetId : props.claim.claim_id;
   const staticItems = 'targetId' in props
@@ -307,8 +315,12 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
     ? props.votingBlockedReason
     : undefined;
   const { t, language } = useI18n();
+  const activeRef = useRef(false);
+  const operationInFlightRef = useRef(false);
   const [participation, setParticipation] = useState<PlatformFulfillmentParticipation | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [visibleResultKeys, setVisibleResultKeys] = useState<Set<string>>(() => new Set());
   const [savingVote, setSavingVote] = useState<{
     itemKey: string;
@@ -321,8 +333,15 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
   } | null>(null);
 
   useEffect(() => {
+    activeRef.current = true;
+    return () => { activeRef.current = false; };
+  }, []);
+
+  useEffect(() => {
     let active = true;
     setLoading(true);
+    setParticipation(null);
+    setLoadFailed(false);
     setError(null);
     setVisibleResultKeys(new Set());
     void loadPlatformFulfillment(targetId)
@@ -330,7 +349,9 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
         if (active) setParticipation(result);
       })
       .catch((loadError: unknown) => {
-        if (active && import.meta.env.DEV) {
+        if (!active) return;
+        setLoadFailed(true);
+        if (import.meta.env.DEV) {
           console.warn('Failed to load platform fulfilment voting', loadError);
         }
       })
@@ -340,7 +361,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
     return () => {
       active = false;
     };
-  }, [targetId]);
+  }, [targetId, loadAttempt]);
 
   useEffect(() => {
     if (loading || !window.location.hash) return;
@@ -380,30 +401,38 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
     status: PlatformFulfillmentStatus,
     currentStatus?: PlatformFulfillmentStatus,
   ) {
-    if (!votingIsOpen || status === currentStatus) return;
+    if (!activeRef.current || operationInFlightRef.current || !votingIsOpen || status === currentStatus) return;
+    operationInFlightRef.current = true;
     setSavingVote({ itemKey, status });
     setError(null);
     try {
       await submitPlatformFulfillmentVote(targetId, itemKey, status);
+      if (!activeRef.current) return;
       const refreshed = await loadPlatformFulfillment(targetId);
+      if (!activeRef.current) return;
       setParticipation(refreshed);
     } catch (submitError: unknown) {
+      if (!activeRef.current) return;
       if (import.meta.env.DEV) {
         console.warn('Failed to submit platform fulfilment vote', submitError);
       }
       setError({ itemKey, kind: 'submit' });
     } finally {
-      setSavingVote(null);
+      operationInFlightRef.current = false;
+      if (activeRef.current) setSavingVote(null);
     }
   }
 
   async function handleWithdraw(itemKey: string) {
-    if (!votingIsOpen) return;
+    if (!activeRef.current || operationInFlightRef.current || !votingIsOpen) return;
+    operationInFlightRef.current = true;
     setWithdrawingKey(itemKey);
     setError(null);
     try {
       await withdrawPlatformFulfillmentVote(targetId, itemKey);
+      if (!activeRef.current) return;
       const refreshed = await loadPlatformFulfillment(targetId);
+      if (!activeRef.current) return;
       setParticipation(refreshed);
       setVisibleResultKeys((current) => {
         const next = new Set(current);
@@ -411,12 +440,14 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
         return next;
       });
     } catch (withdrawError: unknown) {
+      if (!activeRef.current) return;
       if (import.meta.env.DEV) {
         console.warn('Failed to withdraw platform fulfilment vote', withdrawError);
       }
       setError({ itemKey, kind: 'withdraw' });
     } finally {
-      setWithdrawingKey(null);
+      operationInFlightRef.current = false;
+      if (activeRef.current) setWithdrawingKey(null);
     }
   }
 
@@ -450,6 +481,14 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
           shareContext={loading ? undefined : shareContext}
         />
         {loading ? <p className="mt-2 text-[10px] text-slate-500">{t('person.fulfillment.loading')}</p> : null}
+        {loadFailed ? (
+          <div className="mt-2 text-xs text-rose-300" role="alert">
+            <p>{t('person.fulfillment.loadError')}</p>
+            <button type="button" onClick={() => setLoadAttempt((attempt) => attempt + 1)} className="mt-2 min-h-11 text-accent underline underline-offset-4">
+              {t('app.retry')}
+            </button>
+          </div>
+        ) : null}
       </>
     );
   }
@@ -561,7 +600,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
                     <VoteButtons
                       selected={ownVote}
                       savingStatus={itemSavingVote}
-                      busy={Boolean(itemSavingVote) || withdrawing}
+                      busy={Boolean(savingVote || withdrawingKey)}
                       enabled={votingIsOpen}
                       onVote={(status) => void handleVote(item.itemKey, status, ownVote)}
                     />
@@ -570,6 +609,7 @@ export function PlatformFulfillmentList(props: PlatformFulfillmentListProps) {
                       visible={Boolean(ownVote) || visibleResultKeys.has(item.itemKey)}
                       hasOwnVote={Boolean(ownVote)}
                       withdrawing={withdrawing}
+                      busy={Boolean(savingVote || withdrawingKey)}
                       votingIsOpen={votingIsOpen}
                       onToggle={() => toggleResult(item.itemKey)}
                       onWithdraw={() => void handleWithdraw(item.itemKey)}

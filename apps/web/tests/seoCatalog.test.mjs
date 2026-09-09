@@ -3,7 +3,56 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { createSeoCatalog, fetchPublishedRows, writeSeoCatalogFiles } from '../scripts/generate-seo-catalog.mjs';
+import { createSeoCatalog, fetchElectionIndex, fetchPublishedRows, writeSeoCatalogFiles } from '../scripts/generate-seo-catalog.mjs';
+import { buildElectionEvents, getElectionEventByKey } from '../src/data/electionEvents.ts';
+
+test('SEO and the UI share event identities when race summaries refine the election family', () => {
+  const cases = [
+    ['by_election', ['legislative_district']], ['by_election', ['county_mayor']],
+    ['presidential', ['president']], ['local', ['village_chief']],
+    ['referendum', ['referendum']], ['recall', ['recall']], ['unknown', []],
+  ];
+  for (const [electionType, raceTypes] of cases) {
+    const elections = [{ election_id: 'fixture', name: 'Fixture election', year: 2026, voting_date: '2026-11-28', election_type: electionType, status: 'upcoming' }];
+    const raceSummaryRows = [{ election_id: 'fixture', race_count: 0, race_types: raceTypes }];
+    const result = createSeoCatalog({ elections, races: [], electionIndex: { electionRows: elections, raceSummaryRows } });
+    const ui = buildElectionEvents(elections, [], raceSummaryRows);
+    const pages = result.pages.filter(page => page.group === 'events');
+    assert.equal(pages.length, ui.length);
+    for (const page of pages) {
+      const event = getElectionEventByKey(ui, decodeURIComponent(page.path.split('/').at(-1)));
+      assert.ok(event, 'Every generated event URL must resolve in the UI');
+      assert.equal(page.title, event.title);
+    }
+  }
+});
+
+test('the election-index reader enforces metadata, summary shape, and overflow sentinels', async () => {
+  const election = { election_id: 'fixture', name: 'Fixture', year: 2026, voting_date: null, election_type: 'by_election' };
+  const payload = { api_version: 1, release_id: null, published_at: null, election_rows: [election], race_summary_rows: [] };
+  const read = candidate => fetchElectionIndex({ supabaseUrl: 'https://fixture.invalid', anonKey: 'fixture-public-key',
+    fetchImpl: async (url, init) => {
+      assert.equal(url.pathname, '/rest/v1/rpc/election_index_page');
+      assert.equal(init.headers['content-profile'], 'published');
+      assert.equal(init.body, '{}');
+      return Response.json([{ payload: candidate }]);
+    } });
+  assert.deepEqual(await read(payload), { electionRows: [election], raceSummaryRows: [] });
+  for (const patch of [
+    { api_version: 2 }, { release_id: undefined }, { published_at: undefined },
+    { election_rows: Array.from({ length: 501 }, () => election) },
+    { race_summary_rows: Array.from({ length: 501 }, () => ({})) },
+    { race_summary_rows: undefined }, { race_summary_rows: [{ election_id: 'fixture', race_count: 1, race_types: null }] },
+    { race_summary_rows: [{ election_id: 'different-election', race_count: 1, race_types: ['county_mayor'] }] },
+  ]) await assert.rejects(read({ ...payload, ...patch }));
+});
+
+test('inconsistent election snapshots and missing race summaries stop catalog generation', () => {
+  const election = { election_id: 'fixture', name: 'Fixture', year: 2026, voting_date: null, election_type: 'by_election' };
+  assert.throws(() => createSeoCatalog({ elections: [election], electionIndex: { electionRows: [{ ...election, year: 2025 }], raceSummaryRows: [] } }), /snapshots disagree/);
+  assert.throws(() => createSeoCatalog({ elections: [election], races: [{ race_id: 'fixture-race', title: 'Fixture race' }],
+    electionIndex: { electionRows: [election], raceSummaryRows: [] } }), /race summaries are incomplete/);
+});
 
 test('creates deduplicated public entity metadata from published rows', () => {
   const catalog = createSeoCatalog({

@@ -1,8 +1,30 @@
 # 2026 政黨候選人資料匯入準備
 
-檢查日期：2026-07-30
+流程規則更新：2026-09-09。下列各批筆數與發布情況為各節所標日期的歷史紀錄，不能代替當前環境查核。
 
 本階段允許寫入本機待審核及預覽發布層；未經人工決定不建立候選關係，也不寫入正式 Supabase。
+
+## 來源版本與重跑規則
+
+- 新 staging 使用 `schemaVersion: 2` 與內容 SHA-256；來源及 candidacy claim 的 key 加上 `:revision:<hash>`。姓名、來源、年份、選區、學經歷、政見等改變會建立新的私人待審版本；抓取時間與身分建議排序不影響內容版本。
+- 同內容 staging 僅新增缺少的列，不覆寫既有來源、審核終態或身分決定。舊格式只有來源與 claim 原文一致且內容相同時才沿用；不一致時保留舊資料並另建待審版本。
+- 人物與 candidate external ID 沿用原始 `sourceCandidateKey`。新的來源版本不代表另一個人物或另一筆候選關係；既有候選的不同人物、選區或正式狀態必須另行審核，不能由匯入重跑覆蓋。
+- dry-run 的 `reviewTemplate` 包含全部待處理項目的 `contentRevision`。審核者核對當次來源後填寫決定；`--apply-reviewed` 重新驗證版本。不能把新 hash 補到舊審核檔，假裝舊決定已審過新內容。
+- 曾有其他來源版本的變更需要新的人工審核。舊 `rejected`／`archived` claim、被拒絕的身分配對及人工保留狀態不由自動配對覆寫。已完成且一致的候選保持其公開與登記狀態。
+- 自動配對逐筆返回 `completed`／`unchanged`／`conflict`／`incomplete` 與實際計數。來源、身分與 claim 會重讀，必要更新加上前態條件；回應遺失或部分完成後，先重新 dry-run，再依真實狀態續跑。這是可恢復的多步寫入，不是跨表全批回滾。
+
+同一候選有多個來源版本時，本機發布預覽、release migration builder 與來源新鮮度比較必須傳入 `--revisions <json-path>`。內容是選定版本的陣列：
+
+```json
+[
+  {
+    "sourcePersonKey": "party-candidate:source-key:revision:replace-with-current-content-hash",
+    "contentRevision": "replace-with-current-content-hash"
+  }
+]
+```
+
+此選擇可由人工套用結果的 `revisionSelections` 取得；staging 輸出的同名欄位僅識別版本，不代表已通過審核。未指定、重複指定、hash 不符或選到未核准版本時阻擋，不以更新時間猜最新版本，也不放寬既有批次筆數門檻。release SQL 另帶入被取代來源的退休清單，驗證原文未變後只調整公開標記，不把歷史版本混入固定候選筆數。公開的學歷／經歷／政見 claim key 保持原候選 key；本機選定新版本後，退休被取代版本的公開標記及新版已清空的舊欄位，保留來源原文與審核歷史。發布流程仍須完成全部寫入與驗證才可視為成功。
 
 ## 現有基礎
 
@@ -350,7 +372,7 @@ node scripts/import-party-candidate-snapshot.mjs \
   --stage
 ```
 
-逐筆完成 `docs/party-candidate-review.example.json` 格式的審核檔後：
+先執行相同 input 的 dry-run，將完整 `reviewTemplate` 存成審核檔，再逐筆填寫決定；`docs/party-candidate-review.example.json` 僅示意欄位，不可直接套用：
 
 ```bash
 node scripts/import-party-candidate-snapshot.mjs \

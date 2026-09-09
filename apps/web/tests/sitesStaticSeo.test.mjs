@@ -90,7 +90,7 @@ test('document responses allow same-origin geolocation with matching static poli
       headers: { accept: 'text/html' },
     }), {
       ASSETS: {
-        fetch: async () => new Response(method === 'HEAD' ? null : baseHtml, {
+        fetch: async () => new Response(baseHtml, {
           headers: { 'content-type': 'text/html; charset=utf-8' },
         }),
       },
@@ -204,7 +204,7 @@ test('returns real document statuses for known, missing entity, and unknown rout
   assert.equal(documentResponseStatus('/people/missing', catalog), 404);
   assert.equal(documentResponseStatus('/elections/events/missing', catalog), 404);
   assert.equal(documentResponseStatus('/missing', catalog), 404);
-  assert.equal(documentResponseStatus('/people/missing'), 200);
+  assert.equal(documentResponseStatus('/people/missing'), 503);
 });
 
 test('forces private cache and crawler headers on internal routes', () => {
@@ -266,7 +266,7 @@ test('publishes sitemap groups from a split catalog manifest', () => {
 });
 
 test('serves metadata endpoint HEAD requests with the same content types as GET', async () => {
-  const env = { ASSETS: { fetch: async () => new Response('Not expected') } };
+  const { env } = assetFixture();
   const cases = [
     ['/robots.txt', 'text/plain; charset=utf-8'],
     ['/sitemap.xml', 'application/xml; charset=utf-8'],
@@ -279,4 +279,119 @@ test('serves metadata endpoint HEAD requests with the same content types as GET'
     assert.equal(response.headers.get('content-type'), contentType);
     assert.equal(await response.text(), '');
   }
+});
+
+function assetFixture() {
+  const groups = ['people', 'parties', 'regions', 'elections', 'events', 'races'];
+  const state = {
+    calls: [], failures: new Set(), overrides: new Map(), rootStatus: 200,
+    manifest: { version: 3, groups: Object.fromEntries(groups.map(group => [group, { paths: [`/seo-catalog/${group}.json`] }])) },
+  };
+  const env = { ASSETS: { fetch: async request => {
+    const path = new URL(request.url).pathname;
+    state.calls.push({ path, method: request.method, headers: Object.fromEntries(request.headers) });
+    if (state.failures.has(path)) return new Response('Controlled unavailable', { status: 503 });
+    if (state.overrides.has(path)) return new Response(state.overrides.get(path), { headers: { 'content-type': 'application/json' } });
+    if (path === '/seo-catalog.json') return Response.json(state.manifest);
+    if (path.startsWith('/seo-catalog/')) return Response.json({ version: 1, pages: catalog.pages.filter(page => path === `/seo-catalog/${page.group}.json`) });
+    return new Response([204, 304].includes(state.rootStatus) ? null : baseHtml, {
+      status: state.rootStatus, headers: { 'content-type': 'text/html', etag: 'root-only', 'content-length': '123', 'last-modified': 'Wed, 09 Sep 2026 00:00:00 GMT' },
+    });
+  } } };
+  return { env, state };
+}
+const documentRequest = (path, method = 'GET', headers = {}) => new Request('https://pow4vote.org' + path, { method, headers: { accept: 'text/html', ...headers } });
+
+test('document GET and HEAD use unconditional root GET and remove transformed validators', async () => {
+  const { env, state } = assetFixture();
+  const headers = { 'if-none-match': 'root-only', 'if-modified-since': 'Wed, 09 Sep 2026 00:00:00 GMT', range: 'bytes=0-10' };
+  const get = await worker.fetch(documentRequest('/people/person-1', 'GET', headers), env);
+  const head = await worker.fetch(documentRequest('/people/person-1', 'HEAD', headers), env);
+  assert.equal(get.status, 200); assert.equal(head.status, 200);
+  assert.match(await get.text(), /王小明/); assert.equal(await head.text(), '');
+  assert.deepEqual([...get.headers], [...head.headers]);
+  for (const name of ['etag', 'last-modified', 'content-length']) assert.equal(get.headers.get(name), null);
+  for (const call of state.calls.filter(call => call.path === '/')) {
+    assert.equal(call.method, 'GET');
+    assert.equal(call.headers['if-none-match'], undefined);
+    assert.equal(call.headers['if-modified-since'], undefined);
+    assert.equal(call.headers.range, undefined);
+  }
+});
+
+for (const status of [204, 304, 404, 503]) {
+  test(`root asset ${status} never becomes a successful empty document`, async () => {
+    const { env, state } = assetFixture(); state.rootStatus = status;
+    for (const method of ['GET', 'HEAD']) {
+      const response = await worker.fetch(documentRequest('/about', method), env);
+      assert.equal(response.status, status === 204 || status === 304 ? 503 : status);
+      assert.equal(response.headers.get('cache-control'), 'no-store');
+      if (method === 'HEAD') assert.equal(await response.text(), '');
+    }
+  });
+}
+
+for (const failingPath of ['/seo-catalog.json', '/seo-catalog/people.json']) {
+  test(`${failingPath} failure retries after cooldown in the same isolate`, async t => {
+    let now = 1000; t.mock.method(Date, 'now', () => now);
+    const { env, state } = assetFixture(); state.failures.add(failingPath);
+    let response = await worker.fetch(documentRequest('/people/person-1'), env);
+    assert.equal(response.status, 503); assert.equal(response.headers.get('cache-control'), 'no-store');
+    state.failures.clear();
+    response = await worker.fetch(documentRequest('/people/person-1'), env);
+    assert.equal(response.status, 503);
+    assert.equal(state.calls.filter(call => call.path === failingPath).length, 1);
+    now += 1001;
+    response = await worker.fetch(documentRequest('/people/person-1'), env);
+    assert.equal(response.status, 200); assert.match(await response.text(), /王小明/);
+    await worker.fetch(documentRequest('/people/person-1'), env);
+    assert.equal(state.calls.filter(call => call.path === failingPath).length, 2);
+  });
+}
+
+test('a valid empty catalog is an authoritative missing entity for both GET and HEAD', async () => {
+  const { env, state } = assetFixture();
+  state.overrides.set('/seo-catalog/people.json', JSON.stringify({ version: 1, pages: [] }));
+  for (const method of ['GET', 'HEAD']) {
+    const response = await worker.fetch(documentRequest('/people/missing', method), env);
+    assert.equal(response.status, 404);
+    if (method === 'GET') assert.match(await response.text(), /noindex,nofollow/);
+    else assert.equal(await response.text(), '');
+  }
+});
+
+test('invalid JSON, invalid page shape, or missing required group is unavailable, not missing', async () => {
+  for (const invalid of ['not-json', JSON.stringify({ version: 1, pages: [{}] }), JSON.stringify({ version: 9, pages: [] })]) {
+    const { env, state } = assetFixture(); state.overrides.set('/seo-catalog/people.json', invalid);
+    const response = await worker.fetch(documentRequest('/people/missing'), env);
+    assert.equal(response.status, 503);
+  }
+  const { env, state } = assetFixture(); delete state.manifest.groups.people;
+  assert.equal((await worker.fetch(documentRequest('/people/missing'), env)).status, 503);
+});
+
+test('unavailable dynamic sitemaps and previews do not return partial successful content', async () => {
+  const { env, state } = assetFixture();
+  state.manifest.groups.people.paths.push('/seo-catalog/people-extra.json');
+  state.failures.add('/seo-catalog/people-extra.json');
+  state.failures.add('/seo-catalog/races.json');
+  for (const method of ['GET', 'HEAD']) {
+    assert.equal((await worker.fetch(new Request('https://pow4vote.org/sitemaps/people.xml', { method }), env)).status, 503);
+    assert.equal((await worker.fetch(new Request('https://pow4vote.org/og/share.png?path=%2Felections%2Fraces%2Frace-1&compare=person-1,person-2', { method }), env)).status, 503);
+    assert.equal((await worker.fetch(new Request('https://pow4vote.org/sitemaps/static.xml', { method }), env)).status, 200);
+  }
+});
+
+test('successful catalogs are isolated by asset binding', async () => {
+  const first = assetFixture(), second = assetFixture();
+  second.state.overrides.set('/seo-catalog/people.json', JSON.stringify({ version: 1, pages: [] }));
+  assert.equal((await worker.fetch(documentRequest('/people/person-1'), first.env)).status, 200);
+  assert.equal((await worker.fetch(documentRequest('/people/person-1'), second.env)).status, 404);
+});
+
+test('a shared shard path across groups cannot turn unavailable data into a cached missing entity', async () => {
+  const { env, state } = assetFixture();
+  state.manifest.groups.races.paths = state.manifest.groups.people.paths;
+  assert.equal((await worker.fetch(documentRequest('/people/person-1'), env)).status, 503);
+  assert.equal((await worker.fetch(documentRequest('/elections/races/missing'), env)).status, 503);
 });

@@ -2,7 +2,9 @@ import type { PublicElection, PublicElectionRaceSummary, PublicRace } from '../t
 import { compareElectionRegionLabels, compareRacesForDisplay, getElectionCountyCityName, getRaceCategory, getRaceCategoryByType, groupRacesByCategory } from './electionLabels.ts';
 import type { RaceCategoryKey } from './electionLabels.ts';
 
-export type ElectionEventFamily = 'national' | 'local' | 'referendum' | 'recall' | 'by_election' | 'other';
+import { electionEventIdentity, initialElectionEventKey, type ElectionEventFamily } from './electionEventIdentity.mjs';
+export { buildElectionEventKey, getDisplayElectionYear } from './electionEventIdentity.mjs';
+export type { ElectionEventFamily } from './electionEventIdentity.mjs';
 
 export type ElectionEventRegion = {
   key: string;
@@ -30,19 +32,6 @@ export type ElectionEvent = {
 
 const statusOrder: PublicElection['status'][] = ['active', 'upcoming', 'announced', 'draft', 'completed', 'cancelled', 'unknown'];
 const firstNineInOneElectionYear = 2014;
-const localRaceTypes = new Set<PublicRace['race_type']>([
-  'municipality_mayor',
-  'county_mayor',
-  'local_chief',
-  'city_councilor',
-  'county_councilor',
-  'councilor_district',
-  'township_mayor',
-  'township_representative',
-  'township_representative_district',
-  'village_chief',
-]);
-const nationalRaceTypes = new Set<PublicRace['race_type']>(['president', 'vice_president', 'legislator', 'legislative_district', 'party_list_legislator', 'indigenous']);
 
 function uniqueValues(values: Array<string | null | undefined>) {
   return Array.from(new Set(values.filter((value): value is string => Boolean(value))));
@@ -53,55 +42,6 @@ function summarizeLabels(labels: string[], emptyLabel: string, maxVisible = 4) {
   return labels.slice(0, maxVisible).join('、') + (labels.length > maxVisible ? ` 等 ${labels.length} 項` : '');
 }
 
-export function getDisplayElectionYear(election: PublicElection) {
-  if (election.voting_date) {
-    const year = Number.parseInt(election.voting_date.slice(0, 4), 10);
-    if (Number.isFinite(year)) return year;
-  }
-
-  return election.year;
-}
-
-function getEventFamily(elections: PublicElection[], raceTypes: PublicRace['race_type'][]): ElectionEventFamily {
-  if (raceTypes.some((raceType) => nationalRaceTypes.has(raceType)) || elections.some((election) => election.election_type === 'presidential' || election.election_type === 'president' || election.election_type === 'legislative' || election.election_type === 'legislator')) {
-    return 'national';
-  }
-
-  if (raceTypes.some((raceType) => localRaceTypes.has(raceType)) || elections.some((election) => ['local', 'local_chief', 'councilor', 'township_representative', 'village_chief'].includes(election.election_type))) {
-    return 'local';
-  }
-
-  if (raceTypes.includes('referendum') || elections.some((election) => election.election_type === 'referendum')) {
-    return 'referendum';
-  }
-
-  if (raceTypes.includes('recall') || elections.some((election) => election.election_type === 'recall')) {
-    return 'recall';
-  }
-
-  if (elections.some((election) => election.election_type === 'by_election')) {
-    return 'by_election';
-  }
-
-  return 'other';
-}
-
-function getInitialFamily(election: PublicElection) {
-  if (['presidential', 'president', 'legislative', 'legislator'].includes(election.election_type)) return 'national';
-  if (['local', 'local_chief', 'councilor', 'township_representative', 'village_chief'].includes(election.election_type)) return 'local';
-  if (election.election_type === 'referendum') return 'referendum';
-  if (election.election_type === 'recall') return 'recall';
-  if (election.election_type === 'by_election') return 'by_election';
-  return 'other';
-}
-
-function getLegacyLocalEventKind(election: PublicElection) {
-  if (election.election_type === 'councilor') return 'councilor';
-  if (election.election_type === 'township_representative') return 'township-representative';
-  if (election.election_type === 'village_chief') return 'village-chief';
-  if (['local', 'local_chief'].includes(election.election_type)) return null;
-  return election.election_type;
-}
 
 function buildEventTitle(year: number | null, family: ElectionEventFamily, elections: PublicElection[], raceTypes: PublicRace['race_type'][]) {
   const yearLabel = year ? `${year}` : '未定年份';
@@ -177,21 +117,16 @@ function finalizeEvent(elections: PublicElection[], allRaces: PublicRace[], allS
     ...races.map((race) => race.race_type),
     ...summaries.flatMap((summary) => summary.race_types),
   ]));
-  const family = getEventFamily(elections, raceTypes);
-  const year = elections.map(getDisplayElectionYear).find((value): value is number => value !== null) ?? null;
-  const votingDate = elections.map((election) => election.voting_date).find((value): value is string => Boolean(value)) ?? null;
+  const { family, year, votingDate, key } = electionEventIdentity(elections, raceTypes);
   const categoryGroups = groupRacesByCategory(races);
   const summaryCategories = Array.from(new Map(raceTypes.map((raceType) => {
     const category = getRaceCategoryByType(raceType);
     return [category.key, category] as const;
   })).values()).sort((left, right) => left.order - right.order);
   const regionGroups = groupRacesByRegion(races);
-  const legacyLocalKind = family === 'local' && year !== null && year < firstNineInOneElectionYear
-    ? getLegacyLocalEventKind(elections[0])
-    : null;
 
   return {
-    key: buildElectionEventKey(year, votingDate, family, legacyLocalKind),
+    key,
     title: buildEventTitle(year, family, elections, raceTypes),
     year,
     votingDate,
@@ -209,21 +144,11 @@ function finalizeEvent(elections: PublicElection[], allRaces: PublicRace[], allS
   };
 }
 
-export function buildElectionEventKey(year: number | null, votingDate: string | null, family: ElectionEventFamily, discriminator: string | null = null) {
-  const baseKey = `${year ?? 'unknown'}-${votingDate ?? 'undated'}-${family}`;
-  return discriminator ? `${baseKey}-${discriminator}` : baseKey;
-}
-
 export function buildElectionEvents(elections: PublicElection[], races: PublicRace[], raceSummaries: PublicElectionRaceSummary[] = []) {
   const groups = new Map<string, PublicElection[]>();
 
   for (const election of elections) {
-    const year = getDisplayElectionYear(election);
-    const family = getInitialFamily(election);
-    const legacyLocalKind = family === 'local' && year !== null && year < firstNineInOneElectionYear
-      ? getLegacyLocalEventKind(election)
-      : null;
-    const key = buildElectionEventKey(year, election.voting_date, family, legacyLocalKind);
+    const key = initialElectionEventKey(election);
     const group = groups.get(key) ?? [];
     group.push(election);
     groups.set(key, group);

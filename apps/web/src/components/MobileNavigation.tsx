@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import {
@@ -39,18 +39,34 @@ export function MobileNavigation({ panel, setPanel, onOpenVotingRegion }: Mobile
   const { pathname } = useLocation();
   const { t } = useI18n();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const restoreFocusRef = useRef(false);
+  const dismissPanel = useCallback(() => {
+    restoreFocusRef.current = true;
+    setPanel(null);
+  }, [setPanel]);
+  const openPanel = (nextPanel: MobilePanel, trigger: HTMLButtonElement) => {
+    restoreFocusRef.current = false;
+    triggerRef.current = trigger;
+    setPanel(nextPanel);
+  };
   const exploreActive = pathname.startsWith('/people')
     || pathname.startsWith('/elections')
     || pathname.startsWith('/parties')
     || pathname.startsWith('/regions');
 
   useEffect(() => {
+    if (!panel && restoreFocusRef.current) {
+      restoreFocusRef.current = false;
+      const trigger = triggerRef.current;
+      if (trigger?.isConnected && trigger.getClientRects().length > 0) trigger.focus({ preventScroll: true });
+    }
     if (!panel) return undefined;
     const mobileViewport = window.matchMedia('(max-width: 767px)');
     const previousOverflow = document.body.style.overflow;
     if (mobileViewport.matches) document.body.style.overflow = 'hidden';
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setPanel(null);
+      if (event.key === 'Escape') dismissPanel();
     };
     const handleViewportChange = (event: MediaQueryListEvent) => {
       if (!event.matches) setPanel(null);
@@ -63,7 +79,7 @@ export function MobileNavigation({ panel, setPanel, onOpenVotingRegion }: Mobile
       window.removeEventListener('keydown', handleKeyDown);
       mobileViewport.removeEventListener('change', handleViewportChange);
     };
-  }, [panel, setPanel]);
+  }, [panel, setPanel, dismissPanel]);
 
   const itemClass = (active: boolean) => [
     'flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-center transition focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent/40',
@@ -90,11 +106,11 @@ export function MobileNavigation({ panel, setPanel, onOpenVotingRegion }: Mobile
             </>
           )}
         </NavLink>
-        <button type="button" onClick={() => setPanel('explore')} className={itemClass(exploreActive || panel === 'explore')}>
+        <button type="button" onClick={event => openPanel('explore', event.currentTarget)} className={itemClass(exploreActive || panel === 'explore')}>
           <span aria-hidden="true" className={exploreActive || panel === 'explore' ? 'text-signal' : 'text-slate-500'}>◇</span>
           <span className="text-[10px] leading-tight">{t('nav.mobileExplore')}</span>
         </button>
-        <button type="button" onClick={() => setPanel('search')} className={itemClass(panel === 'search')}>
+        <button type="button" onClick={event => openPanel('search', event.currentTarget)} className={itemClass(panel === 'search')}>
           <span aria-hidden="true" className={panel === 'search' ? 'text-signal' : 'text-slate-500'}>⌕</span>
           <span className="text-[10px] leading-tight">{t('common.search')}</span>
         </button>
@@ -102,7 +118,7 @@ export function MobileNavigation({ panel, setPanel, onOpenVotingRegion }: Mobile
           <span aria-hidden="true" className="text-slate-500">▤</span>
           <span className="text-[10px] leading-tight">{t('nav.mobileDiscussion')}</span>
         </button>
-        <button type="button" onClick={() => setPanel('more')} className={itemClass(panel === 'more')}>
+        <button type="button" onClick={event => openPanel('more', event.currentTarget)} className={itemClass(panel === 'more')}>
           <span aria-hidden="true" className={panel === 'more' ? 'text-signal' : 'text-slate-500'}>•••</span>
           <span className="text-[10px] leading-tight">{t('nav.mobileMore')}</span>
         </button>
@@ -113,7 +129,7 @@ export function MobileNavigation({ panel, setPanel, onOpenVotingRegion }: Mobile
           <button
             type="button"
             aria-label={t('nav.mobileClose')}
-            onClick={() => setPanel(null)}
+            onClick={dismissPanel}
             className="absolute inset-0 bg-black/70"
           />
           <section
@@ -131,7 +147,7 @@ export function MobileNavigation({ panel, setPanel, onOpenVotingRegion }: Mobile
               <button
                 ref={closeButtonRef}
                 type="button"
-                onClick={() => setPanel(null)}
+                onClick={dismissPanel}
                 aria-label={t('nav.mobileClose')}
                 className="grid h-11 w-11 place-items-center border border-line text-xl text-slate-300 focus:outline-none focus:ring-2 focus:ring-accent/40"
               >

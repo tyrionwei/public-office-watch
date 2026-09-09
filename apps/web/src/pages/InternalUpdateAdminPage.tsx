@@ -2,6 +2,7 @@ import { type FormEvent, useEffect, useMemo, useState } from 'react';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
+import { BirthDateDisplayAdmin } from '../components/BirthDateDisplayAdmin';
 import {
   createPublicUpdateDraft,
   loadPublicUpdateAdminDashboard,
@@ -184,6 +185,7 @@ export function InternalUpdateAdminPage() {
     <AppShell><div className="space-y-4">
       <PixelFrame title="Update Administration"><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-xs uppercase tracking-[0.2em] text-accent">draft → review → publish</p><h1 className="mt-2 font-display text-3xl text-white">公開更新動態管理</h1><p className="mt-2 text-sm text-slate-400">{dashboard.adminEmail ?? '已驗證管理員'}・自動監控資料不會在此自動公開</p></div><div className="flex gap-2"><button type="button" onClick={() => void refreshDashboard()} className="border border-line px-3 py-2 text-sm text-slate-300 hover:text-white">重新整理</button><button type="button" onClick={() => void handleSignOut()} className="border border-line px-3 py-2 text-sm text-slate-400 hover:text-white">登出</button></div></div></PixelFrame>
       {error ? <p role="alert" className="border-l-2 border-rose-400 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">{error}</p> : null}
+      <BirthDateDisplayAdmin />
       <SectionPanel title="建立內部草稿" eyebrow="not public until approved">
         <form className="grid gap-4 lg:grid-cols-2" onSubmit={handleCreateDraft}>
           <label className="text-xs text-slate-400">類型<select value={draft.updateType} onChange={(event) => setDraft((current) => ({ ...current, updateType: event.target.value as PublicUpdateType }))} className="mt-2 w-full border border-line bg-bg px-3 py-2 text-sm text-white">{publicUpdateTypeOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>

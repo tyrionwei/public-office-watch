@@ -86,10 +86,14 @@ export function ElectionEventPage() {
   const { language, t } = useI18n();
   const { eventKey } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [event, setEvent] = useState<ElectionEvent | null>(null);
+  const [eventResult, setEventResult] = useState<{ key: string | undefined; event: ElectionEvent | null } | null>(null);
+  const event = eventResult?.key === eventKey ? eventResult?.event ?? null : null;
   const [facets, setFacets] = useState<PublicElectionRaceFacet[]>([]);
   const [racePage, setRacePage] = useState<PublicRaceListPage>({ items: [], total: 0 });
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const eventPending = loading || eventResult?.key !== eventKey;
   const [educationDistribution, setEducationDistribution] = useState<PublicElectionEducationDistribution[]>([]);
   const [educationDistributionLoading, setEducationDistributionLoading] = useState(false);
   const [racesLoading, setRacesLoading] = useState(false);
@@ -103,7 +107,8 @@ export function ElectionEventPage() {
   useEffect(() => {
     let active = true;
     setLoading(true);
-    setEvent(null);
+    setLoadError(false);
+    setEventResult(null);
     setFacets([]);
     setRacePage({ items: [], total: 0 });
 
@@ -122,12 +127,16 @@ export function ElectionEventPage() {
         return { event: eventSummary, facets: nextFacets };
       })
       .then((result) => {
-        if (active && result) {
-          setEvent(result.event);
-          setFacets(result.facets);
+        if (active) {
+          setEventResult({ key: eventKey, event: result?.event ?? null });
+          if (result) setFacets(result.facets);
         }
       })
       .catch((error: unknown) => {
+        if (active) {
+          setLoadError(true);
+          setEventResult({ key: eventKey, event: null });
+        }
         if (import.meta.env.DEV) console.warn('Failed to load election event', error);
       })
       .finally(() => {
@@ -137,7 +146,7 @@ export function ElectionEventPage() {
     return () => {
       active = false;
     };
-  }, [eventKey]);
+  }, [eventKey, loadAttempt]);
 
   const selectedCategoryParam = searchParams.get('category') ?? '';
   const categoryOptions = buildCategoryOptions(facets, t);
@@ -261,8 +270,9 @@ export function ElectionEventPage() {
   if (!event) {
     return (
       <AppShell>
-        <PixelFrame title={loading ? t('event.loadingTitle') : t('event.notFoundTitle')} action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('event.backYears')}</Link>}>
-          <p className="text-sm text-slate-300">{loading ? t('event.loadingBody') : t('event.notFoundBody')}</p>
+        <PixelFrame title={eventPending ? t('event.loadingTitle') : loadError ? t('event.loadErrorTitle') : t('event.notFoundTitle')} action={<Link to={electionsPath()} className="text-[11px] uppercase tracking-[0.22em] text-accent">{t('event.backYears')}</Link>}>
+          <p role={!eventPending && loadError ? 'alert' : undefined} className="text-sm text-slate-300">{eventPending ? t('event.loadingBody') : loadError ? t('app.loadError') : t('event.notFoundBody')}</p>
+          {!eventPending && loadError ? <button type="button" className="mt-3 border border-accent px-3 py-2 text-accent" onClick={() => setLoadAttempt(value => value + 1)}>{t('app.retry')}</button> : null}
         </PixelFrame>
       </AppShell>
     );

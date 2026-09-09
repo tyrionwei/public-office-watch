@@ -3,6 +3,7 @@ import path from 'node:path';
 import type { Plugin } from 'vite';
 
 import { handleParticipationRequest } from '../worker/participation.ts';
+import { checkParticipationLength, ParticipationBodyError, participationBodyLimit } from '../worker/participationBody.ts';
 
 type EnvMap = Record<string, string>;
 type DevRequest = {
@@ -10,7 +11,7 @@ type DevRequest = {
   url?: string;
   headers: Record<string, string | string[] | undefined>;
   socket: { remoteAddress?: string };
-  [Symbol.asyncIterator](): AsyncIterator<Uint8Array | string>;
+  iterator(options: { destroyOnReturn: boolean }): AsyncIterable<Uint8Array | string>;
 };
 type DevResponse = {
   statusCode: number;
@@ -56,12 +57,19 @@ function requireValue(env: EnvMap, name: string) {
   return value;
 }
 
-async function requestBody(request: DevRequest) {
-  const chunks: Uint8Array[] = [];
-  for await (const chunk of request) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+export async function requestBody(request: DevRequest) {
+  const length = request.headers['content-length'];
+  checkParticipationLength(Array.isArray(length) ? length.join(',') : length ?? null);
+  const bytes = new Uint8Array(participationBodyLimit);
+  let size = 0;
+  // Keep the socket alive long enough to send the rejection; middleware closes it.
+  for await (const chunk of request.iterator({ destroyOnReturn: false })) {
+    const value = typeof chunk === 'string' ? Buffer.from(chunk) : chunk;
+    if (value.byteLength > participationBodyLimit - size) throw new ParticipationBodyError(413);
+    bytes.set(value, size);
+    size += value.byteLength;
   }
-  return Buffer.concat(chunks);
+  return bytes.subarray(0, size);
 }
 
 function toWebRequest(request: DevRequest, body: Uint8Array) {
@@ -114,9 +122,19 @@ export function participationDevProxyPlugin(): Plugin {
           next();
           return;
         }
-        const body = await requestBody(request as DevRequest);
-        const result = await handleParticipationRequest(toWebRequest(request as DevRequest, body), env);
-        await writeWebResponse(result, response as DevResponse);
+        try {
+          const body = await requestBody(request as DevRequest);
+          const result = await handleParticipationRequest(toWebRequest(request as DevRequest, body), env);
+          await writeWebResponse(result, response as DevResponse);
+        } catch (error) {
+          const status = error instanceof ParticipationBodyError ? error.status : 400;
+          await writeWebResponse(new Response(JSON.stringify({
+            error: error instanceof ParticipationBodyError ? error.message : 'PARTICIPATION_INVALID_BODY',
+          }), {
+            status,
+            headers: { 'content-type': 'application/json', 'cache-control': 'no-store', connection: 'close' },
+          }), response as DevResponse);
+        }
       });
     },
   };

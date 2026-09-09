@@ -18,9 +18,9 @@
 
 - 人物、選舉、選區、候選人與 canonical merge graph。
 - 政黨、公司、政治獻金摘要及已核准的公司關係。
-- 已核准公開的人物學歷、經歷、政見、家族、案件與 office claims。
+- 已核准公開的人物生日、學歷、經歷、政見、家族、案件與 office claims；生日保留完整原文，顯示粒度另由全站偏好決定。
 - 已核准的黨籍／黨職資料與人物媒體。
-- 公開區域議題定義、聊天室功能設定。
+- 公開區域議題定義、聊天室功能設定及全站生日顯示偏好（`site_display_settings`）。
 - `published` 實體快照、Materialized Views、索引與公開讀取權限。
 
 模擬庫不帶入：
@@ -30,6 +30,15 @@
 - 身分配對建議與審核佇列。
 - 候選狀態歷史及資料同步執行紀錄。
 - 本機聊天室訊息、IP 安全紀錄、管理操作與使用者回報。
+- 生日顯示設定的管理操作紀錄（`site_display_setting_actions`）；只複製公開偏好，不帶入操作者。
+
+## 驗收限度
+
+這是完整本機資料庫的 **schema snapshot + 核准公開子集**，不是對空庫依序重播 `supabase/migrations` 全部歷史。重建成功、容量合格或版本數一致，都不能證明完整 migration replay 或 SQL 內容無漂移。全史回放需另外核准唯一隔離 project／ports／volume，保留逐步執行與失敗證據。
+
+full-local 若另裝了 `supabase/local-migrations` 的本地審查 RPC，結構快照可能包含該函式；這不代表正式發布需要安裝它，也不代表已套用正式 migration。該目錄不加入本流程的 migration 重播或 ledger；本機安裝入口固定 full-local，不能用它指向 rehearsal。相關用途與授權見[審核流程](review-workflow.md#自動審核的資料庫前置與恢復)。
+
+重建與停止會刪除 rehearsal 自己的工作內容或可拋棄 volume，執行前先確認目標和服務占用。DB 寫入／拒絕 probe 必須核對測試本身是否硬編碼 full-local ports；不能因網站使用 `dev:rehearsal` 就假定所有 CLI 與 SQL 也轉到 rehearsal。詳見 [驗證矩陣](local-supabase-validation.md#驗證矩陣)。
 
 ## 使用方式
 

@@ -1,5 +1,5 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.105.4';
-import { normalizePublicUpdateDraft, normalizePublicUpdateReview } from '../_shared/publicUpdateAdmin.ts';
+import { normalizeBirthDateDisplay, normalizePublicUpdateDraft, normalizePublicUpdateReview } from '../_shared/publicUpdateAdmin.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
@@ -27,6 +27,8 @@ function knownAdminError(error: { message?: string } | null) {
     'PUBLIC_UPDATE_ADMIN_INVALID_REVIEW',
     'PUBLIC_UPDATE_ADMIN_NOT_FOUND',
     'PUBLIC_UPDATE_ADMIN_INVALID_STATE',
+    'PUBLIC_UPDATE_ADMIN_INVALID_DISPLAY_SETTING',
+    'PUBLIC_UPDATE_ADMIN_DISPLAY_CONFLICT',
   ];
   return codes.find((code) => error?.message?.includes(code));
 }
@@ -61,6 +63,29 @@ Deno.serve(async (request) => {
     const serviceClient = createClient(supabaseUrl, serviceRoleKey, {
       auth: { autoRefreshToken: false, persistSession: false },
     });
+
+    if (payload.action === 'display-settings') {
+      const { data, error } = await serviceClient.from('site_display_settings')
+        .select('birth_date_year_only,revision,updated_at').eq('id', 1).single();
+      if (error || !data) return jsonResponse(500, { error: 'PUBLIC_UPDATE_ADMIN_SERVER_ERROR' });
+      return jsonResponse(200, { settings: data });
+    }
+
+    if (payload.action === 'set-birth-date-display') {
+      const setting = normalizeBirthDateDisplay(payload);
+      if (!setting) return jsonResponse(400, { error: 'PUBLIC_UPDATE_ADMIN_INVALID_DISPLAY_SETTING' });
+      const { data, error } = await serviceClient.rpc('admin_set_birth_date_display', {
+        p_admin_user_id: adminUser.id,
+        p_year_only: setting.yearOnly,
+        p_expected_revision: setting.expectedRevision,
+      }).single();
+      if (error) {
+        const code = knownAdminError(error);
+        return jsonResponse(code === 'PUBLIC_UPDATE_ADMIN_DISPLAY_CONFLICT' ? 409 : code ? 400 : 500,
+          { error: code ?? 'PUBLIC_UPDATE_ADMIN_SERVER_ERROR' });
+      }
+      return jsonResponse(200, { settings: data });
+    }
 
     if (payload.action === 'dashboard') {
       const [eventsResult, actionsResult] = await Promise.all([

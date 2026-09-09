@@ -1,3 +1,4 @@
+import { partyCandidateBaseKey } from './party-candidate-revision.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -100,23 +101,25 @@ function readLocalEnv() {
 function parseArgs(argv) {
   let output = defaultOutput;
   let party = null;
+  let revisionSelectionPath = null;
   for (let index = 0; index < argv.length; index += 1) {
     if (argv[index] === '--output' && argv[index + 1]) {
       output = path.resolve(repoRoot, argv[index + 1]);
       index += 1;
       continue;
     }
+    if (argv[index] === '--revisions' && argv[index + 1]) { revisionSelectionPath = path.resolve(argv[++index]); continue; }
     if (argv[index] === '--party' && argv[index + 1]) {
       party = argv[index + 1];
       index += 1;
       continue;
     }
-    throw new Error('Usage: node scripts/build-reviewed-party-candidate-release-migration.mjs [--output <path>] [--party <name>]');
+    throw new Error('Usage: node scripts/build-reviewed-party-candidate-release-migration.mjs [--output <path>] [--party <name>] [--revisions <json-path>]');
   }
   if (party && !partyReleaseExpectations.has(party)) {
     throw new Error(`No reviewed release expectations are configured for party: ${party}`);
   }
-  return { output, party };
+  return { output, party, revisionSelectionPath };
 }
 
 function assertLocalSupabase(url) {
@@ -228,7 +231,7 @@ function assertEqual(actual, wanted, label) {
 
 function isSourceScopedPerson(person, source) {
   const partyCandidatePersonId = source.source_person_key.startsWith('party-candidate:')
-    ? `party-candidate-person:${source.source_person_key.slice('party-candidate:'.length)}`
+    ? `party-candidate-person:${partyCandidateBaseKey(source).slice('party-candidate:'.length)}`
     : null;
   return person?.external_id === `internal-review-source-${source.id}`
     || (partyCandidatePersonId && person?.external_id === partyCandidatePersonId);
@@ -237,6 +240,7 @@ function isSourceScopedPerson(person, source) {
 function buildReleaseDataset(dataset, options = {}) {
   const expectedCounts = options.expected ?? expected;
   const plan = planReviewedPartyCandidatePublication(dataset, {
+    revisionSelections: options.revisionSelections,
     expectedCount: expectedCounts.candidates,
     expectedExcludedCount: expectedCounts.excludedSources,
   });
@@ -244,6 +248,13 @@ function buildReleaseDataset(dataset, options = {}) {
     throw new Error(`Party candidate publication plan is blocked:\n${JSON.stringify(plan.blocking, null, 2)}`);
   }
 
+  dataset = { ...dataset, sources: [...plan.eligible, ...plan.excluded].map(item => item.source) };
+  const retiredSources = (plan.superseded ?? []).map(item => item.source);
+  const retiredIds = new Set(retiredSources.map(row => row.id));
+  const selectedProfileKeys = new Set(dataset.claims.filter(row => dataset.sources.some(source => source.id === row.source_person_id)
+    && ['education', 'experience', 'platform'].includes(row.claim_type)).map(row => row.claim_key));
+  const retiredClaims = dataset.claims.filter(row => retiredIds.has(row.source_person_id)
+    && (row.claim_type === 'candidacy' || (['education', 'experience', 'platform'].includes(row.claim_type) && !selectedProfileKeys.has(row.claim_key))));
   const sourceIds = new Set(dataset.sources.map((row) => row.id));
   const peopleById = new Map(dataset.people.map((row) => [row.id, row]));
   const sourceById = new Map(dataset.sources.map((row) => [row.id, row]));
@@ -287,7 +298,7 @@ function buildReleaseDataset(dataset, options = {}) {
     claim.review_status !== 'verified'
     || claim.visibility !== 'public'
     || claim.is_public !== true
-    || claim.claim_key !== `${sourceById.get(claim.source_person_id)?.source_person_key ?? ''}:${claim.claim_type}`
+    || claim.claim_key !== `${partyCandidateBaseKey(sourceById.get(claim.source_person_id))}:${claim.claim_type}`
   ));
   if (invalidProfiles.length > 0) {
     throw new Error(`Found ${invalidProfiles.length} invalid public profile claims`);
@@ -295,6 +306,8 @@ function buildReleaseDataset(dataset, options = {}) {
 
   return {
     sources: sorted(dataset.sources, ['source_person_key']),
+    retiredSources: sorted(retiredSources, ['source_person_key']),
+    retiredClaims: sorted(retiredClaims, ['claim_key']),
     newPeople: sorted(newPeople, ['id']),
     requiredExistingPersonIds,
     matches: sorted(matches, ['source_person_id', 'person_id', 'id']),
@@ -341,6 +354,9 @@ function buildMigration(release, expectedCounts = expected) {
     .filter((name) => !['id', 'claim_key', 'created_at'].includes(name));
   const candidateUpdates = columns.candidates.map(([name]) => name)
     .filter((name) => !['id', 'external_id', 'created_at'].includes(name));
+  const activeSourceIds = new Set(release.sources.map(row => row.id));
+  const activeClaimIds = new Set(release.claims.map(row => row.id));
+  if ((release.retiredSources ?? []).some(row => activeSourceIds.has(row.id)) || (release.retiredClaims ?? []).some(row => activeClaimIds.has(row.id))) throw new Error('Active release rows cannot be retired');
   const expectedProfileSql = Object.entries(expectedCounts.profileClaimsByType)
     .map(([type, count]) => `('${type}', ${count})`)
     .join(', ');
@@ -350,9 +366,16 @@ function buildMigration(release, expectedCounts = expected) {
 -- Published read models are refreshed once by the final migration in the release batch.
 BEGIN;
 
+SET LOCAL lock_timeout = '5s';
+LOCK TABLE public.source_people, public.person_claims IN SHARE ROW EXCLUSIVE MODE;
+
 ${tempTableSql('_party_release_people', 'people', release.newPeople)}
 
 ${tempTableSql('_party_release_sources', 'sourcePeople', release.sources)}
+
+${tempTableSql('_party_release_retired_sources', 'sourcePeople', release.retiredSources ?? [])}
+
+${tempTableSql('_party_release_retired_claims', 'claims', release.retiredClaims ?? [])}
 
 ${tempTableSql('_party_release_matches', 'matches', release.matches)}
 
@@ -414,6 +437,31 @@ BEGIN
         RAISE EXCEPTION 'Reviewed party candidate source identifier conflict';
     END IF;
 
+    IF EXISTS (
+        SELECT 1 FROM source_people existing JOIN _party_release_retired_sources incoming ON existing.id = incoming.id
+        WHERE existing.source_person_key IS DISTINCT FROM incoming.source_person_key
+          OR existing.source_payload IS DISTINCT FROM incoming.source_payload
+          OR existing.raw_name IS DISTINCT FROM incoming.raw_name
+          OR existing.party IS DISTINCT FROM incoming.party
+          OR existing.election_year IS DISTINCT FROM incoming.election_year
+          OR existing.source_name IS DISTINCT FROM incoming.source_name
+          OR existing.source_url IS DISTINCT FROM incoming.source_url
+    ) OR EXISTS (
+        SELECT 1 FROM source_people existing JOIN _party_release_retired_sources incoming ON existing.source_person_key = incoming.source_person_key WHERE existing.id <> incoming.id
+    ) THEN RAISE EXCEPTION 'Superseded party source content changed; retirement blocked'; END IF;
+
+    IF EXISTS (
+        SELECT 1 FROM person_claims existing JOIN _party_release_retired_claims incoming ON existing.id = incoming.id
+        WHERE existing.claim_key IS DISTINCT FROM incoming.claim_key
+          OR existing.claim_json IS DISTINCT FROM incoming.claim_json
+          OR existing.claim_value IS DISTINCT FROM incoming.claim_value
+          OR existing.person_id IS DISTINCT FROM incoming.person_id
+          OR existing.source_person_id IS DISTINCT FROM incoming.source_person_id
+          OR existing.review_status IS DISTINCT FROM incoming.review_status
+    ) OR EXISTS (
+        SELECT 1 FROM person_claims existing JOIN _party_release_retired_claims incoming ON existing.claim_key = incoming.claim_key WHERE existing.id <> incoming.id
+    ) THEN RAISE EXCEPTION 'Superseded party claim changed; retirement blocked'; END IF;
+
     IF EXISTS (SELECT 1 FROM person_identity_matches existing JOIN _party_release_matches incoming ON existing.source_person_id = incoming.source_person_id AND existing.person_id = incoming.person_id WHERE existing.id <> incoming.id) THEN
         RAISE EXCEPTION 'Reviewed party candidate identity-match identifier conflict';
     END IF;
@@ -432,6 +480,15 @@ $$;
 INSERT INTO people (${columns.people.map(([name]) => name).join(', ')})
 SELECT ${columns.people.map(([name]) => name).join(', ')} FROM _party_release_people
 ON CONFLICT (id) DO NOTHING;
+
+UPDATE source_people existing SET is_public = FALSE, updated_at = clock_timestamp()
+FROM _party_release_retired_sources retired WHERE existing.id = retired.id AND existing.is_public = TRUE;
+
+UPDATE person_claims existing SET is_public = FALSE,
+    visibility = CASE WHEN existing.visibility = 'private' THEN 'private' ELSE 'review_only' END,
+    updated_at = clock_timestamp()
+FROM _party_release_retired_claims retired
+WHERE existing.id = retired.id AND (existing.is_public = TRUE OR existing.visibility = 'public');
 
 ${insertSql('source_people', '_party_release_sources', 'sourcePeople', 'id', sourceUpdates)}
 
@@ -461,7 +518,7 @@ BEGIN
     IF EXISTS (
         SELECT 1 FROM _party_release_sources source
         WHERE source.is_public = FALSE
-          AND EXISTS (SELECT 1 FROM candidates candidate WHERE candidate.external_id = source.source_person_key)
+          AND EXISTS (SELECT 1 FROM candidates candidate WHERE candidate.external_id = CASE WHEN source.source_payload->>'sourceCandidateKey' IS NOT NULL THEN 'party-candidate:' || (source.source_payload->>'sourceCandidateKey') ELSE source.source_person_key END)
     ) THEN
         RAISE EXCEPTION 'Rejected party candidate source still has a candidate row';
     END IF;
@@ -486,7 +543,7 @@ async function main() {
   if (!config.serviceRoleKey) throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
   const expectedCounts = options.party ? partyReleaseExpectations.get(options.party) : expected;
   const dataset = scopeDatasetToParty(await loadDataset(config), options.party);
-  const release = buildReleaseDataset(dataset, { expected: expectedCounts });
+  const release = buildReleaseDataset(dataset, { expected: expectedCounts, revisionSelections: options.revisionSelectionPath ? JSON.parse(fs.readFileSync(options.revisionSelectionPath, 'utf8')) : [] });
   fs.mkdirSync(path.dirname(options.output), { recursive: true });
   fs.writeFileSync(options.output, buildMigration(release, expectedCounts));
   console.log(JSON.stringify({

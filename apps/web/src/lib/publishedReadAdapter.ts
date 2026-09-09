@@ -34,6 +34,7 @@ import {
   PUBLIC_ELECTION_RACE_PAGE_SIZE,
   PUBLIC_PEOPLE_PAGE_SIZE,
   PUBLIC_SEARCH_RESULT_LIMIT,
+  PublicPageOutOfRangeError,
   normalizePublishedSearchQuery,
   toPublicPageRange,
 } from './publicReadContracts.ts';
@@ -689,12 +690,14 @@ export type PublishedPersonProfileRows = {
 
 type PublishedQueryError = {
   message: string;
+  code?: string;
 };
 
 type PublishedQueryResponse<Row> = {
   data: Row[] | null;
   error: PublishedQueryError | null;
   count: number | null;
+  status?: number;
 };
 
 export interface PublishedQueryBuilder<Row> extends PromiseLike<PublishedQueryResponse<Row>> {
@@ -1455,6 +1458,10 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         .order('name', { ascending: true })
         .order('person_id', { ascending: true })
         .range(pageRange.from, pageRange.to);
+
+      if (pageRange.from > 0 && response.status === 416 && response.error?.code === 'PGRST103') {
+        throw new PublicPageOutOfRangeError();
+      }
 
       return {
         rows: getRowsOrThrow(response, 'Published people directory'),

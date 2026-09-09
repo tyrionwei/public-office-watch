@@ -1,3 +1,4 @@
+import { partyCandidateRevision } from './party-candidate-revision.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
@@ -113,4 +114,18 @@ test('treats full-width and ASCII district separators as equivalent', () => {
 
   assert.equal(report.summary.unchangedCount, 1);
   assert.equal(report.summary.changedCount, 0);
+});
+
+
+test('freshness comparison requires an explicit version when source history contains revisions', () => {
+  const old = stagedRow(record({ platform: ['舊版'] }));
+  const current = stagedRow(record());
+  current.source_payload.schemaVersion = 2;
+  current.source_payload.revision = partyCandidateRevision(current.source_payload, current);
+  current.source_person_key = `party-candidate:${current.source_id}:revision:${current.source_payload.revision}`;
+  const input = [{ snapshot: snapshot([record()]), freshnessMode: 'live_fetch', inputPath: 'latest.json' }];
+  assert.throws(() => buildSourceFreshnessReport(input, [old, current]), /--revisions/);
+  const report = buildSourceFreshnessReport(input, [old, current], '2026-09-09', { revisionSelections: [{ sourcePersonKey: current.source_person_key, contentRevision: current.source_payload.revision }] });
+  assert.equal(report.summary.stagedRecordCount, 1);
+  assert.equal(report.summary.unchangedCount, 1);
 });

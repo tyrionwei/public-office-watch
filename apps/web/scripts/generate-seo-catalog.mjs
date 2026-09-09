@@ -1,3 +1,4 @@
+import { electionEventIdentity, initialElectionEventKey } from '../src/data/electionEventIdentity.mjs';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -134,36 +135,12 @@ function regionPage(row) {
   );
 }
 
-function getElectionYear(row) {
-  const votingYear = Number.parseInt(cleanText(row.voting_date).slice(0, 4), 10);
-  if (Number.isFinite(votingYear)) return votingYear;
-  const year = Number(row.year);
-  return Number.isFinite(year) ? year : null;
-}
-
-function getElectionFamily(row) {
-  const type = cleanText(row.election_type);
-  if (['presidential', 'president', 'legislative', 'legislator'].includes(type)) return 'national';
-  if (['local', 'local_chief', 'councilor', 'township_representative', 'village_chief'].includes(type)) return 'local';
-  if (type === 'referendum') return 'referendum';
-  if (type === 'recall') return 'recall';
-  if (type === 'by_election') return 'by_election';
-  return 'other';
-}
-
-function getLegacyLocalKind(row) {
-  if (row.election_type === 'councilor') return 'councilor';
-  if (row.election_type === 'township_representative') return 'township-representative';
-  if (row.election_type === 'village_chief') return 'village-chief';
-  return ['local', 'local_chief'].includes(row.election_type) ? null : cleanText(row.election_type);
-}
-
-function getElectionEventTitle(year, family, rows) {
+function getElectionEventTitle(year, family, rows, raceTypes) {
   const yearLabel = year ?? '未定年份';
   const types = new Set(rows.map((row) => cleanText(row.election_type)));
   if (family === 'national') {
-    const hasPresident = types.has('presidential') || types.has('president');
-    const hasLegislator = types.has('legislative') || types.has('legislator');
+    const hasPresident = types.has('presidential') || types.has('president') || raceTypes.some(type => ['president', 'vice_president'].includes(type));
+    const hasLegislator = types.has('legislative') || types.has('legislator') || raceTypes.some(type => ['legislator', 'legislative_district', 'party_list_legislator', 'indigenous'].includes(type));
     if (hasPresident && hasLegislator) return `${yearLabel} 總統副總統及立法委員選舉`;
     if (hasPresident) return `${yearLabel} 總統副總統選舉`;
     if (hasLegislator) return `${yearLabel} 立法委員選舉`;
@@ -178,25 +155,20 @@ function getElectionEventTitle(year, family, rows) {
   return rows.length === 1 ? cleanText(rows[0].name) : `${yearLabel} 選舉事件`;
 }
 
-function electionEventPages(rows) {
+function electionEventPages(rows, raceSummaries = []) {
   const groups = new Map();
   for (const row of rows) {
-    const year = getElectionYear(row);
-    const votingDate = cleanText(row.voting_date) || null;
-    const family = getElectionFamily(row);
-    const discriminator = family === 'local' && year !== null && year < 2014
-      ? getLegacyLocalKind(row)
-      : null;
-    const key = `${year ?? 'unknown'}-${votingDate ?? 'undated'}-${family}${discriminator ? `-${discriminator}` : ''}`;
+    const key = initialElectionEventKey(row);
     const group = groups.get(key) ?? [];
     group.push(row);
     groups.set(key, group);
   }
 
-  return Array.from(groups.entries()).map(([key, group]) => {
-    const year = getElectionYear(group[0]);
-    const family = getElectionFamily(group[0]);
-    const title = getElectionEventTitle(year, family, group);
+  return Array.from(groups.values()).map(group => {
+    const ids = new Set(group.map(row => row.election_id));
+    const raceTypes = Array.from(new Set(raceSummaries.filter(summary => ids.has(summary.election_id)).flatMap(summary => summary.race_types)));
+    const { key, year, family } = electionEventIdentity(group, raceTypes);
+    const title = getElectionEventTitle(year, family, group, raceTypes);
     return makePage(
       'events',
       `/elections/events/${encodePathSegment(key)}`,
@@ -279,7 +251,8 @@ export function createSeoCatalog(datasets, generatedAt = new Date().toISOString(
       if (page && !pageByPath.has(page.path)) pageByPath.set(page.path, page);
     }
   }
-  for (const page of electionEventPages(Array.isArray(datasets.elections) ? datasets.elections : [])) {
+  if (datasets.electionIndex) assertElectionIndexConsistency(datasets);
+  for (const page of electionEventPages(datasets.electionIndex?.electionRows ?? (Array.isArray(datasets.elections) ? datasets.elections : []), datasets.electionIndex?.raceSummaryRows ?? datasets.raceSummaries ?? [])) {
     if (!pageByPath.has(page.path)) pageByPath.set(page.path, page);
   }
 
@@ -397,6 +370,55 @@ export async function fetchPublishedRows({
     if (page.length < requestPageSize) return rows;
   }
 }
+
+export async function fetchElectionIndex({ supabaseUrl, anonKey, fetchImpl = fetch,
+  waitImpl = delay => new Promise(resolvePromise => setTimeout(resolvePromise, delay)) }) {
+  let response;
+  for (let attempt = 1; attempt <= maxFetchAttempts; attempt += 1) {
+    response = await fetchImpl(new URL('/rest/v1/rpc/election_index_page', supabaseUrl), {
+      method: 'POST',
+      headers: { apikey: anonKey, authorization: `Bearer ${anonKey}`, 'content-profile': 'published', 'content-type': 'application/json' },
+      body: '{}',
+    });
+    if (response.ok || response.status < 500 || attempt === maxFetchAttempts) break;
+    await waitImpl(retryDelayMs * attempt);
+  }
+  if (!response.ok) throw new Error(`Election index for SEO failed (${response.status}).`);
+  const result = await response.json();
+  const payload = Array.isArray(result) && result.length === 1 ? result[0]?.payload : null;
+  if (!payload || payload.api_version !== 1
+    || (payload.release_id !== null && typeof payload.release_id !== 'string')
+    || (payload.published_at !== null && typeof payload.published_at !== 'string')) throw new Error('Invalid election index metadata for SEO.');
+  const electionRows = payload.election_rows, raceSummaryRows = payload.race_summary_rows;
+  if (!Array.isArray(electionRows) || !Array.isArray(raceSummaryRows) || electionRows.length > 500 || raceSummaryRows.length > 500) {
+    throw new Error('Election index for SEO must contain complete bounded arrays (maximum 500 rows each).');
+  }
+  const ids = new Set();
+  for (const row of electionRows) {
+    if (!row || typeof row.election_id !== 'string' || !row.election_id || ids.has(row.election_id)
+      || typeof row.name !== 'string' || typeof row.election_type !== 'string'
+      || (row.year !== null && !Number.isInteger(row.year))
+      || (row.voting_date !== null && typeof row.voting_date !== 'string')) throw new Error('Invalid election identity for SEO.');
+    ids.add(row.election_id);
+  }
+  const summaryIds = new Set();
+  for (const row of raceSummaryRows) {
+    if (!row || !ids.has(row.election_id) || summaryIds.has(row.election_id)
+      || !Number.isInteger(row.race_count) || row.race_count < 0
+      || !Array.isArray(row.race_types) || !row.race_types.every(type => typeof type === 'string')) throw new Error('Invalid election race summary for SEO.');
+    summaryIds.add(row.election_id);
+  }
+  return { electionRows, raceSummaryRows };
+}
+
+function assertElectionIndexConsistency(datasets) {
+  const { electionRows, raceSummaryRows } = datasets.electionIndex;
+  const identityFields = ['election_id', 'name', 'year', 'election_type', 'voting_date', 'status'];
+  const signature = rows => JSON.stringify(rows.map(row => identityFields.map(field => row[field] ?? null)).sort((left, right) => String(left[0]).localeCompare(String(right[0]))));
+  if (signature(electionRows) !== signature(datasets.elections ?? [])) throw new Error('SEO election snapshots disagree; retry generation against a consistent release.');
+  if (raceSummaryRows.reduce((sum, row) => sum + row.race_count, 0) !== (datasets.races ?? []).length) throw new Error('SEO race summaries are incomplete or disagree with the race catalog.');
+}
+
 async function main() {
   validateProductionEnvironment(process.env);
   if (process.env.VITE_PUBLIC_DATA_PROVIDER !== 'published') {
@@ -406,7 +428,7 @@ async function main() {
   const supabaseUrl = process.env.VITE_SUPABASE_URL.trim();
   const anonKey = process.env.VITE_SUPABASE_ANON_KEY.trim();
   const outputPath = resolve(process.argv[2] || 'dist/client/seo-catalog.json');
-  const [results, shareResults] = await Promise.all([
+  const [results, shareResults, electionIndex] = await Promise.all([
     Promise.all(sources.map((source) => fetchPublishedRows({
       supabaseUrl,
       anonKey,
@@ -419,8 +441,10 @@ async function main() {
       rpcName: 'seo_share_catalog_page',
       requestedPageSize: sharePageSize,
     }))),
+    fetchElectionIndex({ supabaseUrl, anonKey }),
   ]);
   const datasets = {
+    electionIndex,
     ...Object.fromEntries(sources.map((source, index) => [source.key, results[index]])),
     ...Object.fromEntries(shareSources.map((source, index) => [source.key, shareResults[index]])),
   };

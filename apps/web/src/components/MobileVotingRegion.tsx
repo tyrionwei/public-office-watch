@@ -74,6 +74,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
   const openVillageMenuForDistrictRef = useRef<string | null>(null);
   const [onboardingDismissed, setOnboardingDismissed] = useState(readOnboardingDismissed);
   const [counties, setCounties] = useState<StageRegionNode[]>([]);
+  const [regionDirectoryStatus, setRegionDirectoryStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [districts, setDistricts] = useState<VotingRegionChoice[]>([]);
   const [countyId, setCountyId] = useState('');
   const [districtId, setDistrictId] = useState('');
@@ -82,6 +83,10 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
   const [villageSearch, setVillageSearch] = useState('');
   const [villageMenuOpen, setVillageMenuOpen] = useState(false);
   const [villagesLoading, setVillagesLoading] = useState(false);
+  const [loadedVillageDistrictId, setLoadedVillageDistrictId] = useState('');
+  const [villageLoadFailed, setVillageLoadFailed] = useState(false);
+  const [savedVillageMissing, setSavedVillageMissing] = useState(false);
+  const [storageError, setStorageError] = useState<'save' | 'clear' | null>(null);
   const [villageLoadRequest, setVillageLoadRequest] = useState(0);
   const [source, setSource] = useState<VotingRegionPreference['source']>('manual');
   const [suggestedLocation, setSuggestedLocation] = useState<SuggestedLocation | null>(null);
@@ -116,6 +121,12 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     villageSearchPlaceholder: 'Enter a village name',
     villageHint: 'Search is built into the dropdown. Only an official option can be saved.',
     loadingVillages: 'Loading villages…',
+    regionLoadFailed: 'Voting areas could not be loaded. Your saved area has not changed.',
+    villageLoadFailed: 'Villages could not be loaded. Your saved area has not changed.',
+    savedVillageMissing: 'Your saved village is not in this list. Choose a village or explicitly select “Do not select a village”.',
+    saveFailed: 'This browser could not save your area. Your previous setting is unchanged. Please try saving again.',
+    clearFailed: 'This browser could not clear your saved area. Please try clearing it again.',
+    reload: 'Reload page',
     noVillages: 'No matching villages found.',
     save: 'Save voting area',
     clear: 'Clear saved area',
@@ -147,6 +158,12 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     villageSearchPlaceholder: '輸入村里名稱',
     villageHint: '搜尋功能就在下拉清單內，只有官方選項可以儲存。',
     loadingVillages: '載入村里中…',
+    regionLoadFailed: '投票地區暫時無法載入，已儲存的設定未變更。',
+    villageLoadFailed: '村里暫時無法載入，已儲存的設定未變更。',
+    savedVillageMissing: '原儲存的村里不在目前清單中，請重新選擇村里，或明確選擇「不選村里」。',
+    saveFailed: '瀏覽器無法儲存投票地區，原設定未變更。請再次按儲存重試。',
+    clearFailed: '瀏覽器無法清除已儲存地區，請再次按清除重試。',
+    reload: '重新載入頁面',
     noVillages: '找不到符合的村里。',
     save: '儲存投票地區',
     clear: '清除已儲存地區',
@@ -158,12 +175,18 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     closeButtonRef.current?.focus();
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [editorOpen]);
+
+  useEffect(() => {
+    if (!editorOpen) return undefined;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onCloseEditor();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [editorOpen, onCloseEditor]);
@@ -180,8 +203,16 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
   }, [villageMenuOpen]);
 
   useEffect(() => {
-    if (!editorOpen) return;
+    if (!editorOpen) {
+      setRegionDirectoryStatus('loading');
+      return;
+    }
     let active = true;
+    setRegionDirectoryStatus('loading');
+    setLoadedVillageDistrictId('');
+    setVillageLoadFailed(false);
+    setSavedVillageMissing(false);
+    setStorageError(null);
     restoreVillageForDistrictRef.current = null;
     openVillageMenuForDistrictRef.current = null;
     setCountyId(preference?.county.id ?? '');
@@ -198,6 +229,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       if (!active) return;
       const nextCounties = getCurrentCountyChoices(publicDataProvider.getStageRegions());
       setCounties(nextCounties);
+      setRegionDirectoryStatus('ready');
       if (!preference?.county.id) {
         setDistricts([]);
         return;
@@ -208,6 +240,8 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       setDistricts(nextDistricts);
       restoreVillageForDistrictRef.current = nextDistrictId || null;
       setDistrictId(nextDistrictId);
+    }).catch(() => {
+      if (active) setRegionDirectoryStatus('error');
     });
     return () => {
       active = false;
@@ -218,14 +252,18 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     if (!editorOpen || !districtId) {
       setVillages([]);
       setVillagesLoading(false);
+      setLoadedVillageDistrictId('');
       return undefined;
     }
     let active = true;
     setVillagesLoading(true);
+    setLoadedVillageDistrictId('');
+    setVillageLoadFailed(false);
     void getVillageChoices(districtId)
       .then((nextVillages) => {
         if (!active) return;
         setVillages(nextVillages);
+        setLoadedVillageDistrictId(districtId);
         const shouldRestoreSavedVillage = restoreVillageForDistrictRef.current === districtId;
         const shouldOpenVillageMenu = openVillageMenuForDistrictRef.current === districtId;
         restoreVillageForDistrictRef.current = null;
@@ -233,9 +271,13 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
         if (shouldRestoreSavedVillage && preference?.village) {
           const savedVillage = nextVillages.find((village) => village.id === preference.village?.id)
             ?? nextVillages.find((village) => village.name === preference.village?.name);
-          setVillageId(savedVillage?.id ?? '');
+          setVillageId(savedVillage?.id ?? preference.village.id);
+          setSavedVillageMissing(!savedVillage);
         }
         if (shouldOpenVillageMenu) setVillageMenuOpen(true);
+      })
+      .catch(() => {
+        if (active) setVillageLoadFailed(true);
       })
       .finally(() => {
         if (active) setVillagesLoading(false);
@@ -250,6 +292,9 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     restoreVillageForDistrictRef.current = null;
     openVillageMenuForDistrictRef.current = null;
     setCountyId(nextCountyId);
+    setLoadedVillageDistrictId('');
+    setVillageLoadFailed(false);
+    setSavedVillageMissing(false);
     setDistrictId('');
     setVillages([]);
     setVillageId('');
@@ -263,6 +308,9 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     restoreVillageForDistrictRef.current = null;
     openVillageMenuForDistrictRef.current = null;
     setDistrictId(nextDistrictId);
+    setLoadedVillageDistrictId('');
+    setVillageLoadFailed(false);
+    setSavedVillageMissing(false);
     setVillages([]);
     setVillageId('');
     setVillageSearch('');
@@ -341,6 +389,9 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     setCountyId(matchingCounty.id);
     setDistricts(nextDistricts);
     setDistrictId(nextDistrictId);
+    setLoadedVillageDistrictId('');
+    setVillageLoadFailed(false);
+    setSavedVillageMissing(false);
     setVillages([]);
     setVillageId('');
     setVillageSearch('');
@@ -350,12 +401,19 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     setSuggestedLocation(null);
   };
 
+  const canSave = regionDirectoryStatus === 'ready'
+    && Boolean(counties.find((county) => county.id === countyId))
+    && Boolean(districts.find((district) => district.id === districtId))
+    && loadedVillageDistrictId === districtId
+    && !villagesLoading && !villageLoadFailed && !savedVillageMissing;
+
   const save = () => {
+    if (!canSave) return;
     const county = counties.find((region) => region.id === countyId);
     const district = districts.find((region) => region.id === districtId);
     if (!county) return;
     const village = villages.find((region) => region.id === villageId);
-    confirmPreference({
+    const saved = confirmPreference({
       county: toChoice(county),
       ...(district ? { district } : {}),
       ...(village ? { village } : {}),
@@ -363,6 +421,20 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       source,
       confirmedAt: new Date().toISOString(),
     });
+    if (!saved) {
+      setStorageError('save');
+      return;
+    }
+    setStorageError(null);
+    onCloseEditor();
+  };
+
+  const clear = () => {
+    if (!clearPreference()) {
+      setStorageError('clear');
+      return;
+    }
+    setStorageError(null);
     onCloseEditor();
   };
 
@@ -433,18 +505,24 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
               </div>
             ) : null}
             {locationError ? <p role="alert" className="mt-3 text-sm leading-6 text-rose-300">{locationError}</p> : null}
+            {regionDirectoryStatus === 'error' || villageLoadFailed ? (
+              <div role="alert" className="mt-3 text-sm leading-6 text-rose-300">
+                <p>{regionDirectoryStatus === 'error' ? copy.regionLoadFailed : copy.villageLoadFailed}</p>
+                <button type="button" onClick={() => window.location.reload()} className="min-h-11 text-accent underline underline-offset-4">{copy.reload}</button>
+              </div>
+            ) : null}
 
             <div className="mt-4 grid gap-4 border-t border-line/70 pt-4">
               <label className="grid gap-2 text-sm text-slate-300">
                 <span>{copy.county}</span>
-                <select data-voting-county value={countyId} onChange={(event) => chooseCounty(event.target.value)} className="min-h-12 border border-line bg-bg px-3 text-white">
+                <select data-voting-county value={countyId} onChange={(event) => chooseCounty(event.target.value)} disabled={regionDirectoryStatus !== 'ready'} className="min-h-12 border border-line bg-bg px-3 text-white disabled:opacity-50">
                   <option value="">{copy.select}</option>
                   {counties.map((county) => <option key={county.id} value={county.id}>{county.label}</option>)}
                 </select>
               </label>
               <label className="grid gap-2 text-sm text-slate-300">
                 <span>{copy.district}</span>
-                <select data-voting-district value={districtId} onChange={(event) => chooseDistrict(event.target.value)} disabled={!countyId} className="min-h-12 border border-line bg-bg px-3 text-white disabled:opacity-50">
+                <select data-voting-district value={districtId} onChange={(event) => chooseDistrict(event.target.value)} disabled={!countyId || regionDirectoryStatus !== 'ready'} className="min-h-12 border border-line bg-bg px-3 text-white disabled:opacity-50">
                   <option value="">{copy.select}</option>
                   {districts.map((district) => <option key={district.id} value={district.id}>{district.name}</option>)}
                 </select>
@@ -459,7 +537,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
                       aria-controls="voting-village-options"
                       aria-expanded={villageMenuOpen}
                       data-voting-village-trigger
-                      disabled={villagesLoading}
+                      disabled={loadedVillageDistrictId !== districtId || villagesLoading || villageLoadFailed}
                       onClick={() => {
                         setVillageSearch('');
                         setVillageMenuOpen((open) => !open);
@@ -497,6 +575,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
                             aria-selected={!villageId}
                             onClick={() => {
                               setVillageId('');
+                              setSavedVillageMissing(false);
                               setVillageSearch('');
                               setVillageMenuOpen(false);
                             }}
@@ -512,6 +591,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
                               aria-selected={village.id === villageId}
                               onClick={() => {
                                 setVillageId(village.id);
+                                setSavedVillageMissing(false);
                                 setVillageSearch('');
                                 setVillageMenuOpen(false);
                               }}
@@ -526,16 +606,18 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
                     ) : null}
                   </div>
                   <p className="text-[11px] leading-5 text-slate-500">{copy.villageHint}</p>
+                  {savedVillageMissing ? <p role="alert" className="text-sm leading-6 text-rose-300">{copy.savedVillageMissing}</p> : null}
                 </div>
               ) : null}
             </div>
 
             <div className="mt-5 grid gap-2">
-              <button type="button" onClick={save} disabled={!countyId || !districtId} className="min-h-12 border border-signal bg-signal/12 px-4 text-sm font-semibold text-signal disabled:cursor-not-allowed disabled:opacity-40">
+              {storageError ? <p role="alert" className="text-sm leading-6 text-rose-300">{storageError === 'save' ? copy.saveFailed : copy.clearFailed}</p> : null}
+              <button type="button" onClick={save} disabled={!canSave} className="min-h-12 border border-signal bg-signal/12 px-4 text-sm font-semibold text-signal disabled:cursor-not-allowed disabled:opacity-40">
                 {copy.save}
               </button>
               {preference ? (
-                <button type="button" onClick={() => { clearPreference(); onCloseEditor(); }} className="min-h-11 text-sm text-rose-300 underline underline-offset-4">
+                <button type="button" onClick={clear} className="min-h-11 text-sm text-rose-300 underline underline-offset-4">
                   {copy.clear}
                 </button>
               ) : null}

@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { compareSourceDiscoveries, monitorState, writeMonitorReport } from './lib/source-monitor-state.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultSources = [
@@ -125,25 +126,7 @@ function contentHash(discoveries) {
   return crypto.createHash('sha256').update(JSON.stringify(discoveries)).digest('hex');
 }
 
-function compareSources(current, previous = null) {
-  const previousSources = new Map((previous?.sources ?? []).map((source) => [source.key, source]));
-  return current.map((source) => {
-    const before = previousSources.get(source.key);
-    const beforeUrls = new Set((before?.discoveries ?? []).map((item) => item.url));
-    const currentUrls = new Set(source.discoveries.map((item) => item.url));
-    return {
-      ...source,
-      baseline: before == null,
-      changed: before != null && before.contentHash !== source.contentHash,
-      newDiscoveries: before == null
-        ? []
-        : source.discoveries.filter((item) => !beforeUrls.has(item.url)),
-      removedDiscoveries: before == null
-        ? []
-        : (before.discoveries ?? []).filter((item) => !currentUrls.has(item.url)),
-    };
-  });
-}
+const compareSources = compareSourceDiscoveries;
 
 async function fetchSource(source) {
   const response = await fetch(source.url, {
@@ -176,11 +159,12 @@ function writeSnapshot(snapshotDir, source) {
   return path.resolve(outputPath);
 }
 
-async function main() {
-  const options = parseArgs(process.argv.slice(2));
+async function main(argv = process.argv.slice(2)) {
+  const options = parseArgs(argv);
   const previous = options.previousPath
     ? JSON.parse(fs.readFileSync(options.previousPath, 'utf8'))
     : null;
+  const generatedAt = new Date().toISOString();
   const fetched = [];
   const errors = [];
 
@@ -199,21 +183,22 @@ async function main() {
   });
   const report = {
     schemaVersion: 1,
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     status: errors.length === 0 ? 'ok' : fetched.length > 0 ? 'partial' : 'failed',
     sourceCount: defaultSources.length,
     changedSourceCount: sources.filter((source) => source.changed).length,
     newDiscoveryCount: sources.reduce((sum, source) => sum + source.newDiscoveries.length, 0),
     sources,
     errors,
+    ...monitorState(defaultSources, sources, errors, previous, generatedAt),
   };
 
   if (options.outputPath) {
-    fs.mkdirSync(path.dirname(options.outputPath), { recursive: true });
-    fs.writeFileSync(options.outputPath, `${JSON.stringify(report, null, 2)}\n`);
+    writeMonitorReport(options.outputPath, report);
   }
   console.log(JSON.stringify(report, null, 2));
   if (report.status === 'failed') process.exitCode = 1;
+  return report;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
@@ -223,4 +208,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { compareSources, extractReferendumLinks, isCecUrl, parseArgs };
+export { main, compareSources, extractReferendumLinks, isCecUrl, parseArgs };

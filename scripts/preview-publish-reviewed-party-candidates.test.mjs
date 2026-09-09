@@ -1,9 +1,11 @@
+import { partyCandidateRevision } from './party-candidate-revision.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
   buildProfileClaimRows,
+  obsoleteProfileClaims,
   planReviewedPartyCandidatePublication,
   scopeDatasetToParty,
 } from './preview-publish-reviewed-party-candidates.mjs';
@@ -51,6 +53,7 @@ function validDataset() {
     claims: [
       {
         id: 'claim-valid',
+        claim_json: { sourceCandidateKey: 'dpp-valid', targetRace: { id: 'race-valid' }, education: ['測試大學', '測試大學'], experience: ['地方服務'], platform: ['改善交通', '增加托育'] },
         source_person_id: 'source-valid',
         person_id: 'person-valid',
         claim_type: 'candidacy',
@@ -184,6 +187,7 @@ test('blocks two reviewed candidacies from sharing the same canonical person', (
   });
   dataset.claims.push({
     id: 'claim-second',
+    claim_json: { targetRace: { id: 'race-second' } },
     source_person_id: 'source-second',
     person_id: 'person-valid',
     claim_type: 'candidacy',
@@ -239,4 +243,42 @@ test('turns official profile arrays into verified public claims without duplicat
     electionId: 'election-valid',
   });
   assert.ok(claims.every((claim) => claim.review_status === 'verified' && claim.visibility === 'public' && claim.is_public));
+});
+
+test('publication explicitly selects a reviewed revision and preserves stable candidate/profile keys', () => {
+  const dataset = validDataset();
+  const previous = dataset.sources[0];
+  const next = structuredClone(previous);
+  next.id = 'source-next'; next.source_payload.schemaVersion = 2; next.source_payload.platform = ['新版政見'];
+  next.source_payload.requiresManualReview = true;
+  next.source_payload.revision = partyCandidateRevision(next.source_payload, next);
+  next.source_person_key += ':revision:' + next.source_payload.revision;
+  dataset.sources.push(next);
+  dataset.claims.push({ ...dataset.claims[0], id: 'claim-next', source_person_id: next.id, claim_json: structuredClone(next.source_payload), scoring_version: 'party-candidate-manual-review-v2' });
+  dataset.matches.push({ ...dataset.matches[0], id: 'match-next', source_person_id: next.id });
+  const options = { expectedCount: 1, expectedExcludedCount: 1 };
+  assert.ok(planReviewedPartyCandidatePublication(dataset, options).blocking.length);
+  options.revisionSelections = [{ sourcePersonKey: next.source_person_key, contentRevision: next.source_payload.revision }];
+  const selected = planReviewedPartyCandidatePublication(dataset, options);
+  assert.equal(selected.blocking.length, 0);
+  assert.equal(selected.eligible[0].source.id, next.id);
+  assert.equal(selected.superseded[0].source.id, previous.id);
+  const profiles = buildProfileClaimRows(selected, '2026-09-09');
+  assert.equal(profiles.find(row => row.claim_type === 'platform').claim_key, 'party-candidate:dpp-valid:platform');
+  assert.equal(profiles.find(row => row.claim_type === 'platform').claim_value, '新版政見');
+  dataset.claims.at(-1).review_status = 'pending';
+  assert.ok(planReviewedPartyCandidatePublication(dataset, options).blocking.length);
+  dataset.claims.at(-1).review_status = 'verified'; dataset.claims.at(-1).claim_json.platform = ['unreviewed mutation'];
+  assert.ok(planReviewedPartyCandidatePublication(dataset, options).blocking.length);
+});
+
+test('empty reviewed profile fields retire the previous public values instead of preserving stale content', () => {
+  const dataset = validDataset();
+  dataset.sources[0].source_payload.education = [];
+  dataset.claims[0].claim_json.education = [];
+  const plan = planReviewedPartyCandidatePublication(dataset, { expectedCount: 1, expectedExcludedCount: 1 });
+  const old = { claim_key: 'party-candidate:dpp-valid:education', person_id: 'person-valid', is_public: true };
+  assert.deepEqual(obsoleteProfileClaims(plan, [old]), [old]);
+  assert.deepEqual(obsoleteProfileClaims(plan, [{ ...old, is_public: false }]), []);
+  assert.throws(() => obsoleteProfileClaims(plan, [{ ...old, person_id: 'another-person' }]), /another person/);
 });

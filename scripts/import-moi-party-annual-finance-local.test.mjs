@@ -12,12 +12,15 @@ import {
 
 function report(overrides = {}) {
   return {
+    status: 'ok',
+    failedDetailCount: 0,
     sourceName: '內政部政黨資訊網－查財報',
     sourceUrl: 'https://party.moi.gov.tw/PartyFinancialChecklist.aspx?n=16101&sms=13073',
     reportYear: 2025,
     recordCount: 1,
     generatedAt: '2026-08-20T00:00:00.000Z',
     records: [{
+      detailStatus: 'ok',
       partyNumber: 350,
       partyName: '台灣民眾黨',
       filingStatus: '已申報',
@@ -33,6 +36,23 @@ function report(overrides = {}) {
 test('accepts local Supabase only', () => {
   assert.doesNotThrow(() => assertLocalSupabase('http://127.0.0.1:54321'));
   assert.throws(() => assertLocalSupabase('https://project.supabase.co'), /local-only/u);
+});
+
+test('incomplete or contradictory reports cannot create rows even when the builder is called directly', () => {
+  const invalid = [
+    report({ status: 'needs_attention' }),
+    report({ status: undefined }),
+    report({ failedDetailCount: 1 }),
+    report({ failedDetailCount: undefined }),
+    ...['failed', 'missing_report_pdf', undefined].map(detailStatus => report({
+      records: [{ ...report().records[0], detailStatus }],
+    })),
+    report({ records: [{ ...report().records[0], reportPdfUrl: null }] }),
+  ];
+  for (const input of invalid) {
+    assert.throws(() => validateReport(input), /Incomplete MOI/);
+    assert.throws(() => buildStagingRows(input, [{ id: 'party-tpp', name: '臺灣民眾黨' }]), /Incomplete MOI/);
+  }
 });
 
 test('normalizes MOI names and filing statuses', () => {

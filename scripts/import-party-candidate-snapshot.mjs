@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   applyReviewedPartyCandidates,
+  buildReviewTemplate,
   stagePartyCandidateReview,
   validateReviewFile,
 } from './party-candidate-review.mjs';
@@ -608,6 +609,7 @@ async function main() {
     existingCandidateReviewCount: plan.matched.filter((item) => item.existingCandidates.length > 0).length,
     blockingCount: plan.blocking.length,
     blocking: plan.blocking,
+    reviewTemplate: buildReviewTemplate(snapshot, plan),
     sample: plan.matched.slice(0, 20).map((item) => ({
       sourceCandidateKey: item.record.sourceCandidateKey,
       personName: item.record.personName,

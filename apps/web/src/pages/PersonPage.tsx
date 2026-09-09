@@ -17,6 +17,8 @@ import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
+import { formatPublicBirthDate } from '../lib/publicBirthDate';
+import { useBirthDateDisplay } from '../lib/useBirthDateDisplay';
 import { platformClaimsForCandidate, platformItemsForClaim } from '../lib/candidatePlatform';
 import type { FeedbackSectionKey } from '../lib/personFeedback';
 import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
@@ -426,6 +428,7 @@ function PlatformClaimCard({
 
 export function PersonPage() {
   const { language, t } = useI18n();
+  const birthDateYearOnly = useBirthDateDisplay();
   const { personId } = useParams();
   const safePersonId = personId ?? '';
   const [loadedPersonId, setLoadedPersonId] = useState<string | null>(null);
@@ -467,6 +470,7 @@ export function PersonPage() {
   const theme = partyTheme[toPartyThemeKey(person?.party)];
   const publicClaims = profile ? visibleProfileClaims(profile.public_claims) : [];
   const birthDateClaim = profile ? claimsByType(profile.public_claims, 'birth_date')[0] ?? null : null;
+  const displayedBirthDate = formatPublicBirthDate(birthDateClaim?.claim_value, birthDateYearOnly);
   const primaryPhotoUrl = person?.primary_photo_thumbnail_url ?? person?.primary_photo_url ?? null;
   const personSprite = person ? pickPersonCandidateSprite(person.person_id) : null;
   const portraitSrc = person
@@ -515,7 +519,7 @@ export function PersonPage() {
     ? [
         person.alias ? [t('person.alias'), person.alias] : null,
         person.gender && person.gender !== 'unknown' ? [t('person.gender'), t(genderLabels[person.gender])] : null,
-        birthDateClaim?.claim_value ? [t('person.birthDate'), birthDateClaim.claim_value] : null,
+        displayedBirthDate ? [t(birthDateYearOnly ? 'person.birthYear' : 'person.birthDate'), displayedBirthDate] : null,
         [profilePositionLabel, profilePosition],
         person.region_name || person.district ? [t('person.location'), person.region_name ?? person.district ?? ''] : null,
       ].filter((fact): fact is [string, string] => fact !== null)

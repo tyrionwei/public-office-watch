@@ -16,6 +16,7 @@ This document records the current project rules for data ingestion, review, dedu
 - Same normalized name, known gender, and verified birth date is a strong candidate, but it is B-level until another stable identifier is available.
 - Party, district, position, candidate region, and elected office are context-only signals because they can change.
 - Different known gender or different known birth date blocks automatic merge.
+- Full birth dates may be collected and published under [Data Policy](data-policy.md#出生日期), with full-date display enabled by default for identity comparison. Administrators can switch all public website birth-date fields to year-only display without changing source claims or matching inputs. Existing source/identity review still applies; do not infer missing month/day or copy family birth dates.
 - Name-only matches must never create or merge canonical people.
 
 ## Claims And Review

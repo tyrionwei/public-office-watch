@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import { toPartyThemeKey } from '../lib/personData';
@@ -34,9 +34,13 @@ export function GlobalSearch({ autoFocus = false, id = 'global-search', onNaviga
   const [isFocused, setIsFocused] = useState(false);
   const [results, setResults] = useState<PublicSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [requestVersion, setRequestVersion] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const normalizedQuery = query.trim();
+    setLoadError(false);
 
     if (normalizedQuery.length < 2) {
       setResults([]);
@@ -52,7 +56,10 @@ export function GlobalSearch({ autoFocus = false, id = 'global-search', onNaviga
           if (active) setResults(nextResults);
         })
         .catch((error: unknown) => {
-          if (active) setResults([]);
+          if (active) {
+            setResults([]);
+            setLoadError(true);
+          }
           if (import.meta.env.DEV) console.warn('Failed to search public records', error);
         })
         .finally(() => {
@@ -64,7 +71,7 @@ export function GlobalSearch({ autoFocus = false, id = 'global-search', onNaviga
       active = false;
       window.clearTimeout(timeoutId);
     };
-  }, [query]);
+  }, [query, requestVersion]);
 
   const showPanel = isFocused;
 
@@ -80,7 +87,20 @@ export function GlobalSearch({ autoFocus = false, id = 'global-search', onNaviga
   );
 
   return (
-    <div className="relative min-w-0 flex-1">
+    <div
+      className="relative min-w-0 flex-1"
+      onFocus={() => setIsFocused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setIsFocused(false);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          inputRef.current?.focus();
+          setIsFocused(false);
+        }
+      }}
+    >
       <label htmlFor={id} className="sr-only">
         {t('search.placeholder')}
       </label>
@@ -89,13 +109,15 @@ export function GlobalSearch({ autoFocus = false, id = 'global-search', onNaviga
           ⌕
         </span>
         <input
+          ref={inputRef}
           id={id}
           type="search"
           autoFocus={autoFocus}
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => window.setTimeout(() => setIsFocused(false), 120)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setIsFocused(true);
+          }}
           placeholder={t('search.placeholder')}
           className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-slate-500"
         />
@@ -124,6 +146,21 @@ export function GlobalSearch({ autoFocus = false, id = 'global-search', onNaviga
             <p className="px-2 py-3 text-xs text-slate-400">{t('search.minChars')}</p>
           ) : loading ? (
             <p className="px-2 py-3 text-xs text-slate-400">{t('search.loading')}</p>
+          ) : loadError ? (
+            <div role="alert" className="space-y-3 px-2 py-3 text-xs text-slate-300">
+              <p>{t('search.loadError')}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  inputRef.current?.focus();
+                  setLoading(true);
+                  setRequestVersion((value) => value + 1);
+                }}
+                className="pixel-button"
+              >
+                {t('search.retry')}
+              </button>
+            </div>
           ) : groupedResults.length > 0 ? (
             <div className="space-y-3">
               {groupedResults.map((group) => (
@@ -139,6 +176,7 @@ export function GlobalSearch({ autoFocus = false, id = 'global-search', onNaviga
                           to={result.href}
                           onClick={() => {
                             setQuery('');
+                            setIsFocused(false);
                             onNavigate?.();
                           }}
                           className="pixel-corners block border border-transparent px-3 py-2 transition hover:border-accent/45 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/25"

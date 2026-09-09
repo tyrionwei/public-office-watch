@@ -1,3 +1,4 @@
+import { selectPartyCandidateSources } from './party-candidate-revision.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -26,11 +27,12 @@ function readLocalEnv() {
 }
 
 function parseArgs(argv) {
-  const options = { liveInputs: [], browserInputs: [], outputPath: null };
+  const options = { liveInputs: [], browserInputs: [], outputPath: null, revisionSelectionPath: null };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === '--input') options.liveInputs.push(path.resolve(argv[++index] ?? ''));
     else if (arg === '--browser-input') options.browserInputs.push(path.resolve(argv[++index] ?? ''));
+    else if (arg === '--revisions') options.revisionSelectionPath = path.resolve(argv[++index] ?? '');
     else if (arg === '--output') options.outputPath = path.resolve(argv[++index] ?? '');
     else throw new Error(`Unsupported argument: ${arg}`);
   }
@@ -124,7 +126,7 @@ function countByParty(items, partyFor) {
   return counts;
 }
 
-function buildSourceFreshnessReport(snapshotInputs, stagedRows, generatedAt = new Date().toISOString()) {
+function buildSourceFreshnessReport(snapshotInputs, stagedRows, generatedAt = new Date().toISOString(), options = {}) {
   const latestRecords = [];
   const sources = snapshotInputs.map(({ snapshot, freshnessMode, inputPath }) => {
     validateSnapshot(snapshot);
@@ -141,7 +143,11 @@ function buildSourceFreshnessReport(snapshotInputs, stagedRows, generatedAt = ne
   });
 
   const latestByKey = indexedByKey(latestRecords, 'Latest snapshots');
-  const staged = stagedRows.map(canonicalStaged);
+  const selection = selectPartyCandidateSources(stagedRows.map(row => ({ ...row,
+    source_person_key: row.source_person_key ?? `party-candidate:${row.source_payload?.sourceCandidateKey ?? row.source_id}`,
+  })), options.revisionSelections);
+  if (selection.blocking.length) throw new Error(`Select source revisions with --revisions before freshness comparison: ${JSON.stringify(selection.blocking)}`);
+  const staged = selection.selected.map(canonicalStaged);
   const stagedByKey = indexedByKey(staged, 'Local Supabase source_people');
   const unchanged = [];
   const changed = [];
@@ -216,8 +222,9 @@ async function fetchStagedRows(config) {
   const rows = [];
   for (let offset = 0; ; offset += 1000) {
     const url = restUrl(config);
-    url.searchParams.set('select', 'source_id,source_name,source_url,raw_name,party,source_payload');
+    url.searchParams.set('select', 'source_person_key,source_id,source_name,source_url,raw_name,party,election_year,source_payload');
     url.searchParams.set('source_type', 'eq.official_site');
+    url.searchParams.set('source_person_key', 'like.party-candidate:*');
     url.searchParams.set('election_year', 'eq.2026');
     url.searchParams.set('order', 'source_id.asc');
     url.searchParams.set('limit', '1000');
@@ -259,7 +266,7 @@ async function main() {
     throw new Error('Party candidate freshness report only reads Local Supabase.');
   }
 
-  const report = buildSourceFreshnessReport(loadInputs(options), await fetchStagedRows(config));
+  const report = buildSourceFreshnessReport(loadInputs(options), await fetchStagedRows(config), new Date().toISOString(), { revisionSelections: options.revisionSelectionPath ? JSON.parse(fs.readFileSync(options.revisionSelectionPath, 'utf8')) : [] });
   if (options.outputPath) {
     fs.mkdirSync(path.dirname(options.outputPath), { recursive: true });
     fs.writeFileSync(options.outputPath, `${JSON.stringify(report, null, 2)}\n`);

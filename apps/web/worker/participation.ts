@@ -1,3 +1,5 @@
+import { ParticipationBodyError, readParticipationBody } from './participationBody.ts';
+
 const participationCookieName = 'pow_participation_clearance';
 const participationClearanceSeconds = 30 * 24 * 60 * 60;
 const turnstileVerificationUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
@@ -143,10 +145,8 @@ function sameOrigin(request: Request) {
 }
 
 async function readPayload(request: Request) {
-  const length = Number.parseInt(request.headers.get('content-length') ?? '0', 10);
-  if (Number.isFinite(length) && length > 16_384) return null;
-  const text = await request.text();
-  if (!text || text.length > 16_384) return null;
+  const text = await readParticipationBody(request);
+  if (!text) return null;
   try {
     const value = JSON.parse(text);
     return value && typeof value === 'object' && !Array.isArray(value)
@@ -470,6 +470,7 @@ export async function handleParticipationRequest(
     }
     return jsonResponse(404, { error: 'NOT_FOUND' });
   } catch (error) {
+    if (error instanceof ParticipationBodyError) return jsonResponse(error.status, { error: error.message });
     console.error('participation API failed', error instanceof Error ? error.message : 'unknown error');
     return jsonResponse(500, { error: 'PARTICIPATION_SERVER_ERROR' });
   }

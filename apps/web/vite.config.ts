@@ -1,8 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createInternalReviewGuard, internalErrorStatus, readJsonBody, validateInternalSupabaseUrl, type InternalRequest } from './build/internalReviewSecurity';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { sites } from './build/sites-vite-plugin';
+import { pwaShellVersionPlugin } from './build/pwaShellVersion.mjs';
 import { participationDevProxyPlugin } from './build/participationDevProxy';
 import {
   buildIdentityClaimLinkPatch,
@@ -28,13 +30,7 @@ import {
 
 type EnvMap = Record<string, string>;
 type JsonObject = Record<string, unknown>;
-type DevRequest = {
-  method?: string;
-  url?: string;
-  on(event: 'data', listener: (chunk: Uint8Array | string) => void): void;
-  on(event: 'end', listener: () => void): void;
-  on(event: 'error', listener: (error: Error) => void): void;
-};
+type DevRequest = InternalRequest;
 type DevResponse = {
   statusCode: number;
   setHeader(name: string, value: string): void;
@@ -128,22 +124,6 @@ function parseEnvFile(filePath: string): EnvMap {
   );
 }
 
-function readJsonBody(request: DevRequest): Promise<unknown> {
-  return new Promise((resolve, reject) => {
-    const chunks: Uint8Array[] = [];
-    request.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-    request.on('end', () => {
-      try {
-        const text = Buffer.concat(chunks).toString('utf8');
-        resolve(text ? JSON.parse(text) : {});
-      } catch (error) {
-        reject(error);
-      }
-    });
-    request.on('error', reject);
-  });
-}
-
 function jsonResponse(response: DevResponse, status: number, body: unknown) {
   response.statusCode = status;
   response.setHeader('content-type', 'application/json');
@@ -178,8 +158,10 @@ async function supabaseRest(pathname: string, init: RestInit = {}) {
     throw new Error('Internal review API requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in local env.');
   }
 
-  const response = await fetch(`${env.supabaseUrl.replace(/\/$/, '')}/rest/v1/${pathname}`, {
+  const baseUrl = validateInternalSupabaseUrl(env.supabaseUrl);
+  const response = await fetch(`${baseUrl}/rest/v1/${pathname}`, {
     ...init,
+    redirect: 'error',
     headers: {
       apikey: env.serviceRoleKey,
       authorization: `Bearer ${env.serviceRoleKey}`,
@@ -380,7 +362,10 @@ async function fetchReviewPersonContextRows(personIds: string[]) {
 function internalReviewApiPlugin(): Plugin {
   return {
     name: 'internal-review-api',
+    apply: 'serve',
     configureServer(server) {
+      const guard = createInternalReviewGuard();
+      server.middlewares.use('/internal-api', (request, response, next) => guard(request as DevRequest, response, next));
       server.middlewares.use('/internal-api/review-claims', async (request, response) => {
         const devRequest = request as DevRequest;
         if (devRequest.method !== 'GET') {
@@ -431,7 +416,7 @@ function internalReviewApiPlugin(): Plugin {
 
           jsonResponse(response, 200, { claims: Array.from(claimsById.values()) });
         } catch (error) {
-          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+          jsonResponse(response, internalErrorStatus(error), { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
       });
 
@@ -454,7 +439,7 @@ function internalReviewApiPlugin(): Plugin {
 
           jsonResponse(response, 200, await fetchReviewPersonContextRows(personIds));
         } catch (error) {
-          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+          jsonResponse(response, internalErrorStatus(error), { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
       });
 
@@ -471,7 +456,7 @@ function internalReviewApiPlugin(): Plugin {
           );
           jsonResponse(response, 200, { items });
         } catch (error) {
-          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+          jsonResponse(response, internalErrorStatus(error), { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
       });
 
@@ -628,7 +613,7 @@ function internalReviewApiPlugin(): Plugin {
             personFieldPreserved,
           });
         } catch (error) {
-          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+          jsonResponse(response, internalErrorStatus(error), { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
       });
       server.middlewares.use('/internal-api/person-feedback', async (request, response) => {
@@ -657,7 +642,7 @@ function internalReviewApiPlugin(): Plugin {
             })),
           });
         } catch (error) {
-          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+          jsonResponse(response, internalErrorStatus(error), { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
       });
 
@@ -717,7 +702,7 @@ function internalReviewApiPlugin(): Plugin {
 
           jsonResponse(response, 200, { status: 'ok', reviewStatus });
         } catch (error) {
-          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+          jsonResponse(response, internalErrorStatus(error), { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
       });
 
@@ -872,7 +857,7 @@ function internalReviewApiPlugin(): Plugin {
 
           jsonResponse(response, 200, { status: 'ok', action });
         } catch (error) {
-          jsonResponse(response, 500, { error: error instanceof Error ? error.message : 'Unknown error.' });
+          jsonResponse(response, internalErrorStatus(error), { error: error instanceof Error ? error.message : 'Unknown error.' });
         }
       });
     },
@@ -880,5 +865,5 @@ function internalReviewApiPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), sites(), participationDevProxyPlugin(), internalReviewApiPlugin()],
+  plugins: [react(), sites(), pwaShellVersionPlugin(), participationDevProxyPlugin(), internalReviewApiPlugin()],
 });

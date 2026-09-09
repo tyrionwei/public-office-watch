@@ -524,31 +524,44 @@ function SectionPagination({
 }
 
 function usePartyCompanyContributions(partyId: string | null, page: number) {
-  const [result, setResult] = useState({
-    current: emptyContributionPage,
-    top: emptyContributionPage,
-  });
+  const key = `${partyId}:${page}`;
+  const [attempt, setAttempt] = useState(0);
+  const [result, setResult] = useState<{
+    key: string;
+    status: 'loading' | 'ready' | 'error';
+    current: typeof emptyContributionPage;
+    top: typeof emptyContributionPage;
+  } | null>(null);
 
   useEffect(() => {
     let active = true;
     if (!partyId) {
-      setResult({ current: emptyContributionPage, top: emptyContributionPage });
+      setResult(null);
       return () => { active = false; };
     }
+    setResult({ key, status: 'loading', current: emptyContributionPage, top: emptyContributionPage });
 
     void Promise.all([
       publicDataProvider.loadPartyCompanyContributionPage(partyId, page, CONTRIBUTION_PAGE_SIZE),
       publicDataProvider.loadPartyCompanyContributionPage(partyId, 1, CONTRIBUTION_PAGE_SIZE),
     ]).then(([current, top]) => {
-      if (active) setResult({ current, top });
+      if (active) setResult({ key, status: 'ready', current, top });
     }).catch((error: unknown) => {
+      if (active) setResult({ key, status: 'error', current: emptyContributionPage, top: emptyContributionPage });
       if (import.meta.env.DEV) console.warn('Failed to load party company contributions', error);
     });
 
     return () => { active = false; };
-  }, [page, partyId]);
+  }, [page, partyId, key, attempt]);
 
-  return result;
+  const matches = result?.key === key;
+  return {
+    current: matches ? result.current : emptyContributionPage,
+    top: matches ? result.top : emptyContributionPage,
+    loading: Boolean(partyId) && (!matches || result.status === 'loading'),
+    error: matches && result.status === 'error',
+    retry: () => setAttempt(value => value + 1),
+  };
 }
 
 export function PartyPage() {
@@ -688,7 +701,7 @@ export function PartyPage() {
                   label={t('partyDetail.balance')}
                   value={<span className="font-display text-xl text-white">{latestFinance ? currency(latestFinance.balance_amount) : t('parties.awaitingData')}</span>}
                 />
-                <HudStatCard label={t('parties.companySummaries')} value={t('partyDetail.reviewedCount', { count: companyContributions.current.total })} />
+                <HudStatCard label={t('parties.companySummaries')} value={companyContributions.loading || companyContributions.error ? '—' : t('partyDetail.reviewedCount', { count: companyContributions.current.total })} />
                 <HudStatCard label={t('parties.chairperson')} value={party.chairperson_name ?? t('parties.registryPending')} />
                 <HudStatCard label={t('parties.founded')} value={party.founded_date_text ?? t('parties.registryPending')} />
               </dl>
@@ -1079,7 +1092,10 @@ export function PartyPage() {
             ) : null}
 
             <SectionPanel title={t('partyDetail.companyTitle')} eyebrow={t('partyDetail.companyEyebrow')}>
-              {companyContributions.current.total > 0 ? (
+              {companyContributions.loading ? <p className="text-sm text-slate-400">{t('app.loading')}</p> : companyContributions.error ? <div>
+                <p role="alert" className="text-sm text-slate-300">{t('app.loadError')}</p>
+                <button type="button" className="mt-3 border border-accent px-3 py-2 text-accent" onClick={companyContributions.retry}>{t('app.retry')}</button>
+              </div> : companyContributions.current.total > 0 ? (
                 <>
                   <div className="mb-5 pixel-corners border border-line/70 p-4 [background:var(--theme-panel-gradient)] sm:p-5">
                     <div className="mb-4 border-b border-line/60 pb-3">

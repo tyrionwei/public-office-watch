@@ -6,6 +6,7 @@ import zlib from 'node:zlib';
 import { assessLegalRecordMatch } from './legal-record-review-policy.mjs';
 import { normalizeElectionDistrict } from './normalize-election-district.mjs';
 import { canonicalPartyName } from './lib/party-name-normalization.mjs';
+import { planPlannedLocalRaceReconciliation, withPlannedLocalRaceReconciliation } from './lib/planned-local-race-reconciliation.mjs';
 import { withSourceRetry } from './monitor-source-retry.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -4154,29 +4155,32 @@ async function writeSeed(seed, hash, args) {
     };
   });
 
-  await upsertOrThrow(env, 'races', raceRows, { onConflict: 'external_id' });
-
   const plannedLocalElectionId = electionByExternalId.get(plannedLocalElection.externalId)?.id;
+  let plannedLocalRaceReconciliation = {
+    status: 'skipped',
+    policy: 'preserve_missing_rows',
+    reason: 'planned_election_absent',
+    automaticHideCount: 0,
+  };
   if (plannedLocalElectionId) {
-    const currentPlannedRaceIds = new Set(
-      raceRows
-        .filter((race) => race.election_id === plannedLocalElectionId)
-        .map((race) => race.external_id),
-    );
+    // Read ownership before upsert can change source metadata on existing rows.
     const storedPlannedRaces = await selectAllOrThrow(
       env,
       'races',
-      'id,external_id,is_public',
+      'id,external_id,election_id,race_type,source_name,source_url,is_public',
       1000,
       { election_id: `eq.${plannedLocalElectionId}` },
     );
-
-    for (const race of storedPlannedRaces) {
-      if (race.is_public && !currentPlannedRaceIds.has(race.external_id)) {
-        await supabasePatch(env, 'races', { id: race.id }, { is_public: false, updated_at: startedAt });
-      }
-    }
+    plannedLocalRaceReconciliation = planPlannedLocalRaceReconciliation({
+      electionId: plannedLocalElectionId,
+      currentRows: raceRows,
+      storedRows: storedPlannedRaces,
+      source: seed.sources.find(source => source.id === plannedLocalElection.sourceId),
+      sourceStatus: args.plannedLocalElections?.status,
+    });
   }
+
+  await upsertOrThrow(env, 'races', raceRows, { onConflict: 'external_id' });
 
   const raceRefresh = await selectAllOrThrow(env, 'races', 'id,external_id,status');
   const raceByExternalId = new Map(raceRefresh.map((race) => [race.external_id, race]));
@@ -4469,6 +4473,25 @@ async function writeSeed(seed, hash, args) {
     schema: 'published',
   });
 
+  const completedReport = withPlannedLocalRaceReconciliation(
+    buildReport(
+      seed,
+      hash,
+      args,
+      args.livePartyRegistry,
+      args.liveCurrentOfficeholders,
+      args.liveCecCandidates,
+      args.historicalCecSourcePeople,
+      args.plannedLocalElections,
+      args.livePartyFinanceSummaries,
+      args.legalRecordLeads,
+      args.personEnrichmentClaims,
+      args.personSourcePeople,
+      args.electionHistory,
+    ),
+    plannedLocalRaceReconciliation,
+  );
+
   if (args.recordRun) {
     await upsertOrThrow(
       env,
@@ -4498,25 +4521,12 @@ async function writeSeed(seed, hash, args) {
             companyContributionRows.length,
           started_at: startedAt,
           finished_at: new Date().toISOString(),
-          report_json: buildReport(
-            seed,
-            hash,
-            args,
-            args.livePartyRegistry,
-            args.liveCurrentOfficeholders,
-            args.liveCecCandidates,
-            args.historicalCecSourcePeople,
-            args.plannedLocalElections,
-            args.livePartyFinanceSummaries,
-            args.legalRecordLeads,
-            args.personEnrichmentClaims,
-            args.personSourcePeople,
-            args.electionHistory,
-          ),
+          report_json: completedReport,
         },
       ],
     );
   }
+  return completedReport;
 }
 
 function buildReport(
@@ -4573,6 +4583,7 @@ function buildReport(
     liveCecCandidates,
     historicalCecSourcePeople,
     plannedLocalElections,
+    plannedLocalRaceReconciliation: { status: 'not_checked', policy: 'preserve_missing_rows', automaticHideCount: 0 },
     livePartyFinanceSummaries,
     legalRecordLeads,
     personEnrichmentClaims,
@@ -4631,7 +4642,7 @@ async function main() {
   args.rejectedWikidataQidsByPerson = loadRejectedWikidataQidsByPerson(args.personEnrichmentSkippedPath);
 
   if (args.write) {
-    await writeSeed(seed, hash, args);
+    Object.assign(report, await writeSeed(seed, hash, args));
   }
 
   console.log(JSON.stringify(report, null, 2));

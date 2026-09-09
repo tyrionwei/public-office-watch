@@ -14,11 +14,34 @@ const internalDocumentPaths = new Set([
   '/internal/review-queue',
   '/internal/update-admin',
 ]);
-const emptySeoCatalog = { version: 1, generatedAt: null, pages: [] };
-const emptySeoManifest = { version: 3, generatedAt: null, groups: {} };
+const emptySeoCatalog = { version: 1, generatedAt: null, pages: [], available: false };
+const emptySeoManifest = { version: 3, generatedAt: null, groups: {}, available: false };
 
-let cachedSeoManifestPromise = null;
-const cachedSeoCatalogPromises = new Map();
+// Cache parsed public data only: no Request, Response, or cross-request I/O promise.
+const seoAssetCaches = new WeakMap();
+const seoRetryDelayMs = 1000;
+async function loadSeoAsset(env, origin, path, normalize, unavailable) {
+  let cache = seoAssetCaches.get(env.ASSETS);
+  if (!cache) { cache = new Map(); seoAssetCaches.set(env.ASSETS, cache); }
+  const key = new URL(path, origin).toString();
+  const previous = cache.get(key);
+  if (previous && (previous.value.available || Date.now() < previous.retryAt)) return previous.value;
+  try {
+    const response = await env.ASSETS.fetch(new Request(key));
+    if (!response.ok) throw new Error('SEO asset unavailable');
+    const value = normalize(await response.json());
+    if (!value.available) throw new Error('Invalid SEO asset');
+    cache.set(key, { value });
+    if (cache.size > 128) cache.delete(cache.keys().next().value);
+    return value;
+  } catch {
+    if (cache.get(key) === previous) {
+      cache.set(key, { value: unavailable, retryAt: Date.now() + seoRetryDelayMs });
+      if (cache.size > 128) cache.delete(cache.keys().next().value);
+    }
+    return unavailable;
+  }
+}
 
 function addSecurityHeaders(response, pathname = '') {
   const headers = new Headers(response.headers);
@@ -42,7 +65,7 @@ function addSecurityHeaders(response, pathname = '') {
 }
 
 function isDocumentRoute(request) {
-  if (request.method !== 'GET' || !request.headers.get('accept')?.includes('text/html')) {
+  if (!['GET', 'HEAD'].includes(request.method) || !request.headers.get('accept')?.includes('text/html')) {
     return false;
   }
 
@@ -53,7 +76,7 @@ function isDocumentRoute(request) {
 function normalizeCatalog(value) {
   if (!value || value.version !== 1 || !Array.isArray(value.pages)) return emptySeoCatalog;
 
-  const pages = value.pages.filter((page) => (
+  const valid = value.pages.every((page) => (
     page
     && typeof page.path === 'string'
     && page.path.startsWith('/')
@@ -61,9 +84,12 @@ function normalizeCatalog(value) {
     && typeof page.description === 'string'
     && dynamicSitemapGroups.includes(page.group)
   ));
+  if (!valid || new Set(value.pages.map(page => page.path)).size !== value.pages.length) return emptySeoCatalog;
+  const pages = value.pages;
 
   return {
     version: 1,
+    available: true,
     generatedAt: typeof value.generatedAt === 'string' ? value.generatedAt : null,
     pages,
     pageByPath: new Map(pages.map((page) => [page.path, page])),
@@ -71,30 +97,22 @@ function normalizeCatalog(value) {
 }
 
 async function loadSeoCatalog(env, origin) {
-  cachedSeoManifestPromise ??= env.ASSETS
-    .fetch(new Request(new URL('/seo-catalog.json', origin)))
-    .then(async (response) => {
-      if (!response.ok) return emptySeoManifest;
-      const value = await response.json();
-      if (!value || value.version !== 3 || !value.groups || typeof value.groups !== 'object') {
-        return emptySeoManifest;
+  return loadSeoAsset(env, origin, '/seo-catalog.json', value => {
+    if (!value || value.version !== 3 || !value.groups || typeof value.groups !== 'object') return emptySeoManifest;
+    const groups = {};
+    const seenPaths = new Set();
+    for (const group of dynamicSitemapGroups) {
+      const item = value.groups[group];
+      if (!item || !Array.isArray(item.paths) || item.paths.length === 0
+        || !item.paths.every(path => typeof path === 'string' && /^\/seo-catalog\/[A-Za-z0-9._-]+\.json$/.test(path))) return emptySeoManifest;
+      for (const path of item.paths) {
+        if (seenPaths.has(path)) return emptySeoManifest;
+        seenPaths.add(path);
       }
-      const groups = Object.fromEntries(Object.entries(value.groups).filter(([group, item]) => (
-        dynamicSitemapGroups.includes(group)
-        && item
-        && Array.isArray(item.paths)
-        && item.paths.length > 0
-        && item.paths.every((path) => typeof path === 'string' && path.startsWith('/seo-catalog/'))
-      )));
-      return {
-        version: 3,
-        generatedAt: typeof value.generatedAt === 'string' ? value.generatedAt : null,
-        groups,
-      };
-    })
-    .catch(() => emptySeoManifest);
-
-  return cachedSeoManifestPromise;
+      groups[group] = item;
+    }
+    return { version: 3, available: true, generatedAt: typeof value.generatedAt === 'string' ? value.generatedAt : null, groups };
+  }, emptySeoManifest);
 }
 
 function catalogShardIndex(path, shardCount) {
@@ -115,15 +133,11 @@ async function loadSeoCatalogGroup(env, origin, group, pathname = null) {
   const paths = pathname
     ? [entry.paths[catalogShardIndex(pathname, entry.paths.length)]]
     : entry.paths;
-  const catalogs = await Promise.all(paths.map((path) => {
-    if (!cachedSeoCatalogPromises.has(path)) {
-      cachedSeoCatalogPromises.set(path, env.ASSETS
-        .fetch(new Request(new URL(path, origin)))
-        .then(async (response) => (response.ok ? normalizeCatalog(await response.json()) : emptySeoCatalog))
-        .catch(() => emptySeoCatalog));
-    }
-    return cachedSeoCatalogPromises.get(path);
-  }));
+  const catalogs = await Promise.all(paths.map(path => loadSeoAsset(env, origin, path, value => {
+    const catalog = normalizeCatalog(value);
+    return catalog.pages.every(page => page.group === group) ? catalog : emptySeoCatalog;
+  }, emptySeoCatalog)));
+  if (catalogs.some(catalog => !catalog.available)) return emptySeoCatalog;
 
   return normalizeCatalog({
     version: 1,
@@ -162,7 +176,7 @@ function documentMetadata(pathname, catalog = emptySeoCatalog) {
     };
   }
 
-  const hasCatalog = Array.isArray(catalog.pages) && catalog.pages.length > 0;
+  const hasCatalog = catalog.available !== false && Array.isArray(catalog.pages);
 
   if (/^\/people\/[^/]+$/.test(pathname)) {
     return { title: '人物資料', description: '查看公職人物的經歷、黨籍、參選紀錄、政見與公開資料來源。', noIndex: hasCatalog };
@@ -226,8 +240,9 @@ function documentResponseStatus(pathname, catalog = emptySeoCatalog) {
   if (staticSitemapPaths.includes(pathname) || internalDocumentPaths.has(pathname)) return 200;
   const group = catalogGroupForPathname(pathname);
   if (!group) return 404;
-  const hasCatalog = Array.isArray(catalog.pages) && catalog.pages.length > 0;
-  return hasCatalog && !getCatalogPage(pathname, catalog) ? 404 : 200;
+  const hasCatalog = catalog.available !== false && Array.isArray(catalog.pages);
+  if (!hasCatalog) return 503;
+  return getCatalogPage(pathname, catalog) ? 200 : 404;
 }
 
 function isSafeShareIdentifier(value) {
@@ -385,6 +400,12 @@ function robotsText(origin) {
   return `User-agent: *\nAllow: /\nDisallow: /internal/\nSitemap: ${new URL('/sitemap.xml', origin)}\n`;
 }
 
+function unavailableResponse(request, pathname = '') {
+  return addSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Public page data temporarily unavailable. Please try again.', {
+    status: 503, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store', 'retry-after': '1', 'x-robots-tag': 'noindex, nofollow' },
+  }), pathname);
+}
+
 function textResponse(body, contentType) {
   return addSecurityHeaders(new Response(body, {
     headers: {
@@ -411,6 +432,7 @@ const worker = {
         return addSecurityHeaders(new Response('Not found', { status: 404 }), url.pathname);
       }
       const catalog = await loadSeoCatalogGroup(env, url.origin, group, targetPath);
+      if (!catalog.available) return unavailableResponse(request, url.pathname);
       const card = shareCardForUrl(url, catalog);
       if (!card) {
         return addSecurityHeaders(new Response('Not found', { status: 404 }), url.pathname);
@@ -441,7 +463,8 @@ const worker = {
       return textResponse(responseBody(robotsText(canonicalSiteOrigin)), 'text/plain; charset=utf-8');
     }
     if (isGetOrHead && url.pathname === '/sitemap.xml') {
-      const manifest = request.method === 'HEAD' ? emptySeoManifest : await loadSeoCatalog(env, url.origin);
+      const manifest = await loadSeoCatalog(env, url.origin);
+      if (!manifest.available) return unavailableResponse(request, url.pathname);
       return textResponse(responseBody(sitemapIndexXml(canonicalSiteOrigin, manifest)), 'application/xml; charset=utf-8');
     }
     const sitemapMatch = url.pathname.match(/^\/sitemaps\/([a-z]+)\.xml$/);
@@ -450,25 +473,37 @@ const worker = {
       if (group !== 'static' && !dynamicSitemapGroups.includes(group)) {
         return addSecurityHeaders(new Response('Not found', { status: 404 }));
       }
-      const catalog = group === 'static' || request.method === 'HEAD'
+      const catalog = group === 'static'
         ? emptySeoCatalog
         : await loadSeoCatalogGroup(env, url.origin, group);
+      if (group !== 'static' && !catalog.available) return unavailableResponse(request, url.pathname);
       return textResponse(responseBody(sitemapXml(canonicalSiteOrigin, sitemapEntries(catalog, group))), 'application/xml; charset=utf-8');
     }
     if (isDocumentRoute(request)) {
-      const group = catalogGroupForPathname(url.pathname.replace(/\/$/, '') || '/');
-      const [indexResponse, catalog] = await Promise.all([
-        env.ASSETS.fetch(new Request(new URL('/', request.url), request)),
-        loadSeoCatalogGroup(env, url.origin, group, url.pathname.replace(/\/$/, '') || '/'),
-      ]);
       const pathname = url.pathname.replace(/\/$/, '') || '/';
-      const html = injectDocumentMetadata(await indexResponse.text(), request.url, catalog, canonicalSiteOrigin);
+      const group = catalogGroupForPathname(pathname);
+      const rootHeaders = new Headers(request.headers);
+      for (const name of ['if-none-match', 'if-modified-since', 'if-match', 'if-unmodified-since', 'range', 'if-range']) rootHeaders.delete(name);
+      const [indexResponse, catalog] = await Promise.all([
+        env.ASSETS.fetch(new Request(new URL('/', request.url), { method: 'GET', headers: rootHeaders })),
+        loadSeoCatalogGroup(env, url.origin, group, pathname),
+      ]);
+      if (indexResponse.status !== 200) {
+        if (indexResponse.status < 300 || indexResponse.status === 304) return unavailableResponse(request, pathname);
+        const headers = new Headers(indexResponse.headers);
+        headers.set('cache-control', 'no-store');
+        return addSecurityHeaders(new Response(responseBody(indexResponse.body), { status: indexResponse.status, headers }), pathname);
+      }
+      if (group && !catalog.available) return unavailableResponse(request, pathname);
+      const sourceHtml = await indexResponse.text();
+      if (!sourceHtml.includes('</head>')) return unavailableResponse(request, pathname);
+      const html = injectDocumentMetadata(sourceHtml, request.url, catalog, canonicalSiteOrigin);
       const headers = new Headers(indexResponse.headers);
+      for (const name of ['etag', 'last-modified', 'content-length', 'content-range', 'content-encoding', 'content-md5', 'digest']) headers.delete(name);
       headers.set('content-type', 'text/html; charset=utf-8');
-      return addSecurityHeaders(new Response(html, {
-        status: documentResponseStatus(pathname, catalog),
-        headers,
-      }), url.pathname);
+      return addSecurityHeaders(new Response(responseBody(html), {
+        status: documentResponseStatus(pathname, catalog), headers,
+      }), pathname);
     }
 
     const assetResponse = await env.ASSETS.fetch(request);

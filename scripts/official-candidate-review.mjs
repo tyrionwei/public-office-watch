@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 const localHostnames = new Set(['127.0.0.1', 'localhost', '::1']);
 
 function normalizeText(value) {
@@ -8,12 +10,12 @@ function normalizeText(value) {
     .toLowerCase();
 }
 
-function sourcePersonKey(record) {
-  return `official-candidate:${record.candidateExternalId}`;
+function sourcePersonKey(record, revision = null) {
+  return `official-candidate:${record.candidateExternalId}${revision ? `:revision:${revision}` : ''}`;
 }
 
-function claimKey(record) {
-  return `official-candidacy:${record.candidateExternalId}`;
+function claimKey(record, revision = null) {
+  return `official-candidacy:${record.candidateExternalId}${revision ? `:revision:${revision}` : ''}`;
 }
 
 function assertLocalSupabase(config) {
@@ -27,6 +29,24 @@ function suggestedPersonId(item) {
   return item.candidate?.person_id ?? item.person?.id ?? null;
 }
 
+// Deliberately exclude fetch times and local identity suggestions from content identity.
+function revisionContent(payload, source) {
+  return JSON.stringify({
+    candidateExternalId: payload.candidateExternalId,
+    personExternalId: payload.personExternalId,
+    personName: payload.personName ?? source.raw_name,
+    electionYear: payload.electionYear ?? source.election_year,
+    candidacyStatus: payload.candidacyStatus,
+    party: payload.party,
+    candidateNo: payload.candidateNo,
+    candidateNoProvided: payload.candidateNoProvided,
+    isIncumbent: payload.isIncumbent,
+    targetRace: { id: payload.targetRace?.id, externalId: payload.targetRace?.externalId, title: payload.targetRace?.title },
+    sourceName: source.source_name,
+    sourceUrl: source.source_url,
+  });
+}
+
 function buildStagingRows(snapshot, plan, observedAt = new Date().toISOString()) {
   const sourcePeople = [];
   const claims = [];
@@ -36,7 +56,9 @@ function buildStagingRows(snapshot, plan, observedAt = new Date().toISOString())
     const { record, race } = item;
     const personId = suggestedPersonId(item);
     const payload = {
-      schemaVersion: 1,
+      schemaVersion: 2,
+      personName: record.personName,
+      electionYear: snapshot.electionYear,
       candidateExternalId: record.candidateExternalId,
       personExternalId: record.personExternalId,
       candidacyStatus: snapshot.candidacyStatus,
@@ -50,8 +72,13 @@ function buildStagingRows(snapshot, plan, observedAt = new Date().toISOString())
         exactNamePersonIds: item.identityCandidates.map((person) => person.id),
       },
     };
+    const revision = createHash('sha256').update(revisionContent(payload, {
+      source_name: snapshot.source.name, source_url: snapshot.source.url,
+    })).digest('hex');
+    payload.revision = revision;
+    payload.baseClaimKey = claimKey(record);
     sourcePeople.push({
-      source_person_key: sourcePersonKey(record),
+      source_person_key: sourcePersonKey(record, revision),
       source_type: 'official_election',
       source_id: record.personExternalId,
       source_name: snapshot.source.name,
@@ -72,7 +99,7 @@ function buildStagingRows(snapshot, plan, observedAt = new Date().toISOString())
       updated_at: observedAt,
     });
     claims.push({
-      claim_key: claimKey(record),
+      claim_key: claimKey(record, revision),
       claim_type: 'candidacy',
       claim_value: `${snapshot.electionYear} ${race.title} ${snapshot.candidacyStatus}`,
       claim_json: payload,
@@ -87,7 +114,7 @@ function buildStagingRows(snapshot, plan, observedAt = new Date().toISOString())
     });
     if (personId) {
       suggestions.push({
-        sourcePersonKey: sourcePersonKey(record),
+        sourcePersonKey: sourcePersonKey(record, revision),
         personId,
         match_status: 'probable_match',
         score: 95,
@@ -112,12 +139,17 @@ function validateReviewFile(raw, snapshot, plan) {
   if (rawDecisions.length === 0) errors.push('decisions must contain at least one reviewed record');
   const planByKey = new Map(plan.matched.map((item) => [item.record.candidateExternalId, item]));
   const seen = new Set();
+  const revisions = new Map(buildStagingRows(snapshot, plan).claims.map((claim) => [claim.claim_json.candidateExternalId, claim.claim_json.revision]));
 
   const decisions = rawDecisions.map((decision, index) => {
     const prefix = `decisions[${index}]`;
     const candidateExternalId = String(decision?.candidateExternalId ?? '').trim();
     const item = planByKey.get(candidateExternalId);
     if (!item) errors.push(`${prefix}.candidateExternalId is not in the snapshot`);
+    const contentRevision = String(decision?.contentRevision ?? '');
+    if (item && contentRevision !== revisions.get(candidateExternalId)) {
+      errors.push(`${prefix}.contentRevision must match the current snapshot review template`);
+    }
     if (seen.has(candidateExternalId)) errors.push(`${prefix}.candidateExternalId is duplicated`);
     seen.add(candidateExternalId);
     const personName = String(decision?.personName ?? '').trim();
@@ -152,6 +184,7 @@ function validateReviewFile(raw, snapshot, plan) {
     }
     return {
       candidateExternalId,
+      contentRevision,
       personName,
       decision: action,
       personId,
@@ -185,13 +218,13 @@ async function responseJson(response, label) {
   return body;
 }
 
-async function upsertRows(config, tableName, rows, conflictKey) {
+async function upsertRows(config, tableName, rows, conflictKey, resolution = 'merge-duplicates') {
   if (rows.length === 0) return [];
   const url = restUrl(config, tableName);
   url.searchParams.set('on_conflict', conflictKey);
   const response = await fetch(url, {
     method: 'POST',
-    headers: headers(config, 'resolution=merge-duplicates,return=representation'),
+    headers: headers(config, `resolution=${resolution},return=representation`),
     body: JSON.stringify(rows),
     signal: AbortSignal.timeout(30000),
   });
@@ -245,16 +278,52 @@ async function patchById(config, tableName, id, row) {
   return responseJson(response, `Failed to update ${tableName}`);
 }
 
+async function loadStagingRevision(config, snapshot, plan, observedAt) {
+  const staging = buildStagingRows(snapshot, plan, observedAt);
+  const sources = await fetchRowsByValues(config, 'source_people', '*', 'source_person_key', [
+    ...staging.sourcePeople.map((row) => row.source_person_key),
+    ...plan.matched.map((item) => sourcePersonKey(item.record)),
+  ]);
+  const claims = await fetchRowsByValues(config, 'person_claims', '*', 'claim_key', [
+    ...staging.claims.map((row) => row.claim_key),
+    ...plan.matched.map((item) => claimKey(item.record)),
+  ]);
+  for (const [index, item] of plan.matched.entries()) {
+    const claim = staging.claims[index];
+    if (claims.some((row) => row.claim_key === claim.claim_key)) continue;
+    const legacy = claims.find((row) => row.claim_key === claimKey(item.record));
+    const source = sources.find((row) => row.source_person_key === sourcePersonKey(item.record));
+    if (!legacy || !source || legacy.source_person_id !== source.id) continue;
+    if (revisionContent(legacy.claim_json, source) !== revisionContent(claim.claim_json, staging.sourcePeople[index])) continue;
+    // Reuse an identical v1 record without changing any review or evidence fields.
+    const revisionSourceKey = staging.sourcePeople[index].source_person_key;
+    staging.sourcePeople[index] = { ...staging.sourcePeople[index], source_person_key: source.source_person_key };
+    staging.claims[index] = { ...claim, claim_key: legacy.claim_key };
+    for (const suggestion of staging.suggestions) {
+      if (suggestion.sourcePersonKey === revisionSourceKey) suggestion.sourcePersonKey = source.source_person_key;
+    }
+  }
+  return {
+    staging,
+    sourceRows: sources,
+    existingClaims: claims.filter((row) => staging.claims.some((claim) => claim.claim_key === row.claim_key)),
+  };
+}
+
 async function stageOfficialCandidateReview(config, snapshot, plan, rawSnapshot, observedAt = new Date().toISOString()) {
   assertLocalSupabase(config);
   if (plan.blocking.length > 0) throw new Error('Cannot stage a blocked official candidate import plan');
-  const staging = buildStagingRows(snapshot, plan, observedAt);
-  const sourceRows = await upsertRows(config, 'source_people', staging.sourcePeople, 'source_person_key');
+  const { staging, existingClaims } = await loadStagingRevision(config, snapshot, plan, observedAt);
+  // Ignore duplicates atomically: a concurrent reviewer must never be overwritten by staging.
+  await upsertRows(config, 'source_people', staging.sourcePeople, 'source_person_key', 'ignore-duplicates');
+  const sourceRows = await fetchRowsByValues(config, 'source_people', 'id,source_person_key',
+    'source_person_key', staging.sourcePeople.map((row) => row.source_person_key));
   const sourceByKey = new Map(sourceRows.map((row) => [row.source_person_key, row]));
-  await upsertRows(config, 'person_claims', staging.claims.map((row, index) => ({
-    ...row,
-    source_person_id: sourceByKey.get(staging.sourcePeople[index].source_person_key)?.id,
-  })), 'claim_key');
+  const insertedClaims = await upsertRows(config, 'person_claims', staging.claims.map((row, index) => {
+    const source = sourceByKey.get(staging.sourcePeople[index].source_person_key);
+    if (!source) throw new Error(`Source person was not staged: ${row.claim_key}`);
+    return { ...row, source_person_id: source.id };
+  }), 'claim_key', 'ignore-duplicates');
 
   const existingMatches = await fetchRowsByValues(
     config,
@@ -294,7 +363,8 @@ async function stageOfficialCandidateReview(config, snapshot, plan, rawSnapshot,
   }]);
   return {
     stagedSourcePeople: sourceRows.length,
-    stagedClaims: staging.claims.length,
+    stagedClaims: insertedClaims.length,
+    preservedClaims: existingClaims.length,
     stagedIdentitySuggestions: suggestionCount,
     archivedRawSnapshots: 1,
   };
@@ -323,29 +393,33 @@ async function confirmIdentityMatch(config, sourcePersonId, personId, decision, 
 
 async function applyReviewedOfficialCandidates(config, snapshot, review, candidateWriteRow) {
   assertLocalSupabase(config);
-  const sourceRows = await fetchRowsByValues(
-    config,
-    'source_people',
-    'id,source_person_key',
-    'source_person_key',
-    review.decisions.map((decision) => sourcePersonKey(decision.item.record)),
-  );
+  const { staging, sourceRows, existingClaims } = await loadStagingRevision(config, snapshot, {
+    matched: review.decisions.map((decision) => decision.item),
+  });
   const sourceByKey = new Map(sourceRows.map((row) => [row.source_person_key, row]));
+  let preservedTerminalClaims = 0;
   let createdPeople = 0;
   let writtenCandidates = 0;
   let rejected = 0;
 
-  for (const decision of review.decisions) {
+  for (const [index, decision] of review.decisions.entries()) {
     const { item } = decision;
-    const source = sourceByKey.get(sourcePersonKey(item.record));
+    if (decision.contentRevision !== staging.claims[index].claim_json.revision) {
+      throw new Error(`Review content revision does not match snapshot: ${decision.candidateExternalId}`);
+    }
+    const source = sourceByKey.get(staging.sourcePeople[index].source_person_key);
     if (!source) throw new Error(`Source person was not staged: ${decision.candidateExternalId}`);
-    const claims = await fetchRows(config, 'person_claims', 'id', { claim_key: `eq.${claimKey(item.record)}` });
+    const claims = existingClaims.filter((claim) => claim.claim_key === staging.claims[index].claim_key);
     if (!claims[0]) throw new Error(`Candidacy claim was not staged: ${decision.candidateExternalId}`);
+    if (['verified', 'rejected', 'archived'].includes(claims[0].review_status)) {
+      preservedTerminalClaims += 1;
+      continue;
+    }
     if (decision.decision === 'reject') {
       await patchById(config, 'person_claims', claims[0].id, {
         review_status: 'rejected', visibility: 'private', is_public: false,
         scoring_version: 'official-candidate-manual-review-v1',
-        scoring_reasons: [{ reason: decision.reason ?? 'Rejected by reviewer', reviewedAt: decision.reviewedAt }],
+        scoring_reasons: [{ reviewedBy: review.reviewedBy, reason: decision.reason ?? 'Rejected by reviewer', reviewedAt: decision.reviewedAt }],
         updated_at: decision.reviewedAt,
       });
       rejected += 1;
@@ -384,12 +458,12 @@ async function applyReviewedOfficialCandidates(config, snapshot, review, candida
       visibility: 'review_only',
       is_public: false,
       scoring_version: 'official-candidate-manual-review-v1',
-      scoring_reasons: [{ reason: decision.reason ?? 'Confirmed by reviewer', reviewedAt: decision.reviewedAt }],
+      scoring_reasons: [{ reviewedBy: review.reviewedBy, reason: decision.reason ?? 'Confirmed by reviewer', reviewedAt: decision.reviewedAt }],
       updated_at: decision.reviewedAt,
     });
     writtenCandidates += 1;
   }
-  return { reviewed: review.decisions.length, writtenCandidates, createdPeople, rejected };
+  return { reviewed: review.decisions.length, writtenCandidates, createdPeople, rejected, preservedTerminalClaims };
 }
 
 export {

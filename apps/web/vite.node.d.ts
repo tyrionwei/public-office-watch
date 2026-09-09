@@ -18,6 +18,11 @@ declare module 'node:path' {
   export default path;
 }
 
+declare module 'node:crypto' {
+  export function randomBytes(size: number): Uint8Array & { toString(encoding: string): string };
+  export function timingSafeEqual(left: Uint8Array, right: Uint8Array): boolean;
+}
+
 declare const Buffer: {
   from(value: ArrayBuffer | Uint8Array | string): Uint8Array;
   concat(values: Uint8Array[]): Uint8Array & { toString(encoding: string): string };

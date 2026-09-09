@@ -80,6 +80,9 @@ function normalizeAssemblyApprovalStatus(value) {
 }
 
 function validateReport(report) {
+  if (report?.status !== 'ok' || report?.failedDetailCount !== 0) {
+    throw new Error('Incomplete MOI annual finance report: all detail fetches must succeed before import');
+  }
   assertOfficialUrl(report?.sourceUrl, sourceHost, 'Source URL');
   if (!Number.isInteger(report?.reportYear) || !Array.isArray(report?.records) || report.records.length === 0) {
     throw new Error('Expected a non-empty MOI annual finance report with a Gregorian report year');
@@ -93,13 +96,17 @@ function validateReport(report) {
       throw new Error(`Invalid or duplicate MOI party record: ${record.partyName ?? 'unknown'}`);
     }
     partyNumbers.add(record.partyNumber);
+    if (record.detailStatus !== 'ok' || !record.reportPdfUrl) {
+      throw new Error('Incomplete MOI annual finance detail: a successful fetch and official PDF are required');
+    }
     assertOfficialUrl(record.detailUrl, sourceHost, 'Detail URL');
-    assertOfficialUrl(record.reportPdfUrl, pdfHost, 'Report PDF URL', true);
+    assertOfficialUrl(record.reportPdfUrl, pdfHost, 'Report PDF URL');
   }
   return report;
 }
 
 function buildStagingRows(report, parties) {
+  validateReport(report);
   const partyByName = new Map();
   const ambiguousNames = new Set();
   for (const party of parties) {

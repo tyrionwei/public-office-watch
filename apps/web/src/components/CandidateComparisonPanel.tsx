@@ -15,6 +15,8 @@ type CandidateComparisonPanelProps = {
   candidates: PublicCandidate[];
   profiles: PublicPersonProfile[];
   loading: boolean;
+  error: boolean;
+  onRetry: () => void;
   currentRaceId: string;
   raceTitle: string;
   onRemove: (personId: string) => void;
@@ -111,6 +113,8 @@ export function CandidateComparisonPanel({
   candidates,
   profiles,
   loading,
+  error,
+  onRetry,
   currentRaceId,
   raceTitle,
   onRemove,
@@ -146,7 +150,7 @@ export function CandidateComparisonPanel({
       <SectionPanel
         title={t('race.compareTitle')}
         eyebrow={t('race.compareEyebrow')}
-        action={shareUrl ? (
+        action={shareUrl && !loading && !error ? (
           <ShareButton
             title={t('share.comparisonTitle', { race: raceTitle })}
             text={t('share.comparisonText', { candidates: candidateNames })}
@@ -162,6 +166,11 @@ export function CandidateComparisonPanel({
         <p className="pixel-corners border border-line/70 bg-bg/35 p-4 text-sm text-slate-300">{t('race.compareNeedTwo')}</p>
       ) : loading ? (
         <p className="text-sm text-slate-400">{t('race.compareLoading')}</p>
+      ) : error ? (
+        <div>
+          <p role="alert" className="text-sm text-slate-300">{t('app.loadError')}</p>
+          <button type="button" className="mt-3 border border-accent px-3 py-2 text-accent" onClick={onRetry}>{t('app.retry')}</button>
+        </div>
       ) : (
         <div className="overflow-x-visible md:overflow-x-auto">
           <div

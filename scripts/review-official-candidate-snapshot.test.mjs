@@ -40,7 +40,7 @@ test('builds a review item with exact-name identity candidates', () => {
   const basePlan = { blocking: [], createPeople: [], createCandidates: [], updateCandidates: [], unchanged: [] };
   const plan = buildReviewPlan(input, { races: [race], people: [person], candidates: [] }, basePlan);
   assert.equal(plan.matched[0].identityCandidates[0].id, 'person-1');
-  assert.equal(reviewTemplate(plan)[0].suggestedDecision, 'use_existing');
+  assert.equal(reviewTemplate(plan, input)[0].suggestedDecision, 'use_existing');
 });
 
 test('new reviewed candidates remain private while existing visibility is preserved', () => {

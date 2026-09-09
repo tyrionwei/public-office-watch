@@ -29,8 +29,8 @@ type VotingRegionContextValue = {
   preference: VotingRegionPreference | null;
   currentLocation: CurrentLocation | null;
   setCurrentLocation: (location: CurrentLocation | null) => void;
-  confirmPreference: (preference: VotingRegionPreference) => void;
-  clearPreference: () => void;
+  confirmPreference: (preference: VotingRegionPreference) => boolean;
+  clearPreference: () => boolean;
 };
 
 const VotingRegionContext = createContext<VotingRegionContextValue | null>(null);
@@ -67,12 +67,22 @@ export function VotingRegionProvider({ children }: PropsWithChildren) {
     currentLocation,
     setCurrentLocation,
     confirmPreference(nextPreference) {
-      window.localStorage.setItem(votingRegionStorageKey, JSON.stringify(nextPreference));
+      try {
+        window.localStorage.setItem(votingRegionStorageKey, JSON.stringify(nextPreference));
+      } catch {
+        return false;
+      }
       setPreference(nextPreference);
+      return true;
     },
     clearPreference() {
-      window.localStorage.removeItem(votingRegionStorageKey);
+      try {
+        window.localStorage.removeItem(votingRegionStorageKey);
+      } catch {
+        return false;
+      }
       setPreference(null);
+      return true;
     },
   }), [currentLocation, preference]);
 

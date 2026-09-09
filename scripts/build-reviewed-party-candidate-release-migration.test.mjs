@@ -1,3 +1,4 @@
+import { partyCandidateRevision } from './party-candidate-revision.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
@@ -16,6 +17,7 @@ function fixture() {
     party: '民主進步黨', is_public: false, source_payload: { targetRace: { id: 'race-rejected' } },
   };
   const candidacyValid = {
+    claim_json: structuredClone(sourceValid.source_payload),
     id: 'claim-valid', claim_key: 'party-candidacy:dpp-valid', source_person_id: sourceValid.id,
     person_id: 'person-valid', claim_type: 'candidacy', review_status: 'verified', visibility: 'public',
     is_public: true, source_name: '政黨官網', source_url: 'https://example.test/valid',
@@ -99,4 +101,30 @@ test('blocks generation when the reviewed new-person boundary drifts', () => {
     () => buildReleaseDataset(dataset, { expected: fixtureExpected }),
     /new people: expected 1, found 0/,
   );
+});
+
+test('release selects one reviewed revision while keeping base person/candidate/profile keys and fixed counts', () => {
+  const dataset = fixture();
+  const previous = structuredClone(dataset.sources[0]);
+  const selected = dataset.sources[0];
+  selected.id = 'source-new-revision'; selected.source_payload.sourceCandidateKey = 'dpp-valid'; selected.source_payload.schemaVersion = 2;
+  selected.source_payload.revision = partyCandidateRevision(selected.source_payload, selected);
+  selected.source_person_key += ':revision:' + selected.source_payload.revision;
+  for (const claim of dataset.claims.filter(row => row.source_person_id === previous.id)) {
+    claim.source_person_id = selected.id;
+    if (claim.claim_type === 'candidacy') claim.claim_json = structuredClone(selected.source_payload);
+  }
+  dataset.matches[0].source_person_id = selected.id;
+  dataset.sources.push(previous);
+  assert.throws(() => buildReleaseDataset(dataset, { expected: fixtureExpected }), /blocked/);
+  const release = buildReleaseDataset(dataset, { expected: fixtureExpected, revisionSelections: [{ sourcePersonKey: selected.source_person_key, contentRevision: selected.source_payload.revision }] });
+  assert.equal(release.sources.length, fixtureExpected.sources);
+  assert.equal(release.sources.some(row => row.id === previous.id), false);
+  assert.deepEqual(release.retiredSources.map(row => row.id), [previous.id]);
+  assert.match(buildMigration(release, fixtureExpected), /Superseded party source content changed; retirement blocked/);
+  assert.match(buildMigration(release, fixtureExpected), /UPDATE source_people existing SET is_public = FALSE/);
+  assert.equal(release.newPeople[0].external_id, 'party-candidate-person:dpp-valid');
+  assert.equal(release.candidates[0].external_id, 'party-candidate:dpp-valid');
+  assert.equal(release.claims.find(row => row.claim_type === 'platform').claim_key, 'party-candidate:dpp-valid:platform');
+  assert.match(buildMigration(release, fixtureExpected), /source_payload->>'sourceCandidateKey'/);
 });

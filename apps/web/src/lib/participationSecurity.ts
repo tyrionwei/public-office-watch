@@ -80,7 +80,7 @@ function loadTurnstile() {
   return turnstileScriptPromise;
 }
 
-export async function createParticipationCaptchaToken() {
+async function createCaptchaToken(action: 'participation' | 'admin-login') {
   const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim();
   if (!siteKey) throw new Error('Turnstile is unavailable');
 
@@ -108,13 +108,21 @@ export async function createParticipationCaptchaToken() {
     };
     widgetId = api.render(container, {
       sitekey: siteKey,
-      action: 'participation',
+      action,
       appearance: 'interaction-only',
       callback: (token) => finish(() => resolve(token)),
       'error-callback': () => finish(() => reject(new Error('Security verification failed'))),
       'expired-callback': () => finish(() => reject(new Error('Security verification expired'))),
     });
   });
+}
+
+export function createParticipationCaptchaToken() {
+  return createCaptchaToken('participation');
+}
+
+export function createAdminLoginCaptchaToken() {
+  return createCaptchaToken('admin-login');
 }
 
 function hasClearanceMarker() {

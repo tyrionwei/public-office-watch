@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { compareSourceDiscoveries, monitorState, writeMonitorReport } from './lib/source-monitor-state.mjs';
 
 const defaultManifestPath = 'data-sources/cec-2026-candidate-source-manifest.json';
 
@@ -164,25 +165,7 @@ function contentHash(body) {
   return crypto.createHash('sha256').update(body).digest('hex');
 }
 
-function compareDiscoveries(current, previous = null) {
-  const previousSources = new Map((previous?.sources ?? []).map((source) => [source.key, source]));
-  return current.map((source) => {
-    const before = previousSources.get(source.key);
-    const beforeUrls = new Set((before?.discoveries ?? []).map((item) => item.url));
-    const currentUrls = new Set(source.discoveries.map((item) => item.url));
-    return {
-      ...source,
-      baseline: before == null,
-      changed: before != null && before.contentHash !== source.contentHash,
-      newDiscoveries: before == null
-        ? []
-        : source.discoveries.filter((item) => !beforeUrls.has(item.url)),
-      removedDiscoveries: before == null
-        ? []
-        : (before.discoveries ?? []).filter((item) => !currentUrls.has(item.url)),
-    };
-  });
-}
+const compareDiscoveries = compareSourceDiscoveries;
 
 function snapshotExtension(contentType) {
   if (contentType.includes('html')) return 'html';
@@ -224,13 +207,16 @@ function writeSnapshot(snapshotDir, source) {
   return path.resolve(outputPath);
 }
 
-async function main() {
-  const options = parseArgs(process.argv.slice(2));
+async function main(argv = process.argv.slice(2)) {
+  const options = parseArgs(argv);
   const manifestPath = path.resolve(options.manifestPath);
   const manifest = validateManifest(JSON.parse(fs.readFileSync(manifestPath, 'utf8')));
-  const previous = options.previousPath && fs.existsSync(path.resolve(options.previousPath))
+  let previous = options.previousPath && fs.existsSync(path.resolve(options.previousPath))
     ? JSON.parse(fs.readFileSync(path.resolve(options.previousPath), 'utf8'))
     : null;
+  const comparisonContext = contentHash(JSON.stringify({ electionYear: manifest.electionYear, rules: manifest.rules }));
+  if ((previous?.electionYear && previous.electionYear !== manifest.electionYear)
+    || (previous?.comparisonContext && previous.comparisonContext !== comparisonContext)) previous = null;
   const fetchedAt = new Date().toISOString();
   const fetched = [];
   const errors = [];
@@ -252,6 +238,7 @@ async function main() {
   const report = {
     schemaVersion: 1,
     electionYear: manifest.electionYear,
+    comparisonContext,
     fetchedAt,
     status: errors.length === 0 ? 'ok' : fetched.length > 0 ? 'partial' : 'failed',
     sourceCount: manifest.sources.length,
@@ -259,15 +246,16 @@ async function main() {
     newDiscoveryCount: sources.reduce((sum, source) => sum + source.newDiscoveries.length, 0),
     sources,
     errors,
+    ...monitorState(manifest.sources, sources, errors, previous, fetchedAt),
   };
 
   if (options.outputPath) {
     const outputPath = path.resolve(options.outputPath);
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-    fs.writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`);
+    writeMonitorReport(outputPath, report);
   }
   console.log(JSON.stringify(report, null, 2));
   if (report.status === 'failed') process.exitCode = 1;
+  return report;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
@@ -277,4 +265,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { compareDiscoveries, discoveryMatches, extractCandidateLinks, isCecUrl, parseArgs, validateManifest };
+export { main, compareDiscoveries, discoveryMatches, extractCandidateLinks, isCecUrl, parseArgs, validateManifest };

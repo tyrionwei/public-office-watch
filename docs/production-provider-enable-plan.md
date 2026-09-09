@@ -1,5 +1,13 @@
 # Cloudflare Pages production enable plan
 
+> **Historical plan — retired as current release guidance (2026-09-09).**
+> The current production target is Cloudflare Workers + Static Assets.
+> Use [deployment environments and releases](deployment-environments.md),
+> [production rehearsal](production-rehearsal.md), and
+> [production security](cloudflare-production-security.md) for current procedures.
+> The Pages build, Access assumptions, smoke scope, and rollback steps below
+> preserve the earlier plan only; they are not instructions for a current release.
+
 ## Status
 
 - Production deployment is not performed by this document.

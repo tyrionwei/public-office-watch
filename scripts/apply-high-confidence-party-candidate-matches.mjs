@@ -1,3 +1,5 @@
+import { assertPartyCandidateRevision, partyCandidateBaseKey } from './party-candidate-revision.mjs';
+import { assertLocalSupabase, insertOnce, patchExpected } from './party-candidate-review.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -109,44 +111,33 @@ function planHighConfidenceMatches({ sources, matches, claims, candidates }, opt
       continue;
     }
 
-    const confirmedMatch = (matchesBySource.get(source.id) ?? []).find((match) => match.match_status === 'auto_matched');
-    if (confirmedMatch) {
-      if (confirmedMatch.person_id !== parsed.personId) {
-        blocking.push({
-          sourcePersonKey: source.source_person_key,
-          personName: source.raw_name,
-          errors: ['confirmed identity differs from the high-confidence candidate'],
-        });
-      } else {
-        alreadyConfirmed.push({ source, ...parsed });
-      }
-      continue;
-    }
-
-    const sourceClaims = claimsBySource.get(source.id) ?? [];
-    if (sourceClaims.length !== 1) {
-      blocking.push({
-        sourcePersonKey: source.source_person_key,
-        personName: source.raw_name,
-        errors: [`expected one staged claim, found ${sourceClaims.length}`],
-      });
-      continue;
-    }
-
-    const externalId = `party-candidate:${parsed.sourceCandidateKey}`;
+    const sourceClaims = (claimsBySource.get(source.id) ?? []).filter(row => row.claim_type === 'candidacy');
+    const sourceMatches = matchesBySource.get(source.id) ?? [];
+    const errors = [];
+    const claim = sourceClaims[0];
+    if (sourceClaims.length !== 1) errors.push(`expected one staged claim, found ${sourceClaims.length}`);
+    if (claim && !['pending', 'verified'].includes(claim.review_status)) errors.push('claim has a manual hold or terminal rejection');
+    if (claim?.person_id && claim.person_id !== parsed.personId) errors.push('claim identifies another person');
+    if (sourceMatches.length > 1) errors.push('multiple identity matches require manual review');
+    const match = sourceMatches[0];
+    if (match?.match_status === 'rejected_match') errors.push('identity match is rejected');
+    if (match?.person_id && match.person_id !== parsed.personId) errors.push('identity match identifies another person');
+    if (match?.reviewed_at && match.match_status !== 'auto_matched') errors.push('identity has a manual hold');
+    let externalId;
+    try { externalId = partyCandidateBaseKey(source); assertPartyCandidateRevision(source, claim); }
+    catch (error) { errors.push(error.message); }
     const existingCandidate = candidatesByExternalId.get(externalId);
-    if (existingCandidate && (
-      existingCandidate.person_id !== parsed.personId || existingCandidate.race_id !== parsed.raceId
-    )) {
-      blocking.push({
-        sourcePersonKey: source.source_person_key,
-        personName: source.raw_name,
-        errors: ['existing candidate conflicts with selected person or race'],
-      });
-      continue;
+    if (existingCandidate && (existingCandidate.person_id !== parsed.personId || existingCandidate.race_id !== parsed.raceId || existingCandidate.party !== source.party)) errors.push('existing candidate conflicts with selected person, race, or party');
+    if (existingCandidate && (existingCandidate.candidacy_status !== 'party_nominee' || existingCandidate.registration_status !== 'unknown' || existingCandidate.election_result !== 'pending')) errors.push('existing candidate status requires separate review');
+    const complete = existingCandidate && match?.match_status === 'auto_matched' && claim?.review_status === 'verified' && claim.person_id === parsed.personId;
+    if (source.source_payload?.requiresManualReview === true && (!complete || claim?.scoring_version !== 'party-candidate-manual-review-v2')) errors.push('changed source revision requires new manual review');
+    if (errors.length) {
+      blocking.push({ sourcePersonKey: source.source_person_key, personName: source.raw_name, errors });
+    } else if (complete) {
+      alreadyConfirmed.push({ source, claim, match, existingCandidate, externalId, ...parsed });
+    } else {
+      eligible.push({ source, claim, match, existingCandidate, externalId, ...parsed });
     }
-
-    eligible.push({ source, claim: sourceClaims[0], externalId, ...parsed });
   }
 
   return { eligible, alreadyConfirmed, blocking };
@@ -209,7 +200,7 @@ async function upsertRows(config, tableName, rows, conflictKey) {
     url.searchParams.set('on_conflict', conflictKey);
     const response = await fetch(url, {
       method: 'POST',
-      headers: headers(config, 'resolution=merge-duplicates,return=minimal'),
+      headers: headers(config, 'resolution=ignore-duplicates,return=minimal'),
       body: JSON.stringify(rows.slice(index, index + 100)),
       signal: AbortSignal.timeout(30000),
     });
@@ -217,17 +208,6 @@ async function upsertRows(config, tableName, rows, conflictKey) {
   }
 }
 
-async function patchRows(config, tableName, filters, row) {
-  const url = restUrl(config, tableName);
-  for (const [key, value] of Object.entries(filters)) url.searchParams.set(key, value);
-  const response = await fetch(url, {
-    method: 'PATCH',
-    headers: headers(config, 'return=minimal'),
-    body: JSON.stringify(row),
-    signal: AbortSignal.timeout(30000),
-  });
-  await responseJson(response, `Failed to update ${tableName}`);
-}
 
 function countByParty(items) {
   return Object.fromEntries(
@@ -267,62 +247,74 @@ function reviewMetadata(item) {
   };
 }
 
+async function currentItem(config, item) {
+  const sources = await fetchRows(config, 'source_people', '*', { id: `eq.${item.source.id}` });
+  const [matches, claims, candidates] = await Promise.all([
+    fetchRows(config, 'person_identity_matches', '*', { source_person_id: `eq.${item.source.id}` }),
+    fetchRows(config, 'person_claims', '*', { source_person_id: `eq.${item.source.id}`, claim_type: 'eq.candidacy' }),
+    fetchRows(config, 'candidates', '*', { external_id: `eq.${item.externalId}` }),
+  ]);
+  if (sources.length !== 1 || JSON.stringify(sources[0].source_payload) !== JSON.stringify(item.source.source_payload)) throw new Error('Source changed since identity planning');
+  const plan = planHighConfidenceMatches({ sources, matches, claims, candidates }, { includeProbableContext: true });
+  if (plan.blocking.length || plan.eligible.length + plan.alreadyConfirmed.length !== 1) throw new Error(plan.blocking.flatMap(row => row.errors).join('; ') || 'Source is no longer eligible');
+  return { item: plan.eligible[0] ?? plan.alreadyConfirmed[0], complete: plan.alreadyConfirmed.length === 1 };
+}
+
 async function applyPlan(config, plan, reviewedAt) {
-  await upsertRows(config, 'candidates', plan.eligible.map((item) => ({
-    external_id: item.externalId,
-    person_id: item.personId,
-    race_id: item.raceId,
-    party: item.source.party,
-    registration_status: 'unknown',
-    candidacy_status: 'party_nominee',
-    election_result: 'pending',
-    status_updated_at: reviewedAt,
-    source_name: item.source.source_name,
-    source_url: item.source.source_url,
-    is_public: false,
-    updated_at: reviewedAt,
-  })), 'external_id');
-
-  await upsertRows(config, 'person_identity_matches', plan.eligible.map((item) => {
-    const metadata = reviewMetadata(item);
-    return {
-      source_person_id: item.source.id,
-      person_id: item.personId,
-      match_status: 'auto_matched',
-      score: 100,
-      match_method: metadata.version.replaceAll('-', '_'),
-      match_reason: metadata.reason,
-      evidence_json: {
-        version: metadata.version,
-        sourceCandidateKey: item.sourceCandidateKey,
-        evidence: item.evidence,
-      },
-      reviewed_by: metadata.version,
-      reviewed_at: reviewedAt,
-      updated_at: reviewedAt,
-    };
-  }), 'source_person_id,person_id');
-
-  for (let index = 0; index < plan.eligible.length; index += 20) {
-    await Promise.all(plan.eligible.slice(index, index + 20).flatMap((item) => [
-      patchRows(config, 'source_people', { id: `eq.${item.source.id}` }, {
-        is_public: false,
-        updated_at: reviewedAt,
-      }),
-      patchRows(config, 'person_claims', { id: `eq.${item.claim.id}` }, {
-        person_id: item.personId,
-        review_status: 'verified',
-        visibility: 'review_only',
-        is_public: false,
-        scoring_version: reviewMetadata(item).version,
-        scoring_reasons: [{
-          reason: reviewMetadata(item).reason,
-          reviewedAt,
-        }],
-        updated_at: reviewedAt,
-      }),
-    ]));
+  assertLocalSupabase(config);
+  if (plan.blocking.length) throw new Error('Cannot apply blocked identity plan');
+  const results = [];
+  for (const planned of plan.eligible) {
+    let changed = false, writeAttempted = false;
+    try {
+      const current = await currentItem(config, planned);
+      if (current.complete) { results.push({ sourcePersonKey: planned.source.source_person_key, status: 'unchanged' }); continue; }
+      const item = current.item;
+      writeAttempted = true;
+      const candidate = await insertOnce(config, 'candidates', {
+        external_id: item.externalId, person_id: item.personId, race_id: item.raceId, party: item.source.party,
+        registration_status: 'unknown', candidacy_status: 'party_nominee', election_result: 'pending',
+        status_updated_at: reviewedAt, source_name: item.source.source_name, source_url: item.source.source_url,
+        is_public: false, updated_at: reviewedAt,
+      }, 'external_id');
+      changed ||= candidate.created;
+      if (candidate.row.person_id !== item.personId || candidate.row.race_id !== item.raceId || candidate.row.party !== item.source.party
+        || candidate.row.candidacy_status !== 'party_nominee' || candidate.row.registration_status !== 'unknown' || candidate.row.election_result !== 'pending') throw new Error('Candidate changed concurrently; preserved');
+      const metadata = reviewMetadata(item);
+      const identity = {
+        source_person_id: item.source.id, person_id: item.personId, match_status: 'auto_matched', score: 100,
+        match_method: metadata.version.replaceAll('-', '_'), match_reason: metadata.reason,
+        evidence_json: { version: metadata.version, sourceCandidateKey: item.sourceCandidateKey, evidence: item.evidence,
+          contentRevision: item.source.source_payload?.revision ?? null },
+        reviewed_by: metadata.version, reviewed_at: reviewedAt, updated_at: reviewedAt,
+      };
+      if (!item.match) {
+        await upsertRows(config, 'person_identity_matches', [identity], 'source_person_id,person_id');
+        changed = true;
+      } else if (item.match.match_status !== 'auto_matched') {
+        await patchExpected(config, 'person_identity_matches', item.match, identity, ['match_status', 'reviewed_at', 'person_id']);
+        changed = true;
+      }
+      // Re-read all rows after the identity step. A manual rejection cannot be
+      // erased to compensate for a partially completed private write.
+      const resumed = await currentItem(config, planned);
+      if (!resumed.complete) {
+        if (resumed.item.match?.match_status !== 'auto_matched') throw new Error('Identity confirmation did not complete');
+        await patchExpected(config, 'person_claims', resumed.item.claim, {
+          person_id: item.personId, review_status: 'verified', visibility: 'review_only', is_public: false,
+          scoring_version: metadata.version, scoring_reasons: [{ reason: metadata.reason, reviewedAt }], updated_at: reviewedAt,
+        }, ['review_status', 'person_id', 'claim_json', 'visibility', 'is_public']);
+        changed = true;
+      }
+      if (!(await currentItem(config, planned)).complete) throw new Error('Identity workflow remains incomplete');
+      results.push({ sourcePersonKey: item.source.source_person_key, status: 'completed' });
+    } catch (error) {
+      results.push({ sourcePersonKey: planned.source.source_person_key, status: changed || writeAttempted ? 'incomplete' : 'conflict', error: error.message });
+    }
   }
+  return { results, completed: results.filter(row => row.status === 'completed').length,
+    unchanged: results.filter(row => row.status === 'unchanged').length,
+    incomplete: results.filter(row => ['incomplete', 'conflict'].includes(row.status)).length };
 }
 
 async function main() {
@@ -337,13 +329,13 @@ async function main() {
     throw new Error('High-confidence party candidate matching is local-only');
   }
 
-  const sources = await fetchRows(config, 'source_people', 'id,source_person_key,raw_name,party,source_name,source_url,source_payload', {
+  const sources = await fetchRows(config, 'source_people', '*', {
     source_person_key: 'like.party-candidate:*',
   });
   const [matches, claims, candidates] = await Promise.all([
-    fetchRowsByValues(config, 'person_identity_matches', 'source_person_id,person_id,match_status', 'source_person_id', sources.map((row) => row.id)),
-    fetchRowsByValues(config, 'person_claims', 'id,source_person_id,review_status,visibility,is_public', 'source_person_id', sources.map((row) => row.id)),
-    fetchRows(config, 'candidates', 'external_id,person_id,race_id,is_public', { external_id: 'like.party-candidate:*' }),
+    fetchRowsByValues(config, 'person_identity_matches', '*', 'source_person_id', sources.map((row) => row.id)),
+    fetchRowsByValues(config, 'person_claims', '*', 'source_person_id', sources.map((row) => row.id)),
+    fetchRows(config, 'candidates', '*', { external_id: 'like.party-candidate:*' }),
   ]);
   const plan = planHighConfidenceMatches(
     { sources, matches, claims, candidates },
@@ -356,9 +348,11 @@ async function main() {
   }
 
   const reviewedAt = new Date().toISOString();
-  if (options.write) await applyPlan(config, plan, reviewedAt);
+  const applied = options.write ? await applyPlan(config, plan, reviewedAt) : null;
+  if (applied?.incomplete) process.exitCode = 1;
   console.log(JSON.stringify({
-    status: 'ok',
+    status: applied?.incomplete ? 'needs_attention' : 'ok',
+    applied,
     mode: options.write ? 'write' : 'dry-run',
     includeProbableContext: options.includeProbableContext,
     sourceCount: sources.length,
@@ -378,4 +372,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { candidateForAutoMatch, highConfidenceCandidate, planHighConfidenceMatches };
+export { candidateForAutoMatch, highConfidenceCandidate, planHighConfidenceMatches, applyPlan };

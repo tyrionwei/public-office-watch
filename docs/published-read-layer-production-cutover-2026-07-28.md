@@ -1,7 +1,8 @@
 # Published read layer production cutover - 2026-07-28
 
 > Historical record. The legacy Supabase provider rollback described below was retired on 2026-08-12.
-> Current releases and rollbacks must follow `docs/production-provider-enable-plan.md`.
+> Current release gates and recovery boundaries are documented in [deployment-environments.md](deployment-environments.md).
+> The former [Pages enable plan](production-provider-enable-plan.md) is historical only.
 
 ## Database
 

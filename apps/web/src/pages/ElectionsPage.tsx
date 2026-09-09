@@ -35,9 +35,13 @@ export function ElectionsPage() {
   const { language, t } = useI18n();
   const [indexData, setIndexData] = useState<PublicElectionIndexData>({ elections: [], raceSummaries: [] });
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
+    setLoadError(false);
 
     void refreshConfiguredPublicDataProvider()
       .then(() => publicDataProvider.loadElectionIndex())
@@ -45,6 +49,7 @@ export function ElectionsPage() {
         if (active) setIndexData(data);
       })
       .catch((error: unknown) => {
+        if (active) setLoadError(true);
         if (import.meta.env.DEV) console.warn('Failed to load election index', error);
       })
       .finally(() => {
@@ -54,7 +59,7 @@ export function ElectionsPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [loadAttempt]);
 
   const events = buildElectionEvents(indexData.elections, [], indexData.raceSummaries);
   const eventGroups = groupEventsByYear(events, t('elections.unknownYear'), language);
@@ -72,7 +77,7 @@ export function ElectionsPage() {
       <div className="space-y-4">
         <PixelFrame
           title={t('elections.frameTitle')}
-          action={<span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">{t('elections.eventCount', { count: events.length })}</span>}
+          action={<span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">{loading || loadError ? '—' : t('elections.eventCount', { count: events.length })}</span>}
         >
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.34fr)]">
             <div className="min-w-0">
@@ -83,14 +88,19 @@ export function ElectionsPage() {
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              <HudStatCard label={t('elections.events')} value={<span className="font-display text-xl text-white">{events.length}</span>} />
-              <HudStatCard label={t('elections.races')} value={<span className="font-display text-xl text-white">{totalRaces}</span>} />
-              <HudStatCard label={t('elections.upcoming')} value={<span className="font-display text-xl text-signal">{upcomingEvents.length}</span>} />
+              <HudStatCard label={t('elections.events')} value={<span className="font-display text-xl text-white">{loading || loadError ? '—' : events.length}</span>} />
+              <HudStatCard label={t('elections.races')} value={<span className="font-display text-xl text-white">{loading || loadError ? '—' : totalRaces}</span>} />
+              <HudStatCard label={t('elections.upcoming')} value={<span className="font-display text-xl text-signal">{loading || loadError ? '—' : upcomingEvents.length}</span>} />
             </div>
           </div>
         </PixelFrame>
 
-        {eventGroups.length > 0 ? (
+        {loadError ? (
+          <PixelFrame title={t('elections.loadErrorTitle')}>
+            <p role="alert" className="text-sm text-slate-300">{t('app.loadError')}</p>
+            <button type="button" className="mt-3 border border-accent px-3 py-2 text-accent" onClick={() => setLoadAttempt(value => value + 1)}>{t('app.retry')}</button>
+          </PixelFrame>
+        ) : !loading && eventGroups.length > 0 ? (
           eventGroups.map(([year, yearEvents]) => (
             <SectionPanel key={year} title={year} eyebrow={t('elections.year')}>
               <div className="grid gap-3 xl:grid-cols-2">

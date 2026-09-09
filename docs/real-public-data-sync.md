@@ -1,6 +1,6 @@
 # Real Public Data Sync
 
-This branch introduces the first real-data ingestion path. It is intentionally small and repeatable.
+This document describes the foundational real-data sync and its current entry points. Source-specific collectors and review workflows have separate runbooks.
 
 For source-specific fetching and parsing recipes, see `docs/public-data-fetch-recipes.md` and `data-sources/source-fetch-recipes.json`.
 
@@ -31,22 +31,43 @@ Legal record leads are not public views and do not create public `legal_case` cl
 4. The CEC ZIP reader decodes Big5/CP950 file names, maps party codes from `elpaty.csv`, creates legislative/local race records, and imports person-candidate rows from the presidential, legislative, mayor, and councilor `elcand.csv` files.
 5. The political contribution parser reads `political party_incomes and expenditures.csv`, converts ROC years to Gregorian years, and writes party-level annual totals.
 6. It also reads `incomes.csv`, keeps only `營利事業捐贈收入` rows with a valid unified business number, and aggregates them by party, company, and report year.
-7. Dry-run mode prints a JSON report only:
+7. Dry-run skips database writes and prints a JSON report. It can still fetch external sources and create local caches or monitoring artifacts; it is not an offline test:
 
 ```bash
 npm run sync:real-data:dry-run
 ```
 
-8. Write mode requires Supabase write secrets:
+8. Write mode requires authorized full-local Supabase service credentials supplied through a controlled local environment. Do not use production credentials for collection or paste secrets into shell history:
 
 ```bash
-SUPABASE_URL="https://..." \
-SUPABASE_SERVICE_ROLE_KEY="..." \
+# After verifying the authorized full-local URL and loading server-only credentials:
 npm run sync:real-data:write
 ```
 
-9. The script upserts base tables by `external_id` or stable natural keys, then public views expose only `is_public = TRUE` rows.
-10. The frontend still reads only public views through `publicDataProvider`.
+9. The script upserts local base tables by `external_id` or stable natural keys. Collected/private rows are not automatically a reviewed production release.
+10. The frontend reads the reviewed `published` interface through `publicDataProvider`; legacy `public_*` views are retired.
+
+### Planned 2026 race reconciliation
+
+Write mode preserves existing public races that are absent from the current
+planned mayor/councilor input. Even a successful CEC fetch does not establish
+complete coverage. Missing generated races with matching election, type, and
+calendar source metadata appear in `plannedLocalRaceReconciliation` as
+`review_required`; manual, grassroots, and other-source races are preserved.
+This comparison uses a snapshot taken before race upserts change source metadata.
+
+The CLI and `data_sync_runs.report_json` use the same completed report. Missing
+owned races set its `needsAttention` to true and change an otherwise `ok` report
+to `degraded`. The run row's `status: ok` describes completion of the write;
+monitoring must also inspect report health. Fallback comparisons remain visible
+with `sourceStatus: fallback` and `coverage: not_proven_complete`. Dry runs report
+`not_checked` and do not query stored races. ID lists are capped at 500 with a
+total count and truncation flag; no missing-row hide operation is performed.
+
+Official metadata for the five changed councilor regions still updates 48
+districts. Older generated IDs can remain alongside replacement IDs, including
+fallback `official-*` IDs after historic CEC data becomes available again. Resolve
+those differences through separate evidence-based review before hiding rows.
 
 Legal lead mode:
 
@@ -55,16 +76,14 @@ npm run sync:legal-leads:dry-run
 ```
 
 ```bash
-SUPABASE_URL="https://..." \
-SUPABASE_SERVICE_ROLE_KEY="..." \
+# After verifying the authorized full-local URL and loading server-only credentials:
 npm run sync:legal-leads:write
 ```
 
 ## Automation
 
-- `.github/workflows/sync-real-public-data.yml` runs a daily dry-run.
-- The weekly schedule attempts a write only when `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` repository secrets are present.
-- Manual workflow dispatch can request a write with `write=true`.
+- [sync-real-public-data.yml](../.github/workflows/sync-real-public-data.yml) is **manual dispatch only**, runs `sync:real-data:dry-run`, and selects Node 22. It has no schedule, write input, or database-secret configuration.
+- Daily/weekly full-local monitoring is a separate operation described in [weekly-monitoring.md](weekly-monitoring.md) and [daily-person-news-monitor.md](daily-person-news-monitor.md). Check the actual local scheduler and run artifacts before claiming a schedule is active; this GitHub workflow is not evidence of it.
 - Each write can record a row in `data_sync_runs` with counts, mode, source hash, and report JSON.
 
 ## Supabase Migration

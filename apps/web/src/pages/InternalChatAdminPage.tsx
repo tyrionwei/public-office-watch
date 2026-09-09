@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
+import { AdminMagicLinkError, adminMagicLinkErrorMessage } from '../lib/adminMagicLink';
 import { SectionPanel } from '../components/SectionPanel';
 import {
   ChatAdminApiError,
@@ -45,6 +46,7 @@ function formatDateTime(value: string | null) {
 }
 
 function displayError(error: unknown) {
+  if (error instanceof AdminMagicLinkError) return adminMagicLinkErrorMessage(error);
   if (error instanceof ChatAdminApiError) {
     if (error.code === 'CHAT_ADMIN_FORBIDDEN') return '此帳號沒有聊天室管理權限。';
     if (error.code === 'CHAT_ADMIN_AUTH_FAILED') return '登入未完成，請確認 Email 後再試。';
@@ -111,6 +113,7 @@ export function InternalChatAdminPage() {
     event.preventDefault();
     setBusyAction('login');
     setError(null);
+    setMagicLinkSent(false);
     try {
       await requestChatAdminMagicLink(email.trim());
       setMagicLinkSent(true);
@@ -211,7 +214,7 @@ export function InternalChatAdminPage() {
                 {busyAction === 'login' ? '寄送中…' : '寄送一次性登入連結'}
               </button>
             </form>
-            {magicLinkSent ? <p className="mt-4 border-l-2 border-signal bg-signal/10 px-3 py-2 text-sm text-signal">登入連結已寄出，請回到此頁完成登入。</p> : null}
+            {magicLinkSent ? <p className="mt-4 border-l-2 border-signal bg-signal/10 px-3 py-2 text-sm text-signal">已送出登入連結請求，請到信箱點擊連結完成登入。</p> : null}
             {error ? <p className="mt-4 text-sm text-rose-300">{error}</p> : null}
           </PixelFrame>
         </div>

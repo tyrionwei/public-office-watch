@@ -1,3 +1,5 @@
+import { internalReviewFetch } from './internalReviewClient';
+
 export type ReviewClaim = {
   claim_id: string;
   person_id: string | null;
@@ -173,7 +175,7 @@ async function fetchPersonReviewContexts(
     return { peopleById: new Map(), error: null };
   }
 
-  const response = await fetch('/internal-api/review-person-contexts', {
+  const response = await internalReviewFetch('/internal-api/review-person-contexts', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ personIds }),
@@ -240,7 +242,7 @@ export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Pr
   if (filters.reviewStatus) params.set('reviewStatus', filters.reviewStatus);
   if (filters.personName) params.set('personName', filters.personName);
 
-  const response = await fetch(`/internal-api/review-claims?${params.toString()}`);
+  const response = await internalReviewFetch(`/internal-api/review-claims?${params.toString()}`);
   const body = await response.json().catch(() => null);
   if (!response.ok) {
     return { claims: [], error: body?.error ?? response.statusText };
@@ -280,7 +282,7 @@ export async function fetchInternalReviewClaims(filters: ReviewClaimFilters): Pr
 }
 
 export async function fetchInternalIdentityReviewItems(): Promise<IdentityReviewResult> {
-  const response = await fetch('/internal-api/review-identities');
+  const response = await internalReviewFetch('/internal-api/review-identities');
   const body = await response.json().catch(() => null);
   if (!response.ok) {
     return { items: [], error: body?.error ?? response.statusText };
@@ -330,7 +332,7 @@ export async function reviewInternalClaim(
   personFieldPreserved: boolean;
   error: string | null;
 }> {
-  const response = await fetch('/internal-api/review-claim', {
+  const response = await internalReviewFetch('/internal-api/review-claim', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ claimId, action, ...options }),
@@ -363,7 +365,7 @@ export async function reviewInternalIdentityMatch(
   candidatePersonId: string | null,
   action: IdentityReviewAction,
 ): Promise<{ error: string | null }> {
-  const response = await fetch('/internal-api/review-identity-match', {
+  const response = await internalReviewFetch('/internal-api/review-identity-match', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ sourcePersonId, candidatePersonId, action }),
@@ -381,7 +383,7 @@ export async function fetchInternalPersonFeedbackItems(): Promise<{
   items: PersonFeedbackReviewItem[];
   error: string | null;
 }> {
-  const response = await fetch('/internal-api/person-feedback');
+  const response = await internalReviewFetch('/internal-api/person-feedback');
   const body = await response.json().catch(() => null);
 
   if (!response.ok) {
@@ -399,7 +401,7 @@ export async function reviewInternalPersonFeedback(
   action: PersonFeedbackReviewAction,
   note: string,
 ): Promise<{ reviewStatus: string | null; error: string | null }> {
-  const response = await fetch('/internal-api/review-person-feedback', {
+  const response = await internalReviewFetch('/internal-api/review-person-feedback', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ submissionId, action, note }),

@@ -8,27 +8,27 @@ assumes the attacker has read the
 
 ## Repository controls
 
-- Deploy `apps/web` as a Cloudflare Pages project with output directory `dist`.
-- Use `npm run check:production-env && npm run build` as the build command.
-- Confirm `dist/_headers` exists after the build.
+- The repository's deployment path is Worker `public-office-watch` with Static Assets, configured by `apps/web/wrangler.jsonc`; the asset output is `dist/cloudflare`.
+- Use the reviewed [Production Release workflow](../.github/workflows/production-release.yml) and [environment/release runbook](deployment-environments.md). It runs `build:cloudflare`, Wrangler dry run, current-main verification, deploy, then post-deploy smoke.
+- Check Worker-generated security headers and the built static-asset `_headers`; a local output file alone does not prove headers served by the deployed version.
 - Production uses only the reviewed `published` Supabase interface.
 - Never place the Supabase service-role key, database password, or server secrets in a `VITE_*` variable.
 
 ## Cloudflare dashboard controls
 
-Before the custom domain receives traffic:
+Verify these controls in the intended account when preparing an authorized release; repository wording is not evidence that a dashboard policy is active:
 
 - Set SSL/TLS encryption to Full (strict), enable Always Use HTTPS, TLS 1.3, and a minimum TLS version of 1.2.
 - Enable HSTS only after every affected hostname works permanently over HTTPS. Start without `includeSubDomains` or preload unless every subdomain is ready.
-- Protect Pages preview deployments with Cloudflare Access.
-- Redirect the production `*.pages.dev` hostname to the canonical custom domain.
+- Keep `workers.dev` and Worker preview URLs disabled as configured, or separately review Access protection before enabling alternate entry points.
+- Verify the canonical `pow4vote.org` custom-domain route and DNS in the Cloudflare account.
 - Protect `/internal/*` with Cloudflare Access. Test magic-link callbacks after enabling it because administrators will pass both Access and Supabase authentication.
 - Enable appropriate managed WAF rules and review Security Events before changing actions from log or challenge to block.
 - Add a conservative rate-limit or managed challenge for abusive requests to the public site, excluding verified search bots where SEO matters.
 
 ## Response headers
 
-`apps/web/public/_headers` currently enforces:
+The Worker `addSecurityHeaders` implementation and `apps/web/public/_headers` define:
 
 - clickjacking protection;
 - MIME sniffing protection;
@@ -36,20 +36,40 @@ Before the custom domain receives traffic:
 - no-store and no-index behavior for `/internal/*`;
 - a compatibility-safe CSP baseline that blocks plugins, framing, and `<base>` injection.
 
-Do not add a strict `default-src`, `connect-src`, or `img-src` policy until staging has the final custom domain and exact Supabase project URL. An incomplete policy would break Supabase HTTPS/WebSocket traffic, magic-link login, or externally hosted public photos.
+Review CSP changes against the Worker policy and actual approved origins, including Supabase HTTPS/WebSocket, Turnstile, login callbacks and public images. Verify served headers after deployment; changing a static file alone may not change a Worker-generated response.
 
 ## Supabase origin limitation
 
-The browser currently connects directly to the Supabase project domain. Cloudflare WAF and rate-limit rules on the Pages domain do not protect those direct Data API, Auth, Realtime, or Edge Function requests.
+Public reads connect directly to Supabase. The participation routes under
+`/api/participation/*` go through the Worker for challenge/clearance validation,
+authorization, rate limits and signed RPC proofs. Direct Supabase API, Auth,
+Realtime or Edge Function requests are outside the site's Cloudflare request path
+and still need their own database/service authorization controls. Do not infer
+that protecting the website domain protects every direct Supabase endpoint.
 
-Before a high-traffic launch, choose one of these controls for write endpoints:
-
-1. Proxy chat, person feedback, and region participation writes through a Cloudflare Worker and validate Turnstile there; or
-2. keep direct Supabase calls and add equivalent server-side abuse controls in Supabase Edge Functions.
-
-This is an architecture change, not a dashboard toggle. It changes API URLs, CORS, trusted client IP handling, failure behavior, and monitoring, so it requires staging and dedicated regression tests.
+Worker runtime secrets and frontend build variables are separate. Required
+participation runtime names are listed in the README; provision only reviewed
+server secrets, and verify Vault proof-key consistency without logging either
+value. The historical proof-v2 rollout order and normal migration-drift gate are
+explained in [deployment-environments.md](deployment-environments.md#historical-participation-transitions).
 
 ## Supabase production controls
+
+### Participation request body limit
+
+The participation Worker and Vite development proxy enforce a 16,384-byte
+request body limit during reading. Declared oversized bodies return 413 before
+reading; absent or understated `Content-Length` still receives the streamed byte
+check. A malformed length or invalid UTF-8/read failure returns 400. JSON must be
+an object. The Worker cancels the reader on rejection; the dev proxy stops its
+iterator and sends `Connection: close` so a rejected upload is not buffered or
+drained. Both use fixed-capacity byte storage, including for many small chunks.
+
+`apps/web/tests/participation-body.test.mjs` exercises both paths without external
+services. These are local source guarantees, not confirmation of a deployed
+Worker version or dashboard configuration.
+
+### Database configuration
 
 - Deploy all reviewed security migrations before deploying the frontend that depends on them.
 - Expose only `public`, `graphql_public`, and `published` in the Data API configuration; browser grants in `public` must remain limited to explicitly reviewed compatibility functions.
@@ -61,7 +81,7 @@ This is an architecture change, not a dashboard toggle. It changes API URLs, COR
 
 ## Release verification
 
-- Verify response headers on the custom domain, `*.pages.dev`, preview URLs, and `/internal/*`.
+- Verify response headers on the canonical custom domain and `/internal/*`; confirm alternate Worker entry points remain disabled or have separately reviewed protection.
 - Verify old public views and RPCs return 401, 403, or 404 with the public key.
 - Verify all reviewed `published` reads and writes return the expected responses.
 - Test chat, feedback, region issue submission, Supabase magic links, Realtime, external images, canonical URLs, and SEO metadata.

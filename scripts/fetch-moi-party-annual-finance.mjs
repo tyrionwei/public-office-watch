@@ -152,8 +152,8 @@ async function enrichDetails(records) {
   return enriched;
 }
 
-async function main() {
-  const options = parseArgs(process.argv.slice(2));
+async function main(argv = process.argv.slice(2)) {
+  const options = parseArgs(argv);
   const records = await enrichDetails(await fetchListing(options.rocYear));
   if (records.length === 0) throw new Error(`No MOI party annual finance records found for ROC year ${options.rocYear}.`);
   const failedDetailCount = records.filter((record) => record.detailStatus !== 'ok').length;
@@ -181,6 +181,9 @@ async function main() {
     failedDetailCount: payload.failedDetailCount,
     outputPath: options.outputPath,
   }, null, 2));
+  if (failedDetailCount > 0) {
+    throw new Error(`Incomplete MOI annual finance report saved; ${failedDetailCount} details need attention. Import must not continue.`);
+  }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
@@ -190,4 +193,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { parseArgs, parseDetailPage, parseListingRows, priorRocYear, textFromHtml };
+export { main, parseArgs, parseDetailPage, parseListingRows, priorRocYear, textFromHtml };

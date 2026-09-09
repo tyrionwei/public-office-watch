@@ -194,7 +194,7 @@ copy_runtime_data() {
 
   # Only approved claims that the public person profile still needs at runtime.
   copy_table person_claims \
-    "is_public = TRUE AND visibility = 'public' AND review_status = 'verified' AND claim_type IN ('education','experience','platform','family_relation','legal_case','office','finance_summary')"
+    "is_public = TRUE AND visibility = 'public' AND review_status = 'verified' AND claim_type IN ('birth_date','education','experience','platform','family_relation','legal_case','office','finance_summary')"
   copy_table person_media \
     "is_public = TRUE AND verification_status = 'verified'"
   copy_table person_company_relations \
@@ -216,6 +216,8 @@ copy_runtime_data() {
   copy_table referendum_options 'is_public = TRUE'
   copy_table referendum_region_results 'is_public = TRUE'
   copy_table chat_settings
+  # Display preference is public runtime data; its administrator audit stays local.
+  copy_table site_display_settings
 }
 
 refresh_publication_layer() {

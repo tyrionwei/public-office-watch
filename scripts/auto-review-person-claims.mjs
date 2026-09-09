@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createLocalReviewClient } from './lib/local-review-target.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -25,11 +26,20 @@ function readLocalEnv() {
   );
 }
 
-const localEnv = readLocalEnv();
-const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || localEnv.SUPABASE_URL || 'http://127.0.0.1:54321';
-const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || localEnv.SUPABASE_SERVICE_ROLE_KEY;
+let localClient;
+function configureLocalEnvironment() {
+  const localEnv = readLocalEnv();
+  localClient = createLocalReviewClient({
+    supabaseUrl: process.env.SUPABASE_URL?.trim() || localEnv.SUPABASE_URL || 'http://127.0.0.1:54321',
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || localEnv.SUPABASE_SERVICE_ROLE_KEY,
+  });
+}
 
-const autoReviewVersion = 'auto-verified-external-id-or-identity-match-v3';
+const claimSnapshotKeys = [
+  'id', 'claim_key', 'person_id', 'source_person_id', 'candidate_id', 'claim_type',
+  'claim_value', 'claim_json', 'confidence_level', 'review_score', 'review_status',
+  'visibility', 'is_public', 'source_name', 'source_url', 'scoring_version', 'scoring_reasons', 'updated_at',
+];
 const wikidataSourceName = 'Wikidata 人物補充資料';
 const voteTwSourceName = 'VoteTW';
 const voteTwSourceId = 'votetw-person-enrichment';
@@ -99,28 +109,11 @@ function parseArgs(argv) {
 }
 
 function supabaseUrl(path) {
-  return new URL(`${localSupabaseUrl.replace(/\/$/, '')}/rest/v1/${path}`);
+  return localClient.urlFor(path);
 }
 
 async function supabaseJson(url, init = {}) {
-  const response = await fetch(url, {
-    ...init,
-    headers: {
-      apikey: localServiceRoleKey,
-      authorization: `Bearer ${localServiceRoleKey}`,
-      ...(init.body ? { 'content-type': 'application/json' } : {}),
-      ...(init.headers ?? {}),
-    },
-    signal: AbortSignal.timeout(30000),
-  });
-  const text = await response.text();
-  const body = text ? JSON.parse(text) : null;
-
-  if (!response.ok) {
-    throw new Error(`${init.method ?? 'GET'} ${url.pathname} failed: ${body?.message ?? response.statusText}`);
-  }
-
-  return body;
+  return localClient.requestJson(url, init);
 }
 
 async function fetchReviewCandidates(options) {
@@ -131,7 +124,7 @@ async function fetchReviewCandidates(options) {
     const url = supabaseUrl('person_claims');
     url.searchParams.set(
       'select',
-      'id,claim_key,person_id,claim_type,claim_value,claim_json,confidence_level,review_score,source_name,source_url,scoring_reasons,updated_at',
+      claimSnapshotKeys.join(','),
     );
     if (options.sourceName) {
       url.searchParams.set('source_name', `eq.${options.sourceName}`);
@@ -433,60 +426,47 @@ function incrementReason(reasonCounts, reason) {
   reasonCounts[reason] = (reasonCounts[reason] ?? 0) + 1;
 }
 
-function nextScoringReasons(claim) {
-  const existing = Array.isArray(claim.scoring_reasons) ? claim.scoring_reasons : [];
-  return [
-    ...existing,
-    {
-      version: autoReviewVersion,
-      reason: 'low-sensitivity claim auto-approved after verified external_id or matched identity evidence for the same person and source entity',
-      reviewedAt: new Date().toISOString(),
-    },
-  ];
-}
-
-async function approveClaim(claim) {
-  const url = supabaseUrl('person_claims');
-  url.searchParams.set('id', `eq.${claim.claim_id}`);
-
-  const reviewedAt = new Date().toISOString();
-  await supabaseJson(url, {
-    method: 'PATCH',
-    headers: {
-      prefer: 'return=minimal',
-    },
-    body: JSON.stringify({
-      review_status: 'verified',
-      visibility: 'public',
-      is_public: true,
-      scoring_version: autoReviewVersion,
-      scoring_reasons: nextScoringReasons(claim),
-      auto_reviewed_at: reviewedAt,
-      updated_at: reviewedAt,
+export async function approveClaim(claim, { urlFor = supabaseUrl, requestJson = supabaseJson } = {}) {
+  if (!claim.updated_at || !claim.person_id || !claimSnapshotKeys.every(key => Object.hasOwn(claim, key))) {
+    throw new Error('Auto-review requires a complete claim snapshot');
+  }
+  if (!['pending', 'needs_more_evidence'].includes(claim.review_status)
+    || blockedClaimTypes.has(claim.claim_type) || claim.claim_type === 'platform') return { outcome: 'conflict', updated_claims: 0, updated_affiliations: 0 };
+  let affiliations = [];
+  if (claim.claim_type === 'party_affiliation') {
+    const url = urlFor('person_party_affiliations');
+    url.searchParams.set('select', '*');
+    url.searchParams.set('source_claim_key', 'eq.' + claim.claim_key);
+    url.searchParams.set('order', 'id.asc');
+    url.searchParams.set('limit', '33');
+    affiliations = await requestJson(url);
+    if (!Array.isArray(affiliations) || affiliations.length > 32) throw new Error('Invalid or oversized affiliation snapshot');
+  }
+  const result = await requestJson(urlFor('rpc/auto_approve_person_claim'), {
+    method: 'POST', body: JSON.stringify({
+      p_expected_claim: Object.fromEntries(claimSnapshotKeys.map(key => [key, claim[key]])),
+      p_expected_affiliations: affiliations,
     }),
   });
+  if (!result || !['applied', 'conflict'].includes(result.outcome)
+    || result.updated_claims !== (result.outcome === 'applied' ? 1 : 0)
+    || !Number.isInteger(result.updated_affiliations) || result.updated_affiliations < 0
+    || (result.outcome === 'conflict' && result.updated_affiliations !== 0)) throw new Error('Invalid atomic auto-review result');
+  return result;
+}
 
-  if (claim.claim_type === 'party_affiliation' && claim.claim_key) {
-    const affiliationUrl = supabaseUrl('person_party_affiliations');
-    affiliationUrl.searchParams.set('source_claim_key', 'eq.' + claim.claim_key);
-    await supabaseJson(affiliationUrl, {
-      method: 'PATCH',
-      headers: {
-        prefer: 'return=minimal',
-      },
-      body: JSON.stringify({
-        review_status: 'verified',
-        is_public: true,
-        updated_at: reviewedAt,
-      }),
-    });
+export async function approveClaimBatch(claims, approve = approveClaim) {
+  let updated = 0, conflicts = 0;
+  for (const claim of claims) {
+    const result = await approve(claim);
+    updated += result.updated_claims;
+    if (result.outcome === 'conflict') conflicts += 1;
   }
+  return { updated, conflicts };
 }
 
 async function main() {
-  if (!localServiceRoleKey) {
-    throw new Error('Set SUPABASE_SERVICE_ROLE_KEY for auto review.');
-  }
+  configureLocalEnvironment();
 
   const options = parseArgs(process.argv.slice(2));
   const sensitiveBefore = await countSensitivePublicClaims();
@@ -494,12 +474,14 @@ async function main() {
   let totalScanned = 0;
   let totalEligible = 0;
   let totalUpdated = 0;
+  let totalConflicts = 0;
   let totalSkipped = 0;
   const eligibilityReasonCounts = {};
   let batches = 0;
+  const attemptedClaimIds = new Set();
 
   while (batches < options.maxBatches) {
-    const candidates = await fetchReviewCandidates(options);
+    const candidates = (await fetchReviewCandidates(options)).filter(claim => !attemptedClaimIds.has(claim.id));
     const primaryPublicFieldKeys = await fetchPrimaryPublicFieldKeys(candidates);
     const primaryPublicClaimKeys = await fetchPrimaryPublicClaimKeys(candidates);
     const currentPartyByPersonId = await fetchCurrentPartyByPersonId(candidates);
@@ -525,11 +507,10 @@ async function main() {
       break;
     }
 
-    for (const claim of eligibleClaims) {
-      await approveClaim(claim);
-    }
-
-    totalUpdated += eligibleClaims.length;
+    const result = await approveClaimBatch(eligibleClaims);
+    for (const claim of eligibleClaims) attemptedClaimIds.add(claim.id);
+    totalUpdated += result.updated;
+    totalConflicts += result.conflicts;
     batches += 1;
 
     if (candidates.length < options.limit) {
@@ -555,6 +536,7 @@ async function main() {
     scanned: totalScanned,
     eligible: totalEligible,
     updated: totalUpdated,
+    conflicts: totalConflicts,
     skipped: totalSkipped,
     verifiedExternalIdKeyCount: verifiedExternalIdKeys.size,
     eligibilityReasonCounts,

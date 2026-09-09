@@ -57,13 +57,13 @@ test('builds private pending source records and a non-confirming identity sugges
   const rows = buildStagingRows(snapshot, plan, '2026-07-29T08:00:00.000Z');
   assert.equal(rows.sourcePeople.length, 1);
   assert.equal(rows.sourcePeople[0].source_type, 'official_site');
-  assert.equal(rows.sourcePeople[0].source_person_key, 'party-candidate:dpp-2026-taipei-mayor-test');
+  assert.match(rows.sourcePeople[0].source_person_key, /^party-candidate:dpp-2026-taipei-mayor-test:revision:[a-f0-9]{64}$/);
   assert.equal(rows.sourcePeople[0].source_payload.identitySuggestion.resolution, 'high_confidence_match');
   assert.equal(rows.sourcePeople[0].source_payload.isIncumbent, true);
   assert.match(rows.sourcePeople[0].source_payload.incumbencyEvidence, /當選/);
   assert.match(rows.sourcePeople[0].source_payload.incumbencySourceUrl, /^https:\/\/db\.cec\.gov\.tw\//);
   assert.equal(rows.claims[0].claim_type, 'candidacy');
-  assert.equal(rows.claims[0].review_status, undefined);
+  assert.equal(rows.claims[0].review_status, 'pending');
   assert.equal(rows.suggestions[0].match_status, 'probable_match');
   assert.notEqual(rows.suggestions[0].match_status, 'auto_matched');
 });
@@ -75,6 +75,7 @@ test('accepts an explicit reviewed identity and rejects unrelated person ids', (
     reviewedBy: 'reviewer@example.test',
     decisions: [{
       sourceCandidateKey: record.sourceCandidateKey,
+      contentRevision: buildStagingRows(snapshot, plan).claims[0].claim_json.revision,
       personName: record.personName,
       decision: 'use_existing',
       personId: 'person-1',
@@ -89,6 +90,7 @@ test('accepts an explicit reviewed identity and rejects unrelated person ids', (
     reviewedBy: 'reviewer@example.test',
     decisions: [{
       sourceCandidateKey: record.sourceCandidateKey,
+      contentRevision: buildStagingRows(snapshot, plan).claims[0].claim_json.revision,
       personName: record.personName,
       decision: 'use_existing',
       personId: 'unrelated-person',

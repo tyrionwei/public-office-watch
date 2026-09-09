@@ -9,7 +9,8 @@
       "decision": "use_existing",
       "personId": "replace-with-canonical-person-uuid",
       "reason": "姓名、政黨與選舉地區皆一致",
-      "reviewedAt": "2026-07-29T12:00:00+08:00"
+      "reviewedAt": "2026-07-29T12:00:00+08:00",
+      "contentRevision": "copy-from-current-dry-run-reviewTemplate"
     }
   ]
 }

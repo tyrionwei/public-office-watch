@@ -19,18 +19,24 @@ function formatCurrency(value: number, locale: string) {
 
 export function PartiesPage() {
   const { language, t } = useI18n();
-  const [, setDataVersion] = useState(0);
+  const [parties, setParties] = useState<ReturnType<typeof publicDataProvider.getParties>>([]);
+  const [statuses, setStatuses] = useState<Array<'loading' | 'ready' | 'error'>>(['loading', 'loading', 'loading']);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const ready = statuses.every(status => status === 'ready');
+  const loadError = statuses.includes('error');
   const [companyCounts, setCompanyCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
     let active = true;
+    setStatuses(['loading', 'loading', 'loading']);
     void Promise.allSettled([
       publicDataProvider.loadPartyDirectory(),
       publicDataProvider.loadPartyFinanceData(),
       publicDataProvider.loadPartyCompanyContributionCounts(),
     ]).then((results) => {
       if (!active) return;
-      setDataVersion((value) => value + 1);
+      setStatuses(results.map(result => result.status === 'fulfilled' ? 'ready' : 'error'));
+      setParties(results[0].status === 'fulfilled' ? results[0].value : []);
       const contributionResult = results[2];
       const counts = contributionResult.status === 'fulfilled'
         ? contributionResult.value
@@ -42,10 +48,8 @@ export function PartiesPage() {
       if (import.meta.env.DEV) console.warn('Failed to load party overview', error);
     });
     return () => { active = false; };
-  }, []);
-
-  const parties = publicDataProvider.getParties();
-  const summaries = parties
+  }, [loadAttempt]);
+  const summaries = (ready ? parties : [])
     .map((party) => {
       const latestFinance = publicDataProvider
         .getPartyFinanceSummaries(party.party_id)
@@ -80,14 +84,18 @@ export function PartiesPage() {
               <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">{t('parties.description')}</p>
             </div>
             <dl className="grid gap-3">
-              <HudStatCard label={t('parties.trackedParties')} value={<span className="font-display text-2xl text-white">{summaries.length}</span>} />
-              <HudStatCard label={t('parties.incomeTotal')} value={<span className="font-display text-2xl text-signal">{currency(totalIncome)}</span>} />
-              <HudStatCard label={t('parties.companySummaryTotal')} value={<span className="font-display text-2xl text-white">{companyRelationCount}</span>} />
+              <HudStatCard label={t('parties.trackedParties')} value={<span className="font-display text-2xl text-white">{ready ? summaries.length : '—'}</span>} />
+              <HudStatCard label={t('parties.incomeTotal')} value={<span className="font-display text-2xl text-signal">{ready ? currency(totalIncome) : '—'}</span>} />
+              <HudStatCard label={t('parties.companySummaryTotal')} value={<span className="font-display text-2xl text-white">{ready ? companyRelationCount : '—'}</span>} />
             </dl>
           </div>
         </PixelFrame>
 
         <SectionPanel title={t('parties.trackedTitle')} eyebrow={t('parties.trackedEyebrow')}>
+          {!ready ? <div>
+            <p role={loadError ? 'alert' : 'status'} className="text-sm text-slate-300">{t(loadError ? 'app.loadError' : 'app.loading')}</p>
+            {loadError ? <button type="button" className="mt-3 border border-accent px-3 py-2 text-accent" onClick={() => setLoadAttempt(value => value + 1)}>{t('app.retry')}</button> : null}
+          </div> : null}
           <div className="grid gap-3 lg:grid-cols-3">
             {summaries.map(({ party, latestFinance, companyCount }) => {
               const theme = partyTheme[party.theme_key];
@@ -144,11 +152,11 @@ export function PartiesPage() {
         </SectionPanel>
 
         <SectionPanel title={t('parties.registryTitle')} eyebrow={t('parties.registryEyebrow')}>
-          <details className="group pixel-corners border border-line/70 bg-bg/35">
+          {statuses[0] === 'ready' ? <details className="group pixel-corners border border-line/70 bg-bg/35">
             <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm text-white marker:hidden">
               <span>{t('parties.registryAll')}</span>
               <span className="text-xs uppercase tracking-[0.18em] text-slate-500 group-open:hidden">
-                {t('parties.registrySummary', { total: sortedParties.length, untracked: untrackedPartyCount })}
+                {ready ? t('parties.registrySummary', { total: sortedParties.length, untracked: untrackedPartyCount }) : t('parties.registryCount', { total: sortedParties.length })}
               </span>
               <span className="hidden text-xs uppercase tracking-[0.18em] text-slate-500 group-open:inline">
                 {t('parties.registryCollapse')}
@@ -183,7 +191,7 @@ export function PartiesPage() {
                 })}
               </div>
             </div>
-          </details>
+          </details> : <p className="text-sm text-slate-300">{t(statuses[0] === 'error' ? 'app.loadError' : 'app.loading')}</p>}
         </SectionPanel>
 
         <SectionPanel title={t('parties.limitsTitle')} eyebrow={t('parties.limitsEyebrow')}>
@@ -193,7 +201,7 @@ export function PartiesPage() {
             ))}
           </div>
           <p className="mt-3 text-xs text-slate-500">
-            {t('parties.businessDonationTotal', { amount: currency(totalBusinessDonations) })}
+            {ready ? t('parties.businessDonationTotal', { amount: currency(totalBusinessDonations) }) : '—'}
           </p>
         </SectionPanel>
       </div>

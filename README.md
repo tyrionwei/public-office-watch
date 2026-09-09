@@ -106,25 +106,29 @@ Codex 用於本專案的核心維護工作，包括理解程式與資料流程�
 
 ## 本機啟動
 
-需求：Node.js 22（或 Node.js 20.19 以上）與 npm。
+需求：Node.js 22.13 以上的 22.x、npm，以及本機資料庫使用的 Docker。根目錄測試另需 Python 3、Pillow 與 NumPy；版本基線與安裝方式見 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ```bash
-npm install
-npm --prefix apps/web install
-npx supabase start
-cp apps/web/.env.example apps/web/.env.local
+npm ci
+npm --prefix apps/web ci
+```
+
+接著依 [Local Supabase Validation](docs/local-supabase-validation.md) 啟動完整本機 Supabase、填妥 `.env.local` 與參與代理的 `.dev.vars`，再執行：
+
+```bash
+npm --prefix apps/web run check:local-test-env
 npm --prefix apps/web run dev
 ```
 
-本機開發與瀏覽器測試一律使用 Local Supabase。`apps/web/.env.example` 已固定使用 `http://127.0.0.1:54321` 與 `supabase` provider；複製後，請填入 `npx supabase status` 顯示的本機 anon／publishable key。正式站的 Supabase 設定由部署環境管理，不可複製到 `.env.local`，前端也不可使用 service role key。
+正常本機開發使用 loopback Supabase、`published` provider 與明確 enable flag；還需要本機 public key、Turnstile 測試 site key 和 server-only 代理設定。只複製 `.env.example` 尚不足以啟動。正式值不可複製到 `.env.local`，service role key 不可放進任何 `VITE_*` 欄位。
 
-完整檢查：
+綜合檢查入口：
 
 ```bash
 npm run check
 ```
 
-此指令會執行前端 lint、正式建置、公開資料邊界與公開 view contract 檢查。
+它依序執行根目錄 Node／四套 Python 影像測試、web read contracts、lint、Vite build、兩個來源碼邊界檢查，以及 legacy public view retirement 檢查。build 會重建本機產物；DB 寫入 E2E 預設跳過，retirement 缺 URL／key 時也會跳過。此指令不含 Playwright、正式部署或 migration 全史回放；各類驗收範圍見 [本機驗證矩陣](docs/local-supabase-validation.md#驗證矩陣)。
 
 ## Cloudflare 正式部署
 
@@ -142,7 +146,7 @@ Supabase 不會自動清除匿名使用者。正式上線後須監控匿名註�
 npm --prefix apps/web run check:cloudflare
 ```
 
-正式建置使用 `npm --prefix apps/web run build:cloudflare`，並要求非本機 HTTPS Supabase URL、`published` provider 與公開前端金鑰。通過完整檢查、Wrangler dry run 與 production smoke 後，由維護者在 `apps/web` 目錄執行 `npx wrangler deploy` 發布 `public-office-watch` Worker。`pow4vote.org` 的自訂網域與 DNS 由 Cloudflare 管理；`wrangler.jsonc` 已關閉 `workers.dev` 與 preview URL，正式流量只使用自訂網域。
+目前倉庫的發布入口是 [Production Release](.github/workflows/production-release.yml)：`main` push 的 Web CI 成功後，以該 commit 檢查 migration drift、建置與 dry run、確認仍是最新 main，再部署及執行 **post-deploy smoke**；也提供 main 手動 dispatch。workflow 不套 migration，smoke 失敗也不會自動回滾。正式建置要求非本機 HTTPS Supabase、`published` provider 與公開前端金鑰。環境、歷史 migration 轉換及復原界線見 [部署說明](docs/deployment-environments.md)。自訂網域與 DNS 屬遠端設定；本機 workflow 或 branch 不能證明目前線上版本。
 
 ## 專案結構
 

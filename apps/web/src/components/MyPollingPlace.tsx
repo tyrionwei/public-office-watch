@@ -4,7 +4,7 @@ import { buildCecPollingPlaceLookupUrl } from '../lib/cecPollingPlaceLookup';
 import { pollingPlaceMapUrl, pollingPlacesForDisplay, validNeighborhood } from '../lib/pollingPlace';
 import { publicDataProvider } from '../lib/publicData';
 import type { PollingPlace } from '../types/pollingPlace';
-import { useVotingRegion } from '../votingRegion';
+import { useVotingRegion, type VotingRegionPreference } from '../votingRegion';
 
 export function MyPollingPlace({ eventKey, lookupUrl, onClose }: { eventKey: string; lookupUrl: string; onClose: () => void }) {
   const { language } = useI18n();
@@ -13,6 +13,10 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose }: { eventKey: str
   const villageCode = preference?.village?.id.replace(/^village-/, '') ?? '';
   const key = eventKey + ':' + villageCode;
   const [state, setState] = useState<{ key: string; places: PollingPlace[]; error: boolean } | null>(null);
+  const [saveDraft, setSaveDraft] = useState<{
+    preference: VotingRegionPreference;
+    neighborhood: number | undefined;
+  } | null>(null);
   useEffect(() => {
     if (!villageCode) return;
     let active = true;
@@ -22,6 +26,11 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose }: { eventKey: str
     return () => { active = false; };
   }, [eventKey, villageCode, key]);
   if (!preference) return null;
+  const failedSave = saveDraft?.preference === preference ? saveDraft : null;
+  const saveNeighborhood = (neighborhood: number | undefined) => {
+    const saved = confirmPreference({ ...preference, neighborhood });
+    setSaveDraft(saved ? null : { preference, neighborhood });
+  };
   const current = state?.key === key ? state : null;
   const places = current?.places ?? [];
   const matching = pollingPlacesForDisplay(places, preference.neighborhood);
@@ -38,11 +47,19 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose }: { eventKey: str
         <label className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-300">
           <span>{english ? 'Neighborhood (optional)' : '鄰別（選填）'}</span>
           <input data-polling-neighborhood type="number" inputMode="numeric" min="1" max="999"
-            value={preference.neighborhood ?? ''}
-            onChange={(event) => confirmPreference({ ...preference, neighborhood: validNeighborhood(Number(event.target.value)) })}
+            value={(failedSave ? failedSave.neighborhood : preference.neighborhood) ?? ''}
+            onChange={(event) => saveNeighborhood(validNeighborhood(Number(event.target.value)))}
             className="min-h-11 w-24 border border-line bg-bg px-3 text-white" />
           <span className="text-[11px] text-slate-500">{english ? 'Saved only on this device' : '僅儲存在此裝置'}</span>
         </label>
+        {failedSave ? (
+          <div role="alert" className="mt-2 text-xs leading-5 text-rose-300">
+            <p>{english ? 'Your neighborhood could not be saved. Results still use your previous setting.' : '鄰別未能儲存，目前結果仍依原設定顯示。'}</p>
+            <button type="button" onClick={() => saveNeighborhood(failedSave.neighborhood)} className="min-h-11 text-accent underline underline-offset-4">
+              {english ? 'Retry saving' : '重試儲存'}
+            </button>
+          </div>
+        ) : null}
         {!current ? <p role="status" className="mt-3 text-sm text-slate-400">{english ? 'Loading official data…' : '載入官方資料中…'}</p>
           : current.error ? <p role="status" className="mt-3 text-sm text-amber-200">{english ? 'Could not load polling places. Use the official lookup below.' : '投開票所資料暫時無法載入，請使用下方官方查詢。'}</p>
           : places.length === 0 ? <p className="mt-3 text-sm text-slate-400">{english ? 'We have not yet added official station data for this village and election.' : '本站尚未收錄此村里本次投票的官方投開票所資料。'}</p>

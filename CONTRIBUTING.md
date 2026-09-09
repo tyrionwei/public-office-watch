@@ -11,18 +11,43 @@
 
 ## 本機開發
 
-需求：Node.js 22（或 Node.js 20.19 以上）、npm、Docker 與 Supabase CLI。
+- 使用 Node.js 22.13 以上的 22.x 與 npm。Vite 鎖檔要求 `^20.19.0 || >=22.12.0`，Wrangler 要求 `>=22.0.0`，而巢狀 `eslint-visitor-keys` 5.0.1 要求 `^20.19.0 || ^22.13.0 || >=24`，因此整套工具的 Node 22 基線為 22.13，Node 20 不涵蓋整套工具。2026-09-08 本機驗證基線為 Node 22.22.1；GitHub workflows 選擇 major 22，不是固定 patch。
+- 一般網站開發需要 Docker 與根目錄鎖定的 Supabase CLI。根目錄、`apps/web` 各有一份 lockfile，分別使用 `npm ci`，不要混用 Windows 與 WSL 的 node_modules。
+- 根目錄 `test:script-suite` 的四套影像幾何／裁切測試需要 Python 3、Pillow、NumPy。已驗證組合為 Python 3.10.12、Pillow 9.0.1、NumPy 1.21.5；這是實測組合，不是完整最低相容版本宣告，也不代表通過外部 OCR 引擎整合。
 
 ```bash
-npm install
-npm --prefix apps/web install
-npx supabase start
-cp apps/web/.env.example apps/web/.env.local
-npm --prefix apps/web run check:local-test-env
-npm --prefix apps/web run dev
+npm ci
+npm --prefix apps/web ci
 ```
 
-一般開發與測試只能使用本機 Vite 與本機 Supabase。不要把正式 Supabase URL、金鑰或資料庫憑證複製到 `.env.local`，也不要讓瀏覽器端取得 service role key。
+若 Python 環境尚未具備影像相依，可使用專案虛擬環境：
+
+```bash
+python3 -m venv tmp/python-dev
+. tmp/python-dev/bin/activate
+python -m pip install Pillow==9.0.1 numpy==1.21.5
+```
+
+上述固定組合適用已驗證的 Python 3.10；其他 Python 版本須選擇相容依賴並重跑測試，不要在系統 Python 強制安裝。虛擬環境及建置產物不提交。
+
+完整本機設定依 [Local Supabase Validation](docs/local-supabase-validation.md)，環境配對依 [deployment-environments.md](docs/deployment-environments.md)。必須填本機 public key、Turnstile site key，以及 Vite 參與代理所需的 server-only `.dev.vars`；只複製範本仍會被 guard 或代理啟動檢查擋下。一般開發使用本機 Vite 與完整本機 Supabase，正式值不可複製進來。
+
+### Windows／WSL 執行方式
+
+先用實際執行工作的命令工具確認作業系統、使用者、工作目錄及 runtime；Windows 視窗不代表命令在 Windows 執行，Linux 專案路徑也不代表 Agent 已在 Linux。已在 WSL 執行時，直接使用 Linux 路徑與工具，不再經過 PowerShell 或 `wsl.exe`。
+
+2026-09-08 的實測顯示，Windows sandbox 在處理專案 UNC 權限時可能於命令啟動前失敗；改 command cwd 或增加 shell wrapper 不能解決該故障。使用者切換後的 Linux Agent 已完成 cwd、參數、退出碼及本機服務操作驗證。這是當次環境的結果，不保證其他任務或重啟後仍相同；切換後需重新核對。
+
+必須從 Windows PowerShell 執行時，先確認發行版、Linux 使用者及專案絕對路徑，再使用單層入口。以下變數必須由目前環境填入，不可照抄其他人的設定：
+
+```powershell
+wsl.exe -d $PowDistro -u $PowLinuxUser --cd $PowProjectPath --exec node apps/web/scripts/check-environment.mjs local
+exit $LASTEXITCODE
+```
+
+此形狀在 PowerShell 7.6.5 實測，未驗證 Windows PowerShell 5.1。複雜操作先寫成可審閱的 Linux 腳本，再傳入腳本路徑，避免多層 shell 展開。退出碼測試應刻意讓子程序回傳非零碼（例如 37），確認外層原樣回傳；這個預期失敗不能記作工具故障或成功 exit 0。
+
+工具找不到時，在 Linux 用 `command -v`，在 PowerShell 用 `Get-Command`，核對已知安裝位置及非互動 PATH；不要立刻安裝第二份。PowerShell 找到的 Windows 工具不代表 WSL 也有同一入口。單純解析 JSON 可使用既有 Node／Python，不一定需要 jq。工具版本符合鎖檔後，還要完成相關最小操作：瀏覽器開本機頁、DB client 對已確認的本機目標安全查詢。詳見[測試選擇與環境證據](docs/local-supabase-validation.md#依修改範圍選擇驗證)。
 
 ## 程式碼與介面變更
 
@@ -42,13 +67,17 @@ npm --prefix apps/web run dev
 
 ## 驗證
 
-提交前至少執行：
+程式變更的綜合檢查入口：
 
 ```bash
 npm run check
 ```
 
-若變更涉及特定功能，請再執行對應測試；涉及 migration 時，先在本機 Supabase 套用並執行資料庫 lint。PR 說明需列出實際執行的命令與結果，未執行的檢查也應說明原因。
+文件變更先核對連結、命令、workflow 與實作；程式變更再執行相關測試。`check` 會重建 dist，且含可跳過的 live DB 檢查，不能把 exit 0 當成所有環境通過。依 [驗證矩陣](docs/local-supabase-validation.md#驗證矩陣) 分別記錄通過、失敗、skip 及未執行原因。
+
+migration、RLS 與寫入拒絕探針要使用事先確認的隔離資料庫；不要 reset 既有研究資料。正式形狀 rehearsal 由本機 schema snapshot 建立，不能替代空庫 migration 全史回放。
+
+[Web CI](.github/workflows/web-ci.yml) 執行 polling-place 工具、選定 monitor/review 回歸、web 單元／來源碼檢查及 mock browser/PWA/state-safety；不是整套 root/Python 測試或真 DB 寫入 E2E。legacy retirement 步驟缺 DB 設定會明示 skip。遠端某次 run 是否執行或通過須看該 run 紀錄。
 
 ## Pull Request checklist
 

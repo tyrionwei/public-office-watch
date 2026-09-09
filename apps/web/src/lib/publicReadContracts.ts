@@ -2,6 +2,13 @@ export const PUBLIC_PEOPLE_PAGE_SIZE = 20;
 export const PUBLIC_ELECTION_RACE_PAGE_SIZE = 20;
 export const PUBLIC_SEARCH_RESULT_LIMIT = 12;
 
+export class PublicPageOutOfRangeError extends Error {
+  constructor() {
+    super('The requested public page is out of range.');
+    this.name = 'PublicPageOutOfRangeError';
+  }
+}
+
 export type PublicPageRange = {
   from: number;
   to: number;

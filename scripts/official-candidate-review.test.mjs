@@ -49,6 +49,7 @@ test('allows reviewed exact-name matches and rejects arbitrary person IDs', () =
     reviewedBy: 'tester',
     decisions: [{
       candidateExternalId: 'cec-candidate-1',
+      contentRevision: buildStagingRows(snapshot, plan).claims[0].claim_json.revision,
       personName: '測試人物',
       decision: 'use_existing',
       personId: 'person-1',

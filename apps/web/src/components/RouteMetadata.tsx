@@ -284,6 +284,7 @@ function ensureCanonical(url: string) {
 }
 
 function setStructuredData(value: Record<string, unknown> | undefined, url: string) {
+  document.getElementById('public-office-watch-server-structured-data')?.remove();
   const id = 'public-office-watch-structured-data';
   const current = document.getElementById(id);
   if (!value) {

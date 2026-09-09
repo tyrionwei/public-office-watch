@@ -76,7 +76,7 @@ test('keeps probable matches out of the default high-confidence scope', () => {
   assert.equal(candidateForAutoMatch(probable).status, 'skip');
 });
 
-test('plans unmatched A-grade sources and preserves already confirmed identities', () => {
+test('does not treat a confirmed identity with missing claim and candidate as complete', () => {
   const first = source();
   const second = source({
     id: 'source-2',
@@ -89,21 +89,22 @@ test('plans unmatched A-grade sources and preserves already confirmed identities
   const plan = planHighConfidenceMatches({
     sources: [first, second],
     matches: [{ source_person_id: 'source-2', person_id: 'person-1', match_status: 'auto_matched' }],
-    claims: [{ id: 'claim-1', source_person_id: 'source-1' }],
+    claims: [{ id: 'claim-1', source_person_id: 'source-1', claim_type: 'candidacy', review_status: 'pending', claim_json: source().source_payload }],
     candidates: [],
   });
 
-  assert.equal(plan.blocking.length, 0);
+  assert.equal(plan.blocking.length, 1);
+  assert.match(plan.blocking[0].errors.join(' '), /expected one staged claim/);
   assert.equal(plan.eligible.length, 1);
   assert.equal(plan.eligible[0].source.id, 'source-1');
-  assert.equal(plan.alreadyConfirmed.length, 1);
+  assert.equal(plan.alreadyConfirmed.length, 0);
 });
 
 test('blocks an existing candidate linked to a different person', () => {
   const plan = planHighConfidenceMatches({
     sources: [source()],
     matches: [],
-    claims: [{ id: 'claim-1', source_person_id: 'source-1' }],
+    claims: [{ id: 'claim-1', source_person_id: 'source-1', claim_type: 'candidacy', review_status: 'pending', claim_json: source().source_payload }],
     candidates: [{ external_id: 'party-candidate:party-2026-001', person_id: 'person-2', race_id: 'race-1' }],
   });
 

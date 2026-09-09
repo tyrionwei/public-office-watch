@@ -1,4 +1,6 @@
 import { getSupabaseChatAdminClient } from './supabasePublicClient.ts';
+import { sendAdminMagicLink } from './adminMagicLink.ts';
+import { createAdminLoginCaptchaToken } from './participationSecurity.ts';
 import { parsePublicDisplaySettings } from './publicBirthDate.ts';
 
 export type PublicUpdateType = 'candidate' | 'person' | 'party' | 'election' | 'correction' | 'site';
@@ -95,11 +97,7 @@ export async function loadPublicUpdateAdminSession() {
 export async function requestPublicUpdateAdminMagicLink(email: string) {
   const client = requireClient();
   const redirectUrl = new URL('/internal/update-admin', window.location.origin).toString();
-  const { error } = await client.auth.signInWithOtp({
-    email,
-    options: { emailRedirectTo: redirectUrl, shouldCreateUser: false },
-  });
-  if (error) throw new PublicUpdateAdminApiError('PUBLIC_UPDATE_ADMIN_AUTH_FAILED');
+  await sendAdminMagicLink(client.auth, email, redirectUrl, createAdminLoginCaptchaToken);
 }
 
 export async function signOutPublicUpdateAdmin() {

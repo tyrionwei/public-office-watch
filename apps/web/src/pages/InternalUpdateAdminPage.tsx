@@ -1,6 +1,7 @@
 import { type FormEvent, useEffect, useMemo, useState } from 'react';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
+import { AdminMagicLinkError, adminMagicLinkErrorMessage } from '../lib/adminMagicLink';
 import { SectionPanel } from '../components/SectionPanel';
 import { BirthDateDisplayAdmin } from '../components/BirthDateDisplayAdmin';
 import {
@@ -35,6 +36,7 @@ const emptyDraft: PublicUpdateDraftInput = {
 };
 
 function displayError(error: unknown) {
+  if (error instanceof AdminMagicLinkError) return adminMagicLinkErrorMessage(error);
   if (!(error instanceof PublicUpdateAdminApiError)) return '操作未完成，請稍後再試。';
   const messages: Record<string, string> = {
     PUBLIC_UPDATE_ADMIN_UNAVAILABLE: '目前未設定 Supabase，無法使用更新管理。',
@@ -108,6 +110,7 @@ export function InternalUpdateAdminPage() {
     event.preventDefault();
     setBusyAction('login');
     setError(null);
+    setMagicLinkSent(false);
     try {
       await requestPublicUpdateAdminMagicLink(email.trim());
       setMagicLinkSent(true);
@@ -169,7 +172,7 @@ export function InternalUpdateAdminPage() {
           <input id="update-admin-email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} className="w-full border border-line bg-bg/70 px-3 py-2 text-sm text-white outline-none focus:border-accent" />
           <button type="submit" disabled={busyAction === 'login'} className="border border-accent/70 bg-accent/10 px-4 py-2 text-sm text-accent disabled:opacity-50">{busyAction === 'login' ? '寄送中…' : '寄送一次性登入連結'}</button>
         </form>
-        {magicLinkSent ? <p className="mt-4 border-l-2 border-signal bg-signal/10 px-3 py-2 text-sm text-signal">登入連結已寄出，請回到此頁完成登入。</p> : null}
+        {magicLinkSent ? <p className="mt-4 border-l-2 border-signal bg-signal/10 px-3 py-2 text-sm text-signal">已送出登入連結請求，請到信箱點擊連結完成登入。</p> : null}
         {error ? <p className="mt-4 text-sm text-rose-300">{error}</p> : null}
       </PixelFrame></div></AppShell>
     );

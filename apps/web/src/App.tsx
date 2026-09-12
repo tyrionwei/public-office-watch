@@ -4,7 +4,7 @@ import { GlobalChatWidget } from './components/GlobalChatWidget';
 import { LanguageProvider, useI18n } from './i18n';
 import { RouteMetadata } from './components/RouteMetadata';
 import { publicDataReadyEvent, refreshConfiguredPublicDataProvider } from './lib/publicDataProviderFactory';
-import { aboutPath, dataGuidancePath, electionsPath, homePath, internalChatAdminPath, internalDataProgressPath, internalReviewQueuePath, internalUpdateAdminPath, partiesPath, peoplePath, supportPath, updatesPath } from './routes/routePaths';
+import { aboutPath, dataGuidancePath, electionsPath, homePath, internalFeedbackAdminPath, internalChatAdminPath, internalDataProgressPath, internalReviewQueuePath, internalUpdateAdminPath, partiesPath, peoplePath, supportPath, updatesPath } from './routes/routePaths';
 import { SelectedRegionProvider } from './selectedRegion';
 import { ThemeProvider } from './theme';
 import { VotingRegionProvider } from './votingRegion';
@@ -25,6 +25,7 @@ const RegionPage = lazy(() => import('./pages/RegionPage').then((module) => ({ d
 const ElectionPage = lazy(() => import('./pages/ElectionPage').then((module) => ({ default: module.ElectionPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })));
 const InternalChatAdminPage = lazy(() => import('./pages/InternalChatAdminPage').then((module) => ({ default: module.InternalChatAdminPage })));
+const InternalFeedbackAdminPage = lazy(() => import('./pages/InternalFeedbackAdminPage').then((module) => ({ default: module.InternalFeedbackAdminPage })));
 const InternalUpdateAdminPage = lazy(() => import('./pages/InternalUpdateAdminPage').then((module) => ({ default: module.InternalUpdateAdminPage })));
 
 const InternalReviewQueuePage = import.meta.env.DEV
@@ -122,7 +123,8 @@ function AppRoutes({
 }) {
   const location = useLocation();
   const isInternalAdminRoute = location.pathname === internalChatAdminPath()
-    || location.pathname === internalUpdateAdminPath();
+    || location.pathname === internalUpdateAdminPath()
+    || location.pathname === internalFeedbackAdminPath();
 
   if (publicDataStatus !== 'ready' && !isInternalAdminRoute) {
     return <PublicDataBootstrapScreen failed={publicDataStatus === 'error'} onRetry={onRetry} />;
@@ -148,6 +150,7 @@ function AppRoutes({
           <Route path="/regions/:regionId" element={<RegionPage />} />
           <Route path="/elections/:electionId" element={<ElectionPage />} />
           <Route path={internalChatAdminPath()} element={<InternalChatAdminPage />} />
+          <Route path={internalFeedbackAdminPath()} element={<InternalFeedbackAdminPage />} />
           <Route path={internalUpdateAdminPath()} element={<InternalUpdateAdminPage />} />
           {InternalReviewQueuePage ? <Route path={internalReviewQueuePath()} element={<InternalReviewQueuePage />} /> : null}
           {InternalDataProgressPage ? <Route path={internalDataProgressPath()} element={<InternalDataProgressPage />} /> : null}

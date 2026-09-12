@@ -112,3 +112,86 @@ Worker/database compatibility state.
 GitHub production-environment approval rules and actual deployment results must
 be checked remotely when releasing. A green Web CI or current local `main` does
 not establish which Worker version is live.
+
+### Feedback administration (`/internal/feedback-admin`)
+
+Feedback administration uses the database of the current website environment. Local
+and hosted environments remain isolated: no production feedback connection, summary
+bridge, production credential, or status synchronization is added to local
+`review-queue` or `data-progress`. `feedbackEnvironmentMatches()` rejects a local
+browser configured with a hosted database, and a hosted browser configured with a
+loopback database, before creating the feedback authentication client.
+
+The page reuses the administrator Magic Link session. The `feedback-admin` Edge
+Function verifies the bearer token through `auth.getUser()` and requires the
+server-owned `app_metadata.chat_admin === true`; its service-only
+`public.admin_feedback()` RPC checks the administrator against `auth.users` again.
+The function is configured with `verify_jwt = false` because authentication is
+performed inside the handler, as with `update-admin`. No management RPC is granted
+to `anon` or `authenticated` and feedback history has RLS enabled with no public
+read policy. The API has no people, Claims, merge, or publication action.
+
+Release prerequisites, to be completed in the release workflow before frontend
+publication:
+
+1. Rehearse `20260912112359_feedback_admin_workflow.sql` against the production
+   baseline. The checked-in rollback test is `tests/sql/feedback-admin.sql`.
+2. After production migration authorization, apply that migration, then deploy
+   the `feedback-admin` Edge Function to the same Supabase project as the website.
+   The web deployment does not automatically deploy this function or apply SQL.
+3. Verify the Auth redirect allowlist includes the exact production
+   `/internal/feedback-admin` URL, and the administrator account has the existing
+   `chat_admin` permission. Local callbacks remain local; do not add local callback
+   URLs to production to work around environment isolation.
+4. Test signed-out/ordinary users (401/403), administrative paging, save conflicts,
+   resubmissions, immutable history and public feedback-count compatibility before
+   merging the frontend release PR. After deployment, smoke the actual deployed SHA.
+
+The four persistent sections represent pending, accepted/high, accepted/normal and
+rejected decisions. Accepted items have independent pending/in-progress/completed
+work status; completed items stay editable and sort after unfinished items.
+Legacy `verified` and `published` feedback migrate to accepted/normal/pending:
+neither legacy label proves that the reported data was fixed or published.
+`review_status` remains a compatibility projection so rejected requests stay
+excluded from existing public supplement counts. Management changes do not reset
+the public submission timestamp.
+
+Each save checks `revision` under a row lock and records before/after snapshots with
+the verified administrator UUID in the same transaction. The client retains the
+same request ID when retrying an uncertain save; mismatched reuse is rejected.
+History is append-only. A changed submission adds a content version and reopens
+pending while retaining previous notes and history; identical submissions only
+record their count/time and do not reset the decision or priority. Administration
+never overwrites user text or evidence. Baseline histories capture only the state
+available at migration time, not earlier unknown edits.
+
+Feature validation: the SQL test runs inside a rollback-only local transaction;
+`feedbackAdminEndpoint.test.mjs` covers authorization and error boundaries;
+`feedbackEnvironment.test.ts` covers environment separation; `feedbackAdmin.pw.ts`
+uses synthetic services to exercise the real UI at phone and desktop widths.
+These tests do not substitute for the authorized migration rehearsal, Edge Function
+deployment, real Magic Link/SMTP verification, CI, or production smoke.
+
+Development verification on 2026-09-12:
+
+- Passed: frontend build, scoped ESLint, feedback endpoint authorization/error tests,
+  local/hosted environment guard tests, internal-route SEO tests, rollback-only SQL
+  tests (including real upsert and independent paging), and 3 synthetic browser
+  tests covering 390px/1280px layouts and signed-out access.
+- Fixed during verification: ambiguous SQL alias, synthetic auth fixture syntax,
+  and textarea labels that prevented reliable reopening/editing. Reruns passed.
+  The initial sandbox browser launch could not bind a loopback port; the authorized
+  local test rerun passed. Existing Vite configuration/chunk-size warnings remain.
+- Not run: real Magic Link delivery, a served Edge Function against a persistent
+  test database, production baseline rehearsal/application, remote CI or production
+  deployment/smoke. No production data or credentials were accessed for this feature.
+
+Local runtime follow-up on 2026-09-12: the feedback branch website is served at
+`http://127.0.0.1:5181`. Migration `20260912112359` was applied transactionally to
+`supabase_db_public-office-watch`, recorded in its local migration ledger, and the
+PostgREST schema cache was reloaded. `supabase functions serve` now runs from this
+worktree. Verified: the running feedback endpoint rejects unauthenticated requests
+with HTTP 401 / `FEEDBACK_AUTH`; the database dashboard RPC returns all four groups
+for the existing local administrator. This is not an authenticated browser
+end-to-end result; verification with the user's normal signed-in browser is pending.
+No production changes were made.

@@ -1,6 +1,8 @@
 declare module 'node:fs' {
   const fs: {
     existsSync(path: string): boolean;
+    realpathSync(path: string): string;
+    statSync(path: string): { size: number };
     readFileSync(path: string, encoding: string): string;
     writeFileSync(path: string, data: string): void;
     rmSync(path: string, options: { recursive?: boolean; force?: boolean }): void;
@@ -12,6 +14,7 @@ declare module 'node:fs' {
 
 declare module 'node:path' {
   const path: {
+    sep: string;
     resolve(...segments: string[]): string;
     join(...segments: string[]): string;
   };

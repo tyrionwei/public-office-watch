@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createDataProgressReader } from './build/internalDataProgress';
 import { createInternalReviewGuard, internalErrorStatus, readJsonBody, validateInternalSupabaseUrl, type InternalRequest } from './build/internalReviewSecurity';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -37,6 +38,7 @@ type DevResponse = {
   end(body?: string): void;
 };
 type RestInit = {
+  signal?: AbortSignal;
   method?: string;
   headers?: Record<string, string>;
   body?: string;
@@ -365,7 +367,22 @@ function internalReviewApiPlugin(): Plugin {
     apply: 'serve',
     configureServer(server) {
       const guard = createInternalReviewGuard();
+      const readProgress = createDataProgressReader(rootPath(), (query, profile = 'public') => supabaseRest(query, { headers: { 'accept-profile': profile }, signal: AbortSignal.timeout(30_000) }));
       server.middlewares.use('/internal-api', (request, response, next) => guard(request as DevRequest, response, next));
+      server.middlewares.use('/internal-api/data-progress', async (request, response) => {
+        const devRequest = request as DevRequest;
+        if (devRequest.method !== 'GET') {
+          jsonResponse(response, 405, { error: 'Method not allowed.' });
+          return;
+        }
+        try {
+          validateInternalSupabaseUrl(loadInternalEnv().supabaseUrl || '');
+          const params = new URL(devRequest.url || '/', 'http://localhost').searchParams;
+          jsonResponse(response, 200, await readProgress(params));
+        } catch {
+          jsonResponse(response, 503, { error: '無法讀取進度，請確認完整本機 Supabase 環境與資料格式。' });
+        }
+      });
       server.middlewares.use('/internal-api/review-claims', async (request, response) => {
         const devRequest = request as DevRequest;
         if (devRequest.method !== 'GET') {

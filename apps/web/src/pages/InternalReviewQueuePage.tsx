@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { PersonFeedbackReviewPanel } from '../components/PersonFeedbackReviewPanel';
@@ -290,16 +290,22 @@ function claimTypeTone(value: string) {
 }
 
 export function InternalReviewQueuePage() {
+  const [progressParams] = useSearchParams();
+  const progressReturn = progressParams.get('returnTo');
+  const safeProgressReturn = progressReturn === '/internal/data-progress' || progressReturn?.startsWith('/internal/data-progress?') ? progressReturn : null;
   const [claims, setClaims] = useState<ReviewClaim[]>([]);
   const [identityItems, setIdentityItems] = useState<IdentityReviewItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [identityLoading, setIdentityLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [identityError, setIdentityError] = useState<string | null>(null);
-  const [claimType, setClaimType] = useState('');
+  const [claimType, setClaimType] = useState(() => progressParams.get('claimType') || '');
   const [sourceName, setSourceName] = useState('');
-  const [reviewStatus, setReviewStatus] = useState<'pending' | 'needs_more_evidence' | 'ready_for_publication' | ''>('pending');
-  const [query, setQuery] = useState('');
+  const [reviewStatus, setReviewStatus] = useState<'pending' | 'needs_more_evidence' | 'ready_for_publication' | ''>(() => {
+    const value = progressParams.get('reviewStatus');
+    return value === 'needs_more_evidence' || value === 'ready_for_publication' ? value : 'pending';
+  });
+  const [query, setQuery] = useState(() => progressParams.get('personName') || '');
   const [actionClaimId, setActionClaimId] = useState<string | null>(null);
   const [actionIdentityKey, setActionIdentityKey] = useState<string | null>(null);
   const [claimValueDrafts, setClaimValueDrafts] = useState<Record<string, string>>({});
@@ -525,6 +531,7 @@ export function InternalReviewQueuePage() {
     <AppShell>
       <div className="space-y-4">
         <PixelFrame title="資料審核工作台">
+          {safeProgressReturn && <Link to={safeProgressReturn} className="mb-4 inline-block text-sm text-accent underline">返回資料進度（保留篩選與頁碼）</Link>}
           <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
             <div>
               <p className="text-xs tracking-[0.18em] text-accent">內部工具 · 僅限本機</p>

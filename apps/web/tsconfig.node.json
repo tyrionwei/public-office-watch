@@ -13,6 +13,8 @@
   },
   "include": [
     "vite.config.ts",
+    "src/lib/dataProgressContract.ts",
+    "src/lib/taiwanText.ts",
     "worker-configuration.d.ts",
     "worker/participation.ts",
     "worker/participationBody.ts",
@@ -20,6 +22,7 @@
     "build/sites-vite-plugin.ts",
     "build/participationDevProxy.ts",
     "build/internalClaimReview.ts",
+    "build/internalDataProgress.ts",
     "build/internalReviewSecurity.ts",
     "build/internalPartyCandidateReview.ts",
     "build/internalReviewPersonContext.ts",

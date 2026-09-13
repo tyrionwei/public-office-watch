@@ -12,10 +12,10 @@ test('uses the confirmed person affiliation as the primary party', () => {
   );
 });
 
-test('does not repeat a matching candidacy recommendation', () => {
+test('always includes a matching candidacy recommendation', () => {
   assert.deepEqual(
     getHomeCandidateParty({ person_party: '臺灣民眾黨', party: '台灣民眾黨' }),
-    { affiliationParty: '台灣民眾黨', recommendation: null },
+    { affiliationParty: '台灣民眾黨', recommendation: { kind: 'party', party: '台灣民眾黨' } },
   );
 });
 

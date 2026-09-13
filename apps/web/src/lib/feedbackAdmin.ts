@@ -39,6 +39,17 @@ export function reconcileFeedbackDraft(base: FeedbackDraft, mine: FeedbackDraft,
   }
   return { draft: result, conflicts, unresolved: conflicts.filter(field => !choices[field]) };
 }
+// This key only scopes UI state; server-side authorization remains mandatory.
+// A refreshed access token keeps session_id; a new login has a different session_id.
+export function feedbackSessionKey(session: { user: { id: string; is_anonymous?: boolean }; access_token: string } | null): string | null {
+  if (!session || session.user.is_anonymous) return null;
+  try {
+    const payload = session.access_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const claims = JSON.parse(atob(payload));
+    return typeof claims.session_id === 'string' && claims.session_id && claims.sub === session.user.id
+      ? `${session.user.id}:${claims.session_id}` : null;
+  } catch { return null; }
+}
 export class FeedbackApiError extends Error { constructor(public code: string, public status = 0) { super(code); } }
 export function getFeedbackAdminClient() {
   const env = getSupabasePublicEnv();

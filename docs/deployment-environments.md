@@ -226,3 +226,12 @@ unchanged publication state, then rolls back. The initial whole-local-family run
 exceeded its 180-second statement timeout inside `office_status_rows_for`; full
 family capacity and production-baseline migration rehearsal remain required before
 release. No production schema or data was changed by these checks.
+
+
+Follow-up: repeated `SIGNED_IN`, `TOKEN_REFRESHED` or `USER_UPDATED` events for the
+same user and JWT `session_id` revalidate access without clearing the editor.
+The session key is only a UI lifecycle identifier, never authorization. A new
+user/session, sign-out, malformed session, or server 401/403 still clears state
+and invalidates pending responses. The updated feedback browser suite passed all
+9 cases, including refocus/token renewal draft retention and account/new-session
+changes with delayed responses; lint and production build also passed.

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { AdminMagicLinkError, adminMagicLinkErrorMessage } from '../lib/adminMagicLink';
-import { getFeedbackAdminClient, reconcileFeedbackDraft, feedbackConflictLabels, type FeedbackConflictField, bucketLabels, draftFrom, FeedbackApiError, feedbackBucket, feedbackBuckets, feedbackRequest, progressLabels, requestFeedbackLogin, type FeedbackBucket, type FeedbackDashboard, type FeedbackDetail, type FeedbackDraft, type FeedbackItem } from '../lib/feedbackAdmin';
+import { getFeedbackAdminClient, feedbackSessionKey, reconcileFeedbackDraft, feedbackConflictLabels, type FeedbackConflictField, bucketLabels, draftFrom, FeedbackApiError, feedbackBucket, feedbackBuckets, feedbackRequest, progressLabels, requestFeedbackLogin, type FeedbackBucket, type FeedbackDashboard, type FeedbackDetail, type FeedbackDraft, type FeedbackItem } from '../lib/feedbackAdmin';
 
 const inputClass = 'w-full border border-line bg-bg p-2 text-sm text-white';
 const buttonClass = 'border border-line px-3 py-2 text-sm text-slate-200 hover:border-accent disabled:opacity-40';
@@ -38,8 +38,10 @@ export function InternalFeedbackAdminPage() {
   const request = useRef<{ key: string; id: string } | null>(null);
   const generation = useRef(0);
   const sessionGeneration = useRef(0);
+  const sessionIdentity = useRef<string | null>(null);
   const [choices, setChoices] = useState<Partial<Record<FeedbackConflictField, 'mine' | 'latest'>>>({});
   const invalidateSession = useCallback((state: 'signed-out' | 'forbidden') => {
+    sessionIdentity.current = null;
     sessionGeneration.current++; generation.current++;
     setDashboard(null); setDetail(null); setDraft(null); setLatest(null); setConflict(false);
     setChoices({}); setNotice(null); setError(''); setBusy(false); setLoading(false);
@@ -81,12 +83,25 @@ export function InternalFeedbackAdminPage() {
     const sessionGen = sessionGeneration.current;
     void client.auth.getSession().then(({ data, error: authError }) => {
       if (!active || sessionGen !== sessionGeneration.current) return;
-      if (authError || !data.session || data.session.user.is_anonymous) invalidateSession('signed-out');
-      else void refresh();
+      const identity = authError ? null : feedbackSessionKey(data.session);
+      if (!identity) invalidateSession('signed-out');
+      else {
+        if (sessionIdentity.current !== identity) { invalidateSession('signed-out'); sessionIdentity.current = identity; }
+        void refresh();
+      }
     }).catch(() => { if (active && sessionGen === sessionGeneration.current) { invalidateSession('signed-out'); setError('登入狀態讀取失敗。'); } });
-    const { data: { subscription } } = client.auth.onAuthStateChange(event => {
-      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') { invalidateSession('signed-out'); queueMicrotask(() => { if (active) void refresh(); }); }
-      if (event === 'SIGNED_OUT') invalidateSession('signed-out');
+    const { data: { subscription } } = client.auth.onAuthStateChange((event, session) => {
+      if (!active) return;
+      if (event === 'SIGNED_OUT') { invalidateSession('signed-out'); return; }
+      if (['SIGNED_IN', 'USER_UPDATED', 'TOKEN_REFRESHED'].includes(event)) {
+        const identity = feedbackSessionKey(session);
+        if (!identity) { invalidateSession('signed-out'); return; }
+        if (sessionIdentity.current !== identity) { invalidateSession('signed-out'); sessionIdentity.current = identity; }
+        // Refocus and token renewal can confirm the same session. Recheck access
+        // without discarding its draft; 401/403 still invalidate all pending work.
+        const gen = sessionGeneration.current;
+        queueMicrotask(() => { if (active && gen === sessionGeneration.current) void refresh(); });
+      }
     });
     return () => { active = false; subscription.unsubscribe(); };
   }, [refresh, invalidateSession]);

@@ -16,10 +16,13 @@ export async function startFeedbackFixture() {
     'components/AppShell': `import React from 'react';export const AppShell=({children})=>React.createElement('main',{className:'mx-auto max-w-6xl p-4'},children);`,
     'lib/supabasePublicClient': `
       const listeners = new Set();
-      window.__feedbackSignOut = () => { for (const listener of listeners) listener('SIGNED_OUT'); };
+      const makeSession = (id='admin',sid='session-one',version=1) => ({ user: { id, is_anonymous: false }, access_token: 'fixture.'+btoa(JSON.stringify({ sub:id,session_id:sid,iat:version }))+'.fixture' });
+      let session = new URLSearchParams(location.search).get('auth') === 'signed-out' ? null : makeSession();
+      window.__feedbackAuth = (event='SIGNED_IN',id='admin',sid='session-one',version=1) => { session = event === 'SIGNED_OUT' ? null : makeSession(id,sid,version); for (const listener of listeners) listener(event,session); };
+      window.__feedbackSignOut = () => window.__feedbackAuth('SIGNED_OUT');
       const client = {
         auth: {
-          getSession: async () => ({ data: { session: new URLSearchParams(location.search).get('auth') === 'signed-out' ? null : { user: { is_anonymous: false } } } }),
+          getSession: async () => ({ data: { session } }),
           signOut: async () => ({ error: null }),
           onAuthStateChange: listener => { listeners.add(listener); return { data: { subscription: { unsubscribe() { listeners.delete(listener); } } } }; },
         },

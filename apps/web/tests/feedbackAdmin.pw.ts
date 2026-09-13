@@ -39,6 +39,12 @@ for (const width of [390, 1280]) test(`four sections, save, reopen, notes and co
   await expect(page.locator('#feedback-priority')).toContainText('已完成 1 件');
   await page.getByRole('button', { name: '編輯處理', exact: true }).click();
   await dialog.getByLabel('處理備註', { exact: true }).fill('我的草稿必須保留');
+  for (const event of ['SIGNED_IN', 'TOKEN_REFRESHED', 'USER_UPDATED']) {
+    const refreshed = page.waitForResponse(response => response.url().endsWith('/__feedback') && response.request().postDataJSON().action === 'dashboard');
+    await page.evaluate(event => (window as unknown as { __feedbackAuth: (event: string, id: string, sid: string, version: number) => void }).__feedbackAuth(event, 'admin', 'session-one', 2), event);
+    await refreshed;
+    await expect(dialog.getByLabel('處理備註', { exact: true })).toHaveValue('我的草稿必須保留');
+  }
   fail = true;
   await dialog.getByRole('button', { name: '儲存處理', exact: true }).click();
   await expect(dialog.getByText('最新備註：另一位管理員的新備註')).toBeVisible();
@@ -109,4 +115,30 @@ for (const pendingAction of ['detail', 'save', 'conflict-detail', 'history']) te
   await expect(page.locator('#feedback-pending')).toHaveCount(0);
   await expect(page.getByText('合成測試人物', { exact: true })).toHaveCount(0);
   expect(saves).toBe(['save', 'conflict-detail'].includes(pendingAction) ? 1 : 0);
+});
+
+for (const [id, sid] of [['another-admin', 'another-session'], ['admin', 'new-session']]) test(`changed login ${id}/${sid} clears draft and ignores old detail`, async ({ page }) => {
+  let release!: () => void;
+  const held = new Promise<void>(resolve => { release = resolve; });
+  let started!: () => void;
+  const requested = new Promise<void>(resolve => { started = resolve; });
+  let delay = false;
+  await page.route('**/__feedback', async route => {
+    const { action } = route.request().postDataJSON();
+    if (action === 'detail') { if (delay) { started(); await held; } return route.fulfill({ json: { item: base, history: [], history_total: 30, history_page: 1 } }); }
+    return route.fulfill({ json: { fetched_at: base.created_at, groups: Object.fromEntries(['pending', 'priority', 'normal', 'rejected'].map(key => [key, { total: key === 'pending' ? 1 : 0, completed: 0, unfinished: 1, page: 1, page_size: 10, items: key === 'pending' ? [base] : [] }])) } });
+  });
+  await page.goto(fixture.origin);
+  await page.getByRole('button', { name: '編輯處理', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByLabel('處理備註', { exact: true }).fill('上一個登入的私人草稿');
+  await dialog.getByText('操作與提交歷程（30）').click(); delay = true;
+  await dialog.getByRole('button', { name: '較舊歷程' }).click(); await requested;
+  await page.evaluate(({ id, sid }) => (window as unknown as { __feedbackAuth: (event: string, id: string, sid: string) => void }).__feedbackAuth('SIGNED_IN', id, sid), { id, sid });
+  await expect(dialog).toHaveCount(0);
+  const completed = page.waitForResponse(response => response.url().endsWith('/__feedback') && response.request().postDataJSON().action === 'detail');
+  release(); await completed;
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByText('上一個登入的私人草稿')).toHaveCount(0);
 });

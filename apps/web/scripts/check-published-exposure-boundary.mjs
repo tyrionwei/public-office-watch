@@ -12,6 +12,8 @@ const migrationsRoot = path.join(repoRoot, 'supabase', 'migrations');
 const publicAccessMigration = 'supabase/migrations/202607280004_published_public_read_access.sql';
 const relationPrivilegeBaselineMigration = 'supabase/migrations/20260830144212_revoke_browser_relation_maintenance_privileges.sql';
 const supplementalPublicAccessMigrations = [
+  // Recreates the already-approved directory read contract; private snapshot stays revoked.
+  'supabase/migrations/20260913084244_publish_reviewed_office_terms.sql',
   'supabase/migrations/20260905103228_add_registration_name_roster.sql',
   'supabase/migrations/20260904145904_add_candidate_lifecycle_events.sql',
   'supabase/migrations/20260904150704_add_polling_places.sql',

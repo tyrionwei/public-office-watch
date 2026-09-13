@@ -685,7 +685,7 @@ export type PublicNationalOfficeHolder = {
   holder_name: string | null;
   holder_person_id: string | null;
   party_name: string | null;
-  tenure_status: 'current' | 'acting' | 'vacant';
+  tenure_status: 'current' | 'acting' | 'vacant' | 'unknown';
   source_name: string;
   source_url: string;
   observed_at: string;

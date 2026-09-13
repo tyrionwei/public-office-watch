@@ -276,6 +276,7 @@ export type PublicReferendumRegionResult = {
 };
 
 export type PublicCandidate = {
+  office_is_current?: boolean | null;
   candidate_id: string;
   person_id: string;
   person_name: string;

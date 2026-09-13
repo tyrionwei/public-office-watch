@@ -32,6 +32,9 @@ const blockedTermAllowlist = {
   source_documents: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
   person_media: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
   pending: new Set([
+    // Feedback management states use the authenticated, bounded feedback-admin Edge endpoint.
+    path.join(srcRoot, 'pages', 'InternalFeedbackAdminPage.tsx'),
+    path.join(srcRoot, 'lib', 'feedbackAdmin.ts'),
     path.join(srcRoot, 'components', 'HomeElectionSpotlight.tsx'),
     path.join(srcRoot, 'types', 'publicViews.ts'),
     path.join(srcRoot, 'pages', 'ElectionPage.tsx'),
@@ -49,6 +52,9 @@ const blockedTermAllowlist = {
     path.join(srcRoot, 'lib', 'publicViewRegistry.ts'),
   ]),
   rejected: new Set([
+    // Feedback management states use the authenticated, bounded feedback-admin Edge endpoint.
+    path.join(srcRoot, 'pages', 'InternalFeedbackAdminPage.tsx'),
+    path.join(srcRoot, 'lib', 'feedbackAdmin.ts'),
     // Official qualification outcomes returned by the reviewed, bounded lifecycle RPC.
     path.join(srcRoot, 'components', 'CandidateLifecycle.tsx'),
     path.join(srcRoot, 'components', 'GlobalChatWidget.tsx'),

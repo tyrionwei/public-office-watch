@@ -14,6 +14,7 @@ type PixelCandidateSpriteProps = {
   personId?: string | null;
   partyKey: PartyThemeKey;
   partyLabel: string;
+  recommendationLabel?: string;
   variant: string;
   align?: 'left' | 'right';
   gender?: string | null;
@@ -29,6 +30,7 @@ export function PixelCandidateSprite({
   personId,
   partyKey,
   partyLabel,
+  recommendationLabel,
   variant,
   align = 'left',
   gender,
@@ -81,6 +83,7 @@ export function PixelCandidateSprite({
           >
             {partyLabel}
           </p>
+          {recommendationLabel ? <p className="mt-1 text-[10px] text-slate-400" data-candidate-recommendation>{recommendationLabel}</p> : null}
           {usesMascot ? (
             <p className={compactOnMobile ? 'mt-1 hidden text-[10px] text-cyan-200/75 md:block' : 'mt-1 text-[10px] text-cyan-200/75'}>{t('person.mascotFallbackLabel')}</p>
           ) : usesDemographicFallback ? (

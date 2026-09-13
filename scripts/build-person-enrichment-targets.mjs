@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { partitionIdentityResearchTargets } from './lib/identity-research-holds.mjs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -397,6 +398,10 @@ async function main() {
   }
 
   const options = parseArgs(process.argv.slice(2));
+  const origin = new URL(supabaseUrl);
+  if (!['127.0.0.1', 'localhost'].includes(origin.hostname) || origin.port !== '54321' || origin.protocol !== 'http:') {
+    throw new Error('Person research target generation requires full local Supabase on port 54321');
+  }
   const peopleFilters = {
     list_status: options.includeFormer ? 'in.(current,candidate,former)' : 'in.(current,candidate)',
   };
@@ -408,12 +413,15 @@ async function main() {
     peopleFilters,
     'person_id.asc',
   );
-  const [publicClaims, candidateHistories] = await Promise.all([
+  const [publicClaims, candidateHistories, identityHolds] = await Promise.all([
     fetchClaimsForPeople(people),
     fetchCandidateHistoryForPeople(people),
+    options.ongoingResearchOnly || options.includeResearchSignals
+      ? fetchAllRows('active_identity_research_holds', 'person_id,canonical_person_id,reason,resume_condition', 1000, {}, 'id.asc')
+      : Promise.resolve([]),
   ]);
   const publicClaimTypes = claimTypesByPerson(publicClaims);
-  const targets = people
+  const allTargets = people
     .map((person) => {
       const missing = options.ongoingResearchOnly
         ? []
@@ -441,14 +449,18 @@ async function main() {
       right.missing.length - left.missing.length ||
       left.person.name.localeCompare(right.person.name, 'zh-Hant-TW'),
     )
-    .slice(0, options.limit)
     .map(({ person, missing, researchSignals, group, history }) => targetFromPerson(person, missing, researchSignals, group, history));
 
+  const { eligible, deferred, totalCount } = partitionIdentityResearchTargets(allTargets, identityHolds);
+  const targets = eligible.slice(0, options.limit);
   const output = {
     schemaVersion: 1,
     name: 'person-profile-gap-targets',
     generatedAt: new Date().toISOString(),
     targetCount: targets.length,
+    totalBeforeIdentityDeferral: totalCount,
+    identityDeferredCount: deferred.length,
+    deferredTargets: deferred,
     targets,
   };
 

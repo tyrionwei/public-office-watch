@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
-import { PersonFeedbackReviewPanel } from '../components/PersonFeedbackReviewPanel';
 import { SectionPanel } from '../components/SectionPanel';
 import {
   fetchInternalIdentityReviewItems,
@@ -290,16 +289,22 @@ function claimTypeTone(value: string) {
 }
 
 export function InternalReviewQueuePage() {
+  const [progressParams] = useSearchParams();
+  const progressReturn = progressParams.get('returnTo');
+  const safeProgressReturn = progressReturn === '/internal/data-progress' || progressReturn?.startsWith('/internal/data-progress?') ? progressReturn : null;
   const [claims, setClaims] = useState<ReviewClaim[]>([]);
   const [identityItems, setIdentityItems] = useState<IdentityReviewItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [identityLoading, setIdentityLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [identityError, setIdentityError] = useState<string | null>(null);
-  const [claimType, setClaimType] = useState('');
+  const [claimType, setClaimType] = useState(() => progressParams.get('claimType') || '');
   const [sourceName, setSourceName] = useState('');
-  const [reviewStatus, setReviewStatus] = useState<'pending' | 'needs_more_evidence' | 'ready_for_publication' | ''>('pending');
-  const [query, setQuery] = useState('');
+  const [reviewStatus, setReviewStatus] = useState<'pending' | 'needs_more_evidence' | 'ready_for_publication' | ''>(() => {
+    const value = progressParams.get('reviewStatus');
+    return value === 'needs_more_evidence' || value === 'ready_for_publication' ? value : 'pending';
+  });
+  const [query, setQuery] = useState(() => progressParams.get('personName') || '');
   const [actionClaimId, setActionClaimId] = useState<string | null>(null);
   const [actionIdentityKey, setActionIdentityKey] = useState<string | null>(null);
   const [claimValueDrafts, setClaimValueDrafts] = useState<Record<string, string>>({});
@@ -525,6 +530,7 @@ export function InternalReviewQueuePage() {
     <AppShell>
       <div className="space-y-4">
         <PixelFrame title="資料審核工作台">
+          {safeProgressReturn && <Link to={safeProgressReturn} className="mb-4 inline-block text-sm text-accent underline">返回資料進度（保留篩選與頁碼）</Link>}
           <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
             <div>
               <p className="text-xs tracking-[0.18em] text-accent">內部工具 · 僅限本機</p>
@@ -586,7 +592,7 @@ export function InternalReviewQueuePage() {
           </div>
         </PixelFrame>
 
-        <PersonFeedbackReviewPanel query={query} />
+        <SectionPanel title="使用者回饋"><p className="text-sm text-slate-400">本頁只管理本機研究資料，不讀取或修改正式站回饋。回饋管理請在對應環境的管理頁處理。</p><a className="mt-3 inline-block text-accent underline" href="/internal/feedback-admin">開啟本機回饋管理</a></SectionPanel>
 
         <SectionPanel
           title="身分比對審核"

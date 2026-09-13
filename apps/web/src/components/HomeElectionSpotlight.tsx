@@ -679,12 +679,12 @@ export function HomeElectionSpotlight({
                 const party = partyInfo.affiliationParty
                   ? normalizePartyLabel(partyInfo.affiliationParty)
                   : t('homeSpotlight.unknownParty');
-                const partyLabel = t('homeSpotlight.partyAffiliation', { party: normalizeTaiwanText(party) });
+                const partyLabel = partyInfo.affiliationParty === '無黨籍' ? t('homeSpotlight.noParty') : normalizeTaiwanText(party);
                 const recommendationLabel = partyInfo.recommendation?.kind === 'party'
                   ? t('homeSpotlight.recommendedBy', { party: normalizeTaiwanText(partyInfo.recommendation.party) })
                   : partyInfo.recommendation?.kind === 'unendorsed'
                     ? t('homeSpotlight.unendorsed')
-                    : null;
+                    : t('homeSpotlight.recommendationUnknown');
                 const demographics = candidateDemographics.get(candidate.person_id);
                 const themeKey = toPartyThemeKey(partyInfo.affiliationParty);
                 const theme = partyTheme[themeKey];
@@ -703,6 +703,7 @@ export function HomeElectionSpotlight({
                     ageGroup={demographics?.ageGroup}
                     useDemographicSprite
                     partyLabel={partyLabel}
+                    recommendationLabel={recommendationLabel}
                     variant={candidate.candidate_id}
                   />
                 );
@@ -717,9 +718,6 @@ export function HomeElectionSpotlight({
                       <span className="theme-party-chip inline-flex rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: theme.accent, backgroundColor: `${theme.primary}28`, color: theme.text }}>
                         {translateCandidateStatus(candidate, t)}
                       </span>
-                      {recommendationLabel ? (
-                        <p className="mt-2 text-[10px] text-slate-400" data-candidate-recommendation>{recommendationLabel}</p>
-                      ) : null}
                       {raceContext ? <p className="mt-2 font-display text-xs text-accent" data-candidate-race-context>{raceContext}</p> : null}
                       {officeTitleLabel ? (
                         <p className="mt-1 line-clamp-2 min-h-4 text-xs text-slate-400" data-candidate-office-title>{officeTitleLabel}</p>

@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createDataProgressReader } from './build/internalDataProgress';
 import { createInternalReviewGuard, internalErrorStatus, readJsonBody, validateInternalSupabaseUrl, type InternalRequest } from './build/internalReviewSecurity';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -37,6 +38,7 @@ type DevResponse = {
   end(body?: string): void;
 };
 type RestInit = {
+  signal?: AbortSignal;
   method?: string;
   headers?: Record<string, string>;
   body?: string;
@@ -365,7 +367,22 @@ function internalReviewApiPlugin(): Plugin {
     apply: 'serve',
     configureServer(server) {
       const guard = createInternalReviewGuard();
+      const readProgress = createDataProgressReader(rootPath(), (query, profile = 'public') => supabaseRest(query, { headers: { 'accept-profile': profile }, signal: AbortSignal.timeout(30_000) }));
       server.middlewares.use('/internal-api', (request, response, next) => guard(request as DevRequest, response, next));
+      server.middlewares.use('/internal-api/data-progress', async (request, response) => {
+        const devRequest = request as DevRequest;
+        if (devRequest.method !== 'GET') {
+          jsonResponse(response, 405, { error: 'Method not allowed.' });
+          return;
+        }
+        try {
+          validateInternalSupabaseUrl(loadInternalEnv().supabaseUrl || '');
+          const params = new URL(devRequest.url || '/', 'http://localhost').searchParams;
+          jsonResponse(response, 200, await readProgress(params));
+        } catch {
+          jsonResponse(response, 503, { error: '無法讀取進度，請確認完整本機 Supabase 環境與資料格式。' });
+        }
+      });
       server.middlewares.use('/internal-api/review-claims', async (request, response) => {
         const devRequest = request as DevRequest;
         if (devRequest.method !== 'GET') {
@@ -646,66 +663,10 @@ function internalReviewApiPlugin(): Plugin {
         }
       });
 
-      server.middlewares.use('/internal-api/review-person-feedback', async (request, response) => {
-        const devRequest = request as DevRequest;
-        if (devRequest.method !== 'POST') {
-          jsonResponse(response, 405, { error: 'Method not allowed.' });
-          return;
-        }
-
-        try {
-          const body = await readJsonBody(devRequest) as {
-            submissionId?: string;
-            action?: string;
-            note?: string;
-          };
-          const submissionId = body.submissionId?.trim();
-          const action = body.action;
-          const note = body.note?.trim() ?? '';
-
-          if (!submissionId || !['start', 'verify', 'reject'].includes(action ?? '')) {
-            jsonResponse(response, 400, { error: 'submissionId and action=start|verify|reject are required.' });
-            return;
-          }
-
-          if (note.length > 1000) {
-            jsonResponse(response, 400, { error: 'Review note must not exceed 1000 characters.' });
-            return;
-          }
-
-          if (action === 'reject' && note.length < 5) {
-            jsonResponse(response, 400, { error: 'Rejecting a submission requires a review note of at least 5 characters.' });
-            return;
-          }
-
-          const submissions = await supabaseRest(
-            `person_feedback_submissions?select=id&id=eq.${encodeURIComponent(submissionId)}&limit=1`,
-          ) as Pick<PersonFeedbackRow, 'id'>[];
-          if (!submissions[0]) {
-            jsonResponse(response, 404, { error: 'Feedback submission not found.' });
-            return;
-          }
-
-          const now = new Date().toISOString();
-          const reviewStatus = action === 'start' ? 'reviewing' : action === 'verify' ? 'verified' : 'rejected';
-          await supabaseRest(`person_feedback_submissions?id=eq.${encodeURIComponent(submissionId)}`, {
-            method: 'PATCH',
-            headers: { prefer: 'return=minimal' },
-            body: JSON.stringify({
-              review_status: reviewStatus,
-              review_note: note || null,
-              reviewed_by: 'local_internal_review',
-              reviewed_at: action === 'start' ? null : now,
-              updated_at: now,
-            }),
-          });
-
-          jsonResponse(response, 200, { status: 'ok', reviewStatus });
-        } catch (error) {
-          jsonResponse(response, internalErrorStatus(error), { error: error instanceof Error ? error.message : 'Unknown error.' });
-        }
+      // Retired: all feedback decisions must use the versioned admin transaction.
+      server.middlewares.use('/internal-api/review-person-feedback', (_request, response) => {
+        jsonResponse(response, 410, { error: 'Feedback review moved to /internal/feedback-admin.' });
       });
-
 
       server.middlewares.use('/internal-api/review-identity-match', async (request, response) => {
         const devRequest = request as DevRequest;
@@ -865,5 +826,16 @@ function internalReviewApiPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), sites(), pwaShellVersionPlugin(), participationDevProxyPlugin(), internalReviewApiPlugin()],
+  plugins: [{
+    name: 'exclude-local-data-progress',
+    apply: 'build',
+    generateBundle(_options, bundle) {
+      for (const output of Object.values(bundle)) {
+        if (output.type !== 'chunk') continue;
+        const forbidden = Object.keys(output.modules).find(id =>
+          /\/(?:pages\/InternalDataProgressPage|lib\/internalDataProgress|build\/internalDataProgress)\.[cm]?[jt]sx?(?:\?|$)/.test(id.replaceAll('\\', '/')));
+        if (forbidden) this.error(`Local data-progress module included in build: ${forbidden}`);
+      }
+    },
+  }, react(), sites(), pwaShellVersionPlugin(), participationDevProxyPlugin(), internalReviewApiPlugin()],
 });

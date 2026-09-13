@@ -12,7 +12,7 @@ export function getHomeCandidateParty(candidate: CandidatePartyFields) {
   const recommendedParty = canonicalPartyName(candidate.party);
 
   let recommendation: HomeCandidateRecommendation | null = null;
-  if (recommendedParty && recommendedParty !== affiliationParty) {
+  if (recommendedParty) {
     recommendation = recommendedParty === '無黨籍'
       ? { kind: 'unendorsed' }
       : { kind: 'party', party: recommendedParty };

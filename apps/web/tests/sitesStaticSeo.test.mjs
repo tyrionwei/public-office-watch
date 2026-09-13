@@ -200,6 +200,8 @@ test('returns real document statuses for known, missing entity, and unknown rout
   assert.equal(documentResponseStatus('/about', catalog), 200);
   assert.equal(documentResponseStatus('/support', catalog), 200);
   assert.equal(documentResponseStatus('/internal/chat-admin', catalog), 200);
+  assert.equal(documentResponseStatus('/internal/feedback-admin', catalog), 200);
+  assert.equal(documentMetadata('/internal/feedback-admin', catalog).noIndex, true);
   assert.equal(documentResponseStatus('/people/person-1', catalog), 200);
   assert.equal(documentResponseStatus('/people/missing', catalog), 404);
   assert.equal(documentResponseStatus('/elections/events/missing', catalog), 404);
@@ -394,4 +396,20 @@ test('a shared shard path across groups cannot turn unavailable data into a cach
   state.manifest.groups.races.paths = state.manifest.groups.people.paths;
   assert.equal((await worker.fetch(documentRequest('/people/person-1'), env)).status, 503);
   assert.equal((await worker.fetch(documentRequest('/elections/races/missing'), env)).status, 503);
+});
+
+
+test('hosted worker rejects local data-progress and internal APIs before asset or data access', async () => {
+  const env = { ASSETS: { fetch() { throw Error('Must not access assets'); } } };
+  for (const path of ['/internal/data-progress', '/internal/data-progress/', '/internal/data-progress/details', '/internal-api', '/internal-api/data-progress?refresh=1']) {
+    for (const method of ['GET', 'HEAD', 'POST', 'OPTIONS']) {
+      const response = await worker.fetch(new Request(`https://pow4vote.org${path}`, { method }), env);
+      assert.equal(response.status, 404);
+      assert.match(response.headers.get('Cache-Control'), /no-store/);
+      assert.match(response.headers.get('X-Robots-Tag'), /noindex/);
+      assert.equal(await response.text(), method === 'HEAD' ? '' : 'Not found');
+    }
+  }
+  assert.equal(documentResponseStatus('/internal/data-progress', catalog), 404);
+  assert.equal(documentResponseStatus('/internal/chat-admin', catalog), 200);
 });

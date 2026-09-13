@@ -109,6 +109,19 @@ button {
   cursor: pointer;
 }
 
+/* Keep editable controls readable before focus so mobile Safari need not zoom.
+   Include touch devices in landscape; retain the browser's manual pinch zoom. */
+@media (max-width: 767px), (pointer: coarse) {
+  input:not(:where([type='checkbox'], [type='radio'], [type='range'], [type='color'], [type='file'], [type='hidden'], [type='button'], [type='submit'], [type='reset'], [type='image'])),
+  textarea,
+  select,
+  [contenteditable='true'],
+  [contenteditable='plaintext-only'] {
+    /* Override compact text utilities used by search, chat and review forms. */
+    font-size: max(16px, 1rem) !important;
+  }
+}
+
 ::selection {
   background: rgb(var(--color-accent) / 0.24);
   color: rgb(var(--color-fg));

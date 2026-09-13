@@ -10,7 +10,6 @@ const staticSitemapPaths = ['/', '/people', '/elections', '/parties', '/updates'
 const dynamicSitemapGroups = ['people', 'parties', 'regions', 'elections', 'events', 'races'];
 const internalDocumentPaths = new Set([
   '/internal/chat-admin',
-  '/internal/data-progress',
   '/internal/review-queue',
   '/internal/update-admin',
 ]);
@@ -420,6 +419,14 @@ const worker = {
     const url = new URL(request.url);
     const isGetOrHead = request.method === 'GET' || request.method === 'HEAD';
     const responseBody = (body) => (request.method === 'HEAD' ? null : body);
+
+    // Full-local research endpoints must never reach hosted assets or data services.
+    if (/^\/internal\/data-progress(?:\/|$)/.test(url.pathname)
+      || /^\/internal-api(?:\/|$)/.test(url.pathname)) {
+      return addSecurityHeaders(new Response(responseBody('Not found'), {
+        status: 404, headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' },
+      }), url.pathname);
+    }
 
     if (url.pathname.startsWith('/api/participation/')) {
       return addSecurityHeaders(await handleParticipationRequest(request, env), url.pathname);

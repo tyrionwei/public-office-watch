@@ -882,5 +882,16 @@ function internalReviewApiPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), sites(), pwaShellVersionPlugin(), participationDevProxyPlugin(), internalReviewApiPlugin()],
+  plugins: [{
+    name: 'exclude-local-data-progress',
+    apply: 'build',
+    generateBundle(_options, bundle) {
+      for (const output of Object.values(bundle)) {
+        if (output.type !== 'chunk') continue;
+        const forbidden = Object.keys(output.modules).find(id =>
+          /\/(?:pages\/InternalDataProgressPage|lib\/internalDataProgress|build\/internalDataProgress)\.[cm]?[jt]sx?(?:\?|$)/.test(id.replaceAll('\\', '/')));
+        if (forbidden) this.error(`Local data-progress module included in build: ${forbidden}`);
+      }
+    },
+  }, react(), sites(), pwaShellVersionPlugin(), participationDevProxyPlugin(), internalReviewApiPlugin()],
 });

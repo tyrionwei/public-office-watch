@@ -100,11 +100,11 @@ OpenClaw 不得 ad hoc 直接把資料寫成：
 
 此頁第一版僅供 local 使用。是否提供正式版，以及正式版採取何種呈現方式，留待另外規劃；本次不新增公開入口或部署。
 
-`/internal/data-progress` 的四區總覽由受保護、僅 GET 的 `/internal-api/data-progress` 提供；沿用本機連線、同源、工作階段與完整本機 Supabase URL 限制。只讀本機 `published.people`、`published.candidates`、內部審核佇列和固定路徑的 `tmp` 產物，不透過公開瀏覽器金鑰讀取待審資料，也不改排程、核准或發布。
+`/internal/data-progress` 的四區總覽由受保護、僅 GET 的 `/internal-api/data-progress` 提供；沿用本機連線、同源、工作階段與完整本機 Supabase URL 限制。只讀本機 `published.people`、`published.candidates`、`published.person_claims`、內部審核佇列和固定路徑的 `tmp` 產物，不透過公開瀏覽器金鑰讀取待審資料，也不改排程、核准或發布。
 
 統計契約實作在 `apps/web/build/internalDataProgress.ts` 的 `buildDataProgress`，版本為 `necessary-items-v1`：
 
-- 已收錄人物：姓名為必要項目；有已收錄參選紀錄的人物另檢查學歷與經歷是否有內容。生日、外部 ID 不列入。這是欄位涵蓋檢查，不能取代來源內容與身分的人工品質查核。
+- 已收錄人物：姓名為必要項目；有已收錄參選紀錄的人物另檢查學歷與經歷是否有內容；合併人物主檔與已核准公開 Claims 的內容判定，Claims 使用公開層的 canonical 人物 ID。Claims 讀取失敗時該比例為未知，不把其他來源已存在的內容誤列缺口。生日、外部 ID 不列入。這是欄位涵蓋檢查，不能取代來源內容與身分的人工品質查核。
 - 參選紀錄：每筆檢查人物對應和來源名稱／HTTP(S) URL；往年另檢查當選／未當選结果。本年與未來結果等待適用日期契約，不以缺漏或完成計算。
 - 上述分子／分母按「對象 × 必要項目」彙總，只代表可統計範圍。官方預期名冊未接入，因此尚未收錄的分母未知；任期、政見公報、政治獻金、投票所等尚無完整必要項目契約，明列未納入。司法與家族關係不以有無紀錄衡量人物完整度。
 - 人物按 person ID 去重；參選紀錄按 candidate ID 計算。現任以公開名冊分類判定；本屆以本年參選紀錄篩選。過去參選／當選不直接推定曾任；歷史任期證據未接入時，曾任篩選顯示未知。地區、年份、結果必須匹配同一筆參選紀錄，未對應人物的身分待辦不強套人物篩選。
@@ -116,3 +116,7 @@ OpenClaw 不得 ad hoc 直接把資料寫成：
 所有來源分開記錄錯誤；分頁讀取失敗會捨棄該來源的部分結果，受影響比例不計算。伺服器最多重用五分鐘快照，明列時間，可按「重新讀取」更新；快照來自多次唯讀查詢，不宣稱單一資料庫交易一致性。明細每頁 25 筆，篩選／分頁保存於 URL，審核入口帶受限本機返回路徑。這些狀態不代表正式站的資料或部署進度。
 
 驗證涵蓋 `apps/web/tests/internalDataProgress.test.ts`（分母、去重、讀取失敗、搜尋完成、舊摘要降級、任職分類、分頁）與 `apps/web/tests/internal-review-security.test.mjs`（本機權限及禁止遠端資料庫）。
+
+正式建置隔離：程式碼可納入 main，但此頁仍僅 local 可用。`App.tsx` 以 `import.meta.env.DEV` 載入頁面；內部 API 只在 Vite `apply: serve`／`configureServer` 安裝。Vite `exclude-local-data-progress` 建置檢查會拒絕將進度頁、前端讀取器或後端彙總模組打包到任何輸出 chunk。正式 Worker 對 `/internal/data-progress`（含子路徑）及 `/internal-api`（含子路徑）所有方法先回傳 404、no-store、noindex，不讀取資產或資料服務。這個限制不套用於獨立授權的 feedback-admin、chat-admin、update-admin。
+
+`sitesStaticSeo.test.mjs` 驗證正式 Worker 的 GET／HEAD／POST／OPTIONS 阻擋與不觸碰資產；實際 production-mode build 會執行模組隔離檢查。本機統計及登入界線仍由上述原有測試覆蓋。

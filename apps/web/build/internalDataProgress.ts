@@ -10,7 +10,7 @@ type Result = { rows: Row[]; error: string | null };
 type Artifact = { data: Row | null; error: string | null };
 export type ProgressSources = {
   people: Result; candidates: Result; claims: Result; identities: Result;
-  regions?: Result;
+  regions?: Result; profileClaims: Result;
   pool: Artifact; state: Artifact; followups: Artifact; daily: Artifact; weekly: Artifact; review: Artifact;
 };
 const categories = ['family_relation', 'party_affiliation', 'legal_case'];
@@ -84,11 +84,11 @@ function readArtifact(root: string, relative: string, requiredKey: string): Arti
     return { data: null, error: `${relative}：${(error as { code?: string }).code === 'ENOENT' ? '未接入' : '讀取失敗或格式不符'}` };
   }
 }
-export async function readProgressRows(rest: (query: string) => Promise<unknown>, table: string, select: string, key: string): Promise<Result> {
+export async function readProgressRows(rest: (query: string) => Promise<unknown>, table: string, select: string, key: string, filters: Record<string, string> = {}): Promise<Result> {
   const rows: Row[] = [];
   try {
     for (let offset = 0; offset < 500000; offset += 1000) {
-      const query = new URLSearchParams({ select, order: `${key}.asc`, limit: '1000', offset: String(offset) });
+      const query = new URLSearchParams({ ...filters, select, order: `${key}.asc`, limit: '1000', offset: String(offset) });
       const page = await rest(`${table}?${query}`);
       if (!Array.isArray(page)) throw Error('Invalid response');
       rows.push(...page);
@@ -99,14 +99,15 @@ export async function readProgressRows(rest: (query: string) => Promise<unknown>
 }
 export async function loadProgressSources(root: string, rest: (query: string, profile?: string) => Promise<unknown>): Promise<ProgressSources> {
   const published = (query: string) => rest(query, 'published');
-  const [people, candidates, claims, identities, regions] = await Promise.all([
+  const [people, candidates, claims, identities, regions, profileClaims] = await Promise.all([
     readProgressRows(published, 'people', 'person_id,name,position,current_office_label,list_role,list_status,district,education,experience', 'person_id'),
     readProgressRows(published, 'candidates', 'candidate_id,person_id,person_name,election_year,election_result,region_id,region_name,race_title,source_name,source_url', 'candidate_id'),
     readProgressRows(rest, 'person_claim_review_queue', 'claim_id,person_id,raw_name,claim_type,review_status,source_name,source_url,updated_at,claim_json', 'claim_id'),
     readProgressRows(rest, 'person_identity_review_queue', 'source_person_id,raw_name,review_status,source_name,source_url,updated_at,election_year,district', 'source_person_id'),
     readProgressRows(published, 'regions', 'region_id,name,region_type,parent_region_id', 'region_id'),
+    readProgressRows(published, 'person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json', 'claim_id', { claim_type: 'in.(education,experience)' }),
   ]);
-  return { people, candidates, claims, identities, regions,
+  return { people, candidates, claims, identities, regions, profileClaims,
     pool: readArtifact(root, 'tmp/daily-person-enrichment-pool.json', 'targets'),
     state: readArtifact(root, 'tmp/daily-person-enrichment-state.json', 'historicalBackfill'),
     followups: readArtifact(root, 'tmp/monitor-followups.json', 'items'),
@@ -176,15 +177,17 @@ export function buildDataProgress(input: ProgressSources, params: URLSearchParam
   namesMissing.forEach(p => addGap(`name:${p.person_id}`, p.person_id, p.person_id, '缺少人物姓名', '本機公開人物資料'));
   const candidatePersonIds = new Set(allCandidates.map(c => c.person_id));
   const profilePeople = people.filter(p => candidatePersonIds.has(p.person_id));
+  const profileFields = new Set(input.profileClaims.rows.filter(c => ['education', 'experience'].includes(c.claim_type) && (text(c.claim_value) || text(c.claim_json?.value))).map(c => `${c.person_id}:${c.claim_type}`));
+  const profileFailed = Boolean(input.profileClaims.error);
   let profileMissing = namesMissing.length;
   for (const p of profilePeople) for (const [key, label] of [['education', '學歷'], ['experience', '經歷']]) {
-    if (!text(p[key])) {
+    if (!profileFailed && !text(p[key]) && !profileFields.has(`${p.person_id}:${key}`)) {
       profileMissing++;
-      addGap(`name:${p.person_id}:${key}`, p.name, p.person_id, `缺少${label}；需以已確認人物的官方公報或人物資料補齊`, '本機已發布人物欄位');
+      addGap(`name:${p.person_id}:${key}`, p.name, p.person_id, `缺少${label}；需以已確認人物的官方公報或人物資料補齊`, '本機人物欄位與已公開資料主張');
     }
   }
   const profileTotal = people.length + profilePeople.length * 2;
-  metrics.push({ key: 'people', label: '人物基本資料', missing: scopeFailed || input.candidates.error ? null : profileMissing, total: scopeFailed || input.candidates.error ? null : profileTotal, unit: '必要項目', note: 'v1：每人姓名；有參選紀錄者另檢查學歷、經歷。生日、外部 ID 為補充項目，不列入。此處只檢查欄位是否有內容，尚未稽核內容品質。' });
+  metrics.push({ key: 'people', label: '人物基本資料', missing: scopeFailed || input.candidates.error || profileFailed ? null : profileMissing, total: scopeFailed || input.candidates.error || profileFailed ? null : profileTotal, unit: '必要項目', note: 'v1：每人姓名；有參選紀錄者另檢查學歷、經歷。生日、外部 ID 為補充項目，不列入。以人物欄位及已核准公開主張共同檢查是否有內容，尚未稽核內容品質。' });
   let candidateMissing = 0; let candidateTotal = 0; let waiting = 0;
   for (const c of candidates) {
     const checks = [[Boolean(c.person_id && peopleById.has(c.person_id)), '人物對應'], [Boolean(text(c.source_name) && safeUrl(c.source_url)), '可追溯來源']] as [boolean, string][];
@@ -252,7 +255,7 @@ export function buildDataProgress(input: ProgressSources, params: URLSearchParam
   return { version: 'necessary-items-v1', generatedAt: now.toISOString(), errors,
     options: { years: [...new Set(allCandidates.map(c => String(c.election_year)).filter(y => /^\d{4}$/.test(y)))].sort().reverse(), regions: progressCountyNames.filter(name => yearCandidates.some(c => countyByCandidate.get(c.candidate_id) === name)), offices: groups },
     people: scopeFailed ? null : people.length, candidates: candidateFailed ? null : candidates.length,
-    gap: { missing: candidateFailed ? null : profileMissing + candidateMissing, total: candidateFailed ? null : profileTotal + candidateTotal, waiting: candidateFailed ? null : waiting }, metrics,
+    gap: { missing: candidateFailed || profileFailed ? null : profileMissing + candidateMissing, total: candidateFailed || profileFailed ? null : profileTotal + candidateTotal, waiting: candidateFailed ? null : waiting }, metrics,
     research: { poolAt: text(input.pool.data?.generatedAt) || null, stateAt: text(state?.updatedAt) || null, excluded: !poolIds || scopeFailed ? null : people.length - eligiblePeople.length, groups: researchGroups },
     backlog, schedules, details: { rows: selected.slice((page - 1) * 25, page * 25), total: selected.length, page, pages } };
 }

@@ -4,6 +4,7 @@ import { buildDataProgress, readProgressRows, createDataProgressReader, candidat
 const now = new Date('2026-09-12T00:00:00Z');
 function fixture(): ProgressSources {
   return {
+    profileClaims: { rows: [], error: null },
     people: { error: null, rows: [{ person_id: 'p1', name: '人物一', current_office_label: '立法委員', list_status: 'current', list_role: 'legislator' }, { person_id: 'p2', name: '人物二', list_status: 'candidate' }] },
     candidates: { error: null, rows: [2024, 2026].map(y => ({ candidate_id: `c${y}`, person_id: 'p1', election_year: y, election_result: y === 2024 ? 'elected' : 'pending', source_name: '官方', source_url: 'https://example.org', region_name: '臺北市' })) },
     claims: { error: null, rows: [{ claim_id: 'a', person_id: 'p1', review_status: 'pending', claim_type: 'family_relation' }] }, identities: { error: null, rows: [] },
@@ -59,9 +60,9 @@ test('concurrent requests share a snapshot; filters reuse it and explicit refres
   let reads = 0;
   const reader = createDataProgressReader('/nonexistent-progress-fixture', async () => { reads++; return []; });
   await Promise.all([reader(new URLSearchParams()), reader(new URLSearchParams({ scope: 'current' }))]);
-  assert.equal(reads, 5);
-  await reader(new URLSearchParams({ page: '2' })); assert.equal(reads, 5);
-  await reader(new URLSearchParams({ refresh: '1' })); assert.equal(reads, 10);
+  assert.equal(reads, 6);
+  await reader(new URLSearchParams({ page: '2' })); assert.equal(reads, 6);
+  await reader(new URLSearchParams({ refresh: '1' })); assert.equal(reads, 12);
 });
 
 
@@ -84,4 +85,26 @@ test('county filter follows election year, historical titles and township parent
   assert.equal(candidateCounty({ election_year: 2014, race_title: '桃園市市長選舉' }, new Map()), '桃園市');
   assert.equal(candidateCounty({ election_year: 2005, region_name: '臺中市', race_title: '臺中縣第1選舉區議員選舉' }, new Map()), '臺中縣');
   assert.equal(candidateCounty({ region_name: '全國' }, new Map()), null);
+});
+
+
+test('published claims fill canonical person profile gaps without master-field mutation', () => {
+  const input = fixture();
+  input.profileClaims.rows = [
+    { claim_id: 'edu', person_id: 'p1', claim_type: 'education', claim_value: '公報學歷' },
+    { claim_id: 'exp', person_id: 'p1', claim_type: 'experience', claim_value: '', claim_json: { value: '公報經歷' } },
+    { claim_id: 'other', person_id: 'p2', claim_type: 'education', claim_value: '其他人' },
+  ];
+  const summary = build(input);
+  assert.equal(summary.metrics.find(m => m.key === 'people')?.missing, 0);
+  assert.equal(summary.details.rows.filter(r => r.id.startsWith('name:p1:')).length, 0);
+  assert.equal(input.people.rows[0].education, undefined);
+});
+test('published profile read failure is unknown, not a false missing or completed count', () => {
+  const input = fixture(); input.profileClaims = { rows: [], error: 'profile read failed' };
+  const summary = build(input);
+  assert.equal(summary.gap.missing, null);
+  assert.equal(summary.gap.total, null);
+  assert.equal(summary.metrics.find(m => m.key === 'people')?.missing, null);
+  assert.equal(summary.details.rows.filter(r => r.id.startsWith('name:p1:')).length, 0);
 });

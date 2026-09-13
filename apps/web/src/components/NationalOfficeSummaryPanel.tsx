@@ -20,7 +20,6 @@ const institutionOrder: PublicNationalOfficeInstitution[] = [
 
 function HolderSlot({ holder }: { holder: PublicNationalOfficeHolder | undefined }) {
   const { t } = useI18n();
-  const isUnknown = holder?.tenure_status === 'unknown';
   const isVacant = !holder?.holder_name || holder.tenure_status === 'vacant';
   const roleLabel = holder?.role_key === 'deputy'
     ? t('nationalOffice.deputy')
@@ -31,12 +30,12 @@ function HolderSlot({ holder }: { holder: PublicNationalOfficeHolder | undefined
         <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{roleLabel}</p>
         {holder?.tenure_status === 'acting' || isVacant ? (
           <span className="text-[10px] uppercase tracking-[0.16em] text-signal">
-            {isUnknown ? t('nationalOffice.awaitingUpdate') : holder?.tenure_status === 'acting' ? t('nationalOffice.acting') : t('nationalOffice.vacant')}
+            {holder?.tenure_status === 'acting' ? t('nationalOffice.acting') : t('nationalOffice.vacant')}
           </span>
         ) : null}
       </div>
       <p className="mt-1 truncate font-display text-lg text-white">
-        {holder?.holder_name || t(isUnknown ? 'nationalOffice.awaitingUpdate' : 'nationalOffice.awaitingAppointment')}
+        {holder?.holder_name || t('nationalOffice.awaitingAppointment')}
       </p>
     </>
   );

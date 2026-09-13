@@ -431,7 +431,28 @@ function currentOfficeLabelFor(candidateRecords: PublicCandidate[]) {
 }
 
 function isLikelyCurrentElectedCandidate(candidate: PublicCandidate) {
-  return isCandidateElected(candidate) && candidate.office_is_current === true;
+  const isElected = isCandidateElected(candidate);
+
+  if (!isElected) {
+    return false;
+  }
+
+  const year = candidateElectionYear(candidate);
+  const text = [candidate.election_name, candidate.race_title, candidate.person_position].filter(Boolean).join(' ');
+
+  if (!year) {
+    return true;
+  }
+
+  if (/總統|副總統|立法委員|立委|不分區/.test(text)) {
+    return year >= 2024;
+  }
+
+  if (/市長|縣長|議員|鄉長|鎮長|市民代表|鄉民代表|鎮民代表|村長|里長|代表/.test(text)) {
+    return year >= 2022;
+  }
+
+  return year >= 2024;
 }
 
 function getPersonStatus(
@@ -616,8 +637,8 @@ function timelineYearForCandidate(candidate: PublicCandidate) {
 }
 
 function timelineStatusForCandidate(candidate: PublicCandidate, isCurrentOffice: boolean): PublicPersonTimelineItem['status'] {
+  if (isActiveCandidacy(candidate)) return 'candidate';
   if (isCurrentOffice) return 'current';
-  if (isActiveCandidacy(candidate) && candidate.election_result !== 'elected' && candidate.election_result !== 'not_elected') return 'candidate';
   return 'past';
 }
 

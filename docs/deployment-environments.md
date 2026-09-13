@@ -207,23 +207,12 @@ choice. Decision, priority and work progress resolve together to remain valid.
 All detail, save, conflict and history requests discard responses after a session
 change; the editor also requires ready administrator access.
 
-The original family cache refresh in `20260913073155` is superseded by
-`20260913084244_publish_reviewed_office_terms.sql`: expensive family derivation now
-runs locally, while approved terms drive public date comparisons. See the workflow
-below for its independent data-release gate.
-
 Validation on the integrated release: script tests 475 passed; frontend read
 contracts 415 passed and 7 environment-dependent integration tests skipped;
 feedback browser scenarios 7 passed (390px, 1280px, conflict merge, delayed detail,
 save, conflict detail and history responses after sign-out). Lint, build and
 static exposure checks passed. The legacy DB contract check skipped without DB
 environment variables; that is not a database pass.
-
-Historical validation: the old full-local-family computation exceeded 180 seconds
-inside `office_status_rows_for`; its bounded one-person regression passed, but did
-not establish whole-family capacity. The new workflow removes that operation from
-production. Its tests and full local export evidence are recorded below.
-
 
 Follow-up: repeated `SIGNED_IN`, `TOKEN_REFRESHED` or `USER_UPDATED` events for the
 same user and JWT `session_id` revalidate access without clearing the editor.
@@ -234,119 +223,4 @@ and invalidates pending responses. The updated feedback browser suite passed all
 changes with delayed responses; lint and production build also passed.
 
 
-### Reviewed office release workflow
-
-All research and draft generation use full local Supabase on loopback port 54321.
-The CLI cannot connect to production. A production baseline is a separately
-authorized, read-only export of `office_release_baseline(uuid[])`; do not repoint
-local `.env` or internal review APIs. Export only the selected IDs, retaining the
-same release ID and office revision across pages. A local baseline is for local
-rehearsal only and must not be presented as a production baseline.
-
-```sh
-node scripts/office-release.mjs source --family local --output tmp/office-release/source.json
-node scripts/office-release.mjs baseline-local --source tmp/office-release/source.json --output tmp/office-release/baseline.json
-node scripts/office-release.mjs draft --source tmp/office-release/source.json --baseline tmp/office-release/baseline.json --as-of 2026-09-13 --output tmp/office-release/draft.json
-```
-
-Families: `president`, `legislator`, `local`. Each selected person must include all
-published elected candidacies, including other families. Invalid or missing terms,
-unknown departure dates and missing evidence block that person. The preview contains
-before/after office fields; `blocked` explains exclusions. Drafts are private and
-are not approvals. Review the actual sources, titles, dates and conflicts, then
-create a private review JSON with `draftHash`, `reviewedBy`, `reason` and an explicit
-`approvedPersonIds` array (1–500 people). Editing the draft invalidates approval.
-
-```sh
-node scripts/office-release.mjs build --draft tmp/office-release/draft.json --review tmp/office-release/review.json --output tmp/office-release/package.json
-```
-
-This writes a payload, `.sql` and `.rollback.sql`, without applying anything. After
-explicit release authorization, apply only that SQL to the verified target. The
-transaction checks the public release, office revision, selected-person fingerprints,
-public elected candidacies, evidence and the office-field whitelist; any conflict
-aborts the whole package. No `promote()` or private profile refresh is invoked.
-A successful package refreshes the directory snapshot atomically. Later reads compare
-approved dates in Asia/Taipei, without requiring an annual/full-table cron.
-
-Rollback is limited to the latest office package on the same public baseline and
-expected office revision. It restores previous profiles/terms and refreshes the
-snapshot, retains history and advances the revision. If another package or general
-release intervened, stop and prepare a fresh reviewed correction instead of forcing
-an old rollback. A production restore is independently authorized.
-
-Before production release: rehearse the schema and first office package against the
-approved production baseline, verify expiry, early departure, person/directory/home
-consistency, voting dates, read permissions, refresh costs and rollback. Audit first
-package coverage: unmanaged people still use the legacy office presentation; do not
-claim migration complete until existing supported current offices have approved terms
-or an explicitly reviewed unresolved outcome. This change includes no automatic
-approval of local public-report repairs and no production data package.
-
-Validation entrypoints: `node --test scripts/office-release.test.mjs`; SQL regressions
-`tests/sql/reviewed-office-release.sql` and `scripts/sql/annual-office-refresh-regression.sql`.
-Run the SQL only in a local/rehearsal rollback transaction after the release schema.
-The former also tests denied browser mutations, baseline rejection, no non-office
-profile changes, known expiry, public projections and versioned rollback.
-
-
-Local evidence (2026-09-13): the complete local-family export finished with 16,347
-people. The draft has 14,146 eligible and 2,201 blocked people; these are source
-readiness counts, not approvals. Missing/unknown term dates and an unresolved
-presidential ticket role account for exclusions. The original nine CLI tests passed. The
-installed-schema transaction regression and fixed-date calendar regression passed.
-A rollback-only 500-person real-shaped package took 2.738 seconds to apply (including
-directory refresh), 37.630 ms to read anonymous current-office counts, and 307.156 ms
-to restore. This is full-local evidence, not a production-baseline capacity result.
-No office package was retained; production schema/data and release rehearsal remain
-unchanged/unexecuted. Local schema is installed for development on port 54321, and
-the release website continues at port 5173.
-
-For a shared `president` race, race type alone cannot distinguish president from
-vice president. The source must include `office_role` and a reviewed
-`role_source_url`; otherwise the person is blocked. Do not infer an older ticket's
-role from a person's current title. Legislative leadership and other appointments
-also need their own term evidence before replacing those current-office labels.
-
-The nationwide presidency panel uses the same approved terms. When a known term
-ends and no unique approved successor exists, it shows `unknown` / 資料待更新,
-not the old holder or an assertion of vacancy. Other institutional appointments
-remain on their separate workflow. Existing candidacy presentation is retained
-until a reviewed future winner reaches inauguration.
-
-Broader validation: 483 script tests and 21 Python cases passed after rerunning
-outside the sandbox's local-listener restriction; the final ninth office unit case
-also passed. The first sandbox run failed two existing suites (local listener /
-mock process restrictions), not the office logic. Web read contracts, lint, build,
-data-boundary and published-exposure checks passed; the existing direct mock import
-and large bundle warnings remain. No production or production-baseline rehearsal
-was performed.
-
-
-Review follow-up: migration `20260913104427_fix_reviewed_office_candidacy_and_dependencies.sql`
-adds live published candidacy composition and rebinds the candidate views to the
-approved-term function OIDs. The release now includes this additional migration.
-Regenerate the target baseline and draft: a `candidacyContextVersion: 1` baseline
-is required, and old drafts cannot be built into new packages. Live candidacy
-context is preview input only; it is not copied into the office payload.
-
-Two cross-flow SQL attempts joined candidate views to a temporary fixture and
-timed out at 60 seconds in the legacy source helper for unrelated rows. The
-final regression uses literal person and candidate filters, retains the real
-view/function implementation, and passes under service_role. This is not a
-passed unrestricted legacy-view capacity test.
-
-The final cross-flow transaction regression passed: no remaining view dependencies
-on either source-copy OID, approved early departure through both candidate views,
-current candidacy ahead of expired terms, withdrawal/loss updates without another
-office package, and returning winner status before/on inauguration. All test data
-rolled back. Ten office CLI tests passed. The migration is installed only in full
-local Supabase; no production schema/data was changed.
-
-An initial live-context capacity run read current-office totals in 11.059 seconds:
-the per-person context rebuilt public race display/canonical facets. The final
-query uses published candidate IDs, indexed core date/status lookups and the same
-public election/race/region visibility guards, without reading private candidate
-facts. The 500-person rollback run now applies in 2.100 seconds, reads totals in
-116.379 ms and restores in 267.419 ms. The CLI baseline also returned the new
-versioned candidacy context. These measurements are local, not production capacity.
+Release scope update (2026-09-13): office-term and platform-voting changes are deferred by owner decision. The complete candidate is preserved on `codex/hold/office-release-2026-09-13`; current release does not apply its migrations or office data packages. See `docs/releases/2026-09-13.md` for the reduced release scope.

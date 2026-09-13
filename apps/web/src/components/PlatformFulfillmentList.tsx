@@ -387,6 +387,10 @@ function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
     totalCount: overallSummary.totalCount,
   };
 
+  const announcedDate = formatEligibilityDate(
+    participation?.resultsAnnouncedOn ?? null,
+    language,
+  );
   const openDate = formatEligibilityDate(
     participation?.votingOpensOn ?? null,
     language,
@@ -477,12 +481,6 @@ function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
           shareContext={loading ? undefined : shareContext}
         />
         {loading ? <p className="mt-2 text-[10px] text-slate-500">{t('person.fulfillment.loading')}</p> : null}
-        {!loading && !loadFailed ? (
-          <div className="mt-2 text-xs leading-5 text-slate-400">
-            <p>{t('person.fulfillment.unavailable')}</p>
-            <p>{t('person.fulfillment.votingRule')}</p>
-          </div>
-        ) : null}
         {loadFailed ? (
           <div className="mt-2 text-xs text-rose-300" role="alert">
             <p>{t('person.fulfillment.loadError')}</p>
@@ -547,7 +545,7 @@ function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
             <p className="text-[10px] leading-4 text-amber-200" data-testid="party-threshold-voting-locked">
               {t('person.fulfillment.partyThresholdLocked')}
             </p>
-          ) : openDate ? (
+          ) : announcedDate && openDate ? (
             <p className={`text-[10px] leading-4 ${
               votingIsOpen ? 'text-slate-500' : 'text-amber-200'
             }`}>
@@ -555,7 +553,7 @@ function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
                 votingIsOpen
                   ? 'person.fulfillment.votingDates'
                   : 'person.fulfillment.votingDatesLocked',
-                { openDate },
+                { announcedDate, openDate },
               )}
             </p>
           ) : (

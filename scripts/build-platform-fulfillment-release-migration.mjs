@@ -201,7 +201,114 @@ function validateClaims(claims) {
   return { approved, withheld, missingClaims };
 }
 
-const resultsFunctionSql = fs.readFileSync(path.join(repoRoot, 'scripts/sql/platform-fulfillment-results.sql'), 'utf8');
+const resultsFunctionSql = `CREATE OR REPLACE FUNCTION published.platform_fulfillment_results(
+    p_claim_id UUID
+)
+RETURNS TABLE (
+    item_key TEXT,
+    display_order INTEGER,
+    promise_text TEXT,
+    fulfilled_count BIGINT,
+    in_progress_count BIGINT,
+    not_fulfilled_count BIGINT,
+    insufficient_information_count BIGINT,
+    total_count BIGINT,
+    results_announced_on DATE,
+    voting_opens_on DATE,
+    voting_is_open BOOLEAN
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $function$
+    WITH target AS (
+        SELECT public.platform_fulfillment_vote_claim_id(p_claim_id) AS vote_claim_id
+    ),
+    current_items AS (
+        SELECT DISTINCT ON (derived.item_key)
+            derived.item_key,
+            derived.display_order,
+            derived.promise_text,
+            election.results_announced_on,
+            (election.results_announced_on + INTERVAL '1 year')::DATE AS voting_opens_on,
+            COALESCE(
+                CURRENT_DATE >= (election.results_announced_on + INTERVAL '1 year')::DATE,
+                FALSE
+            ) AS voting_is_open
+        FROM public.person_claims AS claim
+        JOIN public.candidates AS candidate ON candidate.id = claim.candidate_id
+        JOIN public.races AS race ON race.id = candidate.race_id
+        JOIN public.elections AS election ON election.id = race.election_id
+        CROSS JOIN LATERAL (
+            SELECT
+                pg_catalog.encode(
+                    extensions.digest(pg_catalog.btrim(item.value), 'sha256'),
+                    'hex'
+                ) AS item_key,
+                item.ordinality::INTEGER AS display_order,
+                pg_catalog.btrim(item.value) AS promise_text
+            FROM pg_catalog.jsonb_array_elements_text(claim.claim_json -> 'items')
+                WITH ORDINALITY AS item(value, ordinality)
+            WHERE pg_catalog.btrim(item.value) <> ''
+        ) AS derived
+        WHERE claim.id = p_claim_id
+          AND claim.claim_type = 'platform'
+          AND claim.review_status = 'verified'
+          AND claim.visibility = 'public'
+          AND claim.is_public = TRUE
+          AND claim.claim_json #>> '{contentSplit,reviewStatus}'
+                IN ('auto_approved', 'reviewed')
+          AND candidate.election_result = 'elected'
+          AND (
+              (
+                  election.year = 2024
+                  AND race.race_type IN (
+                      'president',
+                      'legislative_district',
+                      'legislator',
+                      'party_list_legislator',
+                      'indigenous'
+                  )
+              )
+              OR (
+                  election.year = 2022
+                  AND race.race_type IN (
+                      'councilor_district',
+                      'city_councilor',
+                      'county_councilor'
+                  )
+              )
+          )
+          AND pg_catalog.jsonb_typeof(claim.claim_json -> 'items') = 'array'
+        ORDER BY derived.item_key, derived.display_order
+    )
+    SELECT
+        item.item_key,
+        item.display_order,
+        item.promise_text,
+        pg_catalog.count(*) FILTER (WHERE vote.vote_status = 'fulfilled') AS fulfilled_count,
+        pg_catalog.count(*) FILTER (WHERE vote.vote_status = 'in_progress') AS in_progress_count,
+        pg_catalog.count(*) FILTER (WHERE vote.vote_status = 'not_fulfilled') AS not_fulfilled_count,
+        pg_catalog.count(*) FILTER (WHERE vote.vote_status = 'insufficient_information') AS insufficient_information_count,
+        pg_catalog.count(vote.id) AS total_count,
+        item.results_announced_on,
+        item.voting_opens_on,
+        item.voting_is_open
+    FROM current_items AS item
+    CROSS JOIN target
+    LEFT JOIN public.platform_fulfillment_votes AS vote
+      ON vote.claim_id = target.vote_claim_id
+     AND vote.item_key = item.item_key
+    GROUP BY
+        item.item_key,
+        item.display_order,
+        item.promise_text,
+        item.results_announced_on,
+        item.voting_opens_on,
+        item.voting_is_open
+    ORDER BY item.display_order;
+$function$;`;
 
 function buildMigration(claims) {
   const { approved, withheld, missingClaims } = validateClaims(claims);
@@ -495,8 +602,6 @@ async function loadLocalClaims() {
     throw new Error('Refused non-local Supabase host');
   }
 
-  // Replays a fixed, audited 991-claim historical release, not a voting eligibility policy.
-  // Universal voting rules come from the canonical SQL above.
   const elections = await fetchAll(config, 'elections', 'id,year', { year: 'in.(2022,2024)' });
   const electionById = new Map(elections.map((election) => [election.id, election]));
   const races = (await fetchByValues(

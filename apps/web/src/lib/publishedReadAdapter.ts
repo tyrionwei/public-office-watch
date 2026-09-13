@@ -303,7 +303,6 @@ export const HOME_CANDIDATE_SUMMARY_COLUMNS = [
 ].join(',');
 
 export const PERSON_CANDIDATE_COLUMNS = [
-  'office_is_current',
   'candidate_id',
   'person_id',
   'person_name',

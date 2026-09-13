@@ -98,13 +98,3 @@ Assessed coverage: 13 of 20 promises
 The percentage should be the average reviewed progress of assessable promises only. `not_assessable` promises stay in the total platform count but are excluded from the percentage denominator. The UI must label the result as an evidence-based estimate, not an objective score of political performance.
 
 The first public version should prefer status counts over a percentage. Add the percentage only after the review workflow has produced stable and repeatable assessments across more than one officeholder.
-
-## 履行投票資格（2026-09-12）
-
-以該次任期就任日起滿一個曆年開放，不再以選舉結果公告日或投票日計算，也不限制選舉年份或公職類別。必須同時為該次當選、人物對應一致、政見核准公開且拆分審核完成；政黨不分區以取得席次及政見完成審核判斷，使用立委任期。卸任不取消歷屆政見的投票資格。
-
-日期來源與補選、個別任職例外見 [candidate-status-model.md](candidate-status-model.md)。無任期日期、未滿一年、未當選或政見未審核時不開放。2014 年以前地方選舉暫不推算日期。
-
-共用讀取 SQL：`scripts/sql/platform-fulfillment-results.sql`；提交 API 仍透過該函式檢查相同條件。固定 991 筆的舊發布產生器維持原已審核資料範圍，但讀取共用函式，不能覆蓋回舊年份／職務限制。
-
-本機驗證：`scripts/sql/platform-voting-eligibility-regression.sql` 用交易回滾驗證就任、卸任、跨年、補選與例外、審核與席次條件；不送出任何真實使用者投票。

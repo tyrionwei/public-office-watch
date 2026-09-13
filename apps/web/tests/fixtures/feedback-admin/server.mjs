@@ -15,11 +15,13 @@ export async function startFeedbackFixture() {
     'lib/supabaseEnv': `export const getSupabasePublicEnv=()=>({url:'http://127.0.0.1:54321',anonKey:'synthetic'});`,
     'components/AppShell': `import React from 'react';export const AppShell=({children})=>React.createElement('main',{className:'mx-auto max-w-6xl p-4'},children);`,
     'lib/supabasePublicClient': `
+      const listeners = new Set();
+      window.__feedbackSignOut = () => { for (const listener of listeners) listener('SIGNED_OUT'); };
       const client = {
         auth: {
           getSession: async () => ({ data: { session: new URLSearchParams(location.search).get('auth') === 'signed-out' ? null : { user: { is_anonymous: false } } } }),
           signOut: async () => ({ error: null }),
-          onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
+          onAuthStateChange: listener => { listeners.add(listener); return { data: { subscription: { unsubscribe() { listeners.delete(listener); } } } }; },
         },
         functions: { invoke: async (_name, { body }) => {
           const response = await fetch('/__feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });

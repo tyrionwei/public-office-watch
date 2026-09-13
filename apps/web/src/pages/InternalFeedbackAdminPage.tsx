@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { AdminMagicLinkError, adminMagicLinkErrorMessage } from '../lib/adminMagicLink';
-import { getFeedbackAdminClient, bucketLabels, draftFrom, FeedbackApiError, feedbackBucket, feedbackBuckets, feedbackRequest, progressLabels, requestFeedbackLogin, type FeedbackBucket, type FeedbackDashboard, type FeedbackDetail, type FeedbackDraft, type FeedbackItem } from '../lib/feedbackAdmin';
+import { getFeedbackAdminClient, reconcileFeedbackDraft, feedbackConflictLabels, type FeedbackConflictField, bucketLabels, draftFrom, FeedbackApiError, feedbackBucket, feedbackBuckets, feedbackRequest, progressLabels, requestFeedbackLogin, type FeedbackBucket, type FeedbackDashboard, type FeedbackDetail, type FeedbackDraft, type FeedbackItem } from '../lib/feedbackAdmin';
 
 const inputClass = 'w-full border border-line bg-bg p-2 text-sm text-white';
 const buttonClass = 'border border-line px-3 py-2 text-sm text-slate-200 hover:border-accent disabled:opacity-40';
@@ -37,6 +37,23 @@ export function InternalFeedbackAdminPage() {
   const [notice, setNotice] = useState<FeedbackBucket | null>(null);
   const request = useRef<{ key: string; id: string } | null>(null);
   const generation = useRef(0);
+  const sessionGeneration = useRef(0);
+  const [choices, setChoices] = useState<Partial<Record<FeedbackConflictField, 'mine' | 'latest'>>>({});
+  const invalidateSession = useCallback((state: 'signed-out' | 'forbidden') => {
+    sessionGeneration.current++; generation.current++;
+    setDashboard(null); setDetail(null); setDraft(null); setLatest(null); setConflict(false);
+    setChoices({}); setNotice(null); setError(''); setBusy(false); setLoading(false);
+    request.current = null; setAccess(state);
+  }, []);
+  useEffect(() => () => { sessionGeneration.current++; generation.current++; }, []);
+  function handleRequestError(caught: unknown) {
+    if (caught instanceof FeedbackApiError && [401, 403].includes(caught.status)) invalidateSession(caught.status === 401 ? 'signed-out' : 'forbidden');
+    setError(errorText(caught));
+  }
+  const reconciliation = detail && draft && latest ? reconcileFeedbackDraft(draftFrom(detail.item), draft, draftFrom(latest.item), choices) : null;
+  function conflictValue(value: FeedbackDraft, field: FeedbackConflictField) {
+    return field === 'status' ? `${value.decision === 'accepted' ? '採納' : value.decision === 'rejected' ? '駁回' : '待處理'} · ${value.priority === 'high' ? '高優先' : '一般'} · ${progressLabels[value.workStatus]}` : value[field] || '無';
+  }
   const dialogRef = useRef<HTMLDivElement>(null);
   const selectedId = detail?.item.id;
   useEffect(() => {
@@ -54,46 +71,79 @@ export function InternalFeedbackAdminPage() {
     } catch (caught) {
       if (generation.current !== gen) return;
       setError(errorText(caught)); setDashboard(null);
-      if (caught instanceof FeedbackApiError && caught.status === 401) { setAccess('signed-out'); setDetail(null); setDraft(null); }
-      else if (caught instanceof FeedbackApiError && caught.status === 403) { setAccess('forbidden'); setDetail(null); setDraft(null); }
+      if (caught instanceof FeedbackApiError && [401, 403].includes(caught.status)) invalidateSession(caught.status === 401 ? 'signed-out' : 'forbidden');
     } finally { if (generation.current === gen) setLoading(false); }
-  }, [filter, pages]);
+  }, [filter, pages, invalidateSession]);
   useEffect(() => {
     let active = true;
     const client = getFeedbackAdminClient();
     if (!client) { setAccess('signed-out'); setError('尚未設定回饋管理，或網站與資料庫環境不相符。'); return; }
+    const sessionGen = sessionGeneration.current;
     void client.auth.getSession().then(({ data, error: authError }) => {
-      if (!active) return;
-      if (authError || !data.session || data.session.user.is_anonymous) setAccess('signed-out');
+      if (!active || sessionGen !== sessionGeneration.current) return;
+      if (authError || !data.session || data.session.user.is_anonymous) invalidateSession('signed-out');
       else void refresh();
-    }).catch(() => { if (active) { setAccess('signed-out'); setError('登入狀態讀取失敗。'); } });
+    }).catch(() => { if (active && sessionGen === sessionGeneration.current) { invalidateSession('signed-out'); setError('登入狀態讀取失敗。'); } });
     const { data: { subscription } } = client.auth.onAuthStateChange(event => {
-      if (event === 'SIGNED_IN') queueMicrotask(() => { if (active) void refresh(); });
-      if (event === 'SIGNED_OUT') { generation.current++; setDashboard(null); setDetail(null); setDraft(null); setLatest(null); setAccess('signed-out'); }
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') { invalidateSession('signed-out'); queueMicrotask(() => { if (active) void refresh(); }); }
+      if (event === 'SIGNED_OUT') invalidateSession('signed-out');
     });
     return () => { active = false; subscription.unsubscribe(); };
-  }, [refresh]);
+  }, [refresh, invalidateSession]);
   async function open(item: FeedbackItem, historyPage = 1) {
+    if (access !== 'ready') return;
+    const gen = sessionGeneration.current;
     setBusy(true); setError(''); setNotice(null);
-    try { const next = await feedbackRequest<FeedbackDetail>('detail', { id: item.id, historyPage }); setDetail(next); setDraft(draftFrom(next.item)); setConflict(false); setLatest(null); request.current = null; }
-    catch (caught) { setError(errorText(caught)); } finally { setBusy(false); }
+    try {
+      const next = await feedbackRequest<FeedbackDetail>('detail', { id: item.id, historyPage });
+      if (gen !== sessionGeneration.current) return;
+      setDetail(next); setDraft(draftFrom(next.item)); setConflict(false); setLatest(null); setChoices({}); request.current = null;
+    } catch (caught) { if (gen === sessionGeneration.current) handleRequestError(caught); }
+    finally { if (gen === sessionGeneration.current) setBusy(false); }
+  }
+  async function loadLatest() {
+    if (!detail || access !== 'ready') return;
+    const gen = sessionGeneration.current;
+    setBusy(true);
+    try {
+      const next = await feedbackRequest<FeedbackDetail>('detail', { id: detail.item.id });
+      if (gen === sessionGeneration.current) { setLatest(next); setChoices({}); }
+    } catch (caught) { if (gen === sessionGeneration.current) handleRequestError(caught); }
+    finally { if (gen === sessionGeneration.current) setBusy(false); }
+  }
+  async function loadHistory(delta: number) {
+    if (!detail || access !== 'ready') return;
+    const gen = sessionGeneration.current;
+    setBusy(true);
+    try {
+      const next = await feedbackRequest<FeedbackDetail>('detail', { id: detail.item.id, historyPage: detail.history_page + delta });
+      if (gen === sessionGeneration.current) setDetail(previous => previous ? { ...previous, history: next.history, history_page: next.history_page, history_total: next.history_total } : null);
+    } catch (caught) { if (gen === sessionGeneration.current) handleRequestError(caught); }
+    finally { if (gen === sessionGeneration.current) setBusy(false); }
   }
   async function save(event: FormEvent) {
-    event.preventDefault(); if (!detail || !draft || conflict) return;
+    event.preventDefault(); if (access !== 'ready' || !detail || !draft || conflict) return;
+    const gen = sessionGeneration.current;
     setBusy(true); setError('');
     const payload = { id: detail.item.id, expectedRevision: detail.item.revision, ...draft };
     const key = JSON.stringify(payload);
     if (request.current?.key !== key) request.current = { key, id: crypto.randomUUID() };
     try {
       const item = await feedbackRequest<FeedbackItem>('save', { ...payload, requestId: request.current.id });
+      if (gen !== sessionGeneration.current) return;
       setDetail({ ...detail, item }); setDraft(draftFrom(item)); setNotice(feedbackBucket(item)); request.current = null;
       // Reset only the destination page so the moved item can be found without losing the other sections.
       setPages(previous => ({ ...previous, [feedbackBucket(item)]: 1 }));
-      const next = await feedbackRequest<FeedbackDetail>('detail', { id: item.id }); setDetail(next); setDraft(draftFrom(next.item));
+      const next = await feedbackRequest<FeedbackDetail>('detail', { id: item.id });
+      if (gen !== sessionGeneration.current) return;
+      setDetail(next); setDraft(draftFrom(next.item));
     } catch (caught) {
-      setError(errorText(caught));
-      if (caught instanceof FeedbackApiError && caught.status === 409) { setConflict(true); try { setLatest(await feedbackRequest<FeedbackDetail>('detail', { id: detail.item.id })); } catch { /* User can retry loading latest. */ } }
-    } finally { setBusy(false); }
+      if (gen !== sessionGeneration.current) return;
+      handleRequestError(caught);
+      if (caught instanceof FeedbackApiError && caught.status === 409) {
+        setConflict(true); setChoices({}); await loadLatest();
+      }
+    } finally { if (gen === sessionGeneration.current) setBusy(false); }
   }
   async function login(event: FormEvent) {
     event.preventDefault(); setBusy(true); setError(''); setSent(false);
@@ -102,7 +152,7 @@ export function InternalFeedbackAdminPage() {
   return <AppShell><div className="space-y-5">
     <PixelFrame title="Feedback Administration">
       <div className="flex flex-wrap items-start justify-between gap-4"><div><h1 className="text-2xl font-bold text-white">使用者回饋管理</h1><p className="mt-1 text-xs text-accent">{['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname) ? '本機回饋 · 測試環境' : '本站回饋'}</p><p className="mt-2 text-sm text-slate-400">採納、優先程度與實際工作進度分開記錄。處理過的回饋仍可查看及修改。</p></div>
-        {access === 'ready' || access === 'forbidden' ? <button className={buttonClass} onClick={async () => { setBusy(true); try { const result = await getFeedbackAdminClient()?.auth.signOut(); if (result?.error) throw result.error; generation.current++; setDashboard(null); setDetail(null); setDraft(null); setLatest(null); setAccess('signed-out'); } catch (caught) { setError(errorText(caught)); } finally { setBusy(false); } }} disabled={busy}>登出</button> : null}</div>
+        {access === 'ready' || access === 'forbidden' ? <button className={buttonClass} onClick={async () => { setBusy(true); try { const result = await getFeedbackAdminClient()?.auth.signOut(); if (result?.error) throw result.error; invalidateSession('signed-out'); } catch (caught) { setError(errorText(caught)); } finally { setBusy(false); } }} disabled={busy}>登出</button> : null}</div>
       <p className="mt-3 text-xs text-slate-500">採納代表值得處理或查證；高優先不會自動加入搜尋排程。人物資料修正仍循發布流程。</p>
     </PixelFrame>
     {error ? <div role="alert" className="border border-amber-500/50 p-3 text-sm text-amber-200">{error}</div> : null}
@@ -132,7 +182,7 @@ export function InternalFeedbackAdminPage() {
         </section>; })}
       </div></> : null}
     </> : null}
-    {detail && draft ? <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 p-3 sm:p-8" ref={dialogRef} role="dialog" aria-modal="true" aria-label="編輯回饋處理" onKeyDown={event => {
+    {access === 'ready' && detail && draft ? <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 p-3 sm:p-8" ref={dialogRef} role="dialog" aria-modal="true" aria-label="編輯回饋處理" onKeyDown={event => {
       if (event.key === 'Escape' && !busy) { setDetail(null); setDraft(null); }
       if (event.key !== 'Tab') return;
       const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], summary')).filter(element => element.getClientRects().length > 0);
@@ -144,8 +194,20 @@ export function InternalFeedbackAdminPage() {
       <FeedbackContent item={detail.item} />
       {error ? <p role="alert" className="text-amber-300">{error}</p> : null}
       {notice ? <p role="status" className="text-accent">已儲存至{bucketLabels[notice]}，可繼續編輯。</p> : null}
-      {conflict ? <div className="space-y-3 border border-amber-500 p-3"><h3 className="text-amber-300">較新的版本</h3>{latest ? <><FeedbackContent item={latest.item} /><p>{bucketLabels[feedbackBucket(latest.item)]} · {progressLabels[latest.item.work_status]}</p><p className="whitespace-pre-wrap break-words">最新備註：{latest.item.review_note || '無'}</p><button className={buttonClass} onClick={() => { setDetail(latest); setLatest(null); setConflict(false); setError(''); request.current = null; }}>已查看差異，保留草稿繼續編輯</button></> : <button className={buttonClass} onClick={async () => { try { setLatest(await feedbackRequest<FeedbackDetail>('detail', { id: detail.item.id })); } catch (caught) { setError(errorText(caught)); } }}>讀取最新版本</button>}</div> : null}
-      <form onSubmit={save}><fieldset disabled={busy} className="space-y-4">
+      {conflict ? <div className="space-y-3 border border-amber-500 p-3"><h3 className="text-amber-300">較新的版本</h3>{latest && reconciliation ? <>
+        <FeedbackContent item={latest.item} />
+        <p>最新備註：{latest.item.review_note || '無'}</p>
+        <p className="text-sm text-slate-400">未修改的欄位沿用最新版本；雙方都修改的欄位請選擇要保留的內容。</p>
+        {(Object.keys(feedbackConflictLabels) as FeedbackConflictField[]).map(field => <div key={field} className="space-y-2 border-t border-line pt-2" data-conflict-field={field}>
+          <h4>{feedbackConflictLabels[field]}</h4>
+          <p className="whitespace-pre-wrap break-words">原始版本：{conflictValue(draftFrom(detail.item), field)}</p>
+          <p className="whitespace-pre-wrap break-words">我的草稿：{conflictValue(draft, field)}</p>
+          <p className="whitespace-pre-wrap break-words">最新版本：{conflictValue(draftFrom(latest.item), field)}</p>
+          {reconciliation.conflicts.includes(field) ? <div className="flex flex-wrap gap-3">{(['mine', 'latest'] as const).map(choice => <label key={choice}><input type="radio" name={`conflict-${field}`} checked={choices[field] === choice} onChange={() => setChoices(previous => ({ ...previous, [field]: choice }))} />{choice === 'mine' ? '保留我的' : '採用最新'}{feedbackConflictLabels[field]}</label>)}</div> : null}
+        </div>)}
+        <button disabled={busy || reconciliation.unresolved.length > 0} className={buttonClass} onClick={() => { setDraft(reconciliation.draft); setDetail(latest); setLatest(null); setConflict(false); setError(''); request.current = null; }}>套用合併結果，繼續編輯</button>
+      </> : <button disabled={busy} className={buttonClass} onClick={() => void loadLatest()}>讀取最新版本</button>}</div> : null}
+      <form onSubmit={save}><fieldset disabled={busy || conflict} className="space-y-4">
         <div className="grid gap-3 sm:grid-cols-3"><label className="text-sm">處理決定<select className={inputClass} value={draft.decision} onChange={e => { const decision = e.target.value as FeedbackDraft['decision']; setDraft({ ...draft, decision, ...(decision === 'accepted' ? {} : { priority: 'normal', workStatus: 'pending' }) }); }}><option value="pending">新回饋／待處理</option><option value="accepted">採納</option><option value="rejected">駁回</option></select></label>
           <label className="text-sm">優先程度<select disabled={draft.decision !== 'accepted'} className={inputClass} value={draft.priority} onChange={e => setDraft({ ...draft, priority: e.target.value as FeedbackDraft['priority'] })}><option value="normal">一般</option><option value="high">高優先</option></select></label>
           <label className="text-sm">執行進度<select disabled={draft.decision !== 'accepted'} className={inputClass} value={draft.workStatus} onChange={e => setDraft({ ...draft, workStatus: e.target.value as FeedbackDraft['workStatus'] })}>{Object.entries(progressLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label></div>
@@ -155,7 +217,7 @@ export function InternalFeedbackAdminPage() {
         <button disabled={busy || conflict} className={buttonClass}>{busy ? '儲存中…' : '儲存處理'}</button>
       </fieldset></form>
       <details><summary className="cursor-pointer text-accent">操作與提交歷程（{detail.history_total}）</summary><div className="mt-3 space-y-3">{detail.history.map(h => <div key={h.id} className="border-t border-line pt-3 text-sm"><p>{eventNames[h.event] ?? h.event} · {date(h.created_at)}</p><p className="break-all text-xs text-slate-400">{h.actor_id || (h.event === 'baseline' ? '匯入既有紀錄' : '使用者提交')}</p><p>{h.before_state ? `${bucketLabels[feedbackBucket(h.before_state)]} → ` : ''}{bucketLabels[feedbackBucket(h.after_state)]} · {progressLabels[h.after_state.work_status]}</p><p className="whitespace-pre-wrap break-words">備註：{h.after_state.review_note || '無'}</p><details><summary>當時內容</summary><p className="whitespace-pre-wrap break-words">{h.after_state.message || '希望補充資料'}</p><p className="break-all">{h.after_state.evidence_url}</p><p>管理摘要：{h.after_state.management_summary}</p></details></div>)}</div>
-      <div className="mt-3 flex gap-3">{[-1, 1].map(delta => <button key={delta} type="button" disabled={busy || (delta < 0 ? detail.history_page <= 1 : detail.history_page * 20 >= detail.history_total)} className={buttonClass} onClick={async () => { setBusy(true); try { const next = await feedbackRequest<FeedbackDetail>('detail', { id: detail.item.id, historyPage: detail.history_page + delta }); setDetail(previous => previous ? { ...previous, history: next.history, history_page: next.history_page, history_total: next.history_total } : null); } catch (caught) { setError(errorText(caught)); } finally { setBusy(false); } }}>{delta < 0 ? '較新歷程' : '較舊歷程'}</button>)}</div></details>
+      <div className="mt-3 flex gap-3">{[-1, 1].map(delta => <button key={delta} type="button" disabled={busy || (delta < 0 ? detail.history_page <= 1 : detail.history_page * 20 >= detail.history_total)} className={buttonClass} onClick={() => void loadHistory(delta)}>{delta < 0 ? '較新歷程' : '較舊歷程'}</button>)}</div></details>
     </div></div> : null}
   </div></AppShell>;
 }

@@ -663,66 +663,10 @@ function internalReviewApiPlugin(): Plugin {
         }
       });
 
-      server.middlewares.use('/internal-api/review-person-feedback', async (request, response) => {
-        const devRequest = request as DevRequest;
-        if (devRequest.method !== 'POST') {
-          jsonResponse(response, 405, { error: 'Method not allowed.' });
-          return;
-        }
-
-        try {
-          const body = await readJsonBody(devRequest) as {
-            submissionId?: string;
-            action?: string;
-            note?: string;
-          };
-          const submissionId = body.submissionId?.trim();
-          const action = body.action;
-          const note = body.note?.trim() ?? '';
-
-          if (!submissionId || !['start', 'verify', 'reject'].includes(action ?? '')) {
-            jsonResponse(response, 400, { error: 'submissionId and action=start|verify|reject are required.' });
-            return;
-          }
-
-          if (note.length > 1000) {
-            jsonResponse(response, 400, { error: 'Review note must not exceed 1000 characters.' });
-            return;
-          }
-
-          if (action === 'reject' && note.length < 5) {
-            jsonResponse(response, 400, { error: 'Rejecting a submission requires a review note of at least 5 characters.' });
-            return;
-          }
-
-          const submissions = await supabaseRest(
-            `person_feedback_submissions?select=id&id=eq.${encodeURIComponent(submissionId)}&limit=1`,
-          ) as Pick<PersonFeedbackRow, 'id'>[];
-          if (!submissions[0]) {
-            jsonResponse(response, 404, { error: 'Feedback submission not found.' });
-            return;
-          }
-
-          const now = new Date().toISOString();
-          const reviewStatus = action === 'start' ? 'reviewing' : action === 'verify' ? 'verified' : 'rejected';
-          await supabaseRest(`person_feedback_submissions?id=eq.${encodeURIComponent(submissionId)}`, {
-            method: 'PATCH',
-            headers: { prefer: 'return=minimal' },
-            body: JSON.stringify({
-              review_status: reviewStatus,
-              review_note: note || null,
-              reviewed_by: 'local_internal_review',
-              reviewed_at: action === 'start' ? null : now,
-              updated_at: now,
-            }),
-          });
-
-          jsonResponse(response, 200, { status: 'ok', reviewStatus });
-        } catch (error) {
-          jsonResponse(response, internalErrorStatus(error), { error: error instanceof Error ? error.message : 'Unknown error.' });
-        }
+      // Retired: all feedback decisions must use the versioned admin transaction.
+      server.middlewares.use('/internal-api/review-person-feedback', (_request, response) => {
+        jsonResponse(response, 410, { error: 'Feedback review moved to /internal/feedback-admin.' });
       });
-
 
       server.middlewares.use('/internal-api/review-identity-match', async (request, response) => {
         const devRequest = request as DevRequest;

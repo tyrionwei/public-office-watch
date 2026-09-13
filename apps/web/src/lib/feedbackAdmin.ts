@@ -22,6 +22,23 @@ export type FeedbackDetail = { item: FeedbackItem; history: FeedbackHistory[]; h
 export type FeedbackDraft = { decision: FeedbackItem['decision']; priority: FeedbackItem['priority']; workStatus: FeedbackItem['work_status']; summary: string; note: string };
 export function feedbackBucket(item: Pick<FeedbackItem, 'decision' | 'priority'>): FeedbackBucket { return item.decision === 'accepted' ? item.priority === 'high' ? 'priority' : 'normal' : item.decision; }
 export function draftFrom(item: FeedbackItem): FeedbackDraft { return { decision: item.decision, priority: item.priority, workStatus: item.work_status, summary: item.management_summary, note: item.review_note ?? '' }; }
+export const feedbackConflictLabels = { status: '處理決定／優先程度／執行進度', summary: '管理摘要', note: '處理備註' };
+export type FeedbackConflictField = keyof typeof feedbackConflictLabels;
+export function reconcileFeedbackDraft(base: FeedbackDraft, mine: FeedbackDraft, latest: FeedbackDraft, choices: Partial<Record<FeedbackConflictField, 'mine' | 'latest'>> = {}) {
+  const result = { ...latest };
+  const conflicts: FeedbackConflictField[] = [];
+  const groups = { status: ['decision', 'priority', 'workStatus'], summary: ['summary'], note: ['note'] } as const;
+  for (const field of Object.keys(groups) as FeedbackConflictField[]) {
+    const keys = groups[field];
+    const changed = keys.some(key => mine[key] !== base[key]);
+    const remoteChanged = keys.some(key => latest[key] !== base[key]);
+    const differs = keys.some(key => mine[key] !== latest[key]);
+    if (changed && remoteChanged && differs) conflicts.push(field);
+    const source = changed && (!remoteChanged || !differs || choices[field] === 'mine') ? mine : latest;
+    Object.assign(result, Object.fromEntries(keys.map(key => [key, source[key]])));
+  }
+  return { draft: result, conflicts, unresolved: conflicts.filter(field => !choices[field]) };
+}
 export class FeedbackApiError extends Error { constructor(public code: string, public status = 0) { super(code); } }
 export function getFeedbackAdminClient() {
   const env = getSupabasePublicEnv();

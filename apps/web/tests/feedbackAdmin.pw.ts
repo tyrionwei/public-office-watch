@@ -13,7 +13,7 @@ for (const width of [390, 1280]) test(`four sections, save, reopen, notes and co
     const { action, input } = route.request().postDataJSON();
     if (action === 'save') {
       writes.push(input);
-      if (fail) { fail = false; item = { ...item, revision: item.revision + 1, review_note: '另一位管理員的新備註' }; return route.fulfill({ status: 409, json: { error: 'FEEDBACK_CONFLICT' } }); }
+      if (fail) { fail = false; item = { ...item, revision: item.revision + 1, review_note: '另一位管理員的新備註', management_summary: '另一位管理員的新摘要' }; return route.fulfill({ status: 409, json: { error: 'FEEDBACK_CONFLICT' } }); }
       item = { ...item, decision: input.decision, priority: input.priority, work_status: input.workStatus, management_summary: input.summary, review_note: input.note, revision: item.revision + 1 };
       return route.fulfill({ json: item });
     }
@@ -44,13 +44,18 @@ for (const width of [390, 1280]) test(`four sections, save, reopen, notes and co
   await expect(dialog.getByText('最新備註：另一位管理員的新備註')).toBeVisible();
   await expect(dialog.getByLabel('處理備註', { exact: true })).toHaveValue('我的草稿必須保留');
   await expect(dialog.getByRole('button', { name: '儲存處理', exact: true })).toBeDisabled();
-  await dialog.getByRole('button', { name: '已查看差異，保留草稿繼續編輯' }).click();
+  await expect(dialog.getByText('最新版本：另一位管理員的新摘要')).toBeVisible();
+  await expect(dialog.getByRole('button', { name: '套用合併結果，繼續編輯' })).toBeDisabled();
+  await dialog.getByLabel('保留我的處理備註').check();
+  await dialog.getByRole('button', { name: '套用合併結果，繼續編輯' }).click();
+  await expect(dialog.getByLabel('管理摘要（不修改使用者原文）')).toHaveValue('另一位管理員的新摘要');
   await dialog.getByLabel('執行進度').selectOption('in_progress');
   await dialog.getByRole('button', { name: '儲存處理', exact: true }).click();
   await expect(dialog.getByRole('button', { name: '儲存處理', exact: true })).toBeEnabled();
   await dialog.getByRole('button', { name: '關閉', exact: true }).click();
   await expect(page.locator('#feedback-priority')).toContainText('我的草稿必須保留');
   expect(writes.at(-1)?.expectedRevision).toBe(4);
+  expect(writes.at(-1)?.summary).toBe('另一位管理員的新摘要');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath(`feedback-${width}.png`), fullPage: true });
   expect(errors).toEqual([]);
@@ -60,4 +65,48 @@ test('signed-out page shows login without feedback reads', async ({ page }) => {
   await page.goto(fixture.origin + '/?auth=signed-out');
   await expect(page.getByRole('button', { name: '寄送登入連結' })).toBeVisible();
   await expect(page.locator('#feedback-pending')).toHaveCount(0); expect(requests).toBe(0);
+});
+
+for (const pendingAction of ['detail', 'save', 'conflict-detail', 'history']) test(`sign-out discards delayed ${pendingAction} response`, async ({ page }) => {
+  let delay = false;
+  let release!: () => void;
+  const held = new Promise<void>(resolve => { release = resolve; });
+  let started!: () => void;
+  const requested = new Promise<void>(resolve => { started = resolve; });
+  let saves = 0;
+  await page.route('**/*', route => new URL(route.request().url()).origin === fixture.origin ? route.continue() : route.abort());
+  await page.route('**/__feedback', async route => {
+    const { action } = route.request().postDataJSON();
+    if (action === 'save') saves++;
+    if (action === 'save' && pendingAction === 'conflict-detail') return route.fulfill({ status: 409, json: { error: 'FEEDBACK_CONFLICT' } });
+    if (delay && action === (pendingAction === 'save' ? 'save' : 'detail')) { started(); await held; }
+    if (action === 'detail') return route.fulfill({ json: { item: base, history: [], history_total: 30, history_page: 1 } });
+    if (action === 'save') return route.fulfill({ json: { ...base, revision: 2 } });
+    return route.fulfill({ json: { fetched_at: base.created_at, groups: Object.fromEntries(['pending', 'priority', 'normal', 'rejected'].map(key => [key, { total: key === 'pending' ? 1 : 0, completed: 0, unfinished: 1, page: 1, page_size: 10, items: key === 'pending' ? [base] : [] }])) } });
+  });
+  await page.goto(fixture.origin);
+  await expect(page.locator('#feedback-pending')).toBeVisible();
+  if (pendingAction === 'detail') delay = true;
+  await page.getByRole('button', { name: '編輯處理', exact: true }).click();
+  if (pendingAction !== 'detail') {
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible(); delay = true;
+    if (pendingAction === 'history') {
+      await dialog.getByText('操作與提交歷程（30）').click();
+      await dialog.getByRole('button', { name: '較舊歷程' }).click();
+    } else {
+      await dialog.getByLabel('處理備註', { exact: true }).fill('等待中的儲存');
+      await dialog.getByRole('button', { name: '儲存處理', exact: true }).click();
+    }
+  }
+  await requested;
+  await page.evaluate(() => (window as unknown as { __feedbackSignOut: () => void }).__feedbackSignOut());
+  await expect(page.getByRole('button', { name: '寄送登入連結' })).toBeVisible();
+  const completed = page.waitForResponse(response => response.url().endsWith('/__feedback'));
+  release(); await completed;
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.locator('#feedback-pending')).toHaveCount(0);
+  await expect(page.getByText('合成測試人物', { exact: true })).toHaveCount(0);
+  expect(saves).toBe(['save', 'conflict-detail'].includes(pendingAction) ? 1 : 0);
 });

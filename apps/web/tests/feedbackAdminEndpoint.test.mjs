@@ -37,3 +37,51 @@ test('conflicts and invalid input are distinguishable without leaking database e
     [{ message: 'private connection details' },500,'FEEDBACK_SERVER_ERROR'],
   ]) { const response = await fixture({ rpcError: error }).request({ action: 'save' }); assert.equal(response.status, expectedStatus); assert.deepEqual(await response.json(), { error: expectedCode }); }
 });
+
+test('retired local feedback write endpoint returns 410 without touching data', () => {
+  const source = readFileSync(new URL('../vite.config.ts', import.meta.url), 'utf8');
+  const ast = ts.createSourceFile('vite.config.ts', source, ts.ScriptTarget.Latest, true);
+  let callback;
+  function visit(node) {
+    if (ts.isCallExpression(node) && node.arguments[0]?.text === '/internal-api/review-person-feedback') callback = node.arguments[1].getText(ast);
+    ts.forEachChild(node, visit);
+  }
+  visit(ast); assert.ok(callback);
+  const outputs = [];
+  const handler = vm.runInNewContext(`(${callback})`, { jsonResponse: (_response, status, body) => outputs.push({ status, body }) });
+  for (const method of ['POST', 'GET', 'PATCH']) handler({ method, body: { action: 'reject' } }, {});
+  assert.equal(outputs.length, 3);
+  for (const output of outputs) { assert.equal(output.status, 410); assert.match(output.body.error, /feedback-admin/); }
+});
+
+function reconciliation() {
+  const source = readFileSync(new URL('../src/lib/feedbackAdmin.ts', import.meta.url), 'utf8');
+  const exports = {};
+  vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText, { exports, require: () => ({}) });
+  return exports.reconcileFeedbackDraft;
+}
+test('conflict preserves remote untouched fields and requires explicit choices for overlapping edits', () => {
+  const merge = reconciliation();
+  const base = { decision: 'accepted', priority: 'normal', workStatus: 'pending', summary: 'original', note: 'original' };
+  const mine = { ...base, note: 'my note' };
+  const remote = { ...base, summary: 'new summary', note: 'their note', priority: 'high' };
+  const result = merge(base, mine, remote);
+  assert.deepEqual(Array.from(result.unresolved), ['note']);
+  assert.equal(result.draft.summary, 'new summary'); assert.equal(result.draft.priority, 'high');
+  const resolved = merge(base, mine, remote, { note: 'mine' });
+  assert.equal(resolved.draft.note, 'my note'); assert.equal(resolved.draft.summary, 'new summary');
+  assert.equal(resolved.unresolved.length, 0);
+  assert.equal(merge(base, mine, remote, { note: 'latest' }).draft.note, 'their note');
+});
+test('status decision, priority and progress resolve together to prevent invalid combinations', () => {
+  const merge = reconciliation();
+  const base = { decision: 'accepted', priority: 'normal', workStatus: 'pending', summary: '', note: '' };
+  const mine = { ...base, priority: 'high' };
+  const remote = { ...base, decision: 'rejected' };
+  assert.deepEqual(Array.from(merge(base, mine, remote).unresolved), ['status']);
+  const latest = merge(base, mine, remote, { status: 'latest' }).draft;
+  assert.equal(latest.decision, 'rejected'); assert.equal(latest.priority, 'normal');
+  const own = merge(base, mine, remote, { status: 'mine' }).draft;
+  assert.equal(own.decision, 'accepted'); assert.equal(own.priority, 'high');
+  assert.equal(merge(base, mine, mine).unresolved.length, 0);
+});

@@ -195,3 +195,34 @@ with HTTP 401 / `FEEDBACK_AUTH`; the database dashboard RPC returns all four gro
 for the existing local administrator. This is not an authenticated browser
 end-to-end result; verification with the user's normal signed-in browser is pending.
 No production changes were made.
+
+
+### PR #51 review corrections (2026-09-13)
+
+The release branch retires `/internal-api/review-person-feedback` with HTTP 410;
+feedback writes must use the authenticated, revisioned `feedback-admin` workflow.
+Conflict resolution compares the original, edited and latest management fields.
+Untouched fields adopt the latest value, while overlapping edits require an explicit
+choice. Decision, priority and work progress resolve together to remain valid.
+All detail, save, conflict and history requests discard responses after a session
+change; the editor also requires ready administrator access.
+
+`20260913073155_sync_office_status_directory.sql` refreshes the already-published
+`published.people_directory` projection in the same transaction as the requested
+family's office cache. It does not invoke `promote()` or rebuild private source
+caches. The expensive office calculation remains scoped to the requested family.
+
+Validation on the integrated release: script tests 475 passed; frontend read
+contracts 415 passed and 7 environment-dependent integration tests skipped;
+feedback browser scenarios 7 passed (390px, 1280px, conflict merge, delayed detail,
+save, conflict detail and history responses after sign-out). Lint, build and
+static exposure checks passed. The legacy DB contract check skipped without DB
+environment variables; that is not a database pass.
+
+The transaction-only regression in `tests/sql/office-status-directory.sql` passed
+against full local Supabase with a bounded real-person office projection. It
+exercises expiry, person/directory/home-seat agreement, access restrictions and
+unchanged publication state, then rolls back. The initial whole-local-family run
+exceeded its 180-second statement timeout inside `office_status_rows_for`; full
+family capacity and production-baseline migration rehearsal remain required before
+release. No production schema or data was changed by these checks.

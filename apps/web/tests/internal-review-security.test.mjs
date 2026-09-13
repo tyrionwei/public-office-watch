@@ -40,6 +40,7 @@ function fixture() {
         if (specifier.endsWith('/pwaShellVersion.mjs')) return { pwaShellVersionPlugin: () => ({}) };
         if (specifier.endsWith('/participationDevProxy')) return { participationDevProxyPlugin: () => ({}) };
         if (specifier.startsWith('./build/internal')) return load(path.resolve(path.dirname(file), `${specifier}.ts`));
+        if (specifier === '../src/lib/taiwanText.ts') return load(path.resolve(path.dirname(file), specifier));
         throw Error(`Unexpected dependency ${specifier}`);
       },
     }, { filename: file });
@@ -167,4 +168,14 @@ test('a new Vite instance rejects the previous in-memory session', async () => {
   const token = (await first.bootstrap()).body.token;
   assert.equal((await second.request('/internal-api/review-claims', { method: 'GET', headers: { 'x-pow-internal-token': token } })).statusCode, 401);
   assert.equal(second.calls.length, 0);
+});
+
+test('data progress is GET only and rejects remote database targets before reading artifacts', async () => {
+  const f = fixture();
+  const token = (await f.bootstrap()).body.token;
+  const headers = { 'x-pow-internal-token': token };
+  assert.equal((await f.request('/internal-api/data-progress', { headers })).statusCode, 405);
+  f.env.SUPABASE_URL = 'https://production.example';
+  assert.equal((await f.request('/internal-api/data-progress', { method: 'GET', headers })).statusCode, 503);
+  assert.equal(f.calls.length, 0);
 });

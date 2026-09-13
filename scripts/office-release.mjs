@@ -24,13 +24,24 @@ function termDraft(t) {
   const current = { ...fallback, position: label, district: t.region_name ?? null, current_office_label: label, list_role: role, list_status: 'current', list_is_grassroots: grassroots, list_status_order: 0, list_role_order: order };
   return { candidateId: t.candidate_id, raceId: t.race_id, family: t.family, startsOn: t.starts_on, endsOn: t.ends_on, endedOn: t.ended_on ?? null, sourceUrl: t.source_url, sourceVersion: t.source_version, reason: '依參選與任期來源推導，經本發布包人工核准' + (t.role_source_url ? `；職務佐證：${t.role_source_url}` : ''), current, former: { ...current, current_office_label: null, list_status: 'former', list_status_order: 2 } };
 }
-export function snapshotOn(person, date) {
+export function snapshotOn(person, date, candidacies = []) {
   const active = person.terms.filter(t => t.startsOn <= date && date < (t.endedOn ?? t.endsOn)).sort((a,b) => a.current.list_role_order-b.current.list_role_order || b.startsOn.localeCompare(a.startsOn) || a.candidateId.localeCompare(b.candidateId));
   const ended = person.terms.filter(t => date >= (t.endedOn ?? t.endsOn)).sort((a,b) => (b.endedOn ?? b.endsOn).localeCompare(a.endedOn ?? a.endsOn) || a.former.list_role_order-b.former.list_role_order || a.candidateId.localeCompare(b.candidateId));
-  return active[0]?.current ?? ended[0]?.former ?? person.fallback;
+  const candidate = candidacies.filter(c => {
+    if (!['potential','party_nominee','officially_announced','registered','qualified'].includes(c.status) || ['cancelled','canceled'].includes(c.raceStatus) || ['cancelled','canceled'].includes(c.electionStatus)) return false;
+    if (c.result === 'elected') return date < (person.terms.find(t=>t.candidateId===c.candidateId)?.startsOn ?? c.startsOn ?? '');
+    return c.result === 'pending' && !['completed','finished'].includes(c.raceStatus) && !['completed','finished'].includes(c.electionStatus)
+      && (c.votingDate ? date <= c.votingDate : Number(date.slice(0,4)) <= c.year);
+  }).sort((a,b)=>b.year-a.year || a.candidateId.localeCompare(b.candidateId))[0];
+  let candidateSnapshot;
+  if (candidate) {
+    const [role,order,,grassroots] = ['president','vice_president'].includes(candidate.raceType) ? ['other',8,'',false] : roles[candidate.raceType] ?? ['other',8,'',false];
+    candidateSnapshot = {...fallback, position:candidate.raceTitle ?? null,district:candidate.regionName ?? null,list_role:role,list_status:'candidate',list_status_order:1,list_role_order:order,list_is_grassroots:grassroots};
+  }
+  return active[0]?.current ?? candidateSnapshot ?? ended[0]?.former ?? (person.fallback.list_status === 'candidate' ? {...fallback} : person.fallback);
 }
 export function makeDraft(source, baseline, asOf) {
-  if (!source.complete || !['president','legislator','local'].includes(source.family) || baseline.schemaVersion !== 1 || !Number.isSafeInteger(baseline.officeRevision) || baseline.officeRevision < 0 || !validDate(asOf)) throw Error('Incomplete source, baseline or as-of date');
+  if (baseline.candidacyContextVersion !== 1 || !source.complete || !['president','legislator','local'].includes(source.family) || baseline.schemaVersion !== 1 || !Number.isSafeInteger(baseline.officeRevision) || baseline.officeRevision < 0 || !validDate(asOf)) throw Error('Incomplete source, baseline or as-of date');
   const targets = new Map(baseline.people.map(p => [p.personId,p]));
   if (targets.size !== baseline.people.length || baseline.people.some(p=>!p.fingerprint || !p.personId)) throw Error('Invalid or duplicate baseline person');
   const people = []; const blocked = []; const seen = new Set();
@@ -43,15 +54,15 @@ export function makeDraft(source, baseline, asOf) {
       if (target.officeStatus === 'current' && target.officeRole === 'legislator' && /院長|副院長/.test(target.officeSnapshot?.current_office_label ?? '')) throw Error('兼任院長／副院長，須補上該職務明確任期後再納入');
       const terms = person.terms.map(termDraft);
       if (!terms.length || terms.length > 100 || new Set(terms.map(t=>t.candidateId)).size !== terms.length) throw Error('Invalid or duplicate candidate terms');
-      people.push({ personId: person.person_id, expectedFingerprint: target.fingerprint, fallback: target.officeStatus === 'candidate' && target.officeSnapshot ? { ...target.officeSnapshot, current_office_label: null } : { ...fallback }, terms });
+      people.push({ personId: person.person_id, expectedFingerprint: target.fingerprint, fallback: { ...fallback }, terms });
     } catch (error) { blocked.push({ personId: person.person_id, reason: error.message }); }
   }
-  const draft = { schemaVersion: 1, family: source.family, asOf, expectedReleaseId: baseline.releaseId, expectedOfficeRevision: baseline.officeRevision, sourceHash: digest(source), baselineHash: digest(baseline), people, blocked, preview: people.map(p=>({personId:p.personId,before:targets.get(p.personId).officeSnapshot,after:snapshotOn(p,asOf),changed:Object.keys(fallback).some(k=>targets.get(p.personId).officeSnapshot?.[k]!==snapshotOn(p,asOf)[k])})) };
+  const draft = { schemaVersion: 1, candidacyContextVersion: 1, family: source.family, asOf, expectedReleaseId: baseline.releaseId, expectedOfficeRevision: baseline.officeRevision, sourceHash: digest(source), baselineHash: digest(baseline), people, blocked, preview: people.map(p=>({personId:p.personId,before:targets.get(p.personId).officeSnapshot,after:snapshotOn(p,asOf,targets.get(p.personId).candidacies ?? []),changed:Object.keys(fallback).some(k=>targets.get(p.personId).officeSnapshot?.[k]!==snapshotOn(p,asOf,targets.get(p.personId).candidacies ?? [])[k])})) };
   return { ...draft, draftHash: digest(draft) };
 }
 export function buildRelease(draft, review) {
   const { draftHash, ...content } = draft;
-  if (!Number.isSafeInteger(draft.expectedOfficeRevision) || draft.expectedOfficeRevision < 0 || draft.expectedOfficeRevision >= 2147483647 || !validDate(draft.asOf)) throw Error('Invalid release revision or date');
+  if (draft.candidacyContextVersion !== 1 || !Number.isSafeInteger(draft.expectedOfficeRevision) || draft.expectedOfficeRevision < 0 || draft.expectedOfficeRevision >= 2147483647 || !validDate(draft.asOf)) throw Error('Invalid release revision or date');
   if (digest(content) !== draftHash || review.draftHash !== draftHash || !review.reviewedBy?.trim() || !review.reason?.trim() || !Array.isArray(review.approvedPersonIds) || !review.approvedPersonIds.length) throw Error('An explicit review of the exact draft is required');
   const approved = new Set(review.approvedPersonIds);
   const people = draft.people.filter(p=>approved.has(p.personId));

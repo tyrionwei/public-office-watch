@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { makeDraft, buildRelease, snapshotOn } from './office-release.mjs';
 const source = () => ({complete:true,family:'legislator',people:[{person_id:'p1',terms:[{candidate_id:'c1',race_id:'r1',family:'legislator',race_type:'legislator',starts_on:'2024-02-01',ends_on:'2028-02-01',source_url:'https://example.test/election',source_version:'v1'}]}]});
-const baseline = () => ({schemaVersion:1,releaseId:'r',officeRevision:3,people:[{personId:'p1',fingerprint:'fingerprint',officeSnapshot:{list_status:'candidate'}}]});
+const baseline = () => ({schemaVersion:1,candidacyContextVersion:1,releaseId:'r',officeRevision:3,people:[{personId:'p1',fingerprint:'fingerprint',officeSnapshot:{list_status:'candidate'}}]});
 const draft = () => makeDraft(source(),baseline(),'2026-09-13');
 const review = d => ({draftHash:d.draftHash,reviewedBy:'Reviewer',reason:"Official evidence 'verified'",approvedPersonIds:['p1']});
 test('draft gives before/after diff, evidence, dates and explicit target baseline',()=>{
@@ -38,5 +38,20 @@ test('shared presidential race cannot label the vice president as president',()=
 });
 test('approved future winner retains existing candidacy presentation until inauguration',()=>{
  const b=baseline();b.people[0].officeStatus='candidate';b.people[0].officeSnapshot={position:'立委候選人',district:null,current_office_label:null,list_role:'legislator',list_status:'candidate',list_is_grassroots:false,list_status_order:1,list_role_order:2};
+ b.people[0].candidacies=[{candidateId:'c1',raceType:'legislator',raceTitle:'立委選舉',year:2024,status:'qualified',result:'elected'}];
  const d=makeDraft(source(),b,'2024-01-20');assert.equal(d.preview[0].after.list_status,'candidate');assert.equal(snapshotOn(d.people[0],'2024-02-01').list_status,'current');
+});
+test('live candidacy outranks old terms, expires after vote, and follows withdrawal/loss',()=>{
+ const p=draft().people[0];p.terms[0].startsOn='2018-12-25';p.terms[0].endsOn='2022-12-25';
+ const c={candidateId:'new',raceType:'city_councilor',raceTitle:'議員選舉',year:2026,votingDate:'2026-11-28',status:'registered',result:'pending'};
+ assert.equal(snapshotOn(p,'2026-09-13',[c]).list_status,'candidate');
+ for(const status of ['potential','officially_announced','party_nominee']) assert.equal(snapshotOn(p,'2026-09-13',[{...c,status}]).list_status,'candidate');
+ assert.equal(snapshotOn(p,'2026-11-29',[c]).list_status,'former');
+ assert.equal(snapshotOn(p,'2026-09-13',[{...c,status:'withdrawn_or_disqualified'}]).list_status,'former');
+ assert.equal(snapshotOn(p,'2026-09-13',[{...c,result:'not_elected'}]).list_status,'former');
+ p.terms.push({...p.terms[0],candidateId:'new',startsOn:'2026-12-25',endsOn:'2030-12-25'});
+ assert.equal(snapshotOn(p,'2026-12-01',[{...c,result:'elected'}]).list_status,'candidate');
+ assert.equal(snapshotOn(p,'2026-12-25',[{...c,result:'elected'}]).list_status,'current');
+ p.fallback={...p.fallback,list_status:'candidate'};
+ assert.equal(snapshotOn(p,'2031-01-01',[]).list_status,'former');
 });

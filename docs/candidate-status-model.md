@@ -86,3 +86,14 @@ is implemented.
 正常任期的固定月日規則不變；补選、遞補及提前離任仍需來源確認後另行發布。未納入核准任期的人物暫沿用舊讀取邏輯，不能宣稱已完成全站日期切換。首批正式公職包的覆蓋審核是發布門檻，不能只部署結構、移除排程就算完成遷移。
 
 操作、版本衝突與回復步驟見 [部署環境文件](deployment-environments.md#reviewed-office-release-workflow)。日期與套用回歸分別位於 `scripts/sql/annual-office-refresh-regression.sql`、`tests/sql/reviewed-office-release.sql`。
+
+
+### 再次參選與候選視圖修正（2026-09-13）
+
+`20260913104427` 將分類組合統一為有效現任、當前有效參選、曾任。
+參選資格取目前 `published.candidate_facts` 及公開選舉日期／狀態；潛在、提名、已宣布、登記、資格確認的已公開且未結束參選，以及已核准任期但尚未就職的當選者，可以顯示候選。
+退選、取消、落選或投票日期已過而仍未確認當選者，不沿用舊候選快照；日期未知時也不跨年度永久保留。舊發布包的候選 fallback 不再決定目前分類。
+
+本機 baseline 和 draft 新增 `candidacyContextVersion`，草稿以同一份公开參選脈絡預覽；舊草稿需重新產生、核准，不能直接套用。
+Migration 另盤點並重綁所有仍引用 `_source` 函式物件的視圖（本機確認為 `public.public_candidates` 與 `published.candidates`），不恢復瀏覽器對來源副本的權限。
+回歸入口為 `tests/sql/reviewed-office-candidacy.sql`，在原發布回歸之後、同一回滾交易內執行。

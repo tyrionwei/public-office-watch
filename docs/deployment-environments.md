@@ -293,7 +293,7 @@ profile changes, known expiry, public projections and versioned rollback.
 Local evidence (2026-09-13): the complete local-family export finished with 16,347
 people. The draft has 14,146 eligible and 2,201 blocked people; these are source
 readiness counts, not approvals. Missing/unknown term dates and an unresolved
-presidential ticket role account for exclusions. The nine CLI tests passed. The
+presidential ticket role account for exclusions. The original nine CLI tests passed. The
 installed-schema transaction regression and fixed-date calendar regression passed.
 A rollback-only 500-person real-shaped package took 2.738 seconds to apply (including
 directory refresh), 37.630 ms to read anonymous current-office counts, and 307.156 ms
@@ -321,3 +321,32 @@ mock process restrictions), not the office logic. Web read contracts, lint, buil
 data-boundary and published-exposure checks passed; the existing direct mock import
 and large bundle warnings remain. No production or production-baseline rehearsal
 was performed.
+
+
+Review follow-up: migration `20260913104427_fix_reviewed_office_candidacy_and_dependencies.sql`
+adds live published candidacy composition and rebinds the candidate views to the
+approved-term function OIDs. The release now includes this additional migration.
+Regenerate the target baseline and draft: a `candidacyContextVersion: 1` baseline
+is required, and old drafts cannot be built into new packages. Live candidacy
+context is preview input only; it is not copied into the office payload.
+
+Two cross-flow SQL attempts joined candidate views to a temporary fixture and
+timed out at 60 seconds in the legacy source helper for unrelated rows. The
+final regression uses literal person and candidate filters, retains the real
+view/function implementation, and passes under service_role. This is not a
+passed unrestricted legacy-view capacity test.
+
+The final cross-flow transaction regression passed: no remaining view dependencies
+on either source-copy OID, approved early departure through both candidate views,
+current candidacy ahead of expired terms, withdrawal/loss updates without another
+office package, and returning winner status before/on inauguration. All test data
+rolled back. Ten office CLI tests passed. The migration is installed only in full
+local Supabase; no production schema/data was changed.
+
+An initial live-context capacity run read current-office totals in 11.059 seconds:
+the per-person context rebuilt public race display/canonical facets. The final
+query uses published candidate IDs, indexed core date/status lookups and the same
+public election/race/region visibility guards, without reading private candidate
+facts. The 500-person rollback run now applies in 2.100 seconds, reads totals in
+116.379 ms and restores in 267.419 ms. The CLI baseline also returned the new
+versioned candidacy context. These measurements are local, not production capacity.

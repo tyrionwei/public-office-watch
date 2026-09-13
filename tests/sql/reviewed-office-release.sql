@@ -10,7 +10,7 @@ CREATE FUNCTION pg_temp.reject_package(p jsonb, expected text) RETURNS void LANG
  END; $$;
 CREATE TEMP TABLE fixture AS SELECT c.person_id,min(c.candidate_id::text)::uuid AS candidate_id
  FROM published.candidate_facts c JOIN published.people p USING(person_id)
- WHERE c.election_result='elected' AND p.list_role='councilor' GROUP BY c.person_id LIMIT 1;
+ WHERE c.election_result='elected' AND p.list_role='councilor' AND NOT EXISTS(SELECT 1 FROM published.candidate_facts fresh WHERE fresh.person_id=c.person_id AND fresh.election_year>=2026) GROUP BY c.person_id LIMIT 1;
 SELECT pg_temp.assert_true((SELECT count(*)=1 FROM fixture),'fixture exists');
 CREATE TEMP TABLE baseline AS SELECT public.office_release_baseline(ARRAY(SELECT person_id FROM fixture)) AS data;
 CREATE TEMP TABLE prior_person AS SELECT to_jsonb(p)-ARRAY['position','district','current_office_label','list_role','list_status','list_is_grassroots','list_status_order','list_role_order','list_is_party_only'] AS data FROM published.people p JOIN fixture USING(person_id);
@@ -30,7 +30,7 @@ SELECT pg_temp.reject_package(jsonb_set(p,'{people,0,expectedFingerprint}','"sta
 SELECT pg_temp.reject_package(jsonb_set(p,'{people,0,terms,0,sourceUrl}','""'),'OFFICE_EVIDENCE_REQUIRED') FROM package;
 SELECT pg_temp.reject_package(jsonb_set(p,'{people,0,terms,0,current,list_status}','"candidate"'),'OFFICE_INVALID_TERM') FROM package;
 SELECT public.apply_reviewed_office_release(p) FROM package;
-SELECT pg_temp.assert_true(public.reviewed_office_snapshot(person_id,'2024-01-31')->>'list_status'='other','future election is not current') FROM fixture;
+SELECT pg_temp.assert_true(public.reviewed_office_snapshot(person_id,'2024-01-31')->>'list_status'='candidate','future election is not current') FROM fixture;
 SELECT pg_temp.assert_true(public.reviewed_office_snapshot(person_id,'2024-02-01')->>'list_status'='current','starts on inauguration') FROM fixture;
 SELECT pg_temp.assert_true(public.reviewed_office_snapshot(person_id,'2026-01-01')->>'list_status'='current','cross-year term continues') FROM fixture;
 SELECT pg_temp.assert_true(public.reviewed_office_snapshot(person_id,'2026-01-02')->>'list_status'='former','early departure expires on exact date') FROM fixture;

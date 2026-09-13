@@ -84,3 +84,5 @@ export function internalChatAdminPath() {
 export function internalUpdateAdminPath() {
   return '/internal/update-admin';
 }
+
+export function internalFeedbackAdminPath() { return "/internal/feedback-admin"; }

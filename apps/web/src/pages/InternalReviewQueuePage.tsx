@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
-import { PersonFeedbackReviewPanel } from '../components/PersonFeedbackReviewPanel';
 import { SectionPanel } from '../components/SectionPanel';
 import {
   fetchInternalIdentityReviewItems,
@@ -586,7 +585,7 @@ export function InternalReviewQueuePage() {
           </div>
         </PixelFrame>
 
-        <PersonFeedbackReviewPanel query={query} />
+        <SectionPanel title="使用者回饋"><p className="text-sm text-slate-400">本頁只管理本機研究資料，不讀取或修改正式站回饋。回饋管理請在對應環境的管理頁處理。</p><a className="mt-3 inline-block text-accent underline" href="/internal/feedback-admin">開啟本機回饋管理</a></SectionPanel>
 
         <SectionPanel
           title="身分比對審核"

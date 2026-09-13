@@ -13,6 +13,7 @@ const internalDocumentPaths = new Set([
   '/internal/data-progress',
   '/internal/review-queue',
   '/internal/update-admin',
+  '/internal/feedback-admin',
 ]);
 const emptySeoCatalog = { version: 1, generatedAt: null, pages: [], available: false };
 const emptySeoManifest = { version: 3, generatedAt: null, groups: {}, available: false };

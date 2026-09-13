@@ -158,6 +158,9 @@ site_url = "http://127.0.0.1:3000"
 additional_redirect_urls = [
   "http://127.0.0.1:5173/internal/chat-admin",
   "http://localhost:5173/internal/chat-admin",
+  "http://127.0.0.1:5173/internal/feedback-admin",
+  "http://localhost:5173/internal/feedback-admin",
+  "http://127.0.0.1:5181/internal/feedback-admin",
   "http://127.0.0.1:5173/internal/update-admin",
   "http://localhost:5173/internal/update-admin",
   "https://127.0.0.1:3000"
@@ -417,4 +420,8 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 verify_jwt = true
 
 [functions.update-admin]
+verify_jwt = false
+
+# Handler verifies JWT with getUser and checks server-owned administrator metadata.
+[functions.feedback-admin]
 verify_jwt = false

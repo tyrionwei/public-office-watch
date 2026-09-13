@@ -200,6 +200,8 @@ test('returns real document statuses for known, missing entity, and unknown rout
   assert.equal(documentResponseStatus('/about', catalog), 200);
   assert.equal(documentResponseStatus('/support', catalog), 200);
   assert.equal(documentResponseStatus('/internal/chat-admin', catalog), 200);
+  assert.equal(documentResponseStatus('/internal/feedback-admin', catalog), 200);
+  assert.equal(documentMetadata('/internal/feedback-admin', catalog).noIndex, true);
   assert.equal(documentResponseStatus('/people/person-1', catalog), 200);
   assert.equal(documentResponseStatus('/people/missing', catalog), 404);
   assert.equal(documentResponseStatus('/elections/events/missing', catalog), 404);

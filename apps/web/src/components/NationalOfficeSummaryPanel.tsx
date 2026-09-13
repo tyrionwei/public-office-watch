@@ -31,12 +31,12 @@ function HolderSlot({ holder }: { holder: PublicNationalOfficeHolder | undefined
         <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{roleLabel}</p>
         {holder?.tenure_status === 'acting' || isVacant ? (
           <span className="text-[10px] uppercase tracking-[0.16em] text-signal">
-            {isUnknown ? t('nationalOffice.pendingUpdate') : holder?.tenure_status === 'acting' ? t('nationalOffice.acting') : t('nationalOffice.vacant')}
+            {isUnknown ? t('nationalOffice.awaitingUpdate') : holder?.tenure_status === 'acting' ? t('nationalOffice.acting') : t('nationalOffice.vacant')}
           </span>
         ) : null}
       </div>
       <p className="mt-1 truncate font-display text-lg text-white">
-        {holder?.holder_name || t(isUnknown ? 'nationalOffice.pendingUpdate' : 'nationalOffice.awaitingAppointment')}
+        {holder?.holder_name || t(isUnknown ? 'nationalOffice.awaitingUpdate' : 'nationalOffice.awaitingAppointment')}
       </p>
     </>
   );

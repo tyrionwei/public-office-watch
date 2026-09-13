@@ -147,4 +147,3 @@ AS $function$
         item.voting_is_open
     ORDER BY item.display_order;
 $function$;
-

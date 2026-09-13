@@ -266,7 +266,9 @@ test('chat admin edge function verifies a non-anonymous admin without exposing p
 });
 
 test('chat admin page uses one-time email login and remains available during public-data failure', () => {
-  assert.match(adminClient, /shouldCreateUser: false/);
+  assert.match(adminClient, /sendAdminMagicLink\(/);
+  const magicLink = readFileSync(new URL('../apps/web/src/lib/adminMagicLink.ts', import.meta.url), 'utf8');
+  assert.match(magicLink, /options: \{ emailRedirectTo: redirectUrl, shouldCreateUser: false, captchaToken \}/);
   assert.match(adminClient, /getSupabaseChatAdminClient/);
   assert.match(app, /isInternalAdminRoute/);
   assert.match(app, /publicDataStatus !== 'ready' && !isInternalAdminRoute/);

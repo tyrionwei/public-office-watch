@@ -1,6 +1,7 @@
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
+import { CryptoSupportPanel } from '../components/CryptoSupportPanel';
 import { useI18n } from '../i18n';
 
 const supportEmail = 'support@pow4vote.org';
@@ -19,14 +20,7 @@ export function SupportPage() {
           </div>
         </PixelFrame>
 
-        <SectionPanel title={t('support.preparingTitle')} eyebrow={t('support.preparingEyebrow')}>
-          <div className="pixel-corners border border-signal/45 bg-signal/8 p-5">
-            <p className="font-display text-xl text-white">{t('support.preparingStatus')}</p>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-              {t('support.preparingDescription')}
-            </p>
-          </div>
-        </SectionPanel>
+        <CryptoSupportPanel />
 
         <div className="grid gap-3 xl:grid-cols-2">
           <SectionPanel title={t('support.usesTitle')} eyebrow={t('support.usesEyebrow')}>

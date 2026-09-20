@@ -134,7 +134,8 @@ function clearClearanceMarker() {
   window.localStorage.removeItem(clearanceMarkerKey);
 }
 
-export async function ensureParticipationClearance() {
+export async function ensureParticipationClearance(refresh = false) {
+  if (refresh) clearClearanceMarker();
   if (hasClearanceMarker()) return;
   if (clearancePromise) return clearancePromise;
 

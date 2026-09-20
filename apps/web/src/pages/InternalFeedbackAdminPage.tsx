@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { SupportMessagesAdmin } from '../components/SupportMessagesAdmin';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { AdminMagicLinkError, adminMagicLinkErrorMessage } from '../lib/adminMagicLink';
@@ -47,6 +48,7 @@ export function InternalFeedbackAdminPage() {
     setChoices({}); setNotice(null); setError(''); setBusy(false); setLoading(false);
     request.current = null; setAccess(state);
   }, []);
+  const supportUnauthorized = useCallback((status: number) => invalidateSession(status === 401 ? 'signed-out' : 'forbidden'), [invalidateSession]);
   useEffect(() => () => { sessionGeneration.current++; generation.current++; }, []);
   function handleRequestError(caught: unknown) {
     if (caught instanceof FeedbackApiError && [401, 403].includes(caught.status)) invalidateSession(caught.status === 401 ? 'signed-out' : 'forbidden');
@@ -175,6 +177,7 @@ export function InternalFeedbackAdminPage() {
     {access === 'signed-out' ? <PixelFrame title="管理員登入"><form onSubmit={login} className="max-w-lg space-y-3"><label className="block text-sm">管理員電子郵件<input type="email" required value={email} onChange={e => setEmail(e.target.value)} className={inputClass} autoComplete="email" /></label><button disabled={busy} className={buttonClass}>寄送登入連結</button>{sent ? <p role="status" className="text-sm text-accent">登入連結已寄出，請查看信箱。</p> : null}</form></PixelFrame> : null}
     {access === 'loading' ? <p>{loading ? '正在讀取回饋…' : <button className={buttonClass} onClick={() => void refresh()}>重新讀取</button>}</p> : null}
     {access === 'ready' ? <>
+      <SupportMessagesAdmin key={sessionIdentity.current} onUnauthorized={supportUnauthorized} />
       <form className="flex flex-wrap items-end gap-3" onSubmit={e => { e.preventDefault(); setPages({}); setFilter({ query, kind }); }}>
         <label className="min-w-0 flex-1 text-sm">搜尋人物、回報或備註<input maxLength={100} value={query} onChange={e => setQuery(e.target.value)} className={inputClass} /></label>
         <label className="text-sm">回饋種類<select value={kind} onChange={e => setKind(e.target.value)} className={inputClass}><option value="">全部</option><option value="supplement_request">希望補充</option><option value="problem_report">問題回報</option></select></label>

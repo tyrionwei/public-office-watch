@@ -1,3 +1,4 @@
+import { supportNetworks, availableSupportNetworks, validateSupportInput, type SupportNetwork } from '../src/config/cryptoSupport.ts';
 import { ParticipationBodyError, readParticipationBody } from './participationBody.ts';
 
 const participationCookieName = 'pow_participation_clearance';
@@ -444,11 +445,56 @@ async function handleSubmit(
   });
 }
 
+async function handleSupportSubmit(
+  request: Request, env: ParticipationEnvironment, fetcher: Fetcher, now: Now,
+  networks: readonly SupportNetwork[],
+) {
+  const payload = await readPayload(request);
+  if (!payload) return jsonResponse(400, { error: 'SUPPORT_INVALID', field: 'request' });
+  const field = validateSupportInput(payload, networks);
+  if (field) return jsonResponse(400, { error: 'SUPPORT_INVALID', field });
+  const clientIp = getClientIp(request);
+  if (!clientIp) return jsonResponse(503, { error: 'SUPPORT_UNAVAILABLE' });
+  const ipDigest = await hmacSha256Hex(clientIp, env.PARTICIPATION_IP_HMAC_KEY);
+  const limit = await env.PARTICIPATION_USER_RATE_LIMITER.limit({ key: `crypto-support:${ipDigest}` });
+  if (!limit.success) return jsonResponse(429, { error: 'SUPPORT_RATE_LIMITED' }, { 'retry-after': '60' });
+  if (hasSevereBotRisk(request) && !await hasValidClearance(request, env.PARTICIPATION_CLEARANCE_KEY, now())) {
+    return jsonResponse(403, { error: 'PARTICIPATION_CHALLENGE_REQUIRED' });
+  }
+  const network = availableSupportNetworks(networks).find(n => n.networkId === payload.networkId)!;
+  const body = {
+    p_request_id: (payload.requestId as string).toLowerCase(),
+    p_network_id: network.networkId,
+    p_network_type: network.networkType,
+    p_currency: network.currency,
+    p_receiving_address: network.address,
+    p_reference: (payload.reference as string).trim(),
+    p_nickname: (payload.nickname as string | undefined)?.trim() || null,
+    p_message: (payload.message as string | undefined)?.trim() || null,
+  };
+  const bodyHash = await participationBodySha256(Object.values(body));
+  const timestamp = Math.floor(now() / 1000).toString();
+  const signature = await hmacSha256Hex(`crypto-support\n${timestamp}\n${bodyHash}`, env.PARTICIPATION_PROXY_HMAC_KEY);
+  const response = await fetcher(new Request(`${env.SUPABASE_URL.replace(/\/$/u, '')}/rest/v1/rpc/submit_crypto_support`, {
+    method: 'POST', redirect: 'error',
+    headers: { apikey: env.SUPABASE_ANON_KEY, authorization: `Bearer ${env.SUPABASE_ANON_KEY}`,
+      'content-type': 'application/json', 'x-support-timestamp': timestamp, 'x-support-signature': signature },
+    body: JSON.stringify(body),
+  }));
+  // Never relay database errors, which can include private row contents.
+  const result = await response.json().catch(() => null) as { id?: unknown; message?: unknown } | null;
+  if (!response.ok) return jsonResponse(result?.message === 'SUPPORT_REQUEST_CONFLICT' ? 409 : 503,
+    { error: result?.message === 'SUPPORT_REQUEST_CONFLICT' ? 'SUPPORT_REQUEST_CONFLICT' : 'SUPPORT_UNAVAILABLE' });
+  if (!result || typeof result.id !== 'string' || !uuidPattern.test(result.id)) return jsonResponse(503, { error: 'SUPPORT_UNAVAILABLE' });
+  return jsonResponse(200, { id: result.id });
+}
+
 export async function handleParticipationRequest(
   request: Request,
   env: ParticipationEnvironment,
   fetcher: Fetcher = fetch,
   now: Now = Date.now,
+  networks: readonly SupportNetwork[] = supportNetworks,
 ) {
   const path = new URL(request.url).pathname;
   if (request.method !== 'POST') {
@@ -465,13 +511,16 @@ export async function handleParticipationRequest(
     if (path === '/api/participation/challenge') {
       return await handleChallenge(request, env, fetcher, now);
     }
+    if (path === '/api/participation/support') {
+      return await handleSupportSubmit(request, env, fetcher, now, networks);
+    }
     if (path === '/api/participation/submit') {
       return await handleSubmit(request, env, fetcher, now);
     }
     return jsonResponse(404, { error: 'NOT_FOUND' });
   } catch (error) {
     if (error instanceof ParticipationBodyError) return jsonResponse(error.status, { error: error.message });
-    console.error('participation API failed', error instanceof Error ? error.message : 'unknown error');
+    console.error('participation API failed');
     return jsonResponse(500, { error: 'PARTICIPATION_SERVER_ERROR' });
   }
 }

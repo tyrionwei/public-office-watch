@@ -32,6 +32,18 @@ logs/
 tmp/
 apps/web/.env.rehearsal.local
 apps/web/.dev.vars
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+/.tmp/
+*.sqlite-*
+*.db-*
+*.dump
+*.sql.gz
 supabase/.branches/
 supabase/.temp/
 supabase/snippets/
@@ -74,3 +86,21 @@ data-sources/tpp/*:Zone.Identifier
 
 # Production EXPLAIN exports reveal database structure.
 /docs/phase-0-production-explain.json
+
+# Private research inputs, review ledgers and local run reports.
+# Keep files locally; reviewed release results belong in migrations/public data.
+/data-sources/tnl-dark-guide/*
+!/data-sources/tnl-dark-guide/README.md
+/docs/tnl-dark-guide-family-claims-preview.md
+/docs/tnl-dark-guide-legal-claims-preview.md
+/docs/tnl-dark-guide-legal-review-backlog.md
+/docs/cec-registration-*20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*.json
+/docs/cec-registration-*20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*.md
+/data-sources/cec-elected-executive-identity-coverage.json
+/data-sources/elected-executive-profile-gaps.json
+/data-sources/historical-local-chief-identity-coverage.json
+/data-sources/*.progress.json
+/data-sources/*.skipped.json
+/data-sources/votetw-person-enrichment*.report.json
+/data-sources/major-parties/officer-match-report.json
+/data-sources/tpp/member-match-report.json

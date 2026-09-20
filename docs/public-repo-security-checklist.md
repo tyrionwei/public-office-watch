@@ -2,7 +2,27 @@
 
 本文件用於公開 GitHub repo 的日常安全稽核，重點是避免 secrets、個資、local artifacts 與不該公開的暫存資料被提交。
 
-## Public repo 不可提交的檔案
+## Git 追蹤與本機保留
+
+本節是後續檔案分類的單一維護來源。新增檔案、調整產物輸出位置或整理提交內容時，先依下表分類，再核對實際內容、程式／測試引用與現有 Git 狀態；不要只憑副檔名、資料夾名稱或「本機開發用」判定。無法確認可公開的研究資料先留本機待審，不自動納入提交；也不要為了排除資料而隱藏必要來源碼。
+
+| 分類 | 追蹤／上傳原則 | 例子 |
+| --- | --- | --- |
+| 共用來源，需追蹤 | 納入 Git，經 review 後才能提交／推送；本機測試工具也屬來源碼 | `apps/web/src`、`apps/web/build`、`scripts`、測試、公開資產、套件與 lockfile、CI、migration、環境範本、公開 CA 憑證 |
+| 共用文件與必要資料，需追蹤 | 保留可重現方法及通過既有公開審核的必要輸入；檔名含 seed 或 local 不代表應忽略 | 開發／發布文件、來源 manifest、必要 seed、已審核發布 migration；`CONTRIBUTING.md` 與 `deployment-environments.md` 亦屬此類 |
+| 本機私有資料，不追蹤但須備份 | 使用 `.gitignore` 保護，保留原檔、來源、mtime 與雜湊；不得因停止追蹤就刪除 | 環境值、研究下載、人物比對／待審清單、TNL 研究資料、CEC 逐批審核與執行紀錄、資料庫備份、`local-data/` |
+| 可重建產物，不需追蹤 | 使用 `.gitignore`；是否刪除另行判斷，不與本次分類一併清理 | `node_modules/`、`dist/`、測試報告、cache、暫存檔；`tmp/` 中的研究證據仍須保留備份 |
+| 個人工作環境，不上傳 | 使用本機 `.git/info/exclude`，不把個人偏好變成團隊忽略規則 | 本機代理設定、代理工作紀錄、IDE 個人設定；此工作區的根 `AGENTS.md`、`.codex/`、`.agents/`、`.codex-tmp/` |
+
+忽略規則限定已確認的產物類型或精確路徑，保留共用 README、範本與未來方法文件。取消追蹤前查明引用依賴；若一般測試依賴私有資料，保留原斷言並分離成明確的本機驗收，不以刪除案例或靜默 skip 代替。分類完成後檢查忽略命中、必要來源未被隱藏、原始資料保全與相關測試。可不追蹤不等於可刪除；需追蹤也不等於已授權 commit、push 或發布。
+
+GitHub 收到的是 commit；未提交的工作目錄不會由一般 push 上傳。ignore 只保護未追蹤檔案，已追蹤的私有產物必須先確認備份，再用 `git rm --cached -- <精確路徑>` 取消追蹤，保留本機檔。不要用 assume-unchanged 或 skip-worktree 隱藏變更，也不要以整目錄清除代替分類。
+
+取消追蹤會形成待提交的刪除差異，不會清除已存在的 Git 歷史或 GitHub 舊版本。歷史清理、正式發布與遠端操作另行授權。個人 exclude 不會隨 clone 移轉；新工作區須自行設定，且 `git add -f` 可繞過忽略規則。
+
+TNL 的完整研究驗收保留在 `scripts/local-data-tests/`，使用 `npm run test:local-research-data`，缺少本機資料會失敗，不能當成通過。一般 `test:script-suite`／`test:data-reports` 保留合成案例；它們通過不代表真實研究資料通過。CEC 身分核對工具同樣需要本機 ledger；取得程式碼不等於取得待審資料或寫入授權。
+
+## 禁止提交的常見檔案
 
 以下內容不應進入公開 repo：
 

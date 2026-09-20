@@ -1,8 +1,8 @@
 # 2026 參選時間線與投開票所驗收
 
-最新進度：新增913筆純文字姓名登記，本機可顯示18,413筆（17,500筆已連人物＋913筆純姓名）；暫未公開4筆，身分待核仍917筆。詳見[純姓名登記呈現](cec-registration-name-roster-2026-09-05.md)。下文保留前一階段紀錄。
+最新進度：新增913筆純文字姓名登記，本機可顯示18,413筆（17,500筆已連人物＋913筆純姓名）；暫未公開4筆，身分待核仍917筆。逐批身分核對與執行紀錄留在本機；共用流程見[官方候選人匯入](official-candidate-import.md)。
 
-2026-09-05 更新：十輪身分核對後，本批公開登記事件已增至 17,269 筆、待核剩 1,148 筆。詳見[第一批身分核對](cec-registration-identity-review-2026-09-05.md)、[第二批身分核對](cec-registration-identity-review-2026-09-05-round-2.md)、[第三批外部生日補證](cec-registration-identity-review-2026-09-05-round-3.md)、[第四批同名排除](cec-registration-identity-review-2026-09-05-round-4.md)、[第五批性別正規化與轉戰證據核對](cec-registration-identity-review-2026-09-05-round-5.md)、[第六批縣市長身分鏈](cec-registration-identity-review-2026-09-05-round-6.md)、[第七批現職轉戰核對](cec-registration-identity-review-2026-09-05-round-7.md)、[第八批現職轉戰核對](cec-registration-identity-review-2026-09-05-round-8.md)及[前一批本機公開紀錄](cec-registration-publication-2026-09-05.md)。最新逐筆核對見[第九批審核](cec-registration-identity-review-2026-09-05-round-9.md)。下文保留前一階段驗收紀錄。 最新完整比對見[第十輪審核](cec-registration-identity-review-2026-09-05-round-10.md)。
+2026-09-05 更新：十輪身分核對後，本批公開登記事件已增至 17,269 筆、待核剩 1,148 筆。逐批身分核對與執行紀錄留在本機；共用流程見[官方候選人匯入](official-candidate-import.md)。
 
 驗收日期：2026-09-04。分支：codex/2026-registration-polling-analytics。
 

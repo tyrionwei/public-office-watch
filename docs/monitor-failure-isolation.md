@@ -1,6 +1,25 @@
 # 蒐集來源失敗隔離與部分審核
 
-每日／每週蒐集與每日 21:30 審核使用本文件。所有環境守門、私人待審、人工核准與額度限制保持不變。
+每日／每週蒐集與排程審核使用本文件；執行時間以目前有效的排程設定為準。所有環境守門、私人待審、人工核准與額度限制保持不變。
+
+## 排程環境與批次交接
+
+兩個排程使用同一持久專案 `/home/xiaosha/projects/public-office-watch`；以下路徑均以此為根。只用正式排程管理工具修正實際專案、cwd、目標任務及可寫範圍，不能只加 cd、改提示詞路徑或改 App 資料庫。沒有管理能力就列出待操作欄位，不新增重複排程或恢復舊 PAUSED 排程。
+
+| 用途 | 既有持久路徑 |
+| --- | --- |
+| 蒐集封存＝審核輸入 | `tmp/monitor-history/<daily或weekly>/<runId>/`，含 summary、manifest、artifacts、logs |
+| 審核結果 | `tmp/monitor-review/runs/<runId>.json`；續審用 `tmp/monitor-review/run-attempts/<runId>/<reviewId>.json`，追加 `tmp/monitor-review/runs.jsonl` |
+| 共同進度／追蹤 | `tmp/codex-scheduled-review-state.json`、`tmp/monitor-followups.json`；保留原欄位與歷史 |
+| 人物輪替／補證 | `tmp/daily-person-enrichment-state.json`；審核沿用 `tmp/monitor-review/followup-reviews/`、`tmp/monitor-review/evidence/` 及 state.followupReview |
+
+- 各次執行核對當次實際資料目標及待處理批次；環境／設定未變時不重做 Docker、掛載、群組或模型全面盤點。首次使用、新工作階段、相關設定變更或異常時，才補驗必要部分。資料目標沿用 [本機驗證](local-supabase-validation.md) 及既有查詢，確認程式最終解析的 loopback endpoint／目標身分與憑證用途；不從 env 檔名、cwd 或 Docker 健康推定。
+- Docker 只在確實需要容器身分證據、操作容器或診斷容器異常時檢查。已確認的來源 HTTP 下載、封存讀寫不額外依賴 Docker；資料目標無法確認時仍停止相依操作，不刪掉必要驗證。只有配置／憑證需要核對時才使用 CLI status，在程序內比對，不輸出完整結果：新版 `sb_publishable_`／`sb_secret_` 分別對應 `PUBLISHABLE_KEY`／`SECRET_KEY`，legacy JWT 的 anon／service role 分別對應 `ANON_KEY`／`SERVICE_ROLE_KEY`。缺欄位、用途錯誤或同格式值不同仍停止，不更換憑證來湊通過。
+- 已有本機 API 證據可沿用；需要重驗時，public key 讀 `published.people_directory`，server key 讀 `public.person_claim_review_queue` 的 `claim_id`。權限修改或存取異常才再驗匿名拒絕。不要用未開放的 `published.people` 或不存在的佇列 `id` 欄位判定服務故障；前端 guard 不等於資料目標已驗證。
+- 互動對話保留「代我核准」，必要越界命令走系統正式核准。兩個排程各自必須事先具備搜尋／下載及必要本機資料存取能力，不依賴途中核准，也不靠 Full access 解決錯誤路徑。EROFS、socket 拒絕、網路封鎖記為 local_tool，停止相依步驟；不 chmod、remount、改群組、重建服務或換入口繞過。
+- 排程語意審核不等於 `review:person-claims:write` 自動核准。只有工作確實需要 RPC 時才依 [審核流程](review-workflow.md#自動審核的資料庫前置與恢復) 查安裝狀態；不為啟動排程安裝 SQL，保留 installer 的容器／workdir 守門。
+
+改綁／權限修正後才做一次隔離批次驗收：從蒐集排程實際入口完成最小批次的原蒐集與封存，再由審核排程實際入口讀同一 runId、manifest 與 hashes，完成下述資格／語意審核、去重分流、必要補證及結果／狀態保存。驗收的所有暫存輸出與狀態副本均隔離，不能讓只改 output-dir 的子程序覆寫正常 canonical 檔或輪替狀態；不減少所選批次原本必需的審核工作，不寫正式或發布。無法隔離或缺少實際排程入口就停止驗收，分別標記蒐集、審核、交接尚未驗證。本段不是每次開發／排程的例行前置，舊批次仍不可變。
 
 ## 蒐集
 
@@ -45,4 +64,4 @@ node scripts/plan-monitor-review.mjs tmp/monitor-history/daily/<runId>
 - 以 `runId + artifact SHA-256 + 事件／主張穩定 key` 記錄逐項進度。state 新增 `artifactReviews`，每項保存 runId、path、sha256、reviewId、status、reviewedAt；只有實際完成語意審核的 artifact 才記 reviewed。既有欄位與歷史全部保留。
 - runs.jsonl 的後續列記錄 attemptId、同一 runId、incremental=true 與本次實際新增處理數。累計不重加先前已處理事件；沒有新證據的 blocked artifact 不反覆重審。
 - 部分成功只能記 partial_reviewed；仍有未審或 blocked 產物時，不能把整批新增到 reviewedRuns 或宣稱 reviewCompleted。失敗來源單獨追蹤 nextCheckAt；非空 blockedRuns 不應阻擋新批的有效產物。
-- 寫回前再驗輸入雜湊。公開與核准仍由人工決定；本文件不授權補搜、資料合併或正式寫入。
+- 寫回前再驗輸入雜湊。公開與核准仍由人工決定；本文件不新增補搜、資料合併或正式寫入授權。有效排程已明確授權的定向補證仍須完成其原有身分／來源核對、每次審核45分鐘、每日最多10個key／30分鐘及證據與state保存，不因精簡環境檢查而取消；無此授權不自行補搜。

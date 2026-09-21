@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { externalFindingCanAutoReview } from './build-tnl-dark-guide-source-research.mjs';
+import { externalFindingCanAutoReview } from '../build-tnl-dark-guide-source-research.mjs';
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const dataDir = path.join(repoRoot, 'data-sources', 'tnl-dark-guide');
 const categories = ['政治工作', '政治家族', '涉案紀錄', '其他'];
 const statuses = [

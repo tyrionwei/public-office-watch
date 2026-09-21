@@ -19,7 +19,7 @@ Worker 接受 `requestId`、`networkId`、`receivingAddress`（畫面版本核�
 ## 套用與回復
 
 1. 先在經核准的隔離 DB 套用 `20260920143533_crypto_support_messages.sql`，既有 migration 中的 digest helper、pgcrypto、Vault、Auth 為前置條件。確認 Worker 與 Vault 的 participation proof key 已配對，不輸出密鑰。
-2. 隔離 DB 執行 `tests/sql/crypto-support.sql`，使用合成 Vault key 與合成 auth users；測試交易最後 rollback。這次依使用者要求只準備 SQL，未套用 migration 或執行 DB 測試。
+2. 隔離 DB 執行 `tests/sql/crypto-support.sql`，使用合成 Vault key 與合成 auth users；測試交易最後 rollback。2026-09-20 僅準備 SQL；2026-09-21 已完成最小隔離 DB 測試及本機研究庫套用，詳見下節。
 3. 經發布授權後先套 migration、部署更新的 `feedback-admin` Edge Function，再依既有 release 流程發布前台與 Worker。migration 不變更既有 RPC；舊版前台仍相容。檢查一般回饋、管理登入、支持留言端到端流程後才開放收款設定。
 4. 回復可將網路停用並發布前一版 Worker／前台／Edge Function；保留已收到的私密留言與新增資料表。不要用 DROP TABLE 作一般回復或刪除支持者資料。金鑰輪替仍沿用原本 participation 流程。
 
@@ -28,7 +28,7 @@ Worker 接受 `requestId`、`networkId`、`receivingAddress`（畫面版本核�
 - 單元與伺服器替身：web `test:read-contracts`（包含 cryptoSupport、participationSecurity、feedbackAdminEndpoint）。
 - 瀏覽器 fixture：web `test:state-safety -- cryptoSupport.pw.ts feedbackAdmin.pw.ts`，地址皆合成、無 DB／鏈上呼叫；QR 解碼驗證完整地址。
 - 靜態檢查：web lint、build、check:data-boundary、check:published-exposure。
-- SQL 是真 DB 權限與冪等驗收的準備檔，未執行不能宣稱 RLS／migration 已實測。
+- SQL 為權限與冪等驗收入口；2026-09-21 隔離合成資料測試已通過，不代表正式 Auth／Vault 全環境驗收。
 - 正式地址、真實小額收轉款、正式 Auth／Edge Function／Worker 整合、真手機掃碼仍須正式開放前另驗。
 
 ## 本次交付驗證（2026-09-20）
@@ -43,14 +43,19 @@ Worker 接受 `requestId`、`networkId`、`receivingAddress`（畫面版本核�
 
 私人失敗紀錄：本 worktree `.codex/task-failures.md`。原始 log 保留於 `/tmp/pow-usdt-*.log`，browser traces 保留 `apps/web/test-results`；均不作公開來源追蹤。
 
-### 後續追加網路
+### 2026-09-20 後續追加網路（歷史紀錄）
 
 新增六條網路並填入站方提供的三組地址；現有 BSC networkId `bsc` 保留。Solana 已補前後端與同份未套用 migration 的格式驗證及離線 QR 測試。未重試已停止的瀏覽器問題，未執行 SQL 或真實轉帳；正式開放前仍須完成各鏈代幣版本與小額收轉款確認。
 
 八鏈追加驗證：10 個設定／Worker 案例與 3 個 client／QR 案例通過，lint、build、Worker dry-run、diff check 通過。首跑曾有一個測試向量誤把 87 個 `2` 的 Base58 值預期為 64 bytes；實際為 63，已改用正確 64-byte 向量，並新增該 63-byte 值必須拒絕的斷言，重跑通過。此追加不包含 SQL 實測或 browser 重跑；實際地址只驗基本格式。
 
-### 本機啟用預覽
+### 2026-09-20 本機啟用預覽（已取代）
 
-使用者要求背景啟動 5173 並「直接啟用」後，八鏈已明確啟用。代幣版本、收轉款測試與真實後端提交仍未驗證；目前服務是使用示範資料的 Vite build preview，不具留言儲存 API。設定與前台已啟用不等於正式站已發布。
+使用者要求背景啟動 5173 並「直接啟用」後，八鏈已明確啟用。代幣版本、收轉款測試與真實後端提交仍未驗證；當時服務是使用示範資料的 Vite build preview，不具留言儲存 API。設定與前台已啟用不等於正式站已發布。
 
 前台依使用者確認改為桌面左右排列、手機上下排列，地址欄禁止拖曳縮放，QR Code 縮小；代幣版本未驗證提示依要求不在頁面顯示，設定備註仍保留。最後介面修改後 build 與 diff check 通過；版型調整另通過 lint 與 QR 解碼測試，未重跑受阻的瀏覽器驗收。
+
+
+## 2026-09-21 release 整合
+
+已整合至 `codex/release/2026-09-21`，以完整本機研究庫與 Vite dev 啟動，取代前述歷史示範預覽。migration 已在最小隔離 DB 完成合成金鑰／人物的 SQL 回歸，並在研究庫回滾驗證後套用。支持頁單元／契約20項與建置通過；真實管理登入、成功留言端到端與收轉款仍未驗收。詳見 [本批release紀錄](releases/2026-09-21.md)。

@@ -1,5 +1,11 @@
 # Frontend environment separation
 
+## 依工作範圍選擇檢查
+
+一般開發確認 repo／分支／未提交變更即可開始；本文件的服務、資料庫與發布檢查只在相關工作使用。資料庫、匯入及會寫外部服務的測試，須核對程式解析後的 endpoint、設定覆寫與目標身分；不只看檔名、cwd 或容器健康。目標不明或是未授權正式環境時停止，不載入正式寫入憑證。優先沿用現有 guard／唯讀查詢；同一工作階段且設定未變不重做完整盤點，寫入前仍確認實際目標一致。新工作階段或相關設定變動，只重新確認必要部分。
+
+下面的發布、備份與回復要求適用於正式操作；rehearsal 只用於需要正式形狀的驗收，不是一般開發前置。
+
 ## Local development and browser tests
 
 - Store local-only frontend values in `apps/web/.env.local`.
@@ -47,6 +53,40 @@ participation proxy separately reads `.env.local`, `.dev.vars`, then process env
 Internal review's service key comes from root `.env.local` or process env. An env
 file's presence does not prove which database a running process uses. Rehearsal
 must be rebuilt and verified as described in [its runbook](production-rehearsal.md).
+
+## 開發分支與批次發布流程
+
+2026-09-12 定案：**功能／修正分支 → 暫時 release 整合分支 → PR → main → 自動部署 → production smoke**。保留現有自動 CD，將發布決策放在 release PR 合併前；不改採「功能逐一進 main，日後才手動發布」。本節是流程的維護來源，其他文件及跨任務筆記只保留入口。
+
+| 分支角色 | 用途與界線 |
+|---|---|
+| `main` | 正式發布基準，只接受經審核的 release 或 hotfix PR；不從本機直接 push。合併會啟動自動發布流程。 |
+| `release/*` | 從最新 `origin/main` 建立的短期整合版本，只納入這批要發布的功能；處理整合衝突、必要整合修正與驗證，不持續開發無關新功能。 |
+| `feature/*`、`fix/*` | 各自從最新 `origin/main` 建立，承載單一功能或修正；完成自身測試與 review 後才納入 release。 |
+| `hotfix/*` | 從最新 `origin/main` 建立的正式故障修正，可直接 PR 到 main，仍需適用檢查與發布授權。 |
+
+表內是角色名稱。Codex 新分支預設保留 `codex/` 前綴，例如 `codex/feature/<topic>`、`codex/release/<date>`；使用者指定名稱時依指定名稱。既有分支不必為命名而重建。 沿用既有功能／UIUX 分支時先核對未提交與未合併工作，不為每次小修改自動 fetch／merge。需要建立新功能分支或準備整合發布時，才更新遠端資訊並確認 `origin/main` 基準；同步後處理衝突並驗證。多項工作同時進行時使用各自 worktree，避免把同一份 dirty 工作目錄誤當成互相隔離的分支。有功能依賴時明列並一起評估整合順序，不偷偷帶入未納入本批的功能。
+
+### 一般發布
+
+1. 在功能分支完成實作、適用測試與功能 review。可先推送備份或供 review，不強制每個功能都另開一份 PR 到 release。
+2. 確認發布清單與依賴，從最新 `origin/main` 建立 release，再整合選定功能。未完成、未核准發布或僅供 local 使用的工作不因「已 commit」就自動列入；`/internal/data-progress` 目前維持 local 專用，正式版是否提供及呈現方式另定。
+3. 執行整合 review 與適用的 lint、typecheck、unit／contract、瀏覽器、安全界線、migration drift 和建置。明列通過、失敗、未執行及不適用；單一功能測試通過不代表整批通過。
+4. 有 migration 時，依既有環境規則完成演練、相容性與恢復方案；獲准的正式 migration 另行套用，再進入發布 PR／CI／合併。需要 Worker-first 等特殊順序時，另訂明確的分階段方案，不跳過 drift gate。
+5. 推送 release，開一份 **release → main** 的發布 PR，記錄本批內容、依賴、測試、migration 與回復限制。核對目前 PR head 的 CI／review；main 或整合內容改變後重新同步並驗證。合併前確認授權包含正式發布，不把 commit、push 或開 PR 的要求擴大成 merge／部署授權。
+6. 合併後追蹤該 merge commit 的 `Web CI` → `Production Release` → migration drift → Cloudflare build／Wrangler dry-run → deploy → production smoke。確認實際 Worker version、流量及來源 SHA，才記為發布成功。
+7. 成功部署且 smoke 通過後，將 release tag 指向**實際部署的 commit**，例如 `vYYYY.MM.DD`；同日多版使用不重複尾碼，不覆寫既有 tag。保留 PR、commit、CI、部署版本與驗收紀錄。
+8. 清理本批已合併且已發布的 feature／fix／release 分支及不用的 worktree。刪除前逐一確認沒有未合併 commit、dirty 檔案、開啟中的 PR 或進行中的工作；保留未發布及 local-only 工作，不為「只剩 main」刪掉其他成果。
+
+功能 review 檢查單一變更；release review 檢查多個變更放在一起後的行為，以及整批上線條件。
+
+### Hotfix 與實際部署狀態
+
+緊急修正走 **hotfix → PR → main → 自動部署 → smoke**，不必另繞 release。成功後，進行中的 release 必須同步 main 中的 hotfix，並重做受影響驗證；不要改寫他人已使用的分支歷史。
+
+`main = production` 是工作流程的目標，不是免驗證的事實。排隊、部署失敗、smoke 失敗、跳過過期版本或 rollback 都可能造成差異；此時分開記錄 main SHA 與實際 Worker version。CI 綠燈、PR 已 merge 或已有 tag 都不能單獨證明已上線。沿用下方 smoke 失敗處置；現有流程沒有自動 rollback。
+
+目前程式碼確認：`web-ci.yml` 在 PR 與 main push 執行，**單純 push feature 不會自動取得 Web CI**；需要遠端檢查時可開適當 PR，或另行規劃觸發範圍。`production-release.yml` 已保留 main push 的成功 Web CI 後自動發布及手動備援入口，且只檢查 migration drift、不自動套用 migration。本次只記錄流程，未變更 GitHub Actions、遠端 main 保護／ruleset、tag 自動化或刪分支設定；發布時須核對遠端 main「只接受 PR」限制確實生效。
 
 ## Production Cloudflare Worker releases
 

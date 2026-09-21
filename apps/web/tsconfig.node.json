@@ -14,6 +14,7 @@
   "include": [
     "vite.config.ts",
     "src/lib/dataProgressContract.ts",
+    "src/config/cryptoSupport.ts",
     "src/lib/taiwanText.ts",
     "worker-configuration.d.ts",
     "worker/participation.ts",

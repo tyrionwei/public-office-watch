@@ -1,0 +1,53 @@
+import { expect, test } from '@playwright/test';
+
+const personId = 'a86bf49e-1d29-43b0-a0d2-bf0e423fd9a2';
+const sourceUrl = 'https://judgment.example.test/person-scoped-fixture';
+const original = '測試原文：被告甲無罪。理由曾引述其他人因詐欺取財罪判處有期徒刑三年。';
+const main = '測試本人犯公然侮辱罪，處罰金8,000元。';
+type Claim = { claim_type: string; claim_value: string; person_id: string; source_url: string; claim_json: Record<string, unknown> };
+
+for (const scenario of ['legacy', 'reviewed', 'unknown'] as const) {
+  test(`person legal record preserves original and expands details with keyboard: ${scenario}`, async ({ page }) => {
+    // Only substitute the browser response. No review, claim or database writes.
+    await page.route('**/api/participation/**', route => route.abort());
+    await page.route('**/rest/v1/rpc/person_profiles_for', async route => {
+      const response = await route.fetch();
+      expect(response.status()).toBe(200);
+      const rows = await response.json() as Array<{ payload: { claim_rows: Claim[] } }>;
+      const claims = rows[0].payload.claim_rows;
+      const claim = claims.find(row => row.claim_type === 'legal_case');
+      expect(claim).toBeDefined();
+      claim!.claim_value = original;
+      claim!.source_url = sourceUrl;
+      claim!.claim_json = { recordType: 'criminal', caseStage: 'criminal_judgment_non_final' };
+      if (scenario !== 'legacy') claim!.claim_json.judgmentDisposition = {
+        version: 1, section: '主文', reviewStatus: 'reviewed', personId: claim!.person_id, sourceUrl,
+        text: scenario === 'reviewed' ? main : '上訴駁回。', result: scenario === 'reviewed' ? 'guilty' : 'unknown',
+      };
+      rows[0].payload.claim_rows = claims.filter(row => row.claim_type !== 'legal_case' || row === claim);
+      await route.fulfill({ response, json: rows });
+    });
+    await page.goto(`/people/${personId}`);
+    const summary = page.locator('[data-legal-summary]').first();
+    await expect(summary).toBeVisible();
+    if (scenario === 'reviewed') {
+      await expect(summary).toContainText('公然侮辱罪');
+      await expect(summary).toContainText('8,000元');
+      await expect(summary).toContainText('有罪');
+      await expect(summary).not.toContainText('詐欺取財罪');
+    } else {
+      await expect(summary).toContainText('結果待確認');
+      await expect(summary).toContainText(scenario === 'legacy' ? original : '上訴駁回。');
+    }
+    const card = summary.locator('xpath=ancestor::article[1]');
+    const details = card.locator('details');
+    await page.evaluate(() => document.fonts.ready);
+    await details.locator('summary').evaluate(element => element.scrollIntoView({ block: 'center', behavior: 'instant' }));
+    await details.locator('summary').focus();
+    await expect(details.locator('summary')).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(details).toHaveAttribute('open', '');
+    await expect(card.getByText(original, { exact: true })).toBeVisible();
+    await expect(card.locator(`a[href="${sourceUrl}"]`)).toBeVisible();
+  });
+}

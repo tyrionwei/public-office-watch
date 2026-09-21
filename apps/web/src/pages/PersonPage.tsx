@@ -259,7 +259,7 @@ function ClaimCard({
 }) {
   const { language, t } = useI18n();
   const showSourceDetails = Boolean(correctionSection);
-  const legal = correctionSection === 'legal' ? legalRecordPresentation(claim.claim_value, claim.claim_json) : null;
+  const legal = correctionSection === 'legal' ? legalRecordPresentation(claim.claim_value, claim.claim_json, { personId: claim.person_id, sourceUrl: claim.source_url }) : null;
   const classification = legal ? legalCaseClassification(claim.claim_json, legal) : null;
   const documentStatus = classification
     ? t(`person.legal.status.${classification.status}`)
@@ -294,13 +294,13 @@ function ClaimCard({
           </dl>
           {legal.notes.length ? <p className="text-sm leading-6 text-slate-300">{legal.notes.join('；')}</p> : null}
           {legal.judgmentDate ? <p className="text-xs text-slate-400">{t('person.legal.judgmentDate')}：{legal.judgmentDate}</p> : null}
-          {legal.showNarrative ? <p className="whitespace-pre-line text-sm leading-6 text-slate-200">{claim.claim_value ?? t('person.noContent')}</p> : null}
+          {legal.showNarrative ? <p className="whitespace-pre-line text-sm leading-6 text-slate-200">{legal.narrative || t('person.noContent')}</p> : null}
         </div>
       ) : <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value ?? t('person.noContent')}</h3>}
       {legal ? (
         <details className="mt-4 border-t border-line/60 pt-3">
           <summary className="cursor-pointer text-xs text-accent">{t('person.legal.details')}</summary>
-          {!legal.showNarrative ? <p className="mt-3 text-sm leading-6 text-slate-300">{claim.claim_value}</p> : null}
+          {!legal.showNarrative || legal.narrative !== (claim.claim_value?.trim() ?? '') ? <p className="mt-3 text-sm leading-6 text-slate-300">{claim.claim_value}</p> : null}
           <dl className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
             <div><dt className="text-slate-500">{t('person.source.name')}</dt><dd className="mt-1 text-slate-200">{claim.source_name || t('person.publicSource')}</dd></div>
             <div><dt className="text-slate-500">{t('person.source.date')}</dt><dd className="mt-1 text-slate-200">{formatUpdatedAt(claim.observed_at, language, t('person.source.notRecorded'))}</dd></div>

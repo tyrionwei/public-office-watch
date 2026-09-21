@@ -9,7 +9,7 @@ for (const width of [1280, 390]) {
     const card = page.locator('[data-legal-summary]').first();
     await expect(card).toContainText('判決結果');
     await expect(card).toContainText('是否定讞待查');
-    await expect(card).toContainText('有罪（部分指控不成立或無罪）');
+    await expect(card).toContainText('結果待確認');
     await expect(page.getByRole('tooltip')).toHaveCount(0);
     await page.evaluate(() => document.fonts.ready);
     await button.evaluate(element => element.scrollIntoView({ block: 'center', behavior: 'instant' }));

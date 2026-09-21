@@ -1,12 +1,114 @@
-/** Extract display excerpts only; never change review status or infer finality. */
-export function legalRecordPresentation(text: string | null, json: Record<string, unknown>) {
+/** A presentation contract, not an approval or authorization mechanism.
+ * The intake/review workflow must select this person's orders from THIS court's
+ * main disposition before creating judgmentDisposition; never copy the full case.
+ */
+export type LegalPersonContext = { personId: string | null; sourceUrl: string | null };
+export type DispositionResult = 'guilty' | 'acquitted' | 'mixed' | 'unknown';
+
+type ReviewedDisposition = {
+  text: string;
+  result: DispositionResult;
+  requiresReview: boolean;
+};
+
+const acquittalStages = [
+  'acquitted_final', 'criminal_acquittal_final',
+  'acquitted_non_final', 'criminal_acquittal_non_final',
+];
+const verdicts = new Set<string>(['guilty', 'acquitted', 'mixed', 'unknown']);
+const horizontalSpace = /[\t \u3000]/gu;
+const sectionNumber = /^(?:[壹貳參肆伍陸柒捌玖拾一二三四五六七八九十\d]+[、.．:：)）])/u;
+
+function compactHeading(line: string) {
+  return line.replace(horizontalSpace, '').replace(sectionNumber, '');
+}
+function isReasonHeading(line: string) {
+  return /^(?:事實(?:及理由|與理由|理由|摘要)?|(?:簡要)?犯罪事實|(?:判決)?理由(?:要旨|摘要)?)(?:如下)?(?:[:：]|$)/u.test(compactHeading(line));
+}
+function isDocumentFooter(line: string) {
+  return /^(?:附表|附件|中華民國)/u.test(compactHeading(line));
+}
+
+/** Isolate the court's main-disposition section for PRIVATE intake/review.
+ * This returns the entire section, potentially containing multiple people; it
+ * does NOT match a person, infer a verdict, or approve anything for publication.
+ * Unrecognized/ambiguous section boundaries return null instead of scanning the
+ * facts/reasons for a replacement outcome. No OCR or network access is performed.
+ */
+export function extractJudgmentMainText(documentText: string): string | null {
+  if (!documentText || documentText.length > 1_000_000) return null;
+  const lines = documentText.replace(/^\uFEFF/u, '').replace(/\r\n?/gu, '\n').split('\n');
+  const selected: string[] = [];
+  let found = false;
+  for (const line of lines) {
+    const heading = compactHeading(line.trim());
+    const main = /^(?:(?:本院)?判決)?主文(?:[:：](.*))?$/u.exec(heading);
+    if (!found) {
+      // A quoted earlier judgment inside the reasons is not this court's main.
+      if (isReasonHeading(line)) return null;
+      if (!main) continue;
+      found = true;
+      // Preserve source spelling and spaces; only discard the heading itself.
+      if (main[1]) selected.push(line.slice(line.indexOf('文', line.indexOf('主')) + 1).replace(/^[\t \u3000]*[:：]/u, ''));
+      continue;
+    }
+    if (main) return null; // concatenated decisions / ambiguous multiple headings
+    if (isReasonHeading(line) || isDocumentFooter(line)) break;
+    // Flattened or malformed headings are not safe boundaries to guess around.
+    if (/(?:事\s*實\s*[及與]\s*理\s*由|犯\s*罪\s*事\s*實)/u.test(line)) return null;
+    selected.push(line);
+  }
+  const text = selected.join('\n').trim();
+  return found && text ? text : null;
+}
+
+function isHttpsSource(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && Boolean(url.hostname) && !url.username && !url.password;
+  } catch { return false; }
+}
+
+function personDisposition(json: Record<string, unknown>, context?: LegalPersonContext): ReviewedDisposition | null {
+  const raw = json.judgmentDisposition;
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw) || !context?.personId || !context.sourceUrl) return null;
+  const value = raw as Record<string, unknown>;
+  if (value.version !== 1 || value.section !== '主文' || value.reviewStatus !== 'reviewed'
+    || value.personId !== context.personId || !isHttpsSource(value.sourceUrl) || value.sourceUrl !== context.sourceUrl
+    || typeof value.text !== 'string' || !value.text.trim() || value.text.length > 12_000
+    || typeof value.result !== 'string' || !verdicts.has(value.result)) return null;
+  const text = value.text.trim();
+  // This field contains ONLY the already selected person's verbatim main text.
+  // A full document or reasons accidentally placed here is invalid, not a cue
+  // to automatically assign all defendants' orders to the current person.
+  if (text.split(/\r?\n/u).some(line => /^(?:(?:本院)?判決)?主文(?:[:：]|$)/u.test(compactHeading(line.trim()))
+    || isReasonHeading(line) || isDocumentFooter(line))
+    || /事\s*實\s*[及與]\s*理\s*由|犯\s*罪\s*事\s*實/u.test(text)) return null;
+  const requiresReview = /附表|附件|發回|先前|曾被|主張|辯稱|抗辯|求刑|求處|起訴意旨|公訴意旨/u.test(text)
+    || /(?:一審|二審|原審|前審|原判決)[^。；\n]*(?:判處|判刑|有期徒刑|無期徒刑|死刑|拘役)/u.test(text)
+    || /免訴|不受理/u.test(text)
+    // Dismissing an appeal alone does not establish whose guilt/penalty stands.
+    || (/(?:上訴.*駁回|駁回.*上訴)/u.test(text) && !/無罪|有罪|犯[^。；\n]+罪/u.test(text));
+  return { text, result: requiresReview ? 'unknown' : value.result as DispositionResult, requiresReview };
+}
+
+/** Extract display excerpts from reviewed person-scoped 主文 only.
+ * Legacy narratives remain readable, but are never treated as a current verdict.
+ * No review/publication flags or input records are changed here.
+ */
+export function legalRecordPresentation(text: string | null, json: Record<string, unknown>, context?: LegalPersonContext) {
   const original = text?.trim() ?? '';
   const stage = typeof json.caseStage === 'string' ? json.caseStage : '';
-  const criminal = json.recordType === 'criminal' && stage.startsWith('criminal_judgment');
-  // A narrative combining overturned sentences or several historical outcomes needs
-  // its full context. Do not turn its earlier sentence into a current conviction.
-  const complex = /發回|先前|曾被/.test(original) || /(?:有期徒刑|拘役|判刑)[\s\S]*撤銷/.test(original);
-  const clauses = original.split(/[，；;。\n]/u).map(s => s.trim()).filter(Boolean);
+  const criminal = json.recordType === 'criminal'
+    && (stage.startsWith('criminal_judgment') || stage === 'historical_criminal_judgment_final' || acquittalStages.includes(stage));
+  const disposition = criminal ? personDisposition(json, context) : null;
+  const dispositionConflict = Boolean(disposition && acquittalStages.includes(stage)
+    && ['guilty', 'mixed'].includes(disposition.result));
+  const complex = !disposition || disposition.requiresReview || dispositionConflict;
+  const reviewedResult: DispositionResult = complex ? 'unknown' : disposition.result;
+  const canExtract = !complex && ['guilty', 'mixed'].includes(reviewedResult);
+  const clauses = (disposition?.text ?? '').split(/[，；;。\n]/u).map(s => s.trim()).filter(Boolean);
   const offenses = [
     '利用職務機會詐取財物及不違背職務收受賄賂等罪',
     '非公務機關未於蒐集特定目的必要範圍內利用個人資料罪',
@@ -29,7 +131,7 @@ export function legalRecordPresentation(text: string | null, json: Record<string
     '恐嚇取財罪', '誹謗罪', '傷害罪', '誣告罪', '偽證罪',
   ].sort((a, b) => b.length - a.length);
   const matched: string[] = [];
-  if (criminal && !complex) {
+  if (canExtract) {
     for (const clause of clauses) {
       if (/無罪|不成立|不構成|被訴|涉嫌|不另為/.test(clause)) continue;
       let remaining = clause;
@@ -44,7 +146,7 @@ export function legalRecordPresentation(text: string | null, json: Record<string
   // Preserve complete penalty clauses: totals, individual counts, reductions,
   // probation and conversion conditions must not become an invented total.
   const penalties: string[] = [];
-  if (criminal && !complex) {
+  if (canExtract) {
     for (const clause of clauses) {
       if (/本次|本筆|未確認|未核實|待補|最終|後續|不能標示|無罪|不成立|不構成|不另為/.test(clause)) continue;
       const index = clause.search(/(?:應執行|各判|各處|各有期|判處(?!理)|處有期|判刑|減為|有期徒刑|無期徒刑|死刑|拘役|罰金|緩刑|褫奪公權|得易科|得以每日|易科罰金|得易服|易服勞役|向公庫|並於確定後|於判決確定後|沒收)/);
@@ -64,8 +166,15 @@ export function legalRecordPresentation(text: string | null, json: Record<string
   }
   return {
     offenses: [...new Set(matched)],
-    notes: clauses.filter(clause => /無罪|不成立|不構成|不另為/.test(clause)),
-    action: /撤銷(?:其一審判決|原判)/.test(original) ? 'revised' : /駁回.*上訴/.test(original) ? 'dismissed' : null,
+    // These are source excerpts only; classification never inspects this array.
+    notes: complex ? [] : clauses.filter(clause => /無罪|不成立|不構成|不另為/.test(clause)),
+    action: !complex && /(?:撤銷(?:其一審判決|原判)|原判決[^。\n]*撤銷)/u.test(disposition.text) ? 'revised'
+      : !complex && /(?:駁回.*上訴|上訴.*駁回)/u.test(disposition.text) ? 'dismissed' : null,
+    reviewedResult,
+    dispositionConflict,
+    // Keep the person's actual disposition visible, with the original source
+    // narrative retained separately in the expandable full-record view.
+    narrative: disposition?.text ?? original,
     penalties: [...new Set(penalties)],
     // Keep context visible whenever reliable compact excerpts cannot be produced.
     showNarrative: complex || !matched.length || !penalties.length,
@@ -81,7 +190,6 @@ export function legalCaseClassification(json: Record<string, unknown>, presentat
   const stage = typeof json.caseStage === 'string' ? json.caseStage : '';
   let status: LegalCaseStatus = 'other';
   let result: LegalJudgmentResult = 'unknown';
-  const acquittals = ['acquitted_final', 'criminal_acquittal_final', 'acquitted_non_final', 'criminal_acquittal_non_final'];
   const final = ['criminal_judgment_final', 'historical_criminal_judgment_final', 'acquitted_final', 'criminal_acquittal_final'];
   const nonFinal = ['criminal_judgment_non_final', 'criminal_judgment_first_instance', 'criminal_judgment_appellate_non_final', 'acquitted_non_final', 'criminal_acquittal_non_final'];
   if (json.recordType && json.recordType !== 'criminal') return { status, result: 'notApplicable' as LegalJudgmentResult };
@@ -90,9 +198,11 @@ export function legalCaseClassification(json: Record<string, unknown>, presentat
   if (final.includes(stage)) status = 'final';
   else if (nonFinal.includes(stage)) status = 'nonFinal';
   else if (stage === 'criminal_judgment') status = 'finalityUnknown';
-  if (acquittals.includes(stage)) result = 'acquitted';
-  else if (status !== 'other' && presentation.penalties.length > 0) {
-    result = presentation.notes.some(note => /無罪|不成立|不構成/.test(note)) ? 'mixed' : 'guilty';
-  }
+  if (presentation.dispositionConflict) return { status, result };
+  // Specific reviewed legacy acquittal metadata is preserved. Generic case stage,
+  // penalty keywords, and a defendant's assertions do not establish a verdict.
+  if (acquittalStages.includes(stage)) result = 'acquitted';
+  else if (status !== 'other') result = presentation.reviewedResult;
+
   return { status, result };
 }

@@ -153,7 +153,7 @@ test('local platform voting supports shared presidential tickets and party-list 
     }> | null)?.[0];
     assert.ok(item);
     assert.match(item.results_announced_on, /^202(?:2-12-02|4-01-19)$/u);
-    assert.match(item.voting_opens_on, /^202(?:3-12-02|5-01-19)$/u);
+    assert.equal(item.voting_opens_on, '2025-05-20');
     assert.equal(item.voting_is_open, true);
     itemKey = item.item_key;
     const initialTotal = Number(item.total_count);

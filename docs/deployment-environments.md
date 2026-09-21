@@ -88,6 +88,12 @@ must be rebuilt and verified as described in [its runbook](production-rehearsal.
 
 目前程式碼確認：`web-ci.yml` 在 PR 與 main push 執行，**單純 push feature 不會自動取得 Web CI**；需要遠端檢查時可開適當 PR，或另行規劃觸發範圍。`production-release.yml` 已保留 main push 的成功 Web CI 後自動發布及手動備援入口，且只檢查 migration drift、不自動套用 migration。本次只記錄流程，未變更 GitHub Actions、遠端 main 保護／ruleset、tag 自動化或刪分支設定；發布時須核對遠端 main「只接受 PR」限制確實生效。
 
+### 現任公職更新與延後版本範圍
+
+2026-09-21 決定：取消先前延後版本中「依任期日期自動切換現任公職」的功能。現任資料於交接或人事異動時，由維護者核對官方名冊與生效資料後批次更新，不因系統日期到期自動升任或卸任。
+
+`codex/hold/office-release-2026-09-13` 保留作歷史參考；後續整合不得直接帶回其中的 `candidate_holds_office`、`office_is_current` 日期推算及相關現任切換邏輯。政見投票開放時間由 `20260921120000_platform_votes_after_inauguration.sql` 獨立處理；本機驗證不等於正式發布。此次決定不變更既有當選紀錄，也不代表已更新任何人物的現任資料。
+
 ## Production Cloudflare Worker releases
 
 `supabase/migrations` remains the CLI-tracked release history. The local review

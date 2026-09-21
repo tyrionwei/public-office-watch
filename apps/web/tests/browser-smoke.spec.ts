@@ -1066,8 +1066,14 @@ test('person page leads with data status and keeps sensitive source context besi
   expect(secondPlatformBox).not.toBeNull();
   expect(Math.abs(firstPlatformBox!.y - secondPlatformBox!.y)).toBeLessThanOrEqual(1);
 
-  const sensitiveSource = page.locator('[data-sensitive-source]').first();
-  await expect(sensitiveSource).toBeVisible();
+  const legalSummary = page.locator('[data-legal-summary]').first();
+  await expect(legalSummary).toBeVisible();
+  await expect(legalSummary.getByText('罪名／案由', { exact: true })).toBeVisible();
+  await expect(legalSummary.getByText('案件狀態', { exact: true })).toBeVisible();
+  await expect(legalSummary.getByText('刑度與附帶處分', { exact: true })).toBeVisible();
+  const sensitiveSource = page.locator('article').filter({ has: legalSummary }).first();
+  await expect(sensitiveSource.locator('details')).not.toHaveAttribute('open', '');
+  await sensitiveSource.getByText('展開完整紀錄', { exact: true }).click();
   await expect(sensitiveSource.getByText('來源名稱', { exact: true })).toBeVisible();
   await expect(sensitiveSource.getByText('資料日期', { exact: true })).toBeVisible();
   await expect(sensitiveSource.getByText('案件／文件狀態', { exact: true })).toBeVisible();

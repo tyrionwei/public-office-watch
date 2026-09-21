@@ -6,6 +6,7 @@ import { HudStatCard } from '../components/HudStatCard';
 import { PixelFrame } from '../components/PixelFrame';
 import { PersonFeedbackPanel } from '../components/PersonFeedbackPanel';
 import { PlatformFulfillmentList } from '../components/PlatformFulfillmentList';
+import { LegalStatusHelp } from '../components/LegalStatusHelp';
 import { SectionPanel } from '../components/SectionPanel';
 import {
   pickDefaultCandidateSprite,
@@ -17,6 +18,7 @@ import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
+import { legalCaseClassification, legalRecordPresentation } from '../lib/legalRecordPresentation';
 import { formatPublicBirthDate } from '../lib/publicBirthDate';
 import { useBirthDateDisplay } from '../lib/useBirthDateDisplay';
 import { platformClaimsForCandidate, platformItemsForClaim } from '../lib/candidatePlatform';
@@ -257,19 +259,59 @@ function ClaimCard({
 }) {
   const { language, t } = useI18n();
   const showSourceDetails = Boolean(correctionSection);
-  const documentStatus = correctionSection === 'legal' || correctionSection === 'family'
-    ? t(sensitiveClaimStatusKey(claim))
-    : t('person.source.status.verifiedPublic');
+  const legal = correctionSection === 'legal' ? legalRecordPresentation(claim.claim_value, claim.claim_json) : null;
+  const classification = legal ? legalCaseClassification(claim.claim_json, legal) : null;
+  const documentStatus = classification
+    ? t(`person.legal.status.${classification.status}`)
+    : t(sensitiveClaimStatusKey(claim));
 
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
       <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
         {t(claimTypeLabels[claim.claim_type])}
       </p>
-      <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value ?? t('person.noContent')}</h3>
+      {legal ? (
+        <div data-legal-summary className="mt-3 space-y-3">
+          <dl className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <div>
+              <dt className="text-xs text-slate-400">{t('person.legal.offense')}</dt>
+              <dd className="mt-1 text-base font-semibold text-white">{legal.offenses.join('、') || t('person.legal.seeNarrative')}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-slate-400">{t('person.legal.status')}</dt>
+              <dd className="mt-1 text-sm font-semibold text-accent">{documentStatus}{legal.action ? <span className="mt-1 block text-xs font-normal text-slate-300">{t(legal.action === 'revised' ? 'person.legal.revised' : 'person.legal.dismissed')}</span> : null}</dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="text-xs text-slate-400">{t('person.legal.result')}</dt>
+              <dd className="mt-1 text-sm font-semibold text-white">{classification ? t(`person.legal.result.${classification.result}`) : null}</dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="text-xs text-slate-400">{t('person.legal.sentence')}</dt>
+              <dd className="mt-1 text-sm leading-6 text-white">
+                {legal.penalties.length ? <ul className="space-y-1">{legal.penalties.map(penalty => <li key={penalty}>{penalty}</li>)}</ul> : t('person.legal.seeNarrative')}
+              </dd>
+            </div>
+          </dl>
+          {legal.notes.length ? <p className="text-sm leading-6 text-slate-300">{legal.notes.join('；')}</p> : null}
+          {legal.judgmentDate ? <p className="text-xs text-slate-400">{t('person.legal.judgmentDate')}：{legal.judgmentDate}</p> : null}
+          {legal.showNarrative ? <p className="whitespace-pre-line text-sm leading-6 text-slate-200">{claim.claim_value ?? t('person.noContent')}</p> : null}
+        </div>
+      ) : <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value ?? t('person.noContent')}</h3>}
+      {legal ? (
+        <details className="mt-4 border-t border-line/60 pt-3">
+          <summary className="cursor-pointer text-xs text-accent">{t('person.legal.details')}</summary>
+          {!legal.showNarrative ? <p className="mt-3 text-sm leading-6 text-slate-300">{claim.claim_value}</p> : null}
+          <dl className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
+            <div><dt className="text-slate-500">{t('person.source.name')}</dt><dd className="mt-1 text-slate-200">{claim.source_name || t('person.publicSource')}</dd></div>
+            <div><dt className="text-slate-500">{t('person.source.date')}</dt><dd className="mt-1 text-slate-200">{formatUpdatedAt(claim.observed_at, language, t('person.source.notRecorded'))}</dd></div>
+            <div><dt className="text-slate-500">{t('person.source.documentStatus')}</dt><dd className="mt-1 text-slate-200">{documentStatus}</dd></div>
+            <div><dt className="text-slate-500">{t('person.source.organizedAt')}</dt><dd className="mt-1 text-slate-200">{formatUpdatedAt(claim.updated_at, language, t('person.source.notRecorded'))}</dd></div>
+          </dl>
+        </details>
+      ) : null}
       {showSourceDetails ? (
         <div data-sensitive-source className="mt-4 border-t border-line/60 pt-4">
-          <dl className="grid gap-2 text-xs sm:grid-cols-2">
+          {!legal ? <dl className="grid gap-2 text-xs sm:grid-cols-2">
             <div>
               <dt className="text-slate-500">{t('person.source.name')}</dt>
               <dd className="mt-1 text-slate-200">{claim.source_name?.trim() || t('person.publicSource')}</dd>
@@ -286,8 +328,8 @@ function ClaimCard({
               <dt className="text-slate-500">{t('person.source.organizedAt')}</dt>
               <dd className="mt-1 text-slate-200">{formatUpdatedAt(claim.updated_at, language, t('person.source.notRecorded'))}</dd>
             </div>
-          </dl>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          </dl> : null}
+          <div className="flex flex-wrap items-center gap-3">
             {claim.source_url ? (
               <a href={claim.source_url} target="_blank" rel="noreferrer" className="text-xs text-accent hover:text-white">
                 {t('person.source.originalLink')} ↗
@@ -827,7 +869,7 @@ export function PersonPage() {
                 </SectionPanel>
               </div>
               <div data-person-mobile-legal className="order-1 md:order-none">
-                <SectionPanel title={t('person.legalTitle')} eyebrow={t('person.reviewedEyebrow')}>
+                <SectionPanel title={t('person.legalTitle')} eyebrow={t('person.reviewedEyebrow')} action={<LegalStatusHelp />}>
                   {legalClaims.length > 0 ? (
                     <ClaimGrid claims={legalClaims} correctionSection="legal" onRequestCorrection={handleRequestCorrection} />
                   ) : rawLegalClaims.length > 0 ? (

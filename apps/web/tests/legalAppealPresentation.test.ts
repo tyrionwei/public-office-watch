@@ -33,6 +33,53 @@ test('a reviewed appeal shows current action and separately sourced prior senten
   assert.equal(classify(r, v).status, 'finalityUnknown');
   assert.ok(!JSON.stringify(v).includes('7年'));
 });
+for (const [name, text] of [
+  ['between action words', '被告甲上訴\n駁回。'],
+  ['inside dismissal word', '被告甲上訴駁\n回。'],
+] as const) test(`a layout newline ${name} preserves the reviewed appeal link`, () => {
+  const r = fixture(), d = r.judgmentDisposition;
+  d.text = text; d.personScopeQuote = '被告甲';
+  Object.assign(d.upheldJudgment, { currentDispositionText: text, personScopeQuote: '被告甲' });
+  const v = view(r);
+  assert.equal(v.action, 'dismissed');
+  assert.equal(v.reviewedResult, 'guilty');
+  assert.deepEqual(v.offenses, ['誣告罪']);
+  assert.deepEqual(v.penalties, ['處有期徒刑3月', '褫奪公權1年']);
+  assert.equal(v.narrative, text);
+});
+test('a newline before another person dismissal cannot inherit the first person prior judgment', () => {
+  const r = fixture(), d = r.judgmentDisposition;
+  d.text = '被告甲上訴\n駁回被告乙之上訴。'; d.personScopeQuote = '被告甲';
+  Object.assign(d.upheldJudgment, { currentDispositionText: d.text, personScopeQuote: '被告甲' });
+  const v = view(r);
+  assert.equal(v.action, null);
+  assert.equal(v.reviewedResult, 'unknown');
+  assert.equal(v.basis, null);
+  assert.deepEqual(v.offenses, []);
+  assert.deepEqual(v.penalties, []);
+});
+test('a comma-separated other-person dismissal cannot inherit the first person prior judgment', () => {
+  const r = fixture(), d = r.judgmentDisposition;
+  d.text = '被告甲部分另行審結，被告乙上訴駁回。';
+  Object.assign(d.upheldJudgment, { currentDispositionText: d.text });
+  const v = view(r);
+  assert.equal(v.action, null);
+  assert.equal(v.reviewedResult, 'unknown');
+  assert.equal(v.basis, null);
+  assert.deepEqual(v.offenses, []);
+  assert.deepEqual(v.penalties, []);
+});
+test('unbalanced layout parentheses cannot join another person dismissal', () => {
+  const r = fixture(), d = r.judgmentDisposition;
+  d.text = '被告甲部分（另行審結，\n被告乙上訴駁回。';
+  Object.assign(d.upheldJudgment, { currentDispositionText: d.text });
+  const v = view(r);
+  assert.equal(v.action, null);
+  assert.equal(v.reviewedResult, 'unknown');
+  assert.equal(v.basis, null);
+  assert.deepEqual(v.offenses, []);
+  assert.deepEqual(v.penalties, []);
+});
 test('an appeal-only main without a linked sentence still shows its verified action', () => {
   const r = fixture(); const d = { ...r.judgmentDisposition, version: 1 };
   const v = present('原敘述', { ...r, judgmentDisposition: d }, context);
@@ -87,6 +134,14 @@ test('legacy display hides blank offense, sentence and unknown verdict rows', ()
   assert.deepEqual(legalRecordDisplay(v, classify(r, v)), {
     showOffense: false, showSentence: false, showResult: false, showDate: false, notice: 'legacy',
   });
+});
+for (const [name, r] of [
+  ['indictment', { recordType: 'criminal', caseStage: 'indicted' }],
+  ['deferred prosecution', { recordType: 'criminal', caseStage: 'deferred_prosecution' }],
+  ['administrative sanction', { recordType: 'administrative', caseStage: 'administrative_sanction' }],
+] as const) test(`${name} does not request a judgment-main backfill`, () => {
+  const v = present('保留原紀錄。', r, context);
+  assert.equal(legalRecordDisplay(v, classify(r, v)).notice, null);
 });
 test('no blind date replacement and no loss of the source text', () => {
   const r = { recordType: 'criminal', caseStage: 'criminal_judgment', judgmentDate: '2026-01-20' };

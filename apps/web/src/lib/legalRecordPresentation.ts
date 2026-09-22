@@ -79,6 +79,45 @@ function isHttpsSource(value: unknown): value is string {
   } catch { return false; }
 }
 
+function actionComparisonText(text: string) {
+  // Only join the exact forward action when 駁回 ends that disposition clause.
+  // A line such as `被告甲上訴\n駁回被告乙之上訴` must remain two clauses.
+  return text.replace(
+    /上[\t \u3000\r\n]*訴[\t \u3000\r\n]*駁[\t \u3000\r\n]*回(?=[\t \u3000]*(?:[。；;,，]|$))/gu,
+    '上訴駁回',
+  );
+}
+
+function hasDismissal(text: string) {
+  return /(?:駁回[^。；\n]*上訴|上訴[^。；\n]*駁回)/u.test(text);
+}
+
+function dispositionClauses(text: string) {
+  const clauses: string[] = [];
+  let current = '';
+  const parenthesisStack: string[] = [];
+  for (const character of text) {
+    if (character === '（') parenthesisStack.push('）');
+    else if (character === '(') parenthesisStack.push(')');
+    else if (character === '）' || character === ')') {
+      if (parenthesisStack.pop() !== character) return [];
+    }
+    current += character;
+    if (parenthesisStack.length === 0 && /[。；;,，\n]/u.test(character)) {
+      clauses.push(current.slice(0, -1));
+      current = '';
+    }
+  }
+  if (parenthesisStack.length) return [];
+  if (current) clauses.push(current);
+  return clauses;
+}
+
+function hasScopedDismissal(text: string, personScopeQuote: string) {
+  return dispositionClauses(actionComparisonText(text))
+    .some(clause => clause.includes(personScopeQuote) && hasDismissal(clause));
+}
+
 function personDisposition(json: Record<string, unknown>, context?: LegalPersonContext): ReviewedDisposition | null {
   const raw = json.judgmentDisposition;
   if (!raw || typeof raw !== 'object' || Array.isArray(raw) || !context?.personId || !context.sourceUrl) return null;
@@ -99,10 +138,17 @@ function personDisposition(json: Record<string, unknown>, context?: LegalPersonC
   const unsafe = /附表|附件|發回|先前|曾被|主張|辯稱|抗辯|求刑|求處|起訴意旨|公訴意旨/u.test(text)
     || /(?:一審|二審|原審|前審|原判決)[^。；\n]*(?:判處|判刑|有期徒刑|無期徒刑|死刑|拘役)/u.test(text)
     || /免訴|不受理/u.test(text);
-  const action: DispositionAction = unsafe ? null
-    : /(?:撤銷(?:其一審判決|原判)|原判決[^。\n]*撤銷)/u.test(text) ? 'revised'
-      : /(?:駁回[^。；\n]*上訴|上訴[^。；\n]*駁回)/u.test(text) ? 'dismissed' : null;
-  const appealOnly = action === 'dismissed' && !/無罪|有罪|犯[^。；\n]+罪/u.test(text);
+  // Court layouts can split the action itself across lines. Normalize only
+  // whitespace inside these exact phrases for comparison; keep sentence and
+  // person boundaries, and preserve the verbatim text used for display/audit.
+  const actionText = actionComparisonText(text);
+  const detectedAction: DispositionAction = unsafe ? null
+    : /(?:撤銷(?:其一審判決|原判)|原判決[^。\n]*撤銷)/u.test(actionText) ? 'revised'
+      : hasDismissal(actionText) ? 'dismissed' : null;
+  const action = value.version === 2 && detectedAction === 'dismissed'
+    ? hasScopedDismissal(text, value.personScopeQuote as string) ? detectedAction : null
+    : detectedAction;
+  const appealOnly = action === 'dismissed' && !/無罪|有罪|犯[^。；\n]+罪/u.test(actionText);
   // Version 2 is ONLY the explicitly reviewed, entire-person appeal relationship.
   // Never accept a version-2 root result in place of its independently cited basis.
   if (value.version === 2) {
@@ -285,13 +331,15 @@ export function legalCaseClassification(json: Record<string, unknown>, presentat
 export function legalRecordDisplay(presentation: ReturnType<typeof legalRecordPresentation>,
   classification: ReturnType<typeof legalCaseClassification>) {
   const datePrefix = /^裁判日期[：:]\s*(\d{4}-\d{2}-\d{2})(?:[。\s]|$)/u.exec(presentation.narrative);
+  const isCriminalJudgment = ['nonFinal', 'final', 'finalityUnknown'].includes(classification.status);
   return {
     showOffense: presentation.offenses.length > 0,
     showSentence: presentation.penalties.length > 0,
     showResult: classification.result !== 'unknown' && classification.result !== 'notApplicable',
     showDate: Boolean(presentation.judgmentDate)
       && !(presentation.showNarrative && datePrefix?.[1] === presentation.judgmentDate),
-    notice: !presentation.hasReviewedMain ? 'legacy' as const
-      : presentation.reviewedResult === 'unknown' ? 'incomplete' as const : null,
+    notice: !isCriminalJudgment ? null
+      : !presentation.hasReviewedMain ? 'legacy' as const
+        : presentation.reviewedResult === 'unknown' ? 'incomplete' as const : null,
   };
 }

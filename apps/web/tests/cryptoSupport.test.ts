@@ -10,11 +10,11 @@ const networks = [bsc, tron];
 test('operator-enabled networks have valid addresses; invalid or disabled entries remain hidden', () => {
   assert.equal(availableSupportNetworks().length, 8);
   assert.deepEqual(supportNetworks.map(n => n.networkId), ['ethereum', 'base', 'bsc', 'arbitrum', 'optimism', 'polygon', 'solana', 'tron']);
-  assert.ok(supportNetworks.every(n => validSupportAddress(n.networkType, n.address) && n.enabled && n.tokenNote.includes('尚未驗證')));
+  assert.ok(supportNetworks.every(n => validSupportAddress(n.networkType, n.address) && n.enabled && n.tokenNote.includes('收款驗證')));
   assert.equal(availableSupportNetworks([bsc]).length, 1); assert.equal(availableSupportNetworks(networks).length, 2);
   for (const n of [{ ...bsc, enabled: false }, { ...bsc, address: '' }, { ...bsc, address: '0x123' }, { ...bsc, address: `0x${'0'.repeat(40)}` }]) assert.deepEqual(availableSupportNetworks([n]), []);
 });
-test('unconfirmed token note and other configured receiving addresses fail closed', () => {
+test('missing token note and other configured receiving addresses fail closed', () => {
   assert.deepEqual(availableSupportNetworks([{ ...bsc, tokenNote: '' }]), []);
   const other = { ...bsc, networkId: 'synthetic-other', address: '0x' + 'c'.repeat(40) };
   assert.equal(validateSupportInput({ ...input, reference: other.address }, [...networks, other]), 'recipient');

@@ -1,5 +1,4 @@
-/** Public receiving configuration controlled by the operator.
- * Before production opening, verify token versions and receive/send tests. Never store keys. */
+/** Public receiving configuration controlled by the operator. Never store keys. */
 export type SupportNetwork = {
   networkId: string;
   displayName: string;
@@ -9,18 +8,19 @@ export type SupportNetwork = {
   enabled: boolean;
   tokenNote: string;
 };
-// Addresses supplied and networks explicitly enabled by the operator for local review.
-// Token versions and receive/send checks remain unverified; no deployment is implied.
+// Addresses supplied and networks explicitly enabled by the operator.
+// The operator confirmed successful USDT receipt on all enabled networks on 2026-09-22.
 const evmReceivingAddress = '0xD961BFF29F9b922d239a49b208fB32ccE18B180e';
+const verifiedReceiptNote = '已完成本網路 USDT 收款驗證；轉帳前仍請核對網路、代幣與收款地址。';
 export const supportNetworks: readonly SupportNetwork[] = [
-  { networkId: 'ethereum', displayName: 'Ethereum（ERC20）', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: 'USDT 代幣合約版本及小額收轉款尚未驗證；實際轉帳前請先確認。' },
-  { networkId: 'base', displayName: 'Base', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: 'USDT 代幣合約版本及小額收轉款尚未驗證；實際轉帳前請先確認。' },
-  { networkId: 'bsc', displayName: 'BNB Smart Chain（BSC／BEP20）', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: 'USDT 代幣合約版本及小額收轉款尚未驗證；實際轉帳前請先確認。' },
-  { networkId: 'arbitrum', displayName: 'Arbitrum One', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: 'USDT 代幣合約版本及小額收轉款尚未驗證；實際轉帳前請先確認。' },
-  { networkId: 'optimism', displayName: 'OP Mainnet（Optimism）', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: 'USDT 代幣合約版本及小額收轉款尚未驗證；實際轉帳前請先確認。' },
-  { networkId: 'polygon', displayName: 'Polygon PoS', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: 'USDT 代幣合約版本及小額收轉款尚未驗證；實際轉帳前請先確認。' },
-  { networkId: 'solana', displayName: 'Solana（SPL）', networkType: 'solana', currency: 'USDT', address: '6oewELZKsNbhmPkkdJXrp1q2x85CUiU3jLkWj3MNJsb1', enabled: true, tokenNote: 'USDT 代幣合約版本及小額收轉款尚未驗證；實際轉帳前請先確認。' },
-  { networkId: 'tron', displayName: 'TRON（TRC20）', networkType: 'tron', currency: 'USDT', address: 'TC7RBKrSynGmrzid9hpthHhegNjkh7yA44', enabled: true, tokenNote: 'USDT 代幣合約版本及小額收轉款尚未驗證；實際轉帳前請先確認。' },
+  { networkId: 'ethereum', displayName: 'Ethereum（ERC20）', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: verifiedReceiptNote },
+  { networkId: 'base', displayName: 'Base', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: verifiedReceiptNote },
+  { networkId: 'bsc', displayName: 'BNB Smart Chain（BSC／BEP20）', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: verifiedReceiptNote },
+  { networkId: 'arbitrum', displayName: 'Arbitrum One', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: verifiedReceiptNote },
+  { networkId: 'optimism', displayName: 'OP Mainnet（Optimism）', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: verifiedReceiptNote },
+  { networkId: 'polygon', displayName: 'Polygon PoS', networkType: 'evm', currency: 'USDT', address: evmReceivingAddress, enabled: true, tokenNote: verifiedReceiptNote },
+  { networkId: 'solana', displayName: 'Solana（SPL）', networkType: 'solana', currency: 'USDT', address: '6oewELZKsNbhmPkkdJXrp1q2x85CUiU3jLkWj3MNJsb1', enabled: true, tokenNote: verifiedReceiptNote },
+  { networkId: 'tron', displayName: 'TRON（TRC20）', networkType: 'tron', currency: 'USDT', address: 'TC7RBKrSynGmrzid9hpthHhegNjkh7yA44', enabled: true, tokenNote: verifiedReceiptNote },
 ];
 const base58Alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 /** Format only: Solana account keys are 32 bytes, transaction signatures 64.

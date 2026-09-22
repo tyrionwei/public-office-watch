@@ -2,6 +2,8 @@
 
 這個目錄保存 2018、2022 六都議員暗公報的結構化擷取結果，僅供 Public Office Watch 內部研究與尋找可獨立查證的來源。
 
+只有本 README 納入 Git；資料、審核輸入與衍生報告留在本機並另行備份，clone 不會包含它們。已核准公開的結果沿用既有發布 migration，不直接提交研究佇列。取消追蹤不會清除既有 Git 歷史。
+
 ## 使用限制
 
 - 尚未取得原網站授權，不得直接 Promote 或顯示於公開網站。
@@ -41,6 +43,9 @@ npm run preview:tnl-dark-guide-legal-claims
 
 ```bash
 node scripts/validate-tnl-dark-guide-datasets.mjs
+npm run test:local-research-data
 ```
+
+上述驗收需要完整本機資料；缺少資料會失敗，不會靜默跳過。一般程式測試使用合成案例，不能取代本機研究資料驗收。
 
 2022 網站拒絕一般下載請求，因此本次資料是由正常公開瀏覽器頁面已渲染的 DOM 解析，不使用未公開 API，也不繞過登入或存取控制。日後若重新擷取，應維持相同界線並再次驗證候選人總數。

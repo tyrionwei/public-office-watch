@@ -11,6 +11,7 @@ for (const width of [390, 1280]) test(`four sections, save, reopen, notes and co
   await page.route('**/*', route => new URL(route.request().url()).origin === fixture.origin ? route.continue() : route.abort());
   await page.route('**/__feedback', async route => {
     const { action, input } = route.request().postDataJSON();
+    if (action === 'support-messages') return route.fulfill({ json: { page: 1, page_size: 20, total: 0, items: [] } });
     if (action === 'save') {
       writes.push(input);
       if (fail) { fail = false; item = { ...item, revision: item.revision + 1, review_note: '另一位管理員的新備註', management_summary: '另一位管理員的新摘要' }; return route.fulfill({ status: 409, json: { error: 'FEEDBACK_CONFLICT' } }); }
@@ -83,6 +84,7 @@ for (const pendingAction of ['detail', 'save', 'conflict-detail', 'history']) te
   await page.route('**/*', route => new URL(route.request().url()).origin === fixture.origin ? route.continue() : route.abort());
   await page.route('**/__feedback', async route => {
     const { action } = route.request().postDataJSON();
+    if (action === 'support-messages') return route.fulfill({ json: { page: 1, page_size: 20, total: 0, items: [] } });
     if (action === 'save') saves++;
     if (action === 'save' && pendingAction === 'conflict-detail') return route.fulfill({ status: 409, json: { error: 'FEEDBACK_CONFLICT' } });
     if (delay && action === (pendingAction === 'save' ? 'save' : 'detail')) { started(); await held; }
@@ -125,6 +127,7 @@ for (const [id, sid] of [['another-admin', 'another-session'], ['admin', 'new-se
   let delay = false;
   await page.route('**/__feedback', async route => {
     const { action } = route.request().postDataJSON();
+    if (action === 'support-messages') return route.fulfill({ json: { page: 1, page_size: 20, total: 0, items: [] } });
     if (action === 'detail') { if (delay) { started(); await held; } return route.fulfill({ json: { item: base, history: [], history_total: 30, history_page: 1 } }); }
     return route.fulfill({ json: { fetched_at: base.created_at, groups: Object.fromEntries(['pending', 'priority', 'normal', 'rejected'].map(key => [key, { total: key === 'pending' ? 1 : 0, completed: 0, unfinished: 1, page: 1, page_size: 10, items: key === 'pending' ? [base] : [] }])) } });
   });
@@ -141,4 +144,32 @@ for (const [id, sid] of [['another-admin', 'another-session'], ['admin', 'new-se
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   await expect(dialog).toHaveCount(0);
   await expect(page.getByText('上一個登入的私人草稿')).toHaveCount(0);
+});
+
+test('private support messages render plain text and discard delayed response on sign-out', async ({ page }) => {
+  let delay = false; let release!: () => void; let started!: () => void;
+  const held = new Promise<void>(resolve => { release = resolve; });
+  const pending = new Promise<void>(resolve => { started = resolve; });
+  await page.route('**/__feedback', async route => {
+    const { action } = route.request().postDataJSON();
+    if (action === 'support-messages') {
+      if (delay) { started(); await held; }
+      return route.fulfill({ json: { page: 1, page_size: 20, total: 1, items: [{ id: 'synthetic-support', network_id: 'bsc', currency: 'USDT', receiving_address: '0x' + 'a'.repeat(40), reference: '0x' + 'b'.repeat(64), nickname: null, message: '<img src=x onerror="window.supportXss=true">', created_at: '2026-09-20T00:00:00Z' }] } });
+    }
+    return route.fulfill({ json: { fetched_at: '2026-09-20T00:00:00Z', groups: Object.fromEntries(['pending','priority','normal','rejected'].map(key => [key, { total: 0, completed: 0, unfinished: 0, oldest_waiting_at: null, page: 1, page_size: 10, items: [] }])) } });
+  });
+  await page.goto(fixture.origin);
+  const panel = page.getByRole('region', { name: '支持留言', exact: true });
+  await expect(panel.getByText('匿名', { exact: true })).toBeVisible();
+  await expect(panel).toContainText('0x' + 'b'.repeat(64));
+  await expect(panel).toContainText('<img src=x onerror="window.supportXss=true">');
+  await expect(panel.locator('img')).toHaveCount(0);
+  expect(await page.evaluate(() => 'supportXss' in window)).toBe(false);
+  delay = true;
+  await panel.getByRole('button', { name: '重新讀取支持留言' }).click();
+  await pending;
+  await page.evaluate(() => (window as unknown as { __feedbackSignOut: () => void }).__feedbackSignOut());
+  release();
+  await expect(panel).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '寄送登入連結' })).toBeVisible();
 });

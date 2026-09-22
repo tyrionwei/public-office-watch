@@ -153,6 +153,35 @@ async function main() {
     fail('person_profiles_for returned the wrong person');
   }
 
+  const inaugurationPersonId = '49a7d775-31da-413c-aa2a-f9e6190fcade';
+  const inaugurationClaimId = '81a98426-40d6-46fd-b889-25b18ec68493';
+  const votingOpensOn = '2023-12-25';
+  const inaugurationProfiles = await published.rpc('person_profiles_for', {
+    p_person_ids: [inaugurationPersonId],
+  });
+  if (inaugurationProfiles.error) {
+    fail(`inauguration person profile is not readable: ${inaugurationProfiles.error.message}`);
+  }
+  const platformClaim = inaugurationProfiles.data?.[0]?.payload?.claim_rows
+    ?.find((claim) => claim.claim_id === inaugurationClaimId);
+  if (platformClaim?.person_id !== inaugurationPersonId
+      || platformClaim.claim_type !== 'platform') {
+    fail('reviewed inauguration platform claim does not match its person');
+  }
+  const fulfillment = await published.rpc('platform_fulfillment_results', {
+    p_claim_id: inaugurationClaimId,
+  });
+  if (fulfillment.error) {
+    fail(`platform_fulfillment_results is not executable: ${fulfillment.error.message}`);
+  }
+  const todayInTaipei = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Taipei' });
+  const shouldBeOpen = todayInTaipei >= votingOpensOn;
+  if (!fulfillment.data?.length
+      || fulfillment.data.some((row) => row.voting_opens_on !== votingOpensOn
+        || row.voting_is_open !== shouldBeOpen)) {
+    fail('platform_fulfillment_results did not preserve the reviewed inauguration date');
+  }
+
   const retiredHomeSummary = await published.rpc('home_candidate_summaries_for', { p_race_ids: [] });
   if (!retiredHomeSummary.error) fail('anon can execute retired home_candidate_summaries_for');
   const retiredPersonClaims = await published.rpc('person_claims_for', { p_person_ids: [personId] });

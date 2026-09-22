@@ -20,11 +20,14 @@ Deno.serve(async (req: Request) => {
     if (raw.length > 16000) return reply({ error: 'FEEDBACK_INVALID' }, 400);
     let body;
     try { body = JSON.parse(raw); } catch { return reply({ error: 'FEEDBACK_INVALID' }, 400); }
-    if (!body || !['dashboard', 'detail', 'save'].includes(body.action)) return reply({ error: 'FEEDBACK_INVALID' }, 400);
+    if (!body || !['dashboard', 'detail', 'save', 'support-messages'].includes(body.action)) return reply({ error: 'FEEDBACK_INVALID' }, 400);
     const input = body.input ?? {};
     if (!input || typeof input !== 'object' || Array.isArray(input)) return reply({ error: 'FEEDBACK_INVALID' }, 400);
     const service = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
-    const { data, error } = await service.rpc('admin_feedback', { p_admin_user_id: user.id, p_action: body.action, p_input: input });
+    if (body.action === 'support-messages' && (Object.keys(input).some(key => key !== 'page') || input.page !== undefined && (!Number.isSafeInteger(input.page) || input.page < 1))) return reply({ error: 'FEEDBACK_INVALID' }, 400);
+    const { data, error } = body.action === 'support-messages'
+      ? await service.rpc('admin_crypto_support', { p_admin_user_id: user.id, p_page: input.page ?? 1 })
+      : await service.rpc('admin_feedback', { p_admin_user_id: user.id, p_action: body.action, p_input: input });
     if (error) {
       const code = error.message;
       const status = code === 'FEEDBACK_FORBIDDEN' ? 403 : code === 'FEEDBACK_NOT_FOUND' ? 404

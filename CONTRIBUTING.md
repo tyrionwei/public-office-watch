@@ -12,7 +12,7 @@
 ## 本機開發
 
 - 使用 Node.js 22.13 以上的 22.x 與 npm。Vite 鎖檔要求 `^20.19.0 || >=22.12.0`，Wrangler 要求 `>=22.0.0`，而巢狀 `eslint-visitor-keys` 5.0.1 要求 `^20.19.0 || ^22.13.0 || >=24`，因此整套工具的 Node 22 基線為 22.13，Node 20 不涵蓋整套工具。2026-09-08 本機驗證基線為 Node 22.22.1；GitHub workflows 選擇 major 22，不是固定 patch。
-- 一般網站開發需要 Docker 與根目錄鎖定的 Supabase CLI。根目錄、`apps/web` 各有一份 lockfile，分別使用 `npm ci`，不要混用 Windows 與 WSL 的 node_modules。
+- 使用完整本機資料庫時才需要 Docker 與根目錄鎖定的 Supabase CLI；文件、純函式與 mock 測試不以 Docker 可用為前提。根目錄、`apps/web` 各有一份 lockfile，分別使用 `npm ci`，不要混用 Windows 與 WSL 的 node_modules。
 - 根目錄 `test:script-suite` 的四套影像幾何／裁切測試需要 Python 3、Pillow、NumPy。已驗證組合為 Python 3.10.12、Pillow 9.0.1、NumPy 1.21.5；這是實測組合，不是完整最低相容版本宣告，也不代表通過外部 OCR 引擎整合。
 
 ```bash
@@ -30,26 +30,19 @@ python -m pip install Pillow==9.0.1 numpy==1.21.5
 
 上述固定組合適用已驗證的 Python 3.10；其他 Python 版本須選擇相容依賴並重跑測試，不要在系統 Python 強制安裝。虛擬環境及建置產物不提交。
 
-完整本機設定依 [Local Supabase Validation](docs/local-supabase-validation.md)，環境配對依 [deployment-environments.md](docs/deployment-environments.md)。必須填本機 public key、Turnstile site key，以及 Vite 參與代理所需的 server-only `.dev.vars`；只複製範本仍會被 guard 或代理啟動檢查擋下。一般開發使用本機 Vite 與完整本機 Supabase，正式值不可複製進來。
+完整本機設定依 [Local Supabase Validation](docs/local-supabase-validation.md)，環境配對依 [deployment-environments.md](docs/deployment-environments.md)。必須填本機 public key、Turnstile site key，以及 Vite 參與代理所需的 server-only `.dev.vars`；只複製範本仍會被 guard 或代理啟動檢查擋下。需要網站真資料驗收時使用本機 Vite 與完整本機 Supabase，正式值不可複製進來。
 
-### Windows／WSL 執行方式
+### 日常工作與環境檢查
 
-先用實際執行工作的命令工具確認作業系統、使用者、工作目錄及 runtime；Windows 視窗不代表命令在 Windows 執行，Linux 專案路徑也不代表 Agent 已在 Linux。已在 WSL 執行時，直接使用 Linux 路徑與工具，不再經過 PowerShell 或 `wsl.exe`。
+一般開發確認 repo、分支及未提交變更後直接工作；不要求每次盤點 Docker、掛載、群組、全部代理模型或還原備份。資料庫／匯入／外部寫入測試才額外核對程式實際使用的 endpoint、覆寫來源及目標身分，沿用[測試選擇與環境證據](docs/local-supabase-validation.md#依修改範圍選擇驗證)。正式資料與部署才走對應發布及回復流程。
 
-2026-09-08 的實測顯示，Windows sandbox 在處理專案 UNC 權限時可能於命令啟動前失敗；改 command cwd 或增加 shell wrapper 不能解決該故障。使用者切換後的 Linux Agent 已完成 cwd、參數、退出碼及本機服務操作驗證。這是當次環境的結果，不保證其他任務或重啟後仍相同；切換後需重新核對。
+已在 WSL 執行就直接使用 Linux 工具。同一環境與設定未變時沿用已驗證結果；工具找不到、環境切換或權限異常時才查實際 runtime、PATH、cwd 及受影響設定。Windows 專用腳本才確認 Windows 入口，不把換終端 shell、cd 或 wrapper 當成修復任務綁定。
 
-必須從 Windows PowerShell 執行時，先確認發行版、Linux 使用者及專案絕對路徑，再使用單層入口。以下變數必須由目前環境填入，不可照抄其他人的設定：
-
-```powershell
-wsl.exe -d $PowDistro -u $PowLinuxUser --cd $PowProjectPath --exec node apps/web/scripts/check-environment.mjs local
-exit $LASTEXITCODE
-```
-
-此形狀在 PowerShell 7.6.5 實測，未驗證 Windows PowerShell 5.1。複雜操作先寫成可審閱的 Linux 腳本，再傳入腳本路徑，避免多層 shell 展開。退出碼測試應刻意讓子程序回傳非零碼（例如 37），確認外層原樣回傳；這個預期失敗不能記作工具故障或成功 exit 0。
-
-工具找不到時，在 Linux 用 `command -v`，在 PowerShell 用 `Get-Command`，核對已知安裝位置及非互動 PATH；不要立刻安裝第二份。PowerShell 找到的 Windows 工具不代表 WSL 也有同一入口。單純解析 JSON 可使用既有 Node／Python，不一定需要 jq。工具版本符合鎖檔後，還要完成相關最小操作：瀏覽器開本機頁、DB client 對已確認的本機目標安全查詢。詳見[測試選擇與環境證據](docs/local-supabase-validation.md#依修改範圍選擇驗證)。
+已授權的工作區修改直接執行。互動代理保留 App「代我核准」，必要越界操作交系統正式核准；遭拒就停止相依部分並回報，不反覆要求人工確認或繞過限制。排程權限獨立，須事先具備完成工作所需的搜尋／下載與本機存取能力。
 
 ## 程式碼與介面變更
+
+- 分支與發布採用[功能分支 → 暫時 release 整合 → PR 到 main → 自動部署](docs/deployment-environments.md#開發分支與批次發布流程)。一般功能不逐一合進 main 觸發發布；完整流程、hotfix 與清理規則以該文件為準。
 
 - 只修改與 Issue 或 PR 目標直接相關的內容，避免夾帶無關重構。
 - 維持既有 TypeScript、React、Tailwind 與 i18n 寫法；公開介面新增文案時同步繁體中文與英文。
@@ -62,12 +55,13 @@ exit $LASTEXITCODE
 - 在 PR 說明中列出來源名稱、URL、資料日期，以及如何確認人物、選舉或政黨身分。
 - 同名不代表同一人；合併人物資料時需提供官方識別碼、選舉年份、選區、號次或其他足以交叉確認的證據。
 - 不得因 AI、自動抓取或單一搜尋結果就把待查線索標成已驗證資料。
+- 判決結果、罪名與刑度只取本次法院已核對的逐人主文；事實與理由不參與判決判定。主文、人物或附表對應不明就保留原文待審，詳見[司法主文摘要契約](docs/judgment-disposition-presentation.md)。
 - 學經歷與政見可做空白、編號、換行及條目切分，但不得改寫原意；不確定的切分應保留原文並標記待審。
 - 政治獻金只接受符合本站公開邊界的摘要與彙總，不提交個人捐贈明細。
 
 ## 驗證
 
-程式變更的綜合檢查入口：
+迭代時執行相關測試，整合後由主代理核對同一版本一次；同版本已通過的相同檢查，除非新修改或未解失敗，無需重跑。既有 CI／發布必要檢查保留。需要綜合驗證時使用：
 
 ```bash
 npm run check

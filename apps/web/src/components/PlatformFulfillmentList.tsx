@@ -387,10 +387,6 @@ function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
     totalCount: overallSummary.totalCount,
   };
 
-  const announcedDate = formatEligibilityDate(
-    participation?.resultsAnnouncedOn ?? null,
-    language,
-  );
   const openDate = formatEligibilityDate(
     participation?.votingOpensOn ?? null,
     language,
@@ -545,7 +541,7 @@ function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
             <p className="text-[10px] leading-4 text-amber-200" data-testid="party-threshold-voting-locked">
               {t('person.fulfillment.partyThresholdLocked')}
             </p>
-          ) : announcedDate && openDate ? (
+          ) : openDate ? (
             <p className={`text-[10px] leading-4 ${
               votingIsOpen ? 'text-slate-500' : 'text-amber-200'
             }`}>
@@ -553,7 +549,7 @@ function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
                 votingIsOpen
                   ? 'person.fulfillment.votingDates'
                   : 'person.fulfillment.votingDatesLocked',
-                { announcedDate, openDate },
+                { openDate },
               )}
             </p>
           ) : (

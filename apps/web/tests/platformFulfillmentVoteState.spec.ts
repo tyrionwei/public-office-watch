@@ -5,7 +5,7 @@ test('votes reveal results automatically while non-voters can reveal one or all 
   const itemKey2 = 'c'.repeat(64);
   let ownVote: string | null = null;
   let resultsAnnouncedOn = '2024-01-19';
-  let votingOpensOn = '2025-01-19';
+  let votingOpensOn = '2025-05-20';
   let votingIsOpen = true;
   const submissions: Array<Record<string, unknown>> = [];
 
@@ -151,11 +151,11 @@ test('votes reveal results automatically while non-voters can reveal one or all 
     '資訊不足',
   ]);
   const votingSchedule = card.getByTestId('fulfillment-voting-schedule');
-  const votingRule = votingSchedule.getByText('選舉結果公布滿一年後才開放投票。', {
+  const votingRule = votingSchedule.getByText('就職滿一年且政見整理完成後開放投票。', {
     exact: true,
   });
   const votingDates = votingSchedule.getByText(
-    /結果公布：2024\/1\/19 · 投票開放：2025\/1\/19/u,
+    /已於 2025\/5\/20 開放投票（就職滿一年）/u,
   );
   await expect(votingRule).toBeVisible();
   await expect(votingDates).toBeVisible();

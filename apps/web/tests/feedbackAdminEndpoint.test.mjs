@@ -16,7 +16,7 @@ function fixture({ user = { id: 'verified-admin', is_anonymous: false, app_metad
 test('feedback authorization rejects missing, anonymous and forged metadata before data access', async () => {
   for (const user of [null, { id: 'anon', is_anonymous: true, app_metadata: { chat_admin: true } }, { id: 'user', app_metadata: {}, user_metadata: { chat_admin: true } }]) {
     const app = fixture({ user });
-    for (const action of ['dashboard', 'detail', 'save', 'summary']) assert.ok([401,403].includes((await app.request({ action })).status));
+    for (const action of ['dashboard', 'detail', 'save', 'summary', 'support-messages']) assert.ok([401,403].includes((await app.request({ action })).status));
     assert.equal(app.calls.length, 0);
   }
   const app = fixture(); assert.equal((await app.request({ action: 'dashboard' }, false)).status, 401); assert.equal(app.calls.length, 0);
@@ -84,4 +84,13 @@ test('status decision, priority and progress resolve together to prevent invalid
   const own = merge(base, mine, remote, { status: 'mine' }).draft;
   assert.equal(own.decision, 'accepted'); assert.equal(own.priority, 'high');
   assert.equal(merge(base, mine, mine).unresolved.length, 0);
+});
+
+test('support messages use private RPC and cannot override admin identity or fields', async () => {
+  const app = fixture();
+  for (const input of [{ page: 0 }, { page: 1.1 }, { page: 1, adminUserId: 'forged' }, { public: true }]) assert.equal((await app.request({ action: 'support-messages', input })).status, 400);
+  const response = await app.request({ action: 'support-messages', input: { page: 2 } });
+  assert.equal(response.status, 200);
+  const call = app.calls.find(c => c.name === 'admin_crypto_support');
+  assert.equal(call.args.p_admin_user_id, 'verified-admin'); assert.equal(call.args.p_page, 2);
 });

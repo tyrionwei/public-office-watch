@@ -2,13 +2,13 @@
 
 ## 目的
 
-分開驗證離線程式、mock 介面、完整本機公開資料，以及隔離資料庫的寫入／權限。一般開發使用 full-local；正式形狀驗收使用 [rehearsal](production-rehearsal.md)，兩者不可互換。正式 Supabase 不作本機測試目標。
+分開驗證離線程式、mock 介面、完整本機公開資料，以及隔離資料庫的寫入／權限。需要真實本機資料時使用 full-local；正式形狀驗收使用 [rehearsal](production-rehearsal.md)，兩者不可互換。正式 Supabase 不作本機測試目標。
 
 ## 前置條件
 
-Node.js、Python／影像相依與兩份 lockfile 的安裝方式集中在 [CONTRIBUTING.md](../CONTRIBUTING.md#本機開發)。資料庫驗收另需可用的 Docker daemon。先確認目前 branch、既有變更與服務；不要為重跑測試清除研究資料、dist 或舊報告。
+Node.js、Python／影像相依與兩份 lockfile 的安裝方式集中在 [CONTRIBUTING.md](../CONTRIBUTING.md#本機開發)。一般修改只確認 repo／branch 與既有變更。資料庫驗收再核對實際 endpoint／身分；需要容器操作或容器身分證據時才檢查 Docker daemon，不把全面盤點當成 HTTP 蒐集或離線測試的前置。不要為重跑測試清除研究資料、dist 或舊報告。
 
-新開發環境可用根目錄已安裝的 CLI 啟動：
+首次建立 full-local 且本次確實需要資料庫時，可用根目錄已安裝的 CLI 啟動：
 
 ```bash
 npx supabase start
@@ -56,7 +56,7 @@ npm --prefix apps/web run check:local-test-env
 npm --prefix apps/web run dev
 ```
 
-guard 只檢查前端設定，不驗 server secrets、服務健康或資料內容。full-local 可用需要三類實證：
+guard 只檢查前端設定，不驗 server secrets、服務健康或資料內容。首次建立或變更 full-local、或診斷服務異常時，完整網站／DB 驗收需要下列實證；純腳本資料工作只驗所需 API 與實際目標，不要求另啟 Vite。同一工作階段且設定未變不重跑全部檢查：
 
 1. Vite 在預期 loopback URL 回應。
 2. API `http://127.0.0.1:54321/auth/v1/health` 成功，且 Docker gateway 的實際 runtime port mapping 包含 54321。

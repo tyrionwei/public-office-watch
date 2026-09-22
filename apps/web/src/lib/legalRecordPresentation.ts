@@ -5,10 +5,19 @@
 export type LegalPersonContext = { personId: string | null; sourceUrl: string | null };
 export type DispositionResult = 'guilty' | 'acquitted' | 'mixed' | 'unknown';
 
+type DispositionAction = 'revised' | 'dismissed' | null;
+export type LegalJudgmentBasis = {
+  sourceUrl: string;
+  caseNumber: string;
+  judgmentDate: string;
+  text: string;
+};
 type ReviewedDisposition = {
   text: string;
   result: DispositionResult;
   requiresReview: boolean;
+  action: DispositionAction;
+  basis: LegalJudgmentBasis | null;
 };
 
 const acquittalStages = [
@@ -74,10 +83,12 @@ function personDisposition(json: Record<string, unknown>, context?: LegalPersonC
   const raw = json.judgmentDisposition;
   if (!raw || typeof raw !== 'object' || Array.isArray(raw) || !context?.personId || !context.sourceUrl) return null;
   const value = raw as Record<string, unknown>;
-  if (value.version !== 1 || value.section !== '主文' || value.reviewStatus !== 'reviewed'
+  if (![1, 2].includes(value.version as number) || value.section !== '主文' || value.reviewStatus !== 'reviewed'
     || value.personId !== context.personId || !isHttpsSource(value.sourceUrl) || value.sourceUrl !== context.sourceUrl
     || typeof value.text !== 'string' || !value.text.trim() || value.text.length > 12_000
     || typeof value.result !== 'string' || !verdicts.has(value.result)) return null;
+  if (value.version === 2 && (!record(value.upheldJudgment) || !boundedText(value.caseNumber)
+    || !validDate(value.judgmentDate) || !boundedText(value.personScopeQuote))) return null;
   const text = value.text.trim();
   // This field contains ONLY the already selected person's verbatim main text.
   // A full document or reasons accidentally placed here is invalid, not a cue
@@ -85,12 +96,73 @@ function personDisposition(json: Record<string, unknown>, context?: LegalPersonC
   if (text.split(/\r?\n/u).some(line => /^(?:(?:本院)?判決)?主文(?:[:：]|$)/u.test(compactHeading(line.trim()))
     || isReasonHeading(line) || isDocumentFooter(line))
     || /事\s*實\s*[及與]\s*理\s*由|犯\s*罪\s*事\s*實/u.test(text)) return null;
-  const requiresReview = /附表|附件|發回|先前|曾被|主張|辯稱|抗辯|求刑|求處|起訴意旨|公訴意旨/u.test(text)
+  const unsafe = /附表|附件|發回|先前|曾被|主張|辯稱|抗辯|求刑|求處|起訴意旨|公訴意旨/u.test(text)
     || /(?:一審|二審|原審|前審|原判決)[^。；\n]*(?:判處|判刑|有期徒刑|無期徒刑|死刑|拘役)/u.test(text)
-    || /免訴|不受理/u.test(text)
-    // Dismissing an appeal alone does not establish whose guilt/penalty stands.
-    || (/(?:上訴.*駁回|駁回.*上訴)/u.test(text) && !/無罪|有罪|犯[^。；\n]+罪/u.test(text));
-  return { text, result: requiresReview ? 'unknown' : value.result as DispositionResult, requiresReview };
+    || /免訴|不受理/u.test(text);
+  const action: DispositionAction = unsafe ? null
+    : /(?:撤銷(?:其一審判決|原判)|原判決[^。\n]*撤銷)/u.test(text) ? 'revised'
+      : /(?:駁回[^。；\n]*上訴|上訴[^。；\n]*駁回)/u.test(text) ? 'dismissed' : null;
+  const appealOnly = action === 'dismissed' && !/無罪|有罪|犯[^。；\n]+罪/u.test(text);
+  // Version 2 is ONLY the explicitly reviewed, entire-person appeal relationship.
+  // Never accept a version-2 root result in place of its independently cited basis.
+  if (value.version === 2) {
+    const basis = !unsafe && appealOnly ? reviewedUpheldJudgment(value, context, json) : null;
+    return { text, action, basis: basis?.basis ?? null,
+      result: basis?.result ?? 'unknown', requiresReview: !basis };
+  }
+  const requiresReview = unsafe || appealOnly;
+  return { text, action, basis: null,
+    result: requiresReview ? 'unknown' : value.result as DispositionResult, requiresReview };
+}
+
+function record(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? value as Record<string, unknown> : null;
+}
+function validDate(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false;
+  const date = new Date(`${value}T00:00:00Z`);
+  return Number.isFinite(date.valueOf()) && date.toISOString().slice(0, 10) === value;
+}
+function boundedText(value: unknown, max = 200): value is string {
+  return typeof value === 'string' && Boolean(value.trim()) && value.length <= max;
+}
+const compactReference = (value: string) => value.replace(/[\s\u3000]/gu, '');
+
+/** Review data must bind BOTH court records, dates, person and exact current quote.
+ * This is a consistency check, not an automated legal finding. Partial appeals,
+ * resentencing, remands, unknown scope and chained references remain unsupported.
+ */
+function reviewedUpheldJudgment(value: Record<string, unknown>, context: LegalPersonContext,
+  json: Record<string, unknown>): { basis: LegalJudgmentBasis; result: DispositionResult } | null {
+  const link = record(value.upheldJudgment);
+  const prior = record(link?.prior);
+  if (!link || !prior || value.result !== 'unknown'
+    || !boundedText(value.caseNumber) || !validDate(value.judgmentDate)
+    || value.judgmentDate !== json.judgmentDate
+    || !boundedText(value.personScopeQuote) || typeof value.text !== 'string'
+    || !value.text.includes(value.personScopeQuote)
+    || /之刑|刑部分|量刑|沒收|撤銷/u.test(value.personScopeQuote)
+    || /撤銷|發回|改判|改處|有期徒刑|無期徒刑|死刑|拘役|罰金|褫奪公權/u.test(value.text)
+    || link.reviewStatus !== 'reviewed' || link.relation !== 'appeal_dismissed'
+    || link.scope !== 'entire_person_disposition' || link.personId !== context.personId
+    || link.currentCaseNumber !== value.caseNumber || link.currentSourceUrl !== context.sourceUrl
+    || link.currentDispositionText !== value.text || link.personScopeQuote !== value.personScopeQuote
+    || link.evidenceSourceUrl !== context.sourceUrl || !boundedText(link.evidenceText, 4000)
+    || !boundedText(prior.caseNumber) || link.priorCaseNumber !== prior.caseNumber
+    || !compactReference(link.evidenceText).includes(compactReference(prior.caseNumber))
+    || !validDate(prior.judgmentDate) || prior.judgmentDate >= value.judgmentDate
+    || prior.personId !== context.personId || prior.version !== 1 || prior.upheldJudgment !== undefined
+    || !isHttpsSource(prior.sourceUrl) || prior.sourceUrl === context.sourceUrl
+    || !['court_judgment', 'court_published_main_text'].includes(prior.sourceKind as string)) return null;
+  // Calling version 1 only prevents recursive / circular provenance chains.
+  const selected = personDisposition({ judgmentDisposition: prior }, {
+    personId: context.personId, sourceUrl: prior.sourceUrl,
+  });
+  if (!selected || selected.requiresReview || selected.action || selected.result === 'unknown') return null;
+  return { basis: { sourceUrl: prior.sourceUrl, caseNumber: prior.caseNumber,
+    judgmentDate: prior.judgmentDate, text: selected.text }, result: selected.result };
+
 }
 
 /** Extract display excerpts from reviewed person-scoped 主文 only.
@@ -108,7 +180,7 @@ export function legalRecordPresentation(text: string | null, json: Record<string
   const complex = !disposition || disposition.requiresReview || dispositionConflict;
   const reviewedResult: DispositionResult = complex ? 'unknown' : disposition.result;
   const canExtract = !complex && ['guilty', 'mixed'].includes(reviewedResult);
-  const clauses = (disposition?.text ?? '').split(/[，；;。\n]/u).map(s => s.trim()).filter(Boolean);
+  const clauses = (disposition?.basis?.text ?? disposition?.text ?? '').split(/[，；;。\n]/u).map(s => s.trim()).filter(Boolean);
   const offenses = [
     '利用職務機會詐取財物及不違背職務收受賄賂等罪',
     '非公務機關未於蒐集特定目的必要範圍內利用個人資料罪',
@@ -168,8 +240,10 @@ export function legalRecordPresentation(text: string | null, json: Record<string
     offenses: [...new Set(matched)],
     // These are source excerpts only; classification never inspects this array.
     notes: complex ? [] : clauses.filter(clause => /無罪|不成立|不構成|不另為/.test(clause)),
-    action: !complex && /(?:撤銷(?:其一審判決|原判)|原判決[^。\n]*撤銷)/u.test(disposition.text) ? 'revised'
-      : !complex && /(?:駁回.*上訴|上訴.*駁回)/u.test(disposition.text) ? 'dismissed' : null,
+    // A verified appeal disposition is useful even without a known verdict.
+    action: disposition?.action ?? null,
+    hasReviewedMain: Boolean(disposition),
+    basis: !complex ? disposition.basis : null,
     reviewedResult,
     dispositionConflict,
     // Keep the person's actual disposition visible, with the original source
@@ -177,7 +251,7 @@ export function legalRecordPresentation(text: string | null, json: Record<string
     narrative: disposition?.text ?? original,
     penalties: [...new Set(penalties)],
     // Keep context visible whenever reliable compact excerpts cannot be produced.
-    showNarrative: complex || !matched.length || !penalties.length,
+    showNarrative: Boolean(disposition?.basis) || complex || !matched.length || !penalties.length,
     judgmentDate: typeof json.judgmentDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(json.judgmentDate) ? json.judgmentDate : null,
   };
 }
@@ -205,4 +279,19 @@ export function legalCaseClassification(json: Record<string, unknown>, presentat
   else if (status !== 'other') result = presentation.reviewedResult;
 
   return { status, result };
+}
+
+/** Rendering decisions only; never interpret the source narrative as evidence. */
+export function legalRecordDisplay(presentation: ReturnType<typeof legalRecordPresentation>,
+  classification: ReturnType<typeof legalCaseClassification>) {
+  const datePrefix = /^裁判日期[：:]\s*(\d{4}-\d{2}-\d{2})(?:[。\s]|$)/u.exec(presentation.narrative);
+  return {
+    showOffense: presentation.offenses.length > 0,
+    showSentence: presentation.penalties.length > 0,
+    showResult: classification.result !== 'unknown' && classification.result !== 'notApplicable',
+    showDate: Boolean(presentation.judgmentDate)
+      && !(presentation.showNarrative && datePrefix?.[1] === presentation.judgmentDate),
+    notice: !presentation.hasReviewedMain ? 'legacy' as const
+      : presentation.reviewedResult === 'unknown' ? 'incomplete' as const : null,
+  };
 }

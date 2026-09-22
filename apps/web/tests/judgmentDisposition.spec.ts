@@ -36,7 +36,12 @@ for (const scenario of ['legacy', 'reviewed', 'unknown'] as const) {
       await expect(summary).toContainText('有罪');
       await expect(summary).not.toContainText('詐欺取財罪');
     } else {
-      await expect(summary).toContainText('結果待確認');
+      await expect(summary.locator('[data-legal-summary-notice]')).toHaveText(scenario === 'legacy'
+        ? '逐人主文摘要尚未整理；以下保留原紀錄。'
+        : '本次主文未載明完整結果或刑度，尚待核對相關主文。');
+      await expect(summary).not.toContainText('結果待確認');
+      await expect(summary).not.toContainText('詳見下方案件說明');
+      if (scenario === 'unknown') await expect(summary).toContainText('駁回上訴');
       await expect(summary).toContainText(scenario === 'legacy' ? original : '上訴駁回。');
     }
     const card = summary.locator('xpath=ancestor::article[1]');

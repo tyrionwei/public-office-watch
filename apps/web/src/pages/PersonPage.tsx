@@ -7,6 +7,7 @@ import { PixelFrame } from '../components/PixelFrame';
 import { PersonFeedbackPanel } from '../components/PersonFeedbackPanel';
 import { PlatformFulfillmentList } from '../components/PlatformFulfillmentList';
 import { LegalStatusHelp } from '../components/LegalStatusHelp';
+import { LegalRecordSummary } from '../components/LegalRecordSummary';
 import { SectionPanel } from '../components/SectionPanel';
 import {
   pickDefaultCandidateSprite,
@@ -271,31 +272,7 @@ function ClaimCard({
         {t(claimTypeLabels[claim.claim_type])}
       </p>
       {legal ? (
-        <div data-legal-summary className="mt-3 space-y-3">
-          <dl className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-            <div>
-              <dt className="text-xs text-slate-400">{t('person.legal.offense')}</dt>
-              <dd className="mt-1 text-base font-semibold text-white">{legal.offenses.join('、') || t('person.legal.seeNarrative')}</dd>
-            </div>
-            <div>
-              <dt className="text-xs text-slate-400">{t('person.legal.status')}</dt>
-              <dd className="mt-1 text-sm font-semibold text-accent">{documentStatus}{legal.action ? <span className="mt-1 block text-xs font-normal text-slate-300">{t(legal.action === 'revised' ? 'person.legal.revised' : 'person.legal.dismissed')}</span> : null}</dd>
-            </div>
-            <div className="sm:col-span-2">
-              <dt className="text-xs text-slate-400">{t('person.legal.result')}</dt>
-              <dd className="mt-1 text-sm font-semibold text-white">{classification ? t(`person.legal.result.${classification.result}`) : null}</dd>
-            </div>
-            <div className="sm:col-span-2">
-              <dt className="text-xs text-slate-400">{t('person.legal.sentence')}</dt>
-              <dd className="mt-1 text-sm leading-6 text-white">
-                {legal.penalties.length ? <ul className="space-y-1">{legal.penalties.map(penalty => <li key={penalty}>{penalty}</li>)}</ul> : t('person.legal.seeNarrative')}
-              </dd>
-            </div>
-          </dl>
-          {legal.notes.length ? <p className="text-sm leading-6 text-slate-300">{legal.notes.join('；')}</p> : null}
-          {legal.judgmentDate ? <p className="text-xs text-slate-400">{t('person.legal.judgmentDate')}：{legal.judgmentDate}</p> : null}
-          {legal.showNarrative ? <p className="whitespace-pre-line text-sm leading-6 text-slate-200">{legal.narrative || t('person.noContent')}</p> : null}
-        </div>
+        <LegalRecordSummary legal={legal} classification={classification} documentStatus={documentStatus} />
       ) : <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value ?? t('person.noContent')}</h3>}
       {legal ? (
         <details className="mt-4 border-t border-line/60 pt-3">

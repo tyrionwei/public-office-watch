@@ -179,6 +179,26 @@ copy_runtime_data() {
   copy_table parties 'is_public = TRUE'
   copy_table people
   copy_table candidates
+  copy_table platform_voting_inaugurations \
+    "candidate_id IN (
+      SELECT candidate.id
+      FROM public.candidates candidate
+      JOIN public.races race ON race.id = candidate.race_id
+      JOIN public.elections election ON election.id = race.election_id
+      JOIN public.person_claims claim ON claim.candidate_id = candidate.id
+      WHERE candidate.is_public AND candidate.election_result = 'elected'
+        AND race.is_public AND election.is_public
+        AND claim.claim_type = 'platform' AND claim.review_status = 'verified'
+        AND claim.visibility = 'public' AND claim.is_public
+        AND claim.claim_json #>> '{contentSplit,reviewStatus}' IN ('auto_approved', 'reviewed')
+    ) OR race_id IN (
+      SELECT result.race_id
+      FROM public.party_list_race_results result
+      JOIN public.races race ON race.id = result.race_id
+      JOIN public.elections election ON election.id = race.election_id
+      WHERE result.is_public AND result.platform_items_reviewed_at IS NOT NULL
+        AND race.is_public AND election.is_public
+    )"
   copy_table candidate_lifecycle_events 'is_public = TRUE'
   copy_table registration_name_roster 'is_public = TRUE'
   copy_table polling_place_sources 'is_public = TRUE AND is_current = TRUE'

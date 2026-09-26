@@ -4,6 +4,8 @@
 
 ## 本批內容
 
+- `20260926105525_stage_grassroots_profile_update.sql`：加入基層人物詳細頁暫時調整的更新紀錄草稿，說明姓名與歷屆參選紀錄保留、較高層級人物不受影響，並交代未來經費充裕及資料庫升級後逐步恢復。沿用既有草稿機制，實際精簡與網站發布驗收後再公開，published_at須設定為實際發布時間。
+
 - `20260926093536_grassroots_candidate_names.sql`：新增 candidate_name、允許基層 candidate.person_id 為 NULL；限制無人物候選必須有姓名且只能屬基層選舉。公開候選檢視保留 target 原有欄位與私有人物 gate；不同 name-only 候選不因同名合併。
 - `PartyPage.tsx`：有 person_id 才顯示人物連結，無 person_id 的候選卡片保留姓名與選舉內容。
 - `compact-grassroots-name-only.sql`：以既有 canonical 群組全部參選歷史界定範圍，保存姓名、解除目標連結、移除人物與刷新公開資料，並檢查保留人物、候選歷史、回報及地區不變量。

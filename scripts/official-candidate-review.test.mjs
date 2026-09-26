@@ -24,7 +24,7 @@ function fixture() {
   };
   const item = {
     record,
-    race: { id: 'race-1', external_id: 'cec-race-1', title: '測試選舉' },
+    race: { race_type: 'municipality_mayor', id: 'race-1', external_id: 'cec-race-1', title: '測試選舉' },
     person: null,
     candidate: null,
     identityCandidates: [{ id: 'person-1', name: '測試人物' }],

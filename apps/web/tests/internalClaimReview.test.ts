@@ -4,6 +4,7 @@ import {
   buildEditableProfileClaimRevision,
   canUpdateProfileField,
   claimApprovalBlockReason,
+  grassrootsIdentityReviewBlockReason,
 } from '../build/internalClaimReview.ts';
 
 test('blocks approval when a claim has no reviewed person link', () => {
@@ -56,4 +57,12 @@ test('updates an empty or unchanged profile field but preserves a different exis
   assert.equal(canUpdateProfileField(null, '公報文字'), true);
   assert.equal(canUpdateProfileField('公報文字', '公報文字'), true);
   assert.equal(canUpdateProfileField('較新的資料', '公報文字'), false);
+});
+
+
+test('identity guard preserves higher-level review and does not trust a higher title over the target race', () => {
+  assert.equal(grassrootsIdentityReviewBlockReason({ source_type: 'official_election', position: '縣長' }, 'county_mayor'), null);
+  assert.equal(grassrootsIdentityReviewBlockReason({ source_type: 'official_election', position: '立法委員' }), null);
+  assert.match(grassrootsIdentityReviewBlockReason({ position: '縣長' }, 'township_representative') ?? '', /官方候選審核流程/);
+  assert.match(grassrootsIdentityReviewBlockReason({ position: '議員' }, null) ?? '', /職類尚未確認/);
 });

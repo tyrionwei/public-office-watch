@@ -1,3 +1,4 @@
+import { assertSeedUsesReviewedGrassrootsImport, isGrassrootsSource } from './grassroots-candidate-policy.mjs';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -3146,6 +3147,9 @@ function buildProbableIdentityMatchRows(seed, sourcePersonByKey, canonicalPeople
   const rows = [];
 
   for (const sourcePerson of seed.sourcePeople ?? []) {
+    // Preserve private source rows, but never overwrite a reviewed grassroots identity
+    // with an automatic suggestion. Use the official manual review path instead.
+    if (isGrassrootsSource(sourcePerson)) continue;
     const sourceRow = sourcePersonByKey.get(sourcePerson.sourcePersonKey);
     const candidates = peopleByNormalizedName.get(normalizeSourcePersonName(sourcePerson.rawName)) ?? [];
 
@@ -4066,6 +4070,7 @@ async function hideKnownSamplePublicRows(env) {
 }
 
 async function writeSeed(seed, hash, args) {
+  assertSeedUsesReviewedGrassrootsImport(seed);
   const env = getSupabaseEnv();
   const startedAt = new Date().toISOString();
 
@@ -4239,6 +4244,7 @@ async function writeSeed(seed, hash, args) {
     return applyReviewedCandidateResultOverride({
       external_id: candidate.externalId ?? candidate.external_id ?? null,
       person_id: personByExternalId.get(personExternalId)?.id ?? null,
+      candidate_name: candidate.candidateName ?? candidate.candidate_name ?? personByExternalId.get(personExternalId)?.name ?? null,
       race_id: raceByExternalId.get(raceExternalId)?.id ?? null,
       party: candidate.party ?? null,
       candidate_no: candidate.candidateNo ?? candidate.candidate_no ?? null,
@@ -4265,48 +4271,14 @@ async function writeSeed(seed, hash, args) {
   await upsertOrThrow(env, 'person_identity_matches', probableIdentityMatchRows, { onConflict: 'source_person_id,person_id' });
 
   if (args.includeHistoricalCec) {
-    args.historicalPriorityIdentityResult = await supabaseRequest(
-      env,
-      'rpc/process_historical_priority_identities',
-      {
-        method: 'POST',
-        rows: {
-          p_family_reference_names: loadDarkGuideFamilyReferenceNames(),
-        },
-      },
-    );
-    args.historicalAnchorIdentityResult = await supabaseRequest(
-      env,
-      'rpc/process_historical_anchor_identities',
-      {
-        method: 'POST',
-        rows: {},
-      },
-    );
-    args.highConfidenceIdentityResult = await supabaseRequest(
-      env,
-      'rpc/process_high_confidence_identity_reviews',
-      {
-        method: 'POST',
-        rows: {},
-      },
-    );
-    args.contextDisambiguatedIdentityResult = await supabaseRequest(
-      env,
-      'rpc/process_context_disambiguated_identities',
-      {
-        method: 'POST',
-        rows: {},
-      },
-    );
-    args.careerProgressionIdentityResult = await supabaseRequest(
-      env,
-      'rpc/process_unique_career_progression_identities',
-      {
-        method: 'POST',
-        rows: {},
-      },
-    );
+    // These legacy RPCs inspect all stored source rows, including grassroots rows
+    // from earlier runs. A guard on this seed cannot make that scope safe.
+    const skipped = { status: 'skipped', reason: 'Legacy automatic identity RPCs require grassroots-aware review guards before reuse' };
+    args.historicalPriorityIdentityResult = skipped;
+    args.historicalAnchorIdentityResult = skipped;
+    args.highConfidenceIdentityResult = skipped;
+    args.contextDisambiguatedIdentityResult = skipped;
+    args.careerProgressionIdentityResult = skipped;
   }
 
   args.reconciledHistoricalCecPersonMerges = await reconcileHistoricalCecImportedPeople(
@@ -4657,6 +4629,8 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
 }
 
 export {
+  writeSeed,
+  buildProbableIdentityMatchRows,
   buildCurrentOfficeholders,
   buildPartyRegistryProfile,
   buildSourcePersonRows,

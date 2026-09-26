@@ -1,3 +1,4 @@
+import { hasCandidatePerson } from '../lib/candidateIdentity';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
@@ -437,7 +438,7 @@ export function RacePage() {
                   const rowContent = (
                     <>
                       <div className="flex flex-col items-center gap-1 max-lg:row-span-4">
-                        {group.members.filter((member) => member.person_id).map((member) => {
+                        {group.members.filter(hasCandidatePerson).map((member) => {
                           const isSelected = selectedPersonIds.includes(member.person_id);
                           const selectionDisabled = !member.person_id || (!isSelected && selectedPersonIds.length >= comparisonLimit);
                           return (

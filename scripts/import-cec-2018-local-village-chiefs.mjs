@@ -34,7 +34,7 @@ function parseArgs(argv) {
   const options = { write: false };
   for (const arg of argv) {
     if (arg === '--write') {
-      options.write = true;
+      throw new Error('Legacy grassroots --write is disabled after compaction: prepare an official candidate snapshot and use review-official-candidate-snapshot.mjs --stage / --apply-reviewed with name_only or reviewed higher-level identity.');
       continue;
     }
     throw new Error(`Unsupported argument: ${arg}`);

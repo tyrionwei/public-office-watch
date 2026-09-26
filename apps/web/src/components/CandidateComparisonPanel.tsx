@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
+import { hasCandidatePerson, type PersonLinkedCandidate } from '../lib/candidateIdentity';
 import { platformItemsForCandidate } from '../lib/candidatePlatform';
 import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { buildCandidateComparisonShareUrl, comparisonAnchorId } from '../lib/socialSharing';
@@ -87,8 +88,8 @@ function ComparisonRow({
   children,
 }: {
   label: string;
-  candidates: PublicCandidate[];
-  children: (candidate: PublicCandidate) => ReactNode;
+  candidates: PersonLinkedCandidate[];
+  children: (candidate: PersonLinkedCandidate) => ReactNode;
 }) {
   const desktopGridClass = candidates.length === 4
     ? 'md:grid-cols-4'
@@ -110,7 +111,7 @@ function ComparisonRow({
 }
 
 export function CandidateComparisonPanel({
-  candidates,
+  candidates: allCandidates,
   profiles,
   loading,
   error,
@@ -120,6 +121,7 @@ export function CandidateComparisonPanel({
   onRemove,
 }: CandidateComparisonPanelProps) {
   const { language, t } = useI18n();
+  const candidates = allCandidates.filter(hasCandidatePerson);
   const profilesByPersonId = new Map(profiles.map((profile) => [profile.person.person_id, profile]));
   const minWidth = Math.max(760, candidates.length * 280);
   const desktopGridClass = candidates.length === 4

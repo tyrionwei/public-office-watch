@@ -38,7 +38,7 @@ test('rejects non-election-authority sources for official statuses', () => {
 
 test('creates a source-scoped person instead of matching by name', () => {
   const plan = planOfficialCandidateImport(snapshot(), {
-    races: [{ id: 'race-1', external_id: 'cec-2026-race-taipei-mayor', title: '臺北市市長選舉' }],
+    races: [{ race_type: 'municipality_mayor', id: 'race-1', external_id: 'cec-2026-race-taipei-mayor', title: '臺北市市長選舉' }],
     people: [{ id: 'person-existing', external_id: 'other-source-person', name: '測試人物' }],
     candidates: [],
   });
@@ -62,7 +62,7 @@ test('plans status and ballot-number updates for an exact external-id match', ()
     }],
   });
   const plan = planOfficialCandidateImport(input, {
-    races: [{ id: 'race-1', external_id: 'cec-2026-race-taipei-mayor', title: '臺北市市長選舉' }],
+    races: [{ race_type: 'municipality_mayor', id: 'race-1', external_id: 'cec-2026-race-taipei-mayor', title: '臺北市市長選舉' }],
     people: [{ id: 'person-1', external_id: 'cec-2026-person-001', name: '測試人物' }],
     candidates: [{
       id: 'candidate-1',
@@ -87,7 +87,7 @@ test('plans status and ballot-number updates for an exact external-id match', ()
 
 test('blocks an existing candidate whose person identity conflicts', () => {
   const plan = planOfficialCandidateImport(snapshot(), {
-    races: [{ id: 'race-1', external_id: 'cec-2026-race-taipei-mayor', title: '臺北市市長選舉' }],
+    races: [{ race_type: 'municipality_mayor', id: 'race-1', external_id: 'cec-2026-race-taipei-mayor', title: '臺北市市長選舉' }],
     people: [{ id: 'person-1', external_id: 'cec-2026-person-001', name: '測試人物' }],
     candidates: [{
       id: 'candidate-1',
@@ -122,4 +122,29 @@ test('blocks 2026 writes before registration and ballot-number dates', () => {
     () => assertWriteWindow(withNumber, new Date('2026-10-22T23:59:59+08:00')),
     /disabled before the official draw/,
   );
+});
+
+
+test('grassroots registration plans no people and accepts existing name-only candidates', () => {
+  const input = snapshot();
+  const state = { races: [{ id: 'r', external_id: input.records[0].raceExternalId, race_type: 'village_chief' }], people: [], candidates: [] };
+  const fresh = planOfficialCandidateImport(input, state);
+  assert.equal(fresh.createPeople.length, 0); assert.equal(fresh.createCandidates.length, 1);
+  state.candidates.push({ external_id: input.records[0].candidateExternalId, person_id: null, race_id: 'r' });
+  const existing = planOfficialCandidateImport(input, state);
+  assert.equal(existing.blocking.length, 0); assert.equal(existing.createPeople.length, 0);
+  delete state.races[0].race_type;
+  assert.equal(planOfficialCandidateImport(input, state).blocking[0].reason, 'race_type_required');
+});
+
+
+test('candidate name corrections are planned as updates even with unchanged status', () => {
+  const input = snapshot();
+  const candidate = { id: 'c', external_id: input.records[0].candidateExternalId, person_id: null, race_id: 'r', candidate_name: '舊名字', party: '測試政黨', candidate_no: null, registration_status: 'registered', candidacy_status: 'registered', source_name: input.source.name, source_url: input.source.url, is_public: true };
+  const state = { races: [{ id: 'r', external_id: input.records[0].raceExternalId, race_type: 'village_chief' }], people: [], candidates: [candidate] };
+  const plan = planOfficialCandidateImport(input, state);
+  assert.equal(plan.updateCandidates.length, 1);
+  assert.equal(plan.updateCandidates[0].next.candidate_name, input.records[0].personName);
+  candidate.candidate_name = input.records[0].personName;
+  assert.equal(planOfficialCandidateImport(input, state).unchanged.length, 1);
 });

@@ -132,6 +132,7 @@ SET LOCAL timezone = 'UTC';
 SET LOCAL extra_float_digits = 3;
 SET LOCAL search_path = pg_catalog, public, published;
 SET LOCAL lock_timeout = '5s';
+SET LOCAL statement_timeout = '5min';
 """ + 'LOCK TABLE ' + ','.join(locks) + ' IN SHARE ROW EXCLUSIVE MODE;\n' + \
         'DO ' + delimiter + ' BEGIN\n' + body + 'END ' + delimiter + ';\nCOMMIT;\n'
 
@@ -345,6 +346,7 @@ def build(snapshot_dir, baseline_dir, backup_dir, output_dir, batch_size=1000):
         for number, sql in reverse_parts[table]:
             emit(f'reverse/{phase:02d}-{table}-{number:04d}.sql', sql)
     package = {'format': 'grassroots-offline-operation-package-v1', 'executable_authorization': False,
+               'transaction_timeouts': {'lock_timeout': '5s', 'statement_timeout': '5min'},
                'source_manifest_sha256': digest(manifest_path), 'input_manifest_sha256': digest(hashes_path),
                'batch_target_people': batch_size, 'max_operational_component_people': component_limit, 'scope_people': len(scope), 'batches': details,
                'forward_order': [x['path'] for x in outputs if x['path'].startswith('forward/')],

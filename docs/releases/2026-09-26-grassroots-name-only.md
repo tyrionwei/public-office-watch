@@ -86,7 +86,7 @@ Release工作區從最新origin/main（ce1c1f7）建立，已通過建置、lint
 4. 在維護狀態重新清四個快取，套用已審查的DDL-only migration與正確ledger；按canonical整群分批，候選姓名/發布選取凍結於外部基準。每批候選/facts更新及人物刪除同交易，批次間一般VACUUM重用空間，再按已驗順序回收與重建12個快取。
 5. 索引與快取各階段均須有容量上限、失敗後斷點續行與原位回站工具。逆向順序為先補原UUID人物與依賴資料，再復原候選/facts；空間整理期間保留PK、唯一性及FK保護。完成資料/ACL/匿名RPC驗收及既有搜尋問題修正後，才可依授權合併PR及部署新版前端；維護須持續到部署後人物頁/候選姓名/投票地區/搜尋流程smoke通過，才恢復公開服務。
 
-目前只完成隔離流程與來源碼修正，正式索引尚未整理、15MB緩衝尚未取得；正式維護、停寫、可續行操作工具及部署驗收仍是blocking。
+隔離流程與可續行maintenance executor已完成限定驗證；正式索引尚未整理、15MB緩衝尚未取得。正式維護/停寫、逐階段上界與回復證據、當次資料epoch/內容斷言及部署驗收仍是blocking。
 
 
 ### 離線操作包
@@ -95,6 +95,62 @@ Release工作區從最新origin/main（ce1c1f7）建立，已通過建置、lint
 
 每批交易核對完整原列、canonical群、基層職類、公開候選集合/姓名及FK依賴；公開view的已知依賴表納入鎖定。每個群必須有原候選，facts人物核對canonical ID而非raw候選person_id。跨群的已拒絕合併紀錄只連結操作批次，不改人物身分；範圍外依賴或超過2,000人的操作component拒絕。逆向先補所有原UUID人物，再恢復依賴及候選，拒絕覆寫與原始/精簡狀態不同的列。
 
-16項合成測試與獨立唯讀審查通過；使用正式封存成功產生60批操作包。這不是正式執行器：schema/ledger、全站維護、正式停寫、容量量測與索引/快取斷點回復仍在工具之外，未通過前不能合併部署。
+16項合成測試與獨立唯讀審查通過；使用正式封存成功產生60批操作包。這個離線SQL產生器不執行正式操作；索引/快取/實體回收另由下方maintenance executor處理。schema/ledger、全站維護及正式停寫仍由既有流程處理，正式各gate未通過前不能合併部署。
 
 生成SQL另在既有隔離副本實測一批：999位人物、1,190筆候選精簡與7份逆向SQL全部成功，schema回退後10表逐列指紋、公開候選名單一致。驗證程式首次漏掉回復後的空間整理，直接重建快取時投影500,764,849 bytes而容量驗收失敗；只補上既有已驗證的索引/候選/facts整理後回站通過，完成投影498,741,425 bytes。此失敗保留為操作順序限制：普通VACUUM不足以保證回站容量，完整回復包含空間整理；本測試不宣稱正式容量充足，也沒有重跑60批精簡或原CI。
+
+
+### 正式可續行的維護 executor
+
+`scripts/grassroots-maintenance-executor.py` 專責 cache/index/physical reclaim。保留原60批guarded compaction，不改批次分組、人物身分判斷、DDL或migration ledger；產生器只新增每批交易 `SET LOCAL statement_timeout='5min'`，既有lock timeout仍為5秒。私人原操作包保留，另存timeout版本，463份SQL逐檔比對只增加該行，60批成員及順序不變；沒有重新執行精簡。
+
+執行器支援 `cache_clear`、`cache_refresh`、`index_drop`、`index_create`、`reindex_index`、`reindex_table`、`vacuum_full`、`vacuum_reuse` 與只讀 `gate`。只有索引建立可讀取保存的 `pg_get_indexdef` 單句定義，不接受任意維護SQL；移除索引前拒絕PK、unique、replica identity、constraint及FK前綴索引。普通VACUUM固定 `TRUNCATE FALSE`，只記頁面重用，不宣稱實體容量回收；後續容量只採當下實測cluster值。
+
+- 計畫與所有備份、逆向SQL、DDL、前後置SQL及峰值報告均以SHA-256固定，檔案限於私人package內。計畫只保存host/port/dbname/user，憑證不放manifest或journal。
+- 每個phase開始前，重新核對實際DB/system identifier/PostgreSQL版本、維護/停寫斷言、資料epoch、備份及回復斷言；物件大小必須落在峰值證據的範圍內。
+- 每個phase都有操作峰值、操作前回站及提交後回站三個容量門檻；提交後再用實際cluster量與剩餘回復需求驗證，不能沿用操作前的較小數字。
+- 所有rewrite/reindex（包括快取回建和索引重建）都要求與SQL、資料前後置條件、版本、連線目標、執行設定、備份及回復路線綁定的保守上界證據，涵蓋heap/TOAST、indexes、temporary及其他增長。只有取樣最大值、缺報告、版本/大小不同或fixture證據，皆不准正式執行。過去演練的取樣投影沒有自動升格為此證據。
+- 動作之前把intent原子寫入外部journal並fsync檔案與目錄；完成後驗資料/索引有效性/快取內容及容量，再寫done。全程使用同一資料庫session持有advisory lock，另有本機檔案鎖，沒有在接近額度的DB新增操作狀態表。
+- 中斷先等原session釋鎖再只讀reconcile。filenode改變不是單獨成功證據；還要通過完整前後置資料/catalog斷言、全部相關index有效性及容量。已提交且驗證完成才標done，不重送；已確認未執行須明確retry，或轉回復。狀態不明停止，不能手改journal冒充完成。
+- 普通VACUUM中斷後無法證明是否已完成時，若資料與回復條件通過，標記 `reuse_unconfirmed`，只准轉回站，不自動重送、不給回收容量credit。已提交但未通過容量門檻則標 `committed_blocked`，只准走回復路線。
+- 首輪必須prepare；完成後才可finish，recover開始後不得再走forward。正式每條路線以完整服務gate結束；12個快取須存在且已填入，內容/ACL依hash固定的post SQL核對。prepare終端實測cluster必須不超過485,000,000 bytes。
+
+#### 私人計畫與峰值證據契約
+
+計畫格式 `grassroots-maintenance-v1`：`target` 包含kind、public connection selectors及已核實的database/session_user/server_version_num/system_identifier；`settings` 固定work_mem/maintenance_work_mem=32MB、parallel maintenance=0、lock_timeout=5s；`watch`列全部受影響物件（正式必含12個公開cache）；`maintenance_guard`、`backup_artifacts`、`phases`、`routes`均不可缺。artifact一律為 `{path, sha256}`，相對於私人package根目錄。
+
+每個phase列 `id`、`kind`、`relation`（gate除外）、`epoch`（original/name_only/restored）、`statement_timeout_ms`（1秒至5分鐘）、`reserve_bytes`、`post_max_cluster_bytes`、`min_physical_reclaim_bytes`，以及 `pre`、`post`、`recovery_before`、`recovery_after`、`evidence`。索引create/drop另有definition。SQL斷言是一個不帶分號、恰好回傳一列boolean true的SELECT，在唯讀交易內執行；須核對真實資料/內容指紋、schema/ACL及應有的物件狀態，不能用 `SELECT true` 當正式驗證。
+
+`routes`固定prepare/finish/recover入口及phase ID順序。prepare沿既有「四MV清空→五表索引整理→四MV回建→完整服務15MB gate」；finish沿已驗證的八表實體整理與12MV回建順序。recover入口須確認既有guarded reverse已恢復所要求的資料epoch（prepare尚未動人物時則原資料已符合），再依已驗證順序整理/回建。DDL、ledger、60批forward/reverse、外部維護切換及停寫仍由既有操作流程處理；executor不替它們製造完成狀態。
+
+證據格式 `grassroots-space-envelope-v1` 必須包含：
+
+| 欄位 | 意義 |
+|---|---|
+| `status=passed`、`basis=reviewed_conservative_upper_envelope`、`reports` | 已審查的上界報告及來源hash；取樣峰值不能代替 |
+| `binding_sha256`、`server_version_num`、`scope` | 綁定精確操作與回復路徑；正式只接受production_shape |
+| `operation_extra_bytes` | 操作中相對phase起點的額外峰值上界 |
+| `recovery_before_extra_bytes` | 未提交/失敗回到起點狀態時，回站所需額外峰值 |
+| `max_after_delta_bytes` | 成功提交後，cluster相對起點的增量上界 |
+| `recovery_extra_bytes` | 從已提交狀態繼續回站的剩餘額外峰值 |
+| `components`、`observed_extra_bytes` | heap_toast/indexes/temporary/other與觀測下界；上界不得低於分項加總/觀測 |
+| `relation_min_bytes`、`relation_max_bytes` | 所有watch物件的適用大小範圍；不存在為0 |
+| `recovery_covers` | 固定before/during/after_commit，報告必須涵蓋三種停點 |
+
+寫入前分別要求 `current + operation_extra + reserve <= ceiling`、`current + recovery_before_extra + reserve <= ceiling`、`current + max_after_delta + recovery_extra + reserve <= ceiling`；寫入後要求 `actual_after + recovery_extra + reserve <= ceiling`，並核對實際增量/回收及post最大容量。`max_after_delta`要使用負值時，僅准已驗證的實體回收操作，且預計縮減不得高於目標物件大小下限與必要實測回收量；普通VACUUM/gate不能使用負值。這避免把尚未發生或可能已被其他操作回收的空間先當作可用。
+
+可先用 `--print-bindings` 輸出證據需要綁定的hash；它只計算binding，不驗證或核准計畫。未提供完整正式上界與回復證據前，executor會拒絕執行，不能填入舊取樣值或合成fixture報告來過門檻。
+
+#### 操作入口與驗收界線
+
+在獨立Python環境安裝 `scripts/requirements-grassroots-executor.txt`（psycopg 3.2.12）。預設指令完全離線，不讀憑證、不連DB：
+
+```sh
+python scripts/grassroots-maintenance-executor.py --plan /private/package/maintenance.json --plan-sha256 <已審查SHA256>
+```
+
+正式作用中的環境/維護授權另行確認後，連線從私有 `POW_GRASSROOTS_DSN` 載入；必須明列已核對host/port/dbname/user，正式僅允5432 session endpoint與verify-full TLS。不能用service、hostaddr或多host覆寫目標。`--apply --route prepare --state /private/package/state.json --permit-production <project-ref>` 預設一次一phase，下一次同指令從journal續行；`--max-phases`只控制本次數量，不跳過任何gate。
+
+出現中斷，先以同一plan/state/route加 `--reconcile-only` 核對。只有not_applied可用 `--apply --retry-not-applied` 明確重試；已驗證未執行、已提交但阻擋或reuse_unconfirmed也可在recover entry通過後切 `--route recover`。不要刪journal、換plan hash、重送未知交易或手改done。若system identifier權限不可用或版本變動，停止核對，不能放寬目標驗證來續跑。
+
+本輪只驗新增executor及timeout：29項離線故障注入、1項batch timeout契約及5項小型PostgreSQL17合成fixture通過；涵蓋所有維護SQL型別、提交後斷線不重寫、statement timeout後回站、兩個executor排他與唯讀斷言拒絕寫函式。沒有重跑既有60批、完整還原、本機精簡、舊瀏覽器或舊CI驗證；合成fixture不支持正式峰值結論。正式仍未停寫/整理/精簡/部署，PR維持Draft；正式上界報告、具體epoch/內容與freeze斷言、來源新鮮度及執行授權尚須按實際計畫審核。

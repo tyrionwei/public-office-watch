@@ -194,6 +194,15 @@ class OfflinePlanTest(unittest.TestCase):
         self.assertEqual(sql.count(delimiter), 2)
         self.assertNotEqual(delimiter, '$grassroots$')
 
+    def test_forward_and_reverse_have_bounded_statement_timeout(self):
+        result = self.build()
+        self.assertEqual(result['transaction_timeouts'], {'lock_timeout': '5s', 'statement_timeout': '5min'})
+        for path in result['forward_order'] + result['reverse_order']:
+            sql = (self.out/path).read_text()
+            self.assertEqual(sql.count("SET LOCAL statement_timeout = '5min';"), 1)
+            self.assertLess(sql.index("SET LOCAL statement_timeout = '5min';"), sql.index('LOCK TABLE '))
+            self.assertLess(sql.index("SET LOCAL statement_timeout = '5min';"), sql.index('DO '))
+
     def test_existing_output_refused(self):
         self.build()
         with self.assertRaisesRegex(ValueError, 'already exists'):

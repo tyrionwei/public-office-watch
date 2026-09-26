@@ -154,3 +154,26 @@ python scripts/grassroots-maintenance-executor.py --plan /private/package/mainte
 出現中斷，先以同一plan/state/route加 `--reconcile-only` 核對。只有not_applied可用 `--apply --retry-not-applied` 明確重試；已驗證未執行、已提交但阻擋或reuse_unconfirmed也可在recover entry通過後切 `--route recover`。不要刪journal、換plan hash、重送未知交易或手改done。若system identifier權限不可用或版本變動，停止核對，不能放寬目標驗證來續跑。
 
 本輪只驗新增executor及timeout：29項離線故障注入、1項batch timeout契約及5項小型PostgreSQL17合成fixture通過；涵蓋所有維護SQL型別、提交後斷線不重寫、statement timeout後回站、兩個executor排他與唯讀斷言拒絕寫函式。沒有重跑既有60批、完整還原、本機精簡、舊瀏覽器或舊CI驗證；合成fixture不支持正式峰值結論。正式仍未停寫/整理/精簡/部署，PR維持Draft；正式上界報告、具體epoch/內容與freeze斷言、來源新鮮度及執行授權尚須按實際計畫審核。
+
+### 峰值／回復證據複核：第一步仍不可放行
+
+本次只離線核對既有來源／journal雜湊，重算867筆階段觀測，未重跑60批、完整還原或新增正式操作。原始log第一筆仍使用舊校正值；此次一律從未變更基準453,495,955與正式快照499,675,313計算固定offset46,179,358，保留原log不覆寫。以下全部是**舊隔離觀測的投影，不是即時正式值或峰值上界**：
+
+| 既有情境 | 含起點的觀測投影最大值（bytes） | 距500,000,000上限（bytes） |
+|---|---:|---:|
+| 零批次DDL／schema回退／快取回站 | 499,953,841 | 46,159 |
+| 首批精簡及回復 | 499,855,537 | 144,463 |
+| 完整精簡後原位回復 | 496,922,801 | 3,077,199 |
+| 已整理過的副本再跑前置索引整理／回站 | 496,947,377 | 3,052,623 |
+| 單批操作包回站漏掉必要實體整理（失敗） | 500,764,849 | -764,849 |
+| 補做既定實體整理後回站 | 498,741,425 | 1,258,575 |
+
+867個phase中705個只有一次取樣；表中保留失敗及修正情境，不能把最後完成值替代全程最大值，也不能加上任意百分比就視為保守上界。資料指紋回復通過與容量安全必須分別判定。普通VACUUM沒有預支實體回收量，遵循[PostgreSQL VACUUM說明](https://www.postgresql.org/docs/17/sql-vacuum.html)。
+
+第一個清快取動作的來源起點只剩324,687 bytes。清空後約釋放19.96MB，不能倒推動作執行前／執行中的新檔案與catalog增長一定放得下。既有零批次及前置索引情境皆先清完四個快取，沒有證明「只清第一個快取後中斷」的完整回站上界。五表索引重建是在完整回復後、索引已緊密的副本上執行，各步database before=after；先前19,210,240 bytes只代表正式索引與副本的差額，不能當成正式必然節省量或15MB gate已通過。
+
+另一個待補項是回復路線的停點適用性。executor目前只有一條固定`routes.recover`；第一步未執行時原服務仍完整，第一步已提交時search cache為空，兩者不能僅憑`recovery_covers`字面欄位就宣稱使用同一SQL序列安全。前者若不必要地重建已填入cache，反而可能在接近額度時要求額外空間。正式計畫必須逐一綁定：停點／reconcile狀態、資料epoch、cache及index狀態、可執行回復序列、操作前／中／提交後的容量上界；unknown先只讀reconcile，不能猜分支或手改journal。這項需要具體回復計畫與必要executor調整，尚未實作或驗收。
+
+因此目前不產生`status=passed`的正式space-envelope，也不允許第一筆正式prepare寫入。下一輪只補第一步的暫態上界與各停點回復分支，再處理其餘rewrite/reindex的heap/TOAST、index、temp與其他成長上界；寫入凍結、實際版本、來源新鮮度及獨立disk/WAL餘裕仍須在正式執行前確認。若第一步無法在現有餘裕下取得可信上界，才交由使用者決定額外容量或另行審查的前置釋放方式；不得直接試正式操作。
+
+本次離線來源與journal完整性通過；獨立唯讀審查確認上述兩個缺口。既有commit `870c816` 的Web CI #113已成功；本段只更新證據分類與阻擋條件，不代表新增DB驗收。PR維持Draft，沒有merge、部署或正式DB變更。

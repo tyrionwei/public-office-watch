@@ -75,3 +75,22 @@ export function claimApprovalBlockReason(claim: ClaimApprovalTarget) {
   }
   return null;
 }
+
+/** Generic identity actions cannot bypass the reviewed grassroots candidate writer. */
+export function grassrootsIdentityReviewBlockReason(
+  source: { source_type?: string; normalized_role?: string | null; position?: string | null; source_payload?: Record<string, unknown> | null },
+  targetRaceType?: string | null,
+) {
+  const message = '基層候選人請使用官方候選審核流程，保存姓名；只有核對成功的較高層級人物才能連結。';
+  const payload = source.source_payload ?? {};
+  const hints = [source.position, source.normalized_role, payload.kind, payload.position, payload.normalizedRole, payload.race_type, payload.raceType, (payload.race as Record<string, unknown> | undefined)?.race_type, (payload.targetRace as Record<string, unknown> | undefined)?.race_type].filter(value => typeof value === 'string').join(' ');
+  const grassroots = /村里長|村長|里長|(?:鄉|鎮|市)(?:鎮市)?民?代表|village[-_]chief|township[-_]representative/i;
+  if (grassroots.test(hints) || (targetRaceType && grassroots.test(targetRaceType))) return message;
+  if (targetRaceType !== undefined) {
+    const higher = new Set(['president', 'vice_president', 'legislator', 'party_list_legislator', 'municipality_mayor', 'county_mayor', 'city_councilor', 'county_councilor', 'township_mayor', 'legislative_district', 'councilor_district', 'local_chief', 'indigenous']);
+    if (!targetRaceType || !higher.has(targetRaceType)) return '候選職類尚未確認，請使用官方候選審核流程。';
+  } else if (source.source_type === 'official_election' && !/總統|立法委員|立委|議員|縣長|市長|鄉長|鎮長|鄉鎮市長/.test(hints)) {
+    return '選舉來源職類尚未確認，請使用官方候選審核流程。';
+  }
+  return null;
+}

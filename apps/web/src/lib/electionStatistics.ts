@@ -115,9 +115,9 @@ export function buildElectionEducationDistribution(
   const groups = new Map<string, PublicElectionEducationDistribution>();
   for (const candidate of candidates) {
     if (!electionIdSet.has(candidate.election_id) || !raceIds.has(candidate.race_id)) continue;
-    const person = peopleById.get(candidate.person_id);
+    const person = candidate.person_id ? peopleById.get(candidate.person_id) : undefined;
     const education = person?.education?.trim()
-      || Array.from(new Set(educationClaimsByPersonId.get(candidate.person_id) ?? [])).join('；')
+      || Array.from(new Set((candidate.person_id ? educationClaimsByPersonId.get(candidate.person_id) : undefined) ?? [])).join('；')
       || null;
     const dimension = getEducationStatisticsDimension(education);
     const group = groups.get(dimension.key) ?? {

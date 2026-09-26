@@ -1,3 +1,4 @@
+import { candidateWriteRow } from './review-official-candidate-snapshot.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { applyReviewedOfficialCandidates, buildStagingRows, stageOfficialCandidateReview, validateReviewFile } from './official-candidate-review.mjs';
@@ -9,7 +10,7 @@ function fixture() {
   } };
   const plan = { blocking: [], matched: ['a', 'b'].map((key) => ({
     record: { candidateExternalId: key, personExternalId: `person-${key}`, personName: `測試${key}`, party: '甲', candidateNo: null, candidateNoProvided: false, isIncumbent: false },
-    race: { id: 'race', external_id: 'race-external', title: '測試選舉' },
+    race: { race_type: 'municipality_mayor', id: 'race', external_id: 'race-external', title: '測試選舉' },
     person: null, candidate: null, identityCandidates: [], raceCandidates: [],
   })) };
   return { snapshot, plan };
@@ -119,7 +120,7 @@ test('revision identity includes number, status, name, race and official source,
   const { snapshot, plan } = fixture();
   const key = () => buildStagingRows(snapshot, plan).claims[0].claim_key;
   const original = key();
-  plan.matched[0].race = { title: '測試選舉', external_id: 'race-external', id: 'race' };
+  plan.matched[0].race = { race_type: 'municipality_mayor', title: '測試選舉', external_id: 'race-external', id: 'race' };
   assert.equal(key(), original);
   for (const [object, field, value] of [[plan.matched[0].record, 'candidateNo', 7], [snapshot, 'candidacyStatus', 'withdrawn'], [plan.matched[0].record, 'personName', '另一人'], [plan.matched[0].race, 'id', 'other'], [snapshot.source, 'url', 'https://web.cec.gov.tw/other']]) {
     const old = object[field]; object[field] = value; assert.notEqual(key(), original); object[field] = old;
@@ -167,4 +168,80 @@ test('applying a changed reviewed revision updates only that claim and its ident
   assert.equal(current.review_status, 'verified'); assert.equal(current.person_id, 'person-confirmed');
   assert.equal(current.is_public, false);
   assert.ok(db.person_identity_matches.some((match) => match.source_person_id === current.source_person_id && match.reviewed_by === 'tester'));
+});
+
+
+test('grassroots name-only review writes no people or identity matches and retains independent candidate records', async (t) => {
+  const { snapshot, plan } = fixture(); const { db, writes } = rest(t);
+  for (const item of plan.matched) {
+    item.race.race_type = 'village_chief'; item.record.personName = '同名測試';
+    item.person = { id: 'same-name-only' }; item.identityCandidates = [{ id: 'same-name-only' }];
+    item.raceCandidates = [{ external_id: 'unrelated', person_id: null }];
+  }
+  await stageOfficialCandidateReview(config, snapshot, plan, {});
+  const review = validateReviewFile({ schemaVersion: 1, reviewedBy: 'tester', decisions: plan.matched.map((item, index) => ({
+    candidateExternalId: item.record.candidateExternalId, personName: item.record.personName,
+    contentRevision: buildStagingRows(snapshot, plan).claims[index].claim_json.revision,
+    decision: 'name_only', reviewedAt: '2026-09-08',
+  })) }, snapshot, plan);
+  const result = await applyReviewedOfficialCandidates(config, snapshot, review, candidateWriteRow);
+  assert.equal(result.createdPeople, 0); assert.equal(result.writtenCandidates, 2);
+  assert.deepEqual(db.candidates.map(row => [row.external_id, row.person_id, row.candidate_name]), [['a', null, '同名測試'], ['b', null, '同名測試']]);
+  assert.equal(db.person_identity_matches.length, 0);
+  assert.equal(db.people.length, 0);
+  assert.ok(!writes.some(write => ['people', 'person_identity_matches'].includes(write.table)));
+  assert.ok(db.person_claims.every(row => row.person_id === null && row.is_public === false && row.review_status === 'verified'));
+  assert.deepEqual(db.person_claims.map(row => row.candidate_id), db.candidates.map(row => row.id));
+});
+
+test('grassroots identity requires higher-level history and explicit review evidence before writes', async (t) => {
+  const { snapshot, plan } = fixture(); const { db, writes } = rest(t); const item = plan.matched[0];
+  item.race.race_type = 'township_representative';
+  item.person = { id: 'higher-person' }; item.identityCandidates = [item.person];
+  item.candidate = { external_id: 'a', person_id: 'higher-person', race_id: 'race', is_public: true };
+  item.higherLevelPersonIds = ['higher-person'];
+  const decision = { item, candidateExternalId: 'a', contentRevision: buildStagingRows(snapshot, plan).claims[0].claim_json.revision, decision: 'use_existing', personId: 'higher-person', reviewedAt: '2026-09-08' };
+  await assert.rejects(applyReviewedOfficialCandidates(config, snapshot, { reviewedBy: 'tester', decisions: [decision] }, candidateWriteRow), /identityEvidence/);
+  assert.equal(writes.length, 0);
+  await assert.rejects(applyReviewedOfficialCandidates(config, snapshot, { reviewedBy: 'tester', decisions: [{ ...decision, decision: 'name_only' }] }, candidateWriteRow), /cannot clear/);
+  await assert.rejects(applyReviewedOfficialCandidates(config, snapshot, { reviewedBy: 'tester', decisions: [{ ...decision, decision: 'create_new' }] }, candidateWriteRow), /identityEvidence/);
+  decision.identityEvidence = 'Official biographical record cross-check, not name-only';
+  item.higherLevelPersonIds = [];
+  await assert.rejects(applyReviewedOfficialCandidates(config, snapshot, { reviewedBy: 'tester', decisions: [decision] }, candidateWriteRow), /higher-level/);
+  item.higherLevelPersonIds = ['higher-person'];
+  await stageOfficialCandidateReview(config, snapshot, plan, {});
+  await applyReviewedOfficialCandidates(config, snapshot, { reviewedBy: 'tester', decisions: [decision] }, candidateWriteRow);
+  assert.equal(db.people.length, 0); assert.equal(db.candidates[0].person_id, 'higher-person');
+  assert.equal(db.candidates[0].candidate_name, item.record.personName);
+  assert.equal(db.person_identity_matches[0].person_id, 'higher-person');
+  assert.equal(db.person_identity_matches[0].evidence_json.identityEvidence, decision.identityEvidence);
+});
+
+
+test('name-only registration revisions keep candidate identity while status and name change', async (t) => {
+  const { snapshot, plan } = fixture(); const { db } = rest(t);
+  plan.matched = [plan.matched[0]]; const item = plan.matched[0];
+  item.race.race_type = 'village_chief';
+  const applyRevision = async () => {
+    await stageOfficialCandidateReview(config, snapshot, plan, {});
+    const review = validateReviewFile({ schemaVersion: 1, reviewedBy: 'tester', decisions: [{
+      candidateExternalId: item.record.candidateExternalId, personName: item.record.personName,
+      contentRevision: buildStagingRows(snapshot, plan).claims[0].claim_json.revision,
+      decision: 'name_only', reviewedAt: '2026-09-08',
+    }] }, snapshot, plan);
+    await applyReviewedOfficialCandidates(config, snapshot, review, candidateWriteRow);
+  };
+  await applyRevision();
+  const candidateId = db.candidates[0].id;
+  const registeredClaim = structuredClone(db.person_claims[0]);
+  item.candidate = structuredClone(db.candidates[0]); item.raceCandidates = [item.candidate];
+  snapshot.candidacyStatus = 'qualified'; item.record.personName = '官方更正姓名';
+  await applyRevision();
+  assert.equal(db.candidates.length, 1); assert.equal(db.candidates[0].id, candidateId);
+  assert.equal(db.candidates[0].person_id, null);
+  assert.equal(db.candidates[0].candidate_name, '官方更正姓名');
+  assert.equal(db.candidates[0].candidacy_status, 'qualified');
+  assert.deepEqual(db.person_claims[0], registeredClaim);
+  assert.ok(db.person_claims.every(claim => claim.candidate_id === candidateId));
+  assert.equal(db.people.length, 0); assert.equal(db.person_identity_matches.length, 0);
 });

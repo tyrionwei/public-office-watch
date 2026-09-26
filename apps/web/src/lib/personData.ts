@@ -875,6 +875,7 @@ export function buildPersonListItems(
   claims: PublicPersonClaim[] = [],
 ): PublicPersonListItem[] {
   const candidatesByPersonId = candidates.reduce<Map<string, PublicCandidate[]>>((recordsByPersonId, candidate) => {
+    if (!candidate.person_id) return recordsByPersonId;
     const records = recordsByPersonId.get(candidate.person_id) ?? [];
     records.push(candidate);
     recordsByPersonId.set(candidate.person_id, records);
@@ -1064,7 +1065,7 @@ export function buildPersonProfileFromItems(
   const publicClaims = profileClaimsFor(mergedPersonIds, claims);
   const profilePartyAffiliations = partyAffiliationsFor(mergedPersonIds, partyAffiliations);
   const candidateRecords = candidates
-    .filter((candidate) => mergedPersonIds.includes(candidate.person_id))
+    .filter((candidate) => candidate.person_id !== null && mergedPersonIds.includes(candidate.person_id))
     .sort(compareCandidateRecordsNewestFirst);
   const enrichedPerson = applyClaimBackfill(person, publicClaims) as PublicPersonListItem;
 

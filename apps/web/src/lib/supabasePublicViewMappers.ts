@@ -1,5 +1,5 @@
 import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
-import { partyTheme, type PartyThemeKey } from '../styles/partyThemes';
+import { partyTheme, type PartyThemeKey } from '../styles/partyThemes.ts';
 import type {
   PublicCandidate,
   PublicCompany,
@@ -299,7 +299,7 @@ export function mapPublicCandidateRow(row: PartialRow<PublicCandidate>): PublicC
 
   return {
     candidate_id: asString(row?.candidate_id, ''),
-    person_id: asString(row?.person_id, ''),
+    person_id: asNullableString(row?.person_id),
     person_name: asString(row?.person_name, '未命名候選人'),
     person_party: asNullableString(row?.person_party),
     person_position: asNullableString(row?.person_position),

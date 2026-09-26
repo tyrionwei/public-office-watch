@@ -25,6 +25,21 @@ Release工作區從最新origin/main（ce1c1f7）建立，已通過建置、lint
 
 首次建置/合約檢查因借用原工作區缺少最新main的qrcode依賴失敗；改用release自身lockfile獨立npm ci後通過。CI瀏覽器入口兩次在預啟動4173埠的HTTP探測阻塞；只列測試成功、Playwright代理解析不使用proxy、直接未啟動埠請求逾時。採一次替代：預先啟動此release已建置的mock preview，暫存config僅允許重用該已確認服務，原分享/手機案例7項全部通過。狀態/錯誤處理78項通過；同一已建置mock preview的PWA離線案例1項通過（本機暫存config重用Vite preview，CI原PWA使用Python靜態server）。未改CI設定或測試斷言，不能將此結果稱為原CI自動啟動流程已修復。
 
+## PR #53 補強：後續匯入、archive 與 nullable contract
+
+- 維護中的官方候選審核入口 `review-official-candidate-snapshot.mjs` 支援明確 `name_only` 決策。純基層不建立 `people` 或人物 identity match，只保存候選姓名與 `person_id = NULL`；來源及 claims 仍保留私有審核紀錄。候選寫入後將 ID 寫回 claim，後續 registration lifecycle 及狀態歷史繼續使用 candidate ID。
+- 基層要 `use_existing`，必須提供人工交叉身分證據，且目前候選歷史須證明目標人物有較高層級參選。同名、external ID 存在或有 `people` 紀錄，都不足以直接連結。缺少／未分類職類、無審核決策、嘗試清掉既有人物連結均拒絕。
+- 兩支 2018 村里長／鄉鎮市基層 legacy importer 的 `--write` 已停用；保留 dry-run，後續寫入改走新版審核入口。其原有自動建人物與人物合併不再重放；mixed subcounty 舊批次亦須改走審核流程。固定 identity-review round 若未傳入新版明確決策，基層寫入會被共用 writer 擋下。既有 generic 人物 claim UI 仍維持人物審核界線，name-only 使用上述官方審核入口。
+- 一般內部 identity API 的 create／approve 會先依已保存來源及實際目標職類檢查，基層與不明選舉職類導向官方候選審核，不先建立人物。拒絕錯配仍可使用原入口。
+- `sync-real-public-data.mjs` 在第一次寫入前拒絕基層／未知候選 seed 及明確基層人物 seed；基層來源仍可蒐集，但不寫自動 identity 配對，保留既有人工核對結果。五個會掃描全部既有來源的 legacy identity RPC 暫停呼叫並明確回報 skipped，**包含它們原本對較高層級人物的自動處理**；恢復前須另補可限制職類的方案，不能只過濾當批輸入。未修改或執行 DB 函式。
+- Registration lifecycle 同時要求 claim 的 candidate ID 與 manifest 候選一致，防止同選區錯配。舊 claim 沒有 candidate ID 時停止，需核對後補關聯，不按同名推斷。
+- `PublicCandidate.person_id` 改為 `string | null`，mapper 保留 SQL NULL。人物比較及人物清單明確排除無人物 ID 的紀錄；人口屬性依候選 ID 索引，候選分組不再以同名當身分。沿用原本發布機制，未新增前端人物頁隱藏規則。
+- 新增離線 `scripts/export-grassroots-archive.py`，從已驗證的精簡前 tagged archive 拆成獨立 gzip JSONL：`people`、`person_claims`、完整候選列、candidate-person links、`source_people`、identity matches、merge decisions，以及 manifest／外部 identity 依賴清單。保留 UUID、external ID、審核狀態與證據，依主鍵挑選增量恢復；不按姓名猜 canonical identity、不覆寫較新的目標資料、不自動公開。archive 範圍是原始 UUID 快照的超集合，不能當精簡刪除名單。
+
+私有備份旁已另外產生 `grassroots-incremental-v1/`：59,940 筆 people、292,802 筆 claims、69,977 筆候選及 links、51,582 筆 source_people、51,583 筆 identity matches、28,727 筆 merge decisions。來源 SHA-256／完整筆數及產物解壓、JSON、筆數與 manifest 雜湊均驗證；原本完整 dump 與 tagged archive 保留。這次沒有連線寫入資料庫，也沒有執行 restore UI／新一輪完整還原演練。外部 identity 與 race 依賴須在將來恢復時核對既有目標或完整 dump。
+
+本次只跑新增及受影響範圍的測試：同一工作樹整合執行官方審核／匯入、同步防護、registration 靜態 SQL 契約、name-only／候選分組／選舉統計、內部審核 API／claim 合約，共 64 項通過；archive 合成資料另 2 項通過。前端 app 與 Vite/node TypeScript、修改檔 lint 通過。未重跑既有大量 local compaction、CI、瀏覽器或正式環境驗收；新版匯入未對真實 DB 寫入，mock REST 與 registration 靜態檢查不等於現場驗收。獨立唯讀審查指出的同步覆寫身分配對及 registration 錯配風險已修正，複核無新增阻斷。正式低容量方案仍為 blocking，PR 保持 Draft。
+
 ## 正式部署前阻擋條件
 
 本批狀態為release準備，不可直接合併觸發部署。以下條件尚未完成：

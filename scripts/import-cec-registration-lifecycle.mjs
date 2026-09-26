@@ -43,6 +43,7 @@ BEGIN
    LEFT JOIN public.person_claims claim ON claim.id = i.claim_id
    WHERE c.id IS NULL OR e.year IS DISTINCT FROM 2026
       OR claim.review_status IS DISTINCT FROM 'verified'
+      OR claim.candidate_id IS DISTINCT FROM c.id
       OR claim.claim_json->'targetRace'->>'id' IS DISTINCT FROM c.race_id::text
       OR claim.claim_json->'registrationEvidence'->'source'->>'sha256' IS DISTINCT FROM i.source_hash
       OR claim.claim_json->'registrationEvidence'->>'registration_date' IS DISTINCT FROM i.occurred_on::text

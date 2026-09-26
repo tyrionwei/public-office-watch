@@ -3,7 +3,7 @@
 -- 身分合併原有部分索引無法支援刪除人物時的完整外鍵查找。
 CREATE INDEX IF NOT EXISTS idx_person_merge_decisions_duplicate_fk ON public.person_merge_decisions(duplicate_person_id);
 ALTER TABLE public.candidates ADD COLUMN candidate_name TEXT;
-UPDATE public.candidates c SET candidate_name = p.name FROM public.people p WHERE p.id = c.person_id;
+-- Linked candidates use people.name; name-only conversion backfills only affected rows.
 ALTER TABLE public.candidates ALTER COLUMN person_id DROP NOT NULL;
 ALTER TABLE public.candidates ADD CONSTRAINT candidates_name_only_name_check
     CHECK (person_id IS NOT NULL OR NULLIF(BTRIM(candidate_name), '') IS NOT NULL);

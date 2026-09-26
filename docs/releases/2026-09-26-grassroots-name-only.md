@@ -115,7 +115,7 @@ Release工作區從最新origin/main（ce1c1f7）建立，已通過建置、lint
 - 普通VACUUM中斷後無法證明是否已完成時，若資料與回復條件通過，標記 `reuse_unconfirmed`，只准轉回站，不自動重送、不給回收容量credit。已提交但未通過容量門檻則標 `committed_blocked`，只准走回復路線。
 - 首輪必須prepare；完成後才可finish，recover開始後不得再走forward。正式每條路線以完整服務gate結束；12個快取須存在且已填入，內容/ACL依hash固定的post SQL核對。prepare終端實測cluster必須不超過485,000,000 bytes。
 
-#### 私人計畫與峰值證據契約
+#### 私人計畫與峰值證據契約（以下為v1；正式需使用末節v2）
 
 計畫格式 `grassroots-maintenance-v1`：`target` 包含kind、public connection selectors及已核實的database/session_user/server_version_num/system_identifier；`settings` 固定work_mem/maintenance_work_mem=32MB、parallel maintenance=0、lock_timeout=5s；`watch`列全部受影響物件（正式必含12個公開cache）；`maintenance_guard`、`backup_artifacts`、`phases`、`routes`均不可缺。artifact一律為 `{path, sha256}`，相對於私人package根目錄。
 
@@ -172,8 +172,33 @@ python scripts/grassroots-maintenance-executor.py --plan /private/package/mainte
 
 第一個清快取動作的來源起點只剩324,687 bytes。清空後約釋放19.96MB，不能倒推動作執行前／執行中的新檔案與catalog增長一定放得下。既有零批次及前置索引情境皆先清完四個快取，沒有證明「只清第一個快取後中斷」的完整回站上界。五表索引重建是在完整回復後、索引已緊密的副本上執行，各步database before=after；先前19,210,240 bytes只代表正式索引與副本的差額，不能當成正式必然節省量或15MB gate已通過。
 
-另一個待補項是回復路線的停點適用性。executor目前只有一條固定`routes.recover`；第一步未執行時原服務仍完整，第一步已提交時search cache為空，兩者不能僅憑`recovery_covers`字面欄位就宣稱使用同一SQL序列安全。前者若不必要地重建已填入cache，反而可能在接近額度時要求額外空間。正式計畫必須逐一綁定：停點／reconcile狀態、資料epoch、cache及index狀態、可執行回復序列、操作前／中／提交後的容量上界；unknown先只讀reconcile，不能猜分支或手改journal。這項需要具體回復計畫與必要executor調整，尚未實作或驗收。
+另一個待補項是回復路線的停點適用性。executor目前只有一條固定`routes.recover`；第一步未執行時原服務仍完整，第一步已提交時search cache為空，兩者不能僅憑`recovery_covers`字面欄位就宣稱使用同一SQL序列安全。前者若不必要地重建已填入cache，反而可能在接近額度時要求額外空間。正式計畫必須逐一綁定：停點／reconcile狀態、資料epoch、cache及index狀態、可執行回復序列、操作前／中／提交後的容量上界；unknown先只讀reconcile，不能猜分支或手改journal。這項在當次複核尚未實作；後續v2分支修正與驗證見末節，正式私人回復計畫仍未核可。
 
 因此目前不產生`status=passed`的正式space-envelope，也不允許第一筆正式prepare寫入。下一輪只補第一步的暫態上界與各停點回復分支，再處理其餘rewrite/reindex的heap/TOAST、index、temp與其他成長上界；寫入凍結、實際版本、來源新鮮度及獨立disk/WAL餘裕仍須在正式執行前確認。若第一步無法在現有餘裕下取得可信上界，才交由使用者決定額外容量或另行審查的前置釋放方式；不得直接試正式操作。
 
 本次離線來源與journal完整性通過；獨立唯讀審查確認上述兩個缺口。既有commit `870c816` 的Web CI #113已成功；本段只更新證據分類與阻擋條件，不代表新增DB驗收。PR維持Draft，沒有merge、部署或正式DB變更。
+
+### Checkpoint-aware recovery（v2）與首個 cache_clear 的結論
+
+`grassroots-maintenance-v2`取代正式使用的固定recover路線。v1僅保留隔離測試相容，正式plan會拒絕。原60批forward及403份guarded reverse檔案不重分組、不修改；本輪只離線核對403份reverse的既有SHA／bytes、manifest membership、transaction格式與5分鐘timeout，沒有對真資料重跑。
+
+`routes`只列prepare／finish；`recovery_branches`每支包含`id`、`case`、`from={route,completed,pending}`、唯讀`entry` artifact及`phases`。completed必須是來源route的精確已完成前綴，pending只能是已reconcile的not_applied_verified／committed_blocked／reuse_unconfirmed；unknown拒絕選支。符合journal且現場entry為真的分支必須恰好一支，多支或沒有都停止。分支ID與來源checkpoint保存至外部journal；恢復中斷後固定原分支。若剛保存分支、第一個phase尚未開始，續行會重验entry與data guard；已有phase時依該停點的pre/post與capacity gate續行。
+
+| 分支 | 執行範圍 |
+|---|---|
+| `not_applied` | 僅原服務gate，不REFRESH原本完整的快取 |
+| `cache_cleared` | 僅重建分支指定且現場仍為空的快取，再驗服務gate |
+| `indexes_partially_rebuilt` | 按索引存在狀態與journal選定剩餘序列，已完成部分不重送 |
+| `name_only_batches_started` | 完整逆向已提交的批次前綴，再實體回收、回建快取與服務gate |
+
+資料分支另有`data_checkpoint={package_manifest,committed_batches,guard}`。批次只能是從0開始的連續已提交前綴；guard必須驗前綴已提交、其餘未提交及完整資料形狀，不能以候選NULL數量或`SELECT true`代替。程式機械要求reverse清單等於manifest中該前綴的全部表／檔案及原順序，不准任意省略。
+
+新增typed `guarded_reverse` phase，沒有relation欄位，而是`package_manifest`、`reverse_file`與互斥的`post`／`not_applied`斷言，另保留既有pre、recovery_before/after、evidence及容量欄位。只能執行hash固定、manifest列出的既有逆向transaction；statement_timeout須為300000，SQL的SET LOCAL仍為5min。正式逆向資料表須列入watch。提交後斷線時，依資料前後狀態核實已提交才標done，不再重送；兩個斷言同真或同假均視為ambiguous。這是已審查SQL產物的身分／格式驗證，不是允許執行任意SQL的沙箱。
+
+跨候選批次的plan須宣告`data_window={after_route:prepare,package_manifest,full_commit_guard}`；程式要求prepare完成後的0至60批每個可達前綴都有回復分支，正式plan另須覆蓋每個maintenance前綴及已reconcile中斷狀態。finish進入、續行及每個phase前，都強制核對與完整批次回復分支相同的full_commit_guard，不能在只提交部分批次時進finish。正式有finish或name-only回復分支卻缺data_window會被拒絕。SQL斷言的逐列語意及完整私人plan仍須獨立審核，不能把存在guard檔案當成已驗證資料。
+
+首個`cache_clear`已專門核對PostgreSQL **17.6** 的[matview.c](https://raw.githubusercontent.com/postgres/postgres/REL_17_6/src/backend/commands/matview.c)與[cluster.c](https://raw.githubusercontent.com/postgres/postgres/REL_17_6/src/backend/commands/cluster.c)：WITH NO DATA跳過查詢填入，但仍建立transient heap、可能的TOAST、更新catalog及交換實體，提交前不能預支舊檔回收量。小型隔離PG另外測得before、未提交during、關閉session後rollback、after-commit及恢復後狀態；這是交易／續行機制證據，未做連續峰值量測，也不是正式形狀或正式上界證明。
+
+**結論：無法在現有正式快照324,687 bytes餘裕下建立可信保守上界，停止硬證明並維持首寫阻擋。**未產生passed space-envelope。建議先增加實際可用容量；若希望維持現有額度，可另審單一非必要索引卸除，但其自身catalog增長、依賴與回建容量也須先有證據，不能直接當已安全替代。普通VACUUM、刪列或19.2MB索引差額均不是可預支的實體容量。未購買／升級資源、未連正式DB、未merge或部署，PR保持Draft。
+
+同一release版本整合驗證：原29項受影響executor合約與新增21項checkpoint/reverse離線測試通過；新增6項小型PG17.6測試通過（不重跑既有60批／完整還原）。第一次fixture驗證的觀測連線被嚴格freeze guard納入active session，測試改為明列唯一唯讀觀測連線；帶數字的fixture schema也揭露reverse LOCK TABLE格式過窄，已與identifier契約對齊。這兩項均在修正後重新驗證，未放寬正式maintenance guard。獨立複核指出的空恢復run入口漂移、漏逆向檔／中間批次及finish完整提交guard均已修正。測試owned容器完成後停止移除，其他stack與私人備份保留。

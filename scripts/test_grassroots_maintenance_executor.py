@@ -368,6 +368,14 @@ class MaintenanceFaultTests(unittest.TestCase):
         # Pure synthetic certificate for testing validation branches; never a real
         # production report, connection, or authorization.
         plan, _, _ = make_plan(self.root, ('gate',))
+        old_recover=plan['routes'].pop('recover')
+        plan['format']=executor.CHECKPOINT_FORMAT
+        checkpoints=[([],None),([] ,{'id':'phase-0','status':'not_applied_verified'}),
+                     ([],{'id':'phase-0','status':'committed_blocked'}),(['phase-0'],None)]
+        plan['recovery_branches']=[{'id':f'original-service-{i}',
+            'case':'not_applied' if not done and (pending is None or pending['status']=='not_applied_verified') else 'indexes_partially_rebuilt',
+            'from':{'route':'prepare','completed':done,'pending':pending}, **old_recover}
+            for i,(done,pending) in enumerate(checkpoints)]
         plan['target']['kind'] = 'production'
         plan['ceiling_bytes'] = 500000000
         plan['watch'] = sorted(set(plan['watch']) | executor.SERVICE_CACHES)
@@ -383,7 +391,7 @@ class MaintenanceFaultTests(unittest.TestCase):
         self.assertEqual(executor.load_plan(path, digest)['target']['kind'], 'production')
         cases = ['missing_cache', 'prepare_not_gate', 'recover_not_gate', 'insufficient_reserve']
         codes = ['full_service_cache_inventory_required', 'route_must_end_with_service_gate',
-                 'route_must_end_with_service_gate', 'full_service_15mb_reserve_required']
+                 'recovery_must_end_with_gate', 'full_service_15mb_reserve_required']
         for case, code in zip(cases, codes):
             with self.subTest(case=case):
                 plan = copy.deepcopy(base)

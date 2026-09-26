@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""可續行的基層精簡維護執行器。預設只檢查計畫；不編排或重分候選批次。
+"""可續行的基層精簡維護執行器。預設只檢查計畫；不重分候選批次。
+v2依checkpoint執行已封存的guarded reverse，再續行實體整理與快取回建。
 
 需要私人、hash 固定的計畫/SQL 斷言/峰值與回復證據。不得以取樣峰值替代上界。
 CLI 與 manifest 不是正式寫入授權；維護、停寫及資料 epoch 必須先由操作人確認。
@@ -15,8 +16,9 @@ import sys
 import tempfile
 
 FORMAT = 'grassroots-maintenance-v1'
+CHECKPOINT_FORMAT = 'grassroots-maintenance-v2'
 KINDS = {'cache_clear', 'cache_refresh', 'index_drop', 'index_create',
-         'reindex_index', 'reindex_table', 'vacuum_full', 'vacuum_reuse', 'gate'}
+         'reindex_index', 'reindex_table', 'vacuum_full', 'vacuum_reuse', 'gate', 'guarded_reverse'}
 REWRITES = {'cache_refresh', 'index_create', 'reindex_index', 'reindex_table', 'vacuum_full'}
 INDEX_KINDS = {'index_drop', 'index_create', 'reindex_index'}
 RECLAIM_KINDS = {'cache_clear', 'index_drop', 'reindex_index', 'reindex_table', 'vacuum_full'}
@@ -69,6 +71,8 @@ def action_sql(phase, root):
     kind = phase['kind']
     if kind == 'gate':
         return None
+    if kind == 'guarded_reverse':
+        return reverse_sql(phase, root)
     relation = identifier(phase['relation'])
     if kind == 'index_create':
         sql = artifact(root, phase['definition']).decode().strip()
@@ -90,6 +94,153 @@ def action_sql(phase, root):
     }[kind]
 
 
+def reverse_sql(phase, root):
+    """Only the immutable timeout-enabled generator package; never general SQL."""
+    ref = phase['package_manifest']
+    package_path = (root / ref['path']).resolve()
+    package = json.loads(artifact(root, ref))
+    require(package['format'] == 'grassroots-offline-operation-package-v1', 'unknown_reverse_package')
+    name = phase['reverse_file']
+    require(name in package['reverse_order'] and name.startswith('reverse/'), 'not_a_reverse_file')
+    matches = [f for f in package['files'] if f['path'] == name]
+    require(len(matches) == 1, 'reverse_manifest_membership')
+    f = matches[0]
+    sql = artifact(package_path.parent, {'path':name, 'sha256':f['sha256']})
+    require(len(sql) == f['bytes'], 'reverse_size_mismatch')
+    text = sql.decode()
+    # This is a hash-pinned reviewed artifact, not an SQL sandbox. Exact generator
+    # envelope disallows replacing it with ad-hoc commands or unbounded transactions.
+    prefix = """-- PRIVATE operation package. Complete external maintenance/target/backup/capacity gates first.
+BEGIN;
+SET LOCAL standard_conforming_strings = on;
+SET LOCAL timezone = 'UTC';
+SET LOCAL extra_float_digits = 3;
+SET LOCAL search_path = pg_catalog, public, published;
+SET LOCAL lock_timeout = '5s';
+SET LOCAL statement_timeout = '5min';
+"""
+    require(text.startswith(prefix), 'unreviewed_reverse_transaction')
+    match = re.fullmatch(r'LOCK TABLE [a-z0-9_., ]+ IN SHARE ROW EXCLUSIVE MODE;\nDO (\$grassroots_[a-f0-9]{64}(?:_x)*\$) BEGIN\n(.*)END \1;\nCOMMIT;\n', text[len(prefix):], re.S)
+    require(match is not None, 'unreviewed_reverse_body')
+    require(sha(match[2].encode()) == match[1][12:76], 'reverse_body_digest_mismatch')
+    require(phase['statement_timeout_ms'] == 300000, 'reverse_package_timeout_mismatch')
+    return text
+
+
+def recovery_contract(plan):
+    phase_contracts = [{k:v for k,v in p.items() if k != 'evidence'} for p in plan['phases']]
+    if plan['format'] == CHECKPOINT_FORMAT:
+        return {'branches':plan['recovery_branches'], 'phase_contracts':phase_contracts, 'data_window':plan.get('data_window')}
+    return {'entry':plan['routes']['recover']['entry'], 'phases':[
+        {k:v for k,v in p.items() if k != 'evidence'}
+        for ident in plan['routes']['recover']['phases'] for p in plan['phases'] if p['id']==ident]}
+
+
+def validate_branches(plan, root):
+    branches = plan.get('recovery_branches', [])
+    require(bool(branches) and 'recover' not in plan['routes'], 'checkpoint_branches_required')
+    phases = {p['id']:p for p in plan['phases']}
+    ids = set()
+    for b in branches:
+        require(re.fullmatch(r'[a-z0-9][a-z0-9_.:-]*', b['id']) is not None and b['id'] not in ids, 'invalid_branch_id')
+        ids.add(b['id'])
+        require(b['case'] in ('not_applied','cache_cleared','indexes_partially_rebuilt','name_only_batches_started'), 'unknown_recovery_case')
+        artifact(root,b['entry'])
+        if 'data_checkpoint' in b:
+            artifact(root,b['data_checkpoint']['guard'])
+            artifact(root,b['data_checkpoint']['package_manifest'])
+        checkpoint = b['from']
+        require(set(checkpoint)=={'route','completed','pending'} and checkpoint['route'] in plan['routes'], 'invalid_recovery_checkpoint')
+        route = plan['routes'][checkpoint['route']]['phases']
+        done = checkpoint['completed']
+        require(done==route[:len(done)] and len(done)<=len(route), 'checkpoint_not_route_prefix')
+        pending = checkpoint['pending']
+        if pending is not None:
+            require(set(pending)=={'id','status'} and len(done)<len(route) and pending['id']==route[len(done)]
+                    and pending['status'] in ('not_applied_verified','committed_blocked','reuse_unconfirmed'), 'invalid_checkpoint_frontier')
+        seq = b['phases']
+        require(seq and len(set(seq))==len(seq) and set(seq)<=set(phases), 'invalid_recovery_phases')
+        require(phases[seq[-1]]['kind']=='gate', 'recovery_must_end_with_gate')
+        kinds = [phases[i]['kind'] for i in seq]
+        if b['case']=='not_applied':
+            require(not done and (pending is None or pending['status']=='not_applied_verified')
+                    and set(kinds)=={'gate'}, 'not_applied_must_not_rewrite')
+        if b['case']=='cache_cleared':
+            require(set(kinds)<= {'cache_refresh','gate'}, 'cache_recovery_only_refreshes')
+        reverse = [phases[i] for i in seq if phases[i]['kind']=='guarded_reverse']
+        if b['case']=='name_only_batches_started':
+            require(bool(reverse) and 'vacuum_full' in kinds and 'cache_refresh' in kinds, 'data_reverse_requires_reclaim_and_cache')
+            require(max(i for i,k in enumerate(kinds) if k=='guarded_reverse') < min(i for i,k in enumerate(kinds) if k in ('vacuum_full','cache_refresh')), 'reverse_before_reclaim_and_cache')
+        else:
+            require(not reverse, 'reverse_only_in_data_recovery')
+        if reverse:
+            checkpoint_data = b['data_checkpoint']
+            artifact(root,checkpoint_data['guard'])
+            ref = reverse[0]['package_manifest']
+            require(checkpoint_data['package_manifest']==ref, 'reverse_checkpoint_package_mismatch')
+            require(all(p['package_manifest']==ref for p in reverse), 'mixed_reverse_packages')
+            package = json.loads(artifact(root,ref))
+            order = package['reverse_order']
+            batches = checkpoint_data['committed_batches']
+            require(batches and batches==list(range(len(batches))) and len(batches)<=len(package['batches']), 'reverse_requires_known_committed_prefix')
+            require([x['batch'] for x in package['batches']]==list(range(len(package['batches']))), 'invalid_package_batch_order')
+            mapped = [(name,re.fullmatch(r'reverse/[0-9]{2}-[a-z_.]+-([0-9]{4})\.sql',name)) for name in order]
+            require(all(m for _,m in mapped), 'unknown_reverse_filename_contract')
+            expected = [name for name,m in mapped if int(m[1]) in batches]
+            require([p['reverse_file'] for p in reverse]==expected, 'incomplete_checkpoint_reverse_files')
+            positions = [order.index(p['reverse_file']) for p in reverse]
+            require(positions==sorted(set(positions)), 'reverse_manifest_order_required')
+    if plan['target']['kind']=='production':
+        for route_name,route in plan['routes'].items():
+            for count in range(len(route['phases'])+1):
+                prefix = route['phases'][:count]
+                cases = [None]
+                if count<len(route['phases']):
+                    pid=route['phases'][count]
+                    cases += [{'id':pid,'status':status} for status in ('not_applied_verified','committed_blocked')]
+                    if phases[pid]['kind']=='vacuum_reuse':
+                        cases += [{'id':pid,'status':'reuse_unconfirmed'}]
+                for pending in cases:
+                    source={'route':route_name,'completed':prefix,'pending':pending}
+                    require(any(b['from']==source for b in branches), 'uncovered_production_checkpoint')
+    window = plan.get('data_window')
+    if window is not None:
+        ref = window['package_manifest']
+        package = json.loads(artifact(root,ref))
+        batch_count = len(package['batches'])
+        require(package['format']=='grassroots-offline-operation-package-v1'
+                and [x['batch'] for x in package['batches']]==list(range(batch_count)), 'invalid_data_window_package')
+        source = window['after_route']
+        require(source=='prepare' and source in plan['routes'], 'invalid_data_window_route')
+        entry_checkpoint={'route':source,'completed':plan['routes'][source]['phases'],'pending':None}
+        for count in range(batch_count+1):
+            require(any(b['from']==entry_checkpoint and b.get('data_checkpoint',{}).get('package_manifest')==ref
+                        and b['data_checkpoint'].get('committed_batches')==list(range(count))
+                        and (count==0 or b['case']=='name_only_batches_started') for b in branches), 'uncovered_data_batch_checkpoint')
+        for b in branches:
+            d=b.get('data_checkpoint')
+            if d:
+                require(not d['committed_batches'] or b['case']=='name_only_batches_started', 'committed_data_requires_reverse_branch')
+                require(d['package_manifest']==ref and d['committed_batches']==list(range(len(d['committed_batches'])))
+                        and len(d['committed_batches'])<=batch_count, 'invalid_data_checkpoint_prefix')
+        if 'finish' in plan['routes']:
+            artifact(root,window['full_commit_guard'])
+            for b in branches:
+                d=b.get('data_checkpoint')
+                if d and len(d['committed_batches'])==batch_count:
+                    require(d['guard']==window['full_commit_guard'], 'full_commit_guard_mismatch')
+        if plan['target']['kind']=='production' and 'finish' in plan['routes']:
+            # Once finish starts all immutable forward batches must already have
+            # committed. Each maintenance interruption still needs the data reverse.
+            for b in branches:
+                if b['from']['route']=='finish':
+                    require(b['case']=='name_only_batches_started' and b['data_checkpoint']['committed_batches']==list(range(batch_count)), 'finish_requires_full_data_recovery')
+    if plan['target']['kind']=='production' and ('finish' in plan['routes'] or any(b['case']=='name_only_batches_started' for b in branches)):
+        require(window is not None, 'production_finish_requires_data_window')
+    forward = {i for r in plan['routes'].values() for i in r['phases']}
+    require(all(phases[i]['kind']!='guarded_reverse' for i in forward), 'reverse_in_forward_route')
+
+
 def binding(plan, phase, root):
     """Bind evidence to SQL, both data epochs, recovery assertions and settings."""
     return sha(canonical({
@@ -102,10 +253,7 @@ def binding(plan, phase, root):
         'maintenance_guard': plan['maintenance_guard'], 'target': plan['target'],
         'statement_timeout_ms': phase['statement_timeout_ms'],
         'settings': plan['settings'], 'watch': plan['watch'], 'backup_artifacts': plan['backup_artifacts'],
-        'recovery_route': {'entry': plan['routes']['recover']['entry'], 'phases': [
-            {k:v for k,v in p.items() if k not in ('evidence',)}
-            for ident in plan['routes']['recover']['phases']
-            for p in plan['phases'] if p['id'] == ident]},
+        'recovery_route': recovery_contract(plan),
     }))
 
 
@@ -150,7 +298,7 @@ def load_plan(path, expected_sha):
     raw = path.read_bytes()
     require(sha(raw) == expected_sha, 'plan_hash_mismatch')
     p = json.loads(raw)
-    require(p['format'] == FORMAT, 'unsupported_plan')
+    require(p['format'] in (FORMAT,CHECKPOINT_FORMAT), 'unsupported_plan')
     require(p['target']['kind'] in ('production', 'isolated'), 'invalid_target_kind')
     require(set(p['target']['connection']) == {'host','port','dbname','user'}, 'only_public_connection_selectors_allowed')
     require(set(p['target']['identity']) == {'database', 'session_user', 'server_version_num', 'system_identifier'}, 'incomplete_target_identity')
@@ -178,12 +326,18 @@ def load_plan(path, expected_sha):
         integer(phase['min_physical_reclaim_bytes'])
         if phase['kind'] not in RECLAIM_KINDS:
             require(phase['min_physical_reclaim_bytes'] == 0, 'reuse_is_not_physical_reclaim')
-        if phase['kind'] != 'gate':
+        if phase['kind'] not in ('gate','guarded_reverse'):
             require(phase['relation'] in p['watch'], 'unwatched_operation')
         for key in ('pre', 'post', 'recovery_before', 'recovery_after'):
             artifact(path.parent, phase[key])
         if phase['kind'] in ('index_create','index_drop'):
             artifact(path.parent, phase['definition'])
+        if phase['kind']=='guarded_reverse':
+            require(p['format']==CHECKPOINT_FORMAT, 'reverse_requires_checkpoint_plan')
+            artifact(path.parent,phase['not_applied'])
+            if p['target']['kind']=='production':
+                table = re.fullmatch(r'reverse/[0-9]{2}-([a-z_.]+)-[0-9]{4}\.sql',phase['reverse_file'])
+                require(table is not None and table[1] in p['watch'], 'unwatched_reverse_table')
         action_sql(phase, path.parent)
         evidence(p, phase, path.parent)
     require(p['routes'] and p['phases'], 'empty_plan')
@@ -191,8 +345,12 @@ def load_plan(path, expected_sha):
         require(name in ('prepare', 'finish', 'recover'), 'unknown_route')
         require(route['phases'] and len(set(route['phases'])) == len(route['phases']) and set(route['phases']) <= ids, 'invalid_route')
         artifact(path.parent, route['entry'])
-    require('recover' in p['routes'], 'missing_recovery_route')
+    if p['format']==CHECKPOINT_FORMAT:
+        validate_branches(p,path.parent)
+    else:
+        require('recover' in p['routes'], 'missing_recovery_route')
     if p['target']['kind'] == 'production':
+        require(p['format']==CHECKPOINT_FORMAT, 'production_requires_checkpoint_branches')
         require(SERVICE_CACHES <= set(p['watch']), 'full_service_cache_inventory_required')
         by_id = {phase['id']:phase for phase in p['phases']}
         for name, route in p['routes'].items():
@@ -315,6 +473,9 @@ def shape_before(phase, snap, root):
     kind = phase['kind']
     if kind == 'gate':
         return
+    if kind == 'guarded_reverse':
+        require(all(i['valid'] and i['ready'] for row in snap['relations'].values() if row for i in row['indexes']), 'invalid_index_before_reverse')
+        return
     row = snap['relations'][phase['relation']]
     if kind == 'index_create':
         require(row is None, 'index_already_exists_without_journal')
@@ -340,6 +501,8 @@ def completed_shape(phase, before, after, root):
     kind = phase['kind']
     if kind == 'gate':
         return True
+    if kind == 'guarded_reverse':
+        return all(compatible(row,after['relations'][name]) for name,row in before['relations'].items())
     old, new = before['relations'][phase['relation']], after['relations'][phase['relation']]
     if kind == 'index_drop':
         return old is not None and new is None
@@ -375,13 +538,15 @@ class Executor:
         self.common()
         require(completed_shape(p, before, after, self.root), 'physical_completion_not_proven')
         self.guard(p['post'], 'data_or_catalog_postcondition_failed')
+        if p['kind']=='guarded_reverse':
+            require(not self.db.guard(artifact(self.root,p['not_applied']).decode().strip()), 'reverse_state_not_exclusive')
         self.guard(p['recovery_after'], 'recovery_after_gate_failed')
         if p['kind']=='gate' and self.plan['target']['kind']=='production':
             require(all(after['relations'][name] is not None and after['relations'][name]['kind']=='m'
                         and after['relations'][name]['populated'] for name in SERVICE_CACHES), 'full_service_cache_gate_failed')
         require(after['cluster_bytes'] <= p['post_max_cluster_bytes'], 'post_capacity_limit')
         require(after['cluster_bytes'] <= before['cluster_bytes'] + e['max_after_delta_bytes'], 'retained_growth_exceeds_envelope')
-        if p['kind'] != 'gate':
+        if p['kind'] not in ('gate','guarded_reverse'):
             previous = before['relations'][p['relation']]
             current = after['relations'][p['relation']]
             reclaimed = (previous['bytes'] if previous else 0) - (current['bytes'] if current else 0)
@@ -395,6 +560,19 @@ class Executor:
         """Only read live state. Never infer commit from filenode alone."""
         e = evidence(self.plan, p, self.root)
         now = self.db.snapshot()
+        if p['kind']=='guarded_reverse':
+            self.common()
+            applied = self.db.guard(artifact(self.root,p['post']).decode().strip())
+            untouched = self.db.guard(artifact(self.root,p['not_applied']).decode().strip())
+            if applied == untouched:
+                return 'ambiguous',now
+            if untouched:
+                return ('not_applied' if self.db.guard(artifact(self.root,p['pre']).decode().strip()) else 'ambiguous'),now
+            try:
+                self.post(p,e,item['before'],now)
+            except Stop:
+                return 'committed_needs_recovery',now
+            return 'committed_verified',now
         try:
             self.post(p, e, item['before'], now)
         except Stop:
@@ -413,13 +591,58 @@ class Executor:
             return 'reuse_unconfirmed', now
         return 'committed_verified', now
 
+    def checkpoint(self, run):
+        require(run['route'] in self.plan['routes'], 'checkpoint_source_route_missing')
+        sequence = self.plan['routes'][run['route']]['phases']
+        items = run['items']
+        require(len(items)<=len(sequence) and [i['id'] for i in items]==sequence[:len(items)], 'invalid_journal_phase_order')
+        require(all(i['status']=='done' for i in items[:-1]), 'invalid_journal_frontier')
+        pending = None
+        done = [i['id'] for i in items if i['status']=='done']
+        if items and items[-1]['status']!='done':
+            item = items[-1]
+            require(item['status'] in ('not_applied_verified','committed_blocked','reuse_unconfirmed'), 'reconcile_pending_before_recovery')
+            pending = {'id':item['id'],'status':item['status']}
+        require(not run.get('complete') or (pending is None and done==sequence), 'invalid_complete_checkpoint')
+        return {'route':run['route'],'completed':done,'pending':pending}
+
+    def recovery_route(self, data):
+        require(bool(data['runs']), 'recovery_requires_source_checkpoint')
+        resumed = data['runs'][-1]['route']=='recover'
+        require(not resumed or len(data['runs'])>=2, 'missing_recovery_source')
+        previous = data['runs'][-2] if resumed else data['runs'][-1]
+        checkpoint = self.checkpoint(previous)
+        branches = self.plan['recovery_branches']
+        if resumed:
+            run = data['runs'][-1]
+            require(run.get('source_checkpoint')==checkpoint, 'recovery_source_checkpoint_changed')
+            matches = [b for b in branches if b['id']==run.get('recovery_branch_id') and b['from']==checkpoint]
+            require(len(matches)==1, 'saved_recovery_branch_invalid')
+        else:
+            matches = [b for b in branches if b['from']==checkpoint
+                       and self.db.guard(artifact(self.root,b['entry']).decode().strip())
+                       and ('data_checkpoint' not in b or self.db.guard(artifact(self.root,b['data_checkpoint']['guard']).decode().strip()))]
+            require(len(matches)==1, 'recovery_branch_missing_or_ambiguous')
+        b = matches[0]
+        if resumed and not run['items']:
+            self.guard(b['entry'], 'saved_branch_entry_drift')
+            if 'data_checkpoint' in b:
+                self.guard(b['data_checkpoint']['guard'], 'saved_data_checkpoint_drift')
+        return {'entry':b['entry'],'phases':b['phases']}, {'recovery_branch_id':b['id'], 'source_checkpoint':checkpoint, 'case':b['case']}
+
     def run(self, route_name, max_phases=1, retry_not_applied=False, reconcile_only=False):
         self.db.acquire()  # Same session remains alive throughout all phases.
         self.db.configure(30000)
         self.common()
+        if route_name=='finish' and self.plan.get('data_window'):
+            self.guard(self.plan['data_window']['full_commit_guard'], 'all_forward_batches_must_be_committed')
         data = self.journal.data
         require(not data['recovery_started'] or route_name == 'recover', 'forward_after_recovery_forbidden')
-        route = self.plan['routes'][route_name]
+        selection = {}
+        if route_name=='recover' and self.plan['format']==CHECKPOINT_FORMAT:
+            route, selection = self.recovery_route(data)
+        else:
+            route = self.plan['routes'][route_name]
         if data['runs'] and data['runs'][-1]['route'] == route_name:
             run = data['runs'][-1]
         else:
@@ -432,7 +655,7 @@ class Executor:
                 pending = previous['items'][-1] if previous['items'] else None
                 require(not pending or pending['status'] in ('done','committed_blocked','not_applied_verified','reuse_unconfirmed'), 'reconcile_pending_before_recovery')
             self.guard(route['entry'], 'route_epoch_entry_failed')
-            run = {'route':route_name, 'items':[], 'complete':False}
+            run = {'route':route_name, 'items':[], 'complete':False, **selection}
             data['runs'].append(run)
             if route_name == 'recover':
                 data['recovery_started'] = True
@@ -474,13 +697,20 @@ class Executor:
                 return {'route':route_name, 'status':'complete'}
             p = self.phases[route['phases'][completed]]
             self.common()
+            if route_name=='finish' and self.plan.get('data_window'):
+                self.guard(self.plan['data_window']['full_commit_guard'], 'all_forward_batches_must_be_committed')
             for backup in self.plan['backup_artifacts']:
                 artifact(self.root, backup)
             self.guard(p['pre'], 'phase_precondition_failed')
+            if p['kind']=='guarded_reverse':
+                self.guard(p['not_applied'], 'reverse_not_in_expected_source_state')
+                require(not self.db.guard(artifact(self.root,p['post']).decode().strip()), 'reverse_already_applied_without_checkpoint')
             self.guard(p['recovery_before'], 'recovery_before_gate_failed')
             e = evidence(self.plan, p, self.root)
             before = self.db.snapshot()
             shape_before(p, before, self.root)
+            if selection.get('case')=='cache_cleared' and p['kind']=='cache_refresh':
+                require(before['relations'][p['relation']]['populated'] is False, 'recovery_must_not_refresh_intact_cache')
             capacity(self.plan, p, e, before)
             self.db.configure(p['statement_timeout_ms'])
             item = {'id':p['id'], 'status':'intent', 'before':before, 'evidence_sha256':p['evidence']['sha256']}
@@ -561,7 +791,7 @@ def main():
     if not args.apply and not args.reconcile_only:
         print(json.dumps({'status':'plan_validated_offline','phases':len(p['phases']),'database_connections':0}))
         return
-    require(args.state is not None and args.route in p['routes'], 'state_and_route_required')
+    require(args.state is not None and (args.route in p['routes'] or (args.route=='recover' and p['format']==CHECKPOINT_FORMAT)), 'state_and_route_required')
     if p['target']['kind'] == 'production':
         require(args.permit_production == p['target']['project_ref'], 'explicit_production_scope_required')
     dsn = os.environ.get('POW_GRASSROOTS_DSN')

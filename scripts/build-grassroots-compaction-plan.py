@@ -86,6 +86,15 @@ def sorted_rows(rows):
     return sorted(rows, key=lambda row: json.dumps(row, sort_keys=True))
 
 
+def public_candidate_guard(actual, expected):
+    # Reuse the filtered view result, preserving both EXCEPT ALL directions.
+    return (f"IF EXISTS (WITH actual AS MATERIALIZED ({actual}), "
+            f"expected AS MATERIALIZED ({expected}) "
+            "SELECT 1 FROM ((SELECT row FROM actual EXCEPT ALL SELECT row FROM expected) "
+            "UNION ALL (SELECT row FROM expected EXCEPT ALL SELECT row FROM actual)) AS delta) "
+            "THEN RAISE EXCEPTION 'Public candidate membership or name drift'; END IF;\n")
+
+
 def exact(table, where, rows, subset=False):
     """Compare whole JSON rows, not counts/hashes; subset is for missing restore rows."""
     expected = sql_json(rows)
@@ -301,7 +310,7 @@ def build(snapshot_dir, baseline_dir, backup_dir, output_dir, batch_size=1000):
         visible_rows = [visible[cid] for cid in cids if cid in visible]
         view_actual = f"SELECT jsonb_build_object('id',candidate_id,'person_id',person_id,'name',person_name,'race_id',race_id) AS row FROM public.public_candidates WHERE candidate_id=ANY({sql_ids(cids)})"
         view_expected = f'SELECT value AS row FROM jsonb_array_elements({sql_json(visible_rows)})'
-        body += f"IF EXISTS (({view_actual}) EXCEPT ALL ({view_expected})) OR EXISTS (({view_expected}) EXCEPT ALL ({view_actual})) THEN RAISE EXCEPTION 'Public candidate membership or name drift'; END IF;\n"
+        body += public_candidate_guard(view_actual, view_expected)
         compacted = {}
         for table in TABLES:
             rows = selected[table]

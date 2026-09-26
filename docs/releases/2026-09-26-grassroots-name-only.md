@@ -202,3 +202,15 @@ python scripts/grassroots-maintenance-executor.py --plan /private/package/mainte
 **結論：無法在現有正式快照324,687 bytes餘裕下建立可信保守上界，停止硬證明並維持首寫阻擋。**未產生passed space-envelope。建議先增加實際可用容量；若希望維持現有額度，可另審單一非必要索引卸除，但其自身catalog增長、依賴與回建容量也須先有證據，不能直接當已安全替代。普通VACUUM、刪列或19.2MB索引差額均不是可預支的實體容量。未購買／升級資源、未連正式DB、未merge或部署，PR保持Draft。
 
 同一release版本整合驗證：原29項受影響executor合約與新增21項checkpoint/reverse離線測試通過；新增6項小型PG17.6測試通過（不重跑既有60批／完整還原）。第一次fixture驗證的觀測連線被嚴格freeze guard納入active session，測試改為明列唯一唯讀觀測連線；帶數字的fixture schema也揭露reverse LOCK TABLE格式過窄，已與identifier契約對齊。這兩項均在修正後重新驗證，未放寬正式maintenance guard。獨立複核指出的空恢復run入口漂移、漏逆向檔／中間批次及finish完整提交guard均已修正。測試owned容器完成後停止移除，其他stack與私人備份保留。
+
+### 2026-09-27 正式一次性維護與查詢修正（仍未完成）
+
+使用者改採一次性全站維護、停寫後精簡，保留既有 dump/archive/reverse；先在隔離副本完整演練，再於正式移除可重建搜尋快取、套用 DDL-only schema。這是使用者另行接受未知暫態峰值、必要時人工回復或暫時增容的方案，未將歷史取樣升格為保守上界，也未放寬通用 executor 的容量要求。
+
+正式原方案遇鎖定及 statement timeout 後停止。針對昂貴 public_candidates 核對，產生器改用共享 MATERIALIZED 結果，仍以雙向 EXCEPT ALL 檢查全部欄位及重複筆數，不改目標、順序、DML、鎖定或 5 分鐘逾時。17 項受影響離線測試、11 項隔離 PostgreSQL 語義 fixture 與單次評估計數通過；正式唯讀單項核對約 11.9 秒、所有 20 項寫入前檢查約 40.1 秒。
+
+修正後第 21 批成功提交，但第 22 批再次觸發整個 DO 區塊的 statement timeout，當時 context 為 person_claims 比對；不能據此認定該單項查詢就是全部瓶頸。已停止唯一替代方案，不再自動重送。網站保持維護與資料庫停寫，PR 維持 Draft；physical reclaim、快取重建、migration ledger、正式前端部署及回站驗收仍未完成。普通 VACUUM 只供頁面重用。
+
+原操作包、403 份逆向 SQL、全部備份及 archive 保留；衍生包只修改未完成批次的公開候選核對與對應 SQL 雜湊。私人操作包及正式逐列核對證據不提交公開 repository。
+
+停止後以串流逐列核對 8 張受影響表，精確符合前 21 批，第 22 批未套用；94,681 筆候選全數保留，其中 24,818 筆已為 name-only。資料庫未再次重啟，cluster 實測 485,847,217 bytes；這只確認已提交資料與停止邊界，不能視為完成精簡或恢復服務。

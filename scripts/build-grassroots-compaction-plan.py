@@ -146,6 +146,65 @@ SET LOCAL statement_timeout = '5min';
         'DO ' + delimiter + ' BEGIN\n' + body + 'END ' + delimiter + ';\nCOMMIT;\n'
 
 
+
+SEGMENT_BOUNDARY = '-- grassroots-forward-request-boundary\n'
+
+
+def segment_forward_transaction(sql):
+    """Split this generator's forward DO; preserve each statement and one commit.
+
+    PG17 deadline is set before BEGIN, so smaller DO statements cannot extend
+    the total transaction budget. Execute requests on one dedicated session.
+    This is not a parser for arbitrary SQL or reverse packages.
+    """
+    match = re.search(r'^DO (\$grassroots_[a-f0-9]+\$) BEGIN\n', sql, re.M)
+    if not match:
+        raise ValueError('Expected generated forward DO')
+    tail = 'END ' + match.group(1) + ';\nCOMMIT;\n'
+    if not sql.endswith(tail) or SEGMENT_BOUNDARY in sql:
+        raise ValueError('Unexpected transaction envelope')
+    head = sql[:match.start()]
+    if head.count('BEGIN;\n') != 1 or "SET LOCAL statement_timeout = '5min';" not in head:
+        raise ValueError('Unexpected transaction settings')
+    body = sql[match.end():-len(tail)]
+    parts = []; current = ''
+    for line in body.splitlines(True):
+        if not current and not line.strip():
+            continue
+        if not current and not line.startswith(('IF ', 'UPDATE ', 'DELETE ')):
+            raise ValueError('Unsupported forward statement')
+        current += line
+        if line.rstrip().endswith('END IF;') or (current.startswith(('UPDATE ', 'DELETE ')) and line.rstrip().endswith(';')):
+            parts.append(current); current = ''
+    if current or ''.join(parts).strip() != body.strip():
+        raise ValueError('Forward statement content changed')
+    writes = [part for part in parts if not part.startswith('IF ')]
+    expected = ('UPDATE public.candidates t SET', 'UPDATE published.candidate_facts SET', 'DELETE FROM public.people WHERE')
+    if len(writes) != 3 or not all(part.startswith(prefix) for part, prefix in zip(writes, expected)):
+        raise ValueError('Unexpected forward writes')
+    requests = ["SET transaction_timeout = '5min';\n", head]
+    for part in parts:
+        tag = '$segment_' + hashlib.sha256(part.encode()).hexdigest() + '$'
+        if tag in part:
+            raise ValueError('Segment delimiter collision')
+        requests.append('DO ' + tag + ' BEGIN\n' + part + 'END ' + tag + ';\n')
+    requests.append('COMMIT;\n')
+    return requests
+
+
+def forward_requests(sql):
+    """Read a hash-verified segmented file; caller owns target/transaction gates."""
+    requests = sql.split(SEGMENT_BOUNDARY)
+    if len(requests) < 4 or requests[-1] != 'COMMIT;\n':
+        raise ValueError('Missing segmented forward envelope')
+    if requests[0] != "SET transaction_timeout = '5min';\n" or "BEGIN;\n" not in requests[1]:
+        raise ValueError('Missing whole-transaction deadline')
+    for request in requests[2:-1]:
+        match = re.fullmatch(r'DO (\$segment_[a-f0-9]{64}\$) BEGIN\n(.*)END \1;\n', request, re.S)
+        if not match or match.group(1) != '$segment_' + hashlib.sha256(match.group(2).encode()).hexdigest() + '$':
+            raise ValueError('Segment body hash mismatch')
+    return requests
+
 def batch_rows(tables, people):
     people = set(people)
     selected = {}

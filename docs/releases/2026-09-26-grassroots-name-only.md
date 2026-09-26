@@ -214,3 +214,16 @@ python scripts/grassroots-maintenance-executor.py --plan /private/package/mainte
 原操作包、403 份逆向 SQL、全部備份及 archive 保留；衍生包只修改未完成批次的公開候選核對與對應 SQL 雜湊。私人操作包及正式逐列核對證據不提交公開 repository。
 
 停止後以串流逐列核對 8 張受影響表，精確符合前 21 批，第 22 批未套用；94,681 筆候選全數保留，其中 24,818 筆已為 name-only。資料庫未再次重啟，cluster 實測 485,847,217 bytes；這只確認已提交資料與停止邊界，不能視為完成精簡或恢復服務。
+
+
+### 2026-09-27 同交易分段驗證與最新停止位置
+
+經使用者明確重開，分段 helper 保留固定 forward 的全部語句內容、順序、22 表鎖及單一 COMMIT，改為同一連線依序執行小型 DO。獨立 request 在 BEGIN 前設定整個 transaction_timeout 為 5 分鐘，原 statement_timeout 5 分鐘與 lock_timeout 5 秒不變；提交後先 RESET transaction_timeout，再做普通 VACUUM 頁面重用。這是明確衍生操作包的輔助函式，不會自動轉換舊包或授權正式續行，也不擴充 recovery executor。
+
+已通過：4 項新離線契約測試、隔離 PostgreSQL 寫入後例外及跨 statement 的總交易逾時回滾；兩種故障後 8 表指紋一致。隔離逐段記憶體 context 觀測由約 202MB 降至約 31MB，正式唯讀分段前檢查約 13.2 秒；這些不構成正式峰值或全批耗時上界。獨立審查要求的 BEGIN 前獨立設定及提交後 RESET 已落實。舊 CI 在 c23a074 通過；此新增版本的 CI 另行記錄，未重跑既有全量驗證。
+
+正式第 22–27 批成功提交，第 28 批觸發 5 分鐘整個交易逾時，已停止且未重送。停止後串流逐列核對 8 表精確符合前 27 批，第 28 批未套用；94,681 筆候選全保留，其中 31,916 筆為 name-only，people 剩 52,139 筆。cluster 實測 486,969,521 bytes，沒有再次重啟。原備份、archive、manifest 與 403 份逆向 SQL 保留。
+
+另見平台 exporter 的查詢統計讀取持續逾時；大型 DO 可能增加查詢文字檔與讀取負擔，但未確認是根因。正式維護角色無權設定 pg_stat_statements.track，未變更設定、清除統計或繞過權限。不得把這項假說或輕量唯讀查詢成功當成再次批次寫入的放行證據。
+
+**目前 27/60 批，PR 維持 Draft，不得合併部署。** 網站 503、DB 停寫與 cron 停用保持。尚未完成其餘 33 批、實體回收、公開快取／搜尋回建、migration ledger、相容前端部署、更新紀錄公開與回站驗收。先取得效能／資源問題的具體新依據，再決定續行或依既有備份人工回復；沒有自動猜測 recovery。

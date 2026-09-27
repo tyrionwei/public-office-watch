@@ -121,7 +121,7 @@
     {
       "county_code": "67000",
       "name": "臺南市",
-      "status": "needs_supplemental_provenance",
+      "status": "ready",
       "official_home": "https://web.cec.gov.tw/tnec",
       "source_name": "臺南市選舉委員會",
       "source_url": "https://web.cec.gov.tw/tnec/article/64377",
@@ -129,14 +129,220 @@
       "published_on": "2026-08-31",
       "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
       "format": "pdf",
-      "reason": "選舉 PDF 第 0366 所地址欄空白；臺南市活動中心官方頁可補地址，但目前資料模型無法保存單列補充來源",
-      "supplemental_address_source": {
-        "station_no": "0366",
-        "station_name": "永樂里活動中心",
-        "address": "臺南市西港區永樂里7鄰大塭寮59之35號",
-        "source_name": "臺南市里社區活動中心",
-        "source_url": "https://tnda.tainan.gov.tw/acthouse/actpage.asp?mainid=%7B6348B09B-0431-4548-9180-DF917C2330D9%7D"
-      }
+      "adapter": "cec-pdf-layout-2026",
+      "slug": "tainan",
+      "checked_on": "2026-09-27",
+      "expected_station_count": 1563,
+      "expected_last_station_no": "1563",
+      "village_aliases": {
+        "龍崎區:石𥕢里": "石曹里",
+        "新化區:𦰡拔里": "那拔里"
+      },
+      "review_note": "官方 PDF 含圖片形式欄位，文字層空白不代表原表空白；以下逐欄依原 PDF 頁面核對轉錄。0366 原表為永樂里4鄰，保留原公告內容，不採另一網站的7鄰地址。",
+      "reviewed_pdf_transcriptions": [
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 24,
+          "extracted_row": [
+            "臺南市西港區第0359投開票所",
+            "松林國小",
+            "",
+            "",
+            "1-6"
+          ],
+          "reviewed_row": [
+            "臺南市西港區第0359投開票所",
+            "松林國小",
+            "臺南市西港區檨林里３鄰檨子林３９號之１",
+            "檨林里",
+            "1-6"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 25,
+          "extracted_row": [
+            "臺南市西港區第0360投開票所",
+            "松林國小",
+            "",
+            "",
+            "7-12"
+          ],
+          "reviewed_row": [
+            "臺南市西港區第0360投開票所",
+            "松林國小",
+            "臺南市西港區檨林里３鄰檨子林３９號之１",
+            "檨林里",
+            "7-12"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 25,
+          "extracted_row": [
+            "臺南市西港區第0366投開票所",
+            "永樂里活動中心",
+            "",
+            "永樂里",
+            "1-7"
+          ],
+          "reviewed_row": [
+            "臺南市西港區第0366投開票所",
+            "永樂里活動中心",
+            "臺南市西港區永樂里４鄰大塭寮５９之３５號",
+            "永樂里",
+            "1-7"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 43,
+          "extracted_row": [
+            "臺南市山上區第0632投開票所",
+            "山上區玉峰里活動中心",
+            "",
+            "玉峯里",
+            "全里"
+          ],
+          "reviewed_row": [
+            "臺南市山上區第0632投開票所",
+            "山上區玉峰里活動中心",
+            "臺南市山上區玉峯里３鄰蚵壳潭３５號",
+            "玉峯里",
+            "全里"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 46,
+          "extracted_row": [
+            "臺南市安南區第0673投開票所",
+            "",
+            "",
+            "",
+            "3,17-20"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0673投開票所",
+            "塭南社區活動中心",
+            "臺南市安南區塭南里３鄰環福街１１７號",
+            "塭南里",
+            "3,17-20"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 46,
+          "extracted_row": [
+            "臺南市安南區第0674投開票所",
+            "",
+            "",
+            "",
+            "1-2,4-6"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0674投開票所",
+            "塭南里活動中心(西側)",
+            "臺南市安南區塭南里７鄰安昌街１３０號",
+            "塭南里",
+            "1-2,4-6"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 46,
+          "extracted_row": [
+            "臺南市安南區第0675投開票所",
+            "",
+            "",
+            "",
+            "7-11"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0675投開票所",
+            "塭南里活動中心(東側)",
+            "臺南市安南區塭南里７鄰安昌街１３０號",
+            "塭南里",
+            "7-11"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 46,
+          "extracted_row": [
+            "臺南市安南區第0676投開票所",
+            "",
+            "",
+            "",
+            "12-16"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0676投開票所",
+            "塭南里活動中心(2樓)",
+            "臺南市安南區塭南里７鄰安昌街１３０號",
+            "塭南里",
+            "12-16"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 51,
+          "extracted_row": [
+            "臺南市安南區第0748投開票所",
+            "",
+            "",
+            "",
+            "全里"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0748投開票所",
+            "公塭里活動中心",
+            "臺南市安南區公塭里５鄰育英街１６７號",
+            "公塭里",
+            "全里"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 105,
+          "extracted_row": [
+            "臺南市龍崎區第1561投開票所",
+            "",
+            "臺南市龍崎區石𥕢里３鄰刺子崙１３之３號",
+            "石𥕢里",
+            "全里"
+          ],
+          "reviewed_row": [
+            "臺南市龍崎區第1561投開票所",
+            "石𥕢里民活動中心",
+            "臺南市龍崎區石𥕢里３鄰刺子崙１３之３號",
+            "石𥕢里",
+            "全里"
+          ]
+        }
+      ],
+      "regression_expectations": [
+        {
+          "station_no": "0366",
+          "station_name": "永樂里活動中心",
+          "address": "臺南市西港區永樂里４鄰大塭寮５９之３５號",
+          "village_name": "永樂里",
+          "neighborhoods": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "station_no": "1561",
+          "station_name": "石𥕢里民活動中心",
+          "village_code": "67000300008"
+        }
+      ]
     },
     {
       "county_code": "64000",

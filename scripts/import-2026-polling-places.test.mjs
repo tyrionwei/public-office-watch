@@ -1,11 +1,60 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {
+  applyReviewedPdfTranscriptions,
   buildPollingPlaceSyncSql,
   parseOdsPollingPlaces,
   validatePdfSourceExpectations,
   validatePollingPlaceExpectations,
 } from './import-2026-polling-places.mjs';
+
+const tainan = JSON.parse(fs.readFileSync(new URL('../data-sources/2026-polling-places.json', import.meta.url)))
+  .counties.find((county) => county.county_code === '67000');
+
+test('Tainan image cells retain the original PDF address and all reviewed village identities', () => {
+  const sheets = [{ rows: [
+    ['投開票所編號', '投開票所名稱', '投開票所地址', '一般選舉人所屬村里', '一般選舉人所屬鄰別'],
+    ...tainan.reviewed_pdf_transcriptions.map((review) => review.extracted_row),
+  ] }];
+  const before = structuredClone(sheets);
+  const repaired = applyReviewedPdfTranscriptions(sheets, tainan);
+  const places = parseOdsPollingPlaces(repaired, tainan);
+  assert.deepEqual(sheets, before);
+  assert.equal(places.length, 10);
+  const station = places.find((place) => place.station_no === '0366');
+  assert.equal(station.address, '臺南市西港區永樂里４鄰大塭寮５９之３５號');
+  assert.deepEqual(station.neighborhoods, [1, 2, 3, 4, 5, 6, 7]);
+  assert.equal(places.find((place) => place.station_no === '1561').village_code, '67000300008');
+  assert.equal(places.find((place) => place.station_no === '1561').station_name, '石𥕢里民活動中心');
+  assert.equal(places.find((place) => place.station_no === '0359').village_code, '67000140004');
+});
+
+test('reviewed PDF transcriptions reject changed hashes, rows and duplicate or missing stations', () => {
+  const review = tainan.reviewed_pdf_transcriptions[0];
+  const source = { ...tainan, reviewed_pdf_transcriptions: [review] };
+  const sheets = [{ rows: [review.extracted_row] }];
+  assert.throws(() => applyReviewedPdfTranscriptions(sheets, { ...source, source_hash: '0'.repeat(64) }), /Invalid reviewed/);
+  assert.throws(() => applyReviewedPdfTranscriptions([{ rows: [[...review.extracted_row.slice(0, 4), 'changed']] }], source), /no longer matches/);
+  assert.throws(() => applyReviewedPdfTranscriptions([{ rows: [] }], source), /no longer matches/);
+  assert.throws(() => applyReviewedPdfTranscriptions([{ rows: [review.extracted_row, review.extracted_row] }], source), /no longer matches/);
+  assert.throws(() => applyReviewedPdfTranscriptions(sheets, { ...source, reviewed_pdf_transcriptions: [review, review] }), /Invalid reviewed/);
+});
+
+test('PDF rows without villages fail closed instead of silently omitting a station', () => {
+  const sheets = [{ rows: [
+    ['投開票所編號', '投開票所名稱', '投開票所地址', '一般選舉人所屬村里', '一般選舉人所屬鄰別'],
+    ['臺南市西港區第0359投開票所', '松林國小', '', '', '1-6'],
+  ] }];
+  assert.throws(() => parseOdsPollingPlaces(sheets, tainan), /Missing PDF village assignment/);
+});
+
+test('normalized PDF output must still include every official station after parsing', () => {
+  const source = { adapter: 'cec-pdf-layout-2026', name: '測試縣', expected_station_count: 2, expected_last_station_no: '0002' };
+  assert.doesNotThrow(() => validatePollingPlaceExpectations([{ station_no: '0001' }, { station_no: '0002' }], source));
+  assert.throws(() => validatePollingPlaceExpectations([{ station_no: '0001' }], source), /sequence is incomplete/);
+  assert.throws(() => validatePollingPlaceExpectations([{ station_no: '0001' }, { station_no: '0003' }], source), /sequence is incomplete/);
+});
 
 const source = {
   county_code: '10007',

@@ -34,6 +34,11 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose }: { eventKey: str
   const current = state?.key === key ? state : null;
   const places = current?.places ?? [];
   const matching = pollingPlacesForDisplay(places, preference.neighborhood);
+  const missingAddressNotice = eventKey === '2026-local-general-election-day'
+    && ['county-10009', 'county-10016'].includes(preference.county.id);
+  const officialNoticeUrl = preference.county.id === 'county-10009'
+    ? 'https://web.cec.gov.tw/ylec/article/64366'
+    : 'https://web.cec.gov.tw/phec/article/63671';
   return (
     <section data-my-polling-place className="pixel-corners border border-line/80 bg-panel p-4">
       <div className="flex items-start justify-between gap-3">
@@ -62,10 +67,22 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose }: { eventKey: str
         ) : null}
         {!current ? <p role="status" className="mt-3 text-sm text-slate-400">{english ? 'Loading official data…' : '載入官方資料中…'}</p>
           : current.error ? <p role="status" className="mt-3 text-sm text-amber-200">{english ? 'Could not load polling places. Use the official lookup below.' : '投開票所資料暫時無法載入，請使用下方官方查詢。'}</p>
-          : places.length === 0 ? <p className="mt-3 text-sm text-slate-400">{english ? 'We have not yet added official station data for this village and election.' : '本站尚未收錄此村里本次投票的官方投開票所資料。'}</p>
+          : places.length === 0 ? (missingAddressNotice
+            ? <div data-polling-missing-address className="mt-3 border border-amber-300/30 bg-amber-300/5 p-3 text-sm leading-6 text-amber-200">
+                <p>{english
+                  ? `${preference.county.name}: the official list does not include polling-place addresses, so complete station details are not yet available here.`
+                  : `${preference.county.name}官方尚未提供投開票所地址，本站暫未收錄完整場所資料。`}</p>
+                <p>{english ? 'Please check your voting notice or contact the local election commission.' : '請以投票通知單為準，或向當地選舉委員會確認。'}</p>
+                <a href={officialNoticeUrl} target="_blank" rel="noreferrer" className="mt-1 inline-flex min-h-11 items-center text-accent underline underline-offset-4">
+                  {english ? 'View the official announcement' : '查看官方公告'} ↗
+                </a>
+              </div>
+            : <p className="mt-3 text-sm text-slate-400">{english ? 'We have not yet added official station data for this village and election.' : '本站尚未收錄此村里本次投票的官方投開票所資料。'}</p>)
           : <>
             <p data-polling-match-status className="mt-3 text-sm text-signal">{matching.exact
               ? (english ? 'One station matches the official village assignment' : '依官方村里公告對應到 1 個投開票所')
+              : places.some((place) => place.coverage_kind === 'ambiguous')
+                ? (english ? 'The official data only identifies possible stations; neighborhood alone cannot select one:' : '官方資料僅能列出可能場所，無法依鄰別唯一判定：')
               : preference.neighborhood ? (english ? 'The official data cannot identify one station from neighborhood alone. Possible stations:' : '依目前官方資料無法僅靠鄰別唯一判定，可能場所如下：')
                 : (english ? 'Add your neighborhood to narrow these stations:' : '填入鄰別可進一步縮小範圍，目前可能場所：')}</p>
             <ul className="mt-3 grid max-h-[28rem] gap-3 overflow-y-auto">

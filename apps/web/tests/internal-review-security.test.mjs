@@ -9,7 +9,7 @@ import ts from 'typescript';
 
 // Execute the actual Vite middleware registration with isolated dependencies.
 // No real environment, filesystem mutation, database, or network is reachable.
-function fixture() {
+function fixture({ sourcePeople = [], races = [] } = {}) {
   const calls = [];
   const env = { SUPABASE_URL: 'http://127.0.0.1:54321', SUPABASE_SERVICE_ROLE_KEY: 'test-only' };
   const modules = new Map();
@@ -27,7 +27,7 @@ function fixture() {
         assert.equal(init.redirect, 'error');
         calls.push({ url, ...init });
         const claim = { id: 'fixture', person_id: 'fixture-person', claim_type: 'party', claim_value: 'fixture', claim_json: {}, source_name: 'fixture', scoring_reasons: [] };
-        return new Response(init.method === 'PATCH' ? '' : JSON.stringify(url.includes('/person_claims?') ? [claim] : []));
+        return new Response(init.method === 'PATCH' ? '' : JSON.stringify(url.includes('/person_claims?') ? [claim] : url.includes('/source_people?') ? sourcePeople : url.includes('/races?') ? races : []));
       },
       require(specifier) {
         if (specifier === 'node:fs') return { existsSync: () => false, readFileSync: deny, writeFileSync: deny };
@@ -178,4 +178,29 @@ test('data progress is GET only and rejects remote database targets before readi
   f.env.SUPABASE_URL = 'https://production.example';
   assert.equal((await f.request('/internal-api/data-progress', { method: 'GET', headers })).statusCode, 503);
   assert.equal(f.calls.length, 0);
+});
+
+
+test('generic identity API cannot recreate or link grassroots people before reviewed candidate policy', async () => {
+  const cases = [
+    { source: { position: '里長' } },
+    { source: { normalized_role: 'township_representative' } },
+    { source: { source_payload: { kind: 'village-chief' } } },
+    { source: { source_type: 'official_election', position: null } },
+    { source: { position: '議員', source_payload: { targetRace: { id: 'race' } } }, races: [{ race_type: 'village_chief' }] },
+    { source: { position: '議員', source_payload: { targetRace: { id: 'missing' } } }, races: [] },
+  ];
+  for (const row of cases) {
+    for (const action of ['create', 'approve']) {
+      const f = fixture({ sourcePeople: [{ id: 'source', source_person_key: 'source-key', raw_name: '測試', ...row.source }], races: row.races });
+      const session = await f.bootstrap();
+      const response = await f.request('/internal-api/review-identity-match', {
+        headers: { 'x-pow-internal-token': session.body.token },
+        body: JSON.stringify({ sourcePersonId: 'source', candidatePersonId: 'person', action }),
+      });
+      assert.equal(response.statusCode, 409, JSON.stringify(row));
+      assert.match(response.body.error, /官方候選審核流程/);
+      assert.ok(f.calls.every(call => (call.method ?? 'GET') === 'GET'), 'no people, identity match or claim writes');
+    }
+  }
 });

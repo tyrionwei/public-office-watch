@@ -277,7 +277,8 @@ export type PublicReferendumRegionResult = {
 
 export type PublicCandidate = {
   candidate_id: string;
-  person_id: string;
+  /** NULL for name-only grassroots candidates; never use the display name as identity. */
+  person_id: string | null;
   person_name: string;
   person_party: string | null;
   person_position: string | null;

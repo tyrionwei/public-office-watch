@@ -1,3 +1,4 @@
+import { isGrassrootsRace, assertGrassrootsDecision } from './grassroots-candidate-policy.mjs';
 import { createHash } from 'node:crypto';
 
 const localHostnames = new Set(['127.0.0.1', 'localhost', '::1']);
@@ -26,6 +27,7 @@ function assertLocalSupabase(config) {
 }
 
 function suggestedPersonId(item) {
+  if (isGrassrootsRace(item.race)) return null;
   return item.candidate?.person_id ?? item.person?.id ?? null;
 }
 
@@ -157,8 +159,8 @@ function validateReviewFile(raw, snapshot, plan) {
       errors.push(`${prefix}.personName must match the snapshot record`);
     }
     const action = String(decision?.decision ?? '').trim();
-    if (!['use_existing', 'create_new', 'reject'].includes(action)) {
-      errors.push(`${prefix}.decision must be use_existing, create_new, or reject`);
+    if (!['use_existing', 'create_new', 'name_only', 'reject'].includes(action)) {
+      errors.push(`${prefix}.decision must be use_existing, create_new, name_only, or reject`);
     }
     const personId = decision?.personId == null ? null : String(decision.personId).trim();
     if (action === 'use_existing' && !personId) errors.push(`${prefix}.personId is required for use_existing`);
@@ -166,6 +168,11 @@ function validateReviewFile(raw, snapshot, plan) {
     const reviewedAt = String(decision?.reviewedAt ?? '').trim();
     if (!reviewedAt || Number.isNaN(Date.parse(reviewedAt))) errors.push(`${prefix}.reviewedAt must be a valid date`);
 
+    if (item) {
+      try {
+        assertGrassrootsDecision(item, { decision: action, personId, identityEvidence: decision.identityEvidence });
+      } catch (error) { errors.push(`${prefix}: ${error.message}`); }
+    }
     if (item && action === 'use_existing') {
       const allowedIds = new Set([
         ...item.identityCandidates.map((person) => person.id),
@@ -175,7 +182,7 @@ function validateReviewFile(raw, snapshot, plan) {
       if (!allowedIds.has(personId)) errors.push(`${prefix}.personId is not an exact-name or external-ID candidate`);
       const candidateMatches = item.raceCandidates.filter((candidate) => candidate.person_id === personId);
       if (candidateMatches.length > 1) errors.push(`${prefix}.personId has multiple candidates in the target race`);
-      if (item.candidate && item.candidate.person_id !== personId) {
+      if (item.candidate?.person_id && item.candidate.person_id !== personId) {
         errors.push(`${prefix}.personId conflicts with the existing candidate external ID`);
       }
     }
@@ -188,6 +195,7 @@ function validateReviewFile(raw, snapshot, plan) {
       personName,
       decision: action,
       personId,
+      identityEvidence: String(decision?.identityEvidence ?? '').trim() || null,
       reason: String(decision?.reason ?? '').trim() || null,
       reviewedAt,
       item,
@@ -382,7 +390,7 @@ async function confirmIdentityMatch(config, sourcePersonId, personId, decision, 
     score: 100,
     match_method: 'manual_review',
     match_reason: decision.reason ?? 'Confirmed by manual official-candidate review',
-    evidence_json: { candidateExternalId: decision.candidateExternalId, reviewDecision: decision.decision },
+    evidence_json: { candidateExternalId: decision.candidateExternalId, reviewDecision: decision.decision, identityEvidence: decision.identityEvidence ?? null },
     reviewed_by: reviewedBy,
     reviewed_at: decision.reviewedAt,
     updated_at: decision.reviewedAt,
@@ -393,6 +401,7 @@ async function confirmIdentityMatch(config, sourcePersonId, personId, decision, 
 
 async function applyReviewedOfficialCandidates(config, snapshot, review, candidateWriteRow) {
   assertLocalSupabase(config);
+  for (const decision of review.decisions) assertGrassrootsDecision(decision.item, decision);
   const { staging, sourceRows, existingClaims } = await loadStagingRevision(config, snapshot, {
     matched: review.decisions.map((decision) => decision.item),
   });
@@ -426,7 +435,7 @@ async function applyReviewedOfficialCandidates(config, snapshot, review, candida
       continue;
     }
 
-    let personId = decision.personId;
+    let personId = decision.decision === 'name_only' ? null : decision.personId;
     if (decision.decision === 'create_new') {
       const people = await upsertRows(config, 'people', [{
         external_id: item.record.personExternalId,
@@ -442,18 +451,21 @@ async function applyReviewedOfficialCandidates(config, snapshot, review, candida
       createdPeople += 1;
     }
     const existingCandidate = item.candidate
-      ?? item.raceCandidates.find((candidate) => candidate.person_id === personId)
+      ?? (personId ? item.raceCandidates.find((candidate) => candidate.person_id === personId) : null)
       ?? null;
     const personByExternalId = new Map([[item.record.personExternalId, { id: personId }]]);
-    await upsertRows(config, 'candidates', [candidateWriteRow(
+    const savedCandidates = await upsertRows(config, 'candidates', [candidateWriteRow(
       snapshot,
-      { record: item.record, race: item.race, candidate: existingCandidate },
+      { ...item, candidate: existingCandidate, identityDecision: decision },
       personByExternalId,
       decision.reviewedAt,
     )], 'external_id');
-    await confirmIdentityMatch(config, source.id, personId, decision, review.reviewedBy);
+    const candidateId = savedCandidates[0]?.id;
+    if (!candidateId) throw new Error('Candidate write did not return an id; claim remains unverified');
+    if (personId) await confirmIdentityMatch(config, source.id, personId, decision, review.reviewedBy);
     await patchById(config, 'person_claims', claims[0].id, {
       person_id: personId,
+      candidate_id: candidateId,
       review_status: 'verified',
       visibility: 'review_only',
       is_public: false,

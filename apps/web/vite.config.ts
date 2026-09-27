@@ -17,6 +17,7 @@ import {
   canUpdateProfileField,
   claimApprovalBlockReason,
   claimReviewStatusFilters,
+  grassrootsIdentityReviewBlockReason,
   isEditableProfileClaimType,
 } from './build/internalClaimReview';
 import { buildPlatformApprovalPatch } from './build/internalPlatformReview';
@@ -688,10 +689,12 @@ function internalReviewApiPlugin(): Plugin {
           }
 
           const sourcePeople = await supabaseRest(
-            'source_people?select=id,source_person_key,raw_name,alias,gender,party,position,district,election_year,source_name,source_url,source_payload&id=eq.' + encodeURIComponent(sourcePersonId) + '&limit=1',
+            'source_people?select=id,source_person_key,source_type,normalized_role,raw_name,alias,gender,party,position,district,election_year,source_name,source_url,source_payload&id=eq.' + encodeURIComponent(sourcePersonId) + '&limit=1',
           ) as {
             id: string;
             source_person_key: string;
+            source_type: string;
+            normalized_role: string | null;
             raw_name: string;
             alias: string | null;
             gender: string | null;
@@ -709,6 +712,21 @@ function internalReviewApiPlugin(): Plugin {
             return;
           }
 
+          // Check the stored source and actual target race before any identity/people write.
+          // Rejection remains available; grassroots approval goes through the reviewed writer.
+          if (action !== 'reject') {
+            const targetRace = sourcePerson.source_payload?.targetRace as { id?: string } | undefined;
+            let targetRaceType: string | null | undefined;
+            if (targetRace?.id) {
+              const targetRaces = await supabaseRest('races?select=race_type&id=eq.' + encodeURIComponent(targetRace.id) + '&limit=1') as { race_type: string }[];
+              targetRaceType = targetRaces[0]?.race_type ?? null;
+            }
+            const blocked = grassrootsIdentityReviewBlockReason(sourcePerson, targetRaceType);
+            if (blocked) {
+              jsonResponse(response, 409, { error: blocked });
+              return;
+            }
+          }
           const now = new Date().toISOString();
           const partyCandidateSource = parsePartyCandidateReviewSource(sourcePerson);
           let candidatePerson: { id: string; name: string; party: string | null; position: string | null; district: string | null };

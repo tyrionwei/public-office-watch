@@ -431,12 +431,9 @@ function PersonMiniCard({
 
 function CandidateMiniCard({ candidate }: { candidate: PublicCandidate }) {
   const { t } = useI18n();
-
-  return (
-    <Link
-      to={personPath(candidate.person_id)}
-      className="block pixel-corners border border-line/70 bg-bg/35 p-4 transition hover:border-accent/70 hover:bg-accent/5"
-    >
+  const className = "block pixel-corners border border-line/70 bg-bg/35 p-4";
+  const content = (
+    <>
       <div className="flex flex-wrap items-center gap-2">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
           {translateCandidateStatus(candidate, t)}
@@ -449,7 +446,15 @@ function CandidateMiniCard({ candidate }: { candidate: PublicCandidate }) {
       </div>
       <h3 className="mt-2 font-display text-lg text-white">{candidate.person_name}</h3>
       <p className="mt-2 text-sm text-slate-400">{candidate.race_title}</p>
+    </>
+  );
+
+  return candidate.person_id ? (
+    <Link to={personPath(candidate.person_id)} className={`${className} transition hover:border-accent/70 hover:bg-accent/5`}>
+      {content}
     </Link>
+  ) : (
+    <div className={className}>{content}</div>
   );
 }
 

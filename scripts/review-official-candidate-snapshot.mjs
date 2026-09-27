@@ -1,3 +1,4 @@
+import { isGrassrootsRace, isHigherLevelRace, candidateIdentityFields } from './grassroots-candidate-policy.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -67,6 +68,7 @@ function buildReviewPlan(snapshot, state, basePlan) {
       return {
         record,
         race,
+        higherLevelPersonIds: state.higherLevelPersonIds ?? [],
         person: peopleByExternalId.get(record.personExternalId) ?? null,
         candidate: candidatesByExternalId.get(record.candidateExternalId) ?? null,
         identityCandidates: state.people.filter((person) => normalizeName(person.name) === normalizeName(record.personName)),
@@ -86,7 +88,7 @@ function candidateWriteRow(snapshot, planned, personByExternalId, now) {
   const { record } = planned;
   return {
     external_id: existing?.external_id ?? record.candidateExternalId,
-    person_id: personByExternalId.get(record.personExternalId)?.id ?? existing?.person_id,
+    ...candidateIdentityFields(planned, personByExternalId),
     race_id: planned.race?.id ?? existing?.race_id,
     party: record.party ?? existing?.party ?? null,
     candidate_no: record.candidateNoProvided ? record.candidateNo : existing?.candidate_no ?? null,
@@ -144,15 +146,18 @@ async function fetchByValues(config, tableName, select, column, values) {
 function reviewTemplate(plan, snapshot) {
   const { claims } = buildStagingRows(snapshot, plan);
   return plan.matched.map((item, index) => {
-    const suggestedPersonId = item.candidate?.person_id
+    const grassroots = isGrassrootsRace(item.race);
+    const suggestedPersonId = grassroots ? item.candidate?.person_id ?? null : item.candidate?.person_id
       ?? item.person?.id
       ?? (item.identityCandidates.length === 1 ? item.identityCandidates[0].id : null);
     return {
       candidateExternalId: item.record.candidateExternalId,
       contentRevision: claims[index].claim_json.revision,
       personName: item.record.personName,
-      suggestedDecision: suggestedPersonId ? 'use_existing' : item.identityCandidates.length === 0 ? 'create_new' : 'manual_review',
+      suggestedDecision: grassroots ? (item.candidate?.person_id ? 'manual_review' : 'name_only') : suggestedPersonId ? 'use_existing' : item.identityCandidates.length === 0 ? 'create_new' : 'manual_review',
       suggestedPersonId,
+      identityEvidence: null,
+      higherLevelPersonIds: item.higherLevelPersonIds,
       exactNameCandidates: item.identityCandidates.map((person) => ({ id: person.id, externalId: person.external_id })),
       reviewedAt: null,
     };
@@ -172,18 +177,20 @@ async function main() {
   };
   if (!config.serviceRoleKey) throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
 
-  const races = await fetchByValues(config, 'races', 'id,external_id,title', 'external_id', snapshot.records.map((row) => row.raceExternalId));
+  const races = await fetchByValues(config, 'races', 'id,external_id,title,race_type', 'external_id', snapshot.records.map((row) => row.raceExternalId));
   const [officialPeople, exactNamePeople, officialCandidates, raceCandidates] = await Promise.all([
     fetchByValues(config, 'people', 'id,external_id,name', 'external_id', snapshot.records.map((row) => row.personExternalId)),
     fetchByValues(config, 'people', 'id,external_id,name', 'name', snapshot.records.map((row) => row.personName)),
-    fetchByValues(config, 'candidates', 'id,external_id,person_id,race_id,party,candidate_no,registration_status,candidacy_status,election_result,is_incumbent,source_name,source_url,is_public', 'external_id', snapshot.records.map((row) => row.candidateExternalId)),
-    fetchByValues(config, 'candidates', 'id,external_id,person_id,race_id,party,candidate_no,registration_status,candidacy_status,election_result,is_incumbent,source_name,source_url,is_public', 'race_id', races.map((row) => row.id)),
+    fetchByValues(config, 'candidates', 'id,external_id,person_id,candidate_name,race_id,party,candidate_no,registration_status,candidacy_status,election_result,is_incumbent,source_name,source_url,is_public', 'external_id', snapshot.records.map((row) => row.candidateExternalId)),
+    fetchByValues(config, 'candidates', 'id,external_id,person_id,candidate_name,race_id,party,candidate_no,registration_status,candidacy_status,election_result,is_incumbent,source_name,source_url,is_public', 'race_id', races.map((row) => row.id)),
   ]);
   const candidates = Array.from(new Map([...officialCandidates, ...raceCandidates].map((row) => [row.id, row])).values());
   const candidatePeople = await fetchByValues(config, 'people', 'id,external_id,name', 'id', candidates.map((row) => row.person_id));
   const people = Array.from(new Map([...officialPeople, ...exactNamePeople, ...candidatePeople].map((row) => [row.id, row])).values());
+  const identityHistory = await fetchByValues(config, 'candidates', 'person_id,races!inner(race_type)', 'person_id', people.map((person) => person.id));
+  const higherLevelPersonIds = [...new Set(identityHistory.filter((candidate) => isHigherLevelRace(candidate.races)).map((candidate) => candidate.person_id))];
   const basePlan = planOfficialCandidateImport(snapshot, { races, people, candidates });
-  const plan = buildReviewPlan(snapshot, { races, people, candidates }, basePlan);
+  const plan = buildReviewPlan(snapshot, { races, people, candidates, higherLevelPersonIds }, basePlan);
   const summary = {
     status: plan.blocking.length > 0 ? 'blocked' : 'ok',
     mode: options.mode,

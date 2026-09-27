@@ -331,7 +331,7 @@ export function HomeElectionSpotlight({
     [displayedCandidateSummaries],
   );
   const candidateDemographics = useMemo(() => new Map<string, CandidateDemographics>(
-    displayedCandidateSummaries.map((summary) => [summary.candidate.person_id, {
+    displayedCandidateSummaries.map((summary) => [summary.candidate.candidate_id, {
       gender: summary.gender,
       birthDate: summary.birthDate,
       ageGroup: summary.ageGroup,
@@ -685,7 +685,7 @@ export function HomeElectionSpotlight({
                   : partyInfo.recommendation?.kind === 'unendorsed'
                     ? t('homeSpotlight.unendorsed')
                     : t('homeSpotlight.recommendationUnknown');
-                const demographics = candidateDemographics.get(candidate.person_id);
+                const demographics = candidateDemographics.get(candidate.candidate_id);
                 const themeKey = toPartyThemeKey(partyInfo.affiliationParty);
                 const theme = partyTheme[themeKey];
                 const raceContext = getCandidateRaceContext(candidate, activeCategory, regionLabel);

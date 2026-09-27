@@ -86,7 +86,7 @@ function groupFromMembers(
   const membersByPerson = new Map<string, PublicCandidate>();
 
   for (const candidate of ticketCandidates) {
-    const memberKey = candidate.person_id || candidate.person_name;
+    const memberKey = candidate.person_id || candidate.candidate_id;
     const current = membersByPerson.get(memberKey);
     membersByPerson.set(memberKey, current ? preferredCandidate(current, candidate) : candidate);
   }

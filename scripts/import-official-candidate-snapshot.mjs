@@ -1,3 +1,4 @@
+import { isGrassrootsRace, candidateIdentityFields } from './grassroots-candidate-policy.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -179,18 +180,24 @@ function planOfficialCandidateImport(snapshot, state) {
       continue;
     }
 
+    if (!race.race_type) {
+      blocking.push({ candidateExternalId: record.candidateExternalId, reason: 'race_type_required' });
+      continue;
+    }
+    const grassroots = isGrassrootsRace(race);
     if (candidate) {
-      if (!person) {
+      if (!person && !grassroots) {
         blocking.push({ candidateExternalId: record.candidateExternalId, reason: 'candidate_person_external_id_not_found', personExternalId: record.personExternalId });
         continue;
       }
-      if (candidate.person_id !== person.id || candidate.race_id !== race.id) {
+      if ((!grassroots && candidate.person_id !== person?.id) || candidate.race_id !== race.id) {
         blocking.push({ candidateExternalId: record.candidateExternalId, reason: 'candidate_identity_conflict' });
         continue;
       }
 
       const next = {
         ...candidate,
+        candidate_name: record.personName,
         party: record.party ?? candidate.party ?? null,
         candidate_no: record.candidateNoProvided ? record.candidateNo : candidate.candidate_no,
         registration_status: legacyRegistrationStatus(snapshot.candidacyStatus),
@@ -199,13 +206,13 @@ function planOfficialCandidateImport(snapshot, state) {
         source_url: snapshot.source.url,
         is_public: true,
       };
-      const changed = ['party', 'candidate_no', 'registration_status', 'candidacy_status', 'source_name', 'source_url', 'is_public']
+      const changed = ['candidate_name', 'party', 'candidate_no', 'registration_status', 'candidacy_status', 'source_name', 'source_url', 'is_public']
         .some((key) => next[key] !== candidate[key]);
       (changed ? updateCandidates : unchanged).push({ record, candidate, next });
       continue;
     }
 
-    if (!person && !plannedPersonIds.has(record.personExternalId)) {
+    if (!grassroots && !person && !plannedPersonIds.has(record.personExternalId)) {
       createPeople.push({
         external_id: record.personExternalId,
         name: record.personName,
@@ -309,7 +316,7 @@ function candidateWriteRow(snapshot, planned, personByExternalId, now) {
   const record = planned.record;
   return {
     external_id: record.candidateExternalId,
-    person_id: personByExternalId.get(record.personExternalId)?.id ?? existing?.person_id,
+    ...candidateIdentityFields(planned, personByExternalId),
     race_id: planned.race?.id ?? existing?.race_id,
     party: record.party ?? existing?.party ?? null,
     candidate_no: record.candidateNoProvided ? record.candidateNo : existing?.candidate_no ?? null,
@@ -336,9 +343,9 @@ async function main() {
   if (!config.serviceRoleKey) throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
 
   const [races, people, candidates] = await Promise.all([
-    fetchByExternalIds(config, 'races', 'id,external_id,title', snapshot.records.map((row) => row.raceExternalId)),
+    fetchByExternalIds(config, 'races', 'id,external_id,title,race_type', snapshot.records.map((row) => row.raceExternalId)),
     fetchByExternalIds(config, 'people', 'id,external_id,name', snapshot.records.map((row) => row.personExternalId)),
-    fetchByExternalIds(config, 'candidates', 'id,external_id,person_id,race_id,party,candidate_no,registration_status,candidacy_status,election_result,is_incumbent,source_name,source_url,is_public', snapshot.records.map((row) => row.candidateExternalId)),
+    fetchByExternalIds(config, 'candidates', 'id,external_id,person_id,candidate_name,race_id,party,candidate_no,registration_status,candidacy_status,election_result,is_incumbent,source_name,source_url,is_public', snapshot.records.map((row) => row.candidateExternalId)),
   ]);
   const plan = planOfficialCandidateImport(snapshot, { races, people, candidates });
   const summary = {

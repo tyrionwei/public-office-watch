@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import test from 'node:test';
+import { assertSeedUsesReviewedGrassrootsImport } from './grassroots-candidate-policy.mjs';
 import { planPlannedLocalRaceReconciliation, withPlannedLocalRaceReconciliation } from './lib/planned-local-race-reconciliation.mjs';
 
 const source = fs.readFileSync(new URL('./sync-real-public-data.mjs', import.meta.url), 'utf8');
@@ -40,6 +41,7 @@ async function runWrite(input, complete = false) {
   let plan;
   const stop = new Error('Stop before unrelated people/finance writes');
   const context = vm.createContext({
+    assertSeedUsesReviewedGrassrootsImport,
     getSupabaseEnv: () => ({ fixtureOnly: true }),
     withPlannedLocalRaceReconciliation,
     summarizeLiveSourceHealth: () => ({ status: 'ok', needsAttention: false }),

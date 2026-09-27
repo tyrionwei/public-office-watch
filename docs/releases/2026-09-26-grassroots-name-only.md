@@ -237,3 +237,19 @@ python scripts/grassroots-maintenance-executor.py --plan /private/package/mainte
 新增4項離線測試通過；既有隔離副本以單一ROLLBACK交易模擬前27批，再執行10批輕量檢查及原DML，最後完整核對8表、canonical及public候選多重集合通過，25.4秒，結束後回滾。這不是正式耗時或容量上界。獨立唯讀審查未見此次調整的阻斷。
 
 正式新版尚未送出資料修改：首次連線即遇session pool checkout timeout及資料庫認證逾時，未取得正式連線，未建立新操作狀態；沒有重送或改用其他入口寫入。平台控制面仍回ACTIVE_HEALTHY，但不能據此視為DB連線正常。最近已驗證位置仍為27/60批；網站維護、PR Draft與所有未完成事項不變。需先恢復可驗證的維護連線，再依此10批方案續行。
+
+### 2026-09-27 正式精簡及資料庫回站條件已完成
+
+使用者升級 Pro 並手動重啟後，正式維護連線恢復。此輪採一次性低 I/O 收尾：固定剩餘33批的原DML、防錯刪／FK／連結／CASCADE主鍵檢查、22表鎖及5分鐘整交易逾時保留；取消高頻容量採樣與每批8表VACUUM，完整核對集中於全部60批完成後一次。容量於起點、每10批及最後尾批檢查，實體整理逐表量before/after；未把取樣或2GB provisioned disk當作物理剩餘空間上界。
+
+本次新增控制檢查與有限差異獨立審查通過；補齊最終容量gate並保留每批writer fence確認。沒有重跑已通過的整庫restore或60批隔離演練，也沒有擴充自動recovery。
+
+正式結果：
+
+- 60/60批完成，移除59,738名純基層人物；69,771筆候選改為姓名獨立保存、person_id=NULL，94,681筆候選紀錄全保留。
+- 一次完整8表與canonical／public候選多重集合比對通過，較高層人物與歷史連結符合原凍結基準，people剩19,388筆。
+- 8表實體整理完成；12個公開cache／搜尋重建後cluster約317MB（維護前約500MB）。這是實測實體容量，非普通VACUUM頁面重用推論。
+- 人物目錄10,753筆；name-only race RPC、搜尋來源精確比對、搜尋定義／ACL、anon搜尋與private表拒讀、全部cache populated及索引有效性通過。
+- DDL-only migration的正式ledger已記錄；原CONNECT權限及cron已恢復。網站仍維護，待更新紀錄draft migration、相容前端部署及正式smoke完成後回站／公開更新。
+
+所有完整dump、基層archive、固定target manifest、原／衍生操作包及逆向SQL仍在本機私人區保存。正式資料庫阻擋已解除；PR是否合併仍須以當前CI、兩筆migration ledger及部署準備為準，不把DB完成等同網站已驗收。

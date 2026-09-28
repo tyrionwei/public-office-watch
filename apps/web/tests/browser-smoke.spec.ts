@@ -1596,17 +1596,17 @@ test('homepage candidate cards distinguish party affiliation from this-race reco
   await page.goto('/?region=hsinchu-county&candidateCategory=councilor');
 
   const hsuChingCard = page.locator('[data-candidate-carousel] > a').filter({ hasText: '余筱菁' });
-  await expect(hsuChingCard.locator('[data-candidate-party-label]')).toHaveText('黨籍：臺灣綠黨');
+  await expect(hsuChingCard.locator('[data-candidate-party-label]')).toHaveText('臺灣綠黨');
   await expect(hsuChingCard.locator('[data-candidate-recommendation]')).toHaveText('本次由民主進步黨推薦');
 
   await page.goto('/?region=taichung-city');
   const hoHsinChunCard = page.locator('[data-candidate-carousel] > a').filter({ hasText: '何欣純' });
-  await expect(hoHsinChunCard.locator('[data-candidate-party-label]')).toHaveText('黨籍：民主進步黨');
-  await expect(hoHsinChunCard.locator('[data-candidate-recommendation]')).toHaveCount(0);
+  await expect(hoHsinChunCard.locator('[data-candidate-party-label]')).toHaveText('民主進步黨');
+  await expect(hoHsinChunCard.locator('[data-candidate-recommendation]')).toHaveText('本次由民主進步黨推薦');
 
   await page.goto('/?region=hsinchu-city');
   const hoChihYungCard = page.locator('[data-candidate-carousel] > a').filter({ hasText: '何志勇' });
-  await expect(hoChihYungCard.locator('[data-candidate-party-label]')).toHaveText('黨籍：中國國民黨');
+  await expect(hoChihYungCard.locator('[data-candidate-party-label]')).toHaveText('中國國民黨');
   await expect(hoChihYungCard.locator('[data-candidate-recommendation]')).toHaveText('本次未經政黨推薦');
 });
 

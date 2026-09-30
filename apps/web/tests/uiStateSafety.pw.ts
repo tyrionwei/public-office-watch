@@ -307,7 +307,7 @@ for (const action of ['save', 'clear'] as const) {
     await button.click();
     await expect(page.getByRole('dialog').getByRole('alert')).toContainText(action === 'save' ? 'could not save' : 'could not clear');
     expect(await storedPreference(page)).toEqual(savedPreference);
-    await expect(page.locator('[data-saved-preference]')).toHaveText(JSON.stringify(savedPreference));
+    await expect(page.locator('[data-saved-preference]')).toHaveText(JSON.stringify({ ...savedPreference, ballotCategory: 'unspecified' }));
     await page.evaluate(() => window.__restoreStorage!());
     await button.click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -318,7 +318,8 @@ for (const action of ['save', 'clear'] as const) {
 }
 
 test('neighborhood persistence failure is visible and retries the same draft without pretending it was saved', async ({ page }) => {
-  await seedVotingArea(page);
+  const generalPreference = { ...savedPreference, ballotCategory: 'general' };
+  await seedVotingArea(page, generalPreference);
   await breakStorage(page, 'setItem');
   await page.locator('[data-polling-neighborhood]').fill('12');
   const panel = page.locator('[data-my-polling-place]');

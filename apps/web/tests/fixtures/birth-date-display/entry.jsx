@@ -12,7 +12,7 @@ const profile = Object.freeze({
     education: [], experience: [], updated_at: '2026-09-09T00:00:00Z' },
   candidate_records: [], party_affiliations: [], identity_records: [],
   public_claims: [Object.freeze({ claim_id: 'synthetic-birthday', person_id: 'synthetic-person', claim_type: 'birth_date',
-    claim_value: '1981-07-23', claim_json: {}, source_name: '合成測試來源', source_url: 'https://example.test/source',
+    claim_value: '1981-07-23', claim_json: { officialProfilePolicy: { version: 'official-profile-v1', eligible: true, identityVerified: true, contentVerified: true, datePrecision: 'day' } }, source_name: '合成官方採用測試來源', source_url: 'https://example.test/source',
     confidence_level: 'A', updated_at: '2026-09-09T00:00:00Z' })],
 });
 window.__birthdayProfile = profile;

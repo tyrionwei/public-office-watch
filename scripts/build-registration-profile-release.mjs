@@ -52,7 +52,16 @@ DO $verify$ BEGIN
  IF EXISTS(SELECT 1 FROM registration_profile_batch b JOIN public.person_claims c ON c.claim_key=b.r->'claim'->>'claim_key' WHERE b.r->>'decision'='adopt' AND (NOT public.official_profile_claim_allowed(c.claim_type,c.claim_value,c.claim_json,c.person_id,c.source_url) OR c.review_status<>'verified' OR NOT c.is_public OR c.visibility<>'public')) THEN RAISE EXCEPTION 'Profile adoption failed'; END IF;
  IF EXISTS(SELECT 1 FROM registration_profile_batch b JOIN public.person_claims c ON c.claim_key=b.r->'claim'->>'claim_key' WHERE b.r->>'decision'<>'adopt' AND c.is_public) THEN RAISE EXCEPTION 'Pending field became public'; END IF;
 END $verify$;
-REFRESH MATERIALIZED VIEW published.people_directory_snapshot;
+DO $directory_refresh$
+BEGIN
+ IF EXISTS(SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='published' AND c.relname='people_directory_snapshot' AND c.relkind='m') THEN
+  REFRESH MATERIALIZED VIEW published.people_directory_snapshot;
+ ELSIF EXISTS(SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='published' AND c.relname='people_directory' AND c.relkind='m') THEN
+  REFRESH MATERIALIZED VIEW published.people_directory;
+ ELSE
+  RAISE EXCEPTION 'Expected published people directory materialized view is missing';
+ END IF;
+END $directory_refresh$;
 COMMIT;\n`;
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){

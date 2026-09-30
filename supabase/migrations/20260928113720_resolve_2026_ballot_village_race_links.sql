@@ -14,11 +14,29 @@ BEGIN
     OR NOT EXISTS (SELECT 1 FROM public.regions WHERE id='042cf107-62f0-426b-bcdc-44900eb1e6ca' AND slug='tainan-city') THEN
     RAISE EXCEPTION 'Unexpected election or Tainan identity';
   END IF;
-  IF NOT EXISTS (SELECT 1 FROM public.races WHERE id='58f65fad-3dee-4352-91f9-a45c317ee73d'
+  -- The obsolete combined row only existed in some import baselines.
+  -- Absence needs no archival; an existing row must still match exactly.
+  IF EXISTS (SELECT 1 FROM public.races WHERE id='58f65fad-3dee-4352-91f9-a45c317ee73d')
+    AND NOT EXISTS (SELECT 1 FROM public.races WHERE id='58f65fad-3dee-4352-91f9-a45c317ee73d'
     AND election_id='6d807b31-ddb1-4ff4-9786-fc1388d298ae' AND race_type='village_chief'
     AND title='臺南市官田區東西庄里里長選舉' AND voting_date='2026-11-28'
     AND region_id='45774a50-3ffa-463c-ab32-97ca0e910577') THEN
     RAISE EXCEPTION 'Old combined race identity changed; review before applying';
+  END IF;
+  IF EXISTS (SELECT 1 FROM public.races WHERE id<>'58f65fad-3dee-4352-91f9-a45c317ee73d'
+    AND (external_id='cec-2026-grassroots-857f4a3d6298f24ffed926512ce5eceb'
+      OR (election_id='6d807b31-ddb1-4ff4-9786-fc1388d298ae' AND title='臺南市官田區東西庄里里長選舉'))) THEN
+    RAISE EXCEPTION 'Combined race exists under another ID; review before applying';
+  END IF;
+  IF EXISTS (SELECT 1 FROM public.regions WHERE
+    (id<>'8fc9a72b-baec-4d03-8587-15811cf51551' AND (official_code='67000100017' OR slug='cec-2026-village-67000100017' OR external_id='cec-2026-village-67000100017'))
+    OR (id<>'50317fde-6018-4434-a18b-54e27eed7d78' AND (official_code='67000100018' OR slug='cec-2026-village-67000100018' OR external_id='cec-2026-village-67000100018'))) THEN
+    RAISE EXCEPTION 'Village region exists under another ID; review before applying';
+  END IF;
+  IF EXISTS (SELECT 1 FROM public.races WHERE
+    (id<>'50d51085-f950-4ea6-982b-9166a51f791f' AND (external_id='cec-2026-village-chief-67000100017' OR (election_id='6d807b31-ddb1-4ff4-9786-fc1388d298ae' AND race_type='village_chief' AND (region_id='8fc9a72b-baec-4d03-8587-15811cf51551' OR title='臺南市官田區東庄里里長選舉'))))
+    OR (id<>'fe21df5e-f078-4658-b850-d43900202afe' AND (external_id='cec-2026-village-chief-67000100018' OR (election_id='6d807b31-ddb1-4ff4-9786-fc1388d298ae' AND race_type='village_chief' AND (region_id='50317fde-6018-4434-a18b-54e27eed7d78' OR title='臺南市官田區西庄里里長選舉'))))) THEN
+    RAISE EXCEPTION 'Village race exists under another ID; review before applying';
   END IF;
   IF EXISTS (SELECT 1 FROM public.candidates WHERE race_id='58f65fad-3dee-4352-91f9-a45c317ee73d') THEN
     RAISE EXCEPTION 'Old combined race has candidates; do not hide or move them automatically';

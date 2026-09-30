@@ -21767,8 +21767,9 @@ FROM aggregated;
 REVOKE ALL ON public.official_profile_values FROM PUBLIC,anon,authenticated;
 GRANT SELECT ON public.official_profile_values TO service_role;
 
+-- Preserve released office/status logic; only education/experience use official values.
 CREATE OR REPLACE VIEW public.public_people AS
- WITH mapped_people AS (
+WITH mapped_people AS (
          SELECT canonical_map.canonical_person_id,
             person.id,
             person.name,
@@ -21842,8 +21843,9 @@ CREATE OR REPLACE VIEW public.public_people AS
                     ELSE COALESCE(candidate_offices.race_label, candidate_offices.person_position_label)
                 END AS current_office_label
            FROM candidate_offices
-          WHERE (candidate_offices.candidate_id IN ( SELECT current_elected_offices.candidate_id
-                   FROM current_elected_offices))
+          WHERE (candidate_offices.registration_status = 'elected'::text OR candidate_offices.is_elected = true) AND NOT (EXISTS ( SELECT 1
+                   FROM ended_current_offices ended
+                  WHERE ended.canonical_person_id = candidate_offices.canonical_person_id AND ended.election_year = candidate_offices.election_year AND ended.race_type = candidate_offices.race_type)) AND (candidate_offices.election_year IS NULL OR COALESCE(candidate_offices.race_title, ''::text) ~ '(總統|副總統|立法委員|立委|不分區)'::text AND candidate_offices.election_year >= 2024 OR COALESCE(candidate_offices.race_title, ''::text) ~ '(市長|縣長|區長|議員|鄉長|鎮長|市民代表|鄉民代表|鎮民代表|村長|里長|代表)'::text AND candidate_offices.election_year >= 2022 OR COALESCE(candidate_offices.race_title, ''::text) !~ '(總統|副總統|立法委員|立委|不分區|市長|縣長|區長|議員|鄉長|鎮長|市民代表|鄉民代表|鎮民代表|村長|里長|代表)'::text AND candidate_offices.election_year >= 2024)
           ORDER BY candidate_offices.canonical_person_id, (
                 CASE
                     WHEN COALESCE(candidate_offices.race_label, candidate_offices.person_position_label, ''::text) ~~ '%副總統%'::text THEN 1
@@ -21859,14 +21861,7 @@ CREATE OR REPLACE VIEW public.public_people AS
            FROM source_people source_person
              JOIN person_identity_matches identity_match ON identity_match.source_person_id = source_person.id AND (identity_match.match_status = ANY (ARRAY['auto_matched'::text, 'probable_match'::text]))
              JOIN person_canonical_map person_map ON person_map.person_id = identity_match.person_id
-          WHERE source_person.source_type = 'official_officeholder'::text AND (source_person."position" !~ '(總統|立法委員|立委|市長|縣長|議員|鄉長|鎮長|村長|里長|代表)'::text OR source_person."position" ~ '(副市長|副縣長)'::text OR (EXISTS ( SELECT 1
-                   FROM office_term_calendar calendar
-                  WHERE calendar.office_family =
-                        CASE
-                            WHEN source_person."position" ~ '總統'::text THEN 'president'::text
-                            WHEN source_person."position" ~ '(立法委員|立委)'::text THEN 'legislator'::text
-                            ELSE 'local'::text
-                        END AND EXTRACT(year FROM calendar.starts_on) = source_person.election_year::numeric AND (now() AT TIME ZONE 'Asia/Taipei'::text)::date >= calendar.starts_on AND (now() AT TIME ZONE 'Asia/Taipei'::text)::date < calendar.ends_on))) AND source_person.is_public = true AND (source_person.source_payload ->> 'isCurrent'::text) = 'true'::text AND NULLIF(btrim(source_person."position"), ''::text) IS NOT NULL AND source_person."position" !~ '(候選人|參選|擬參選)'::text
+          WHERE source_person.source_type = 'official_officeholder'::text AND source_person.is_public = true AND (source_person.source_payload ->> 'isCurrent'::text) = 'true'::text AND NULLIF(btrim(source_person."position"), ''::text) IS NOT NULL AND source_person."position" !~ '(候選人|參選|擬參選)'::text
           ORDER BY person_map.canonical_person_id, (
                 CASE
                     WHEN source_person."position" ~~ '%立法院院長%'::text AND source_person."position" !~~ '%副院長%'::text THEN 0
@@ -21883,7 +21878,7 @@ CREATE OR REPLACE VIEW public.public_people AS
                     ELSE COALESCE(candidate_offices.race_label, candidate_offices.person_position_label)
                 END AS upcoming_candidate_label
            FROM candidate_offices
-          WHERE ((candidate_offices.candidacy_status = ANY (ARRAY['party_nominee'::text, 'officially_announced'::text, 'registered'::text, 'qualified'::text])) OR (candidate_offices.candidacy_status = ANY (ARRAY['party_nominee'::text, 'officially_announced'::text, 'registered'::text, 'qualified'::text])) OR (candidate_offices.registration_status = ANY (ARRAY['pending'::text, 'registered'::text, 'qualified'::text]))) AND candidate_offices.election_year >= EXTRACT(year FROM CURRENT_DATE)::integer
+          WHERE ((candidate_offices.candidacy_status = ANY (ARRAY['party_nominee'::text, 'officially_announced'::text, 'registered'::text, 'qualified'::text])) OR (candidate_offices.registration_status = ANY (ARRAY['pending'::text, 'registered'::text, 'qualified'::text]))) AND candidate_offices.election_year >= EXTRACT(year FROM CURRENT_DATE)::integer
           ORDER BY candidate_offices.canonical_person_id, candidate_offices.election_year, (
                 CASE
                     WHEN COALESCE(candidate_offices.race_label, candidate_offices.person_position_label, ''::text) ~~ '%副總統%'::text THEN 1
@@ -21920,8 +21915,8 @@ CREATE OR REPLACE VIEW public.public_people AS
     upcoming_candidates.upcoming_candidate_label
    FROM mapped_people mapped
      JOIN canonical_people canonical ON canonical.id = mapped.canonical_person_id
+     LEFT JOIN public.official_profile_values official_profile ON official_profile.person_id = canonical.id
      LEFT JOIN public_person_primary_photos photo ON photo.person_id = canonical.id
-     LEFT JOIN public.official_profile_values official_profile ON official_profile.person_id=canonical.id
      LEFT JOIN official_current_offices ON official_current_offices.canonical_person_id = canonical.id
      LEFT JOIN current_offices ON current_offices.canonical_person_id = canonical.id
      LEFT JOIN upcoming_candidates ON upcoming_candidates.canonical_person_id = canonical.id
@@ -22241,20 +22236,15 @@ CREATE OR REPLACE VIEW public.person_duplicate_review_queue AS
           WHERE duplicate_map.person_id = ranked_pairs.suggested_duplicate_person_id))
   ORDER BY ranked_pairs.score DESC, duplicate_person.name, canonical_person.name;
 
+-- Preserve released office/status logic; only education/experience use official values.
 CREATE OR REPLACE VIEW published.people AS
- SELECT person.person_id,
+SELECT person.person_id,
     person.name,
     person.alias,
     person.party,
-        CASE
-            WHEN office.person_id IS NOT NULL THEN office.snapshot ->> 'position'::text
-            ELSE person."position"
-        END AS "position",
+    person."position",
     person.election_year,
-        CASE
-            WHEN office.person_id IS NOT NULL THEN office.snapshot ->> 'district'::text
-            ELSE person.district
-        END AS district,
+    person.district,
     person.updated_at,
     person.primary_photo_url,
     person.primary_photo_thumbnail_url,
@@ -22266,38 +22256,16 @@ CREATE OR REPLACE VIEW published.people AS
     person.gender,
     official_profile.education,
     official_profile.experience,
-        CASE
-            WHEN office.person_id IS NOT NULL THEN office.snapshot ->> 'current_office_label'::text
-            ELSE person.current_office_label
-        END AS current_office_label,
+    person.current_office_label,
     person.upcoming_candidate_label,
-        CASE
-            WHEN office.person_id IS NOT NULL THEN office.snapshot ->> 'list_role'::text
-            ELSE person.list_role
-        END AS list_role,
-        CASE
-            WHEN office.person_id IS NOT NULL THEN office.snapshot ->> 'list_status'::text
-            ELSE person.list_status
-        END AS list_status,
-        CASE
-            WHEN office.person_id IS NOT NULL THEN (office.snapshot ->> 'list_is_grassroots'::text)::boolean
-            ELSE person.list_is_grassroots
-        END AS list_is_grassroots,
-        CASE
-            WHEN office.person_id IS NOT NULL THEN (office.snapshot ->> 'list_status_order'::text)::integer
-            ELSE person.list_status_order
-        END AS list_status_order,
-        CASE
-            WHEN office.person_id IS NOT NULL THEN (office.snapshot ->> 'list_role_order'::text)::integer
-            ELSE person.list_role_order
-        END AS list_role_order,
+    person.list_role,
+    person.list_status,
+    person.list_is_grassroots,
+    person.list_status_order,
+    person.list_role_order,
     (EXISTS ( SELECT 1
            FROM person_party_affiliations affiliation
-          WHERE affiliation.person_id = person.person_id AND affiliation.role_context = 'party_officer'::text AND affiliation.is_current = true AND affiliation.is_public = true AND affiliation.review_status = 'verified'::text)) AND
-        CASE
-            WHEN office.person_id IS NOT NULL THEN office.snapshot ->> 'current_office_label'::text
-            ELSE person.current_office_label
-        END IS NULL AND person.upcoming_candidate_label IS NULL AND summary.person_id IS NULL AS list_is_party_only,
+          WHERE affiliation.person_id = person.person_id AND affiliation.role_context = 'party_officer'::text AND affiliation.is_current = true AND affiliation.is_public = true AND affiliation.review_status = 'verified'::text)) AND person.current_office_label IS NULL AND person.upcoming_candidate_label IS NULL AND summary.person_id IS NULL AS list_is_party_only,
     COALESCE(summary.candidate_count, 0::bigint) AS candidate_count,
         CASE
             WHEN latest.candidate_id IS NULL THEN NULL::jsonb
@@ -22308,19 +22276,7 @@ CREATE OR REPLACE VIEW published.people AS
     region.slug AS primary_region_slug,
     summary.published_at
    FROM public_people_list_cached person
-     LEFT JOIN public.official_profile_values official_profile ON official_profile.person_id=person.person_id
-     LEFT JOIN LATERAL ( SELECT person.person_id,
-            reviewed_office_snapshot(person.person_id) AS snapshot
-          WHERE (EXISTS ( SELECT 1
-                   FROM reviewed_office_profiles rp
-                  WHERE rp.person_id = person.person_id))
-        UNION ALL
-         SELECT legacy.person_id,
-            legacy.snapshot
-           FROM person_office_status_cache legacy
-          WHERE legacy.person_id = person.person_id AND NOT (EXISTS ( SELECT 1
-                   FROM reviewed_office_profiles rp
-                  WHERE rp.person_id = person.person_id))) office ON true
+     LEFT JOIN public.official_profile_values official_profile ON official_profile.person_id = person.person_id
      LEFT JOIN published.person_candidate_summaries summary ON summary.person_id = person.person_id
      LEFT JOIN published.candidate_facts latest ON latest.candidate_id = summary.latest_candidate_id
      LEFT JOIN published.regions region ON region.region_id = summary.primary_region_id;
@@ -22362,6 +22318,15 @@ CREATE TRIGGER official_profile_cache_delete AFTER DELETE ON public.person_claim
 
 SELECT public.refresh_public_people_list_cached();
 -- These two snapshots contain no resumes, but refresh the already-supported directory projection.
-REFRESH MATERIALIZED VIEW published.people_directory_snapshot;
+DO $directory_refresh$
+BEGIN
+ IF EXISTS(SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='published' AND c.relname='people_directory_snapshot' AND c.relkind='m') THEN
+  REFRESH MATERIALIZED VIEW published.people_directory_snapshot;
+ ELSIF EXISTS(SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='published' AND c.relname='people_directory' AND c.relkind='m') THEN
+  REFRESH MATERIALIZED VIEW published.people_directory;
+ ELSE
+  RAISE EXCEPTION 'Expected published people directory materialized view is missing';
+ END IF;
+END $directory_refresh$;
 NOTIFY pgrst,'reload schema';
 COMMIT;

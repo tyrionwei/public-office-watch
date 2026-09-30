@@ -111,6 +111,15 @@ CREATE TRIGGER guard_existing_identity_decision BEFORE INSERT OR UPDATE ON publi
 
 REFRESH MATERIALIZED VIEW published.person_candidate_summaries;
 SELECT public.refresh_public_people_list_cached();
-REFRESH MATERIALIZED VIEW published.people_directory_snapshot;
+DO $directory_refresh$
+BEGIN
+ IF EXISTS(SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='published' AND c.relname='people_directory_snapshot' AND c.relkind='m') THEN
+  REFRESH MATERIALIZED VIEW published.people_directory_snapshot;
+ ELSIF EXISTS(SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='published' AND c.relname='people_directory' AND c.relkind='m') THEN
+  REFRESH MATERIALIZED VIEW published.people_directory;
+ ELSE
+  RAISE EXCEPTION 'Expected published people directory materialized view is missing';
+ END IF;
+END $directory_refresh$;
 NOTIFY pgrst,'reload schema';
 COMMIT;

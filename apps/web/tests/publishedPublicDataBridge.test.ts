@@ -343,7 +343,7 @@ test('bridge maps complete published person profile rows to the existing fronten
     claim_id: 'claim-education',
     claim_type: 'education' as const,
     claim_value: '官方大學；官方研究所',
-    claim_json: { items: ['官方大學', '官方研究所'] },
+    claim_json: { items: ['官方大學', '官方研究所'], officialProfilePolicy: { version: 'official-profile-v1', eligible: true, identityVerified: true, contentVerified: true } },
     source_name: '候選人官方頁面',
   };
   const experienceClaim = {
@@ -351,7 +351,7 @@ test('bridge maps complete published person profile rows to the existing fronten
     claim_id: 'claim-experience',
     claim_type: 'experience' as const,
     claim_value: '官方經歷一；官方經歷二',
-    claim_json: { items: ['官方經歷一', '官方經歷二'] },
+    claim_json: { items: ['官方經歷一', '官方經歷二'], officialProfilePolicy: { version: 'official-profile-v1', eligible: true, identityVerified: true, contentVerified: true } },
     source_name: '候選人官方頁面',
   };
   const affiliation = {
@@ -383,7 +383,13 @@ test('bridge maps complete published person profile rows to the existing fronten
       return {
         personRows: [profileRow],
         candidateRows: [candidate],
-        claimRows: [claim, educationClaim, experienceClaim],
+        claimRows: [claim, educationClaim, experienceClaim, {
+          ...educationClaim,
+          claim_id: 'third-party-education',
+          claim_value: '第三方學校',
+          claim_json: {},
+          source_name: '第三方網站',
+        }],
         partyAffiliationRows: [affiliation],
       };
     },
@@ -396,6 +402,7 @@ test('bridge maps complete published person profile rows to the existing fronten
   assert.equal(profiles.length, 1);
   assert.equal(profiles[0]?.person.education, '官方大學；官方研究所');
   assert.equal(profiles[0]?.person.experience, '官方經歷一；官方經歷二');
+  assert.equal(profiles[0]?.public_claims.some((publicClaim) => publicClaim.claim_id === 'third-party-education'), false);
   assert.equal(profiles[0]?.person.primary_photo_url, 'https://example.test/person-1.png');
   assert.equal(profiles[0]?.person.candidate_count, 1);
   assert.equal(profiles[0]?.person.region_id, 'region-taipei');

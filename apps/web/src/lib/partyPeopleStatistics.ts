@@ -7,6 +7,7 @@ import type {
   PublicPersonClaim,
 } from '../types/publicViews.ts';
 import { getEducationStatisticsDimension, getStatisticsPartyLabel } from './statisticsDimensions.ts';
+import { isOfficialProfileClaim } from './officialProfilePolicy.ts';
 
 const dimensionBuckets: Record<
   PublicPartyPeopleStatisticDimension,
@@ -33,7 +34,9 @@ function getBirthDateByPersonId(claims: PublicPersonClaim[]) {
 
   for (const claim of claims) {
     const value = claim.claim_value?.trim();
-    if (claim.claim_type !== 'birth_date' || !value) continue;
+    const policy = claim.claim_json?.officialProfilePolicy;
+    if (!isOfficialProfileClaim(claim) || !policy || typeof policy !== 'object'
+      || Array.isArray(policy) || (policy as Record<string, unknown>).datePrecision !== 'day' || !value) continue;
     const values = valuesByPersonId.get(claim.person_id) ?? new Set<string>();
     values.add(value);
     valuesByPersonId.set(claim.person_id, values);

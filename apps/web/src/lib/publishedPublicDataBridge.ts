@@ -2,6 +2,7 @@ import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
 import { partyTheme } from '../styles/partyThemes.ts';
 import type { StageRegionLevel, StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import { buildLocalOfficeSummaryFromItems, buildPersonProfileFromItems } from './personData.ts';
+import { retainOfficialProfileClaims } from './officialProfilePolicy.ts';
 import type {
   HomePageData,
   PublicDataProvider,
@@ -579,7 +580,7 @@ export function createPublishedPublicDataBridge(
       const rows = await adapter.loadPersonProfiles(normalizedIds);
       const people = rows.personRows.map(mapProfilePersonRow);
       const candidates = rows.candidateRows;
-      const claims = rows.claimRows;
+      const claims = retainOfficialProfileClaims(rows.claimRows);
       const partyAffiliations = rows.partyAffiliationRows;
 
       return normalizedIds

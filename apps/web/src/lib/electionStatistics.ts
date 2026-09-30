@@ -9,6 +9,7 @@ import type {
   PublicRace,
 } from '../types/publicViews.ts';
 import { getEducationStatisticsDimension, getStatisticsPartyLabel } from './statisticsDimensions.ts';
+import { isOfficialProfileClaim } from './officialProfilePolicy.ts';
 
 export type ElectionPerformanceFilters = {
   raceTypes?: PublicRace['race_type'][];
@@ -106,7 +107,7 @@ export function buildElectionEducationDistribution(
   const educationClaimsByPersonId = new Map<string, string[]>();
 
   for (const claim of claims) {
-    if (claim.claim_type !== 'education' || !claim.claim_value?.trim()) continue;
+    if (claim.claim_type !== 'education' || !isOfficialProfileClaim(claim) || !claim.claim_value?.trim()) continue;
     const values = educationClaimsByPersonId.get(claim.person_id) ?? [];
     values.push(claim.claim_value.trim());
     educationClaimsByPersonId.set(claim.person_id, values);

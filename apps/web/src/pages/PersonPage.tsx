@@ -21,6 +21,7 @@ import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { legalCaseClassification, legalRecordPresentation } from '../lib/legalRecordPresentation';
 import { formatPublicBirthDate } from '../lib/publicBirthDate';
+import { isOfficialProfileClaim, officialBirthDateValue } from '../lib/officialProfilePolicy';
 import { useBirthDateDisplay } from '../lib/useBirthDateDisplay';
 import { platformClaimsForCandidate, platformItemsForClaim } from '../lib/candidatePlatform';
 import type { FeedbackSectionKey } from '../lib/personFeedback';
@@ -488,12 +489,13 @@ export function PersonPage() {
   const partyAffiliations = profile ? getPartyChangeAffiliations(profile.party_affiliations, person?.party) : [];
   const theme = partyTheme[toPartyThemeKey(person?.party)];
   const publicClaims = profile ? visibleProfileClaims(profile.public_claims) : [];
-  const birthDateClaim = profile ? claimsByType(profile.public_claims, 'birth_date')[0] ?? null : null;
-  const displayedBirthDate = formatPublicBirthDate(birthDateClaim?.claim_value, birthDateYearOnly);
+  const birthDateClaim = profile ? claimsByType(profile.public_claims, 'birth_date').find(isOfficialProfileClaim) ?? null : null;
+  const officialBirthDate = officialBirthDateValue(birthDateClaim);
+  const displayedBirthDate = formatPublicBirthDate(officialBirthDate, birthDateYearOnly);
   const primaryPhotoUrl = person?.primary_photo_thumbnail_url ?? person?.primary_photo_url ?? null;
   const personSprite = person ? pickPersonCandidateSprite(person.person_id) : null;
   const portraitSrc = person
-    ? personSprite ?? primaryPhotoUrl ?? pickDefaultCandidateSprite(person.name, person.gender, birthDateClaim?.claim_value)
+    ? personSprite ?? primaryPhotoUrl ?? pickDefaultCandidateSprite(person.name, person.gender, officialBirthDate)
     : xiezhiMascotSprite;
   const usesMascotFallback = Boolean(person && !primaryPhotoUrl && portraitSrc === xiezhiMascotSprite);
   const usesDemographicFallback = Boolean(person && !personSprite && !primaryPhotoUrl && portraitSrc !== xiezhiMascotSprite);
@@ -538,7 +540,7 @@ export function PersonPage() {
     ? [
         person.alias ? [t('person.alias'), person.alias] : null,
         person.gender && person.gender !== 'unknown' ? [t('person.gender'), t(genderLabels[person.gender])] : null,
-        displayedBirthDate ? [t(birthDateYearOnly ? 'person.birthYear' : 'person.birthDate'), displayedBirthDate] : null,
+        [t(birthDateYearOnly || /^\d{4}$/u.test(officialBirthDate ?? '') ? 'person.birthYear' : 'person.birthDate'), displayedBirthDate ?? t('person.officialProfilePending')],
         [profilePositionLabel, profilePosition],
         person.region_name || person.district ? [t('person.location'), person.region_name ?? person.district ?? ''] : null,
       ].filter((fact): fact is [string, string] => fact !== null)
@@ -814,7 +816,7 @@ export function PersonPage() {
                       ))}
                     </ul>
                   ) : (
-                    <DataStateNotice kind="uncollected">{t('person.resume.educationEmpty')}</DataStateNotice>
+                    <DataStateNotice kind="uncollected">{t('person.officialProfilePending')}</DataStateNotice>
                   )}
                 </div>
                 <div>
@@ -828,7 +830,7 @@ export function PersonPage() {
                       ))}
                     </ul>
                   ) : (
-                    <DataStateNotice kind="uncollected">{t('person.resume.experienceEmpty')}</DataStateNotice>
+                    <DataStateNotice kind="uncollected">{t('person.officialProfilePending')}</DataStateNotice>
                   )}
                 </div>
                 </div>

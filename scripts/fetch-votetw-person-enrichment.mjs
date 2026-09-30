@@ -732,11 +732,6 @@ function matchProfileToTarget(target, profiles) {
     };
   }
 
-  if (target.birthDate) {
-    const birthDateMatches = sameNameProfiles.filter((profile) => profile.birthDate === target.birthDate);
-    if (birthDateMatches.length === 1) return { status: 'matched', matchedBy: 'birth_date', confidenceLevel: 'A', profile: birthDateMatches[0] };
-    return { status: 'skipped', reason: birthDateMatches.length > 1 ? 'multiple same-name profiles with same birthday' : 'target birthday does not match VoteTW profiles' };
-  }
 
   return {
     status: 'skipped',
@@ -842,7 +837,7 @@ function buildClaims(target, page, profiles, match, args, platformRecords = []) 
       },
     }));
   }
-  return claims;
+  return claims.filter(c=>!['birth_date','education','experience'].includes(c.claimType));
 }
 
 function rawSourceRecord(page, rawPath) {

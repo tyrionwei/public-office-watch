@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { createSeoCatalog, fetchElectionIndex, fetchPublishedRows, writeSeoCatalogFiles } from '../scripts/generate-seo-catalog.mjs';
+import { createSeoCatalog, fetchElectionIndex, fetchPublishedRows, fetchSeoDatasets, writeSeoCatalogFiles } from '../scripts/generate-seo-catalog.mjs';
 import { buildElectionEvents, getElectionEventByKey } from '../src/data/electionEvents.ts';
 
 test('SEO and the UI share event identities when race summaries refine the election family', () => {
@@ -206,4 +206,46 @@ test('writes a lightweight manifest and one bounded file per SEO group', () => {
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
+});
+
+
+test('catalog build reads datasets sequentially without dropping full pages or share data', async () => {
+  let active = 0;
+  let peak = 0;
+  const calls = [];
+  const fullPage = Array.from({ length: 1000 }, (_, index) => ({ person_id: String(index) }));
+  const datasets = await fetchSeoDatasets({
+    supabaseUrl: 'https://fixture.invalid', anonKey: 'fixture-public-key',
+    fetchImpl: async (url, init) => {
+      active += 1;
+      peak = Math.max(peak, active);
+      const args = JSON.parse(init.body);
+      calls.push([url.pathname, args]);
+      await new Promise(resolve => setTimeout(resolve, 1));
+      active -= 1;
+      if (url.pathname.endsWith('/election_index_page')) {
+        return Response.json([{ payload: { api_version: 1, release_id: null, published_at: null, election_rows: [], race_summary_rows: [] } }]);
+      }
+      if (args.p_dataset === 'people_directory') {
+        return Response.json([{ items: args.p_offset === 0 ? fullPage : [{ person_id: 'last' }] }]);
+      }
+      return Response.json([{ items: [] }]);
+    },
+  });
+  assert.equal(peak, 1);
+  assert.equal(datasets.people.length, 1001);
+  assert.equal(datasets.people.at(-1).person_id, 'last');
+  assert.deepEqual(Object.keys(datasets).sort(), ['people', 'parties', 'regions', 'elections', 'races', 'peopleShares', 'raceShares', 'electionIndex'].sort());
+  assert.equal(calls.length, 9);
+  assert.equal(calls.filter(([path, args]) => path.endsWith('/seo_share_catalog_page') && args.p_page_size === 100).length, 2);
+  assert.ok(calls.some(([, args]) => args.p_dataset === 'people_directory' && args.p_offset === 1000));
+});
+
+test('catalog build stops on a failed dataset instead of publishing a partial catalog', async () => {
+  let calls = 0;
+  await assert.rejects(fetchSeoDatasets({
+    supabaseUrl: 'https://fixture.invalid', anonKey: 'fixture-public-key',
+    fetchImpl: async () => { calls += 1; return new Response('', { status: 403 }); },
+  }), /Published people_directory SEO RPC failed \(403\)/);
+  assert.equal(calls, 1);
 });

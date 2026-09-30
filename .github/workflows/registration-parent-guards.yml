@@ -6,6 +6,7 @@ on:
       - 'supabase/migrations/20260930060000_hold_registration_profile_parent_changes.sql'
       - 'tests/sql/registration-profile-parent-guards-isolated.sql'
       - 'supabase/migrations/20260928113720_resolve_2026_ballot_village_race_links.sql'
+      - 'supabase/migrations/20260930083500_refresh_ballot_election_summaries.sql'
       - 'tests/ballot-migration-regression.py'
       - 'tests/official-directory-refresh-regression.py'
       - 'scripts/build-registration-profile-release.mjs'

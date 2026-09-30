@@ -419,6 +419,25 @@ function assertElectionIndexConsistency(datasets) {
   if (raceSummaryRows.reduce((sum, row) => sum + row.race_count, 0) !== (datasets.races ?? []).length) throw new Error('SEO race summaries are incomplete or disagree with the race catalog.');
 }
 
+// Each paginated dataset can perform expensive public-view reads. Keep the
+// build from competing with itself and live traffic on the production database.
+export async function fetchSeoDatasets(options) {
+  const datasets = {};
+  for (const source of sources) {
+    datasets[source.key] = await fetchPublishedRows({ ...options, relation: source.relation });
+  }
+  for (const source of shareSources) {
+    datasets[source.key] = await fetchPublishedRows({
+      ...options,
+      relation: source.relation,
+      rpcName: 'seo_share_catalog_page',
+      requestedPageSize: sharePageSize,
+    });
+  }
+  datasets.electionIndex = await fetchElectionIndex(options);
+  return datasets;
+}
+
 async function main() {
   validateProductionEnvironment(process.env);
   if (process.env.VITE_PUBLIC_DATA_PROVIDER !== 'published') {
@@ -428,26 +447,7 @@ async function main() {
   const supabaseUrl = process.env.VITE_SUPABASE_URL.trim();
   const anonKey = process.env.VITE_SUPABASE_ANON_KEY.trim();
   const outputPath = resolve(process.argv[2] || 'dist/client/seo-catalog.json');
-  const [results, shareResults, electionIndex] = await Promise.all([
-    Promise.all(sources.map((source) => fetchPublishedRows({
-      supabaseUrl,
-      anonKey,
-      relation: source.relation,
-    }))),
-    Promise.all(shareSources.map((source) => fetchPublishedRows({
-      supabaseUrl,
-      anonKey,
-      relation: source.relation,
-      rpcName: 'seo_share_catalog_page',
-      requestedPageSize: sharePageSize,
-    }))),
-    fetchElectionIndex({ supabaseUrl, anonKey }),
-  ]);
-  const datasets = {
-    electionIndex,
-    ...Object.fromEntries(sources.map((source, index) => [source.key, results[index]])),
-    ...Object.fromEntries(shareSources.map((source, index) => [source.key, shareResults[index]])),
-  };
+  const datasets = await fetchSeoDatasets({ supabaseUrl, anonKey });
   const catalog = createSeoCatalog(datasets);
 
   writeSeoCatalogFiles(catalog, outputPath);

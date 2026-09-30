@@ -221,12 +221,13 @@ test('production mobile voting area maps a neighborhood without sending it to Su
   await villageTrigger.click();
   await dialog.locator('[data-voting-village-search]').fill('老梅');
   await dialog.getByRole('option', { name: '老梅里', exact: true }).click();
+  await dialog.locator('[data-voting-ballot-category]').selectOption('general');
   await dialog.getByRole('button', { name: '儲存投票地區' }).click();
 
   const dashboard = page.locator('[data-mobile-my-election]');
   await expect(dashboard).toBeVisible();
   await expect(page.locator('[data-voting-region-summary]')).toContainText('新北市 石門區 老梅里');
-  const pollingPlaceButton = dashboard.getByRole('button', { name: '查看投開票所' });
+  const pollingPlaceButton = dashboard.getByRole('button', { name: '查看完整投開票所資料' });
   await pollingPlaceButton.click();
   const pollingPlacePanel = dashboard.locator('[data-my-polling-place]');
   await expect(pollingPlacePanel).toBeVisible();
@@ -246,10 +247,11 @@ test('production mobile voting area maps a neighborhood without sending it to Su
   ));
   expect(savedPreference).not.toBeNull();
   expect(JSON.parse(savedPreference!).neighborhood).toBe(15);
+  expect(JSON.parse(savedPreference!).ballotCategory).toBe('general');
 
   await page.reload();
   await expect(dashboard).toBeVisible();
-  await dashboard.getByRole('button', { name: '查看投開票所' }).click();
+  await dashboard.getByRole('button', { name: '查看完整投開票所資料' }).click();
   await expect(dashboard.locator('[data-polling-neighborhood]')).toHaveValue('15');
   await expect(dashboard.getByText('第 0004 投開票所', { exact: true })).toBeVisible();
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n';
 import { buildCecPollingPlaceLookupUrl } from '../lib/cecPollingPlaceLookup';
 import { pollingPlaceMapUrl, pollingPlacesForDisplay, validNeighborhood } from '../lib/pollingPlace';
+import { pollingPlaceMissingAddressNoticeUrl } from '../lib/pollingPlaceNotice';
 import { publicDataProvider } from '../lib/publicData';
 import type { PollingPlace } from '../types/pollingPlace';
 import { useVotingRegion, type VotingRegionPreference } from '../votingRegion';
@@ -35,11 +36,7 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose, summary = false }
   const places = current?.places ?? [];
   const matching = pollingPlacesForDisplay(places, preference.neighborhood);
 
-  const missingAddressNotice = eventKey === '2026-local-general-election-day'
-    && ['county-10009', 'county-10016'].includes(preference.county.id);
-  const officialNoticeUrl = preference.county.id === 'county-10009'
-    ? 'https://web.cec.gov.tw/ylec/article/64366'
-    : 'https://web.cec.gov.tw/phec/article/63671';
+  const officialNoticeUrl = pollingPlaceMissingAddressNoticeUrl(eventKey, preference.county.id);
 
   const categoryGeneral = preference.ballotCategory === 'general';
   const canNarrowByNeighborhood = places.length > 1 && places.every((place) => place.coverage_kind === 'neighborhoods' && place.neighborhoods.length > 0);
@@ -76,7 +73,7 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose, summary = false }
         {!current ? <p role="status" className="mt-3 text-sm text-slate-400">{english ? 'Loading official data…' : '載入官方資料中…'}</p>
           : current.error ? <p role="status" className="mt-3 text-sm text-amber-200">{english ? 'Could not load polling places. Use the official lookup below.' : '投開票所資料暫時無法載入，請使用下方官方查詢。'}</p>
 
-          : localPlaces.length === 0 ? (missingAddressNotice
+          : localPlaces.length === 0 ? (officialNoticeUrl
             ? <div data-polling-missing-address className="mt-3 border border-amber-300/30 bg-amber-300/5 p-3 text-sm leading-6 text-amber-200">
                 <p>{english
                   ? `${preference.county.name}: the official list does not include polling-place addresses, so complete station details are not yet available here.`

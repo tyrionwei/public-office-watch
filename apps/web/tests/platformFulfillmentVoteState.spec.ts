@@ -148,7 +148,7 @@ test('votes reveal results automatically while non-voters can reveal one or all 
     '已實現',
     '推進中',
     '尚未實現',
-    '資訊不足',
+    '蛤?',
   ]);
   const votingSchedule = card.getByTestId('fulfillment-voting-schedule');
   const votingRule = votingSchedule.getByText('就職滿一年且政見整理完成後開放投票。', {

@@ -9,19 +9,18 @@ import { MobileNavigation, type MobilePanel } from './MobileNavigation';
 import { MobileVotingRegion } from './MobileVotingRegion';
 import { NextEventTicker } from './NextEventTicker';
 import { ThemeToggle } from './ThemeToggle';
+import { useVotingRegion } from '../votingRegion';
 
 type AppShellProps = PropsWithChildren<{
   headerRight?: ReactNode;
   ticker?: ComponentProps<typeof NextEventTicker>;
   tickerMobileHidden?: boolean;
-  onOpenPollingPlace?: () => void;
-  pollingPlaceOpen?: boolean;
 }>;
 
-export function AppShell({ headerRight, ticker, tickerMobileHidden = false, onOpenPollingPlace, pollingPlaceOpen = false, children }: AppShellProps) {
+export function AppShell({ headerRight, ticker, tickerMobileHidden = false, children }: AppShellProps) {
   const { t } = useI18n();
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>(null);
-  const [votingRegionEditorOpen, setVotingRegionEditorOpen] = useState(false);
+  const { editorOpen: votingRegionEditorOpen, setEditorOpen: setVotingRegionEditorOpen, openPanel, panel } = useVotingRegion();
   const headerControl = (
     <div className="grid gap-2">
       {headerRight}
@@ -58,7 +57,7 @@ export function AppShell({ headerRight, ticker, tickerMobileHidden = false, onOp
           <div className={`mt-3 ${tickerMobileHidden ? 'hidden md:block' : ''}`}>
             <NextEventTicker
               {...ticker}
-              rightSlot={<DesktopVotingRegionInline ticker={ticker} onOpenEditor={() => setVotingRegionEditorOpen(true)} onOpenPollingPlace={onOpenPollingPlace} pollingPlaceOpen={pollingPlaceOpen} />}
+              rightSlot={<DesktopVotingRegionInline ticker={ticker} onOpenEditor={() => setVotingRegionEditorOpen(true)} onOpenPollingPlace={() => openPanel('polling')} pollingPlaceOpen={votingRegionEditorOpen && panel === 'polling'} onOpenMyBallots={() => openPanel('ballots')} myBallotsOpen={votingRegionEditorOpen && panel === 'ballots'} />}
             />
           </div>
         ) : null}

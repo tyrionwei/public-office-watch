@@ -32,6 +32,9 @@ const blockedTermAllowlist = {
   source_documents: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
   person_media: new Set([path.join(srcRoot, 'lib', 'publicViewRegistry.ts')]),
   pending: new Set([
+    // Display-only English copy for unavailable official election mappings; no private query.
+    path.join(srcRoot, 'components', 'MobileMyElection.tsx'),
+    path.join(srcRoot, 'components', 'MyBallots.tsx'),
     // Feedback management states use the authenticated, bounded feedback-admin Edge endpoint.
     path.join(srcRoot, 'pages', 'InternalFeedbackAdminPage.tsx'),
     path.join(srcRoot, 'lib', 'feedbackAdmin.ts'),

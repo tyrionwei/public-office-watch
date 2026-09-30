@@ -1,0 +1,6140 @@
+[
+  {
+    "county": "南投縣",
+    "town": "南投市",
+    "number": 1,
+    "rawScope": "龍泉里、康壽里、三民里、仁和里、南投里、彰仁里、崇文里、三興里、三和里、嘉興里、嘉和里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "南投市",
+    "number": 2,
+    "rawScope": "平和里、振興里、千秋里、軍功里、東山里、營南里、營北里、內興里、內新里、光輝里、光榮里、光明里、光華里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "南投市",
+    "number": 3,
+    "rawScope": "漳興里、漳和里、平山里、新興里、永豐里、福興里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "南投市",
+    "number": 4,
+    "rawScope": "鳳山里、永興里、鳳鳴里、福山里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "埔里鎮",
+    "number": 1,
+    "rawScope": "東門里、枇杷里、水頭里、麒麟里、珠格里、溪南里、杷城里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "埔里鎮",
+    "number": 2,
+    "rawScope": "南門里、西門里、北門里、大湳里、蜈蚣里、北安里、北梅里、泰安里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "埔里鎮",
+    "number": 3,
+    "rawScope": "同聲里、薰化里、清新里、大城里、籃城里、桃米里、成功里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "埔里鎮",
+    "number": 4,
+    "rawScope": "南村里、愛蘭里、鐵山里、房里里、向善里、一新里、廣成里、史港里、福興里、牛眠里、合成里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "草屯鎮",
+    "number": 1,
+    "rawScope": "玉峰里、炎峰里、和平里、敦和里、中正里、中山里、明正里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "草屯鎮",
+    "number": 2,
+    "rawScope": "山腳里、碧峰里、碧洲里、復興里、上林里、新厝里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "草屯鎮",
+    "number": 3,
+    "rawScope": "御史里、新豐里、新庄里、北投里、石川里、加老里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "草屯鎮",
+    "number": 4,
+    "rawScope": "富寮里、北勢里、中原里、南埔里、土城里、坪頂里、雙冬里、平林里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "竹山鎮",
+    "number": 1,
+    "rawScope": "竹山里、中正里、中山里、雲林里、下坪里、桂林里、中和里、中崎里、大鞍里、秀林里、竹圍里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "竹山鎮",
+    "number": 2,
+    "rawScope": "延平里、延正里、延山里、延和里、山崇里、社寮里、中央里、富州里、延祥里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "竹山鎮",
+    "number": 3,
+    "rawScope": "硘磘里、德興里、田子里、福興里、鯉魚里、瑞竹里、坪頂里、桶頭里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "集集鎮",
+    "number": 1,
+    "rawScope": "集集里、和平里、林尾里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "集集鎮",
+    "number": 2,
+    "rawScope": "田寮里、隘寮里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "集集鎮",
+    "number": 3,
+    "rawScope": "玉映里、吳厝里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "集集鎮",
+    "number": 4,
+    "rawScope": "八張里、永昌里、富山里、廣明里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "名間鄉",
+    "number": 1,
+    "rawScope": "南雅村、中正村、中山村、濁水村、炭寮村、新民村、新街村、東湖村、萬丹村、仁和村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "名間鄉",
+    "number": 2,
+    "rawScope": "田仔村、大庄村、廍下村、大坑村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "名間鄉",
+    "number": 3,
+    "rawScope": "竹圍村、赤水村、三崙村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "名間鄉",
+    "number": 4,
+    "rawScope": "松山村、松柏村、埔中村、崁腳村、新厝村、新光村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "鹿谷鄉",
+    "number": 1,
+    "rawScope": "鹿谷村、彰雅村、廣興村、鳳凰村、永隆村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "鹿谷鄉",
+    "number": 2,
+    "rawScope": "內湖村、竹林村、竹豐村、和雅村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "鹿谷鄉",
+    "number": 3,
+    "rawScope": "初鄉村、秀峰村、清水村、瑞田村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "中寮鄉",
+    "number": 1,
+    "rawScope": "廣興村、崁頂村、八仙村、和興村、福盛村、復興村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "中寮鄉",
+    "number": 2,
+    "rawScope": "永平村、中寮村、廣福村、永福村、義和村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "中寮鄉",
+    "number": 3,
+    "rawScope": "清水村、龍安村、內城村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "中寮鄉",
+    "number": 4,
+    "rawScope": "龍岩村、永和村、永芳村、爽文村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "魚池鄉",
+    "number": 1,
+    "rawScope": "東池村、魚池村、大林村、東光村、共和村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "魚池鄉",
+    "number": 2,
+    "rawScope": "中明村、新城村、大雁村、五城村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "魚池鄉",
+    "number": 3,
+    "rawScope": "水社村、頭社村、武登村、日月村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "國姓鄉",
+    "number": 1,
+    "rawScope": "國姓村、石門村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "國姓鄉",
+    "number": 2,
+    "rawScope": "大旗村、北港村、長流村、長福村、長豐村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "國姓鄉",
+    "number": 3,
+    "rawScope": "福龜村、乾溝村、柑林村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "國姓鄉",
+    "number": 4,
+    "rawScope": "北山村、南港村、大石村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "水里鄉",
+    "number": 1,
+    "rawScope": "水里村、農富村、新城村、中央村、城中村、車埕村、新興村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "水里鄉",
+    "number": 2,
+    "rawScope": "北埔村、鉅工村、永豐村、頂崁村、民和村、南光村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "水里鄉",
+    "number": 3,
+    "rawScope": "新山村、郡坑村、上安村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "水里鄉",
+    "number": 4,
+    "rawScope": "永興村、玉峰村、興隆村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "信義鄉",
+    "number": 1,
+    "rawScope": "明德村、愛國村、自強村、豐丘村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "信義鄉",
+    "number": 2,
+    "rawScope": "羅娜村、望美村、卡里布安村、新鄉村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "信義鄉",
+    "number": 3,
+    "rawScope": "同富村、神木村、東埔村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "信義鄉",
+    "number": 4,
+    "rawScope": "人和村、地利村、潭南村、雙龍村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "仁愛鄉",
+    "number": 1,
+    "rawScope": "大同村、南豐村、榮興村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "仁愛鄉",
+    "number": 2,
+    "rawScope": "力行村、發祥村、德鹿谷村、春陽村、精英村、翠華村、都達村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "仁愛鄉",
+    "number": 3,
+    "rawScope": "法治村、中正村、親愛村、萬豐村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "南投縣",
+    "town": "仁愛鄉",
+    "number": 4,
+    "rawScope": "互助村、新生村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/da447c27-5c8b-462f-9956-6ec54111ebae.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "宜蘭市",
+    "number": 1,
+    "rawScope": "民族里、文化里、思源里、七結里、建軍里、泰山里、負郭里、復興里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "宜蘭市",
+    "number": 2,
+    "rawScope": "民權里、神農里、大新里、新民里、進士里、擺厘里、凱旋里、南津里、建業里、南橋里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "宜蘭市",
+    "number": 3,
+    "rawScope": "東門里、東村里、新東里、孝廉里、小東里、菜園里、慈安里、中興里、成功里、延平里、黎明里、七張里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "宜蘭市",
+    "number": 4,
+    "rawScope": "中山里、北門里、西門里、北津里、新生里、梅洲里、南門里、茭白里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "羅東鎮",
+    "number": 1,
+    "rawScope": "開明里、東安里、新群里、大新里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "羅東鎮",
+    "number": 2,
+    "rawScope": "仁和里、仁德里、成功里、羅莊里、南昌里、南豪里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "羅東鎮",
+    "number": 3,
+    "rawScope": "中山里、北成里、國華里、漢民里、西安里、維揚里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "羅東鎮",
+    "number": 4,
+    "rawScope": "仁愛里、竹林里、樹林里、信義里、公正里、賢文里、集祥里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "蘇澳鎮",
+    "number": 1,
+    "rawScope": "東澳里、南強里、朝陽里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "蘇澳鎮",
+    "number": 2,
+    "rawScope": "南寧里、南安里、南正里、南興里、南建里、南成里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "蘇澳鎮",
+    "number": 3,
+    "rawScope": "蘇東里、蘇西里、蘇南里、蘇北里、長安里、永光里、永春里、永樂里、聖湖里、聖愛里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "蘇澳鎮",
+    "number": 4,
+    "rawScope": "港邊里、新城里、隘丁里、永榮里、存仁里、龍德里、頂寮里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "頭城鎮",
+    "number": 1,
+    "rawScope": "二城里、中崙里、下埔里、頂埔里、金盈里、金面里、福成里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "頭城鎮",
+    "number": 2,
+    "rawScope": "拔雅里、新建里、竹安里、城西里、城南里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "頭城鎮",
+    "number": 3,
+    "rawScope": "城東里、城北里、大坑里、武營里、港口里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "頭城鎮",
+    "number": 4,
+    "rawScope": "外澳里、更新里、合興里、大溪里、龜山里、大里里、石城里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "礁溪鄉",
+    "number": 1,
+    "rawScope": "白雲村、玉石村、德陽村、大忠村、大義村、六結村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "礁溪鄉",
+    "number": 2,
+    "rawScope": "二龍村、時潮村、玉田村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "礁溪鄉",
+    "number": 3,
+    "rawScope": "三民村、林美村、白鵝村、玉光村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "礁溪鄉",
+    "number": 4,
+    "rawScope": "吳沙村、光武村、龍潭村、匏崙村、二結村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "壯圍鄉",
+    "number": 1,
+    "rawScope": "吉祥村、古結村、美福村、新南村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "壯圍鄉",
+    "number": 2,
+    "rawScope": "東港村、復興村、過嶺村、永鎮村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "壯圍鄉",
+    "number": 3,
+    "rawScope": "壯六村、順和村、古亭村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "壯圍鄉",
+    "number": 4,
+    "rawScope": "功勞村、美城村、美間村、新社村、大福村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "員山鄉",
+    "number": 1,
+    "rawScope": "員山村、金古村、金泰村、尚德村、惠好村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "員山鄉",
+    "number": 2,
+    "rawScope": "七賢村、深溝村、蓁巷村、內城村、中華村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "員山鄉",
+    "number": 3,
+    "rawScope": "永和村、頭分村、同樂村、枕山村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "員山鄉",
+    "number": 4,
+    "rawScope": "湖東村、湖北村、湖西村、逸仙村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "冬山鄉",
+    "number": 1,
+    "rawScope": "珍珠村、三奇村、補城村、大興村、東城村、香和村、南興村、安平村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "冬山鄉",
+    "number": 2,
+    "rawScope": "冬山村、太和村、永美村、丸山村、八寶村、中山村、順安村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "冬山鄉",
+    "number": 3,
+    "rawScope": "武淵村、清溝村、群英村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "冬山鄉",
+    "number": 4,
+    "rawScope": "鹿埔村、得安村、廣興村、廣安村、柯林村、大進村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "五結鄉",
+    "number": 1,
+    "rawScope": "三興村、二結村、鎮安村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "五結鄉",
+    "number": 2,
+    "rawScope": "上四村、中興村、四結村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "五結鄉",
+    "number": 3,
+    "rawScope": "福興村、五結村、協和村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "五結鄉",
+    "number": 4,
+    "rawScope": "大吉村、孝威村、錦眾村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "五結鄉",
+    "number": 5,
+    "rawScope": "利澤村、成興村、季新村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "三星鄉",
+    "number": 1,
+    "rawScope": "月眉村、人和村、義德村、雙賢村、集慶村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "三星鄉",
+    "number": 2,
+    "rawScope": "員山村、天山村、天福村、萬德村、萬富村、貴林村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "三星鄉",
+    "number": 3,
+    "rawScope": "大隱村、行健村、拱照村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "三星鄉",
+    "number": 4,
+    "rawScope": "大洲村、大義村、尚武村、尾塹村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "大同鄉",
+    "number": 1,
+    "rawScope": "寒溪村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "大同鄉",
+    "number": 2,
+    "rawScope": "崙埤村、松羅村、復興村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "大同鄉",
+    "number": 3,
+    "rawScope": "英士村、樂水村、太平村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "大同鄉",
+    "number": 4,
+    "rawScope": "茂安村、四季村、南山村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "南澳鄉",
+    "number": 1,
+    "rawScope": "南澳村、東岳村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "南澳鄉",
+    "number": 2,
+    "rawScope": "碧候村、金岳村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "南澳鄉",
+    "number": 3,
+    "rawScope": "武塔村、金洋村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "宜蘭縣",
+    "town": "南澳鄉",
+    "number": 4,
+    "rawScope": "澳花村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/67a7d49e-f572-4301-9c2b-3168c8101437.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "金門縣",
+    "town": "金城鎮",
+    "number": null,
+    "rawScope": "金城鎮",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/3fa69d4b-feb1-4c90-96f2-bdb36badff18.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "金門縣",
+    "town": "金湖鎮",
+    "number": null,
+    "rawScope": "金湖鎮",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/3fa69d4b-feb1-4c90-96f2-bdb36badff18.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "金門縣",
+    "town": "金沙鎮",
+    "number": null,
+    "rawScope": "金沙鎮",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/3fa69d4b-feb1-4c90-96f2-bdb36badff18.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "金門縣",
+    "town": "金寧鄉",
+    "number": null,
+    "rawScope": "金寧鄉",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/3fa69d4b-feb1-4c90-96f2-bdb36badff18.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "金門縣",
+    "town": "烈嶼鄉",
+    "number": null,
+    "rawScope": "烈嶼鄉",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/3fa69d4b-feb1-4c90-96f2-bdb36badff18.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "金門縣",
+    "town": "烏坵鄉",
+    "number": null,
+    "rawScope": "烏坵鄉",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/3fa69d4b-feb1-4c90-96f2-bdb36badff18.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "連江縣",
+    "town": "南竿鄉",
+    "number": null,
+    "rawScope": "南竿鄉",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/817b1365-7cda-4a7a-bf8b-327208996220.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "連江縣",
+    "town": "北竿鄉",
+    "number": null,
+    "rawScope": "北竿鄉",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/817b1365-7cda-4a7a-bf8b-327208996220.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "連江縣",
+    "town": "莒光鄉",
+    "number": null,
+    "rawScope": "莒光鄉",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/817b1365-7cda-4a7a-bf8b-327208996220.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "連江縣",
+    "town": "東引鄉",
+    "number": null,
+    "rawScope": "東引鄉",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/817b1365-7cda-4a7a-bf8b-327208996220.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "竹北市",
+    "number": 1,
+    "rawScope": "鹿場里、東平里、中興里、隘口里、東海里、東興里、北興里、十興里、興安里、文化里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "竹北市",
+    "number": 2,
+    "rawScope": "斗崙里、中崙里、北崙里、新崙里、竹北里、竹仁里、福德里、竹義里、泰和里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "竹北市",
+    "number": 3,
+    "rawScope": "新社里、新國里、聯興里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "竹北市",
+    "number": 4,
+    "rawScope": "麻園里、溪州里、新庄里、白地里、新港里、大眉里、大義里、尚義里、崇義里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "竹東鎮",
+    "number": 1,
+    "rawScope": "上坪里、瑞峰里、軟橋里、員崠里、上館里、東寧里、中正里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "竹東鎮",
+    "number": 2,
+    "rawScope": "大鄉里、中山里、南華里、東華里、商華里、竹東里、忠孝里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "竹東鎮",
+    "number": 3,
+    "rawScope": "鷄林里、仁愛里、榮樂里、榮華里、五豐里、陸豐里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "竹東鎮",
+    "number": 4,
+    "rawScope": "頭重里、二重里、三重里、柯湖里、員山里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "新埔鎮",
+    "number": 1,
+    "rawScope": "新埔里、新生里、新民里、田新里、旱坑里、五埔里、四座里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "新埔鎮",
+    "number": 2,
+    "rawScope": "照門里、清水里、鹿鳴里、新北里、巨埔里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "新埔鎮",
+    "number": 3,
+    "rawScope": "內立里、寶石里、文山里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "新埔鎮",
+    "number": 4,
+    "rawScope": "上寮里、下寮里、南平里、北平里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "關西鎮",
+    "number": 1,
+    "rawScope": "東興里、西安里、南雄里、北斗里、南山里、仁安里、北山里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "關西鎮",
+    "number": 2,
+    "rawScope": "東安里、東山里、金山里、錦山里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "關西鎮",
+    "number": 3,
+    "rawScope": "南新里、新富里、東光里、玉山里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "關西鎮",
+    "number": 4,
+    "rawScope": "大同里、石光里、東平里、上林里、新力里、南和里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "湖口鄉",
+    "number": 1,
+    "rawScope": "和興村、德盛村、信勢村、信義村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "湖口鄉",
+    "number": 2,
+    "rawScope": "波羅村、湖鏡村、湖南村、中興村、鳳凰村、鳳山村、勝利村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "湖口鄉",
+    "number": 3,
+    "rawScope": "中勢村、中正村、長嶺村、長安村、湖口村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "湖口鄉",
+    "number": 4,
+    "rawScope": "孝勢村、仁勢村、愛勢村、東興村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "新豐鄉",
+    "number": 1,
+    "rawScope": "福興村、青埔村、瑞興村、中崙村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "新豐鄉",
+    "number": 2,
+    "rawScope": "坡頭村、埔和村、新豐村、後湖村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "新豐鄉",
+    "number": 3,
+    "rawScope": "員山村、忠孝村、山崎村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "新豐鄉",
+    "number": 4,
+    "rawScope": "上坑村、鳳坑村、重興村、崎頂村、松林村、松柏村、明新村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "芎林鄉",
+    "number": 1,
+    "rawScope": "華龍村、五龍村、秀湖村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "芎林鄉",
+    "number": 2,
+    "rawScope": "永興村、石潭村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "芎林鄉",
+    "number": 3,
+    "rawScope": "新鳳村、中坑村、水坑村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "芎林鄉",
+    "number": 4,
+    "rawScope": "文林村、芎林村、上山村、下山村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "橫山鄉",
+    "number": 1,
+    "rawScope": "橫山村、田寮村、南昌村、豐鄉村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "橫山鄉",
+    "number": 2,
+    "rawScope": "大肚村、新興村、豐田村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "橫山鄉",
+    "number": 3,
+    "rawScope": "內灣村、力行村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "橫山鄉",
+    "number": 4,
+    "rawScope": "沙坑村、福興村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "北埔鄉",
+    "number": 1,
+    "rawScope": "南興村、大林村、南埔村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "北埔鄉",
+    "number": 2,
+    "rawScope": "北埔村、埔尾村、水磜村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "北埔鄉",
+    "number": 3,
+    "rawScope": "外坪村、南坑村、大湖村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "寶山鄉",
+    "number": 1,
+    "rawScope": "雙溪村、雙新村、大崎村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "寶山鄉",
+    "number": 2,
+    "rawScope": "三峰村、新城村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "寶山鄉",
+    "number": 3,
+    "rawScope": "深井村、寶斗村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "寶山鄉",
+    "number": 4,
+    "rawScope": "寶山村、油田村、山湖村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "峨眉鄉",
+    "number": 1,
+    "rawScope": "峨眉村、中盛村、石井村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "峨眉鄉",
+    "number": 2,
+    "rawScope": "七星村、富興村、湖光村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "尖石鄉",
+    "number": 1,
+    "rawScope": "嘉樂村、新樂村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "尖石鄉",
+    "number": 2,
+    "rawScope": "義興村、錦屏村、梅花村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "尖石鄉",
+    "number": 3,
+    "rawScope": "玉峰村、秀巒村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "五峰鄉",
+    "number": 1,
+    "rawScope": "大隘村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "五峰鄉",
+    "number": 2,
+    "rawScope": "桃山村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新竹縣",
+    "town": "五峰鄉",
+    "number": 3,
+    "rawScope": "花園村、竹林村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/be2983be-b149-4ad5-bc20-5910a76cee42.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "馬公市",
+    "number": 1,
+    "rawScope": "復興里、長安里、中央里、啟明里、重慶里、中興里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "馬公市",
+    "number": 2,
+    "rawScope": "光復里、光榮里、光明里、朝陽里、陽明里、重光里、西衛里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "馬公市",
+    "number": 3,
+    "rawScope": "西文里、東文里、案山里、光華里、前寮里、石泉里、菜園里、東衛里、安宅里、烏崁里、興仁里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "馬公市",
+    "number": 4,
+    "rawScope": "鐵線里、山水里、鎖港里、五德里、井垵里、嵵裡里、風櫃里、虎井里、桶盤里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "湖西鄉",
+    "number": 1,
+    "rawScope": "湖西村、湖東村、青螺村、白坑村、南寮村、北寮村、紅羅村、西溪村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "湖西鄉",
+    "number": 2,
+    "rawScope": "成功村、東石村、中西村、潭邊村、鼎灣村、許家村、沙港村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "湖西鄉",
+    "number": 3,
+    "rawScope": "城北村、太武村、隘門村、林投村、尖山村、龍門村、菓葉村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "白沙鄉",
+    "number": 1,
+    "rawScope": "中屯村、講美村、城前村、鎮海村、港子村、大倉村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "白沙鄉",
+    "number": 2,
+    "rawScope": "岐頭村、小赤村、赤崁村、瓦硐村、員貝村、鳥嶼村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "白沙鄉",
+    "number": 3,
+    "rawScope": "後寮村、通梁村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "白沙鄉",
+    "number": 4,
+    "rawScope": "吉貝村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "西嶼鄉",
+    "number": 1,
+    "rawScope": "橫礁村、合界村、小門村、竹灣村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "西嶼鄉",
+    "number": 2,
+    "rawScope": "大池村、二崁村、池東村、池西村、赤馬村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "西嶼鄉",
+    "number": 3,
+    "rawScope": "內垵村、外垵村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "望安鄉",
+    "number": 1,
+    "rawScope": "東安村、西安村、中社村、水垵村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "望安鄉",
+    "number": 2,
+    "rawScope": "將軍村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "望安鄉",
+    "number": 3,
+    "rawScope": "東吉村、東坪村、西坪村、花嶼村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "七美鄉",
+    "number": 1,
+    "rawScope": "東湖村、西湖村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "七美鄉",
+    "number": 2,
+    "rawScope": "中和村、平和村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "澎湖縣",
+    "town": "七美鄉",
+    "number": 3,
+    "rawScope": "南港村、海豐村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/62db7bd0-2057-449a-ac2c-a20d7707fd31.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "苗栗市",
+    "number": 1,
+    "rawScope": "中苗里、青苗里、維祥里、維新里、玉清里、玉華里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "苗栗市",
+    "number": 2,
+    "rawScope": "綠苗里、高苗里、新苗里、玉苗里、大同里、恭敬里、水源里、勝利里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "苗栗市",
+    "number": 3,
+    "rawScope": "清華里、上苗里、北苗里、嘉盛里、福星里、福安里、嘉新里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "苗栗市",
+    "number": 4,
+    "rawScope": "建功里、福麗里、文山里、文聖里、新川里、南勢里、新英里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭份市",
+    "number": 1,
+    "rawScope": "流東里、珊湖里、斗煥里、新華里、興隆里、興安里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭份市",
+    "number": 2,
+    "rawScope": "上埔里、土牛里、頭份里、忠孝里、自強里、信義里、仁愛里、上興里、下興里、和平里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭份市",
+    "number": 3,
+    "rawScope": "山下里、後庄里、合興里、文化里、蟠桃里、中興里、建國里、成功里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭份市",
+    "number": 4,
+    "rawScope": "民族里、民權里、東庄里、田寮里、上庄里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭份市",
+    "number": 5,
+    "rawScope": "民生里、蘆竹里、尖山里、廣興里、尖下里、濫坑里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "苑裡鎮",
+    "number": 1,
+    "rawScope": "苑東里、苑南里、苑北里、西平里、苑港里、西勢里、海岸里、房裡里、客庄里、中正里、苑坑里、水坡里、新復里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "苑裡鎮",
+    "number": 2,
+    "rawScope": "山腳里、舊社里、福田里、石鎮里、焦埔里、南勢里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "苑裡鎮",
+    "number": 3,
+    "rawScope": "泰田里、上館里、玉田里、社苓里、山柑里、田心里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "通霄鎮",
+    "number": 1,
+    "rawScope": "通東里、通西里、平元里、平安里、圳頭里、梅南里、通南里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "通霄鎮",
+    "number": 2,
+    "rawScope": "內湖里、楓樹里、烏眉里、福龍里、福源里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "通霄鎮",
+    "number": 3,
+    "rawScope": "城北里、城南里、南和里、福興里、坪頂里、五南里、五北里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "通霄鎮",
+    "number": 4,
+    "rawScope": "通灣里、新埔里、內島里、白東里、白西里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "竹南鎮",
+    "number": 1,
+    "rawScope": "竹南里、照南里、正南里、新南里、大厝里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "竹南鎮",
+    "number": 2,
+    "rawScope": "營盤里、聖福里、竹興里、龍鳳里、天文里、龍山里、佳興里、山佳里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "竹南鎮",
+    "number": 3,
+    "rawScope": "中港里、中華里、中英里、中美里、開元里、海口里、港墘里、公館里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "竹南鎮",
+    "number": 4,
+    "rawScope": "大埔里、頂埔里、崎頂里、公義里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "後龍鎮",
+    "number": 1,
+    "rawScope": "南龍里、中龍里、北龍里、大庄里、東明里、灣寶里、海寶里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "後龍鎮",
+    "number": 2,
+    "rawScope": "豐富里、校椅里、埔頂里、新民里、復興里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "後龍鎮",
+    "number": 3,
+    "rawScope": "大山里、溪洲里、外埔里、海埔里、秀水里、水尾里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "後龍鎮",
+    "number": 4,
+    "rawScope": "龍津里、龍坑里、福寧里、中和里、南港里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "卓蘭鎮",
+    "number": 1,
+    "rawScope": "老庄里、新榮里、中街里、新厝里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "卓蘭鎮",
+    "number": 2,
+    "rawScope": "豐田里、西坪里、苗豐里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "卓蘭鎮",
+    "number": 3,
+    "rawScope": "上新里、內灣里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "卓蘭鎮",
+    "number": 4,
+    "rawScope": "坪林里、景山里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "大湖鄉",
+    "number": 1,
+    "rawScope": "大湖村、明湖村、大寮村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "大湖鄉",
+    "number": 2,
+    "rawScope": "靜湖村、富興村、大南村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "大湖鄉",
+    "number": 3,
+    "rawScope": "南湖村、東興村、武榮村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "大湖鄉",
+    "number": 4,
+    "rawScope": "義和村、栗林村、新開村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "公館鄉",
+    "number": 1,
+    "rawScope": "館中村、館東村、館南村、中義村、玉泉村、大坑村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "公館鄉",
+    "number": 2,
+    "rawScope": "福基村、福德村、福星村、開礦村、石墻村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "公館鄉",
+    "number": 3,
+    "rawScope": "五谷村、玉谷村、鶴岡村、鶴山村、尖山村、仁安村、南河村、北河村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "銅鑼鄉",
+    "number": 1,
+    "rawScope": "銅鑼村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "銅鑼鄉",
+    "number": 2,
+    "rawScope": "樟樹村、九湖村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "銅鑼鄉",
+    "number": 3,
+    "rawScope": "福興村、朝陽村、竹森村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "銅鑼鄉",
+    "number": 4,
+    "rawScope": "中平村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "銅鑼鄉",
+    "number": 5,
+    "rawScope": "興隆村、盛隆村、新隆村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "南庄鄉",
+    "number": 1,
+    "rawScope": "東村、西村、南江村、蓬萊村、東河村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "南庄鄉",
+    "number": 2,
+    "rawScope": "田美村、獅山村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "南庄鄉",
+    "number": 3,
+    "rawScope": "南富村、員林村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "南庄鄉",
+    "number": 4,
+    "rawScope": "居住全鄉各村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭屋鄉",
+    "number": 1,
+    "rawScope": "頭屋村、獅潭村、北坑村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭屋鄉",
+    "number": 2,
+    "rawScope": "曲洞村、飛鳳村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭屋鄉",
+    "number": 3,
+    "rawScope": "象山村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭屋鄉",
+    "number": 4,
+    "rawScope": "明德村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "頭屋鄉",
+    "number": 5,
+    "rawScope": "鳴鳳村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "三義鄉",
+    "number": 1,
+    "rawScope": "廣盛村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "三義鄉",
+    "number": 2,
+    "rawScope": "勝興村、龍騰村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "三義鄉",
+    "number": 3,
+    "rawScope": "雙湖村、雙潭村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "三義鄉",
+    "number": 4,
+    "rawScope": "西湖村、鯉魚潭村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "西湖鄉",
+    "number": 1,
+    "rawScope": "高埔村、下埔村、五湖村、四湖村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "西湖鄉",
+    "number": 2,
+    "rawScope": "三湖村、龍洞村、金獅村、湖東村、二湖村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "造橋鄉",
+    "number": 1,
+    "rawScope": "造橋村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "造橋鄉",
+    "number": 2,
+    "rawScope": "平興村、豐湖村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "造橋鄉",
+    "number": 3,
+    "rawScope": "大龍村、錦水村、大西村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "造橋鄉",
+    "number": 4,
+    "rawScope": "朝陽村、談文村、龍昇村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "三灣鄉",
+    "number": 1,
+    "rawScope": "三灣村、內灣村、銅鏡村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "三灣鄉",
+    "number": 2,
+    "rawScope": "頂寮村、北埔村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "三灣鄉",
+    "number": 3,
+    "rawScope": "大河村、大坪村、永和村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "獅潭鄉",
+    "number": 1,
+    "rawScope": "百壽村、永興村、新店村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "獅潭鄉",
+    "number": 2,
+    "rawScope": "和興村、豐林村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "獅潭鄉",
+    "number": 3,
+    "rawScope": "新豐村、竹木村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "泰安鄉",
+    "number": 1,
+    "rawScope": "錦水村、八卦村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "泰安鄉",
+    "number": 2,
+    "rawScope": "清安村、大興村、中興村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "苗栗縣",
+    "town": "泰安鄉",
+    "number": 3,
+    "rawScope": "梅園村、象鼻村、士林村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/51eff624-907d-45ff-888b-543bb4b48f4b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "太保市",
+    "number": 1,
+    "rawScope": "太保里、後庄里、前潭里、後潭里、梅埔里、春珠里、崙頂里、安仁里、東勢里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "太保市",
+    "number": 2,
+    "rawScope": "新埤里、舊埤里、田尾里、港尾里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "太保市",
+    "number": 3,
+    "rawScope": "過溝里、麻寮里、南新里、北新里、埤鄉里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "鹿草鄉",
+    "number": 1,
+    "rawScope": "後寮村、鹿東村、鹿草村、西井村、豐稠村、重寮村、施家村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "鹿草鄉",
+    "number": 2,
+    "rawScope": "下潭村、光潭村、碧潭村、松竹村、竹山村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "鹿草鄉",
+    "number": 3,
+    "rawScope": "後堀村、三角村、下麻村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "水上鄉",
+    "number": 1,
+    "rawScope": "水上村、水頭村、粗溪村、下竂村、三和村、回歸村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "水上鄉",
+    "number": 2,
+    "rawScope": "大堀村、大崙村、塗溝村、三鎮村、靖和村、南和村、龍德村、溪洲村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "水上鄉",
+    "number": 3,
+    "rawScope": "柳林村、柳新村、柳鄉村、內溪村、寬士村、民生村、忠和村、中庄村、義興村、南鄉村、三界村、國姓村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "民雄鄉",
+    "number": 1,
+    "rawScope": "東榮村、中樂村、西安村、寮頂村、福權村、東湖村、頂崙村、菁埔村、中和村、平和村、西昌村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "民雄鄉",
+    "number": 2,
+    "rawScope": "豊收村、三興村、東興村、鎮北村、北斗村、新山村、双福村、大崎村、秀林村、松山村、福樂村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "民雄鄉",
+    "number": 3,
+    "rawScope": "興中村、興南村、福興村、文隆村、山中村、中央村、金興村",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "新港鄉",
+    "number": 1,
+    "rawScope": "宮前村、宮後村、大興村、福德村、古民村、中庄村、大潭村、西庄村、埤子村、南崙村、北崙村、海瀛村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "新港鄉",
+    "number": 2,
+    "rawScope": "月眉村、月潭村、溪北村、菜公村、中洋村、三間村、安和村、潭大村、南港村、板頭村、共和村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "大林鎮",
+    "number": 1,
+    "rawScope": "東林里、西林里、吉林里、平林里、明華里、明和里、排路里、西結里、湖北里、大糖里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "大林鎮",
+    "number": 2,
+    "rawScope": "大美里、過溪里、中坑里、上林里、中林里、三和里、溝背里、義和里、內林里、三角里、三村里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "溪口鄉",
+    "number": 1,
+    "rawScope": "溪東村、溪西村、溪北村、柳溝村、疊溪村、妙崙村、坪頂村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "溪口鄉",
+    "number": 2,
+    "rawScope": "柴林村、林腳村、美南村、美北村、本厝村、游西村、游東村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "梅山鄉",
+    "number": 1,
+    "rawScope": "梅東村、梅南村、梅北村、過山村、圳南村、圳北村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "梅山鄉",
+    "number": 2,
+    "rawScope": "双溪村、大南村、安靖村、永興村、半天村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "梅山鄉",
+    "number": 3,
+    "rawScope": "太平村、太興村、龍眼村、碧湖村、瑞峯村、瑞里村、太和村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "朴子市",
+    "number": 1,
+    "rawScope": "安福里、平和里、內厝里、開元里、順天里、中正里、博厚里、文化里、竹圍里、永和里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "朴子市",
+    "number": 2,
+    "rawScope": "双溪里、溪口里、德興里、仁和里、大鄉里、大葛里、佳禾里、新寮里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "朴子市",
+    "number": 3,
+    "rawScope": "竹村里、崁前里、崁後里、順安里、德家里、新庄里、梅華里、松華里、南竹里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "六腳鄉",
+    "number": 1,
+    "rawScope": "蒜頭村、蒜東村、蒜南村、工廠村、灣南村、灣北村、雙涵村、塗師村、三義村、正義村、溪厝村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "六腳鄉",
+    "number": 2,
+    "rawScope": "港美村、豐美村、六斗村、崙陽村、蘇厝村、竹本村、永賢村、魚寮村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "六腳鄉",
+    "number": 3,
+    "rawScope": "潭墘村、六腳村、六南村、崩山村、古林村、更寮村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "東石鄉",
+    "number": 1,
+    "rawScope": "東石村、猿樹村、塭港村、型厝村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "東石鄉",
+    "number": 2,
+    "rawScope": "三家村、永屯村、海埔村、龍港村、副瀨村、下揖村、頂揖村、溪下村、港口村、鰲鼓村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "東石鄉",
+    "number": 3,
+    "rawScope": "港墘村、蔦松村、圍潭村、洲仔村、東崙村、西崙村、塭仔村、網寮村、掌潭村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "布袋鎮",
+    "number": 1,
+    "rawScope": "岱江里、九龍里、岑海里、興中里、光復里、見龍里、新厝里、龍江里、振寮里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "布袋鎮",
+    "number": 2,
+    "rawScope": "西安里、中安里、東安里、樹林里、貴舍里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "布袋鎮",
+    "number": 3,
+    "rawScope": "永安里、東港里、江山里、菜舖里、考試里、新岑里、新民里、復興里、好美里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "義竹鄉",
+    "number": 1,
+    "rawScope": "岸腳村、義竹村、六桂村、仁里村、傳芳村、頭竹村、五厝村、中平村、埤前村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "義竹鄉",
+    "number": 2,
+    "rawScope": "平溪村、後鎮村、北華村、新店村、東過村、西過村、官和村、官順村、新富村、東光村、東榮村、龍蛟村、溪洲村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "中埔鄉",
+    "number": 1,
+    "rawScope": "富收村、和睦村、和美村、和興村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "中埔鄉",
+    "number": 2,
+    "rawScope": "中埔村、塩舘村、金蘭村、隆興村、義仁村、社口村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "中埔鄉",
+    "number": 3,
+    "rawScope": "龍門村、裕民村、灣潭村、石硦村、東興村、中崙村、頂埔村、同仁村、瑞豐村、深坑村、三層村、沄水村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "竹崎鄉",
+    "number": 1,
+    "rawScope": "竹崎村、和平村、坑頭村、沙坑村、獅埜村、義和村、義仁村、灣橋村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "竹崎鄉",
+    "number": 2,
+    "rawScope": "鹿滿村、紫雲村、內埔村、昇平村、桃源村、白杞村、塘興村、義隆村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "竹崎鄉",
+    "number": 3,
+    "rawScope": "龍山村、文峯村、金獅村、復金村、緞繻村、仁壽村、中和村、光華村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "番路鄉",
+    "number": 1,
+    "rawScope": "江西村、內甕村、新福村、下坑村、番路村、民和村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "番路鄉",
+    "number": 2,
+    "rawScope": "觸口村、大湖村、公田村、公興村、草山村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "大埔鄉",
+    "number": 1,
+    "rawScope": "大埔村、和平村、永樂村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "大埔鄉",
+    "number": 2,
+    "rawScope": "茄苳村、西興村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "阿里山鄉",
+    "number": 1,
+    "rawScope": "中山村、中正村、香林村、豐山村、十字村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "阿里山鄉",
+    "number": 2,
+    "rawScope": "達邦村、樂野村、來吉村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "嘉義縣",
+    "town": "阿里山鄉",
+    "number": 3,
+    "rawScope": "里佳村、山美村、新美村、茶山村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c6324790-b459-4705-8e26-629268312bac.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "花蓮市",
+    "number": 1,
+    "rawScope": "民意里、民心里、民享里、民孝里、民運里、民政里、民勤里、民立里、民樂里、民德里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "花蓮市",
+    "number": 2,
+    "rawScope": "民有里、民主里、民生里、民族里、民權里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "花蓮市",
+    "number": 3,
+    "rawScope": "主商里、主勤里、主計里、主信里、主義里、主工里、主睦里、主學里、主力里、主權里、主農里、主安里、主和里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "花蓮市",
+    "number": 4,
+    "rawScope": "國治里、國威里、國光里、國防里、國安里、國華里、國風里、國魂里、國聯里、國盛里、國富里、國強里、國慶里、國興里、國福里、國裕里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "花蓮市",
+    "number": 5,
+    "rawScope": "居住全巿各里之平地原住民",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "鳳林鎮",
+    "number": 1,
+    "rawScope": "鳳仁里、鳳義里、鳳禮里、鳳智里、鳳信里、山興里、大榮里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "鳳林鎮",
+    "number": 2,
+    "rawScope": "北林里、南平里、林榮里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "鳳林鎮",
+    "number": 3,
+    "rawScope": "長橋里、森榮里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "鳳林鎮",
+    "number": 4,
+    "rawScope": "居住全鎮各里之平地原住民",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "玉里鎮",
+    "number": 1,
+    "rawScope": "中城里、國武里、啟模里、泰昌里、永昌里、源城里、長良里、大禹里、三民里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "玉里鎮",
+    "number": 2,
+    "rawScope": "樂合里、東豐里、觀音里、松浦里、春日里、德武里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "玉里鎮",
+    "number": 3,
+    "rawScope": "中城里、國武里、啟模里、泰昌里、永昌里、源城里、長良里、大禹里、三民里之平地原住民",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "玉里鎮",
+    "number": 4,
+    "rawScope": "樂合里、東豐里、觀音里、松浦里、春日里、德武里之平地原住民",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "新城鄉",
+    "number": 1,
+    "rawScope": "新城村、順安村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "新城鄉",
+    "number": 2,
+    "rawScope": "康樂村、北埔村、大漢村、新秀村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "新城鄉",
+    "number": 3,
+    "rawScope": "嘉里村、嘉新村、佳林村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "新城鄉",
+    "number": 4,
+    "rawScope": "居住全鄉各村之平地原住民",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "吉安鄉",
+    "number": 1,
+    "rawScope": "太昌村、永安村、北昌村、勝安村、宜昌村、南昌村、吉昌村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "吉安鄉",
+    "number": 2,
+    "rawScope": "慶豐村、吉安村、福興村、南華村、干城村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "吉安鄉",
+    "number": 3,
+    "rawScope": "仁里村、稻香村、永興村、仁和村、光華村、東昌村、仁安村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "吉安鄉",
+    "number": 4,
+    "rawScope": "居住全鄉各村之平地原住民",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "壽豐鄉",
+    "number": 1,
+    "rawScope": "壽豐村、共和村、光榮村、池南村、平和村、志學村、月眉村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "壽豐鄉",
+    "number": 2,
+    "rawScope": "溪口村、樹湖村、豐山村、豐裡村、米棧村、豐坪村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "壽豐鄉",
+    "number": 3,
+    "rawScope": "鹽寮村、水璉村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "壽豐鄉",
+    "number": 4,
+    "rawScope": "居住全鄉各村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "光復鄉",
+    "number": 1,
+    "rawScope": "大安村、大華村、大同村、大平村、大馬村、東富村、西富村、南富村、北富村、大進村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "光復鄉",
+    "number": 2,
+    "rawScope": "大全村、大興村、大富村、大豐村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "光復鄉",
+    "number": 3,
+    "rawScope": "居住大安村、大華村、大同村、大平村、大馬村、大進村、大全村、大興村、大富村、大豐村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "光復鄉",
+    "number": 4,
+    "rawScope": "居住東富村、西富村、南富村、北富村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "豐濱鄉",
+    "number": 1,
+    "rawScope": "豐濱村、港口村、靜浦村、新社村、磯崎村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "豐濱鄉",
+    "number": 2,
+    "rawScope": "居住全鄉各村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "瑞穗鄉",
+    "number": 1,
+    "rawScope": "瑞穗村、瑞美村、瑞良村、瑞祥村、瑞北村、奇美村、鶴岡村、舞鶴村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "瑞穗鄉",
+    "number": 2,
+    "rawScope": "富源村、富興村、富民村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "瑞穗鄉",
+    "number": 3,
+    "rawScope": "居住全鄉各村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "富里鄉",
+    "number": 1,
+    "rawScope": "吳江村、東里村、萬寧村、新興村、竹田村、羅山村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "富里鄉",
+    "number": 2,
+    "rawScope": "石牌村、明里村、富里村、永豐村、豐南村、富南村、學田村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "富里鄉",
+    "number": 3,
+    "rawScope": "居住全鄉各村之平地原住民",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "秀林鄉",
+    "number": 1,
+    "rawScope": "和平村、崇德村、富世村、秀林村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "秀林鄉",
+    "number": 2,
+    "rawScope": "景美村、佳民村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "秀林鄉",
+    "number": 3,
+    "rawScope": "水源村、銅門村、文蘭村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "秀林鄉",
+    "number": 4,
+    "rawScope": "居住全鄉各村之平地原住民",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "萬榮鄉",
+    "number": 1,
+    "rawScope": "西林村、見晴村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "萬榮鄉",
+    "number": 2,
+    "rawScope": "萬榮村、明利村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "萬榮鄉",
+    "number": 3,
+    "rawScope": "馬遠村、紅葉村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "卓溪鄉",
+    "number": 1,
+    "rawScope": "崙山村、立山村、太平村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "花蓮縣",
+    "town": "卓溪鄉",
+    "number": 2,
+    "rawScope": "卓溪村、卓清村、古風村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/aefaf420-c08a-47c8-a0d4-7dda529b168b.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "臺東市",
+    "number": 1,
+    "rawScope": "文化里、中華里、中山里、中正里、成功里、建國里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "臺東市",
+    "number": 2,
+    "rawScope": "民族里、自強里、中心里、馬蘭里、民生里、寶桑里、新生里、仁和里、南榮里、岩灣里、卑南里、南王里、富岡里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "臺東市",
+    "number": 3,
+    "rawScope": "新興里、東海里、豐樂里、光明里、豐年里、康樂里、永樂里、豐安里、豐榮里、豐盛里、豐谷里、豐里里、豐原里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "臺東市",
+    "number": 4,
+    "rawScope": "豐田里、新園里、建和里、建興里、知本里、建農里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "臺東市",
+    "number": 5,
+    "rawScope": "臺東市各里之平地原住民",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "成功鎮",
+    "number": 1,
+    "rawScope": "信義里、和平里、忠仁里、忠智里、三民里、三仙里、忠孝里、博愛里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "成功鎮",
+    "number": 2,
+    "rawScope": "成功鎮各里之平地原住民",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "關山鎮",
+    "number": 1,
+    "rawScope": "里瓏里、中福里、豐泉里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "關山鎮",
+    "number": 2,
+    "rawScope": "新福里、德高里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "關山鎮",
+    "number": 3,
+    "rawScope": "月眉里、電光里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "關山鎮",
+    "number": 4,
+    "rawScope": "關山鎮各里之平地原住民",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "卑南鄉",
+    "number": 1,
+    "rawScope": "富源村、富山村、利吉村、賓朗村、太平村、利嘉村、泰安村、溫泉村、東興村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "卑南鄉",
+    "number": 2,
+    "rawScope": "嘉豐村、初鹿村、明峰村、美農村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "卑南鄉",
+    "number": 3,
+    "rawScope": "卑南鄉各村之平地原住民",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "鹿野鄉",
+    "number": 1,
+    "rawScope": "鹿野村、龍田村、永安村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "鹿野鄉",
+    "number": 2,
+    "rawScope": "瑞隆村、瑞和村、瑞源村、瑞豐村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "鹿野鄉",
+    "number": 3,
+    "rawScope": "鹿野鄉各村之平地原住民",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "池上鄉",
+    "number": 1,
+    "rawScope": "福原村、福文村、大埔村、新興村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "池上鄉",
+    "number": 2,
+    "rawScope": "慶豐村、大坡村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "池上鄉",
+    "number": 3,
+    "rawScope": "錦園村、萬安村、富興村、振興村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "池上鄉",
+    "number": 4,
+    "rawScope": "池上鄉各村之平地原住民",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "東河鄉",
+    "number": 1,
+    "rawScope": "都蘭村、興昌村、隆昌村、東河村、泰源村、北源村、尚德村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "東河鄉",
+    "number": 2,
+    "rawScope": "東河鄉各村之平地原住民",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "長濱鄉",
+    "number": 1,
+    "rawScope": "樟原村、三間村、長濱村、忠勇村、竹湖村、寧埔村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "長濱鄉",
+    "number": 2,
+    "rawScope": "長濱鄉各村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "太麻里鄉",
+    "number": 1,
+    "rawScope": "美和村、三和村、華源村、北里村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "太麻里鄉",
+    "number": 2,
+    "rawScope": "大王村、泰和村、香蘭村、金崙村、多良村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "太麻里鄉",
+    "number": 3,
+    "rawScope": "美和村、三和村、華源村、北里村、大王村、泰和村、香蘭村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "太麻里鄉",
+    "number": 4,
+    "rawScope": "金崙村、多良村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "大武鄉",
+    "number": 1,
+    "rawScope": "尚武村、南興村、大武村、大鳥村、大竹村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "大武鄉",
+    "number": 2,
+    "rawScope": "大武鄉各村之平地原住民",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "綠島鄉",
+    "number": 1,
+    "rawScope": "南寮村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "綠島鄉",
+    "number": 2,
+    "rawScope": "中寮村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "綠島鄉",
+    "number": 3,
+    "rawScope": "公館村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "海端鄉",
+    "number": 1,
+    "rawScope": "霧鹿村、利稻村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "海端鄉",
+    "number": 2,
+    "rawScope": "海端村、廣原村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "海端鄉",
+    "number": 3,
+    "rawScope": "崁頂村、加拿村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "延平鄉",
+    "number": 1,
+    "rawScope": "桃源村、紅葉村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "延平鄉",
+    "number": 2,
+    "rawScope": "永康村、武陵村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "延平鄉",
+    "number": 3,
+    "rawScope": "鸞山村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "金峰鄉",
+    "number": 1,
+    "rawScope": "嘉蘭村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "金峰鄉",
+    "number": 2,
+    "rawScope": "正興村、新興村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "金峰鄉",
+    "number": 3,
+    "rawScope": "賓茂村、歷坵村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "金峰鄉",
+    "number": 4,
+    "rawScope": "金峰鄉各村之平地原住民",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20",
+    "category": "lowland"
+  },
+  {
+    "county": "臺東縣",
+    "town": "達仁鄉",
+    "number": 1,
+    "rawScope": "南田村、森永村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "達仁鄉",
+    "number": 2,
+    "rawScope": "安朔村、新化村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "達仁鄉",
+    "number": 3,
+    "rawScope": "土坂村、台坂村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺東縣",
+    "town": "蘭嶼鄉",
+    "number": null,
+    "rawScope": "椰油村、紅頭村、東清村、朗島村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/715772a7-6820-4bdb-8a57-36e5e6fd13a3.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新北市",
+    "town": "烏來區",
+    "number": 1,
+    "rawScope": "忠治里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c4b572bd-102f-4e02-8870-407aa22ba63d.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新北市",
+    "town": "烏來區",
+    "number": 2,
+    "rawScope": "烏來里、孝義里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c4b572bd-102f-4e02-8870-407aa22ba63d.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新北市",
+    "town": "烏來區",
+    "number": 3,
+    "rawScope": "信賢里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c4b572bd-102f-4e02-8870-407aa22ba63d.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "新北市",
+    "town": "烏來區",
+    "number": 4,
+    "rawScope": "福山里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/c4b572bd-102f-4e02-8870-407aa22ba63d.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "桃園市",
+    "town": "復興區",
+    "number": 1,
+    "rawScope": "三民里、澤仁里、霞雲里、義盛里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/d112386a-2394-40e9-86e3-03c6b814d5ad.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "桃園市",
+    "town": "復興區",
+    "number": 2,
+    "rawScope": "長興里、奎輝里、羅浮里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/d112386a-2394-40e9-86e3-03c6b814d5ad.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "桃園市",
+    "town": "復興區",
+    "number": 3,
+    "rawScope": "高義里、三光里、華陵里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/d112386a-2394-40e9-86e3-03c6b814d5ad.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺中市",
+    "town": "和平區",
+    "number": 1,
+    "rawScope": "南勢里、天輪里、博愛里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/36d48a87-4a66-49f9-b282-7dcfa40692c9.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺中市",
+    "town": "和平區",
+    "number": 2,
+    "rawScope": "中坑里、自由里、達觀里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/36d48a87-4a66-49f9-b282-7dcfa40692c9.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "臺中市",
+    "town": "和平區",
+    "number": 3,
+    "rawScope": "平等里、梨山里",
+    "page": 1,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/36d48a87-4a66-49f9-b282-7dcfa40692c9.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "高雄市",
+    "town": "桃源區",
+    "number": 1,
+    "rawScope": "梅山里、拉芙蘭里、復興里、勤和里、桃源里、高中里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/58ef90be-f921-4b58-a97d-937fc90e4ee0.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "高雄市",
+    "town": "桃源區",
+    "number": 2,
+    "rawScope": "建山里、寶山里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/58ef90be-f921-4b58-a97d-937fc90e4ee0.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "高雄市",
+    "town": "那瑪夏區",
+    "number": 1,
+    "rawScope": "瑪星哈蘭里、達卡努瓦里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/58ef90be-f921-4b58-a97d-937fc90e4ee0.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "高雄市",
+    "town": "那瑪夏區",
+    "number": 2,
+    "rawScope": "瑪雅里、南沙魯里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/58ef90be-f921-4b58-a97d-937fc90e4ee0.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "高雄市",
+    "town": "茂林區",
+    "number": 1,
+    "rawScope": "多納里、萬山里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/58ef90be-f921-4b58-a97d-937fc90e4ee0.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "高雄市",
+    "town": "茂林區",
+    "number": 2,
+    "rawScope": "茂林里",
+    "page": 2,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/58ef90be-f921-4b58-a97d-937fc90e4ee0.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "斗六市",
+    "number": 1,
+    "rawScope": "信義里、四維里、太平里、中和里、光興里、三平里、鎮西里、鎮北里、鎮東里、文化里、公誠里、明德里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "斗六市",
+    "number": 2,
+    "rawScope": "忠孝里、仁愛里、八德里、公正里、重光里、林頭里、鎮南里、社口里、龍潭里、嘉東里、成功里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "斗六市",
+    "number": 3,
+    "rawScope": "崙峰里、溝壩里、江厝里、三光里、久安里、虎溪里、正心里、保庄里、長平里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "斗六市",
+    "number": 4,
+    "rawScope": "榴中里、榴北里、榴南里、梅林里、湖山里、長安里、溪洲里、十三里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "斗南鎮",
+    "number": 1,
+    "rawScope": "東仁里、西岐里、大同里、南昌里、北銘里、中天里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "斗南鎮",
+    "number": 2,
+    "rawScope": "林子里、石龜里、石溪里、靖興里、新南里、阿丹里、將軍里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "斗南鎮",
+    "number": 3,
+    "rawScope": "舊社里、明昌里、僑真里、大東里、埤麻里、西伯里、新崙里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "斗南鎮",
+    "number": 4,
+    "rawScope": "東明里、新光里、田頭里、小東里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "虎尾鎮",
+    "number": 1,
+    "rawScope": "東仁里、新興里、公安里、德興里、中山里、西安里、安慶里、平和里、興南里、新吉里、穎川里、延平里、建國里、立仁里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "虎尾鎮",
+    "number": 2,
+    "rawScope": "埒內里、堀頭里、安溪里、興中里、廉使里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "虎尾鎮",
+    "number": 3,
+    "rawScope": "惠來里、頂溪里、中溪里、下溪里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "虎尾鎮",
+    "number": 4,
+    "rawScope": "東屯里、西屯里、芳草里、墾地里、北溪里、三合里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "西螺鎮",
+    "number": 1,
+    "rawScope": "振興里、大園里、廣福里、正興里、永安里、中和里、福興里、光華里、中興里、漢光里、新安里、新豐里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "西螺鎮",
+    "number": 2,
+    "rawScope": "大新里、埤頭里、東興里、鹿場里、廣興里、頂湳里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "西螺鎮",
+    "number": 3,
+    "rawScope": "吳厝里、九隆里、下湳里、七座里、公館里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "西螺鎮",
+    "number": 4,
+    "rawScope": "詔安里、河南里、安定里、福田里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "土庫鎮",
+    "number": 1,
+    "rawScope": "忠正里、順天里、宮北里、越港里、溪邊里、石廟里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "土庫鎮",
+    "number": 2,
+    "rawScope": "興新里、奮起里、埤腳里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "土庫鎮",
+    "number": 3,
+    "rawScope": "後埔里、崙內里、大荖里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "土庫鎮",
+    "number": 4,
+    "rawScope": "東平里、南平里、西平里、北平里、新庄里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "北港鎮",
+    "number": 1,
+    "rawScope": "東陽里、光民里、東華里、南安里、中和里、義民里、共榮里、西勢里、仁和里、賜福里、公館里、大同里、仁安里、華勝里、光復里、扶朝里、水埔里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "北港鎮",
+    "number": 2,
+    "rawScope": "新街里、劉厝里、後溝里、新厝里、府番里、草湖里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "北港鎮",
+    "number": 3,
+    "rawScope": "溝皂里、番溝里、大北里、好收里、樹腳里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "古坑鄉",
+    "number": 1,
+    "rawScope": "棋盤村、新庄村、東和村、荷苞村、高林村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "古坑鄉",
+    "number": 2,
+    "rawScope": "水碓村、田心村、古坑村、朝陽村、西平村、湳仔村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "古坑鄉",
+    "number": 3,
+    "rawScope": "永光村、永昌村、麻園村、崁腳村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "古坑鄉",
+    "number": 4,
+    "rawScope": "華南村、華山村、桂林村、樟湖村、草嶺村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "大埤鄉",
+    "number": 1,
+    "rawScope": "北和村、吉田村、豐岡村、聯美村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "大埤鄉",
+    "number": 2,
+    "rawScope": "南和村、大德村、松竹村、豐田村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "大埤鄉",
+    "number": 3,
+    "rawScope": "尚義村、嘉興村、三結村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "大埤鄉",
+    "number": 4,
+    "rawScope": "怡然村、北鎮村、興安村、西鎮村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "莿桐鄉",
+    "number": 1,
+    "rawScope": "莿桐村、甘厝村、甘西村、興桐村、義和村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "莿桐鄉",
+    "number": 2,
+    "rawScope": "埔子村、大美村、埔尾村、興貴村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "莿桐鄉",
+    "number": 3,
+    "rawScope": "饒平村、四合村、麻園村、五華村、六合村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "林內鄉",
+    "number": 1,
+    "rawScope": "林南村、林中村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "林內鄉",
+    "number": 2,
+    "rawScope": "林北村、坪頂村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "林內鄉",
+    "number": 3,
+    "rawScope": "林茂村、九芎村、湖本村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "林內鄉",
+    "number": 4,
+    "rawScope": "烏塗村、烏麻村、重興村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "二崙鄉",
+    "number": 1,
+    "rawScope": "崙東村、崙西村、來惠村",
+    "page": 8,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "二崙鄉",
+    "number": 2,
+    "rawScope": "三和村、湳仔村、田尾村",
+    "page": 8,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "二崙鄉",
+    "number": 3,
+    "rawScope": "定安村、永定村、大華村、義庄村、楊賢村",
+    "page": 8,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "二崙鄉",
+    "number": 4,
+    "rawScope": "大義村、港後村、油車村",
+    "page": 8,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "二崙鄉",
+    "number": 5,
+    "rawScope": "大庄村、庄西村、大同村、復興村",
+    "page": 8,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "崙背鄉",
+    "number": 1,
+    "rawScope": "東明村、西榮村、南陽村",
+    "page": 8,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "崙背鄉",
+    "number": 2,
+    "rawScope": "崙前村、羅厝村、港尾村",
+    "page": 8,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "崙背鄉",
+    "number": 3,
+    "rawScope": "阿勸村、五魁村、大有村",
+    "page": 8,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "崙背鄉",
+    "number": 4,
+    "rawScope": "豐榮村、草湖村、舊庄村、水尾村、枋南村",
+    "page": 8,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "麥寮鄉",
+    "number": 1,
+    "rawScope": "興華村、瓦磘村、麥津村、麥豐村、海豐村",
+    "page": 9,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "麥寮鄉",
+    "number": 2,
+    "rawScope": "後安村、三盛村、中興村",
+    "page": 9,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "麥寮鄉",
+    "number": 3,
+    "rawScope": "崙後村、橋頭村",
+    "page": 9,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "麥寮鄉",
+    "number": 4,
+    "rawScope": "雷厝村、新吉村、施厝村",
+    "page": 9,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "東勢鄉",
+    "number": 1,
+    "rawScope": "月眉村、復興村、嘉隆村",
+    "page": 9,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "東勢鄉",
+    "number": 2,
+    "rawScope": "東北村、東南村、程海村、龍潭村",
+    "page": 9,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "東勢鄉",
+    "number": 3,
+    "rawScope": "安南村、昌南村、同安村",
+    "page": 9,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "東勢鄉",
+    "number": 4,
+    "rawScope": "新坤村、四美村",
+    "page": 9,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "褒忠鄉",
+    "number": 1,
+    "rawScope": "中民村、埔姜村",
+    "page": 10,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "褒忠鄉",
+    "number": 2,
+    "rawScope": "中勝村、馬鳴村、新湖村",
+    "page": 10,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "褒忠鄉",
+    "number": 3,
+    "rawScope": "有才村、田洋村",
+    "page": 10,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "褒忠鄉",
+    "number": 4,
+    "rawScope": "龍岩村、潮厝村",
+    "page": 10,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "臺西鄉",
+    "number": 1,
+    "rawScope": "台西村、海北村、海南村、海口村、山寮村",
+    "page": 10,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "臺西鄉",
+    "number": 2,
+    "rawScope": "溪頂村、牛厝村、泉州村、光華村、五榔村",
+    "page": 10,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "臺西鄉",
+    "number": 3,
+    "rawScope": "五港村、富琦村",
+    "page": 10,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "臺西鄉",
+    "number": 4,
+    "rawScope": "永豐村、和豐村、蚊港村",
+    "page": 10,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "元長鄉",
+    "number": 1,
+    "rawScope": "長南村、長北村、子茂村、後湖村、山內村、合和村、五塊村、潭西村、潭東村",
+    "page": 11,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "元長鄉",
+    "number": 2,
+    "rawScope": "客厝村、卓運村、頂寮村、下寮村、龍岩村、西莊村",
+    "page": 11,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "元長鄉",
+    "number": 3,
+    "rawScope": "鹿北村、鹿南村、瓦磘村、內寮村、崙仔村、新吉村",
+    "page": 11,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "四湖鄉",
+    "number": 1,
+    "rawScope": "四湖村、湖西村、新庄村、溪底村、鹿場村、蔡厝村、湖寮村、施湖村",
+    "page": 11,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "四湖鄉",
+    "number": 2,
+    "rawScope": "羊調村、內湖村、飛東村、飛沙村、三姓村",
+    "page": 11,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "四湖鄉",
+    "number": 3,
+    "rawScope": "崙北村、崙南村、廣溝村、箔子村、箔東村",
+    "page": 11,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "四湖鄉",
+    "number": 4,
+    "rawScope": "林厝村、林東村、溪尾村",
+    "page": 11,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "口湖鄉",
+    "number": 1,
+    "rawScope": "口湖村、湖東村、頂湖村、埔南村、埔北村、謝厝村、蚵寮村",
+    "page": 12,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "口湖鄉",
+    "number": 2,
+    "rawScope": "下崙村、崙中村、崙東村、青蚶村",
+    "page": 12,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "口湖鄉",
+    "number": 3,
+    "rawScope": "港東村、港西村、台子村、成龍村",
+    "page": 12,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "口湖鄉",
+    "number": 4,
+    "rawScope": "梧南村、梧北村、水井村、後厝村、湖口村、過港村",
+    "page": 12,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "水林鄉",
+    "number": 1,
+    "rawScope": "水北村、水南村、萬興村、尖山村、大溝村、順興村、大山村、後寮村",
+    "page": 12,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "水林鄉",
+    "number": 2,
+    "rawScope": "春埔村、西井村、車港村、蘇秦村、灣東村、灣西村",
+    "page": 12,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "水林鄉",
+    "number": 3,
+    "rawScope": "蕃薯村、山腳村、松北村、松中村、松西村、檨埔村、塭底村",
+    "page": 12,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "雲林縣",
+    "town": "水林鄉",
+    "number": 4,
+    "rawScope": "海埔村、土厝村、溪墘村",
+    "page": 12,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/9b57bb77-196b-4d3e-a391-b35b88b760cb.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "彰化市",
+    "number": 1,
+    "rawScope": "桃源里、東興里、華北里、華陽里、大同里、永生里、建寶里、光南里、介壽里、延平里、延和里、南興里、南瑤里、成功里、福安里、西安里、彰安里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "彰化市",
+    "number": 2,
+    "rawScope": "中央里、富貴里、民權里、萬壽里、長樂里、西興里、西勢里、忠權里、忠孝里、五權里、平和里、崙平里、向陽里、莿桐里、南美里、南安里、東芳里、磚磘里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "彰化市",
+    "number": 3,
+    "rawScope": "卦山里、光復里、永福里、光華里、中正里、中山里、龍山里、新興里、新華里、興北里、信義里、民生里、文化里、陽明里、萬安里、下廍里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "彰化市",
+    "number": 4,
+    "rawScope": "茄苳里、茄南里、寶廍里、古夷里、阿夷里、和調里、復興里、中庄里、竹中里、香山里、牛埔里、台鳳里、國聖里、福山里、安溪里、三村里、大竹里、田中里、快官里、竹巷里、福田里、石牌里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "花壇鄉",
+    "number": 1,
+    "rawScope": "花壇村、金墩村、中庄村、崙雅村、劉厝村、南口村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "花壇鄉",
+    "number": 2,
+    "rawScope": "北口村、中口村、文德村、白沙村、岩竹村、長沙村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "花壇鄉",
+    "number": 3,
+    "rawScope": "橋頭村、灣雅村、灣東村、三春村、永春村、長春村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "芬園鄉",
+    "number": 1,
+    "rawScope": "舊社村、大埔村、竹林村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "芬園鄉",
+    "number": 2,
+    "rawScope": "楓坑村、社口村、茄荖村、嘉興村、芬園村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "芬園鄉",
+    "number": 3,
+    "rawScope": "縣庄村、圳墘村、溪頭村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "芬園鄉",
+    "number": 4,
+    "rawScope": "進芬村、同安村、中崙村、大竹村",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "鹿港鎮",
+    "number": 1,
+    "rawScope": "大有里、中興里、洛津里、順興里、埔崙里、新宮里、玉順里、東石里、郭厝里、永安里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "鹿港鎮",
+    "number": 2,
+    "rawScope": "景福里、泰興里、長興里、興化里、龍山里、菜園里、街尾里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "鹿港鎮",
+    "number": 3,
+    "rawScope": "詔安里、海埔里、洋厝里、草中里、頭南里、山崙里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "鹿港鎮",
+    "number": 4,
+    "rawScope": "頂番里、頭崙里、溝墘里、廖厝里、東崎里、頂厝里、鹿和里、鹿東里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "福興鄉",
+    "number": 1,
+    "rawScope": "三汴村、萬豐村、元中村、外中村、外埔村、大崙村、番婆村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "福興鄉",
+    "number": 2,
+    "rawScope": "橋頭村、社尾村、番社村、西勢村、同安村、秀厝村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "福興鄉",
+    "number": 3,
+    "rawScope": "福興村、福南村、鎮平村、三和村、二港村、福寶村、頂粘村、廈粘村、麥厝村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "秀水鄉",
+    "number": 1,
+    "rawScope": "秀水村、安溪村、莊雅村、陝西村、金興村、安東村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "秀水鄉",
+    "number": 2,
+    "rawScope": "鶴鳴村、馬興村、義興村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "秀水鄉",
+    "number": 3,
+    "rawScope": "福安村、埔崙村、曾厝村、金陵村、下崙村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "和美鎮",
+    "number": 1,
+    "rawScope": "竹營里、和東里、和南里、和北里、和西里、四張里、頭前里、面前里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "和美鎮",
+    "number": 2,
+    "rawScope": "鎮平里、大霞里、源埤里、南佃里、雅溝里、山犁里、仁愛里、嘉犁里、詔安里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "和美鎮",
+    "number": 3,
+    "rawScope": "鐵山里、柑井里、竹園里、新庄里、犁盛里、中寮里、中圍里、糖友里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "和美鎮",
+    "number": 4,
+    "rawScope": "還社里、塗厝里、地潭里、湖內里、嘉寶里、月眉里、好修里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "伸港鄉",
+    "number": 1,
+    "rawScope": "大同村、海尾村、全興村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "伸港鄉",
+    "number": 2,
+    "rawScope": "溪底村、定興村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "伸港鄉",
+    "number": 3,
+    "rawScope": "什股村、泉州村、泉厝村、曾家村、蚵寮村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "伸港鄉",
+    "number": 4,
+    "rawScope": "新港村、埤墘村、七嘉村、汴頭村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "線西鄉",
+    "number": 1,
+    "rawScope": "線西村、頂庄村、寓埔村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "線西鄉",
+    "number": 2,
+    "rawScope": "塭仔村、溝內村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "線西鄉",
+    "number": 3,
+    "rawScope": "下犁村、頂犁村、德興村",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "員林市",
+    "number": 1,
+    "rawScope": "崙雅里、振興里、林厝里、出水里、湖水里、大峰里、鎮興里、浮圳里、西東里、南東里、中東里、東北里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "員林市",
+    "number": 2,
+    "rawScope": "東和里、民生里、黎明里、惠來里、中央里、溝皂里、大饒里、大明里、萬年里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "員林市",
+    "number": 3,
+    "rawScope": "中正里、仁美里、新興里、和平里、光明里、中山里、三條里、忠孝里、仁愛里、三和里、三橋里、三愛里、三信里、三多里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "員林市",
+    "number": 4,
+    "rawScope": "三義里、新生里、南平里、南興里、源潭里、大埔里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "大村鄉",
+    "number": 1,
+    "rawScope": "大村村、茄苳村、田洋村、貢旗村、南勢村、大橋村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "大村鄉",
+    "number": 2,
+    "rawScope": "加錫村、大崙村、新興村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "大村鄉",
+    "number": 3,
+    "rawScope": "擺塘村、過溝村、村上村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "大村鄉",
+    "number": 4,
+    "rawScope": "美港村、黃厝村、福興村、平和村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "永靖鄉",
+    "number": 1,
+    "rawScope": "浮圳村、東寧村、光雲村、五汴村、永興村、崙子村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "永靖鄉",
+    "number": 2,
+    "rawScope": "永東村、永西村、永南村、永北村、港西村、五福村、湳港村、新莊村、瑚璉村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "永靖鄉",
+    "number": 3,
+    "rawScope": "獨鰲村、敦厚村、崙美村、同安村、同仁村、湳墘村、四芳村、福興村、竹子村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "溪湖鎮",
+    "number": 1,
+    "rawScope": "光平里、平和里、太平里、光華里、湖東里、中山里、西溪里、中竹里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "溪湖鎮",
+    "number": 2,
+    "rawScope": "東寮里、西寮里、大突里、北勢里、汴頭里、大竹里、湖西里、田中里、河東里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "溪湖鎮",
+    "number": 3,
+    "rawScope": "頂庄里、忠覺里、湳底里、大庭里、媽厝里、番婆里、西勢里、東溪里",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埔鹽鄉",
+    "number": 1,
+    "rawScope": "埔鹽村、埔南村、廓子村、出水村、南港村、打廉村、豐澤村、崑崙村、角樹村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埔鹽鄉",
+    "number": 2,
+    "rawScope": "瓦磘村、好修村、西湖村、大有村、新興村、永平村、永樂村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埔鹽鄉",
+    "number": 3,
+    "rawScope": "石埤村、天盛村、太平村、新水村、三省村、南新村",
+    "page": 5,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埔心鄉",
+    "number": 1,
+    "rawScope": "東門村、埔心村、義民村、油車村、瓦北村、瓦中村、瓦南村、經口村、太平村、大華村、仁里村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埔心鄉",
+    "number": 2,
+    "rawScope": "舊館村、南館村、新館村、芎蕉村、羅厝村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埔心鄉",
+    "number": 3,
+    "rawScope": "梧鳳村、二重村、埤霞村、埤腳村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "田中鎮",
+    "number": 1,
+    "rawScope": "香山里、碧峰里、東源里、復興里、平和里、頂潭里、新庄里",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "田中鎮",
+    "number": 2,
+    "rawScope": "中潭里、龍潭里、北路里、西路里、東路里、南路里、中路里、梅州里",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "田中鎮",
+    "number": 3,
+    "rawScope": "三安里、大崙里、沙崙里、新民里、三民里、三光里、大社里",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "社頭鄉",
+    "number": 1,
+    "rawScope": "社頭村、廣興村、東興村、松竹村、舊社村、廣福村、橋頭村、新厝村、張厝村、湳底村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "社頭鄉",
+    "number": 2,
+    "rawScope": "仁雅村、里仁村、美雅村、崙雅村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "社頭鄉",
+    "number": 3,
+    "rawScope": "清水村、山湖村、埤斗村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "社頭鄉",
+    "number": 4,
+    "rawScope": "仁和村、平和村、協和村、泰安村、朝興村、龍井村、湳雅村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "二水鄉",
+    "number": 1,
+    "rawScope": "復興村、十五村、合和村、上豐村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "二水鄉",
+    "number": 2,
+    "rawScope": "過圳村、五伯村、文化村、光化村、聖化村、二水村、惠民村、裕民村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "二水鄉",
+    "number": 3,
+    "rawScope": "大園村、修仁村、合興村、源泉村、倡和村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "北斗鎮",
+    "number": 1,
+    "rawScope": "中寮里、大道里",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "北斗鎮",
+    "number": 2,
+    "rawScope": "西德里、西安里",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "北斗鎮",
+    "number": 3,
+    "rawScope": "光復里、新政里、重慶里、五權里、七星里、居仁里、東光里、文昌里",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "北斗鎮",
+    "number": 4,
+    "rawScope": "中和里、新生里、大新里",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "田尾鄉",
+    "number": 1,
+    "rawScope": "田尾村、溪畔村、打簾村、正義村、北曾村、南曾村、饒平村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "田尾鄉",
+    "number": 2,
+    "rawScope": "豐田村、仁里村、新厝村、溪頂村、柳鳳村、陸豐村、海豐村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "田尾鄉",
+    "number": 3,
+    "rawScope": "睦宜村、新生村、北鎮村、南鎮村、福田村、新興村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埤頭鄉",
+    "number": 1,
+    "rawScope": "和豐村、興農村、埤頭村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埤頭鄉",
+    "number": 2,
+    "rawScope": "豐崙村、崙子村、永豐村、合興村、平原村、崙腳村",
+    "page": 6,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埤頭鄉",
+    "number": 3,
+    "rawScope": "元埔村、芙朝村、新庄村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "埤頭鄉",
+    "number": 4,
+    "rawScope": "陸嘉村、竹圍村、中和村、庄內村、大湖村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "溪州鄉",
+    "number": 1,
+    "rawScope": "溪厝村、坑厝村、瓦厝村、溪州村、尾厝村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "溪州鄉",
+    "number": 2,
+    "rawScope": "東州村、舊眉村、圳寮村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "溪州鄉",
+    "number": 3,
+    "rawScope": "西畔村、柑園村、成功村、大庄村、榮光村、潮洋村、張厝村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "溪州鄉",
+    "number": 4,
+    "rawScope": "菜公村、三條村、三圳村、水尾村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "二林鎮",
+    "number": 1,
+    "rawScope": "豐田里、東和里、南光里、西平里、北平里",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "二林鎮",
+    "number": 2,
+    "rawScope": "中西里、廣興里、香田里、外竹里、興華里、東興里、後厝里",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "二林鎮",
+    "number": 3,
+    "rawScope": "頂厝里、趙甲里、振興里、萬興里、永興里、西庄里、梅芳里、華崙里、萬合里",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "二林鎮",
+    "number": 4,
+    "rawScope": "東勢里、大永里、原斗里、西斗里、東華里、復豐里",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "大城鄉",
+    "number": 1,
+    "rawScope": "山腳村、潭墘村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "大城鄉",
+    "number": 2,
+    "rawScope": "大城村、東城村、西城村、上山村、永和村、公館村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "大城鄉",
+    "number": 3,
+    "rawScope": "豐美村、三豐村、菜寮村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "大城鄉",
+    "number": 4,
+    "rawScope": "東港村、西港村、頂庄村、臺西村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "芳苑鄉",
+    "number": 1,
+    "rawScope": "芳苑村、芳中村、仁愛村、信義村、後寮村、三合村、永興村、新街村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "芳苑鄉",
+    "number": 2,
+    "rawScope": "路上村、路平村、三成村、福榮村、頂廍村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "芳苑鄉",
+    "number": 3,
+    "rawScope": "王功村、博愛村、和平村、興仁村、民生村、新寶村、五俊村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "芳苑鄉",
+    "number": 4,
+    "rawScope": "草湖村、建平村、崙腳村、文津村、新生村、漢寶村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "竹塘鄉",
+    "number": 1,
+    "rawScope": "竹元村、竹塘村、小西村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "竹塘鄉",
+    "number": 2,
+    "rawScope": "民靖村、五庄村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "竹塘鄉",
+    "number": 3,
+    "rawScope": "樹腳村、田頭村、新廣村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "彰化縣",
+    "town": "竹塘鄉",
+    "number": 4,
+    "rawScope": "溪墘村、竹林村、土庫村、內新村、長安村、永安村",
+    "page": 7,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/7e626607-abf6-42dc-9e38-1053d1c88f30.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "潮州鎮",
+    "number": 1,
+    "rawScope": "潮州里、光華里、三星里、三和里、三共里、同榮里、彭城里、九塊里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 6
+  },
+  {
+    "county": "屏東縣",
+    "town": "潮州鎮",
+    "number": 2,
+    "rawScope": "新生里、新榮里、蓬萊里、五魁里、八爺里、光春里、富春里、永春里、興美里、檨子里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 6
+  },
+  {
+    "county": "屏東縣",
+    "town": "潮州鎮",
+    "number": 3,
+    "rawScope": "泗林里、四春里、崙東里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 6
+  },
+  {
+    "county": "屏東縣",
+    "town": "東港鎮",
+    "number": 1,
+    "rawScope": "新勝里、頂中里、內關帝里、東新里、新街里、東光里、興農里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 7
+  },
+  {
+    "county": "屏東縣",
+    "town": "東港鎮",
+    "number": 2,
+    "rawScope": "東隆里、福德里、朝安里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 7
+  },
+  {
+    "county": "屏東縣",
+    "town": "東港鎮",
+    "number": 3,
+    "rawScope": "豐漁里、鎮海里、盛漁里、興漁里、嘉蓮里、南平里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 7
+  },
+  {
+    "county": "屏東縣",
+    "town": "東港鎮",
+    "number": 4,
+    "rawScope": "下廍里、大潭里、興和里、船頭里、東津里、共和里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 7
+  },
+  {
+    "county": "屏東縣",
+    "town": "恆春鎮",
+    "number": 1,
+    "rawScope": "城南里、城北里、城西里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 8
+  },
+  {
+    "county": "屏東縣",
+    "town": "恆春鎮",
+    "number": 2,
+    "rawScope": "網紗里、仁壽里、茄湖里、頭溝里、四溝里、德和里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 8
+  },
+  {
+    "county": "屏東縣",
+    "town": "恆春鎮",
+    "number": 3,
+    "rawScope": "龍水里、山海里、大光里、水泉里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 8
+  },
+  {
+    "county": "屏東縣",
+    "town": "恆春鎮",
+    "number": 4,
+    "rawScope": "山腳里、南灣里、墾丁里、鵝鑾里",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 8
+  },
+  {
+    "county": "屏東縣",
+    "town": "萬丹鄉",
+    "number": 1,
+    "rawScope": "香社村、新庄村、新鐘村、水仙村、興全村、興安村、甘棠村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 9
+  },
+  {
+    "county": "屏東縣",
+    "town": "萬丹鄉",
+    "number": 2,
+    "rawScope": "萬惠村、萬全村、萬後村、萬生村、寶厝村、四維村、竹林村、水泉村、田厝村、萬安村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 9
+  },
+  {
+    "county": "屏東縣",
+    "town": "萬丹鄉",
+    "number": 3,
+    "rawScope": "崙頂村、厦北村、厦南村、後村村、灣內村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 9
+  },
+  {
+    "county": "屏東縣",
+    "town": "萬丹鄉",
+    "number": 4,
+    "rawScope": "上村村、加興村、社口村、磚寮村、社皮村、社中村、社上村、廣安村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 9
+  },
+  {
+    "county": "屏東縣",
+    "town": "長治鄉",
+    "number": 1,
+    "rawScope": "進興村、新潭村、潭頭村、香楊村、長興村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 10
+  },
+  {
+    "county": "屏東縣",
+    "town": "長治鄉",
+    "number": 2,
+    "rawScope": "崙上村、德榮村、德和村、復興村、德成村、德協村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 10
+  },
+  {
+    "county": "屏東縣",
+    "town": "長治鄉",
+    "number": 3,
+    "rawScope": "繁華村、繁榮村、繁昌村、繁隆村、榮華村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 10
+  },
+  {
+    "county": "屏東縣",
+    "town": "麟洛鄉",
+    "number": 1,
+    "rawScope": "新田村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 11
+  },
+  {
+    "county": "屏東縣",
+    "town": "麟洛鄉",
+    "number": 2,
+    "rawScope": "麟頂村、麟蹄村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 11
+  },
+  {
+    "county": "屏東縣",
+    "town": "麟洛鄉",
+    "number": 3,
+    "rawScope": "麟趾村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 11
+  },
+  {
+    "county": "屏東縣",
+    "town": "麟洛鄉",
+    "number": 4,
+    "rawScope": "田中村、田心村、田道村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 11
+  },
+  {
+    "county": "屏東縣",
+    "town": "九如鄉",
+    "number": 1,
+    "rawScope": "九清村、九塊村、九明村、大坵村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 11
+  },
+  {
+    "county": "屏東縣",
+    "town": "九如鄉",
+    "number": 2,
+    "rawScope": "東寧村、玉泉村、玉水村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 11
+  },
+  {
+    "county": "屏東縣",
+    "town": "九如鄉",
+    "number": 3,
+    "rawScope": "三塊村、耆老村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 11
+  },
+  {
+    "county": "屏東縣",
+    "town": "九如鄉",
+    "number": 4,
+    "rawScope": "洽興村、後庄村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 11
+  },
+  {
+    "county": "屏東縣",
+    "town": "里港鄉",
+    "number": 1,
+    "rawScope": "塔樓村、潮厝村、玉田村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 12
+  },
+  {
+    "county": "屏東縣",
+    "town": "里港鄉",
+    "number": 2,
+    "rawScope": "永春村、春林村、過江村、大平村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 12
+  },
+  {
+    "county": "屏東縣",
+    "town": "里港鄉",
+    "number": 3,
+    "rawScope": "載興村、茄苳村、鐵店村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 12
+  },
+  {
+    "county": "屏東縣",
+    "town": "里港鄉",
+    "number": 4,
+    "rawScope": "土庫村、三廍村、中和村、瀰力村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 12
+  },
+  {
+    "county": "屏東縣",
+    "town": "鹽埔鄉",
+    "number": 1,
+    "rawScope": "鹽北村、鹽中村、鹽南村、仕絨村、高朗村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 13
+  },
+  {
+    "county": "屏東縣",
+    "town": "鹽埔鄉",
+    "number": 2,
+    "rawScope": "振興村、久愛村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 13
+  },
+  {
+    "county": "屏東縣",
+    "town": "鹽埔鄉",
+    "number": 3,
+    "rawScope": "新圍村、新二村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 13
+  },
+  {
+    "county": "屏東縣",
+    "town": "鹽埔鄉",
+    "number": 4,
+    "rawScope": "彭厝村、洛陽村、永隆村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 13
+  },
+  {
+    "county": "屏東縣",
+    "town": "高樹鄉",
+    "number": 1,
+    "rawScope": "高樹村、長榮村、東興村、東振村、源泉村、建興村、大埔村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 14
+  },
+  {
+    "county": "屏東縣",
+    "town": "高樹鄉",
+    "number": 2,
+    "rawScope": "菜寮村、司馬村、舊寮村、新豐村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 14
+  },
+  {
+    "county": "屏東縣",
+    "town": "高樹鄉",
+    "number": 3,
+    "rawScope": "泰山村、南華村、廣福村、廣興村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 14
+  },
+  {
+    "county": "屏東縣",
+    "town": "高樹鄉",
+    "number": 4,
+    "rawScope": "舊庄村、田子村、鹽樹村、新南村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 14
+  },
+  {
+    "county": "屏東縣",
+    "town": "萬巒鄉",
+    "number": 1,
+    "rawScope": "萬巒村、萬全村、萬和村、鹿寮村、硫黃村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 15
+  },
+  {
+    "county": "屏東縣",
+    "town": "萬巒鄉",
+    "number": 2,
+    "rawScope": "泗溝村、五溝村、成德村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 15
+  },
+  {
+    "county": "屏東縣",
+    "town": "萬巒鄉",
+    "number": 3,
+    "rawScope": "萬金村、赤山村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 15
+  },
+  {
+    "county": "屏東縣",
+    "town": "萬巒鄉",
+    "number": 4,
+    "rawScope": "新厝村、佳和村、佳佐村、新置村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 15
+  },
+  {
+    "county": "屏東縣",
+    "town": "內埔鄉",
+    "number": 1,
+    "rawScope": "內埔村、內田村、美和村、和興村、興南村、義亭村、東寧村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 16
+  },
+  {
+    "county": "屏東縣",
+    "town": "內埔鄉",
+    "number": 2,
+    "rawScope": "豐田村、振豐村、富田村、竹圍村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 16
+  },
+  {
+    "county": "屏東縣",
+    "town": "內埔鄉",
+    "number": 3,
+    "rawScope": "東勢村、上樹村、東片村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 16
+  },
+  {
+    "county": "屏東縣",
+    "town": "內埔鄉",
+    "number": 4,
+    "rawScope": "老埤村、中林村、龍泉村、龍潭村、大新村、建興村、黎明村、隘寮村、水門村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 16
+  },
+  {
+    "county": "屏東縣",
+    "town": "竹田鄉",
+    "number": 1,
+    "rawScope": "竹田村、竹南村、糶糴村、二崙村、美崙村、頭崙村、履豐村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 17
+  },
+  {
+    "county": "屏東縣",
+    "town": "竹田鄉",
+    "number": 2,
+    "rawScope": "西勢村、南勢村、福田村、永豐村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 17
+  },
+  {
+    "county": "屏東縣",
+    "town": "竹田鄉",
+    "number": 3,
+    "rawScope": "泗洲村、大湖村、鳳明村、六巷村",
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20",
+    "page": 17
+  },
+  {
+    "county": "屏東縣",
+    "town": "屏東市",
+    "number": 1,
+    "rawScope": "大埔里、光榮里、大同里、維新里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "屏東市",
+    "number": 2,
+    "rawScope": "金泉里、楠樹里、橋南里、橋北里、長春里、豐田里、豐榮里、歸心里、湖西里、湖南里、瑞光里、豐源里、大連里、豐年里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "屏東市",
+    "number": 3,
+    "rawScope": "新生里、厚生里、一心里、義勇里、永安里、建國里、頂宅里、頂柳里、公館里、新興里、玉成里、龍華里、大湖里、大洲里、前進里、清溪里、大武里、崇武里、長安里、永光里、安鎮里",
+    "page": 3,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "屏東市",
+    "number": 4,
+    "rawScope": "廣興里、崇蘭里、空翔里、潭墘里、崇陽里、北興里、斯文里、華山里、勝利里、永城里、北勢里、公園里、溝美里、三山里、海豐里、仁義里、信和里、和興里、中正里、仁愛里",
+    "page": 4,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "新埤鄉",
+    "number": 1,
+    "rawScope": "新埤村、建功村、打鐵村、南豐村",
+    "page": 18,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "新埤鄉",
+    "number": 2,
+    "rawScope": "萬隆村、餉潭村、箕湖村",
+    "page": 18,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "枋寮鄉",
+    "number": 1,
+    "rawScope": "枋寮村、新龍村、保生村、中寮村、安樂村、隆山村",
+    "page": 19,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "枋寮鄉",
+    "number": 2,
+    "rawScope": "天時村、地利村、人和村、內寮村、新開村",
+    "page": 19,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "枋寮鄉",
+    "number": 3,
+    "rawScope": "東海村、大庄村、太源村、玉泉村",
+    "page": 19,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "新園鄉",
+    "number": 1,
+    "rawScope": "瓦磘村、仙吉村、田洋村、港墘村",
+    "page": 20,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "新園鄉",
+    "number": 2,
+    "rawScope": "內庄村、新東村、新園村、港西村",
+    "page": 20,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "新園鄉",
+    "number": 3,
+    "rawScope": "烏龍村、興龍村、中洲村、南龍村",
+    "page": 20,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "新園鄉",
+    "number": 4,
+    "rawScope": "五房村、鹽埔村、共和村",
+    "page": 20,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "崁頂鄉",
+    "number": 1,
+    "rawScope": "崁頂村、園寮村",
+    "page": 21,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "崁頂鄉",
+    "number": 2,
+    "rawScope": "力社村、圍內村",
+    "page": 21,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "崁頂鄉",
+    "number": 3,
+    "rawScope": "洲子村、北勢村",
+    "page": 21,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "崁頂鄉",
+    "number": 4,
+    "rawScope": "越溪村、港東村",
+    "page": 21,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "林邊鄉",
+    "number": 1,
+    "rawScope": "林邊村、光林村、永樂村、中林村",
+    "page": 21,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "林邊鄉",
+    "number": 2,
+    "rawScope": "仁和村、田厝村、崎峯村、水利村",
+    "page": 21,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "林邊鄉",
+    "number": 3,
+    "rawScope": "竹林村、鎮安村",
+    "page": 21,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "南州鄉",
+    "number": 1,
+    "rawScope": "溪洲村、溪南村、七塊村、萬華村、仁里村、溪北村",
+    "page": 22,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "南州鄉",
+    "number": 2,
+    "rawScope": "米崙村、壽元村",
+    "page": 22,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "南州鄉",
+    "number": 3,
+    "rawScope": "同安村、南安村",
+    "page": 22,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "佳冬鄉",
+    "number": 1,
+    "rawScope": "佳冬村、六根村、賴家村、萬建村",
+    "page": 23,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "佳冬鄉",
+    "number": 2,
+    "rawScope": "石光村、玉光村",
+    "page": 23,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "佳冬鄉",
+    "number": 3,
+    "rawScope": "昌隆村、豐隆村、大同村、羌園村",
+    "page": 23,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "佳冬鄉",
+    "number": 4,
+    "rawScope": "塭豐村、燄溫村",
+    "page": 23,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "琉球鄉",
+    "number": 1,
+    "rawScope": "本福村、中福村",
+    "page": 23,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "琉球鄉",
+    "number": 2,
+    "rawScope": "漁福村、大福村",
+    "page": 23,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "琉球鄉",
+    "number": 3,
+    "rawScope": "南福村、天福村",
+    "page": 23,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "琉球鄉",
+    "number": 4,
+    "rawScope": "上福村、杉福村",
+    "page": 23,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "車城鄉",
+    "number": 1,
+    "rawScope": "海口村、田中村",
+    "page": 24,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "車城鄉",
+    "number": 2,
+    "rawScope": "福安村、福興村、統埔村、溫泉村",
+    "page": 24,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "車城鄉",
+    "number": 3,
+    "rawScope": "保力村",
+    "page": 24,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "車城鄉",
+    "number": 4,
+    "rawScope": "新街村、埔墘村、射寮村、後灣村",
+    "page": 24,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "滿州鄉",
+    "number": 1,
+    "rawScope": "滿州村、里德村、响林村",
+    "page": 25,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "滿州鄉",
+    "number": 2,
+    "rawScope": "永靖村、港口村",
+    "page": 25,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "滿州鄉",
+    "number": 3,
+    "rawScope": "長樂村、九棚村、港仔村",
+    "page": 25,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "枋山鄉",
+    "number": 1,
+    "rawScope": "枋山村",
+    "page": 25,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "枋山鄉",
+    "number": 2,
+    "rawScope": "加祿村",
+    "page": 25,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "枋山鄉",
+    "number": 3,
+    "rawScope": "楓港村、善餘村",
+    "page": 25,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "三地門鄉",
+    "number": 1,
+    "rawScope": "三地村、達來村、德文村、大社村",
+    "page": 26,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "三地門鄉",
+    "number": 2,
+    "rawScope": "賽嘉村、馬兒村、青山村、口社村、安坡村、青葉村",
+    "page": 26,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "霧臺鄉",
+    "number": 1,
+    "rawScope": "霧台村、吉露村、阿禮村、好茶村",
+    "page": 26,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "霧臺鄉",
+    "number": 2,
+    "rawScope": "佳暮村、大武村",
+    "page": 26,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "瑪家鄉",
+    "number": 1,
+    "rawScope": "瑪家村、北葉村、三和村",
+    "page": 27,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "瑪家鄉",
+    "number": 2,
+    "rawScope": "凉山村、佳義村、排灣村",
+    "page": 27,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "泰武鄉",
+    "number": 1,
+    "rawScope": "佳平村、武潭村、平和村、萬安村",
+    "page": 27,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "泰武鄉",
+    "number": 2,
+    "rawScope": "泰武村、佳興村",
+    "page": 27,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "來義鄉",
+    "number": 1,
+    "rawScope": "來義村、義林村、丹林村、古樓村",
+    "page": 28,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "來義鄉",
+    "number": 2,
+    "rawScope": "文樂村、望嘉村、南和村",
+    "page": 28,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "春日鄉",
+    "number": 1,
+    "rawScope": "春日村、古華村、士文村",
+    "page": 28,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "春日鄉",
+    "number": 2,
+    "rawScope": "歸崇村、七佳村、力里村",
+    "page": 28,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "獅子鄉",
+    "number": 1,
+    "rawScope": "楓林村、丹路村、草埔村、內文村",
+    "page": 29,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "獅子鄉",
+    "number": 2,
+    "rawScope": "南世村、內獅村、獅子村、竹坑村",
+    "page": 29,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "牡丹鄉",
+    "number": 1,
+    "rawScope": "石門村、牡丹村、東源村、旭海村",
+    "page": 29,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "牡丹鄉",
+    "number": 2,
+    "rawScope": "高士村、四林村",
+    "page": 29,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  },
+  {
+    "county": "屏東縣",
+    "town": "滿州鄉",
+    "number": 4,
+    "rawScope": "全鄉各村平地原住民",
+    "category": "lowland",
+    "page": 25,
+    "sourceUrl": "https://web.cec.gov.tw/api/file/e0db1834-e57d-4d53-ac7d-48fc0a1b48ab.pdf",
+    "publishedOn": "2026-08-20"
+  }
+]

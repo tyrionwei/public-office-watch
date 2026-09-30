@@ -332,9 +332,9 @@ const [manuallyApprovedMediaProfile] = buildPersonEnrichmentClaimRows(
   '2026-08-10T00:00:00.000Z',
 );
 assert.equal(manuallyApprovedMediaProfile.review_score, 50);
-assert.equal(manuallyApprovedMediaProfile.review_status, 'verified');
-assert.equal(manuallyApprovedMediaProfile.visibility, 'public');
-assert.equal(manuallyApprovedMediaProfile.is_public, true);
+assert.equal(manuallyApprovedMediaProfile.review_status, 'archived');
+assert.equal(manuallyApprovedMediaProfile.visibility, 'private');
+assert.equal(manuallyApprovedMediaProfile.is_public, false);
 
 assert.deepEqual(
   darkGuideFamilyReferenceNames({

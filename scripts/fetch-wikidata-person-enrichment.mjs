@@ -526,7 +526,7 @@ export function scoreEntityMatch(target, entity, searchResult, relatedEntities =
   const educationLabels = labelsForIds(relatedEntities, claimEntityIds(entity, 'P69')).map((item) => item.label);
   const positionLabels = labelsForIds(relatedEntities, claimEntityIds(entity, 'P39')).map((item) => item.label);
   const occupationLabels = labelsForIds(relatedEntities, claimEntityIds(entity, 'P106')).map((item) => item.label);
-  const wikidataEvidence = [entityDescription, ...positionLabels, ...occupationLabels, ...educationLabels];
+  const wikidataEvidence = [entityDescription, ...positionLabels, ...occupationLabels];
   const corroboratingSignals = [];
 
   const hasPoliticalDescription =
@@ -556,18 +556,6 @@ export function scoreEntityMatch(target, entity, searchResult, relatedEntities =
     evidence.position = true;
     score += 10;
     corroboratingSignals.push('position matched');
-  }
-
-  if (hasTokenOverlap([target.education], educationLabels)) {
-    evidence.education = true;
-    score += 10;
-    corroboratingSignals.push('education matched');
-  }
-
-  if (hasTokenOverlap([target.experience], [...positionLabels, ...occupationLabels])) {
-    evidence.experience = true;
-    score += 10;
-    corroboratingSignals.push('experience matched');
   }
 
   if (hasTokenOverlap([target.district, target.party], [entityDescription])) {
@@ -745,7 +733,7 @@ function buildClaimsForTarget({ target, entity, qid, relatedEntities, matchEvide
     }
   }
 
-  return claims;
+  return claims.filter(c=>!['birth_date','education','experience'].includes(c.claimType));
 }
 
 function mergeClaims(existingPayload, newClaims) {

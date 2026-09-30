@@ -87,7 +87,7 @@ test('collapses small groups without changing totals', () => {
   });
 });
 
-test('groups education using profile values, claim fallbacks and an explicit unknown bucket', () => {
+test('groups adopted education and only officially reviewed claim fallbacks, leaving other values unknown', () => {
   const candidates = [
     candidate('a', 'race-taipei', '民主進步黨'),
     candidate('b', 'race-taipei', '中國國民黨'),
@@ -103,6 +103,12 @@ test('groups education using profile values, claim fallbacks and an explicit unk
     person_id: 'person-b',
     claim_type: 'education',
     claim_value: '某某大學法律學系',
+    claim_json: { officialProfilePolicy: { version: 'official-profile-v1', eligible: true, identityVerified: true, contentVerified: true } },
+  }, {
+    person_id: 'person-c',
+    claim_type: 'education',
+    claim_value: '第三方大學',
+    claim_json: {},
   }] as PublicPersonClaim[];
 
   assert.deepEqual(buildElectionEducationDistribution(

@@ -1,0 +1,22 @@
+[
+  {
+    "office": "councilor",
+    "countyCode": "67000",
+    "number": 12,
+    "raceId": "bda346e3-62a3-4bed-89e2-2bdacc5697b5",
+    "raceTitle": "臺南市第12選舉區平地原住民議員選舉",
+    "electionId": "6d807b31-ddb1-4ff4-9786-fc1388d298ae",
+    "verifiedOn": "2026-09-28",
+    "evidence": "Existing full-local published.election_race_page; event 2026-2026-11-28-local, exact title and election ID matched. Read only."
+  },
+  {
+    "office": "councilor",
+    "countyCode": "67000",
+    "number": 13,
+    "raceId": "6caeb161-161d-4a15-962c-fe77cb88ddee",
+    "raceTitle": "臺南市第13選舉區山地原住民議員選舉",
+    "electionId": "6d807b31-ddb1-4ff4-9786-fc1388d298ae",
+    "verifiedOn": "2026-09-28",
+    "evidence": "Existing full-local published.election_race_page; event 2026-2026-11-28-local, exact title and election ID matched. Read only."
+  }
+]

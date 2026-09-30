@@ -1,3 +1,4 @@
+import {profileFields, acceptedOfficialProfileClaim} from './lib/official-profile-policy.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -358,6 +359,7 @@ function explainWikidataPartyAffiliationEligibility(claim, verifiedExternalIdKey
 }
 
 export function explainEligibility(claim, options, verifiedExternalIdKeys, primaryPublicFieldKeys, primaryPublicClaimKeys, currentPartyByPersonId) {
+  if (profileFields.has(claim.claim_type)) return {eligible:acceptedOfficialProfileClaim(claim),reason:acceptedOfficialProfileClaim(claim)?'reviewed-official-profile':'official-profile-evidence-required'};
   if (blockedClaimTypes.has(claim.claim_type)) {
     return { eligible: false, reason: 'blocked-sensitive-claim-type' };
   }

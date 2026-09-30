@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { HomeElectionSpotlight } from '../components/HomeElectionSpotlight';
-import { MyPollingPlace } from '../components/MyPollingPlace';
-import { selectNextElectionVotingCycle } from '../data/electionVotingCycles';
 import { MobileMyElection } from '../components/MobileMyElection';
 import { MobileRegionBrowser } from '../components/MobileRegionBrowser';
 import { PartySeatDistributionPanel } from '../components/PartySeatDistributionPanel';
@@ -25,7 +23,6 @@ export function HomePage() {
   const { preference: votingRegionPreference } = useVotingRegion();
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedRegionId = searchParams.get('region');
-  const pollingCycle = votingRegionPreference ? selectNextElectionVotingCycle(votingRegionPreference, new Date().toISOString().slice(0, 10)) : null;
   const showMobileBrowse = !votingRegionPreference || requestedRegionId !== null;
   const requestedHomeRegionKey = requestedRegionId ?? storedRegionId;
   const requestedHomeRegionId = requestedHomeRegionKey?.startsWith('historical-')
@@ -146,16 +143,8 @@ export function HomePage() {
   }, [searchParams, setSearchParams, setSelectedRegionId, startTransition, votingCountyId]);
 
   return (
-    <AppShell ticker={homeData.ticker} tickerMobileHidden onOpenPollingPlace={() => setPollingPlaceOpen(true)} pollingPlaceOpen={pollingPlaceOpen}>
+    <AppShell ticker={homeData.ticker} tickerMobileHidden>
       <div className="mb-3 space-y-3 md:contents">
-        <MobileRegionBrowser
-          selectedRegionId={selectedRegionId}
-          selectedRegionLabel={selectedRegionLabel}
-          browsing={showMobileBrowse}
-          onSelectRegion={handleSelectRegion}
-          onReturnToMyArea={votingRegionPreference ? handleReturnToMyArea : undefined}
-        />
-        {pollingPlaceOpen && votingRegionPreference && pollingCycle?.pollingPlaceLookupUrl ? <div data-desktop-polling-place className="hidden md:block"><MyPollingPlace eventKey={pollingCycle.id} lookupUrl={pollingCycle.pollingPlaceLookupUrl} onClose={() => setPollingPlaceOpen(false)} /></div> : null}
         {votingRegionPreference && !showMobileBrowse ? (
           <MobileMyElection
             preference={votingRegionPreference}
@@ -169,6 +158,13 @@ export function HomePage() {
             onClosePollingPlace={() => setPollingPlaceOpen(false)}
           />
         ) : null}
+        <MobileRegionBrowser
+          selectedRegionId={selectedRegionId}
+          selectedRegionLabel={selectedRegionLabel}
+          browsing={showMobileBrowse}
+          onSelectRegion={handleSelectRegion}
+          onReturnToMyArea={votingRegionPreference ? handleReturnToMyArea : undefined}
+        />
       </div>
       <div
         data-home-research-grid

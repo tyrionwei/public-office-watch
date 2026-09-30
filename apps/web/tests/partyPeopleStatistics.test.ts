@@ -34,10 +34,10 @@ test('party people statistics keep unknown data in every denominator', () => {
     },
   ] as never[];
   const claims = [
-    { person_id: 'person-current', claim_type: 'birth_date', claim_value: '1990-01-01' },
-    { person_id: 'person-former', claim_type: 'birth_date', claim_value: '1980-01-01' },
-    { person_id: 'person-unknown', claim_type: 'birth_date', claim_value: '1970-01-01' },
-    { person_id: 'person-unknown', claim_type: 'birth_date', claim_value: '1971-01-01' },
+    { person_id: 'person-current', claim_type: 'birth_date', claim_value: '1990-01-01', claim_json: { officialProfilePolicy: { version: 'official-profile-v1', eligible: true, identityVerified: true, contentVerified: true, datePrecision: 'day' } } },
+    { person_id: 'person-former', claim_type: 'birth_date', claim_value: '1980-01-01', claim_json: { officialProfilePolicy: { version: 'official-profile-v1', eligible: true, identityVerified: true, contentVerified: true, datePrecision: 'day' } } },
+    { person_id: 'person-unknown', claim_type: 'birth_date', claim_value: '1970-01-01', claim_json: { officialProfilePolicy: { version: 'official-profile-v1', eligible: true, identityVerified: true, contentVerified: true, datePrecision: 'day' } } },
+    { person_id: 'person-unknown', claim_type: 'birth_date', claim_value: '1971-01-01', claim_json: { officialProfilePolicy: { version: 'official-profile-v1', eligible: true, identityVerified: true, contentVerified: true, datePrecision: 'day' } } },
   ] as never[];
 
   const rows = buildPartyPeopleStatistics(
@@ -62,4 +62,17 @@ test('party people statistics keep unknown data in every denominator', () => {
   assert.equal(count('education', 'doctorate'), 1);
   assert.equal(count('education', 'master'), 1);
   assert.equal(count('education', 'unknown'), 1);
+});
+
+test('partial or third-party birth dates stay in the unknown age bucket', () => {
+  const people = [
+    { person_id: 'partial', party: '民主進步黨', education: null },
+    { person_id: 'third-party', party: '民主進步黨', education: null },
+  ] as never[];
+  const claims = [
+    { person_id: 'partial', claim_type: 'birth_date', claim_value: '1980', claim_json: { officialProfilePolicy: { version: 'official-profile-v1', eligible: true, identityVerified: true, contentVerified: true, datePrecision: 'year' } } },
+    { person_id: 'third-party', claim_type: 'birth_date', claim_value: '1990-01-01', claim_json: {} },
+  ] as never[];
+  const rows = buildPartyPeopleStatistics('民主進步黨', people, claims, new Date('2026-08-11'));
+  assert.equal(rows.find((row) => row.dimension_key === 'age' && row.bucket_key === 'unknown')?.people_count, 2);
 });

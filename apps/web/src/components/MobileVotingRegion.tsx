@@ -2,10 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { taiwanDistrictsByCountyCode } from '../data/generated/taiwanDistrictDirectory';
 import { taiwanRegions } from '../data/taiwanRegions';
+import { selectNextElectionVotingCycle } from '../data/electionVotingCycles';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
+import { useMyBallot } from '../lib/useMyBallot';
+import { validNeighborhood } from '../lib/pollingPlace';
 import type { StageRegionNode } from '../types/stageMap';
 import { useVotingRegion, type VotingRegionChoice, type VotingRegionPreference } from '../votingRegion';
+import { MyBallots } from './MyBallots';
+import { MyPollingPlace } from './MyPollingPlace';
+import type { VotingRegionPanel } from '../votingRegion';
+import type { BallotCategory } from '../types/ballot';
 
 type MobileVotingRegionProps = {
   editorOpen: boolean;
@@ -67,7 +74,24 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
   const { language } = useI18n();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { preference, confirmPreference, clearPreference, setCurrentLocation } = useVotingRegion();
+  const { preference, confirmPreference, clearPreference, setCurrentLocation, panel, selectPanel, finishEditing } = useVotingRegion();
+  const dialogRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [desktop, setDesktop] = useState(() => window.matchMedia('(min-width: 768px)').matches);
+  const activePanel = desktop && preference ? panel : 'settings';
+  const cycle = preference ? selectNextElectionVotingCycle(preference, new Date().toISOString().slice(0, 10)) : null;
+  const tabs: { id: VotingRegionPanel; label: string }[] = [
+    { id: 'ballots', label: language === 'en' ? 'My ballots' : '我的選票' },
+    { id: 'polling', label: language === 'en' ? 'Polling places' : '投開票所' },
+    { id: 'settings', label: language === 'en' ? 'Registered address' : '戶籍設定' },
+  ];
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 768px)');
+    const update = () => setDesktop(media.matches);
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const villagePickerRef = useRef<HTMLDivElement>(null);
   const restoreVillageForDistrictRef = useRef<string | null>(null);
@@ -80,6 +104,8 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
   const [districtId, setDistrictId] = useState('');
   const [villages, setVillages] = useState<VotingRegionChoice[]>([]);
   const [villageId, setVillageId] = useState('');
+  const [ballotCategory, setBallotCategory] = useState<BallotCategory>('unspecified');
+  const [neighborhood, setNeighborhood] = useState<number | undefined>();
   const [villageSearch, setVillageSearch] = useState('');
   const [villageMenuOpen, setVillageMenuOpen] = useState(false);
   const [villagesLoading, setVillagesLoading] = useState(false);
@@ -114,6 +140,12 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     county: 'County / city',
     district: 'District / township',
     village: 'Village (optional)',
+    ballotCategory: 'Ballot lookup category (optional)',
+    categoryGeneral: 'General (non-indigenous)',
+    categoryLowland: 'Lowland indigenous',
+    categoryHighland: 'Highland indigenous',
+    categoryUnspecified: 'Unsure or skip for now',
+    neighborhood: 'Neighborhood (needed for this district assignment)',
     select: 'Please select',
     selectOptional: 'Do not select a village',
     villageChoose: 'Search or select a village',
@@ -151,6 +183,12 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     county: '縣市',
     district: '行政區／鄉鎮市',
     village: '村里（選填）',
+    ballotCategory: '選票查詢類別（選填）',
+    categoryGeneral: '一般（非原住民）',
+    categoryLowland: '平地原住民',
+    categoryHighland: '山地原住民',
+    categoryUnspecified: '不確定或暫不設定',
+    neighborhood: '鄰別（此選區分配需要）',
     select: '請選擇',
     selectOptional: '不選村里',
     villageChoose: '搜尋或選擇村里',
@@ -173,17 +211,31 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
   useEffect(() => {
     if (!editorOpen) return undefined;
     const previousOverflow = document.body.style.overflow;
+    const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     document.body.style.overflow = 'hidden';
     closeButtonRef.current?.focus();
     return () => {
       document.body.style.overflow = previousOverflow;
+      if (trigger?.isConnected) trigger.focus({ preventScroll: true });
     };
   }, [editorOpen]);
 
   useEffect(() => {
+    contentRef.current?.scrollTo(0, 0);
+    if (desktop && editorOpen) document.getElementById(`voting-tab-${activePanel}`)?.focus({ preventScroll: true });
+  }, [activePanel, desktop, editorOpen]);
+
+  useEffect(() => {
     if (!editorOpen) return undefined;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onCloseEditor();
+      if (event.key === 'Escape' && !event.defaultPrevented) onCloseEditor();
+      if (event.key === 'Tab') {
+        const controls = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), [tabindex="0"]') ?? []).filter((element) => element.getClientRects().length > 0);
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -219,6 +271,8 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     setDistrictId('');
     setVillages([]);
     setVillageId('');
+    setBallotCategory(preference?.ballotCategory ?? 'unspecified');
+    setNeighborhood(preference?.neighborhood);
     setVillageSearch('');
     setVillageMenuOpen(false);
     setSource(preference?.source ?? 'manual');
@@ -298,6 +352,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     setDistrictId('');
     setVillages([]);
     setVillageId('');
+    setNeighborhood(undefined);
     setVillageSearch('');
     setVillageMenuOpen(false);
     setDistricts(selectedCounty ? getDistrictChoices(selectedCounty.label) : []);
@@ -313,6 +368,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     setSavedVillageMissing(false);
     setVillages([]);
     setVillageId('');
+    setNeighborhood(undefined);
     setVillageSearch('');
     setVillageMenuOpen(false);
   };
@@ -417,7 +473,8 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       county: toChoice(county),
       ...(district ? { district } : {}),
       ...(village ? { village } : {}),
-      ...(village?.id === preference?.village?.id && preference?.neighborhood ? { neighborhood: preference.neighborhood } : {}),
+      ...(village ? { neighborhood } : {}),
+      ballotCategory,
       source,
       confirmedAt: new Date().toISOString(),
     });
@@ -426,7 +483,8 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
       return;
     }
     setStorageError(null);
-    onCloseEditor();
+    if (desktop) finishEditing();
+    else onCloseEditor();
   };
 
   const clear = () => {
@@ -443,6 +501,17 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
     : '';
   const showOnboarding = pathname === '/' && !preference && !onboardingDismissed;
   const selectedVillage = villages.find((village) => village.id === villageId);
+  const selectedCounty = counties.find((county) => county.id === countyId);
+  const selectedDistrict = districts.find((district) => district.id === districtId);
+  const draftPreference: VotingRegionPreference | null = selectedCounty && selectedDistrict ? {
+    county: toChoice(selectedCounty), district: selectedDistrict,
+    ...(selectedVillage ? { village: selectedVillage, neighborhood } : {}),
+    ballotCategory, source, confirmedAt: preference?.confirmedAt ?? '',
+  } : null;
+  const nextCycle = draftPreference ? selectNextElectionVotingCycle(draftPreference, new Date().toISOString().slice(0, 10)) : null;
+  const { result: draftBallots, error: draftBallotError, retry: retryDraftBallots } = useMyBallot(nextCycle?.electionEventKey, draftPreference,
+    editorOpen && activePanel === 'settings' && Boolean(draftPreference?.village));
+  const needsNeighborhood = Boolean(draftBallots?.items.some((item) => item.missing.includes('neighborhood')));
   const normalizedVillageSearch = villageSearch.trim();
   const filteredVillages = normalizedVillageSearch
     ? villages.filter((village) => village.name.includes(normalizedVillageSearch))
@@ -480,16 +549,32 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
 
       {editorOpen ? (
         <div className="fixed inset-0 z-[90]">
-          <button type="button" aria-label={copy.close} onClick={onCloseEditor} className="absolute inset-0 bg-black/75" />
-          <section role="dialog" aria-modal="true" aria-labelledby="voting-region-title" className="pixel-corners absolute inset-x-0 bottom-0 max-h-[92dvh] overflow-y-auto border-2 border-signal/60 bg-panel px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-12px_40px_rgba(0,0,0,0.55)] md:bottom-auto md:left-1/2 md:right-auto md:top-1/2 md:w-[min(44rem,calc(100vw-2rem))] md:-translate-x-1/2 md:-translate-y-1/2 md:pb-5">
-            <header className="flex items-start justify-between gap-3 border-b border-line/70 pb-3">
+          <button type="button" tabIndex={-1} aria-label={copy.close} onClick={onCloseEditor} className="absolute inset-0 bg-black/75" />
+          <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="voting-region-title" className="pixel-corners absolute inset-x-0 bottom-0 max-h-[92dvh] flex flex-col overflow-hidden border-2 border-signal/60 bg-panel px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-12px_40px_rgba(0,0,0,0.55)] md:bottom-auto md:left-1/2 md:right-auto md:top-1/2 md:w-[min(44rem,calc(100vw-2rem))] md:-translate-x-1/2 md:-translate-y-1/2 md:pb-5">
+            <header className="flex shrink-0 items-start justify-between gap-3 border-b border-line/70 pb-3">
               <div>
-                <h2 id="voting-region-title" className="font-display text-lg text-white">{copy.title}</h2>
+                <h2 id="voting-region-title" className="font-display text-lg text-white">{desktop ? (language === 'en' ? 'My voting area' : '我的投票地區') : copy.title}</h2>
                 <p className="mt-1 text-xs leading-5 text-slate-400">{copy.intro}</p>
               </div>
               <button ref={closeButtonRef} type="button" onClick={onCloseEditor} aria-label={copy.close} className="grid h-11 w-11 shrink-0 place-items-center border border-line text-xl text-slate-300 focus:outline-none focus:ring-2 focus:ring-accent/40">×</button>
             </header>
 
+            {desktop ? <div role="tablist" aria-label={language === 'en' ? 'Voting information' : '投票資訊'} className="grid shrink-0 grid-cols-3 gap-2 border-b border-line/70 py-3">
+              {tabs.map((tab, index) => <button key={tab.id} id={`voting-tab-${tab.id}`} role="tab" type="button" aria-selected={activePanel === tab.id} aria-controls="voting-panel" tabIndex={activePanel === tab.id ? 0 : -1}
+                onClick={() => selectPanel(tab.id)}
+                onKeyDown={(event) => {
+                  const next = event.key === 'ArrowRight' ? (index + 1) % 3 : event.key === 'ArrowLeft' ? (index + 2) % 3 : event.key === 'Home' ? 0 : event.key === 'End' ? 2 : null;
+                  if (next !== null) { event.preventDefault(); selectPanel(tabs[next].id); document.getElementById(`voting-tab-${preference ? tabs[next].id : 'settings'}`)?.focus(); }
+                }} className={`min-h-11 border px-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 ${activePanel === tab.id ? 'border-signal bg-signal/10 text-signal' : 'border-line text-slate-300'}`}>{tab.label}</button>)}
+            </div> : null}
+            <div ref={contentRef} data-voting-dialog-content id="voting-panel" role={desktop ? 'tabpanel' : undefined} aria-labelledby={desktop ? `voting-tab-${activePanel}` : undefined} className="min-h-0 overflow-y-auto overscroll-contain py-3">
+            {desktop && !preference && panel !== 'settings' ? <p role="status" className="mb-3 text-sm text-amber-200">{language === 'en' ? 'Set your registered address first. Saving returns you to your lookup.' : '請先設定戶籍地區，儲存後會回到原本的查詢分頁。'}</p> : null}
+            {activePanel !== 'settings' && preference ? <div className="space-y-3">
+              <button type="button" onClick={() => selectPanel('settings')} className="min-h-11 text-sm text-accent underline underline-offset-4">{language === 'en' ? 'Change registered address' : '變更戶籍設定'}</button>
+              {activePanel === 'ballots' && cycle?.electionEventKey ? <MyBallots eventKey={cycle.electionEventKey} preference={preference} desktop onNavigate={onCloseEditor} onOpenEditor={() => selectPanel('settings')} />
+                : activePanel === 'polling' && cycle?.pollingPlaceLookupUrl ? <MyPollingPlace eventKey={cycle.id} lookupUrl={cycle.pollingPlaceLookupUrl} />
+                : <p className="text-sm text-slate-400">{language === 'en' ? 'No upcoming election information is available.' : '目前沒有可查詢的近期選舉資料。'}</p>}
+            </div> : <>
             <button type="button" onClick={locate} disabled={locating} className="mt-4 min-h-12 w-full border border-signal/70 bg-signal/10 px-4 text-sm font-semibold text-signal disabled:opacity-60">
               ◎ {locating ? copy.detecting : copy.useLocation}
             </button>
@@ -561,6 +646,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
                           onChange={(event) => setVillageSearch(event.target.value)}
                           onKeyDown={(event) => {
                             if (event.key === 'Escape') {
+                              event.preventDefault();
                               setVillageMenuOpen(false);
                               setVillageSearch('');
                             }
@@ -575,6 +661,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
                             aria-selected={!villageId}
                             onClick={() => {
                               setVillageId('');
+                              setNeighborhood(undefined);
                               setSavedVillageMissing(false);
                               setVillageSearch('');
                               setVillageMenuOpen(false);
@@ -590,6 +677,7 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
                               role="option"
                               aria-selected={village.id === villageId}
                               onClick={() => {
+                                if (village.id !== villageId) setNeighborhood(undefined);
                                 setVillageId(village.id);
                                 setSavedVillageMissing(false);
                                 setVillageSearch('');
@@ -609,6 +697,23 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
                   {savedVillageMissing ? <p role="alert" className="text-sm leading-6 text-rose-300">{copy.savedVillageMissing}</p> : null}
                 </div>
               ) : null}
+              {needsNeighborhood ? <label className="grid gap-2 text-sm text-slate-300">
+                <span>{copy.neighborhood}</span>
+                <input type="number" inputMode="numeric" min="1" max="999" value={neighborhood ?? ''} onChange={(event) => setNeighborhood(validNeighborhood(Number(event.target.value)))} className="min-h-12 border border-line bg-bg px-3 text-white" />
+              </label> : null}
+              {draftBallotError ? <p role="alert" className="text-xs text-amber-200">
+                {language === 'en' ? 'Could not check whether a neighborhood is needed.' : '無法確認是否需要鄰別。'}{' '}
+                <button type="button" onClick={retryDraftBallots} className="underline underline-offset-4">{language === 'en' ? 'Retry' : '重試'}</button>
+              </p> : null}
+              <label className="grid gap-2 text-sm text-slate-300">
+                <span>{copy.ballotCategory}</span>
+                <select data-voting-ballot-category value={ballotCategory} onChange={(event) => setBallotCategory(event.target.value as BallotCategory)} className="min-h-12 border border-line bg-bg px-3 text-white">
+                  <option value="unspecified">{copy.categoryUnspecified}</option>
+                  <option value="general">{copy.categoryGeneral}</option>
+                  <option value="lowland">{copy.categoryLowland}</option>
+                  <option value="highland">{copy.categoryHighland}</option>
+                </select>
+              </label>
             </div>
 
             <div className="mt-5 grid gap-2">
@@ -621,6 +726,8 @@ export function MobileVotingRegion({ editorOpen, onOpenEditor, onCloseEditor }: 
                   {copy.clear}
                 </button>
               ) : null}
+            </div>
+            </>}
             </div>
           </section>
         </div>

@@ -11,6 +11,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const outputDirectory = path.join(repoRoot, 'tmp', 'polling-places-2026');
 const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
+const isPdfSource = (source) => ['cec-pdf-layout-2026', 'cec-reviewed-pdf-2026'].includes(source.adapter);
 const compact = (value) => String(value ?? '').normalize('NFKC')
   .replace(/\\n/g, '')
   .replace(/[\s\[\]]+/g, '')
@@ -18,6 +19,68 @@ const compact = (value) => String(value ?? '').normalize('NFKC')
 
 function findHeaderIndex(header, pattern) {
   return header.findIndex((value) => pattern.test(value));
+}
+
+// Some official PDFs contain image-only cells. Transcriptions are bound to the
+// exact PDF hash, page and complete extracted row; never infer missing values.
+export function applyReviewedPdfTranscriptions(sheets, source) {
+  const reviews = source.reviewed_pdf_transcriptions ?? [];
+  if (!reviews.length) return sheets;
+  if (source.adapter !== 'cec-pdf-layout-2026') throw new Error('Transcriptions require a PDF source');
+  const result = structuredClone(sheets);
+  const seen = new Set();
+  for (const review of reviews) {
+    if (review.source_hash !== source.source_hash || !Number.isInteger(review.page) || review.page < 1
+      || !Array.isArray(review.extracted_row) || review.extracted_row.length !== 5
+      || !Array.isArray(review.reviewed_row) || review.reviewed_row.length !== 5
+      || review.reviewed_row.some((value) => typeof value !== 'string' || !value.trim())
+      || review.extracted_row[0] !== review.reviewed_row[0] || seen.has(review.extracted_row[0])) {
+      throw new Error('Invalid reviewed PDF transcription');
+    }
+    seen.add(review.extracted_row[0]);
+    const matches = result.flatMap((sheet) => sheet.rows.filter((row) => row[0] === review.extracted_row[0]));
+    if (matches.length !== 1 || JSON.stringify(matches[0]) !== JSON.stringify(review.extracted_row)) {
+      throw new Error('Reviewed PDF transcription no longer matches extracted row: ' + review.extracted_row[0]);
+    }
+    matches[0].splice(0, 5, ...review.reviewed_row);
+  }
+  return result;
+}
+
+export function readReviewedPdfRows(review, source) {
+  if (source.adapter !== 'cec-reviewed-pdf-2026'
+    || review.source_hash !== source.source_hash || review.file_url !== source.file_url
+    || review.source_url !== source.source_url || !/^\d{4}-\d{2}-\d{2}$/.test(review.reviewed_on ?? '')
+    || !Array.isArray(review.pages) || !review.pages.length) {
+    throw new Error('Reviewed PDF provenance mismatch');
+  }
+  if (review.review_status !== 'human_approved') throw new Error('Reviewed PDF requires human approval');
+  const pages = new Set();
+  const rows = [];
+  for (const entry of review.pages) {
+    if (!Number.isInteger(entry.page) || entry.page < 1 || pages.has(entry.page)
+      || !Array.isArray(entry.rows) || !entry.rows.length) throw new Error('Invalid reviewed PDF page');
+    pages.add(entry.page);
+    for (const row of entry.rows) {
+      if (!Array.isArray(row) || row.length !== 5
+        || row.some((cell) => typeof cell !== 'string' || !cell.trim())
+        || !row[0].startsWith(source.name) || !/第\d{4}投開票所$/.test(row[0])) {
+        throw new Error('Invalid reviewed PDF row');
+      }
+      rows.push(row);
+    }
+  }
+  return [{ name: 'reviewed-pdf', rows: [
+    ['投開票所編號', '投開票所名稱', '投開票所地址', '一般選舉人所屬村里', '一般選舉人所屬鄰別'],
+    ...rows,
+  ] }];
+}
+
+// Only the suffix AFTER 里 is a station ordinal: keep names such as 友一里 intact.
+export function villageFromStationName(name) {
+  const match = /^(.+里)(?:[一二三四五六七八九十]+|\([一二三四五六七八九十]+\))?$/.exec(compact(name));
+  if (!match) throw new Error('Unrecognized village-only station name: ' + name);
+  return match[1];
 }
 
 export function parseOdsPollingPlaces(sheets, source, {
@@ -28,6 +91,7 @@ export function parseOdsPollingPlaces(sheets, source, {
   const countyName = compact(source.name);
   const districtAliases = source.district_aliases ?? {};
   const villageAliases = source.village_aliases ?? {};
+  const villageOnly = source.assignment_mode === 'station_name_village_only';
   let parsedSheetCount = 0;
 
   for (const sheet of sheets) {
@@ -41,7 +105,9 @@ export function parseOdsPollingPlaces(sheets, source, {
       village: findHeaderIndex(header, /(?:一般選舉人)?所屬(?:村里|里別)/),
       neighborhood: findHeaderIndex(header, /(?:一般選舉人)?所屬鄰別/),
     };
-    const missingColumns = Object.entries(columns).filter(([, index]) => index < 0).map(([name]) => name);
+    const missingColumns = Object.entries(columns)
+      .filter(([name, index]) => index < 0 && !(villageOnly && ['village', 'neighborhood'].includes(name)))
+      .map(([name]) => name);
     if (missingColumns.length) {
       throw new Error(`Official ODS is missing required columns (${missingColumns.join(', ')}) for ${source.name}`);
     }
@@ -60,8 +126,15 @@ export function parseOdsPollingPlaces(sheets, source, {
         .find((item) => compact(item.name) === compact(districtName));
       if (!district) throw new Error(`Unknown district for ${source.name} at row ${index + 1}: ${rawDistrictName}`);
 
-      const rawVillageName = String(row[columns.village] ?? '').trim();
-      if (!rawVillageName) continue;
+      const rawVillageName = villageOnly
+        ? villageFromStationName(row[columns.name])
+        : String(row[columns.village] ?? '').trim();
+      if (!rawVillageName) {
+        if (isPdfSource(source)) {
+          throw new Error('Missing PDF village assignment: ' + stationLabel);
+        }
+        continue;
+      }
       const aliasKey = districtName + ':' + rawVillageName;
       const villageName = villageAliases[aliasKey] ?? rawVillageName;
       const villageMatches = (villagesByDistrictCode[district.code] ?? [])
@@ -72,7 +145,9 @@ export function parseOdsPollingPlaces(sheets, source, {
         throw new Error(`Unresolved station for ${source.name} at row ${index + 1}: ${stationLabel} / ${rawVillageName}`);
       }
 
-      const sourceRawNeighborhoods = String(row[columns.neighborhood] ?? '').trim();
+      const sourceRawNeighborhoods = villageOnly
+        ? '官方僅提供里別，未提供鄰別分配'
+        : String(row[columns.neighborhood] ?? '').trim();
       const rawNeighborhoods = sourceRawNeighborhoods.startsWith('需覆核:')
         ? '官方鄰別條件需人工覆核'
         : sourceRawNeighborhoods;
@@ -157,7 +232,7 @@ export function parseOdsPollingPlaces(sheets, source, {
 }
 
 export function validatePdfSourceExpectations(source) {
-  if (source.adapter !== 'cec-pdf-layout-2026') return;
+  if (!isPdfSource(source)) return;
   if (!Number.isInteger(source.expected_station_count) || source.expected_station_count <= 0) {
     throw new Error('Missing expected PDF station count for ' + source.name);
   }
@@ -170,6 +245,19 @@ export function validatePdfSourceExpectations(source) {
 }
 
 export function validatePollingPlaceExpectations(places, source) {
+  if (isPdfSource(source) || source.expected_station_count !== undefined) {
+    validatePdfSourceExpectations(source);
+    const stations = new Set(places.map((place) => place.station_no));
+    if (stations.size !== source.expected_station_count
+      || Array.from({ length: source.expected_station_count }, (_, index) => String(index + 1).padStart(4, '0'))
+        .some((station) => !stations.has(station))) {
+      throw new Error('Normalized PDF station sequence is incomplete for ' + source.name);
+    }
+  }
+  if (source.expected_village_count !== undefined
+    && new Set(places.map((place) => place.village_code)).size !== source.expected_village_count) {
+    throw new Error('Normalized village count mismatch for ' + source.name);
+  }
   for (const expected of source.regression_expectations ?? []) {
     const matches = places.filter((place) => place.station_no === expected.station_no);
     if (matches.length !== 1) {
@@ -279,17 +367,25 @@ async function loadSnapshot(source) {
   if (source.adapter === "cec-ods-2026") {
     execFileSync("python3", [path.join(repoRoot, "scripts", "extract-polling-places-ods.py"), filePath, rowsPath]);
   } else if (source.adapter === "cec-pdf-layout-2026") {
-    execFileSync("python3", [
+    if (source.county_code === '10015') {
+      execFileSync('python3', [path.join(repoRoot, 'scripts', 'extract-hualien-polling-places-pdf.py'), filePath, rowsPath]);
+    } else execFileSync("python3", [
       path.join(repoRoot, "scripts", "extract-polling-places-pdf.py"),
       filePath, rowsPath,
       "--county-code", source.county_code,
       "--expected-station-count", String(source.expected_station_count),
       "--expected-last-station-no", source.expected_last_station_no,
     ]);
+  } else if (source.adapter === 'cec-reviewed-pdf-2026') {
+    const reviewPath = path.resolve(repoRoot, source.reviewed_rows_path ?? '');
+    if (!reviewPath.startsWith(path.join(repoRoot, 'data-sources', '2026-polling-places-reviewed') + path.sep)) {
+      throw new Error('Unexpected reviewed PDF rows path');
+    }
+    fs.writeFileSync(rowsPath, JSON.stringify(readReviewedPdfRows(readJson(reviewPath), source)));
   } else {
     throw new Error("Unsupported polling-place adapter: " + source.adapter);
   }
-  const places = parseOdsPollingPlaces(readJson(rowsPath), source);
+  const places = parseOdsPollingPlaces(applyReviewedPdfTranscriptions(readJson(rowsPath), source), source);
   validatePollingPlaceExpectations(places, source);
   const summary = {
     county_code: source.county_code,
@@ -309,7 +405,7 @@ async function loadSnapshot(source) {
 export async function main(argv = process.argv.slice(2)) {
   const options = parseArgs(argv);
   const registry = readJson(path.join(repoRoot, 'data-sources', '2026-polling-places.json'));
-  const eligible = registry.counties.filter((source) => source.status === "ready" && ["cec-ods-2026", "cec-pdf-layout-2026"].includes(source.adapter));
+  const eligible = registry.counties.filter((source) => source.status === "ready" && ["cec-ods-2026", "cec-pdf-layout-2026", "cec-reviewed-pdf-2026"].includes(source.adapter));
   const selected = options.countyCodes.length
     ? eligible.filter((source) => options.countyCodes.includes(source.county_code))
     : eligible;

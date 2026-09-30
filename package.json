@@ -14,7 +14,7 @@
     "test": "npm run check",
     "test:local-research-data": "node --test scripts/local-data-tests/*.test.mjs",
     "test:script-suite": "node --test scripts/*.test.mjs scripts/lib/*.test.mjs && python3 scripts/cec-profile-card-geometry.test.py && python3 scripts/cec-profile-ocr-crop.test.py && python3 scripts/cec-profile-table-geometry.test.py && python3 scripts/cec-platform-table-crop.test.py",
-    "test:polling-places": "node --experimental-strip-types --test scripts/polling-place-normalization.test.mjs scripts/import-2026-polling-places.test.mjs && python3 scripts/polling_place_pdf_layout_test.py && python3 -m py_compile scripts/extract-polling-places-ods.py scripts/extract-polling-places-pdf.py scripts/polling_place_pdf_layout.py scripts/polling_place_pdf_layout_test.py",
+    "test:polling-places": "node --experimental-strip-types --test scripts/polling-place-normalization.test.mjs scripts/import-2026-polling-places.test.mjs && python3 scripts/polling_place_pdf_layout_test.py && python3 scripts/extract-hualien-polling-places-pdf.test.py && python3 -m py_compile scripts/extract-polling-places-ods.py scripts/extract-polling-places-pdf.py scripts/polling_place_pdf_layout.py scripts/polling_place_pdf_layout_test.py scripts/extract-hualien-polling-places-pdf.py scripts/extract-hualien-polling-places-pdf.test.py",
     "test:auto-review-person-claims": "node --test scripts/auto-review-person-claims.test.mjs",
     "test:party-candidate-source-freshness": "node --test scripts/report-party-candidate-source-freshness.test.mjs",
     "test:legal-record-policy": "node --test scripts/legal-record-review-policy.test.mjs",

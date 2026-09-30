@@ -1,0 +1,351 @@
+{
+  "announcementDate": "2026-08-20",
+  "sources": [
+    {
+      "countyCode": "63000",
+      "commission": "mect",
+      "filePrefix": "1813cb72",
+      "firstVillagePage": 2
+    },
+    {
+      "countyCode": "65000",
+      "commission": "tpcec",
+      "filePrefix": "c4b572bd",
+      "firstVillagePage": 2,
+      "broadScope": "新北市第5屆里長選舉",
+      "scopePage": 1,
+      "scopeFilePrefix": "c886f25e"
+    },
+    {
+      "countyCode": "68000",
+      "commission": "tyec",
+      "filePrefix": "d112386a",
+      "firstVillagePage": 3,
+      "broadScope": "桃園市第4屆里長選舉",
+      "scopePage": 1
+    },
+    {
+      "countyCode": "66000",
+      "commission": "tcec",
+      "filePrefix": "630b1ed2",
+      "firstVillagePage": 1,
+      "broadScope": "臺中市第5屆里長選舉應選名額及候選人競選經費最高金額一覽表",
+      "scopePage": 1
+    },
+    {
+      "countyCode": "67000",
+      "commission": "tnec",
+      "filePrefix": "02718011",
+      "firstVillagePage": 1,
+      "broadScope": "臺南市第5屆里長選舉候選人競選經費最高金額一覽表",
+      "scopePage": 1
+    },
+    {
+      "countyCode": "64000",
+      "commission": "khec",
+      "filePrefix": "58ef90be",
+      "firstVillagePage": 3,
+      "broadScope": "（三）高雄市第5屆里長。",
+      "scopePage": 1,
+      "visualReview": true
+    },
+    {
+      "countyCode": "10004",
+      "commission": "hccec",
+      "filePrefix": "be2983be",
+      "firstVillagePage": 7,
+      "broadScope": "（三）新竹縣第23屆（竹北市第11屆）村（里）長選舉。",
+      "scopePage": 1,
+      "visualReview": true
+    },
+    {
+      "countyCode": "10005",
+      "commission": "mlec",
+      "filePrefix": "56306079",
+      "firstVillagePage": 1,
+      "broadScope": "一、選舉種類：苗栗縣第23屆村里長選舉。",
+      "scopePage": 1,
+      "visualReview": true
+    },
+    {
+      "countyCode": "10007",
+      "commission": "chec",
+      "filePrefix": "7e626607",
+      "firstVillagePage": 8,
+      "broadScope": "（三）村（里）長：第23屆（員林市第4屆）。",
+      "scopePage": 1,
+      "visualReview": true
+    },
+    {
+      "countyCode": "10008",
+      "commission": "ntec",
+      "filePrefix": "bda7bda1",
+      "firstVillagePage": 6,
+      "broadScope": "臺灣省南投縣第23屆(信義鄉卡里布安村第2屆)村長選舉",
+      "scopePage": 6
+    },
+    {
+      "countyCode": "10009",
+      "commission": "ylec",
+      "filePrefix": "9b57bb77",
+      "firstVillagePage": 13,
+      "broadScope": "（三）雲林縣各鄉鎮第23屆（斗六市第13屆）村里長選舉。",
+      "scopePage": 1,
+      "visualReview": true
+    },
+    {
+      "countyCode": "10010",
+      "commission": "cycec",
+      "filePrefix": "c6324790",
+      "firstVillagePage": 7,
+      "broadScope": "嘉義縣村（里）長選舉區之劃分、應選名額及競選經費最高金額如下",
+      "scopePage": 7
+    },
+    {
+      "countyCode": "10013",
+      "commission": "ptec",
+      "filePrefix": "e0db1834",
+      "firstVillagePage": 3,
+      "broadScope": "屏東縣各鄉（鎮、市）第23屆村（里）長選舉",
+      "scopePage": 1
+    },
+    {
+      "countyCode": "10002",
+      "commission": "ilec",
+      "filePrefix": "67a7d49e",
+      "firstVillagePage": 6,
+      "broadScope": "臺灣省宜蘭縣鄉（鎮、市）第23屆村（里）長選舉。",
+      "scopePage": 1
+    },
+    {
+      "countyCode": "10015",
+      "commission": "hlec",
+      "filePrefix": "aefaf420",
+      "firstVillagePage": 7,
+      "broadScope": "花蓮縣各鄉（鎮、巿）第23屆村(里)長。",
+      "scopePage": 1
+    },
+    {
+      "countyCode": "10014",
+      "commission": "ttec",
+      "filePrefix": "715772a7",
+      "firstVillagePage": 6,
+      "broadScope": "臺東縣各鄉鎮市第23屆村里長選舉",
+      "scopePage": 1,
+      "visualReview": true
+    },
+    {
+      "countyCode": "10016",
+      "commission": "phec",
+      "filePrefix": "62db7bd0",
+      "firstVillagePage": 4,
+      "broadScope": "澎湖縣各鄉（市）第23屆村（里）長選舉。",
+      "scopePage": 1
+    },
+    {
+      "countyCode": "09020",
+      "commission": "kmec",
+      "filePrefix": "3fa69d4b",
+      "firstVillagePage": 5,
+      "broadScope": "（三）金門縣第14屆（烏坵鄉第12屆）村（里）長選舉。",
+      "scopePage": 1,
+      "visualReview": true
+    },
+    {
+      "countyCode": "09007",
+      "commission": "lcec",
+      "filePrefix": "817b1365",
+      "firstVillagePage": 2,
+      "broadScope": "一、選舉種類：福建省連江縣第13屆鄉長、鄉民代表暨村長選舉。",
+      "scopePage": 1,
+      "visualReview": true
+    },
+    {
+      "countyCode": "10017",
+      "commission": "klec",
+      "filePrefix": "e56e473b",
+      "firstVillagePage": 1,
+      "broadScope": "三、選舉區：依各里之行政區為選舉區。",
+      "scopePage": 1
+    },
+    {
+      "countyCode": "10018",
+      "commission": "hcec",
+      "filePrefix": "f8db5cc3",
+      "firstVillagePage": 5,
+      "broadScope": "一、選舉種類：新竹市第23屆里長選舉。",
+      "scopePage": 1,
+      "visualReview": true,
+      "announcementDate": "2026-08-17"
+    },
+    {
+      "countyCode": "10020",
+      "commission": "cyec",
+      "filePrefix": "90187c27",
+      "firstVillagePage": 1,
+      "broadScope": "一、嘉義市第12屆里長選舉。",
+      "scopePage": 1,
+      "visualReview": true
+    }
+  ],
+  "chiefSources": [
+    {
+      "countyCode": "10002",
+      "commission": "ilec",
+      "filePrefix": "67a7d49e",
+      "page": 1,
+      "rawScope": "臺灣省宜蘭縣鄉（鎮、市）第 20 屆鄉（鎮、市）長選舉。",
+      "office": "townshipMayor"
+    },
+    {
+      "countyCode": "10004",
+      "commission": "hccec",
+      "filePrefix": "be2983be",
+      "page": 1,
+      "rawScope": "（一）新竹縣第20屆（竹北市第11屆）鄉（鎮、市）長選舉。",
+      "office": "townshipMayor",
+      "visualReview": true
+    },
+    {
+      "countyCode": "10005",
+      "commission": "mlec",
+      "filePrefix": "095080af",
+      "page": 1,
+      "rawScope": "苗栗縣第20屆(苗栗市第13屆、頭份市第4屆)鄉(鎮、市)長選舉公告",
+      "office": "townshipMayor",
+      "visualReview": true
+    },
+    {
+      "countyCode": "10007",
+      "commission": "chec",
+      "filePrefix": "7e626607",
+      "page": 1,
+      "rawScope": "（一）鄉（鎮、市）長：第20屆（員林市第4屆）。",
+      "office": "townshipMayor",
+      "visualReview": true
+    },
+    {
+      "countyCode": "10008",
+      "commission": "ntec",
+      "filePrefix": "bda7bda1",
+      "page": 2,
+      "rawScope": "臺灣省南投縣第20屆(南投市第13屆)鄉(鎮、市)長選舉",
+      "office": "townshipMayor"
+    },
+    {
+      "countyCode": "10009",
+      "commission": "ylec",
+      "filePrefix": "9b57bb77",
+      "page": 1,
+      "rawScope": "（一）雲林縣各鄉鎮第20屆（斗六市第13屆）鄉鎮市長選舉。",
+      "office": "townshipMayor",
+      "visualReview": true
+    },
+    {
+      "countyCode": "10010",
+      "commission": "cycec",
+      "filePrefix": "c6324790",
+      "page": 1,
+      "rawScope": "嘉義縣各鄉（鎮、市）長選舉選舉區之劃分、名額及競選經費最高金額如下",
+      "office": "townshipMayor"
+    },
+    {
+      "countyCode": "10013",
+      "commission": "ptec",
+      "filePrefix": "e0db1834",
+      "page": 1,
+      "rawScope": "屏東縣第 20 屆鄉（鎮、市）長",
+      "office": "townshipMayor"
+    },
+    {
+      "countyCode": "10014",
+      "commission": "ttec",
+      "filePrefix": "715772a7",
+      "page": 1,
+      "rawScope": "臺東縣各鄉鎮市第20 屆（臺東市第14 屆）鄉鎮市長選舉。",
+      "office": "townshipMayor"
+    },
+    {
+      "countyCode": "10015",
+      "commission": "hlec",
+      "filePrefix": "aefaf420",
+      "page": 1,
+      "rawScope": "花蓮縣第 20 屆鄉(鎮、巿)長。",
+      "office": "townshipMayor"
+    },
+    {
+      "countyCode": "10016",
+      "commission": "phec",
+      "filePrefix": "62db7bd0",
+      "page": 1,
+      "rawScope": "澎湖縣各鄉（市）第 20 屆（馬公市第 13 屆）鄉（巿）長選舉。",
+      "office": "townshipMayor"
+    },
+    {
+      "countyCode": "09020",
+      "commission": "kmec",
+      "filePrefix": "3fa69d4b",
+      "page": 1,
+      "rawScope": "（一）金門縣第14屆（烏坵鄉第12屆）鄉（鎮）長選舉。",
+      "office": "townshipMayor",
+      "visualReview": true
+    },
+    {
+      "countyCode": "09007",
+      "commission": "lcec",
+      "filePrefix": "817b1365",
+      "page": 1,
+      "rawScope": "一、選舉種類：福建省連江縣第13屆鄉長、鄉民代表暨村長選舉。",
+      "office": "townshipMayor",
+      "visualReview": true
+    },
+    {
+      "countyCode": "65000",
+      "commission": "tpcec",
+      "filePrefix": "c886f25e",
+      "page": 1,
+      "rawScope": "新北市烏來區第4屆區長",
+      "office": "indigenousDistrictMayor",
+      "districtNames": [
+        "烏來區"
+      ]
+    },
+    {
+      "countyCode": "68000",
+      "commission": "tyec",
+      "filePrefix": "d112386a",
+      "page": 1,
+      "rawScope": "桃園巿復興區第 4 屆區長選舉。",
+      "office": "indigenousDistrictMayor",
+      "districtNames": [
+        "復興區"
+      ]
+    },
+    {
+      "countyCode": "66000",
+      "commission": "tcec",
+      "filePrefix": "a7d45ffb",
+      "page": 1,
+      "rawScope": "臺 中市和 平 區 第 4屆 區 長",
+      "office": "indigenousDistrictMayor",
+      "districtNames": [
+        "和平區"
+      ],
+      "visualReview": true
+    },
+    {
+      "countyCode": "64000",
+      "commission": "khec",
+      "filePrefix": "58ef90be",
+      "page": 1,
+      "rawScope": "(一)高雄市桃源區、那瑪夏區、茂林區第 4 屆區長。",
+      "office": "indigenousDistrictMayor",
+      "districtNames": [
+        "桃源區",
+        "那瑪夏區",
+        "茂林區"
+      ],
+      "visualReview": true
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react';
 
 import { validNeighborhood } from './lib/pollingPlace';
+import type { BallotCategory } from './types/ballot';
 
 export const votingRegionStorageKey = 'public-office-watch.voting-region-preference.v1';
 
@@ -15,6 +16,7 @@ export type VotingRegionPreference = {
   district?: VotingRegionChoice;
   village?: VotingRegionChoice;
   neighborhood?: number;
+  ballotCategory?: BallotCategory;
   source: 'manual' | 'confirmed-location';
   confirmedAt: string;
 };
@@ -25,7 +27,15 @@ export type CurrentLocation = {
   detectedAt: string;
 };
 
+export type VotingRegionPanel = 'ballots' | 'polling' | 'settings';
+
 type VotingRegionContextValue = {
+  panel: VotingRegionPanel;
+  openPanel: (panel: VotingRegionPanel) => void;
+  selectPanel: (panel: VotingRegionPanel) => void;
+  finishEditing: () => void;
+  editorOpen: boolean;
+  setEditorOpen: (open: boolean) => void;
   preference: VotingRegionPreference | null;
   currentLocation: CurrentLocation | null;
   setCurrentLocation: (location: CurrentLocation | null) => void;
@@ -42,6 +52,10 @@ function isChoice(value: unknown): value is VotingRegionChoice {
     && typeof choice.name === 'string' && choice.name.length > 0;
 }
 
+function validBallotCategory(value: unknown): BallotCategory {
+  return value === 'general' || value === 'lowland' || value === 'highland' ? value : 'unspecified';
+}
+
 function readStoredPreference(): VotingRegionPreference | null {
   if (typeof window === 'undefined') return null;
 
@@ -52,27 +66,51 @@ function readStoredPreference(): VotingRegionPreference | null {
     if (value.village !== undefined && !isChoice(value.village)) return null;
     if (value.source !== 'manual' && value.source !== 'confirmed-location') return null;
     if (typeof value.confirmedAt !== 'string') return null;
-    return { ...value, neighborhood: value.village ? validNeighborhood(value.neighborhood) : undefined } as VotingRegionPreference;
+    return { ...value, neighborhood: value.village ? validNeighborhood(value.neighborhood) : undefined, ballotCategory: validBallotCategory(value.ballotCategory) } as VotingRegionPreference;
   } catch {
     return null;
   }
 }
 
 export function VotingRegionProvider({ children }: PropsWithChildren) {
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [panel, setPanel] = useState<VotingRegionPanel>('settings');
+  const [returnPanel, setReturnPanel] = useState<VotingRegionPanel | null>(null);
   const [preference, setPreference] = useState<VotingRegionPreference | null>(readStoredPreference);
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
 
   const value = useMemo<VotingRegionContextValue>(() => ({
+    editorOpen,
+    panel,
+    setEditorOpen(open) {
+      if (open) { setPanel('settings'); setReturnPanel(null); }
+      setEditorOpen(open);
+    },
+    openPanel(next) {
+      setPanel(next);
+      setReturnPanel(next === 'settings' ? null : next);
+      setEditorOpen(true);
+    },
+    selectPanel(next) {
+      if (next !== 'settings') setReturnPanel(next);
+      else if (panel !== 'settings') setReturnPanel(panel);
+      setPanel(next);
+    },
+    finishEditing() {
+      if (returnPanel) setPanel(returnPanel);
+      else setEditorOpen(false);
+    },
     preference,
     currentLocation,
     setCurrentLocation,
     confirmPreference(nextPreference) {
+      const safePreference = { ...nextPreference, ballotCategory: validBallotCategory(nextPreference.ballotCategory) };
       try {
-        window.localStorage.setItem(votingRegionStorageKey, JSON.stringify(nextPreference));
+        window.localStorage.setItem(votingRegionStorageKey, JSON.stringify(safePreference));
       } catch {
         return false;
       }
-      setPreference(nextPreference);
+      setPreference(safePreference);
       return true;
     },
     clearPreference() {
@@ -84,7 +122,7 @@ export function VotingRegionProvider({ children }: PropsWithChildren) {
       setPreference(null);
       return true;
     },
-  }), [currentLocation, preference]);
+  }), [currentLocation, preference, editorOpen, panel, returnPanel]);
 
   return <VotingRegionContext.Provider value={value}>{children}</VotingRegionContext.Provider>;
 }

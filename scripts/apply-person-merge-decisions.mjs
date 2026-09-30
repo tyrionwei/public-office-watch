@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { birthDatesCompatible, reviewedOfficialBirthDate, verifiedStablePersonIdForClaim } from './report-duplicate-people.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -66,6 +67,9 @@ function parseArgs(argv) {
   if (!['suggested', 'verified'].includes(options.status)) {
     throw new Error('--status must be suggested or verified.');
   }
+  if (options.status === 'verified' && options.confidenceLevel !== 'A') {
+    throw new Error('Automatic verified merge decisions require A-level independent stable person ID evidence.');
+  }
 
   return options;
 }
@@ -74,24 +78,28 @@ function restUrl(pathname) {
   return new URL(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/${pathname}`);
 }
 
-async function fetchRows(viewName, select) {
+async function fetchRows(viewName, select, params = {}) {
   const url = restUrl(viewName);
   url.searchParams.set('select', select);
-
-  const response = await fetch(url, {
-    headers: {
-      apikey: serviceRoleKey,
-      authorization: `Bearer ${serviceRoleKey}`,
-    },
-    signal: AbortSignal.timeout(30000),
-  });
-  const body = await response.json();
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${viewName}: ${body?.message ?? response.statusText}`);
+  for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
+  const rows = [];
+  for (let offset = 0; ; offset += 1000) {
+    const response = await fetch(url, {
+      headers: {
+        apikey: serviceRoleKey,
+        authorization: `Bearer ${serviceRoleKey}`,
+        range: `${offset}-${offset + 999}`,
+      },
+      signal: AbortSignal.timeout(30000),
+    });
+    const body = await response.json();
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${viewName}: ${body?.message ?? response.statusText}`);
+    }
+    if (!Array.isArray(body)) throw new Error(`Invalid ${viewName} rows`);
+    rows.push(...body);
+    if (body.length < 1000) return rows;
   }
-
-  return body;
 }
 
 async function insertRows(viewName, rows) {
@@ -140,6 +148,42 @@ function bestCandidateByDuplicate(candidates) {
   return Array.from(bestByDuplicate.values());
 }
 
+export function verifiedAutoMergePair(item, claimsByPersonId) {
+  if (item.confidence_level !== 'A') return false;
+  const externalId = item.evidence_json?.externalId;
+  if (typeof externalId !== 'string' || !/^wikidata:Q\d+$/u.test(externalId)) return false;
+  const left = claimsByPersonId.get(item.duplicate_person_id) ?? [];
+  const right = claimsByPersonId.get(item.canonical_person_id) ?? [];
+  const stable = (claims) => [...new Set(claims.map(verifiedStablePersonIdForClaim).filter(Boolean))];
+  const leftIds = stable(left);
+  const rightIds = stable(right);
+  if (leftIds.length !== 1 || rightIds.length !== 1
+    || leftIds[0] !== externalId || rightIds[0] !== externalId) return false;
+  const dates = [...left, ...right].map(reviewedOfficialBirthDate).filter(Boolean);
+  return !dates.some((value, index) => dates.slice(index + 1)
+    .some((other) => !birthDatesCompatible(value, other)));
+}
+
+async function fetchPairClaims(candidates) {
+  const ids = [...new Set(candidates.flatMap((item) => [item.duplicate_person_id, item.canonical_person_id]))];
+  const byPersonId = new Map();
+  for (let offset = 0; offset < ids.length; offset += 60) {
+    const chunk = ids.slice(offset, offset + 60);
+    const claims = await fetchRows('person_claims',
+      'id,person_id,claim_type,claim_value,claim_json,review_status,source_url', {
+        person_id: `in.(${chunk.join(',')})`,
+        claim_type: 'in.(external_id,birth_date)',
+        review_status: 'eq.verified',
+        visibility: 'eq.public',
+        is_public: 'eq.true',
+      });
+    for (const claim of claims) {
+      byPersonId.set(claim.person_id, [...(byPersonId.get(claim.person_id) ?? []), claim]);
+    }
+  }
+  return byPersonId;
+}
+
 async function main() {
   if (!serviceRoleKey) {
     throw new Error('Set SUPABASE_SERVICE_ROLE_KEY for person merge decisions.');
@@ -160,10 +204,14 @@ async function main() {
       .filter((decision) => ['suggested', 'verified'].includes(decision.status))
       .map((decision) => decision.duplicate_person_id),
   );
-  const candidates = bestCandidateByDuplicate(queue
+  const eligibleQueue = queue
     .filter((item) => item.confidence_level === options.confidenceLevel)
     .filter((item) => !terminalDecisionKeys.has(decisionKey(item.duplicate_person_id, item.canonical_person_id)))
-    .filter((item) => !activeDuplicatePersonIds.has(item.duplicate_person_id)));
+    .filter((item) => !activeDuplicatePersonIds.has(item.duplicate_person_id));
+  const claimsByPersonId = options.status === 'verified' ? await fetchPairClaims(eligibleQueue) : null;
+  const candidates = bestCandidateByDuplicate(options.status === 'verified'
+    ? eligibleQueue.filter((item) => verifiedAutoMergePair(item, claimsByPersonId))
+    : eligibleQueue);
   const rows = candidates.map((item) => ({
     duplicate_person_id: item.duplicate_person_id,
     canonical_person_id: item.canonical_person_id,
@@ -201,7 +249,7 @@ async function main() {
   }, null, 2));
 }
 
-main().catch((error) => {
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => {
   const message = error instanceof Error ? error.message : 'Unknown error';
   console.error(`person merge decision apply failed: ${message}`);
   process.exit(1);

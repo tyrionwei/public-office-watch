@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { acceptedOfficialProfileClaim, datePrecision } from './lib/official-profile-policy.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultOutputPath = path.join(repoRoot, 'data-sources', 'duplicate-people-report.json');
@@ -31,7 +32,7 @@ const localSupabaseUrl = process.env.SUPABASE_URL?.trim() || localEnv.SUPABASE_U
 const localServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || localEnv.SUPABASE_SERVICE_ROLE_KEY;
 const identityPolicy = {
   mergeCandidateSignals: [
-    'shared verified external ID',
+    'shared independently reviewed stable Wikidata person ID',
     'same normalized name, gender, and birth date as B-level manual candidate',
   ],
   contextOnlySignals: [
@@ -42,7 +43,7 @@ const identityPolicy = {
   ],
   conflictSignals: [
     'different known gender',
-    'different known birth date',
+    'incompatible reviewed official birth dates',
   ],
 };
 
@@ -143,16 +144,33 @@ function normalizeExternalId(value) {
   return wikidataQid ? `wikidata:${wikidataQid.toUpperCase()}` : normalized.toLowerCase();
 }
 
+export function verifiedStablePersonIdForClaim(claim) {
+  const review = claim.claim_json?.stablePersonIdReview;
+  if (claim.claim_type !== 'external_id' || claim.review_status !== 'verified'
+    || typeof claim.claim_value !== 'string' || !/^wikidata:Q\d+$/u.test(claim.claim_value)
+    || review?.status !== 'verified' || review.independentEvidence !== true
+    || !String(review.evidenceUrl ?? '').trim()) return null;
+  return normalizeExternalId(claim.claim_value);
+}
+
+export function reviewedOfficialBirthDate(claim) {
+  if (claim.claim_type !== 'birth_date' || claim.review_status !== 'verified'
+    || !acceptedOfficialProfileClaim(claim.sourceClaimPersonId
+      ? { ...claim, person_id: claim.sourceClaimPersonId } : claim)) return null;
+  const value = String(claim.claim_value ?? claim.claim_json?.value ?? '').trim();
+  const precision = datePrecision(value);
+  return precision && claim.claim_json?.officialProfilePolicy?.datePrecision === precision ? value : null;
+}
+
+export function birthDatesCompatible(left, right) {
+  return left === right || left.startsWith(`${right}-`) || right.startsWith(`${left}-`);
+}
+
 function externalIdsFor(personId, claimsByPersonId) {
   const claims = claimsByPersonId.get(personId) ?? [];
   return Array.from(new Set(
     claims
-      .filter((claim) => claim.claim_type === 'external_id')
-      .flatMap((claim) => {
-        const wikidataQid = typeof claim.claim_json?.wikidataQid === 'string' ? `wikidata:${claim.claim_json.wikidataQid}` : null;
-        return [claim.claim_value, wikidataQid].filter(Boolean);
-      })
-      .map((value) => normalizeExternalId(value))
+      .map(verifiedStablePersonIdForClaim)
       .filter(Boolean),
   )).sort();
 }
@@ -161,8 +179,7 @@ function birthDatesFor(personId, claimsByPersonId) {
   const claims = claimsByPersonId.get(personId) ?? [];
   return Array.from(new Set(
     claims
-      .filter((claim) => claim.claim_type === 'birth_date')
-      .map((claim) => String(claim.claim_value ?? claim.claim_json?.value ?? '').trim())
+      .map(reviewedOfficialBirthDate)
       .filter(Boolean),
   )).sort();
 }
@@ -186,12 +203,13 @@ function sameKnownValue(left, right) {
   return Boolean(left && right && left === right);
 }
 
-function scoreDuplicatePair(left, right) {
+export function scoreDuplicatePair(left, right) {
   const reasons = [];
   let score = 0;
-  const sharedExternalIds = left.externalIds.filter((externalId) => right.externalIds.includes(externalId));
-  const sharedBirthDates = left.birthDates.filter((birthDate) => right.birthDates.includes(birthDate));
-  const hasBirthConflict = left.birthDates.length > 0 && right.birthDates.length > 0 && sharedBirthDates.length === 0;
+  const sharedExternalIds = left.externalIds.filter((externalId) => /^wikidata:Q\d+$/u.test(externalId) && right.externalIds.includes(externalId));
+  const sharedBirthDates = left.birthDates.filter((birthDate) => datePrecision(birthDate) === 'day' && right.birthDates.includes(birthDate));
+  const hasBirthConflict = left.birthDates.length > 0 && right.birthDates.length > 0
+    && left.birthDates.every((leftDate) => right.birthDates.every((rightDate) => !birthDatesCompatible(leftDate, rightDate)));
   const hasGenderConflict =
     left.gender &&
     right.gender &&
@@ -295,7 +313,7 @@ function pairSuggestionsFor(records, terminalDecisionKeys) {
   return suggestions.sort((left, right) => right.score - left.score);
 }
 
-function buildDuplicateReport(people, candidates, claims, mergeDecisions, options) {
+export function buildDuplicateReport(people, candidates, claims, mergeDecisions, options) {
   const candidatesByPersonId = new Map();
   const claimsByPersonId = new Map();
   const verifiedDuplicatePersonIds = new Set(
@@ -397,7 +415,7 @@ async function main() {
   const [people, candidates, claims, mergeDecisions] = await Promise.all([
     fetchRows('public_people_directory', 'person_id,name,gender,party,position,district,election_year', options, 'person_id.asc'),
     fetchRows('public_candidates', 'candidate_id,person_id,person_name,person_party,person_position,race_title,election_name,region_name,party,registration_status', options, 'candidate_id.asc'),
-    fetchRows('public_person_claims', 'claim_id,person_id,claim_type,claim_value,claim_json', options, 'claim_id.asc', {
+    fetchRows('person_claims', 'id,person_id,claim_type,claim_value,claim_json,review_status,source_url', options, 'id.asc', {
       claim_type: 'in.(external_id,birth_date)',
     }),
     fetchRows('person_merge_decisions', 'id,duplicate_person_id,canonical_person_id,status', options, 'id.asc'),
@@ -415,7 +433,7 @@ async function main() {
   console.log(content);
 }
 
-main().catch((error) => {
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => {
   const message = error instanceof Error ? error.message : 'Unknown error';
   console.error(`duplicate people report failed: ${message}`);
   process.exit(1);

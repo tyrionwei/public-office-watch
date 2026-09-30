@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { acceptedOfficialProfileClaim, profileFields } from './lib/official-profile-policy.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const migrationDirectory = path.join(repoRoot, 'supabase/migrations');
@@ -160,6 +161,28 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+export function eligibleReleaseClaim(row) {
+  return row.review_status === 'verified' && row.visibility === 'public' && row.is_public === true
+    && (!profileFields.has(row.claim_type) || acceptedOfficialProfileClaim(row));
+}
+
+export function adoptedProfilePeople(people, profileClaims) {
+  const values = new Map();
+  for (const claim of profileClaims) {
+    if (!['education', 'experience'].includes(claim.claim_type) || !eligibleReleaseClaim(claim)) continue;
+    const text = claim.claim_value?.trim();
+    if (!text) continue;
+    const fields = values.get(claim.person_id) ?? { education: new Set(), experience: new Set() };
+    fields[claim.claim_type].add(text);
+    values.set(claim.person_id, fields);
+  }
+  return people.map((person) => ({
+    ...person,
+    education: [...(values.get(person.id)?.education ?? [])].join('；') || null,
+    experience: [...(values.get(person.id)?.experience ?? [])].join('；') || null,
+  }));
+}
+
 function sqlJson(value, delimiter) {
   const json = JSON.stringify(value);
   if (json.includes(delimiter)) throw new Error(`Payload contains ${delimiter}`);
@@ -267,6 +290,7 @@ async function main() {
   )));
   const claims = dedupe(claimPages.flat(), 'claim_key')
     .filter((row) => !retiredClaimKeys.includes(row.claim_key))
+    .filter(eligibleReleaseClaim)
     .map((row) => ({ ...row, source_person_id: null }))
     .sort((left, right) => left.claim_key.localeCompare(right.claim_key));
 
@@ -285,13 +309,17 @@ async function main() {
     ...claims.map((row) => row.person_id),
     ...candidates.map((row) => row.person_id),
   ])];
-  const people = (await fetchByValues(
+  const rawPeople = (await fetchByValues(
     configValue,
     'people',
     selectList('people'),
     'id',
     personIds,
   )).sort((left, right) => left.external_id.localeCompare(right.external_id));
+  const profileClaims = await fetchByValues(configValue, 'person_claims', selectList('claims'), 'person_id', personIds, {
+    claim_type: 'in.(education,experience)', review_status: 'eq.verified', visibility: 'eq.public', is_public: 'eq.true',
+  });
+  const people = adoptedProfilePeople(rawPeople, profileClaims);
 
   const affiliations = (await fetchByValues(
     configValue,
@@ -514,6 +542,17 @@ SET person_id = mapping.target_id
 FROM _release_people_ids mapping
 WHERE incoming.person_id = mapping.local_id;
 
+-- The reviewed local claim is mapped to the same person by external ID.
+-- Rebind only the retained official profile marker to the mapped target ID.
+UPDATE _release_claims incoming
+SET claim_json = jsonb_set(incoming.claim_json, '{officialProfilePolicy,binding}',
+  to_jsonb(md5(incoming.person_id::text || '|' || incoming.claim_type || '|' ||
+    COALESCE(incoming.claim_value, incoming.claim_json->>'value', '') || '|' ||
+    COALESCE(incoming.source_url, ''))))
+WHERE incoming.claim_type IN ('birth_date', 'education', 'experience')
+  AND incoming.review_status = 'verified'
+  AND incoming.claim_json #>> '{officialProfilePolicy,eligible}' = 'true';
+
 UPDATE _release_affiliations incoming
 SET person_id = mapping.target_id
 FROM _release_people_ids mapping
@@ -678,7 +717,9 @@ COMMIT;
   }));
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error);
-  process.exit(1);
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exit(1);
+  });
+}

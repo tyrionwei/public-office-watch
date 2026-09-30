@@ -1,0 +1,55 @@
+name: Registration parent guard regression
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20260930060000_hold_registration_profile_parent_changes.sql'
+      - 'tests/sql/registration-profile-parent-guards-isolated.sql'
+      - 'supabase/migrations/20260928113720_resolve_2026_ballot_village_race_links.sql'
+      - 'tests/ballot-migration-regression.py'
+      - 'tests/official-directory-refresh-regression.py'
+      - 'scripts/build-registration-profile-release.mjs'
+      - 'supabase/migrations/20260928130407_enforce_official_person_profile_sources.sql'
+      - 'supabase/migrations/20260928133331_correct_reviewed_identity_links.sql'
+      - '.github/workflows/registration-parent-guards.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  registration-parent-guards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: pow_registration_guard_test
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Run synthetic trigger regression in disposable PostgreSQL
+        env:
+          TEST_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          set -euo pipefail
+          docker exec "$TEST_CONTAINER" mkdir -p /tmp/pow/tests/sql /tmp/pow/supabase/migrations
+          docker cp tests/sql/registration-profile-parent-guards-isolated.sql "$TEST_CONTAINER:/tmp/pow/tests/sql/registration-profile-parent-guards-isolated.sql"
+          docker cp supabase/migrations/20260930060000_hold_registration_profile_parent_changes.sql "$TEST_CONTAINER:/tmp/pow/supabase/migrations/20260930060000_hold_registration_profile_parent_changes.sql"
+          docker exec "$TEST_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d pow_registration_guard_test -f /tmp/pow/tests/sql/registration-profile-parent-guards-isolated.sql
+      - name: Run ballot migration baseline regression in disposable PostgreSQL
+        env:
+          TEST_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          set -euo pipefail
+          docker exec "$TEST_CONTAINER" createdb -U postgres pow_ballot_migration_test
+          python3 tests/ballot-migration-regression.py docker exec -i "$TEST_CONTAINER" psql -U postgres -d pow_ballot_migration_test
+          python3 tests/official-directory-refresh-regression.py docker exec -i "$TEST_CONTAINER" psql -U postgres -d pow_ballot_migration_test

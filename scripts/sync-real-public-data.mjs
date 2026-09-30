@@ -1,3 +1,5 @@
+import {acceptedOfficialProfileClaim, profileBinding, profileFields, preserveProfilePolicy} from './lib/official-profile-policy.mjs';
+import {buildRegistrationProfileProposals} from './lib/registration-profile-evidence.mjs';
 import { assertSeedUsesReviewedGrassrootsImport, isGrassrootsSource } from './grassroots-candidate-policy.mjs';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -2448,8 +2450,11 @@ function normalizePersonEnrichmentClaim(rawClaim, seed) {
   const personName = rawClaim.personName ?? rawClaim.person_name ?? null;
 
   return {
+    id: rawClaim.id ?? null,
     claimKey: rawClaim.claimKey ?? rawClaim.claim_key ?? null,
     personId: rawClaim.personId ?? rawClaim.person_id ?? null,
+    candidateId: rawClaim.candidateId ?? rawClaim.candidate_id ?? null,
+    sourcePersonId: rawClaim.sourcePersonId ?? rawClaim.source_person_id ?? null,
     personExternalId: rawClaim.personExternalId ?? rawClaim.person_external_id ?? null,
     personName,
     normalizedName: personName ? normalizeSourcePersonName(personName) : null,
@@ -2818,7 +2823,7 @@ function postgrestIn(values) {
 }
 
 async function fetchExistingPersonClaimReviewStates(env, incomingRows) {
-  const select = 'claim_key,person_id,claim_type,claim_value,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json';
+  const select = 'claim_key,person_id,candidate_id,claim_type,claim_value,source_url,review_status,visibility,is_public,auto_reviewed_at,scoring_version,scoring_reasons,claim_json';
   const claimKeys = [...new Set(incomingRows.map((row) => row.claim_key).filter(Boolean))];
   const rows = [];
 
@@ -2864,12 +2869,44 @@ async function fetchExistingPersonClaimReviewStates(env, incomingRows) {
   return { byClaimKey, byWikidataSemanticKey, rejectedWikidataPersonQids };
 }
 
-function preserveReviewedPersonClaimRows(rows, existingReviewStates) {
+export function preserveReviewedPersonClaimRows(rows, existingReviewStates) {
   return rows.map((row) => {
     const existing =
       existingReviewStates.byClaimKey.get(row.claim_key) ??
       existingReviewStates.rejectedWikidataPersonQids.get(wikidataRejectedPersonQidKey(row)) ??
       existingReviewStates.byWikidataSemanticKey.get(wikidataSemanticClaimKey(row));
+
+    if (profileFields.has(row.claim_type)) {
+      const proposal = row.claim_json?.registrationProposal;
+      if (proposal && (proposal.parentReviewStatus !== 'verified'
+        || ['pending', 'isolated'].includes(proposal.identityStatus))) {
+        return { ...row, review_status: 'pending', visibility: 'private', is_public: false, auto_reviewed_at: null };
+      }
+      if (proposal && existing) {
+        const oldProposal = existing.claim_json?.registrationProposal;
+        const sameParent = existing.claim_key === row.claim_key
+          && oldProposal?.parentClaimId === proposal.parentClaimId
+          && oldProposal?.parentClaimKey === proposal.parentClaimKey;
+        const sameCandidate = !row.candidate_id || row.candidate_id === existing.candidate_id;
+        const sameBinding = profileBinding(row) === profileBinding(existing);
+        if (!sameParent || !sameCandidate || !sameBinding) return preserveProfilePolicy(row, null);
+        if (existing.review_status === 'verified' && existing.is_public
+          && acceptedOfficialProfileClaim(existing)) {
+          const preserved = preserveProfilePolicy(row, existing);
+          return {
+            ...preserved,
+            candidate_id: existing.candidate_id ?? row.candidate_id,
+            claim_json: {
+              ...preserved.claim_json,
+              registrationProposal: oldProposal,
+              ...(existing.claim_json?.registrationProfileReview
+                ? { registrationProfileReview: existing.claim_json.registrationProfileReview } : {}),
+            },
+          };
+        }
+      }
+      return preserveProfilePolicy(row, existing);
+    }
 
     if (!existing) {
       return row;
@@ -3264,7 +3301,7 @@ async function reconcileHistoricalCecImportedPeople(
   const matchesBySourcePersonId = new Map();
   const activeDuplicateIds = new Set(
     existingDecisions
-      .filter((decision) => ['suggested', 'verified'].includes(decision.status))
+      .filter((decision) => ['suggested', 'verified', 'rejected', 'archived'].includes(decision.status))
       .map((decision) => decision.duplicate_person_id),
   );
 
@@ -3302,17 +3339,17 @@ async function reconcileHistoricalCecImportedPeople(
     mergeRows.push({
       duplicate_person_id: duplicatePerson.id,
       canonical_person_id: canonicalPersonId,
-      status: 'verified',
-      confidence_level: 'A',
-      reason: 'The same official 2012 CEC source record has one existing canonical person match.',
+      status: 'suggested',
+      confidence_level: 'B',
+      reason: 'The same official 2012 CEC election record is a review clue, not a stable person identifier.',
       evidence_json: {
         sourcePersonKey: sourcePerson.source_person_key,
         importedExternalId: importedPerson.externalId,
         canonicalExternalId: personById.get(canonicalPersonId)?.external_id ?? null,
         electionYear: 2012,
       },
-      reviewed_by: 'system:cec-2012-source-identity-reconciliation',
-      reviewed_at: startedAt,
+      reviewed_by: null,
+      reviewed_at: null,
       updated_at: startedAt,
     });
   }
@@ -3516,7 +3553,7 @@ function buildPersonClaimRows(seed, sourcePersonByKey, personByExternalId, start
     }
   }
 
-  return rows;
+  return rows.map(row=>preserveProfilePolicy(row));
 }
 
 function normalizePartyAffiliationName(value) {
@@ -3928,7 +3965,9 @@ export function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt,
     peopleByNormalizedName.set(normalizedName, group);
   }
 
-  return (seed.personEnrichmentClaims ?? [])
+  const parentClaims = seed.personEnrichmentClaims ?? [];
+  const registrationProposals = parentClaims.flatMap((claim) => buildRegistrationProfileProposals(claim));
+  return [...parentClaims, ...registrationProposals]
     .map((claim) => {
       if (
         claim.sourceId === 'wikidata-person-enrichment' &&
@@ -3947,6 +3986,9 @@ export function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt,
           ? nameMatches[0]
           : null,
       ].filter(Boolean);
+      if (claim.claimJson?.registrationProposal && new Set(candidates.map((candidate) => candidate.id)).size > 1) {
+        return null;
+      }
       const person = candidates[0] ?? null;
 
       if (!person) {
@@ -3984,7 +4026,8 @@ export function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt,
 
       return {
         person_id: person.id,
-        source_person_id: null,
+        source_person_id: claim.sourcePersonId ?? null,
+        candidate_id: claim.candidateId ?? null,
         claim_key: claim.claimKey ?? `enrichment:${claim.sourceId}:${person.id}:${claim.claimType}:${claimHash}`,
         claim_type: claim.claimType,
         claim_value: claimValue || null,
@@ -4015,7 +4058,7 @@ export function buildPersonEnrichmentClaimRows(seed, canonicalPeople, startedAt,
         updated_at: startedAt,
       };
     })
-    .filter((row) => row !== null);
+    .filter((row) => row !== null).map(row=>preserveProfilePolicy(row));
 }
 
 function estimatePersonClaimCount(seed) {

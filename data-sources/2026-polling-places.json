@@ -121,7 +121,7 @@
     {
       "county_code": "67000",
       "name": "臺南市",
-      "status": "needs_supplemental_provenance",
+      "status": "ready",
       "official_home": "https://web.cec.gov.tw/tnec",
       "source_name": "臺南市選舉委員會",
       "source_url": "https://web.cec.gov.tw/tnec/article/64377",
@@ -129,14 +129,220 @@
       "published_on": "2026-08-31",
       "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
       "format": "pdf",
-      "reason": "選舉 PDF 第 0366 所地址欄空白；臺南市活動中心官方頁可補地址，但目前資料模型無法保存單列補充來源",
-      "supplemental_address_source": {
-        "station_no": "0366",
-        "station_name": "永樂里活動中心",
-        "address": "臺南市西港區永樂里7鄰大塭寮59之35號",
-        "source_name": "臺南市里社區活動中心",
-        "source_url": "https://tnda.tainan.gov.tw/acthouse/actpage.asp?mainid=%7B6348B09B-0431-4548-9180-DF917C2330D9%7D"
-      }
+      "adapter": "cec-pdf-layout-2026",
+      "slug": "tainan",
+      "checked_on": "2026-09-27",
+      "expected_station_count": 1563,
+      "expected_last_station_no": "1563",
+      "village_aliases": {
+        "龍崎區:石𥕢里": "石曹里",
+        "新化區:𦰡拔里": "那拔里"
+      },
+      "review_note": "官方 PDF 含圖片形式欄位，文字層空白不代表原表空白；以下逐欄依原 PDF 頁面核對轉錄。0366 原表為永樂里4鄰，保留原公告內容，不採另一網站的7鄰地址。",
+      "reviewed_pdf_transcriptions": [
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 24,
+          "extracted_row": [
+            "臺南市西港區第0359投開票所",
+            "松林國小",
+            "",
+            "",
+            "1-6"
+          ],
+          "reviewed_row": [
+            "臺南市西港區第0359投開票所",
+            "松林國小",
+            "臺南市西港區檨林里３鄰檨子林３９號之１",
+            "檨林里",
+            "1-6"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 25,
+          "extracted_row": [
+            "臺南市西港區第0360投開票所",
+            "松林國小",
+            "",
+            "",
+            "7-12"
+          ],
+          "reviewed_row": [
+            "臺南市西港區第0360投開票所",
+            "松林國小",
+            "臺南市西港區檨林里３鄰檨子林３９號之１",
+            "檨林里",
+            "7-12"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 25,
+          "extracted_row": [
+            "臺南市西港區第0366投開票所",
+            "永樂里活動中心",
+            "",
+            "永樂里",
+            "1-7"
+          ],
+          "reviewed_row": [
+            "臺南市西港區第0366投開票所",
+            "永樂里活動中心",
+            "臺南市西港區永樂里４鄰大塭寮５９之３５號",
+            "永樂里",
+            "1-7"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 43,
+          "extracted_row": [
+            "臺南市山上區第0632投開票所",
+            "山上區玉峰里活動中心",
+            "",
+            "玉峯里",
+            "全里"
+          ],
+          "reviewed_row": [
+            "臺南市山上區第0632投開票所",
+            "山上區玉峰里活動中心",
+            "臺南市山上區玉峯里３鄰蚵壳潭３５號",
+            "玉峯里",
+            "全里"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 46,
+          "extracted_row": [
+            "臺南市安南區第0673投開票所",
+            "",
+            "",
+            "",
+            "3,17-20"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0673投開票所",
+            "塭南社區活動中心",
+            "臺南市安南區塭南里３鄰環福街１１７號",
+            "塭南里",
+            "3,17-20"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 46,
+          "extracted_row": [
+            "臺南市安南區第0674投開票所",
+            "",
+            "",
+            "",
+            "1-2,4-6"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0674投開票所",
+            "塭南里活動中心(西側)",
+            "臺南市安南區塭南里７鄰安昌街１３０號",
+            "塭南里",
+            "1-2,4-6"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 46,
+          "extracted_row": [
+            "臺南市安南區第0675投開票所",
+            "",
+            "",
+            "",
+            "7-11"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0675投開票所",
+            "塭南里活動中心(東側)",
+            "臺南市安南區塭南里７鄰安昌街１３０號",
+            "塭南里",
+            "7-11"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 46,
+          "extracted_row": [
+            "臺南市安南區第0676投開票所",
+            "",
+            "",
+            "",
+            "12-16"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0676投開票所",
+            "塭南里活動中心(2樓)",
+            "臺南市安南區塭南里７鄰安昌街１３０號",
+            "塭南里",
+            "12-16"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 51,
+          "extracted_row": [
+            "臺南市安南區第0748投開票所",
+            "",
+            "",
+            "",
+            "全里"
+          ],
+          "reviewed_row": [
+            "臺南市安南區第0748投開票所",
+            "公塭里活動中心",
+            "臺南市安南區公塭里５鄰育英街１６７號",
+            "公塭里",
+            "全里"
+          ]
+        },
+        {
+          "source_hash": "84cdace8b1578b760ea970788da04cda19fa054080b06aa2c759c98c60d48a20",
+          "page": 105,
+          "extracted_row": [
+            "臺南市龍崎區第1561投開票所",
+            "",
+            "臺南市龍崎區石𥕢里３鄰刺子崙１３之３號",
+            "石𥕢里",
+            "全里"
+          ],
+          "reviewed_row": [
+            "臺南市龍崎區第1561投開票所",
+            "石𥕢里民活動中心",
+            "臺南市龍崎區石𥕢里３鄰刺子崙１３之３號",
+            "石𥕢里",
+            "全里"
+          ]
+        }
+      ],
+      "regression_expectations": [
+        {
+          "station_no": "0366",
+          "station_name": "永樂里活動中心",
+          "address": "臺南市西港區永樂里４鄰大塭寮５９之３５號",
+          "village_name": "永樂里",
+          "neighborhoods": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "station_no": "1561",
+          "station_name": "石𥕢里民活動中心",
+          "village_code": "67000300008"
+        }
+      ]
     },
     {
       "county_code": "64000",
@@ -169,7 +375,7 @@
     {
       "county_code": "10004",
       "name": "新竹縣",
-      "status": "needs_ocr_review",
+      "status": "ready",
       "official_home": "https://web.cec.gov.tw/hccec",
       "source_name": "新竹縣選舉委員會",
       "source_url": "https://web.cec.gov.tw/hccec/article/64326",
@@ -177,7 +383,64 @@
       "published_on": "2026-08-31",
       "source_hash": "9a8aafe93ff321ce01d189481ce511fd6b8ee5e39353122d93c6c6b18f0cde54",
       "format": "pdf",
-      "reason": "官方 PDF 是掃描圖，沒有可擷取文字，需 OCR 與逐列人工覆核"
+      "checked_on": "2026-09-27",
+      "adapter": "cec-reviewed-pdf-2026",
+      "slug": "hsinchu-county",
+      "expected_station_count": 492,
+      "expected_last_station_no": "0492",
+      "expected_village_count": 193,
+      "reviewed_rows_path": "data-sources/2026-polling-places-reviewed/hsinchu-county.json",
+      "review_note": "使用者提供492列修正版並明確確認「已人工核對，允許本機匯入」。保留投票區域門牌及A/B/C區條件；場所地址的行政區分組須與官方表格行政區欄一致，不以場所所在村里推定服務村里。 接收後比對原始PDF，0235、0236服務里名為「旱坑里」，已校正修正版的「早坑里」；村里名中排版空白移除。",
+      "village_aliases": {
+        "竹東鎮:上館里": "上舘里",
+        "竹東鎮:雞林里": "鷄林里"
+      },
+      "regression_expectations": [
+        {
+          "station_no": "0210",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0211",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0212",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0213",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0214",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0216",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0217",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0218",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0219",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0235",
+          "village_name": "旱坑里"
+        },
+        {
+          "station_no": "0236",
+          "village_name": "旱坑里"
+        }
+      ]
     },
     {
       "county_code": "10005",
@@ -235,7 +498,7 @@
     {
       "county_code": "10009",
       "name": "雲林縣",
-      "status": "needs_ocr_review",
+      "status": "blocked_missing_addresses",
       "official_home": "https://web.cec.gov.tw/ylec",
       "source_name": "雲林縣選舉委員會",
       "source_url": "https://web.cec.gov.tw/ylec/article/64366",
@@ -243,7 +506,8 @@
       "published_on": "2026-08-31",
       "source_hash": "42da441a83cd99b972b0e91578d4f0f157f608316b148b79e7bdda56a4de4129",
       "format": "pdf",
-      "reason": "官方 PDF 是掃描圖，沒有可擷取文字，需 OCR 與逐列人工覆核"
+      "reason": "官方未提供投開票所地址。官方巨幅 PDF 欄位為鄉鎮市別、編號、地點名稱、指定前往投票之村里鄰及原住民投票所，沒有場所地址；原圖仍需 OCR 與逐列覆核。已核首末號0001–0638，未逐號驗證；同年度含地址補充附件尚未找到，不以舊年度或場所名稱推測地址。",
+      "checked_on": "2026-09-27"
     },
     {
       "county_code": "10010",
@@ -308,15 +572,43 @@
     {
       "county_code": "10015",
       "name": "花蓮縣",
-      "status": "needs_ocr_review",
+      "status": "ready",
       "official_home": "https://web.cec.gov.tw/hlec",
       "source_name": "花蓮縣選舉委員會",
       "source_url": "https://web.cec.gov.tw/hlec/article/64361",
-      "file_url": "https://web.cec.gov.tw/api/file/f436325b-adf2-4c49-b3a8-8b802897a1bd.pdf",
+      "file_url": "https://web.cec.gov.tw/api/file/c842d6f6-3624-4d51-9935-d5cde9e36da5.pdf",
       "published_on": "2026-08-31",
-      "source_hash": "7b5801111f0740944fe5fa1e9094470f436942325f2ac28aa8a38d735997ada3",
+      "source_hash": "9c3b2a69c30922bdda8d738fb94e3a59ffb100255ca71060b148a2f63fa28e6e",
       "format": "pdf",
-      "reason": "官方 PDF 是掃描圖，沒有可擷取文字，需 OCR 與逐列人工覆核"
+      "adapter": "cec-pdf-layout-2026",
+      "slug": "hualien",
+      "checked_on": "2026-09-27",
+      "expected_station_count": 344,
+      "expected_last_station_no": "0344",
+      "expected_village_count": 178,
+      "review_note": "採同一官方公告未用印附件的文字版；一般選民欄位與原住民所屬村里專欄分開。0019原鄰別尾逗號、0304與0305泰昌里第14鄰重複，保留原文並標為ambiguous。",
+      "regression_expectations": [
+        {
+          "station_no": "0003",
+          "neighborhoods": [1, 2, 3, 4, 5, 6, 7, 8, 14, 18, 19, 22, 23, 37, 38, 42]
+        },
+        {
+          "station_no": "0094",
+          "village_name": "新城村"
+        },
+        {
+          "station_no": "0019",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0304",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0305",
+          "coverage_kind": "ambiguous"
+        }
+      ]
     },
     {
       "county_code": "10016",
@@ -329,12 +621,12 @@
       "published_on": "2026-08-24",
       "source_hash": "bea39983a2ba20101f92568bad8e5139fc6f61fab8d34aad14c9c79189dfa631",
       "format": "pdf",
-      "reason": "官方附件列出鄉市、村里、鄰別與場所名稱，但沒有場所地址"
+      "reason": "官方未提供投開票所地址。官方附件列出鄉市、村里、鄰別與場所名稱；待官方補充地址後再匯入，不推測或代填地址。"
     },
     {
       "county_code": "10017",
       "name": "基隆市",
-      "status": "blocked_missing_assignments",
+      "status": "ready",
       "official_home": "https://web.cec.gov.tw/klec",
       "source_name": "基隆市選舉委員會",
       "source_url": "https://web.cec.gov.tw/klec/article/64352",
@@ -342,7 +634,29 @@
       "published_on": "2026-08-31",
       "source_hash": "174998f680dfab38f305ddf9aff1311915eac5074aae327b41bc414bd3a74b3c",
       "format": "ods",
-      "reason": "官方附件只有投開票所編號、名稱與地址，沒有村里及鄰別對應欄位"
+      "adapter": "cec-ods-2026",
+      "slug": "keelung",
+      "assignment_mode": "station_name_village_only",
+      "expected_station_count": 288,
+      "expected_last_station_no": "0288",
+      "expected_village_count": 157,
+      "checked_on": "2026-09-27",
+      "review_note": "使用者提供288所清單，與官方ODS逐列三欄比對一致；明確授權無鄰別時僅對應里。移除里名後一、二、三或(一)等分所序號，不移除友一里、友二里本名數字；保留官方分所名稱與完整地址，不以場所地址推定服務里／鄰。所有列標為ambiguous並註明官方未提供鄰別。",
+      "regression_expectations": [
+        {
+          "station_no": "0011",
+          "village_name": "新富里",
+          "coverage_kind": "ambiguous"
+        },
+        {
+          "station_no": "0286",
+          "village_name": "友一里"
+        },
+        {
+          "station_no": "0288",
+          "village_name": "友二里"
+        }
+      ]
     },
     {
       "county_code": "10018",
@@ -401,7 +715,7 @@
     {
       "county_code": "09007",
       "name": "連江縣",
-      "status": "needs_ocr_review",
+      "status": "ready",
       "official_home": "https://web.cec.gov.tw/lcec",
       "source_name": "連江縣選舉委員會",
       "source_url": "https://web.cec.gov.tw/lcec/article/64373",
@@ -409,7 +723,14 @@
       "published_on": "2026-08-31",
       "source_hash": "6ad9204b20c297fb3e21af0809b8edf633d14997799be2197665a4ee2ed958f1",
       "format": "pdf",
-      "reason": "官方 PDF 是掃描圖，沒有可擷取文字，需 OCR 與逐列人工覆核"
+      "adapter": "cec-reviewed-pdf-2026",
+      "slug": "lienchiang",
+      "checked_on": "2026-09-27",
+      "expected_station_count": 12,
+      "expected_last_station_no": "0012",
+      "expected_village_count": 22,
+      "reviewed_rows_path": "data-sources/2026-polling-places-reviewed/lienchiang.json",
+      "review_note": "依原公告單頁逐列核對12所，展開跨村分配為23列；僅介壽村分1–6鄰及7–16鄰，其餘列名村落皆全村。保留原公告地址，不以場所所在地推算服務村落。 使用者逐列核對確認，修正0004名稱為「連江縣介壽國中小學禮堂」，其餘無誤；核可本機匯入。"
     }
   ],
   "official_index_url": "https://web.cec.gov.tw/central/article/64374"

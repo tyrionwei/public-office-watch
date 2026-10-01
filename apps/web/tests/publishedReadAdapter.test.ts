@@ -340,6 +340,39 @@ test('home page adds plain registration names only for its 2026 races', async ()
   assert.equal(JSON.stringify(payload).includes('birth_date'), false);
 });
 
+test('home page preserves its 113-seat payload when registration names fail', async () => {
+  const seatRows = [
+    { party_name: '測試黨甲', seat_count: 50 },
+    { party_name: '測試黨乙', seat_count: 40 },
+    { party_name: '測試黨丙', seat_count: 20 },
+    { party_name: '其他', seat_count: 3 },
+  ];
+  const payload = {
+    ...payloadMetadata,
+    ticker_rows: [{ election_id: 'election-2026', election_name: '2026地方公職人員選舉' }],
+    region_summary_rows: [],
+    region_rows: [],
+    race_rows: [{ race_id: 'race-2026', title: '地方選舉', voting_date: '2026-11-28' }],
+    candidate_rows: [],
+    seat_rows: seatRows,
+  };
+  const fake = createFakeClient({
+    'rpc:home_page_for': { data: [{ payload }], error: null, count: null },
+    'rpc:registration_names_for': { data: null, error: { message: 'supplement unavailable' }, count: null },
+  });
+
+  const result = await createPublishedReadAdapter(fake.client).loadHomePage();
+
+  assert.equal(result.candidateLoadError, true);
+  assert.deepEqual(result.tickerRows, payload.ticker_rows);
+  assert.deepEqual(result.raceRows, payload.race_rows);
+  assert.deepEqual(result.candidateRows, payload.candidate_rows);
+  assert.deepEqual(result.seatRows, seatRows);
+  assert.equal(result.seatRows.reduce((sum, row) => sum + row.seat_count, 0), 113);
+  assert.deepEqual(fake.calls.filter((call) => call[0] === 'rpc').map((call) => call[1]), [
+    'home_page_for', 'registration_names_for',
+  ]);
+});
 test('home page accepts the database 25-race cap and rejects larger payloads', async () => {
   const payloadFor = (count: number) => ({
     ...payloadMetadata,

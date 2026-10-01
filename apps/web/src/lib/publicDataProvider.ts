@@ -52,6 +52,7 @@ export type HomeSeatCount = {
 };
 
 export type HomePageData = {
+  candidateLoadError?: boolean;
   ticker: HomeTicker;
   regions: RegionCard[];
   stageRegions: StageRegionNode[];
@@ -161,7 +162,7 @@ export interface PublicDataProvider {
   loadPartyCandidatePage(partyName: string, page: number, pageSize: number): Promise<PublicCandidateListPage>;
   getPersonById(personId: string): PublicPerson | null;
   getPersonProfile(personId: string): PublicPersonProfile | null;
-  loadPersonProfiles(personIds: string[]): Promise<PublicPersonProfile[]>;
+  loadPersonProfiles(personIds: string[], refresh?: boolean): Promise<PublicPersonProfile[]>;
   getLocalOfficeSummaryByRegionId(regionId: string): PublicLocalOfficeSummary;
   loadLocalOfficeSummaryByRegionId(regionId: string): Promise<PublicLocalOfficeSummary>;
   loadNationalOfficeHolders(): Promise<PublicNationalOfficeHolder[]>;

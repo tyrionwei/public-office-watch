@@ -31,6 +31,7 @@ export function HomePage() {
   const [homeData, setHomeData] = useState(() => publicDataProvider.getHomePageData());
   const [homeLoading, setHomeLoading] = useState(true);
   const [homeLoadError, setHomeLoadError] = useState(false);
+  const [reloadVersion, setReloadVersion] = useState(0);
   const [myElectionData, setMyElectionData] = useState(() => publicDataProvider.getHomePageData());
   const [myElectionLoading, setMyElectionLoading] = useState(Boolean(votingRegionPreference));
   const [myElectionLoadError, setMyElectionLoadError] = useState(false);
@@ -54,7 +55,7 @@ export function HomePage() {
         if (active) setHomeLoading(false);
       });
     return () => { active = false; };
-  }, [requestedHomeRegionId]);
+  }, [requestedHomeRegionId, reloadVersion]);
 
   const votingCountyId = votingRegionPreference?.county.id ?? null;
   useEffect(() => {
@@ -78,7 +79,7 @@ export function HomePage() {
         if (active) setMyElectionLoading(false);
       });
     return () => { active = false; };
-  }, [votingCountyId]);
+  }, [votingCountyId, reloadVersion]);
 
   const selectedRegionId = selectHomeRegionId(homeData.stageRegions, requestedHomeRegionId)
     ?? (taiwanRegions.some((region) => region.slug === requestedHomeRegionId) ? requestedHomeRegionId : null);
@@ -143,7 +144,14 @@ export function HomePage() {
   }, [searchParams, setSearchParams, setSelectedRegionId, startTransition, votingCountyId]);
 
   return (
-    <AppShell ticker={homeData.ticker} tickerMobileHidden>
+    <AppShell ticker={!homeLoading && !homeLoadError ? homeData.ticker : undefined} tickerMobileHidden>
+      {homeLoading ? <p role="status" className="mb-3 text-sm text-slate-400">{t('office.loading')}</p> : null}
+      {homeLoadError || myElectionLoadError || homeData.candidateLoadError || (votingCountyId && myElectionData.candidateLoadError) ? (
+        <div role="alert" className="mb-3 border border-rose-300/55 bg-rose-400/10 p-3 text-sm text-rose-100">
+          <p>{t(homeLoadError || myElectionLoadError ? 'home.loadError' : 'home.candidateLoadError')}</p>
+          <button type="button" disabled={homeLoading || myElectionLoading} onClick={() => setReloadVersion((value) => value + 1)} className="mt-2 border border-current px-3 py-2 disabled:opacity-50">{t('app.retry')}</button>
+        </div>
+      ) : null}
       <div className="mb-3 space-y-3 md:contents">
         {votingRegionPreference && !showMobileBrowse ? (
           <MobileMyElection
@@ -152,7 +160,7 @@ export function HomePage() {
             races={myElectionRaces}
             candidateSummaries={myElectionData.candidateSummaries ?? []}
             loading={myElectionLoading}
-            loadError={myElectionLoadError}
+            loadError={myElectionLoadError || Boolean(myElectionData.candidateLoadError)}
             pollingPlaceOpen={pollingPlaceOpen}
             onOpenPollingPlace={() => setPollingPlaceOpen(true)}
             onClosePollingPlace={() => setPollingPlaceOpen(false)}
@@ -186,7 +194,7 @@ export function HomePage() {
             national={isNationalView}
             candidateSummaries={homeData.candidateSummaries ?? []}
             candidatesLoading={homeLoading}
-            candidateLoadError={homeLoadError}
+            candidateLoadError={homeLoadError || Boolean(homeData.candidateLoadError)}
           />
         </section>
 
@@ -197,6 +205,7 @@ export function HomePage() {
             national={isNationalView}
             partyCounts={homeData.seatDistribution ?? []}
             loading={homeLoading}
+            loadError={homeLoadError}
           />
           <RegionIssueConcernPanel
             regionId={isNationalView ? null : selectedRegionNode?.publicRegionId ?? null}

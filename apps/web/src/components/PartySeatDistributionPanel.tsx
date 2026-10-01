@@ -13,6 +13,7 @@ type PartySeatDistributionPanelProps = {
   national: boolean;
   partyCounts: HomeSeatCount[];
   loading: boolean;
+  loadError?: boolean;
 };
 
 function combinePartyCounts(items: HomeSeatCount[]) {
@@ -31,6 +32,7 @@ export function PartySeatDistributionPanel({
   national,
   partyCounts: rawPartyCounts,
   loading,
+  loadError = false,
 }: PartySeatDistributionPanelProps) {
   const { t } = useI18n();
   const partyCounts = useMemo(() => combinePartyCounts(rawPartyCounts), [rawPartyCounts]);
@@ -51,7 +53,9 @@ export function PartySeatDistributionPanel({
       className="xl:h-full"
       action={loading ? <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{t('office.loading')}</span> : null}
     >
-      <div className="space-y-3">
+      {loading || loadError ? (
+        <p role={loadError ? 'alert' : 'status'} className="py-5 text-sm text-slate-400">{t(loadError ? 'home.loadError' : 'office.loading')}</p>
+      ) : <div className="space-y-3">
         <div className="flex items-end justify-between gap-3">
           <div>
             <p className="text-xs text-slate-500">{regionLabel}</p>
@@ -114,7 +118,7 @@ export function PartySeatDistributionPanel({
             {t('seatDistribution.empty')}
           </div>
         )}
-      </div>
+      </div>}
     </PixelFrame>
   );
 }

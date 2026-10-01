@@ -389,6 +389,14 @@ test('bridge maps complete published person profile rows to the existing fronten
           claim_value: '第三方學校',
           claim_json: {},
           source_name: '第三方網站',
+        }, {
+          ...claim,
+          claim_id: 'malformed-platform',
+          candidate_id: 'candidate-1',
+          claim_json: null as unknown as Record<string, unknown>,
+          source_name: '異常結構來源',
+          source_url: 'https://example.test/malformed',
+          claim_value: { broken: true } as unknown as string,
         }],
         partyAffiliationRows: [affiliation],
       };
@@ -409,6 +417,10 @@ test('bridge maps complete published person profile rows to the existing fronten
   assert.equal(profiles[0]?.candidate_records[0]?.source_name, '中選會');
   assert.ok(profiles[0]?.public_claims.some((publicClaim) => publicClaim.claim_type === 'platform'));
   assert.equal(profiles[0]?.party_affiliations[0]?.party_name, '民主進步黨');
+  assert.equal(profiles[0]?.public_claims.find((publicClaim) => publicClaim.claim_id === 'malformed-platform')?.claim_json.__publishedMalformedClaimJson, true);
+  assert.equal(profiles[0]?.public_claims.find((publicClaim) => publicClaim.claim_id === 'malformed-platform')?.candidate_id, 'candidate-1');
+  assert.equal(profiles[0]?.public_claims.find((publicClaim) => publicClaim.claim_id === 'malformed-platform')?.source_url, 'https://example.test/malformed');
+  assert.ok(profiles[0]?.public_claims.some((publicClaim) => publicClaim.claim_id === 'claim-1'));
   assert.equal(profiles[0]?.platform_status, 'available');
   assert.equal(profiles[0]?.experience_status, 'available');
   assert.equal(profiles[0]?.identity_records.length, 1);

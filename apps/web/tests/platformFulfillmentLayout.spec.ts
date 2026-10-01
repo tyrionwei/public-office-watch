@@ -30,7 +30,7 @@ test('large platform uses one compact desktop row per promise with a header lege
     name: '你認為目前履行情況如何？',
   });
   const buttons = choices.getByRole('button');
-  await expect(buttons).toHaveText(['已實現', '推進中', '尚未實現', '資訊不足']);
+  await expect(buttons).toHaveText(['已實現', '推進中', '尚未實現', '蛤?']);
   const boxes = await buttons.evaluateAll((elements) => elements.map((element) => {
     const box = element.getBoundingClientRect();
     return { top: box.top, left: box.left, right: box.right, bottom: box.bottom };
@@ -57,7 +57,7 @@ test('large platform uses one compact desktop row per promise with a header lege
     card.getByRole('img', { name: /社群投票結果/u }),
   ).toHaveCount(0);
 
-  for (const label of ['已實現', '推進中', '尚未實現', '資訊不足']) {
+  for (const label of ['已實現', '推進中', '尚未實現', '蛤?']) {
     await expect(card.getByText(label, { exact: true }).first()).toBeVisible();
   }
   const listMetrics = await card.locator('ol').evaluate((element) => ({
@@ -185,7 +185,7 @@ test('mobile platform choices form a two-by-two grid without horizontal overflow
     name: '你認為目前履行情況如何？',
   });
   const buttons = choices.getByRole('button');
-  await expect(buttons).toHaveText(['已實現', '推進中', '尚未實現', '資訊不足']);
+  await expect(buttons).toHaveText(['已實現', '推進中', '尚未實現', '蛤?']);
   const boxes = await buttons.evaluateAll((elements) => elements.map((element) => {
     const box = element.getBoundingClientRect();
     return { top: box.top, left: box.left, right: box.right, bottom: box.bottom };

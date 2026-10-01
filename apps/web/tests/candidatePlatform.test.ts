@@ -57,6 +57,7 @@ test('keeps every reviewed platform item for a candidate beyond the generic five
 test('uses stored platform items and safely splits explicit numbered originals', () => {
   const stored = platformClaim('stored');
   stored.claim_json.items = ['第一項', '第二項'];
+  stored.claim_json.contentSplit = { reviewStatus: 'auto_approved' };
   assert.deepEqual(platformItemsForClaim(stored), ['第一項', '第二項']);
 
   const numbered = platformClaim('numbered');
@@ -66,6 +67,16 @@ test('uses stored platform items and safely splits explicit numbered originals',
     '推動地下停車場。',
     '改善市場周邊交通。',
   ]);
+});
+
+test('preserves legacy stored items when contentSplit reviewStatus is absent', () => {
+  const claim = platformClaim('legacy-stored-items');
+  claim.claim_json.items = ['第一項', '第二項'];
+  claim.claim_value = '既有原文不應取代已公開的項目';
+
+  assert.deepEqual(platformItemsForClaim(claim), ['第一項', '第二項']);
+  claim.claim_json.contentSplit = {};
+  assert.deepEqual(platformItemsForClaim(claim), ['第一項', '第二項']);
 });
 
 test('normalizes deterministic punctuation and private-use glyph artifacts', () => {
@@ -114,17 +125,29 @@ test('uses reviewed items instead of a corrupted raw platform text', () => {
   ]);
 });
 
-test('does not remove candidate-specific text from the generic platform parser', () => {
+test('withholds unsplit candidate-specific text pending review', () => {
   const claim = platformClaim('candidate-specific-text');
   claim.claim_value = '改善地方交通。 光達是素人投入服務社會，將推動青年就業。';
 
-  assert.deepEqual(platformItemsForClaim(claim), [claim.claim_value]);
+  assert.deepEqual(platformItemsForClaim(claim), []);
 });
 
-test('uses source newlines as platform item boundaries', () => {
+test('withholds low-confidence source newlines pending review', () => {
   const claim = platformClaim('newline-list');
   claim.claim_value = '監督縣政建設\n爭取鄉親福利';
-  assert.deepEqual(platformItemsForClaim(claim), ['監督縣政建設', '爭取鄉親福利']);
+  assert.deepEqual(platformItemsForClaim(claim), []);
+});
+
+test('does not display unreviewed stored items or unreadable OCR text', () => {
+  const unreviewed = platformClaim('unreviewed-stored-items');
+  unreviewed.claim_json.items = ['尚未核對的政見'];
+  unreviewed.claim_json.contentSplit = { reviewStatus: 'pending' };
+  unreviewed.claim_value = '一、尚未核對的政見。二、另一項政見。';
+  assert.deepEqual(platformItemsForClaim(unreviewed), []);
+
+  const corrupted = platformClaim('corrupted-ocr');
+  corrupted.claim_value = '一、ᑫӥНӥЎϯൺᑫၮ୏ᑫӥНӥЎϯൺᑫၮ୏。二、改善交通。';
+  assert.deepEqual(platformItemsForClaim(corrupted), []);
 });
 
 test('drops a past-achievement intro and joins region headings to their platform sections', () => {
@@ -152,7 +175,7 @@ test('drops a past-achievement intro and joins region headings to their platform
   ]);
 });
 
-test('joins topic headings to policies and excludes explicit past-achievement sections', () => {
+test('withholds sectioned policy text when its split still needs review', () => {
   const claim = platformClaim('topic-sections');
   claim.claim_value = [
     '【政績】',
@@ -165,9 +188,5 @@ test('joins topic headings to policies and excludes explicit past-achievement se
     '建立穩定低碳供電。',
   ].join('\n');
 
-  assert.deepEqual(platformItemsForClaim(claim), [
-    '交通建設：改善主要道路壅塞。',
-    '交通建設：增設公共運輸路線。',
-    '能源政策：建立穩定低碳供電。',
-  ]);
+  assert.deepEqual(platformItemsForClaim(claim), []);
 });

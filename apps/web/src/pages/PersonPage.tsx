@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { Component, useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CandidateLifecycle } from '../components/CandidateLifecycle';
 import { AppShell } from '../components/AppShell';
@@ -23,7 +24,7 @@ import { legalCaseClassification, legalRecordPresentation } from '../lib/legalRe
 import { formatPublicBirthDate } from '../lib/publicBirthDate';
 import { isOfficialProfileClaim, officialBirthDateValue } from '../lib/officialProfilePolicy';
 import { useBirthDateDisplay } from '../lib/useBirthDateDisplay';
-import { platformClaimsForCandidate, platformItemsForClaim } from '../lib/candidatePlatform';
+import { platformClaimsForCandidate } from '../lib/candidatePlatform';
 import type { FeedbackSectionKey } from '../lib/personFeedback';
 import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
@@ -398,24 +399,68 @@ function PartyOfficeList({ affiliations }: { affiliations: PublicPersonPartyAffi
   );
 }
 
+function ClaimFailureNotice({ claim, onRetry }: { claim: PublicPersonClaim; onRetry: () => void }) {
+  const { t } = useI18n();
+  return (
+    <div role="alert" data-claim-load-error className="pixel-corners border border-rose-300/55 bg-rose-400/10 p-4 text-sm text-rose-100">
+      <p>{t('person.claimLoadError')}</p>
+      <div className="mt-3 flex flex-wrap items-center gap-3">
+        {claim.source_url ? (
+          <a href={claim.source_url} target="_blank" rel="noreferrer" className="text-xs text-accent hover:text-white">
+            {claim.source_name?.trim() || t('person.publicSource')} ↗
+          </a>
+        ) : null}
+        <button type="button" onClick={onRetry} className="text-xs text-signal hover:text-white">
+          {t('person.claimRetry')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+type ClaimBoundaryProps = { claim: PublicPersonClaim; onRetry: () => void; children: ReactNode };
+
+class ClaimBoundary extends Component<ClaimBoundaryProps, { failed: boolean }> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch(error: Error) {
+    if (import.meta.env.DEV) console.warn('Failed to render person claim', error);
+  }
+
+  render() {
+    const { claim, onRetry, children } = this.props;
+    if (this.state.failed || claim.claim_json?.__publishedMalformedClaimJson === true) {
+      return <ClaimFailureNotice claim={claim} onRetry={onRetry} />;
+    }
+    return children;
+  }
+}
+
 function ClaimGrid({
   claims,
   correctionSection,
   onRequestCorrection,
+  onRetry,
 }: {
   claims: PublicPersonClaim[];
   correctionSection: Extract<FeedbackSectionKey, 'finance' | 'legal' | 'family'>;
   onRequestCorrection: (section: FeedbackSectionKey) => void;
+  onRetry: () => void;
 }) {
   return (
     <div className="grid gap-3">
       {claims.map((claim) => (
-        <ClaimCard
-          key={claim.claim_id}
-          claim={claim}
-          correctionSection={correctionSection}
-          onRequestCorrection={onRequestCorrection}
-        />
+        <ClaimBoundary key={claim.claim_id} claim={claim} onRetry={onRetry}>
+          <ClaimCard
+            claim={claim}
+            correctionSection={correctionSection}
+            onRequestCorrection={onRequestCorrection}
+          />
+        </ClaimBoundary>
       ))}
     </div>
   );
@@ -429,14 +474,10 @@ function PlatformClaimCard({
   personName: string;
 }) {
   const { t } = useI18n();
-  const platformItems = platformItemsForClaim(claim);
 
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
       <PlatformFulfillmentList claim={claim} title={t('person.publicPlatform')} shareContext={{ personId: claim.person_id, personName }} />
-      {platformItems.length === 0 ? (
-        <div className="mt-3 text-sm leading-6 text-slate-200">{t('person.noContent')}</div>
-      ) : null}
       {claim.source_url ? (
         <a href={claim.source_url} target="_blank" rel="noreferrer" className="mt-3 block truncate text-xs text-accent hover:text-white">
           {claim.source_name?.trim() || t('person.publicSource')}
@@ -453,6 +494,7 @@ export function PersonPage() {
   const safePersonId = personId ?? '';
   const [loadedPersonId, setLoadedPersonId] = useState<string | null>(null);
   const [failedPersonId, setFailedPersonId] = useState<string | null>(null);
+  const [retryVersion, setRetryVersion] = useState(0);
   const [feedbackRequest, setFeedbackRequest] = useState<{ section: FeedbackSectionKey; version: number } | null>(null);
   const loading = loadedPersonId !== safePersonId;
 
@@ -468,7 +510,7 @@ export function PersonPage() {
     }
 
     void refreshConfiguredPublicDataProvider()
-      .then(() => publicDataProvider.loadPersonProfiles([safePersonId]))
+      .then(() => publicDataProvider.loadPersonProfiles([safePersonId], retryVersion > 0))
       .catch((error: unknown) => {
         if (!active) return;
         setFailedPersonId(safePersonId);
@@ -481,7 +523,7 @@ export function PersonPage() {
     return () => {
       active = false;
     };
-  }, [safePersonId]);
+  }, [safePersonId, retryVersion]);
 
   const profile = loading ? null : publicDataProvider.getPersonProfile(safePersonId);
   const person = profile?.person ?? null;
@@ -581,6 +623,10 @@ export function PersonPage() {
   const pendingSections = sectionStates.filter((section) => section.status === 'pending').map((section) => section.label);
   const sectionListSeparator = language === 'en' ? ', ' : '、';
 
+  function handleRetry() {
+    setLoadedPersonId(null);
+    setRetryVersion((version) => version + 1);
+  }
   function handleRequestCorrection(section: FeedbackSectionKey) {
     setFeedbackRequest((current) => ({ section, version: (current?.version ?? 0) + 1 }));
   }
@@ -619,7 +665,7 @@ export function PersonPage() {
               </figure>
 
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{person.role_label}</p>
+                {person.role_label.trim() !== displayPosition.trim() ? <p className="text-xs uppercase tracking-[0.22em] text-slate-500">{person.role_label}</p> : null}
                 <h2 className="mt-2 break-words font-display text-3xl text-white sm:text-4xl">{person.name}</h2>
                 <p className="mt-3 text-sm leading-6 text-slate-300">{displayPosition}</p>
                 <p className="mt-2 max-w-3xl text-[11px] leading-5 text-slate-500">
@@ -779,7 +825,9 @@ export function PersonPage() {
                             <p className="mb-3 text-xs uppercase tracking-[0.2em] text-slate-500">{t('person.platformTitle')}</p>
                             <div className="grid gap-3">
                               {candidatePlatforms.map((claim) => (
-                                <PlatformClaimCard key={claim.claim_id} claim={claim} personName={person.name} />
+                                <ClaimBoundary key={claim.claim_id} claim={claim} onRetry={handleRetry}>
+                                  <PlatformClaimCard claim={claim} personName={person.name} />
+                                </ClaimBoundary>
                               ))}
                             </div>
                           </div>
@@ -841,7 +889,7 @@ export function PersonPage() {
               <div data-person-mobile-finance className="order-2 md:order-none">
                 <SectionPanel title={t('person.financeTitle')} eyebrow={t('person.financeEyebrow')}>
                   {financeClaims.length > 0 ? (
-                    <ClaimGrid claims={financeClaims} correctionSection="finance" onRequestCorrection={handleRequestCorrection} />
+                    <ClaimGrid claims={financeClaims} correctionSection="finance" onRequestCorrection={handleRequestCorrection} onRetry={handleRetry} />
                   ) : (
                     <DataStateNotice kind="uncollected">{t('person.finance.empty')}</DataStateNotice>
                   )}
@@ -850,7 +898,7 @@ export function PersonPage() {
               <div data-person-mobile-legal className="order-1 md:order-none">
                 <SectionPanel title={t('person.legalTitle')} eyebrow={t('person.reviewedEyebrow')} action={<LegalStatusHelp />}>
                   {legalClaims.length > 0 ? (
-                    <ClaimGrid claims={legalClaims} correctionSection="legal" onRequestCorrection={handleRequestCorrection} />
+                    <ClaimGrid claims={legalClaims} correctionSection="legal" onRequestCorrection={handleRequestCorrection} onRetry={handleRetry} />
                   ) : rawLegalClaims.length > 0 ? (
                     <DataStateNotice kind="pending">{t('person.legal.pending')}</DataStateNotice>
                   ) : (
@@ -861,7 +909,7 @@ export function PersonPage() {
               <div className="order-3 md:order-none">
                 <SectionPanel title={t('person.familyTitle')} eyebrow={t('person.reviewedEyebrow')}>
                   {familyClaims.length > 0 ? (
-                    <ClaimGrid claims={familyClaims} correctionSection="family" onRequestCorrection={handleRequestCorrection} />
+                    <ClaimGrid claims={familyClaims} correctionSection="family" onRequestCorrection={handleRequestCorrection} onRetry={handleRetry} />
                   ) : rawFamilyClaims.length > 0 ? (
                     <DataStateNotice kind="pending">{t('person.family.pending')}</DataStateNotice>
                   ) : (
@@ -918,7 +966,7 @@ export function PersonPage() {
             {t('person.loading')}
           </div>
         ) : failedPersonId === safePersonId ? (
-          <DataStateNotice kind="loadError">{t('person.loadError')}</DataStateNotice>
+          <div><DataStateNotice kind="loadError">{t('person.loadError')}</DataStateNotice><button type="button" onClick={handleRetry} className="mt-3 border border-line px-3 py-2 text-sm text-accent">{t('app.retry')}</button></div>
         ) : (
           <DataStateNotice kind="noPublicData">{t('person.notFound')}</DataStateNotice>
         )}

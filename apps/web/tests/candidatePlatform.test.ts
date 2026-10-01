@@ -69,6 +69,16 @@ test('uses stored platform items and safely splits explicit numbered originals',
   ]);
 });
 
+test('preserves legacy stored items when contentSplit reviewStatus is absent', () => {
+  const claim = platformClaim('legacy-stored-items');
+  claim.claim_json.items = ['第一項', '第二項'];
+  claim.claim_value = '既有原文不應取代已公開的項目';
+
+  assert.deepEqual(platformItemsForClaim(claim), ['第一項', '第二項']);
+  claim.claim_json.contentSplit = {};
+  assert.deepEqual(platformItemsForClaim(claim), ['第一項', '第二項']);
+});
+
 test('normalizes deterministic punctuation and private-use glyph artifacts', () => {
   const claim = platformClaim('formatting-artifacts');
   claim.claim_json.items = [
@@ -131,6 +141,7 @@ test('withholds low-confidence source newlines pending review', () => {
 test('does not display unreviewed stored items or unreadable OCR text', () => {
   const unreviewed = platformClaim('unreviewed-stored-items');
   unreviewed.claim_json.items = ['尚未核對的政見'];
+  unreviewed.claim_json.contentSplit = { reviewStatus: 'pending' };
   unreviewed.claim_value = '一、尚未核對的政見。二、另一項政見。';
   assert.deepEqual(platformItemsForClaim(unreviewed), []);
 

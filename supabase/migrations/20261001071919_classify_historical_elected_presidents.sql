@@ -50,7 +50,8 @@ BEGIN
   END IF;
 END $historical_role$;
 
-SELECT public.refresh_public_people_list_cached();
+-- Only the directory role changed; demographic inputs and birth-date projections are unchanged.
+REFRESH MATERIALIZED VIEW public.public_people_list_cached;
 DO $directory_refresh$
 DECLARE directory_found boolean := false;
 BEGIN

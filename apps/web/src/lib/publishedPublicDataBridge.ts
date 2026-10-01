@@ -3,6 +3,7 @@ import { partyTheme } from '../styles/partyThemes.ts';
 import type { StageRegionLevel, StageRegionNode, StageRegionSummary } from '../types/stageMap';
 import { buildLocalOfficeSummaryFromItems, buildPersonProfileFromItems } from './personData.ts';
 import { retainOfficialProfileClaims } from './officialProfilePolicy.ts';
+import { mapPublicPersonClaimRow } from './supabasePublicViewMappers.ts';
 import type {
   HomePageData,
   PublicDataProvider,
@@ -378,6 +379,7 @@ export function createPublishedPublicDataBridge(
           party: row.party_name?.trim() || '未知黨籍',
           count: Number(row.seat_count) || 0,
         })),
+        ...(rows.candidateLoadError ? { candidateLoadError: true } : {}),
         releaseId: rows.releaseId ?? null,
         publishedAt: rows.publishedAt ?? null,
         dataPrinciples: publishedDataPrinciples,
@@ -580,7 +582,15 @@ export function createPublishedPublicDataBridge(
       const rows = await adapter.loadPersonProfiles(normalizedIds);
       const people = rows.personRows.map(mapProfilePersonRow);
       const candidates = rows.candidateRows;
-      const claims = retainOfficialProfileClaims(rows.claimRows);
+      const claims = retainOfficialProfileClaims(rows.claimRows.filter((claim) => claim && typeof claim === 'object').map((rawClaim) => {
+        const claim = {
+          ...mapPublicPersonClaimRow(rawClaim),
+          candidate_id: typeof rawClaim.candidate_id === 'string' ? rawClaim.candidate_id : null,
+        };
+        const claimJson = rawClaim.claim_json;
+        if ((rawClaim.claim_value === null || typeof rawClaim.claim_value === 'string') && claimJson && typeof claimJson === 'object' && !Array.isArray(claimJson)) return claim;
+        return { ...claim, claim_json: { __publishedMalformedClaimJson: true } };
+      }));
       const partyAffiliations = rows.partyAffiliationRows;
 
       return normalizedIds

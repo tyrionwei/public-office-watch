@@ -3,6 +3,9 @@ name: Registration parent guard regression
 on:
   pull_request:
     paths:
+      - 'supabase/migrations/20261001071919_classify_historical_elected_presidents.sql'
+      - 'tests/sql/historical-elected-presidents.sql'
+      - 'scripts/test-historical-elected-presidents.cjs'
       - 'supabase/migrations/20260930060000_hold_registration_profile_parent_changes.sql'
       - 'tests/sql/registration-profile-parent-guards-isolated.sql'
       - 'supabase/migrations/20260928113720_resolve_2026_ballot_village_race_links.sql'
@@ -54,3 +57,13 @@ jobs:
           docker exec "$TEST_CONTAINER" createdb -U postgres pow_ballot_migration_test
           python3 tests/ballot-migration-regression.py docker exec -i "$TEST_CONTAINER" psql -U postgres -d pow_ballot_migration_test
           python3 tests/official-directory-refresh-regression.py docker exec -i "$TEST_CONTAINER" psql -U postgres -d pow_ballot_migration_test
+
+      - name: Run historical presidential directory regression in disposable PostgreSQL
+        env:
+          TEST_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          set -euo pipefail
+          docker exec "$TEST_CONTAINER" createdb -U postgres -T template0 pow_historical_presidents_test
+          docker cp tests/sql/historical-elected-presidents.sql "$TEST_CONTAINER:/tmp/pow/tests/sql/historical-elected-presidents.sql"
+          docker cp supabase/migrations/20261001071919_classify_historical_elected_presidents.sql "$TEST_CONTAINER:/tmp/pow/supabase/migrations/20261001071919_classify_historical_elected_presidents.sql"
+          docker exec "$TEST_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d pow_historical_presidents_test -f /tmp/pow/tests/sql/historical-elected-presidents.sql

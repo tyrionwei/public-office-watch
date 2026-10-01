@@ -85,10 +85,13 @@ type CachedRequest = {
 
 function createRequestCache() {
   const requests = new Map<string, CachedRequest>();
-  return function cached<T>(key: string, staleTime: number, load: () => Promise<T>) {
+  return function cached<T>(key: string, staleTime: number, load: () => Promise<T>, cacheResult: (value: T) => boolean = () => true, refresh = false) {
     const current = requests.get(key);
-    if (current && current.expiresAt > Date.now()) return current.promise as Promise<T>;
-    const promise = load().catch((error: unknown) => {
+    if (!refresh && current && current.expiresAt > Date.now()) return current.promise as Promise<T>;
+    const promise = load().then((value) => {
+      if (!cacheResult(value) && requests.get(key)?.promise === promise) requests.delete(key);
+      return value;
+    }).catch((error: unknown) => {
       if (requests.get(key)?.promise === promise) requests.delete(key);
       throw error;
     });
@@ -210,6 +213,7 @@ export function createPublishedPublicDataProvider(
         `home-page:${normalizedRegionId ?? 'national'}`,
         pageDataStaleTimeMs,
         () => bridge.loadHomePageData(normalizedRegionId),
+        (data) => !data.candidateLoadError,
       );
       const loadedRegionRaces = Array.from(regionRacesByRegionId.values()).flat();
       homeData = {
@@ -405,10 +409,10 @@ export function createPublishedPublicDataProvider(
       return cached('candidate-lifecycle:' + candidateId, pageDataStaleTimeMs,
         () => bridge.loadCandidateLifecycle(candidateId));
     },
-    async loadPersonProfiles(personIds: string[]) {
+    async loadPersonProfiles(personIds: string[], refresh = false) {
       const normalizedIds = Array.from(new Set(personIds)).sort();
       const profiles = await cached(`profiles:${normalizedIds.join(',')}`, pageDataStaleTimeMs, () =>
-        bridge.loadPersonProfiles(normalizedIds));
+        bridge.loadPersonProfiles(normalizedIds), () => true, refresh);
       for (const profile of profiles) profilesById.set(profile.person.person_id, profile);
       people = mergeByKey(people, profiles.map((profile) => profile.person), (person) => person.person_id);
       notifyPublicDataReady();

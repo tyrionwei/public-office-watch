@@ -315,6 +315,31 @@ test('published provider keeps the last complete snapshot when refresh fails and
   assert.equal(assembly.provider.getHomeTicker().electionId, 'election-1');
 });
 
+test('published provider does not cache a partial home snapshot and recovers on retry', async () => {
+  let homeCalls = 0;
+  const baseBridge = createBridge();
+  const bridge = createBridge({
+    async loadHomePageData() {
+      homeCalls += 1;
+      const home = await baseBridge.loadHomePageData();
+      return homeCalls === 1 ? { ...home, candidateLoadError: true } : home;
+    },
+  });
+  const assembly = createPublishedPublicDataProvider(bridge);
+
+  const partial = await assembly.provider.loadHomePageData();
+  assert.equal(partial.candidateLoadError, true);
+  assert.equal(partial.ticker.electionId, 'election-1');
+  assert.equal(partial.stageRegionSummaries[0]?.nearestElectionDate, '2026-11-28');
+
+  const recovered = await assembly.provider.loadHomePageData();
+  assert.equal(recovered.candidateLoadError, undefined);
+  assert.equal(recovered.ticker.electionId, 'election-1');
+  assert.equal(homeCalls, 2);
+
+  await assembly.provider.loadHomePageData();
+  assert.equal(homeCalls, 2);
+});
 test('published provider gets the home directory from one region-scoped payload', async () => {
   let directoryCalls = 0;
   const requestedRegions: Array<string | null> = [];
@@ -372,4 +397,20 @@ test('published provider de-duplicates identical page requests for the session c
   assert.equal(first.total, 1);
   assert.equal(second.total, 1);
   assert.equal(third.total, 1);
+});
+
+test('explicit person retry bypasses a cached profile and replaces displayed data', async () => {
+  let loads = 0;
+  const { provider } = createPublishedPublicDataProvider(createBridge({
+    async loadPersonProfiles() {
+      loads += 1;
+      return [{ person: { ...person, name: `版本 ${loads}` }, public_claims: [], candidate_records: [], party_affiliations: [], timeline_records: [], identity_records: [], experience_status: 'todo', contribution_status: 'todo', platform_status: 'todo', legal_record_status: 'todo', family_relation_status: 'todo' }];
+    },
+  }));
+  await provider.loadPersonProfiles(['person-1']);
+  await provider.loadPersonProfiles(['person-1']);
+  assert.equal(loads, 1);
+  await provider.loadPersonProfiles(['person-1'], true);
+  assert.equal(loads, 2);
+  assert.equal(provider.getPersonProfile('person-1')?.person.name, '版本 2');
 });

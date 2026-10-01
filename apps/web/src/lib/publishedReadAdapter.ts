@@ -573,6 +573,7 @@ export type PublishedPartyCandidatePage = {
 };
 
 export type PublishedHomePageRows = {
+  candidateLoadError?: boolean;
   apiVersion: number;
   releaseId: string | null;
   publishedAt: string | null;
@@ -870,9 +871,15 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
       const raceRows = getBoundedPayloadRows<PublishedRaceRow>(
         payload.race_rows, 'Published home races', HOME_RACE_LIMIT,
       );
-      const registrationNames = await loadRegistrationNames(raceRows.filter((race) => race.voting_date?.startsWith('2026-')).map((race) => race.race_id));
+      let candidateLoadError = false;
+      const registrationNames = await loadRegistrationNames(raceRows.filter((race) => race.voting_date?.startsWith('2026-')).map((race) => race.race_id))
+        .catch(() => {
+          candidateLoadError = true;
+          return [];
+        });
 
       return {
+        ...(candidateLoadError ? { candidateLoadError: true } : {}),
         apiVersion: payload.api_version,
         releaseId: payload.release_id ?? null,
         publishedAt: payload.published_at ?? null,

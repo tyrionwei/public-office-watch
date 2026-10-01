@@ -311,6 +311,11 @@ function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
   const staticItems = 'targetId' in props
     ? props.staticItems ?? []
     : platformItemsForClaim(props.claim);
+  const claimHasOriginalText = 'claim' in props && Boolean((
+    typeof props.claim.claim_json.platformText === 'string'
+      ? props.claim.claim_json.platformText
+      : props.claim.claim_value
+  )?.trim());
   const votingBlockedReason = 'targetId' in props
     ? props.votingBlockedReason
     : undefined;
@@ -477,6 +482,13 @@ function TargetPlatformFulfillmentList(props: PlatformFulfillmentListProps) {
           shareContext={loading ? undefined : shareContext}
         />
         {loading ? <p className="mt-2 text-[10px] text-slate-500">{t('person.fulfillment.loading')}</p> : null}
+        {!loading && !loadFailed && 'claim' in props ? (
+          <p className="mt-3 text-sm leading-6 text-slate-400" data-testid="platform-content-state">
+            {staticItems.length > 0
+              ? t('person.platform.itemsPendingVote')
+              : t(claimHasOriginalText ? 'person.platform.reviewPending' : 'person.noContent')}
+          </p>
+        ) : null}
         {loadFailed ? (
           <div className="mt-2 text-xs text-rose-300" role="alert">
             <p>{t('person.fulfillment.loadError')}</p>

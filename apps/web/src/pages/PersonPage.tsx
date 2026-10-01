@@ -23,7 +23,7 @@ import { legalCaseClassification, legalRecordPresentation } from '../lib/legalRe
 import { formatPublicBirthDate } from '../lib/publicBirthDate';
 import { isOfficialProfileClaim, officialBirthDateValue } from '../lib/officialProfilePolicy';
 import { useBirthDateDisplay } from '../lib/useBirthDateDisplay';
-import { platformClaimsForCandidate, platformItemsForClaim } from '../lib/candidatePlatform';
+import { platformClaimsForCandidate } from '../lib/candidatePlatform';
 import type { FeedbackSectionKey } from '../lib/personFeedback';
 import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
@@ -429,14 +429,10 @@ function PlatformClaimCard({
   personName: string;
 }) {
   const { t } = useI18n();
-  const platformItems = platformItemsForClaim(claim);
 
   return (
     <article className="pixel-corners border border-line/70 bg-bg/35 p-4">
       <PlatformFulfillmentList claim={claim} title={t('person.publicPlatform')} shareContext={{ personId: claim.person_id, personName }} />
-      {platformItems.length === 0 ? (
-        <div className="mt-3 text-sm leading-6 text-slate-200">{t('person.noContent')}</div>
-      ) : null}
       {claim.source_url ? (
         <a href={claim.source_url} target="_blank" rel="noreferrer" className="mt-3 block truncate text-xs text-accent hover:text-white">
           {claim.source_name?.trim() || t('person.publicSource')}

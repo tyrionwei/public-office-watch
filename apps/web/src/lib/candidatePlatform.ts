@@ -42,22 +42,27 @@ export function platformClaimsForCandidate(
 
 export function platformItemsForClaim(claim: PublicPersonClaim) {
   const contentSplit = claim.claim_json.contentSplit;
-  const storedItemsNeedReview = contentSplit !== null
-    && typeof contentSplit === 'object'
-    && (contentSplit as { reviewStatus?: unknown }).reviewStatus === 'needs_review';
-  if (storedItemsNeedReview) return [];
+  const reviewStatus = contentSplit !== null && typeof contentSplit === 'object'
+    ? (contentSplit as { reviewStatus?: unknown }).reviewStatus
+    : undefined;
+  if (reviewStatus && reviewStatus !== 'reviewed' && reviewStatus !== 'auto_approved') return [];
 
   const storedItems = Array.isArray(claim.claim_json.items)
     ? claim.claim_json.items
       .map((item) => typeof item === 'string' ? normalizePlatformItem(item) : '')
       .filter(Boolean)
     : [];
-  if (storedItems.length > 0) return Array.from(new Set(storedItems));
+  if (storedItems.length > 0) return reviewStatus === 'reviewed' || reviewStatus === 'auto_approved'
+    ? Array.from(new Set(storedItems))
+    : [];
+  if (reviewStatus === 'reviewed') return [];
 
   const platformText = typeof claim.claim_json.platformText === 'string'
     ? claim.claim_json.platformText
     : claim.claim_value;
-  return splitPlatformContent(platformText).items.map(normalizePlatformItem).filter(Boolean);
+  const parsed = splitPlatformContent(platformText);
+  if (parsed.reviewStatus !== 'auto_approved') return [];
+  return parsed.items.map(normalizePlatformItem).filter(Boolean);
 }
 
 export function platformItemsForCandidate(

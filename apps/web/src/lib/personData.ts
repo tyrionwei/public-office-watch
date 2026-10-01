@@ -223,13 +223,33 @@ export function toPartyThemeKey(partyLabel: string | null | undefined): PartyThe
   return 'unknown';
 }
 
-function getRoleFromText(text: string): PublicPersonRole {
+const countyLevelCities = [
+  '臺北市', '台北市', '新北市', '桃園市', '臺中市', '台中市',
+  '臺南市', '台南市', '高雄市', '基隆市', '新竹市', '嘉義市',
+];
+const countyLevelCityChiefPattern = new RegExp(
+  `^(?:${countyLevelCities.join('|')})市?長$`,
+);
+
+function isCountyCityChiefOffice(text: string, district?: string | null): boolean {
+  const office = text.replace(/\s+/g, '')
+    .replace(/(?:候選人|參選人|選舉)$/u, '')
+    .replace(/^(?:(?:19|20)\d{2}年)?(?:曾任|前任|現任|代理|前|現)?/u, '');
+
+  if (/鄉長|鎮長|區長|村長|里長|代表|鄉鎮市長|縣轄市長/u.test(office)) return false;
+  if (office.endsWith('縣長') || office === '縣市長' || office === '直轄市長') return true;
+  if (countyLevelCityChiefPattern.test(office)) return true;
+  return office === '市長' && countyLevelCities.includes(district?.replace(/\s+/gu, '') ?? '');
+}
+
+function getRoleFromText(text: string, district?: string | null): PublicPersonRole {
   if (text.includes('副總統')) return 'vice_president';
   if (text.includes('總統')) return 'president';
   if (text.includes('立法委員') || text.includes('立委')) return 'legislator';
   if (text.includes('議員')) return 'councilor';
-  if (text.includes('副市長') || text.includes('副縣長') || text.includes('副縣市長')) return 'local_deputy';
-  if (text.includes('市長') || text.includes('縣長')) return 'local_chief';
+  if (/副(?:市長|縣長|縣市長|直轄市長)/u.test(text)
+    && isCountyCityChiefOffice(text.replace(/副(?=市長|縣長|縣市長|直轄市長)/u, ''), district)) return 'local_deputy';
+  if (isCountyCityChiefOffice(text, district)) return 'local_chief';
   if (text.includes('局長') || text.includes('處長') || text.includes('主任委員')) return 'agency_head';
   if (text.includes('黨主席') || text.includes('主席') || text.includes('秘書長')) return 'party_officer';
   if (text.includes('候選人')) return 'candidate';
@@ -299,12 +319,12 @@ function isCandidatePosition(value: string | null | undefined) {
   return Boolean(value && /候選人|參選|擬參選/.test(value));
 }
 
-function officeLabelMatchesRole(value: string, role: PublicPersonRole): boolean {
+function officeLabelMatchesRole(value: string, role: PublicPersonRole, district?: string | null): boolean {
   if (role === 'president') return value.includes('總統') && !value.includes('副總統');
   if (role === 'vice_president') return value.includes('副總統');
   if (role === 'legislator') return value.includes('立法委員') || value.includes('立委');
-  if (role === 'local_deputy') return value.includes('副市長') || value.includes('副縣長') || value.includes('副縣市長');
-  if (role === 'local_chief') return (value.includes('市長') || value.includes('縣長')) && !officeLabelMatchesRole(value, 'local_deputy');
+  if (role === 'local_deputy') return getRoleFromText(value, district) === 'local_deputy';
+  if (role === 'local_chief') return isCountyCityChiefOffice(value, district);
   if (role === 'agency_head') return value.includes('局長') || value.includes('處長') || value.includes('主任委員');
   if (role === 'councilor') return value.includes('議員');
   if (role === 'party_officer') return value.includes('黨主席') || value.includes('主席') || value.includes('秘書長');
@@ -326,21 +346,21 @@ export function getPersonDisplayPosition(
   return person.display_position_label ?? fallback;
 }
 
-export function getPersonRole(position: string | null | undefined, candidateRecords: PublicCandidate[] = []): PublicPersonRole {
+export function getPersonRole(position: string | null | undefined, candidateRecords: PublicCandidate[] = [], district?: string | null): PublicPersonRole {
   const currentOfficeCandidate = currentOfficeCandidateFor(candidateRecords);
 
   if (currentOfficeCandidate) {
-    return getRoleFromText(currentOfficeCandidateLabel(currentOfficeCandidate) ?? candidateRoleText(currentOfficeCandidate));
+    return getRoleFromText(currentOfficeCandidateLabel(currentOfficeCandidate) ?? candidateRoleText(currentOfficeCandidate), currentOfficeCandidate.region_name);
   }
 
   const positionText = position?.trim() ?? '';
 
   if (positionText && !isCandidatePosition(positionText)) {
-    return getRoleFromText(positionText);
+    return getRoleFromText(positionText, district);
   }
 
   const candidateText = candidateRecords.map(candidateRoleText).filter(Boolean).join(' ');
-  return getRoleFromText([positionText, candidateText].filter(Boolean).join(' '));
+  return getRoleFromText([positionText, candidateText].filter(Boolean).join(' '), district);
 }
 
 export function extractTimelineYear(value: string | null | undefined) {
@@ -503,11 +523,11 @@ function displayPositionLabelFor(
   if (status === 'current' && role !== 'candidate') {
     const officeLabel = currentOfficeLabel?.trim();
 
-    if (officeLabel && officeLabelMatchesRole(officeLabel, role)) {
+    if (officeLabel && officeLabelMatchesRole(officeLabel, role, regionName)) {
       return officeLabel;
     }
 
-    if (position && !isCandidatePosition(position) && officeLabelMatchesRole(position, role)) {
+    if (position && !isCandidatePosition(position) && officeLabelMatchesRole(position, role, regionName)) {
       return position;
     }
 
@@ -892,7 +912,7 @@ export function buildPersonListItems(
     const personClaims = claimsByPersonId.get(person.person_id) ?? [];
     const enrichedPerson = applyClaimBackfill(person, personClaims);
     const candidateRecords = candidatesByPersonId.get(person.person_id) ?? [];
-    const role = getPersonRole(enrichedPerson.position, candidateRecords);
+    const role = getPersonRole(enrichedPerson.position, candidateRecords, enrichedPerson.district);
     const status = getPersonStatus(enrichedPerson.position, role, candidateRecords, enrichedPerson.election_year);
     const region = inferRegionForPerson(enrichedPerson, candidateRecords, stageRegions);
     const roleLabel = roleLabels[role];

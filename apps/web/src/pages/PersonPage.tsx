@@ -21,6 +21,7 @@ import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import { refreshConfiguredPublicDataProvider } from '../lib/publicDataProviderFactory';
 import { legalCaseClassification, legalRecordPresentation } from '../lib/legalRecordPresentation';
+import { sensitivePublicClaims } from '../lib/sensitivePublicClaims';
 import { formatPublicBirthDate } from '../lib/publicBirthDate';
 import { isOfficialProfileClaim, officialBirthDateValue } from '../lib/officialProfilePolicy';
 import { useBirthDateDisplay } from '../lib/useBirthDateDisplay';
@@ -146,9 +147,6 @@ function candidateDetailRows(
   return rows;
 }
 
-function sensitivePublicClaims(claims: PublicPersonClaim[]) {
-  return claims.filter((claim) => claim.review_score >= 70 && ['A', 'B'].includes(claim.confidence_level));
-}
 type DataStateKind = 'notApplicable' | 'uncollected' | 'noPublicData' | 'pending' | 'loadError';
 
 const dataStateLabelKeys: Record<DataStateKind, TranslationKey> = {

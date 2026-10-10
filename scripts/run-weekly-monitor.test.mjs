@@ -14,8 +14,57 @@ import {
   parseJsonOutput,
   releaseRunLock,
   runNodeStep,
+  selectLatestTppSnapshot,
   summarizeWeeklyResults,
 } from './run-weekly-monitor.mjs';
+
+function snapshotDirectory(t) {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'pow-weekly-snapshots-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  return directory;
+}
+
+function writeTppSnapshot(directory, fileDate, retrievedAt) {
+  const file = path.join(directory, `normalized-candidates-${fileDate}.json`);
+  fs.writeFileSync(file, JSON.stringify({
+    schemaVersion: 1, electionYear: 2026, sourceType: 'official_party_nomination',
+    party: '台灣民眾黨',
+    source: { name: '測試選戰專區', url: 'https://www.tpp.org.tw/election2026/index.php', retrievedAt },
+    records: [{
+      sourceCandidateKey: 'tpp-test-001', personName: '測試候選人',
+      candidacyStatus: 'party_nominee', raceType: 'city_councilor',
+      regionName: '臺北市', districtName: '第一選區',
+      profileUrl: 'https://www.tpp.org.tw/election2026/candidatedetail.php?cid=1',
+      education: [], experience: [], platform: [], socialLinks: [],
+    }],
+  }));
+  return file;
+}
+
+test('selects the newest captured TPP version rather than a fixed or lexically latest filename', (t) => {
+  const directory = snapshotDirectory(t);
+  writeTppSnapshot(directory, '2026-07-29', '2026-07-29T09:00:00Z');
+  const newest = writeTppSnapshot(directory, '2026-08-24', '2026-08-24T03:46:41+08:00');
+  writeTppSnapshot(directory, '2026-09-01', '2026-08-24T02:00:00+08:00');
+  fs.writeFileSync(path.join(directory, 'reviewed-other.json'), '{unrelated');
+  assert.equal(selectLatestTppSnapshot(directory), newest);
+});
+
+test('does not silently fall back to an older TPP snapshot when another snapshot is invalid', (t) => {
+  const directory = snapshotDirectory(t);
+  writeTppSnapshot(directory, '2026-07-29', '2026-07-29T09:00:00Z');
+  writeTppSnapshot(directory, '2026-08-24', 'not-a-date');
+  assert.throws(() => selectLatestTppSnapshot(directory), /retrievedAt|snapshot/i);
+});
+
+test('rejects ambiguous snapshot times and returns null when there is no captured snapshot', (t) => {
+  const directory = snapshotDirectory(t);
+  assert.equal(selectLatestTppSnapshot(directory), null);
+  assert.equal(selectLatestTppSnapshot(path.join(directory, 'missing')), null);
+  writeTppSnapshot(directory, '2026-07-29', '2026-08-24T00:00:00Z');
+  writeTppSnapshot(directory, '2026-08-24', '2026-08-24T08:00:00+08:00');
+  assert.throws(() => selectLatestTppSnapshot(directory), /unambiguous source version/);
+});
 
 test('uses a local ignored weekly output directory by default', () => {
   assert.match(parseArgs([]).outputDir, /tmp[\\/]weekly-monitor$/);

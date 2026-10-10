@@ -63,6 +63,9 @@ function readLocalEnv() {
 const localEnv = readLocalEnv();
 
 const reviewedCandidateResultOverrides = new Map([
+  // 2005 屏東第16選區：elctks 僅列霧臺鄉彙總；1794 票與 elprof 選區有效票相符。
+  // 唯一候選人的結果列標示 100%／當選；限定來源 ID，避免缺全選區列再次清空已核結果。
+  ['cec-historical-candidate-ce49033ddcca9d7a', { voteCount: 1794, voteRate: 100, isElected: true, resultOnly: true }],
   ['votetw-candidate-eaa98ca6e1255bff', { voteCount: 236, voteRate: 50, isElected: true, sourceName: '嘉義縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/33e69d9d-e0bd-41ba-bfe3-6d12be8a5b28.pdf' }],
   ['votetw-candidate-6793854d16967e86', { voteCount: 236, voteRate: 50, isElected: false, sourceName: '嘉義縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/33e69d9d-e0bd-41ba-bfe3-6d12be8a5b28.pdf' }],
   ['votetw-candidate-153ca9738d6bcef3', { voteCount: 185, voteRate: 50.1355, isElected: true, sourceName: '嘉義縣選舉委員會', sourceUrl: 'https://web.cec.gov.tw/api/file/fe426522-6520-44b5-8a6b-84def12036cf.pdf' }],
@@ -84,6 +87,16 @@ const reviewedCandidateResultOverrides = new Map([
 export function applyReviewedCandidateResultOverride(row) {
   const override = reviewedCandidateResultOverrides.get(row.external_id);
   if (!override) return row;
+  if (override.resultOnly) {
+    return {
+      ...row,
+      vote_count: override.voteCount,
+      vote_rate: override.voteRate,
+      is_elected: override.isElected,
+      election_result: override.isElected ? 'elected' : 'not_elected',
+      registration_status: override.isElected ? 'elected' : 'not_elected',
+    };
+  }
 
   return {
     ...row,
@@ -1037,9 +1050,6 @@ export function isHistoricalCecAggregateResultRow(row) {
 export function historicalCecAggregateResultKey(row, classification, candidateNo = cleanCecCell(row[6])) {
   candidateNo = cleanCecCell(candidateNo);
   if (isHistoricalCecNationalResult(classification)) return candidateNo;
-  if (classification.kind.startsWith('local-councilor-') && classification.kind.includes('indigenous')) {
-    return `${historicalCecLegacyCountyKey(row)}-${candidateNo}`;
-  }
   return `${historicalCecLegacyRaceKey(row)}-${candidateNo}`;
 }
 
@@ -1094,29 +1104,55 @@ function buildHistoricalCecBaseIndex({ zipBuffer, entryName, seed }) {
 function buildHistoricalCecAggregateResultByKey({ zipBuffer, entryName, classification }) {
   const resultEntryName = `${zipDirname(entryName)}/elctks.csv`;
   const resultEntry = listZipEntries(zipBuffer).find((item) => item.name === resultEntryName);
-  const resultByKey = new Map();
+  if (!resultEntry) return new Map();
+  return buildHistoricalCecAggregateResultIndex({
+    resultRows: parseDelimitedRows(readZipTextByEntry(zipBuffer, resultEntryName), ','),
+    candidateRows: parseDelimitedRows(readZipTextByEntry(zipBuffer, entryName), ','),
+    classification,
+  });
+}
 
-  if (!resultEntry) {
-    return resultByKey;
-  }
-
-  const resultRows = parseDelimitedRows(readZipTextByEntry(zipBuffer, resultEntryName), ',');
+export function buildHistoricalCecAggregateResultIndex({ resultRows, candidateRows, classification }) {
   const nationalRace = isHistoricalCecNationalResult(classification);
-
-  for (const row of resultRows) {
-    const nationalTotal = cleanCecCell(row[0]) === '00' && cleanCecCell(row[1]) === '000';
-
-    if (!isHistoricalCecAggregateResultRow(row) || (nationalRace && !nationalTotal)) {
-      continue;
-    }
-
-    resultByKey.set(historicalCecAggregateResultKey(row, classification), {
-      voteCount: Number.parseInt(cleanCecCell(row[7]), 10),
-      voteRate: Number.parseFloat(cleanCecCell(row[8])),
-      elected: cleanCecCell(row[9]) === '*',
-    });
+  const aggregateRows = resultRows.filter((row) => isHistoricalCecAggregateResultRow(row)
+    && (!nationalRace || (cleanCecCell(row[0]) === '00' && cleanCecCell(row[1]) === '000')));
+  const grouped = new Map();
+  for (const row of aggregateRows) {
+    const key = historicalCecAggregateResultKey(row, classification);
+    grouped.set(key, [...(grouped.get(key) ?? []), row]);
   }
-
+  const resultByKey = new Map();
+  const resultValue = (row) => ({
+    voteCount: Number.parseInt(cleanCecCell(row[7]), 10),
+    voteRate: Number.parseFloat(cleanCecCell(row[8])),
+    elected: cleanCecCell(row[9]) === '*',
+  });
+  for (const [key, rows] of grouped) {
+    if (rows.length === 1) resultByKey.set(key, resultValue(rows[0]));
+  }
+  // 舊資料可能以 00 與 01 分別編碼同一原住民選區；僅雙側唯一時對應。
+  if (classification.kind.startsWith('local-councilor-') && classification.kind.includes('indigenous')) {
+    const candidatesByCountyNumber = new Map();
+    const resultsByCountyNumber = new Map();
+    const add = (map, key, row) => map.set(key, [...(map.get(key) ?? []), row]);
+    for (const row of candidateRows) {
+      if (!cleanCecCell(row[5]) || !cleanCecCell(row[6]) || cleanCecCell(row[6]) === '姓名') continue;
+      add(candidatesByCountyNumber, `${historicalCecLegacyCountyKey(row)}-${cleanCecCell(row[5])}`, row);
+    }
+    for (const row of aggregateRows) {
+      add(resultsByCountyNumber, `${historicalCecLegacyCountyKey(row)}-${cleanCecCell(row[6])}`, row);
+    }
+    for (const [countyNumber, candidates] of candidatesByCountyNumber) {
+      const results = resultsByCountyNumber.get(countyNumber) ?? [];
+      if (candidates.length !== 1 || results.length !== 1) continue;
+      const candidate = candidates[0];
+      const key = historicalCecAggregateResultKey(candidate, classification, candidate[5]);
+      const codes = [cleanCecCell(candidate[2]), cleanCecCell(results[0][2])].sort();
+      if (!grouped.has(key) && codes[0] === '00' && codes[1] === '01') {
+        resultByKey.set(key, resultValue(results[0]));
+      }
+    }
+  }
   return resultByKey;
 }
 

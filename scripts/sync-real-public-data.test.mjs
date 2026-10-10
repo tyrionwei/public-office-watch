@@ -14,6 +14,7 @@ import {
   darkGuideFamilyReferenceNames,
   describeFetchError,
   historicalCecAggregateResultKey,
+  buildHistoricalCecAggregateResultIndex,
   isHistoricalCecAggregateResultRow,
   isHistoricalCecNationalResult,
   loadCurrentOfficeholders,
@@ -245,11 +246,11 @@ assert.equal(isHistoricalCecNationalResult(indigenousCouncilor), false);
 assert.equal(isHistoricalCecNationalResult(indigenousLegislator), true);
 assert.equal(
   historicalCecAggregateResultKey(candidateRow, indigenousCouncilor, candidateRow[5]),
-  '01-001-1',
+  '01-001-00-1',
 );
 assert.equal(
   historicalCecAggregateResultKey(indigenousResultRow, indigenousCouncilor),
-  '01-001-1',
+  '01-001-01-1',
 );
 assert.equal(
   historicalCecAggregateResultKey(regionalCandidateRow, regionalCouncilor, regionalCandidateRow[5]),
@@ -260,6 +261,38 @@ assert.equal(
   '01-001-01-1',
 );
 assert.equal(historicalCecAggregateResultKey(indigenousResultRow, indigenousLegislator), '1');
+
+const mountainCouncilor = { kind: 'local-councilor-mountain-indigenous' };
+const districtCandidate = (district, name) => ['10', '014', district, '000', '0000', '1', name];
+const districtResult = (district, count, rate) => ['10', '014', district, '000', '0000', '0', '1', String(count), String(rate), ' '];
+const district12 = districtCandidate('12', '測試甲');
+const district16 = districtCandidate('16', '測試乙');
+const result12 = districtResult('12', 813, 34.5);
+const result16 = districtResult('16', 339, 18.47);
+for (const resultRows of [[result12, result16], [result16, result12]]) {
+  const index = buildHistoricalCecAggregateResultIndex({ candidateRows: [district12, district16], resultRows, classification: mountainCouncilor });
+  assert.equal(index.get(historicalCecAggregateResultKey(district12, mountainCouncilor, '1')).voteCount, 813);
+  assert.equal(index.get(historicalCecAggregateResultKey(district16, mountainCouncilor, '1')).voteCount, 339);
+}
+const legacyCandidate = [...candidateRow, '測試丙'];
+const legacyResult = [...indigenousResultRow, '100', '50', '*'];
+const legacyIndex = buildHistoricalCecAggregateResultIndex({ candidateRows: [legacyCandidate], resultRows: [legacyResult], classification: indigenousCouncilor });
+assert.equal(legacyIndex.get('01-001-00-1').voteCount, 100);
+const ambiguousIndex = buildHistoricalCecAggregateResultIndex({ candidateRows: [legacyCandidate, [...legacyCandidate.slice(0, 2), '02', ...legacyCandidate.slice(3)]], resultRows: [legacyResult], classification: indigenousCouncilor });
+assert.equal(ambiguousIndex.has('01-001-00-1'), false);
+const duplicateIndex = buildHistoricalCecAggregateResultIndex({ candidateRows: [district12], resultRows: [result12, result12], classification: mountainCouncilor });
+assert.equal(duplicateIndex.has('10-014-12-1'), false);
+const unrelatedIndex = buildHistoricalCecAggregateResultIndex({ candidateRows: [district12], resultRows: [result16], classification: mountainCouncilor });
+assert.equal(unrelatedIndex.has('10-014-12-1'), false);
+const reverseCandidate = [...legacyCandidate.slice(0, 2), '01', ...legacyCandidate.slice(3)];
+const reverseResult = [...legacyResult.slice(0, 2), '00', ...legacyResult.slice(3)];
+assert.equal(buildHistoricalCecAggregateResultIndex({ candidateRows: [reverseCandidate], resultRows: [reverseResult], classification: indigenousCouncilor }).get('01-001-01-1').voteCount, 100);
+const multipleResults = buildHistoricalCecAggregateResultIndex({ candidateRows: [legacyCandidate], resultRows: [legacyResult, [...legacyResult.slice(0, 2), '02', ...legacyResult.slice(3)]], classification: indigenousCouncilor });
+assert.equal(multipleResults.has('01-001-00-1'), false);
+const nationalIndex = buildHistoricalCecAggregateResultIndex({ candidateRows: [legacyCandidate], resultRows: [legacyResult, ['00', '000', '00', '000', '0000', '0', '1', '200', '60', '*']], classification: indigenousLegislator });
+assert.deepEqual(nationalIndex.get('1'), { voteCount: 200, voteRate: 60, elected: true });
+
+
 
 assert.deepEqual(
   applyReviewedCandidateResultOverride({
@@ -290,6 +323,25 @@ assert.equal(
   applyReviewedCandidateResultOverride({ external_id: 'unreviewed-candidate', is_elected: false }).is_elected,
   false,
 );
+
+// 缺少全選區結果列時仍保留已交叉核對的結果，不改人物綁定或可見性。
+for (const voteCount of [null, 856]) {
+  const result = applyReviewedCandidateResultOverride({
+    external_id: 'cec-historical-candidate-ce49033ddcca9d7a',
+    vote_count: voteCount, is_elected: false, person_id: 'existing-person', is_public: false,
+    candidacy_status: 'disqualified', source_name: 'reviewed-source', source_url: 'https://example.org/review',
+  });
+  assert.equal(result.vote_count, 1794);
+  assert.equal(result.vote_rate, 100);
+  assert.equal(result.is_elected, true);
+  assert.equal(result.election_result, 'elected');
+  assert.equal(result.registration_status, 'elected');
+  assert.equal(result.person_id, 'existing-person');
+  assert.equal(result.is_public, false);
+  assert.equal(result.candidacy_status, 'disqualified');
+  assert.equal(result.source_name, 'reviewed-source');
+  assert.equal(result.source_url, 'https://example.org/review');
+}
 
 assert.equal(
   scoreClaim({

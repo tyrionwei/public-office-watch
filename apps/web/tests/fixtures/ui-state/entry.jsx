@@ -1,8 +1,9 @@
+import { LocalOfficeSummaryPanel } from '../../../src/components/LocalOfficeSummaryPanel';
 import { AppErrorBoundary } from '../../../src/components/AppErrorBoundary';
 import { RouteMetadata } from '../../../src/components/RouteMetadata';
 import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { installControls } from './controls';
 import { installPublicFlowControls } from './public-controls';
 import { installPageFailureControls } from './page-failure-controls';
@@ -37,6 +38,7 @@ function MobilePanels() {
     <button data-next-dialog>Next dialog fixture</button>
   </>;
 }
+function OfficeFixture() { return <LocalOfficeSummaryPanel regionId={useParams().regionId} />; }
 function PageFailures() {
   const navigate = useNavigate();
   const current = useLocation();
@@ -46,6 +48,7 @@ function PageFailures() {
   }, [navigate]);
   return <>
     <Routes>
+      <Route path="/office/:regionId" element={<OfficeFixture />} />
       <Route path="/elections" element={<ElectionsPage />} />
       <Route path="/elections/events/:eventKey" element={<ElectionEventPage />} />
       <Route path="/elections/races/:raceId" element={<RacePage />} />

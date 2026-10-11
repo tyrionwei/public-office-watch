@@ -336,8 +336,6 @@ export function createPublishedPublicDataBridge(
   const knownRegions = new Map<string, PublishedRegionResolution>();
 
   function rememberRegions(regions: StageRegionNode[]) {
-    knownRegions.clear();
-
     for (const region of regions) {
       const resolution = {
         regionId: region.publicRegionId ?? region.id,
@@ -353,6 +351,17 @@ export function createPublishedPublicDataBridge(
 
   function resolveKnownRegion(regionId: string) {
     return resolveRegion(regionId) ?? knownRegions.get(regionId) ?? null;
+  }
+
+  async function loadRegionDirectory() {
+    const rows = await adapter.loadRegionDirectory();
+    const regionById = new Map(rows.map((region) => [region.region_id, region]));
+    const regions = rows.map((region, index) => {
+      const parent = region.parent_region_id ? regionById.get(region.parent_region_id) : null;
+      return mapRegionNode(region, index, parent?.slug ?? null);
+    });
+    rememberRegions(regions);
+    return regions;
   }
 
   return {
@@ -386,16 +395,7 @@ export function createPublishedPublicDataBridge(
       };
     },
 
-    async loadRegionDirectory() {
-      const rows = await adapter.loadRegionDirectory();
-      const regionById = new Map(rows.map((region) => [region.region_id, region]));
-      const regions = rows.map((region, index) => {
-        const parent = region.parent_region_id ? regionById.get(region.parent_region_id) : null;
-        return mapRegionNode(region, index, parent?.slug ?? null);
-      });
-      rememberRegions(regions);
-      return regions;
-    },
+    loadRegionDirectory,
 
     async loadRegionPageData(regionSlug) {
       const rows = await adapter.loadRegionPage(regionSlug);
@@ -408,6 +408,8 @@ export function createPublishedPublicDataBridge(
           relatedRaces: rows.raceRows.map(mapRace),
         };
       }
+
+      rememberRegions([mapRegionNode(rows.regionRow, 0, null), ...rows.childRegionRows.map((region, index) => mapRegionNode(region, index, rows.regionRow?.slug ?? null))]);
 
       const summary = rows.summaryRow
         ? mapRegionSummary(rows.summaryRow)
@@ -472,10 +474,12 @@ export function createPublishedPublicDataBridge(
     },
 
     async loadLocalOfficeSummaryByRegionId(regionId) {
-      const region = resolveKnownRegion(regionId);
+      let region = resolveKnownRegion(regionId);
       if (!region) {
-        return buildLocalOfficeSummaryFromItems(regionId, [], []);
+        await loadRegionDirectory();
+        region = resolveKnownRegion(regionId);
       }
+      if (!region) throw new Error(`Unknown local office region: ${regionId}`);
 
       const rows = await adapter.loadLocalOfficePeople(region.districtPrefixes);
       const summary = buildLocalOfficeSummaryFromItems(

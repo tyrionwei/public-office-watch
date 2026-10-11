@@ -6,6 +6,7 @@ import type {
   PublishedPeoplePageRequest,
   PublishedReadAdapter,
 } from '../src/lib/publishedReadAdapter.ts';
+import { createPublishedPublicDataProvider } from '../src/lib/publishedPublicDataProvider.ts';
 import { createPublishedPublicDataBridge } from '../src/lib/publishedPublicDataBridge.ts';
 
 const peopleRow: PublishedPeopleDirectoryRow = {
@@ -31,6 +32,7 @@ const peopleRow: PublishedPeopleDirectoryRow = {
 
 function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadAdapter {
   return {
+    async loadRegionDirectory() { return []; },
     async loadHomePage() {
       return { tickerRows: [], regionSummaryRows: [], regionRows: [], raceRows: [] };
     },
@@ -740,11 +742,8 @@ test('bridge does not query local offices when the region cannot be resolved', a
   });
   const bridge = createPublishedPublicDataBridge(adapter);
 
-  const result = await bridge.loadLocalOfficeSummaryByRegionId('unknown-region');
-
+  await assert.rejects(bridge.loadLocalOfficeSummaryByRegionId('unknown-region'), /Unknown local office region/);
   assert.equal(queried, false);
-  assert.equal(result.region_id, 'unknown-region');
-  assert.equal(result.councilor_total, 0);
 });
 
 test('bridge maps the bounded party data family', async () => {
@@ -855,4 +854,57 @@ test('bridge learns published region labels from the home snapshot', async () =>
   await bridge.loadPeoplePage({ regionId: 'region-taipei' }, 1, 20);
 
   assert.deepEqual(requests[0]?.districtPrefixes, ['臺北市', '台北市']);
+});
+
+const officeRegion = { region_id: 'region-taipei', name: '臺北市', slug: 'taipei-city',
+  region_type: 'municipality' as const, parent_region_id: null, official_code: '63000', map_code: '63000', display_order: 1 };
+
+test('direct region page primes office resolution without visiting home; partial home retains it', async () => {
+  const requests: string[][] = [];
+  const bridge = createPublishedPublicDataBridge(createAdapter({
+    async loadRegionPage() { return { regionRow: officeRegion, summaryRow: null, childRegionRows: [], raceRows: [] }; },
+    async loadHomePage() { return { tickerRows: [], regionSummaryRows: [], raceRows: [], regionRows: [{ ...officeRegion, region_id: 'other', slug: 'other', name: '新北市' }] }; },
+    async loadRegionDirectory() { throw new Error('Directory should not be needed'); },
+    async loadLocalOfficePeople(prefixes) { requests.push(prefixes); return [peopleRow]; },
+  }));
+  await bridge.loadRegionPageData('taipei-city');
+  await bridge.loadHomePageData();
+  for (const key of ['taipei-city', 'region-taipei']) {
+    const summary = await bridge.loadLocalOfficeSummaryByRegionId(key);
+    assert.equal(summary.chief_executive?.person_id, peopleRow.person_id);
+    assert.equal(summary.region_name, '臺北市');
+  }
+  assert(requests.every(prefixes => prefixes.includes('台北市') && prefixes.includes('臺北市')));
+});
+
+test('office resolution and people failures are retryable, while confirmed empty results are cached', async () => {
+  let directoryCalls = 0, peopleCalls = 0;
+  const bridge = createPublishedPublicDataBridge(createAdapter({
+    async loadRegionDirectory() { directoryCalls++; return directoryCalls === 1 ? [] : [officeRegion]; },
+    async loadLocalOfficePeople() { peopleCalls++; if (peopleCalls === 1) throw new Error('network'); return []; },
+  }));
+  const { provider } = createPublishedPublicDataProvider(bridge);
+  await assert.rejects(provider.loadLocalOfficeSummaryByRegionId('taipei-city'), /Unknown local office region/);
+  await assert.rejects(provider.loadLocalOfficeSummaryByRegionId('taipei-city'), /network/);
+  assert.equal((await provider.loadLocalOfficeSummaryByRegionId('taipei-city')).councilor_total, 0);
+  await provider.loadLocalOfficeSummaryByRegionId('taipei-city');
+  assert.equal(directoryCalls, 2);
+  assert.equal(peopleCalls, 2);
+});
+
+
+test('cold office lookup resolves the directory and counts the published subset, not council seats', async () => {
+  const bridge = createPublishedPublicDataBridge(createAdapter({
+    async loadRegionDirectory() { return [officeRegion]; },
+    async loadLocalOfficePeople() {
+      return [peopleRow,
+        ...Array.from({ length: 2 }, (_, i) => ({ ...peopleRow, person_id: `deputy-${i}`, name: `測試副首長${String.fromCodePoint(0x4e00 + i)}`, list_role: 'local_deputy', position: '副市長', current_office_label: '臺北市副市長' })),
+        ...Array.from({ length: 56 }, (_, i) => ({ ...peopleRow, person_id: `councilor-${i}`, name: `測試議員${String.fromCodePoint(0x4e00 + i)}`, list_role: 'councilor', position: '市議員', current_office_label: '臺北市議員' })),
+      ];
+    },
+  }));
+  const summary = await bridge.loadLocalOfficeSummaryByRegionId('taipei-city');
+  assert.equal(summary.chief_executive?.person_id, 'person-1');
+  assert.equal(summary.deputies.length, 2);
+  assert.equal(summary.councilor_total, 56);
 });

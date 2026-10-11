@@ -162,3 +162,36 @@ test('party finance retry restores nonzero totals and tracked party cards', asyn
   await expect(page.locator('main a[href="/parties/a"]').first()).toContainText('5,000');
   await expect(page.locator('main')).toContainText('parties.registrySummary 2 0');
 });
+
+
+test('local office failure is distinct from empty and retries successfully', async ({ page }) => {
+  await open(page, '/office/taipei', 'office');
+  await expect(page.getByRole('alert')).toHaveText('app.loadError');
+  await expect(page.getByText('office.dataPending', { exact: true })).toHaveCount(0);
+  await expect(page.getByText('office.councilorTotal', { exact: false })).toHaveCount(0);
+  await page.evaluate(() => { window.__pageFailures.failures = []; });
+  await page.getByRole('button', { name: 'app.retry', exact: true }).click();
+  await expect(page.getByText('CHIEF taipei', { exact: true })).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.evaluate(() => { window.__pageFailures.empty = ['office']; });
+  await navigate(page, '/office/empty');
+  await expect(page.getByText('office.councilorTotal', { exact: false })).toHaveText('office.councilorTotal0');
+  await expect(page.getByText('office.emptyChief', { exact: true })).toBeVisible();
+});
+
+test('local office pending navigation hides old totals and rejects late responses', async ({ page }) => {
+  await open(page, '/office/taipei');
+  await expect(page.getByText('CHIEF taipei', { exact: true })).toBeVisible();
+  await page.evaluate(() => { window.__pageFailures.deferred = ['office']; });
+  await navigate(page, '/office/slow');
+  await expect(page.getByRole('status').filter({ hasText: 'office.loading' })).toHaveText('office.loading');
+  await expect(page.getByText('office.councilorTotal', { exact: false })).toHaveCount(0);
+  await expect(page.getByText('CHIEF taipei', { exact: true })).toHaveCount(0);
+  await navigate(page, '/office/next');
+  await page.evaluate(() => { window.__pageFailures.calls.find(row => row.method === 'office' && row.args[0] === 'next')!.resolve(); });
+  await expect(page.getByText('CHIEF next', { exact: true })).toBeVisible();
+  await page.evaluate(() => { window.__pageFailures.calls.find(row => row.method === 'office' && row.args[0] === 'slow')!.resolve(); });
+  await settle(page);
+  await expect(page.getByText('CHIEF next', { exact: true })).toBeVisible();
+  await expect(page.getByText('CHIEF slow', { exact: true })).toHaveCount(0);
+});

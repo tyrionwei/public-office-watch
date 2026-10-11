@@ -226,23 +226,30 @@ export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelPro
   const { t } = useI18n();
   const [summary, setSummary] = useState(() => publicDataProvider.getLocalOfficeSummaryByRegionId(regionId));
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [loadedRegionId, setLoadedRegionId] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
     let active = true;
     setSummary(publicDataProvider.getLocalOfficeSummaryByRegionId(regionId));
     setLoading(true);
+    setError(false);
 
     void refreshConfiguredPublicDataProvider()
       .then(() => publicDataProvider.loadLocalOfficeSummaryByRegionId(regionId))
       .then((nextSummary) => {
         if (active) {
           setSummary(nextSummary);
+          setLoadedRegionId(regionId);
           setLoading(false);
         }
       })
       .catch((error: unknown) => {
         if (active) {
           setLoading(false);
+          setLoadedRegionId(regionId);
+          setError(true);
           if (import.meta.env.DEV) {
             console.warn('Failed to load local office summary', error);
           }
@@ -252,7 +259,17 @@ export function LocalOfficeSummaryPanel({ regionId }: LocalOfficeSummaryPanelPro
     return () => {
       active = false;
     };
-  }, [regionId]);
+  }, [regionId, retry]);
+
+  if (loading || loadedRegionId !== regionId || error) {
+    const failed = !loading && loadedRegionId === regionId && error;
+    return (
+      <PixelFrame title={t('office.title')}>
+        <p role={failed ? 'alert' : 'status'}>{t(failed ? 'app.loadError' : 'office.loading')}</p>
+        {failed ? <button type="button" className="mt-3 text-accent" onClick={() => { setLoading(true); setRetry(value => value + 1); }}>{t('app.retry')}</button> : null}
+      </PixelFrame>
+    );
+  }
 
   const hasCouncilors = summary.councilor_party_counts.length > 0;
 

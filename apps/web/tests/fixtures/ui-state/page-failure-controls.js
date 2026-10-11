@@ -22,7 +22,14 @@ export function installPageFailureControls() {
     });
   };
   const emptyPage = { items: [], total: 0 };
+  const officeSummary = id => ({ region_id: id, region_name: id, chief_executive: null,
+    deputies: [], agency_heads: [], councilor_total: 0, councilor_party_counts: [], data_status: [] });
   state.provider = {
+    getLocalOfficeSummaryByRegionId: officeSummary,
+    loadLocalOfficeSummaryByRegionId: id => call('office', [id], state.empty.includes('office') ? officeSummary(id) : {
+      ...officeSummary(id), councilor_total: 3,
+      chief_executive: { person_id: id + '-chief', name: 'CHIEF ' + id, party: 'TEST' },
+    }),
     loadElectionIndex: () => call('index', [], { elections: state.elections, raceSummaries: [] }),
     loadElectionRaceFacets: ids => call('facets', [ids], []),
     loadElectionRacePage: (...args) => call('races', args, emptyPage),

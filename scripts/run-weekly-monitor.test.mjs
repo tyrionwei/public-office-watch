@@ -15,6 +15,7 @@ import {
   releaseRunLock,
   runNodeStep,
   selectLatestTppSnapshot,
+  runPartyCandidateFreshness,
   summarizeWeeklyResults,
 } from './run-weekly-monitor.mjs';
 
@@ -64,6 +65,28 @@ test('rejects ambiguous snapshot times and returns null when there is no capture
   writeTppSnapshot(directory, '2026-07-29', '2026-08-24T00:00:00Z');
   writeTppSnapshot(directory, '2026-08-24', '2026-08-24T08:00:00+08:00');
   assert.throws(() => selectLatestTppSnapshot(directory), /unambiguous source version/);
+});
+
+test('snapshot selection failures record timing without launching a freshness child', async (t) => {
+  const directory = snapshotDirectory(t);
+  writeTppSnapshot(directory, '2026-07-29', 'not-a-date');
+  const steps = [];
+  let launches = 0;
+  const before = Date.now();
+  await runPartyCandidateFreshness([], directory, async () => { launches += 1; }, steps, directory);
+  const after = Date.now();
+  assert.equal(launches, 0);
+  assert.equal(steps.length, 1);
+  const [step] = steps;
+  assert.equal(step.name, 'party-candidate-freshness');
+  assert.equal(step.status, 'failed');
+  assert.match(step.error, /retrievedAt|snapshot/i);
+  assert.ok(Date.parse(step.startedAt) >= before);
+  assert.ok(Date.parse(step.finishedAt) >= Date.parse(step.startedAt));
+  assert.ok(Date.parse(step.finishedAt) <= after);
+  assert.ok(Number.isInteger(step.durationMs) && step.durationMs >= 0);
+  assert.ok(step.durationMs <= after - before);
+  assert.equal(summarizeWeeklyResults(steps).failedCount, 1);
 });
 
 test('uses a local ignored weekly output directory by default', () => {

@@ -267,6 +267,30 @@ function previousArgs(filePath) {
   return fs.existsSync(filePath) ? ['--previous', filePath] : [];
 }
 
+async function runPartyCandidateFreshness(livePartyInputs, outputDir, run, steps,
+  snapshotDirectory = path.join(repoRoot, 'data-sources', 'tpp', '2026-election')) {
+  const startedAtMs = Date.now();
+  try {
+    const tppSnapshot = selectLatestTppSnapshot(snapshotDirectory);
+    if (livePartyInputs.length > 0 || tppSnapshot) {
+      const freshnessArgs = ['scripts/report-party-candidate-source-freshness.mjs'];
+      for (const inputPath of livePartyInputs) freshnessArgs.push('--input', inputPath);
+      if (tppSnapshot) freshnessArgs.push('--browser-input', tppSnapshot);
+      freshnessArgs.push('--output', path.join(outputDir, 'party-candidate-freshness.json'));
+      await run('party-candidate-freshness', freshnessArgs);
+    }
+  } catch (error) {
+    steps.push({
+      name: 'party-candidate-freshness',
+      status: 'failed',
+      startedAt: new Date(startedAtMs).toISOString(),
+      finishedAt: new Date().toISOString(),
+      durationMs: Date.now() - startedAtMs,
+      error: error.message,
+    });
+  }
+}
+
 async function runWeeklyMonitor(options = parseArgs(process.argv.slice(2))) {
   fs.mkdirSync(options.outputDir, { recursive: true });
   const steps = [];
@@ -331,18 +355,7 @@ async function runWeeklyMonitor(options = parseArgs(process.argv.slice(2))) {
     }
   }
 
-  try {
-    const tppSnapshot = selectLatestTppSnapshot(path.join(repoRoot, 'data-sources', 'tpp', '2026-election'));
-    if (livePartyInputs.length > 0 || tppSnapshot) {
-      const freshnessArgs = ['scripts/report-party-candidate-source-freshness.mjs'];
-      for (const inputPath of livePartyInputs) freshnessArgs.push('--input', inputPath);
-      if (tppSnapshot) freshnessArgs.push('--browser-input', tppSnapshot);
-      freshnessArgs.push('--output', path.join(options.outputDir, 'party-candidate-freshness.json'));
-      await run('party-candidate-freshness', freshnessArgs);
-    }
-  } catch (error) {
-    steps.push({ name: 'party-candidate-freshness', status: 'failed', error: error.message });
-  }
+  await runPartyCandidateFreshness(livePartyInputs, options.outputDir, run, steps);
 
   const newsReportPath = path.join(options.outputDir, 'weekly-person-news.json');
   await run('weekly-person-news', [
@@ -398,5 +411,6 @@ export {
   runNodeStep,
   runWeeklyMonitor,
   selectLatestTppSnapshot,
+  runPartyCandidateFreshness,
   summarizeWeeklyResults,
 };

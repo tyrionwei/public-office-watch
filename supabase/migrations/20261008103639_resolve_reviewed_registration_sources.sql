@@ -52,6 +52,7 @@ WITH reviewed_registration_scope AS MATERIALIZED (
       AND claim.claim_json->'registrationEvidence'->'source'->>'url' = source.source_url
       AND claim.claim_json->'registrationEvidence'->'source'->>'sha256' ~ '^[a-f0-9]{64}$'
       AND claim.claim_json->'registrationEvidence'->>'registration_date' ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+      AND pg_input_is_valid(claim.claim_json->'registrationEvidence'->>'registration_date', 'date')
       AND left(claim.claim_json->'registrationEvidence'->>'registration_date', 4) = election.year::text
       -- 這是已保存的逐筆登記事實審核，不接受僅姓名相同或來源建議。
       AND claim.claim_json->'registrationFactAdoption20261008'->>'decision' = 'verified_official_registration_fact'
@@ -65,6 +66,8 @@ WITH reviewed_registration_scope AS MATERIALIZED (
       AND COALESCE(claim.claim_json->'identityAudit'->>'status', '') NOT IN ('pending', 'quarantined')
       -- 本屆登記事實可成立，跨來源同名歧義仍須保留在來源待核清單。
       -- 缺欄位沿用既有語意；明確 false、null 或異常型別均不得結案。
+      AND (NOT (claim.claim_json ? 'privateRegistrationBinding20261008')
+           OR jsonb_typeof(claim.claim_json->'privateRegistrationBinding20261008') = 'object')
       AND COALESCE(claim.claim_json->'privateRegistrationBinding20261008'->'crossSourceIdentityResolved', 'true'::jsonb) = 'true'::jsonb
       AND COALESCE(claim.claim_json->'privateRegistrationBinding20261008'->'sameBatchIdentityResolved', 'true'::jsonb) = 'true'::jsonb
       AND NOT EXISTS (

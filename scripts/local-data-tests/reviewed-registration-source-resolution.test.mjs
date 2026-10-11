@@ -74,6 +74,12 @@ UPDATE candidates SET source_url=${literal};`;
   check('explicit_cross_source_resolution_allows_closure',`UPDATE person_claims SET claim_json=claim_json||'{"privateRegistrationBinding20261008":{"crossSourceIdentityResolved":true,"sameBatchIdentityResolved":true}}';`,0);
   check('null_cross_source_resolution_stays_pending',`UPDATE person_claims SET claim_json=claim_json||'{"privateRegistrationBinding20261008":{"crossSourceIdentityResolved":null}}';`,1);
   check('string_cross_source_resolution_stays_pending',`UPDATE person_claims SET claim_json=claim_json||'{"privateRegistrationBinding20261008":{"crossSourceIdentityResolved":"true"}}';`,1);
+  for (const [name, value] of Object.entries({null:null, string:'true', boolean:true, number:1, array:[]})) {
+    check(`malformed_binding_${name}_stays_pending`, `UPDATE person_claims SET claim_json=claim_json||${json({privateRegistrationBinding20261008:value})};`, 1);
+  }
+  for (const date of ['2026-99-99', '2026-02-29', '2026-04-31']) {
+    check(`invalid_date_${date}_stays_pending`, `UPDATE person_claims SET claim_json=replace(claim_json::text,'2026-09-02','${date}')::jsonb; UPDATE source_people SET source_payload=replace(source_payload::text,'2026-09-02','${date}')::jsonb;`, 1);
+  }
   check('cross_source_hold_cannot_be_hidden_by_auto_match',crossSourceHold+`INSERT INTO person_identity_matches VALUES ('${sid}','${pid}','auto_matched',NULL,100);`,1);
   check('cross_source_hold_xlsx_stays_pending',xlsx+crossSourceHold,1);
   check('identity_hold_reopens',`UPDATE person_claims SET claim_json=claim_json||'{"identityAudit":{"status":"pending"}}';`,1);

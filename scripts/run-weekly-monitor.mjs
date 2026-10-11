@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { validateSnapshot } from './import-party-candidate-snapshot.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultLockPath = path.join(repoRoot, 'tmp', 'monitor-locks', 'weekly.lock');
@@ -12,6 +13,27 @@ const taiwanForwardSlugs = [
   'obasan-alliance',
   'green-party-taiwan',
 ];
+
+function selectLatestTppSnapshot(directory) {
+  if (!fs.existsSync(directory)) return null;
+  const snapshots = fs.readdirSync(directory)
+    .filter((name) => /^normalized-candidates-\d{4}-\d{2}-\d{2}\.json$/u.test(name))
+    .map((name) => {
+      const inputPath = path.join(directory, name);
+      const snapshot = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
+      validateSnapshot(snapshot);
+      const retrievedAt = Date.parse(snapshot.source.retrievedAt);
+      if (!Number.isFinite(retrievedAt) || snapshot.party !== '台灣民眾黨' || snapshot.electionYear !== 2026) {
+        throw new Error(`Invalid TPP comparison snapshot: ${inputPath}`);
+      }
+      return { inputPath, retrievedAt };
+    })
+    .sort((left, right) => right.retrievedAt - left.retrievedAt);
+  if (snapshots.length > 1 && snapshots[0].retrievedAt === snapshots[1].retrievedAt) {
+    throw new Error('Multiple TPP snapshots share the latest retrieval time; select an unambiguous source version');
+  }
+  return snapshots[0]?.inputPath ?? null;
+}
 
 function parseArgs(argv) {
   const options = { outputDir: path.join(repoRoot, 'tmp', 'weekly-monitor') };
@@ -245,6 +267,30 @@ function previousArgs(filePath) {
   return fs.existsSync(filePath) ? ['--previous', filePath] : [];
 }
 
+async function runPartyCandidateFreshness(livePartyInputs, outputDir, run, steps,
+  snapshotDirectory = path.join(repoRoot, 'data-sources', 'tpp', '2026-election')) {
+  const startedAtMs = Date.now();
+  try {
+    const tppSnapshot = selectLatestTppSnapshot(snapshotDirectory);
+    if (livePartyInputs.length > 0 || tppSnapshot) {
+      const freshnessArgs = ['scripts/report-party-candidate-source-freshness.mjs'];
+      for (const inputPath of livePartyInputs) freshnessArgs.push('--input', inputPath);
+      if (tppSnapshot) freshnessArgs.push('--browser-input', tppSnapshot);
+      freshnessArgs.push('--output', path.join(outputDir, 'party-candidate-freshness.json'));
+      await run('party-candidate-freshness', freshnessArgs);
+    }
+  } catch (error) {
+    steps.push({
+      name: 'party-candidate-freshness',
+      status: 'failed',
+      startedAt: new Date(startedAtMs).toISOString(),
+      finishedAt: new Date().toISOString(),
+      durationMs: Date.now() - startedAtMs,
+      error: error.message,
+    });
+  }
+}
+
 async function runWeeklyMonitor(options = parseArgs(process.argv.slice(2))) {
   fs.mkdirSync(options.outputDir, { recursive: true });
   const steps = [];
@@ -309,14 +355,7 @@ async function runWeeklyMonitor(options = parseArgs(process.argv.slice(2))) {
     }
   }
 
-  const tppSnapshot = path.join(repoRoot, 'data-sources', 'tpp', '2026-election', 'normalized-candidates-2026-07-29.json');
-  if (livePartyInputs.length > 0 || fs.existsSync(tppSnapshot)) {
-    const freshnessArgs = ['scripts/report-party-candidate-source-freshness.mjs'];
-    for (const inputPath of livePartyInputs) freshnessArgs.push('--input', inputPath);
-    if (fs.existsSync(tppSnapshot)) freshnessArgs.push('--browser-input', tppSnapshot);
-    freshnessArgs.push('--output', path.join(options.outputDir, 'party-candidate-freshness.json'));
-    await run('party-candidate-freshness', freshnessArgs);
-  }
+  await runPartyCandidateFreshness(livePartyInputs, options.outputDir, run, steps);
 
   const newsReportPath = path.join(options.outputDir, 'weekly-person-news.json');
   await run('weekly-person-news', [
@@ -371,5 +410,7 @@ export {
   releaseRunLock,
   runNodeStep,
   runWeeklyMonitor,
+  selectLatestTppSnapshot,
+  runPartyCandidateFreshness,
   summarizeWeeklyResults,
 };

@@ -65,6 +65,24 @@ BEGIN
  END;
 END;
 $assert$;
+-- 選後合格參選者的文件仍可讀；公開資格與私人邊界仍適用。
+DO $assert$
+DECLARE state TEXT; subject UUID; result JSONB;
+BEGIN
+ SELECT eligible_id INTO STRICT subject FROM qualification_fixture;
+ FOREACH state IN ARRAY ARRAY['elected', 'not_elected'] LOOP
+  UPDATE public.candidates SET registration_status=state, candidacy_status='qualified' WHERE id=subject;
+  EXECUTE 'SET LOCAL ROLE anon';
+  SELECT jsonb_agg(row) INTO result FROM published.candidate_asset_documents_for(ARRAY[subject]) row;
+  IF jsonb_array_length(result) IS DISTINCT FROM 2 OR result::text LIKE '%DO_NOT_EXPOSE%'
+  THEN RAISE EXCEPTION 'Post-election asset documents lost or private review exposed: %',state; END IF;
+  SELECT jsonb_agg(row) INTO result FROM published.candidate_lifecycle_for(subject) row;
+  IF (SELECT count(*) FROM jsonb_array_elements(result) r WHERE r->>'event_type'='asset_declaration_published') <> 2
+  THEN RAISE EXCEPTION 'Post-election asset timeline lost: %',state; END IF;
+  EXECUTE 'RESET ROLE';
+ END LOOP;
+END;
+$assert$;
 -- 姓名名錄若已有正式人物候選接替，不再公開舊名錄的文件。
 UPDATE public.registration_name_roster SET candidate_external_id=(
  SELECT c.external_id FROM public.candidates c JOIN qualification_fixture f ON c.id=f.template_id

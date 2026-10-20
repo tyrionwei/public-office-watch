@@ -28,7 +28,7 @@ BEGIN
         JOIN public.races r ON r.id = c.race_id AND r.is_public
         JOIN public.elections e ON e.id = r.election_id AND e.is_public AND e.year = 2026
         WHERE c.id = ANY(p_candidate_ids) AND c.is_public
-          AND c.registration_status IN ('registered', 'qualified')
+          AND c.registration_status IN ('registered', 'qualified', 'elected', 'not_elected')
           AND coalesce(c.candidacy_status, 'unknown') <> 'withdrawn_or_disqualified'
         UNION ALL
         SELECT n.id, true AS name_only
@@ -75,7 +75,7 @@ AS $function$
     WHERE event.candidate_id = p_candidate_id AND event.is_public
       AND EXISTS (SELECT 1 FROM published.candidates visible WHERE visible.candidate_id = candidate.id)
       AND (event.event_type <> 'asset_declaration_published' OR (
-          election.year = 2026 AND candidate.registration_status IN ('registered', 'qualified')
+          election.year = 2026 AND candidate.registration_status IN ('registered', 'qualified', 'elected', 'not_elected')
           AND coalesce(candidate.candidacy_status, 'unknown') <> 'withdrawn_or_disqualified'
       ))
     ORDER BY coalesce(event.occurred_on, event.source_published_on) DESC NULLS LAST, event.id

@@ -19,7 +19,7 @@ export async function startBirthDateFixture() {
     'components/PersonFeedbackPanel': `export const PersonFeedbackPanel=()=>null;`,
     'components/PlatformFulfillmentList': `export const PlatformFulfillmentList=()=>null;`,
     'lib/publicDataProviderFactory': `export const refreshConfiguredPublicDataProvider=async()=>{};`,
-    'lib/publicData': `export const publicDataProvider={loadPersonProfiles:async()=>{},getPersonProfile:()=>window.__birthdayProfile};`,
+    'lib/publicData': `export const publicDataProvider={loadPersonProfiles:async()=>{},loadPersonFamilyLinks:async()=>[],getPersonProfile:()=>window.__birthdayProfile};`,
     'lib/supabaseEnv': `export const getPublicDataProviderMode=()=> 'published';export const getSupabasePublicEnv=()=>null;`,
     'lib/supabasePublicClient': `const authMode=()=>new URLSearchParams(location.search).get('auth')??'admin';
       const admin={auth:{getSession:async()=>({data:{session:authMode()==='signed-out'?null:{user:{is_anonymous:authMode()==='anonymous'}}},error:null}),signOut:async()=>({error:null})},

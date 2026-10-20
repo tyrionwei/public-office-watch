@@ -25,6 +25,7 @@ export function installPageFailureControls() {
   const officeSummary = id => ({ region_id: id, region_name: id, chief_executive: null,
     deputies: [], agency_heads: [], councilor_total: 0, councilor_party_counts: [], data_status: [] });
   state.provider = {
+    loadCandidateAssetDocuments: ids => call('assetDocuments', [ids], []),
     getLocalOfficeSummaryByRegionId: officeSummary,
     loadLocalOfficeSummaryByRegionId: id => call('office', [id], state.empty.includes('office') ? officeSummary(id) : {
       ...officeSummary(id), councilor_total: 3,

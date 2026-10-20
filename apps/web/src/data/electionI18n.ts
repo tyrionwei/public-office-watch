@@ -132,17 +132,26 @@ export function translateElectionResult(result: PublicCandidate['election_result
 }
 
 export function translateCandidateStatus(candidate: PublicCandidate, t: Translate) {
+  if (candidate.registration_status === 'disqualified') return t('registration.status.disqualified');
+  if (candidate.registration_status === 'withdrawn') return t('registration.status.withdrawn');
   return candidate.election_result === 'elected' || candidate.election_result === 'not_elected'
     ? translateElectionResult(candidate.election_result, t)
     : translateCandidacyStatus(candidate.candidacy_status, t);
 }
 
+/** Whether a registration remains part of the effective candidate roster. */
+export function isEffectiveCandidate(candidate: PublicCandidate) {
+  return candidate.registration_status !== 'disqualified'
+    && candidate.registration_status !== 'withdrawn'
+    && candidate.candidacy_status !== 'withdrawn_or_disqualified';
+}
+
 export function isCandidateElected(candidate: PublicCandidate) {
-  return candidate.election_result === 'elected';
+  return isEffectiveCandidate(candidate) && candidate.election_result === 'elected';
 }
 
 export function isActiveCandidacy(candidate: PublicCandidate) {
-  return activeCandidacyStatuses.has(candidate.candidacy_status);
+  return isEffectiveCandidate(candidate) && activeCandidacyStatuses.has(candidate.candidacy_status);
 }
 
 export function translateRaceCategory(category: string, t: Translate) {

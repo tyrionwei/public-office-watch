@@ -1,5 +1,5 @@
 import { getRaceRegionGroup } from '../data/electionEvents.ts';
-import { isCandidateElected } from '../data/electionI18n.ts';
+import { isCandidateElected, isEffectiveCandidate } from '../data/electionI18n.ts';
 import type {
   PublicCandidate,
   PublicElectionEducationDistribution,
@@ -32,7 +32,7 @@ export function buildPartyElectionPerformance(
   const groups = new Map<string, PublicPartyElectionPerformance>();
 
   for (const candidate of candidates) {
-    if (!electionIdSet.has(candidate.election_id) || !raceIds.has(candidate.race_id)) continue;
+    if (!isEffectiveCandidate(candidate) || !electionIdSet.has(candidate.election_id) || !raceIds.has(candidate.race_id)) continue;
     const partyName = getStatisticsPartyLabel(candidate.party ?? candidate.person_party) || '無黨籍';
     const group = groups.get(partyName) ?? {
       party_name: partyName,
@@ -115,7 +115,7 @@ export function buildElectionEducationDistribution(
 
   const groups = new Map<string, PublicElectionEducationDistribution>();
   for (const candidate of candidates) {
-    if (!electionIdSet.has(candidate.election_id) || !raceIds.has(candidate.race_id)) continue;
+    if (!isEffectiveCandidate(candidate) || !electionIdSet.has(candidate.election_id) || !raceIds.has(candidate.race_id)) continue;
     const person = candidate.person_id ? peopleById.get(candidate.person_id) : undefined;
     const education = person?.education?.trim()
       || Array.from(new Set((candidate.person_id ? educationClaimsByPersonId.get(candidate.person_id) : undefined) ?? [])).join('；')

@@ -59,7 +59,17 @@ async function runWrite(input, complete = false) {
       tables.set(table, saved);
       return saved;
     },
-    selectAllOrThrow: async (_env, table, columns) => {
+    selectAllOrThrow: async (_env, table, columns, limit, filters) => {
+      if (table === 'person_claims') {
+        assert.equal(columns, 'id,person_id,review_status,visibility,is_public,claim_json');
+        assert.equal(limit, 1000);
+        assert.deepEqual(JSON.parse(JSON.stringify(filters)), {
+          review_status: 'eq.pending', is_public: 'eq.false', visibility: 'in.(private,review_only)',
+          'claim_json->identityAudit->>status': 'eq.pending',
+          'claim_json->identityAudit->>personPublicationHold': 'eq.true',
+        });
+        return [];
+      }
       if (table === 'regions') return tables.get(table);
       if (table === 'races' && columns === 'id,external_id,status') { if (!complete) throw stop; return tables.get(table); }
       if (complete && ['people', 'person_identity_matches'].includes(table)) return [];

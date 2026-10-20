@@ -69,6 +69,25 @@ test('groups only the selected election, race type and region with canonical par
   }]);
 });
 
+test('excludes withdrawn and disqualified registrations from election statistics', () => {
+  const rows = buildPartyElectionPerformance([
+    candidate('qualified', 'race-taipei', '民主進步黨'),
+    candidate('rejected', 'race-taipei', '民主進步黨', true),
+    candidate('withdrawn', 'race-taipei', '中國國民黨'),
+  ].map((row, index) => index === 1
+    ? { ...row, registration_status: 'disqualified', candidacy_status: 'withdrawn_or_disqualified', vote_count: 0 }
+    : index === 2
+      ? { ...row, registration_status: 'withdrawn', candidacy_status: 'withdrawn_or_disqualified' }
+      : row), races, ['election-2022'], { raceTypes: ['city_councilor'], regionKey: '臺北市' });
+
+  assert.deepEqual(rows, [{
+    party_name: '民主進步黨',
+    candidate_count: 1,
+    elected_count: 0,
+    pending_count: 0,
+  }]);
+});
+
 test('collapses small groups without changing totals', () => {
   const rows = Array.from({ length: 5 }, (_, index) => ({
     party_name: `party-${index}`,

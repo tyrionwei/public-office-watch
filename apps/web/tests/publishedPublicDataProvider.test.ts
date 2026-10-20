@@ -154,6 +154,9 @@ function createBridge(overrides: Partial<PublishedPublicDataBridge> = {}) {
     async loadPartyCandidatePage() {
       return { items: [], total: 0 };
     },
+    async loadPersonFamilyLinks() {
+      return [];
+    },
     async loadPersonProfiles() {
       return [];
     },
@@ -218,6 +221,30 @@ test('published provider refreshes home and party snapshots atomically and cache
   const page = await assembly.provider.loadPeoplePage({}, 1, 20);
   assert.equal(page.total, 1);
   assert.equal(assembly.provider.getPersonById('person-1')?.name, '測試市長');
+});
+
+test('candidate asset document reads are deduplicated, cached, and split into 128-id batches', async () => {
+  const calls: string[][] = [];
+  const { provider } = createPublishedPublicDataProvider(createBridge({
+    async loadCandidateAssetDocuments(ids) {
+      calls.push(ids);
+      return ids.map((candidate_id) => ({
+        candidate_id,
+        document_id: `doc-${candidate_id}`,
+        source_name: '2026官方申報文件',
+        source_url: 'https://pdps-dec.cec.gov.tw/document.pdf',
+        source_published_on: '2026-10-16',
+      }));
+    },
+  }));
+  const candidateIds = Array.from({ length: 129 }, (_, index) => `candidate-${index}`);
+
+  const first = await provider.loadCandidateAssetDocuments([...candidateIds, candidateIds[0]]);
+  const second = await provider.loadCandidateAssetDocuments(candidateIds);
+
+  assert.equal(first.length, 129);
+  assert.deepEqual(second, first);
+  assert.deepEqual(calls.map((ids) => ids.length), [128, 1]);
 });
 
 test('published provider loads races for a region omitted from the bounded home race list', async () => {
@@ -413,4 +440,20 @@ test('explicit person retry bypasses a cached profile and replaces displayed dat
   await provider.loadPersonProfiles(['person-1'], true);
   assert.equal(loads, 2);
   assert.equal(provider.getPersonProfile('person-1')?.person.name, '版本 2');
+});
+
+test('family links deduplicate and cache four-person batches without changing profile JSON', async () => {
+  const calls: string[][] = [];
+  const { provider } = createPublishedPublicDataProvider(createBridge({
+    async loadPersonFamilyLinks(ids) {
+      calls.push(ids);
+      return ids.map((person_id) => ({ claim_id: `family-${person_id}`, person_id, relative_person_id: 'relative-1', relative_name: '測試親屬' }));
+    },
+  }));
+  const ids = ['person-1', 'person-2', 'person-3', 'person-4', 'person-5'];
+  const first = await provider.loadPersonFamilyLinks([...ids, ' person-1 ', '']);
+  assert.equal(first.length, 5);
+  assert.deepEqual(await provider.loadPersonFamilyLinks([...ids].reverse()), first);
+  assert.deepEqual(calls.map((batch) => batch.length), [4, 1]);
+  assert.equal(provider.getPersonProfile('person-1'), null);
 });

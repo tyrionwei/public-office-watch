@@ -15,7 +15,7 @@ import {
   pickPersonCandidateSprite,
   xiezhiMascotSprite,
 } from '../data/defaultCharacterAssets';
-import { translateCandidacyStatus, translateElectionResult } from '../data/electionI18n';
+import { isEffectiveCandidate, translateCandidateStatus, translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import type { TranslationKey } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
@@ -29,9 +29,9 @@ import { platformClaimsForCandidate } from '../lib/candidatePlatform';
 import type { FeedbackSectionKey } from '../lib/personFeedback';
 import { getCandidateElectionLabel, getPartyChangeAffiliations, getPersonDisplayPosition, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { educationProfileItems, experienceProfileItems } from '../lib/profileResume';
-import { dataGuidancePath, peoplePath } from '../routes/routePaths';
+import { dataGuidancePath, peoplePath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicCandidate, PublicPersonClaim, PublicPersonPartyAffiliation } from '../types/publicViews';
+import type { PublicCandidate, PublicPersonClaim, PublicPersonFamilyLink, PublicPersonPartyAffiliation } from '../types/publicViews';
 
 const genderLabels: Record<'male' | 'female' | 'unknown', TranslationKey> = {
   male: 'person.gender.male',
@@ -124,12 +124,13 @@ function candidateDetailRows(
   replacementElected: boolean,
 ) {
   const rows: Array<[string, string, string?]> = [];
-  const voteCount = formatVoteCount(candidate.vote_count, locale);
-  const voteRate = formatVoteRate(candidate.vote_rate);
+  const qualificationRejected = !isEffectiveCandidate(candidate);
+  const voteCount = qualificationRejected ? null : formatVoteCount(candidate.vote_count, locale);
+  const voteRate = qualificationRejected ? null : formatVoteRate(candidate.vote_rate);
 
   if (candidate.region_name) rows.push([t('person.region'), candidate.region_name]);
   rows.push([t('person.party'), normalizePartyLabel(candidate.party)]);
-  if (candidate.election_result === 'elected' || candidate.election_result === 'not_elected') {
+  if (!qualificationRejected && (candidate.election_result === 'elected' || candidate.election_result === 'not_elected')) {
     rows.push([
       t('person.electionResult'),
       translateElectionResult(candidate.election_result, t),
@@ -251,10 +252,12 @@ function claimsByType(claims: PublicPersonClaim[], claimType: PublicPersonClaim[
 
 function ClaimCard({
   claim,
+  familyLink,
   correctionSection,
   onRequestCorrection,
 }: {
   claim: PublicPersonClaim;
+  familyLink?: PublicPersonFamilyLink;
   correctionSection?: Extract<FeedbackSectionKey, 'finance' | 'legal' | 'family'>;
   onRequestCorrection?: (section: FeedbackSectionKey) => void;
 }) {
@@ -274,6 +277,11 @@ function ClaimCard({
       {legal ? (
         <LegalRecordSummary legal={legal} classification={classification} documentStatus={documentStatus} />
       ) : <h3 className="mt-2 text-sm font-semibold text-white">{claim.claim_value ?? t('person.noContent')}</h3>}
+      {familyLink ? (
+        <Link to={personPath(familyLink.relative_person_id)} className="mt-3 inline-block text-sm text-accent underline hover:text-white">
+          {t('person.family.viewPerson')}{familyLink.relative_name}
+        </Link>
+      ) : null}
       {legal ? (
         <details className="mt-4 border-t border-line/60 pt-3">
           <summary className="cursor-pointer text-xs text-accent">{t('person.legal.details')}</summary>
@@ -440,11 +448,13 @@ class ClaimBoundary extends Component<ClaimBoundaryProps, { failed: boolean }> {
 
 function ClaimGrid({
   claims,
+  familyLinks = [],
   correctionSection,
   onRequestCorrection,
   onRetry,
 }: {
   claims: PublicPersonClaim[];
+  familyLinks?: PublicPersonFamilyLink[];
   correctionSection: Extract<FeedbackSectionKey, 'finance' | 'legal' | 'family'>;
   onRequestCorrection: (section: FeedbackSectionKey) => void;
   onRetry: () => void;
@@ -455,6 +465,10 @@ function ClaimGrid({
         <ClaimBoundary key={claim.claim_id} claim={claim} onRetry={onRetry}>
           <ClaimCard
             claim={claim}
+            familyLink={correctionSection === 'family' ? familyLinks.find((link) =>
+              link.claim_id === claim.claim_id && link.person_id === claim.person_id
+              && link.relative_person_id !== claim.person_id && Boolean(link.relative_person_id.trim())
+              && Boolean(link.relative_name.trim())) : undefined}
             correctionSection={correctionSection}
             onRequestCorrection={onRequestCorrection}
           />
@@ -495,6 +509,9 @@ export function PersonPage() {
   const [retryVersion, setRetryVersion] = useState(0);
   const [feedbackRequest, setFeedbackRequest] = useState<{ section: FeedbackSectionKey; version: number } | null>(null);
   const loading = loadedPersonId !== safePersonId;
+  const [familyLinkResult, setFamilyLinkResult] = useState<{
+    personId: string; links: PublicPersonFamilyLink[]; failed: boolean;
+  } | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -523,6 +540,24 @@ export function PersonPage() {
     };
   }, [safePersonId, retryVersion]);
 
+  useEffect(() => {
+    if (loading || !safePersonId || failedPersonId === safePersonId) return;
+    let active = true;
+    setFamilyLinkResult(null);
+    void publicDataProvider.loadPersonFamilyLinks([safePersonId])
+      .then((links) => {
+        if (active) setFamilyLinkResult({ personId: safePersonId, links, failed: false });
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        setFamilyLinkResult({ personId: safePersonId, links: [], failed: true });
+        if (import.meta.env.DEV) console.warn('Failed to load person family links', error);
+      });
+    return () => { active = false; };
+  }, [loading, safePersonId, failedPersonId, retryVersion]);
+
+  const familyLinks = familyLinkResult?.personId === safePersonId ? familyLinkResult.links : [];
+  const familyLinksFailed = familyLinkResult?.personId === safePersonId && familyLinkResult.failed;
   const profile = loading ? null : publicDataProvider.getPersonProfile(safePersonId);
   const person = profile?.person ?? null;
   const partyOffices = profile?.party_affiliations.filter((affiliation) => affiliation.role_context === 'party_officer' && affiliation.is_current) ?? [];
@@ -805,7 +840,7 @@ export function PersonPage() {
                           <h3 className="mt-2 font-display text-lg text-white">{candidate.race_title}</h3>
                         </div>
                         <span className="theme-candidacy-status text-xs text-signal">
-                          {t('person.candidacyStatusValue', { status: translateCandidacyStatus(candidate.candidacy_status, t) })}
+                          {t('person.candidacyStatusValue', { status: translateCandidateStatus(candidate, t) })}
                         </span>
                       </div>
                       <dl className="mt-3 space-y-2 text-sm">
@@ -906,8 +941,9 @@ export function PersonPage() {
               </div>
               <div className="order-3 md:order-none">
                 <SectionPanel title={t('person.familyTitle')} eyebrow={t('person.reviewedEyebrow')}>
+                  {familyLinksFailed && familyClaims.length > 0 ? <p role="status" className="mb-3 text-sm text-slate-400">{t('person.family.linkLoadError')}</p> : null}
                   {familyClaims.length > 0 ? (
-                    <ClaimGrid claims={familyClaims} correctionSection="family" onRequestCorrection={handleRequestCorrection} onRetry={handleRetry} />
+                    <ClaimGrid claims={familyClaims} familyLinks={familyLinks} correctionSection="family" onRequestCorrection={handleRequestCorrection} onRetry={handleRetry} />
                   ) : rawFamilyClaims.length > 0 ? (
                     <DataStateNotice kind="pending">{t('person.family.pending')}</DataStateNotice>
                   ) : (

@@ -430,6 +430,12 @@ export const mockPublicDataProvider: PublicDataProvider = {
   async loadCandidateLifecycle() {
     return [];
   },
+  async loadPersonFamilyLinks() {
+    return [];
+  },
+  async loadCandidateAssetDocuments() {
+    return [];
+  },
   async loadPartyPlatformHistory() {
     return [];
   },

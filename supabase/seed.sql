@@ -77,6 +77,12 @@ TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION published.person_profiles_for(UUID[])
 TO anon, authenticated;
 
+GRANT EXECUTE ON FUNCTION published.person_family_links_for(UUID[])
+TO anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION published.candidate_asset_documents_for(UUID[])
+TO anon, authenticated;
+
 GRANT EXECUTE ON FUNCTION published.race_page_for(UUID)
 TO anon, authenticated;
 

@@ -8,6 +8,7 @@ import {
   ELECTION_PARTY_PERFORMANCE_LIMIT,
   ELECTION_RACE_PAGE_ELECTION_LIMIT,
   ELECTION_RACE_PAGE_SIZE,
+  CANDIDATE_ASSET_DOCUMENT_LIMIT,
   HOME_RACE_LIMIT,
   HOME_REGION_LIMIT,
   LOCAL_OFFICE_PERSON_LIMIT,
@@ -660,6 +661,73 @@ test('person profile reads reject more than four unique ids before querying', as
   assert.deepEqual(fake.calls, []);
 });
 
+test('candidate asset documents return two documents for each of 128 candidates', async () => {
+  const candidateIds = Array.from({ length: 128 }, (_, index) => `candidate-${index}`);
+  const documents = candidateIds.flatMap((candidate_id) => [1, 2].map((number) => ({
+    candidate_id,
+    document_id: `doc-${candidate_id}-${number}`,
+    source_name: '2026官方申報文件',
+    source_url: `https://pdps-dec.cec.gov.tw/release/formal/files/${candidate_id}-${number}.pdf`,
+    source_published_on: '2026-10-16',
+  })));
+  const fake = createFakeClient({
+    'rpc:candidate_asset_documents_for': { data: documents, error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.equal((await adapter.loadCandidateAssetDocuments(candidateIds)).length, 256);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['rpc', 'candidate_asset_documents_for', { p_candidate_ids: candidateIds }],
+  ]);
+});
+
+test('candidate asset documents deduplicate ids in one bounded RPC', async () => {
+  const document = {
+    candidate_id: 'candidate-1', document_id: 'doc-1', source_name: '2026官方申報文件',
+    source_url: 'https://pdps-dec.cec.gov.tw/release/formal/files/1.pdf', source_published_on: '2026-10-16',
+  };
+  const fake = createFakeClient({
+    'rpc:candidate_asset_documents_for': { data: [document], error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  assert.deepEqual(await adapter.loadCandidateAssetDocuments([' candidate-1 ', 'candidate-1', 'candidate-2']), [document]);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['rpc', 'candidate_asset_documents_for', { p_candidate_ids: ['candidate-1', 'candidate-2'] }],
+  ]);
+});
+
+test('candidate asset document reads fail explicitly above the 512-row response limit', async () => {
+  const documents = Array.from({ length: CANDIDATE_ASSET_DOCUMENT_LIMIT + 1 }, (_, index) => ({
+    candidate_id: `candidate-${index % 128}`,
+    document_id: `doc-${index}`,
+    source_name: '2026官方申報文件',
+    source_url: `https://pdps-dec.cec.gov.tw/release/formal/files/${index}.pdf`,
+    source_published_on: '2026-10-16',
+  }));
+  const fake = createFakeClient({
+    'rpc:candidate_asset_documents_for': { data: documents, error: null, count: null },
+  });
+  const adapter = createPublishedReadAdapter(fake.client);
+
+  await assert.rejects(
+    () => adapter.loadCandidateAssetDocuments(Array.from({ length: 128 }, (_, index) => `candidate-${index}`)),
+    /Published candidate asset documents exceeded the 512-row batch limit/u,
+  );
+});
+
+test('candidate asset document reads reject more than 128 ids before querying', async () => {
+  const fake = createFakeClient({});
+  const adapter = createPublishedReadAdapter(fake.client);
+  await assert.rejects(
+    () => adapter.loadCandidateAssetDocuments(Array.from({ length: 129 }, (_, index) => `candidate-${index}`)),
+    /128-row batch limit/u,
+  );
+  assert.deepEqual(fake.calls, []);
+});
+
 test('person profile reads fail closed when a payload collection exceeds its limit', async () => {
   const fake = createFakeClient({
     'rpc:person_profiles_for': {
@@ -1298,4 +1366,27 @@ test('party people statistics require a non-empty party name', async () => {
     /require a party name/u,
   );
   assert.deepEqual(fake.calls, []);
+});
+
+test('family links use only the bounded published RPC with normalized person ids', async () => {
+  const link = { claim_id: 'family-1', person_id: 'person-1', relative_person_id: 'person-2', relative_name: '測試親屬' };
+  const fake = createFakeClient({ 'rpc:person_family_links_for': { data: [link], error: null, count: null } });
+  const adapter = createPublishedReadAdapter(fake.client);
+  assert.deepEqual(await adapter.loadPersonFamilyLinks([' person-1 ', 'person-1', '']), [link]);
+  assert.deepEqual(fake.calls, [
+    ['schema', 'published'],
+    ['rpc', 'person_family_links_for', { p_person_ids: ['person-1'] }],
+  ]);
+  assert.deepEqual(await adapter.loadPersonFamilyLinks([]), []);
+  await assert.rejects(() => adapter.loadPersonFamilyLinks(['1', '2', '3', '4', '5']), /at most 4 person ids/u);
+  assert.equal(fake.calls.length, 2);
+});
+
+test('family link RPC errors and 401-row responses remain explicit failures', async () => {
+  const failed = createFakeClient({ 'rpc:person_family_links_for': { data: null, error: { message: 'unavailable' }, count: null } });
+  await assert.rejects(() => createPublishedReadAdapter(failed.client).loadPersonFamilyLinks(['person-1']), /unavailable/u);
+  const excessive = createFakeClient({ 'rpc:person_family_links_for': {
+    data: Array.from({ length: PERSON_CLAIM_LIMIT + 1 }, () => ({})), error: null, count: null,
+  } });
+  await assert.rejects(() => createPublishedReadAdapter(excessive.client).loadPersonFamilyLinks(['person-1']), /Published person family links exceeded the 400-row batch limit/u);
 });

@@ -409,6 +409,30 @@ export function createPublishedPublicDataProvider(
       return cached('candidate-lifecycle:' + candidateId, pageDataStaleTimeMs,
         () => bridge.loadCandidateLifecycle(candidateId));
     },
+    async loadPersonFamilyLinks(rawPersonIds: string[]) {
+      const personIds = Array.from(new Set(rawPersonIds.map((id) => id.trim()).filter(Boolean))).sort();
+      if (personIds.length === 0) return [];
+      const links = await Promise.all(
+        Array.from({ length: Math.ceil(personIds.length / 4) }, (_, index) => {
+          const batch = personIds.slice(index * 4, (index + 1) * 4);
+          return cached(`person-family-links:${batch.join(',')}`, pageDataStaleTimeMs,
+            () => bridge.loadPersonFamilyLinks(batch));
+        }),
+      );
+      return links.flat();
+    },
+    async loadCandidateAssetDocuments(rawCandidateIds: string[]) {
+      const candidateIds = Array.from(new Set(rawCandidateIds.map((id) => id.trim()).filter(Boolean))).sort();
+      if (candidateIds.length === 0) return [];
+      const documents = await Promise.all(
+        Array.from({ length: Math.ceil(candidateIds.length / 128) }, (_, index) => {
+          const batch = candidateIds.slice(index * 128, (index + 1) * 128);
+          return cached(`candidate-asset-documents:${batch.join(',')}`, pageDataStaleTimeMs,
+            () => bridge.loadCandidateAssetDocuments(batch));
+        }),
+      );
+      return documents.flat();
+    },
     async loadPersonProfiles(personIds: string[], refresh = false) {
       const normalizedIds = Array.from(new Set(personIds)).sort();
       const profiles = await cached(`profiles:${normalizedIds.join(',')}`, pageDataStaleTimeMs, () =>

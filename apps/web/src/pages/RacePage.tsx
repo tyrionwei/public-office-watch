@@ -9,7 +9,7 @@ import { PartyListRacePanel } from '../components/PartyListRacePanel';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
 import { buildElectionEvents, getElectionEventForRace, getRaceRegionGroup } from '../data/electionEvents';
-import { isCandidateElected, translateCandidateStatus, translateElectionEventTitle, translateElectionStatus, translateRaceCategory, translateRaceStatus, translateRaceType } from '../data/electionI18n';
+import { isCandidateElected, isEffectiveCandidate, translateCandidateStatus, translateElectionEventTitle, translateElectionStatus, translateRaceCategory, translateRaceStatus, translateRaceType } from '../data/electionI18n';
 import { getRaceCategory } from '../data/electionLabels';
 import { useI18n, type Translate } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
@@ -19,7 +19,7 @@ import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../l
 import { groupRaceCandidates, isPresidentialTicketRace, type CandidateIncumbencyBadge } from '../lib/raceCandidateGroups';
 import { electionEventPath, electionsPath, personPath } from '../routes/routePaths';
 import { partyTheme } from '../styles/partyThemes';
-import type { PublicCandidate, PublicPersonProfile } from '../types/publicViews';
+import type { PublicCandidate, PublicCandidateAssetDocument, PublicPersonProfile } from '../types/publicViews';
 
 function formatNumber(value: number | null, locale: string) {
   return value === null ? '—' : new Intl.NumberFormat(locale).format(value);
@@ -74,6 +74,7 @@ export function RacePage() {
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [comparisonResult, setComparisonResult] = useState<{ key: string; status: 'loading' | 'ready' | 'error'; profiles: PublicPersonProfile[] } | null>(null);
   const [comparisonAttempt, setComparisonAttempt] = useState(0);
+  const [assetDocumentsState, setAssetDocumentsState] = useState<{ key: string; documents: PublicCandidateAssetDocument[]; status: 'loading' | 'ready' | 'error' } | null>(null);
   const [isMobileViewport, setIsMobileViewport] = useState(() => window.matchMedia('(max-width: 767px)').matches);
 
   useEffect(() => {
@@ -119,7 +120,7 @@ export function RacePage() {
 
   const { race, election } = detail;
   const candidates = useMemo(
-    () => detail.candidates.slice().sort((left, right) => compareCandidates(left, right, language)),
+    () => detail.candidates.filter(isEffectiveCandidate).slice().sort((left, right) => compareCandidates(left, right, language)),
     [detail.candidates, language],
   );
   const candidateGroups = useMemo(
@@ -131,6 +132,50 @@ export function RacePage() {
     () => new Set(candidates.map((candidate) => candidate.person_id).filter(Boolean)),
     [candidates],
   );
+  const assetDocumentCandidateIds = useMemo(
+    () => Array.from(new Set(candidates.map((candidate) => candidate.candidate_id))).sort(),
+    [candidates],
+  );
+  const assetDocumentKey = assetDocumentCandidateIds.join(',');
+  const supportsAssetDeclarationDocuments = election?.year === 2026 && (
+    race?.race_type === 'municipality_mayor'
+    || race?.race_type === 'county_mayor'
+    || race?.race_type === 'city_councilor'
+    || race?.race_type === 'county_councilor'
+  );
+  useEffect(() => {
+    if (!supportsAssetDeclarationDocuments || !assetDocumentKey) {
+      setAssetDocumentsState({ key: '', documents: [], status: 'ready' });
+      return;
+    }
+    let active = true;
+    setAssetDocumentsState({ key: assetDocumentKey, documents: [], status: 'loading' });
+    void publicDataProvider.loadCandidateAssetDocuments(assetDocumentCandidateIds)
+      .then((documents) => {
+        if (active) setAssetDocumentsState({ key: assetDocumentKey, documents, status: 'ready' });
+      })
+      .catch((error: unknown) => {
+        if (active) setAssetDocumentsState({ key: assetDocumentKey, documents: [], status: 'error' });
+        if (import.meta.env.DEV) console.warn('Failed to load candidate asset declaration documents', error);
+      });
+    return () => { active = false; };
+  }, [assetDocumentCandidateIds, assetDocumentKey, supportsAssetDeclarationDocuments]);
+  const assetDocuments = useMemo(
+    () => assetDocumentsState?.key === assetDocumentKey ? assetDocumentsState.documents : [],
+    [assetDocumentsState, assetDocumentKey],
+  );
+  const assetDocumentsByCandidate = useMemo(() => {
+    const grouped = new Map<string, typeof assetDocuments>();
+    for (const document of assetDocuments) {
+      const items = grouped.get(document.candidate_id) ?? [];
+      items.push(document);
+      grouped.set(document.candidate_id, items);
+    }
+    for (const documents of grouped.values()) {
+      documents.sort((left, right) => left.document_id.localeCompare(right.document_id));
+    }
+    return grouped;
+  }, [assetDocuments]);
   const comparisonLimit = isMobileViewport ? 2 : 4;
   const selectedPersonIds = useMemo(
     () => Array.from(new Set((searchParams.get('compare') ?? '').split(',').filter(Boolean)))
@@ -406,6 +451,9 @@ export function RacePage() {
         ) : null}
 
         {!isReferendum && !isPartyList ? <SectionPanel title={candidateGroups.length > 0 ? t('race.listTitle') : t('race.listFallbackTitle')} eyebrow={t('race.roster')}>
+          {assetDocumentsState?.key === assetDocumentKey && assetDocumentsState.status === 'error' ? (
+            <p role="status" className="mb-3 text-xs text-amber-200">{t('race.assetDeclarationDocumentsUnavailable')}</p>
+          ) : null}
           {candidateGroups.length > 0 ? (
             <div className="overflow-hidden pixel-corners border border-line/70">
               <div className="hidden gap-3 border-b border-line/70 bg-panelAlt/55 px-4 py-2 text-xs uppercase tracking-[0.16em] text-slate-500 lg:grid lg:grid-cols-[44px_72px_minmax(150px,1fr)_minmax(120px,0.55fr)_96px_100px_96px]">
@@ -477,6 +525,21 @@ export function RacePage() {
                           ))}
                         </div>
                         <p className="mt-1 truncate text-xs text-slate-500">{memberPositions || race.title}</p>
+                        {group.members.flatMap((member) => assetDocumentsByCandidate.get(member.candidate_id) ?? []).map((document) => {
+                          let safeUrl: string | null = null;
+                          try {
+                            const parsed = new URL(document.source_url);
+                            if (parsed.protocol === 'https:' && !parsed.username && !parsed.password) safeUrl = parsed.href;
+                          } catch { /* Invalid published URLs are not rendered as links. */ }
+                          return safeUrl ? (
+                            <a key={document.document_id} href={safeUrl} target="_blank" rel="noreferrer" className="mr-2 mt-1 inline-block text-xs text-accent underline underline-offset-4">
+                              {t('race.assetDeclarationDocuments')} · {t('race.assetDeclarationDocumentNumber', { number: (assetDocumentsByCandidate.get(document.candidate_id) ?? []).findIndex((item) => item.document_id === document.document_id) + 1 })} ↗
+                            </a>
+                          ) : null;
+                        })}
+                        {group.members.some((member) => (assetDocumentsByCandidate.get(member.candidate_id)?.length ?? 0) > 0) ? (
+                          <p className="mt-1 text-[11px] text-slate-500">{t('race.assetDeclarationAmountNotReviewed')}</p>
+                        ) : null}
                       </div>
                       <div className="min-w-0 max-lg:col-start-2 max-lg:row-start-3">
                         <span

@@ -292,6 +292,23 @@ assert.equal(multipleResults.has('01-001-00-1'), false);
 const nationalIndex = buildHistoricalCecAggregateResultIndex({ candidateRows: [legacyCandidate], resultRows: [legacyResult, ['00', '000', '00', '000', '0000', '0', '1', '200', '60', '*']], classification: indigenousLegislator });
 assert.deepEqual(nationalIndex.get('1'), { voteCount: 200, voteRate: 60, elected: true });
 
+// 官方 elctks 的婦女保障標記不能被解讀成落選；票數、得票率保持原值。
+for (const [county, district, number, votes, rate] of [
+  ['005', '03', '4', '3238', '7.49'],
+  ['008', '01', '14', '3587', '5.07'],
+]) {
+  for (const [marker, elected] of [['*', true], ['!', true], [' ! ', true], ['-', false], ['', false]]) {
+    const candidate = ['01', county, district, '000', '0000', number, '測試候選人'];
+    const result = ['01', county, district, '000', '0000', '0', number, votes, rate, marker];
+    const index = buildHistoricalCecAggregateResultIndex({
+      candidateRows: [candidate], resultRows: [result], classification: regionalCouncilor,
+    });
+    assert.deepEqual(index.get(historicalCecAggregateResultKey(candidate, regionalCouncilor, number)), {
+      voteCount: Number(votes), voteRate: Number(rate), elected,
+    });
+  }
+}
+
 
 
 assert.deepEqual(

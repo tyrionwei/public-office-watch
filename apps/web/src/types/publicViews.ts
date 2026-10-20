@@ -724,3 +724,18 @@ export type PublicPersonProfile = {
   legal_record_status: 'review_required' | 'todo';
   family_relation_status: 'review_required' | 'todo';
 };
+
+export type PublicCandidateAssetDocument = {
+  candidate_id: string;
+  document_id: string;
+  source_name: string;
+  source_url: string;
+  source_published_on: string | null;
+};
+
+export type PublicPersonFamilyLink = {
+  claim_id: string;
+  person_id: string;
+  relative_person_id: string;
+  relative_name: string;
+};

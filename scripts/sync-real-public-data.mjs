@@ -1125,7 +1125,8 @@ export function buildHistoricalCecAggregateResultIndex({ resultRows, candidateRo
   const resultValue = (row) => ({
     voteCount: Number.parseInt(cleanCecCell(row[7]), 10),
     voteRate: Number.parseFloat(cleanCecCell(row[8])),
-    elected: cleanCecCell(row[9]) === '*',
+    // 中選會 elctks 格式：* 當選、! 婦女保障當選、- 因婦女保障未當選。
+    elected: ['*', '!'].includes(cleanCecCell(row[9])),
   });
   for (const [key, rows] of grouped) {
     if (rows.length === 1) resultByKey.set(key, resultValue(rows[0]));
@@ -4148,10 +4149,51 @@ async function hideKnownSamplePublicRows(env) {
   await supabasePatch(env, 'person_media', { source_url: 'https://example.com/placeholder' }, { is_public: false });
 }
 
+// Only an explicit, private reviewed publication marker can suppress reimport.
+// Research deferrals and ordinary pending identity claims are not publication holds.
+function identityPublicationHoldsFromClaims(claims) {
+  return claims.flatMap((claim) => {
+    const audit = claim.claim_json?.identityAudit;
+    if (claim.review_status !== 'pending' || claim.is_public !== false
+      || !['private', 'review_only'].includes(claim.visibility)
+      || audit?.status !== 'pending' || audit.personPublicationHold !== true
+      || typeof claim.person_id !== 'string' || !claim.person_id.trim()
+      || typeof audit.personExternalId !== 'string' || !audit.personExternalId.trim()
+      || typeof audit.sourcePersonKey !== 'string' || !audit.sourcePersonKey.trim()
+      || claim.claim_json?.sourcePersonKey !== audit.sourcePersonKey) return [];
+    return [{ personId: claim.person_id, personExternalId: audit.personExternalId, sourcePersonKey: audit.sourcePersonKey }];
+  });
+}
+
+function preserveIdentityHeldPeople(rows, holds) {
+  const externalIds = new Set(holds.map((hold) => hold.personExternalId));
+  return rows.map((row) => externalIds.has(row.external_id) ? { ...row, is_public: false } : row);
+}
+
+function preserveIdentityHeldAffiliations(rows, holds) {
+  return rows.map((row) => holds.some((hold) => hold.personId === row.person_id
+    && hold.sourcePersonKey === row.source_payload?.sourcePersonKey)
+    ? { ...row, review_status: 'pending', is_public: false } : row);
+}
+
+async function fetchIdentityPublicationHolds(env) {
+  const claims = await selectAllOrThrow(env, 'person_claims',
+    'id,person_id,review_status,visibility,is_public,claim_json', 1000, {
+      review_status: 'eq.pending',
+      is_public: 'eq.false',
+      visibility: 'in.(private,review_only)',
+      'claim_json->identityAudit->>status': 'eq.pending',
+      'claim_json->identityAudit->>personPublicationHold': 'eq.true',
+    });
+  return identityPublicationHoldsFromClaims(claims);
+}
+
 async function writeSeed(seed, hash, args) {
   assertSeedUsesReviewedGrassrootsImport(seed);
   const env = getSupabaseEnv();
   const startedAt = new Date().toISOString();
+
+  const identityPublicationHolds = await fetchIdentityPublicationHolds(env);
 
   await hideKnownSamplePublicRows(env);
 
@@ -4288,7 +4330,7 @@ async function writeSeed(seed, hash, args) {
     };
   });
 
-  const people = await upsertOrThrow(env, 'people', personRows, { onConflict: 'external_id' });
+  const people = await upsertOrThrow(env, 'people', preserveIdentityHeldPeople(personRows, identityPublicationHolds), { onConflict: 'external_id' });
   const personByExternalId = new Map(people.map((person) => [person.external_id, person]));
   const peopleRefresh = await selectAllOrThrow(env, 'people', 'id,external_id,name,party,position,district,gender');
 
@@ -4427,7 +4469,7 @@ async function writeSeed(seed, hash, args) {
     ...buildPersonPartyAffiliationRows(seed, sourcePersonByKey, personByExternalId, sourcePeopleWithMatches, startedAt),
     ...buildEnrichmentPartyAffiliationRows(personEnrichmentClaimRows, startedAt),
   ];
-  await upsertOrThrow(env, 'person_party_affiliations', personPartyAffiliationRows, {
+  await upsertOrThrow(env, 'person_party_affiliations', preserveIdentityHeldAffiliations(personPartyAffiliationRows, identityPublicationHolds), {
     onConflict: 'affiliation_key',
   });
 
@@ -4708,6 +4750,9 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? '')) {
 }
 
 export {
+  identityPublicationHoldsFromClaims,
+  preserveIdentityHeldPeople,
+  preserveIdentityHeldAffiliations,
   writeSeed,
   buildProbableIdentityMatchRows,
   buildCurrentOfficeholders,

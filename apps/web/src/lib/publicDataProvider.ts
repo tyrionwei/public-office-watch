@@ -4,6 +4,7 @@ import type { RegionCard, UpcomingRace } from '../data/mockHomeData';
 import type { PollComparison } from '../types/polling';
 import type {
   PublicCandidate,
+  PublicCandidateAssetDocument,
   PublicCompany,
   PublicElection,
   PublicElectionEducationDistribution,
@@ -28,6 +29,7 @@ import type {
   PublicPersonListItem,
   PublicPersonPartyAffiliation,
   PublicPersonProfile,
+  PublicPersonFamilyLink,
   PublicRace,
   PublicReferendumOption,
   PublicReferendumQuestion,
@@ -176,6 +178,8 @@ export interface PublicDataProvider {
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
   loadPollingPlaces(eventKey: string, villageCode: string): Promise<PollingPlace[]>;
   loadCandidateLifecycle(candidateId: string): Promise<CandidateLifecycleEvent[]>;
+  loadCandidateAssetDocuments(candidateIds: string[]): Promise<PublicCandidateAssetDocument[]>;
+  loadPersonFamilyLinks(personIds: string[]): Promise<PublicPersonFamilyLink[]>;
   loadPartyPlatformHistory(partyId: string): Promise<PublicPartyPlatformHistory[]>;
   loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
   loadPartyLegalStatistics(partyName: string): Promise<PublicPartyLegalStatistics>;

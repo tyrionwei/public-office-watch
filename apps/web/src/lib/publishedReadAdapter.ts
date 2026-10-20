@@ -1,5 +1,6 @@
 import type { PollingPlace } from '../types/pollingPlace';
 import type { CandidateLifecycleEvent } from '../types/candidateLifecycle';
+import type { PublicCandidateAssetDocument, PublicPersonFamilyLink } from '../types/publicViews';
 import type {
   PublicElection,
   PublicElectionEducationDistribution,
@@ -52,6 +53,7 @@ export const ELECTION_RACE_PAGE_SIZE = PUBLIC_ELECTION_RACE_PAGE_SIZE;
 export const ELECTION_EDUCATION_DISTRIBUTION_LIMIT = 9;
 export const ELECTION_PARTY_PERFORMANCE_LIMIT = 50;
 export const PERSON_PROFILE_BATCH_LIMIT = 4;
+export const CANDIDATE_ASSET_DOCUMENT_LIMIT = 512;
 export const PERSON_CANDIDATE_LIMIT = 100;
 export const PERSON_CLAIM_LIMIT = 400;
 export const LOCAL_OFFICE_PERSON_LIMIT = 200;
@@ -761,6 +763,8 @@ export type PublishedReadAdapter = {
   loadPartyOfficers(partyId: string): Promise<PublicPartyOfficer[]>;
   loadPollingPlaces(eventKey: string, villageCode: string): Promise<PollingPlace[]>;
   loadCandidateLifecycle(candidateId: string): Promise<CandidateLifecycleEvent[]>;
+  loadCandidateAssetDocuments(candidateIds: string[]): Promise<PublicCandidateAssetDocument[]>;
+  loadPersonFamilyLinks(personIds: string[]): Promise<PublicPersonFamilyLink[]>;
   loadPartyPlatformHistory(partyId: string): Promise<PublicPartyPlatformHistory[]>;
   loadPartyPeopleStatistics(partyName: string): Promise<PublicPartyPeopleStatisticRow[]>;
   loadPartyLegalStatistics(partyName: string): Promise<PublicPartyLegalStatistics>;
@@ -1373,6 +1377,23 @@ export function createPublishedReadAdapter(client: PublishedSchemaClient): Publi
         p_candidate_id: candidateId,
       });
       return getBoundedRowsOrThrow(response, 'Published candidate lifecycle', 50);
+    },
+    async loadPersonFamilyLinks(rawPersonIds) {
+      const personIds = normalizePersonIds(rawPersonIds);
+      if (personIds.length === 0) return [];
+      const response = await client.schema('published').rpc<PublicPersonFamilyLink>('person_family_links_for', {
+        p_person_ids: personIds,
+      });
+      return getBoundedRowsOrThrow(response, 'Published person family links', PERSON_CLAIM_LIMIT);
+    },
+    async loadCandidateAssetDocuments(rawCandidateIds) {
+      const candidateIds = Array.from(new Set(rawCandidateIds.map((id) => id.trim()).filter(Boolean)));
+      if (candidateIds.length === 0) return [];
+      if (candidateIds.length > 128) throw new Error('Candidate asset document request exceeds the 128-row batch limit.');
+      const response = await client.schema('published').rpc<PublicCandidateAssetDocument>('candidate_asset_documents_for', {
+        p_candidate_ids: candidateIds,
+      });
+      return getBoundedRowsOrThrow(response, 'Published candidate asset documents', CANDIDATE_ASSET_DOCUMENT_LIMIT);
     },
     async loadPartyPlatformHistory(rawPartyId) {
       const partyId = rawPartyId.trim();

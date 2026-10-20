@@ -89,6 +89,9 @@ function createAdapter(overrides: Partial<PublishedReadAdapter>): PublishedReadA
         acquittal_records: 0,
       };
     },
+    async loadPersonFamilyLinks() {
+      return [];
+    },
     async loadPersonProfiles() {
       return { personRows: [], candidateRows: [], claimRows: [], partyAffiliationRows: [] };
     },
@@ -907,4 +910,14 @@ test('cold office lookup resolves the directory and counts the published subset,
   assert.equal(summary.chief_executive?.person_id, 'person-1');
   assert.equal(summary.deputies.length, 2);
   assert.equal(summary.councilor_total, 56);
+});
+
+test('family links are forwarded separately from claim JSON', async () => {
+  const calls: string[][] = [];
+  const links = [{ claim_id: 'family-1', person_id: 'person-1', relative_person_id: 'person-2', relative_name: '測試親屬' }];
+  const bridge = createPublishedPublicDataBridge(createAdapter({
+    async loadPersonFamilyLinks(ids) { calls.push(ids); return links; },
+  }));
+  assert.deepEqual(await bridge.loadPersonFamilyLinks(['person-1']), links);
+  assert.deepEqual(calls, [['person-1']]);
 });

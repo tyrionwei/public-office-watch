@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import type { Translate } from '../src/i18n.tsx';
+import { isActiveCandidacy, isCandidateElected, translateCandidateStatus } from '../src/data/electionI18n.ts';
 import { getCandidateIncumbencyBadge, groupRaceCandidates } from '../src/lib/raceCandidateGroups.ts';
 import type { PublicCandidate } from '../src/types/publicViews.ts';
 
@@ -65,6 +67,48 @@ test('keeps non-presidential candidates as separate rows', () => {
 
   assert.equal(groups.length, 2);
   assert.deepEqual(groups.map((group) => group.members.length), [1, 1]);
+});
+
+test('excludes withdrawn and disqualified registrations from the effective roster', () => {
+  const groups = groupRaceCandidates([
+    candidate({ candidate_id: 'qualified' }),
+    candidate({ candidate_id: 'rejected', registration_status: 'disqualified', candidacy_status: 'withdrawn_or_disqualified', vote_count: 0, election_result: 'not_elected' }),
+    candidate({ candidate_id: 'withdrawn', registration_status: 'withdrawn', candidacy_status: 'withdrawn_or_disqualified' }),
+  ], '臺南市第7選舉區');
+
+  assert.deepEqual(groups.map((group) => group.representative.candidate_id), ['qualified']);
+});
+
+test('uses distinct status labels for disqualification and withdrawal', () => {
+  const translate: Translate = (key) => key;
+  assert.equal(
+    translateCandidateStatus(candidate({ registration_status: 'disqualified', candidacy_status: 'withdrawn_or_disqualified' }), translate),
+    'registration.status.disqualified',
+  );
+  assert.equal(
+    translateCandidateStatus(candidate({ registration_status: 'withdrawn', candidacy_status: 'withdrawn_or_disqualified' }), translate),
+    'registration.status.withdrawn',
+  );
+});
+
+test('does not treat a rejected registration as active or elected when legacy fields conflict', () => {
+  const rejectedButLegacyActive = candidate({
+    registration_status: 'disqualified',
+    candidacy_status: 'qualified',
+    election_result: 'elected',
+    is_elected: true,
+  });
+  const withdrawnButLegacyActive = candidate({
+    registration_status: 'withdrawn',
+    candidacy_status: 'qualified',
+    election_result: 'elected',
+    is_elected: true,
+  });
+
+  assert.equal(isActiveCandidacy(rejectedButLegacyActive), false);
+  assert.equal(isCandidateElected(rejectedButLegacyActive), false);
+  assert.equal(isActiveCandidacy(withdrawnButLegacyActive), false);
+  assert.equal(isCandidateElected(withdrawnButLegacyActive), false);
 });
 
 test('does not label a non-incumbent candidate', () => {

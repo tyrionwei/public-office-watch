@@ -12,6 +12,8 @@ const migrationsRoot = path.join(repoRoot, 'supabase', 'migrations');
 const publicAccessMigration = 'supabase/migrations/202607280004_published_public_read_access.sql';
 const relationPrivilegeBaselineMigration = 'supabase/migrations/20260830144212_revoke_browser_relation_maintenance_privileges.sql';
 const supplementalPublicAccessMigrations = [
+  'supabase/migrations/20261017100815_add_reviewed_family_person_links.sql',
+  'supabase/migrations/20261016105627_add_candidate_asset_document_links.sql',
   'supabase/migrations/20260905103228_add_registration_name_roster.sql',
   'supabase/migrations/20260904145904_add_candidate_lifecycle_events.sql',
   'supabase/migrations/20260904150704_add_polling_places.sql',
@@ -99,6 +101,7 @@ const reviewedAuxiliaryFunctions = [
   'submit_region_issue_response',
 ];
 const reviewedFunctions = [
+  'candidate_asset_documents_for',
   'candidate_lifecycle_for',
   'election_education_distribution',
   'election_index_page',
@@ -110,6 +113,7 @@ const reviewedFunctions = [
   'party_list_race_page_for',
   'party_people_statistics',
   'party_platform_history_for',
+  'person_family_links_for',
   'person_profiles_for',
   'polling_places_for_village',
   'race_page_for',

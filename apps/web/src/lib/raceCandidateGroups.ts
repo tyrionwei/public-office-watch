@@ -1,4 +1,5 @@
 import type { PublicCandidate, PublicRace } from '../types/publicViews';
+import { isEffectiveCandidate } from '../data/electionI18n.ts';
 
 export type CandidateIncumbencyBadge = {
   kind:
@@ -127,12 +128,13 @@ export function groupRaceCandidates(
   raceTitle: string | null | undefined,
   raceStatus?: PublicRace['status'] | null,
 ) {
+  const effectiveCandidates = candidates.filter(isEffectiveCandidate);
   if (!isPresidentialTicketRace(raceTitle)) {
-    return candidates.map((candidate) => groupFromMembers('candidate:' + candidate.candidate_id, [candidate], raceStatus));
+    return effectiveCandidates.map((candidate) => groupFromMembers('candidate:' + candidate.candidate_id, [candidate], raceStatus));
   }
 
   const membersByTicket = new Map<string, PublicCandidate[]>();
-  for (const candidate of candidates) {
+  for (const candidate of effectiveCandidates) {
     const key = [
       candidate.candidate_no?.trim() ?? '',
       (candidate.party ?? candidate.person_party)?.trim() ?? '',

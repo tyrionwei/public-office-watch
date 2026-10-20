@@ -13,6 +13,7 @@ const eventLabels: Record<CandidateLifecycleEvent['event_type'], [string, string
   ballot_number_assigned: ['抽籤號次', 'Ballot number assigned'],
   official_candidate_list_published: ['正式候選人名單公告', 'Official candidate list published'],
   election_result_published: ['選舉結果公告', 'Election result published'],
+  asset_declaration_published: ['財產申報文件公告', 'Asset declaration document published'],
 };
 
 export function CandidateLifecycle({ candidateId, registered }: { candidateId: string; registered: boolean }) {
@@ -42,6 +43,9 @@ export function CandidateLifecycle({ candidateId, registered }: { candidateId: s
                 {event.occurred_on ?? (english ? 'Event date not specified' : '來源未載明事件日期')}
                 {event.source_published_on ? ` · ${english ? 'Source published' : '來源公告'} ${event.source_published_on}` : ''}
               </p>
+              {event.event_type === 'asset_declaration_published' ? (
+                <p className="text-slate-500">{english ? 'Document index only; reported amounts have not been reviewed.' : '目前僅列文件索引，申報金額尚未核對。'}</p>
+              ) : null}
               <a href={event.source_url} target="_blank" rel="noreferrer" className="text-accent underline underline-offset-4">{event.source_name} ↗</a>
             </li>
           ))}

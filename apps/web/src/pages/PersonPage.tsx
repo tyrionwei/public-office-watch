@@ -1,6 +1,7 @@
 import { Component, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { CandidateSpriteCreditLink } from '../components/CandidateSpriteCreditLink';
 import { CandidateLifecycle } from '../components/CandidateLifecycle';
 import { AppShell } from '../components/AppShell';
 import { HudStatCard } from '../components/HudStatCard';
@@ -629,32 +630,6 @@ export function PersonPage() {
         ...profile.public_claims.map((claim) => claim.updated_at),
       ])
     : null;
-  const platformClaims = profile ? claimsByType(profile.public_claims, 'platform') : [];
-  const sectionStates: Array<{ label: string; status: 'complete' | 'uncollected' | 'pending' }> = [
-    {
-      label: profilePositionLabel,
-      status: person && (person.current_office_label || person.position || person.upcoming_candidate_label) ? 'complete' : 'uncollected',
-    },
-    { label: t('person.party'), status: person?.party ? 'complete' : 'uncollected' },
-    { label: t('person.candidaciesTitle'), status: profile?.candidate_records.length ? 'complete' : 'uncollected' },
-    { label: t('person.affiliationsTitle'), status: partyAffiliations.length ? 'complete' : 'uncollected' },
-    { label: t('person.education'), status: educationItems.length ? 'complete' : 'uncollected' },
-    { label: t('person.experience'), status: experienceItems.length ? 'complete' : 'uncollected' },
-    { label: t('person.platformTitle'), status: platformClaims.length ? 'complete' : 'uncollected' },
-    { label: t('person.financeTitle'), status: financeClaims.length ? 'complete' : 'uncollected' },
-    {
-      label: t('person.legalTitle'),
-      status: legalClaims.length ? 'complete' : rawLegalClaims.length ? 'pending' : 'uncollected',
-    },
-    {
-      label: t('person.familyTitle'),
-      status: familyClaims.length ? 'complete' : rawFamilyClaims.length ? 'pending' : 'uncollected',
-    },
-  ];
-  const completedSections = sectionStates.filter((section) => section.status === 'complete').map((section) => section.label);
-  const uncollectedSections = sectionStates.filter((section) => section.status === 'uncollected').map((section) => section.label);
-  const pendingSections = sectionStates.filter((section) => section.status === 'pending').map((section) => section.label);
-  const sectionListSeparator = language === 'en' ? ', ' : '、';
 
   function handleRetry() {
     setLoadedPersonId(null);
@@ -690,6 +665,7 @@ export function PersonPage() {
                     </span>
                   ) : null}
                 </div>
+                {personSprite ? <figcaption><CandidateSpriteCreditLink personId={person.person_id} /></figcaption> : null}
                 {portraitFallbackDescription ? (
                   <figcaption className="text-xs leading-5 text-slate-400">
                     {portraitFallbackDescription}
@@ -725,59 +701,6 @@ export function PersonPage() {
                 </div>
               </div>
             </section>
-
-            <div className="order-5 md:order-none">
-              <SectionPanel title={t('person.dataSummary.title')} eyebrow={t('person.dataSummary.eyebrow')}>
-                <div data-person-data-summary className="space-y-4">
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                  <HudStatCard
-                    label={t('person.dataSummary.lastUpdated')}
-                    value={formatUpdatedAt(latestProfileUpdate, language, t('person.awaitingSync'))}
-                  />
-                  <HudStatCard
-                    label={t('person.dataSummary.sourceCount')}
-                    value={t('person.dataSummary.sourceCountValue', { count: profileSources.length })}
-                  />
-                  <HudStatCard
-                    label={t('person.dataSummary.reviewState')}
-                    value={<span className="text-signal">{t('person.dataSummary.reviewedOnly')}</span>}
-                  />
-                </div>
-                <div className="grid gap-3 lg:grid-cols-3">
-                  <article data-summary-state="completed" className="pixel-corners border border-signal/35 bg-signal/5 p-4">
-                    <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-signal">{t('person.dataSummary.completed')}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-200">
-                      {completedSections.join(sectionListSeparator) || t('person.dataSummary.none')}
-                    </p>
-                  </article>
-                  <article data-summary-state="uncollected" className="pixel-corners border border-amber-300/35 bg-amber-300/5 p-4">
-                    <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">{t('person.dataSummary.uncollected')}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-200">
-                      {uncollectedSections.join(sectionListSeparator) || t('person.dataSummary.none')}
-                    </p>
-                  </article>
-                  <article data-summary-state="pending" className="pixel-corners border border-violet-300/35 bg-violet-300/5 p-4">
-                    <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-200">{t('person.dataSummary.pending')}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-200">
-                      {pendingSections.join(sectionListSeparator) || t('person.dataSummary.none')}
-                    </p>
-                  </article>
-                </div>
-                <p className="border-l-2 border-accent/60 pl-3 text-xs leading-5 text-slate-400">
-                  {t('person.dataSummary.reviewPolicy')}
-                </p>
-                </div>
-              </SectionPanel>
-            </div>
-
-            <div className="order-6 md:order-none">
-              <PersonFeedbackPanel
-                personId={person.person_id}
-                personName={person.name}
-                requestedSection={feedbackRequest?.section}
-                requestVersion={feedbackRequest?.version}
-              />
-            </div>
 
             <SectionPanel title={t('person.basicTitle')} eyebrow={t('person.basicEyebrow')}>
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
@@ -965,7 +888,16 @@ export function PersonPage() {
               </div>
             ) : null}
 
-            <div data-person-mobile-sources className="order-4 md:order-none">
+            <div data-person-feedback-section className="order-4 md:order-none">
+              <PersonFeedbackPanel
+                personId={person.person_id}
+                personName={person.name}
+                requestedSection={feedbackRequest?.section}
+                requestVersion={feedbackRequest?.version}
+              />
+            </div>
+
+            <div data-person-mobile-sources className="order-5 md:order-none">
               <SectionPanel title={t('person.sourcesTitle')} eyebrow={t('person.sourcesEyebrow')}>
                 {profileSources.length > 0 ? (
                   <>

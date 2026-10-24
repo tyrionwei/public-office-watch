@@ -1,3 +1,4 @@
+import { CandidateSpriteCreditLink } from './CandidateSpriteCreditLink';
 import {
   pickDefaultCandidateSprite,
   pickDefaultCandidateSpriteForAgeGroup,
@@ -83,6 +84,7 @@ export function PixelCandidateSprite({
           >
             {partyLabel}
           </p>
+          {personSprite ? <CandidateSpriteCreditLink personId={personId} hint /> : null}
           {recommendationLabel ? <p className="mt-1 text-[10px] text-slate-400" data-candidate-recommendation>{recommendationLabel}</p> : null}
           {usesMascot ? (
             <p className={compactOnMobile ? 'mt-1 hidden text-[10px] text-cyan-200/75 md:block' : 'mt-1 text-[10px] text-cyan-200/75'}>{t('person.mascotFallbackLabel')}</p>

@@ -1,3 +1,4 @@
+import { CandidateSpriteCreditsSection } from '../components/CandidateSpriteCreditsSection';
 import { Link } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
@@ -68,6 +69,8 @@ export function AboutPage() {
             <p className="mt-3 text-sm leading-6 text-slate-300">{t('about.description')}</p>
           </div>
         </PixelFrame>
+
+        <CandidateSpriteCreditsSection />
 
         <SectionPanel title={t('about.progressTitle')} eyebrow={t('about.progressEyebrow')}>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">

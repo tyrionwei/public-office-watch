@@ -194,12 +194,7 @@ test('light theme uses warm surfaces and readable semantic colors', async ({ pag
   await expect(partyChip).toBeVisible();
   await expect(partyChip).toHaveCSS('color', 'rgb(27, 41, 56)');
 
-  const uncollectedSummary = page.locator('[data-summary-state="uncollected"]');
-  const pendingSummary = page.locator('[data-summary-state="pending"]');
-  await expect(uncollectedSummary).toBeVisible();
-  await expect(pendingSummary).toBeVisible();
-  await expect(uncollectedSummary.getByRole('heading')).toHaveCSS('color', 'rgb(116, 70, 0)');
-  await expect(pendingSummary.getByRole('heading')).toHaveCSS('color', 'rgb(92, 59, 159)');
+  await expect(page.locator('[data-person-data-summary]')).toHaveCount(0);
 
   const candidacyStatus = page.locator('.theme-candidacy-status').first();
   await expect(candidacyStatus).toBeVisible();
@@ -1049,15 +1044,12 @@ test('person and election routes do not preload unrelated party finance or chat 
   expect(apiRequests.some((path) => path.includes('party_annual_finance'))).toBe(false);
   expect(apiRequests.some((path) => path.includes('chat_status'))).toBe(false);
 });
-test('person page leads with data status and keeps sensitive source context beside the claim', async ({ page }) => {
+test('person page omits data status and keeps sensitive source context beside the claim', async ({ page }) => {
   await page.goto('/people/d888dcb7-abda-48fd-8cd0-b973e0cf43e0');
 
   await expect(page.getByRole('heading', { name: '王世堅', exact: true })).toBeVisible();
-  const dataSummary = page.locator('[data-person-data-summary]');
-  await expect(dataSummary).toBeVisible();
-  await expect(dataSummary.getByText('最後更新', { exact: true })).toBeVisible();
-  await expect(dataSummary.getByText('已引用來源', { exact: true })).toBeVisible();
-  await expect(dataSummary.getByText('僅顯示已審核公開資料', { exact: true })).toBeVisible();
+  await expect(page.locator('[data-person-data-summary]')).toHaveCount(0);
+  expect(await page.locator('#person-feedback').evaluate(node => !!(node.compareDocumentPosition(document.querySelector('[data-person-mobile-sources]')!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
   const candidacyCards = page.locator('[data-candidacy-card]');
   expect(await candidacyCards.count()).toBeGreaterThanOrEqual(2);
   const firstPlatformBox = await candidacyCards.nth(0).locator('[data-candidacy-platform]').boundingBox();

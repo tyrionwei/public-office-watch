@@ -56,12 +56,14 @@ test('mobile person and party profiles keep their identity cards in the viewport
     finance: document.querySelector('[data-person-mobile-finance]')?.getBoundingClientRect().top ?? 0,
     resume: document.querySelector('[data-person-mobile-resume]')?.getBoundingClientRect().top ?? 0,
     sources: document.querySelector('[data-person-mobile-sources]')?.getBoundingClientRect().top ?? 0,
-    summary: document.querySelector('[data-person-data-summary]')?.getBoundingClientRect().top ?? 0,
+    feedback: document.querySelector('#person-feedback')?.getBoundingClientRect().top ?? 0,
   }));
   expect(personSectionTops.legal).toBeLessThan(personSectionTops.finance);
   expect(personSectionTops.finance).toBeLessThan(personSectionTops.resume);
   expect(personSectionTops.resume).toBeLessThan(personSectionTops.sources);
-  expect(personSectionTops.sources).toBeLessThan(personSectionTops.summary);
+  expect(personSectionTops.resume).toBeLessThan(personSectionTops.feedback);
+  expect(personSectionTops.feedback).toBeLessThan(personSectionTops.sources);
+  await expect(page.locator('[data-person-data-summary]')).toHaveCount(0);
 
   await page.goto('/parties/dpp');
   await expect(page.locator('[data-party-profile-hero]')).toBeVisible();

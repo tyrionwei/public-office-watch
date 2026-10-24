@@ -10,6 +10,16 @@ const storageKey = 'public-office-watch-language';
 
 const translations = {
   'zh-TW': {
+    'spriteCredit.link': "插畫來源與授權",
+    'spriteCredit.personHint': "插畫署名見人物頁",
+    'spriteCredit.title': "人物插畫來源與授權",
+    'spriteCredit.eyebrow': "逐張署名",
+    'spriteCredit.scope': "以下為 AI 生成改作插畫，不是官方肖像照片或本人背書。每張圖片適用各自列明的授權，不以網站程式碼授權取代。",
+    'spriteCredit.source': "原始來源",
+    'spriteCredit.sourceDate': "原照日期",
+    'spriteCredit.adaptation': "本插畫改作授權",
+    'spriteCredit.download': "下載逐檔來源與授權紀錄",
+
     'brand.name': '公職資料觀測站',
     'brand.subtitle': 'Public Office Watch',
     'brand.identity': '民間公共資料整理平台・非政府機關',
@@ -1271,6 +1281,16 @@ const translations = {
     'legacyElection.notFoundHint': '你可以返回選舉列表，從目前的公開選舉資料重新進入。',
   },
   en: {
+    'spriteCredit.link': "Illustration credits",
+    'spriteCredit.personHint': "Illustration credits on profile",
+    'spriteCredit.title': "Character illustration credits",
+    'spriteCredit.eyebrow': "Image attribution",
+    'spriteCredit.scope': "These AI-generated adaptations are illustrations, not official photographs or endorsements. Each image retains its listed license, independently of the website code license.",
+    'spriteCredit.source': "Original source",
+    'spriteCredit.sourceDate': "Source photo date",
+    'spriteCredit.adaptation': "Illustration adaptation license",
+    'spriteCredit.download': "Download per-image source and license records",
+
     'brand.name': '公職資料觀測站',
     'brand.subtitle': 'Public Office Watch',
     'brand.identity': 'Independent public-data platform · Not a government agency',

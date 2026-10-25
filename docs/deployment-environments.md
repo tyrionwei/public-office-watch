@@ -70,11 +70,11 @@ must be rebuilt and verified as described in [its runbook](production-rehearsal.
 ### 一般發布
 
 1. 在功能分支完成實作、適用測試與功能 review。可先推送備份或供 review，不強制每個功能都另開一份 PR 到 release。
-2. 確認發布清單與依賴，從最新 `origin/main` 建立 release，再整合選定功能。未完成、未核准發布或僅供 local 使用的工作不因「已 commit」就自動列入；`/internal/data-progress` 目前維持 local 專用，正式版是否提供及呈現方式另定。
+2. 確認發布清單與依賴，從最新 `origin/main` 建立 release，再整合選定功能。 每次發布前，在 `docs/releases/` 的本版文件準備「公開資料更新紀錄」文案與管理欄位，僅描述本版實際範圍；未上線的清理、候選與待審資料不得寫成已修復。稿件保持待發布，不因備稿而提前寫入或公開正式資料。未完成、未核准發布或僅供 local 使用的工作不因「已 commit」就自動列入；`/internal/data-progress` 目前維持 local 專用，正式版是否提供及呈現方式另定。
 3. 執行整合 review 與適用的 lint、typecheck、unit／contract、瀏覽器、安全界線、migration drift 和建置。明列通過、失敗、未執行及不適用；單一功能測試通過不代表整批通過。
 4. 有 migration 時，依既有環境規則完成演練、相容性與恢復方案；獲准的正式 migration 另行套用，再進入發布 PR／CI／合併。需要 Worker-first 等特殊順序時，另訂明確的分階段方案，不跳過 drift gate。
 5. 推送 release，開一份 **release → main** 的發布 PR，記錄本批內容、依賴、測試、migration 與回復限制。核對目前 PR head 的 CI／review；main 或整合內容改變後重新同步並驗證。合併前確認授權包含正式發布，不把 commit、push 或開 PR 的要求擴大成 merge／部署授權。
-6. 合併後追蹤該 merge commit 的 `Web CI` → `Production Release` → migration drift → Cloudflare build／Wrangler dry-run → deploy → production smoke。確認實際 Worker version、流量及來源 SHA，才記為發布成功。
+6. 合併後追蹤該 merge commit 的 `Web CI` → `Production Release` → migration drift → Cloudflare build／Wrangler dry-run → deploy → production smoke。確認實際 Worker version、流量及來源 SHA，才記為發布成功。 部署與 smoke 通過後，依已核准的資料更新紀錄發布範圍，由既有 `/internal/update-admin` 流程建立或核對對應稿件、審核公開，使用實際發布時間；尚未獲准寫入／公開紀錄時保留文案並回報待辦。最後核對正式 `/updates` 的標題、內容、時間及連結確實可見，將紀錄 ID 或公開驗證結果回填本版文件。失敗或未部署不得把公告改成已發布。
 7. 成功部署且 smoke 通過後，將 release tag 指向**實際部署的 commit**，例如 `vYYYY.MM.DD`；同日多版使用不重複尾碼，不覆寫既有 tag。保留 PR、commit、CI、部署版本與驗收紀錄。
 8. 清理本批已合併且已發布的 feature／fix／release 分支及不用的 worktree。刪除前逐一確認沒有未合併 commit、dirty 檔案、開啟中的 PR 或進行中的工作；保留未發布及 local-only 工作，不為「只剩 main」刪掉其他成果。
 

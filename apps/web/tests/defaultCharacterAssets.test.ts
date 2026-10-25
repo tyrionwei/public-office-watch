@@ -59,7 +59,7 @@ test('falls back to the Xiezhi mascot when gender or exact birth date is unavail
 });
 
 test('uses canonical person IDs for configured candidate sprites', () => {
-  assert.equal(Object.keys(personCandidateSprites).length, 237);
+  assert.equal(Object.keys(personCandidateSprites).length, 612);
   for (const [personId, spritePath] of Object.entries(personCandidateSprites)) {
     assert.match(personId, /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
     assert.equal(spritePath, `/assets/characters/candidates/${personId}.png`);
@@ -82,6 +82,10 @@ test('uses canonical person IDs for configured candidate sprites', () => {
     '/assets/characters/candidates/20915299-0469-47b7-ae81-cf499a806a1a.png',
   );
   for (const personId of [
+    'cc4de44b-a6ba-4816-b388-ad59cb379d9a',
+    'cae4d254-c26c-4990-942c-677e24434555',
+    '801b13e5-b4fd-4ca7-b5b8-360b4f3dfd7f',
+    'db2ed4f2-1f21-4753-81df-21a47c6610ec',
     '7ceadf52-bdeb-45ae-9542-9fd3ace7a502',
     '880f8fb6-84d7-44e1-a38a-818707dcd22e',
     'e333ae37-8821-4f98-8a90-54a4d217dbce',

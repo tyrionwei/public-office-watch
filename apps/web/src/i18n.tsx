@@ -18,6 +18,10 @@ const translations = {
     'spriteCredit.source': "原始來源",
     'spriteCredit.sourceDate': "原照日期",
     'spriteCredit.adaptation': "本插畫改作授權",
+    'spriteCredit.viewAll': "查看全部署名",
+    'spriteCredit.collapse': "收合完整清單",
+    'spriteCredit.collapseReturn': "收合並回到署名區頂端",
+    'spriteCredit.notFound': "找不到指定人物的插畫署名，請查看全部署名或下載完整紀錄。",
     'spriteCredit.download': "下載逐檔來源與授權紀錄",
 
     'brand.name': '公職資料觀測站',
@@ -1289,6 +1293,10 @@ const translations = {
     'spriteCredit.source': "Original source",
     'spriteCredit.sourceDate': "Source photo date",
     'spriteCredit.adaptation': "Illustration adaptation license",
+    'spriteCredit.viewAll': "View all credits",
+    'spriteCredit.collapse': "Collapse full list",
+    'spriteCredit.collapseReturn': "Collapse and return to credits",
+    'spriteCredit.notFound': "The requested illustration credit was not found. View all credits or download the full records.",
     'spriteCredit.download': "Download per-image source and license records",
 
     'brand.name': '公職資料觀測站',

@@ -1,3 +1,4 @@
+import { pingtungProfileListHtml } from './lib/pingtung-profile-section.mjs';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -632,8 +633,8 @@ function profileRowFromPage(page, name, education, experience) {
 function parseMagistrateProfile(html, page) {
   const content = cleanText(html);
   const name = page.expectedNames[0];
-  const education = fieldBetweenAny(content, ['縣長學歷', '學歷'], ['網站功能']);
-  const experience = fieldBetweenAny(content, ['縣長經歷', '經歷'], ['縣長學歷', '學歷', '網站功能']);
+  const education = cleanText(pingtungProfileListHtml(html, '縣長學歷'));
+  const experience = cleanText(pingtungProfileListHtml(html, '縣長經歷'));
 
   if (!html.includes(name) && !content.includes(name)) {
     throw new Error('Unable to verify official name from ' + page.url);

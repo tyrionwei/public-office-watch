@@ -6,8 +6,8 @@ import { pickPersonCandidateSprite } from '../src/data/defaultCharacterAssets.ts
 
 const manifest = JSON.parse(readFileSync(new URL('../src/data/candidateSpriteSources.json', import.meta.url), 'utf8'));
 test('credit records identify unique deployed sprite bytes and keep individual sources', () => {
-  assert.equal(manifest.assets.length, 331);
-  assert.equal(new Set(manifest.assets.map((item: { canonicalId: string }) => item.canonicalId)).size, 331);
+  assert.equal(manifest.assets.length, 375);
+  assert.equal(new Set(manifest.assets.map((item: { canonicalId: string }) => item.canonicalId)).size, 375);
   for (const item of manifest.assets) {
     assert.equal(pickPersonCandidateSprite(item.canonicalId), `/assets/characters/candidates/${item.file}`);
     assert.equal(createHash('sha256').update(readFileSync(new URL('../public/assets/characters/candidates/' + item.file, import.meta.url))).digest('hex'), item.sha256);
@@ -18,7 +18,7 @@ test('credit records identify unique deployed sprite bytes and keep individual s
 });
 test('Huang replacement uses the official Tainan source and exact new bytes', () => {
  const item=manifest.assets.find((x: {canonicalId:string})=>x.canonicalId==='a0959bb6-fc41-4012-b5dc-52d136c4bb73');
- assert.equal(item.sha256,'12a7afc8768e0c1293f1d141d92a164dff88e7572b6b25d3ddf40a6aafed0029');
+ assert.equal(item.sha256,'a21301370332fa3ef7599d7c6b77a140241181a96e4b8d802eae926ed136b8f2');
  assert.equal(item.sourceUrl,'https://www.tainan.gov.tw/cp.aspx?n=5034');
  assert.equal(item.licenseUrl,'https://www.tainan.gov.tw/cp.aspx?n=13612');
  assert.equal(item.adaptationLicense,undefined);

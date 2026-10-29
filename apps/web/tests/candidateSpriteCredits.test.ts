@@ -6,8 +6,8 @@ import { pickPersonCandidateSprite } from '../src/data/defaultCharacterAssets.ts
 
 const manifest = JSON.parse(readFileSync(new URL('../src/data/candidateSpriteSources.json', import.meta.url), 'utf8'));
 test('credit records identify unique deployed sprite bytes and keep individual sources', () => {
-  assert.equal(manifest.assets.length, 375);
-  assert.equal(new Set(manifest.assets.map((item: { canonicalId: string }) => item.canonicalId)).size, 375);
+  assert.equal(manifest.assets.length, 822);
+  assert.equal(new Set(manifest.assets.map((item: { canonicalId: string }) => item.canonicalId)).size, 822);
   for (const item of manifest.assets) {
     assert.equal(pickPersonCandidateSprite(item.canonicalId), `/assets/characters/candidates/${item.file}`);
     assert.equal(createHash('sha256').update(readFileSync(new URL('../public/assets/characters/candidates/' + item.file, import.meta.url))).digest('hex'), item.sha256);

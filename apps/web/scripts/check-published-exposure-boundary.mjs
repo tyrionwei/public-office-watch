@@ -12,6 +12,7 @@ const migrationsRoot = path.join(repoRoot, 'supabase', 'migrations');
 const publicAccessMigration = 'supabase/migrations/202607280004_published_public_read_access.sql';
 const relationPrivilegeBaselineMigration = 'supabase/migrations/20260830144212_revoke_browser_relation_maintenance_privileges.sql';
 const supplementalPublicAccessMigrations = [
+  'supabase/migrations/20261028080055_add_reviewed_registration_ballot_projection.sql',
   'supabase/migrations/20261017100815_add_reviewed_family_person_links.sql',
   'supabase/migrations/20261016105627_add_candidate_asset_document_links.sql',
   'supabase/migrations/20260905103228_add_registration_name_roster.sql',
@@ -84,6 +85,7 @@ const retiredFrontendRelations = [
 ];
 const directlyQueriedRelations = reviewedRelations;
 const reviewedAuxiliaryFunctions = [
+  'registration_name_ballots_for',
   'chat_messages',
   'chat_room_directory',
   'chat_rooms',

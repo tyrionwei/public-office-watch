@@ -132,3 +132,4 @@ GRANT EXECUTE ON FUNCTION published.candidate_lifecycle_for(UUID) TO anon, authe
 GRANT EXECUTE ON FUNCTION published.polling_places_for_village(TEXT, TEXT) TO anon, authenticated;
 
 GRANT EXECUTE ON FUNCTION published.registration_names_for(UUID[]) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION published.registration_name_ballots_for(UUID[]) TO anon, authenticated;

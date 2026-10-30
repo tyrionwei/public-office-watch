@@ -32,7 +32,8 @@
     "test:browser": "npm run check:local-test-env && playwright test",
     "test:pwa": "npm run build && playwright test --config=playwright.pwa.config.ts",
     "test:browser:production": "node scripts/check-environment.mjs production-smoke && playwright test --config=playwright.production.config.ts",
-    "test:browser:ci": "playwright test --config=playwright.ci.config.ts"
+    "test:browser:ci": "playwright test --config=playwright.ci.config.ts",
+    "prepare:sprite-credit-index": "node scripts/generate-candidate-sprite-credit-index.mjs"
   },
   "dependencies": {
     "@resvg/resvg-wasm": "2.6.2",

@@ -7,7 +7,7 @@ export default defineConfig({
   testDir: './tests',
   projects: [
     { name: 'sharing', testMatch: 'sharingCi.pw.ts' },
-    { name: 'mobile', testMatch: ['browser-smoke.spec.ts', 'aboutCredits.spec.ts'], grep: /@mobile-ci/ },
+    { name: 'mobile', testMatch: ['browser-smoke.spec.ts', 'aboutCredits.spec.ts', 'homeAssets.spec.ts'], grep: /@mobile-ci/ },
     { name: 'polling-place-notices', testMatch: 'releaseBallotPolling.spec.ts' },
   ],
   timeout: 30_000,

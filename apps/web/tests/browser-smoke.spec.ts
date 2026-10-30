@@ -1264,12 +1264,14 @@ test('explicit nationwide selection shows the announced referendum and its pendi
   expect(electionTimingStyles.every((styles) => styles.background === 'rgba(0, 0, 0, 0)')).toBe(true);
   expect(electionTimingStyles.every((styles) => styles.borderWidth === '0px')).toBe(true);
   const nationalBackground = page.locator('[data-national-overview] img').first();
-  await expect(nationalBackground).toHaveAttribute('src', '/assets/elections/national-east-coast-overview-v1.png');
-  const nationalBackgroundResponse = await page.request.get('/assets/elections/national-east-coast-overview-v1.png');
+  await expect(nationalBackground).toHaveAttribute('src', '/assets/elections/national-east-coast-overview-v1-1440.webp');
+  const nationalBackgroundResponse = await page.request.get('/assets/elections/national-east-coast-overview-v1-1440.webp');
   expect(nationalBackgroundResponse.ok()).toBe(true);
   expect((await nationalBackgroundResponse.body()).byteLength).toBeGreaterThan(100_000);
   await expect(nationalBackground).toHaveCSS('object-fit', 'cover');
-  await expect(nationalBackground).toHaveJSProperty('naturalWidth', 1672);
+  await expect.poll(() => nationalBackground.evaluate((image) => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await expect(nationalBackground).toHaveAttribute('fetchpriority', 'high');
+  expect(await nationalBackground.evaluate((image) => (image as HTMLImageElement).currentSrc)).toMatch(/-(?:960|1440)\.webp$/);
   await expect(page.getByText('全國議題關注', { exact: true })).toBeVisible();
   await expect(page.getByText('立法委員政黨概況', { exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: '全國公投項目', exact: true })).toBeVisible();

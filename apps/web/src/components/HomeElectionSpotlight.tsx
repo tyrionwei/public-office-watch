@@ -382,8 +382,8 @@ export function HomeElectionSpotlight({
   const highlightBackground = getRegionHighlightBackground(regionNode?.id, regionNode?.publicRegionId, regionNode?.stageLabel);
   const highlightImage = national
     ? {
-        src: '/assets/elections/national-east-coast-overview-v1.png',
-        srcSet: '/assets/elections/national-east-coast-overview-v1.png',
+        src: '/assets/elections/national-east-coast-overview-v1-1440.webp',
+        srcSet: '/assets/elections/national-east-coast-overview-v1-960.webp 960w, /assets/elections/national-east-coast-overview-v1-1440.webp 1440w',
       }
     : highlightBackground
       ? getRegionHighlightImageSources(highlightBackground.image)
@@ -462,6 +462,7 @@ export function HomeElectionSpotlight({
               alt=""
               aria-hidden="true"
               loading="eager"
+              fetchPriority="high"
               decoding="async"
               className="pointer-events-none absolute inset-0 h-full w-full object-cover"
               style={{ objectPosition: highlightBackground?.focalPoint ?? 'center' }}

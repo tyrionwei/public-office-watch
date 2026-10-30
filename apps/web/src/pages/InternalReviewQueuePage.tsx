@@ -1,3 +1,4 @@
+import { SourceRecordDisplay } from '../components/SourceRecordDisplay';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { AppShell } from '../components/AppShell';
@@ -290,6 +291,7 @@ function claimTypeTone(value: string) {
 
 export function InternalReviewQueuePage() {
   const [progressParams] = useSearchParams();
+  const sourceRecordsOnly = progressParams.get('sourceRecords') === '1';
   const progressReturn = progressParams.get('returnTo');
   const safeProgressReturn = progressReturn === '/internal/data-progress' || progressReturn?.startsWith('/internal/data-progress?') ? progressReturn : null;
   const [claims, setClaims] = useState<ReviewClaim[]>([]);
@@ -311,7 +313,7 @@ export function InternalReviewQueuePage() {
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isLocalReviewEnabled()) return;
+    if (!isLocalReviewEnabled() || sourceRecordsOnly) return;
 
     let cancelled = false;
     setLoading(true);
@@ -332,10 +334,10 @@ export function InternalReviewQueuePage() {
       cancelled = true;
       window.clearTimeout(timeoutId);
     };
-  }, [claimType, query, reviewStatus, sourceName]);
+  }, [claimType, query, reviewStatus, sourceName, sourceRecordsOnly]);
 
   useEffect(() => {
-    if (!isLocalReviewEnabled()) return;
+    if (!isLocalReviewEnabled() || sourceRecordsOnly) return;
 
     setIdentityLoading(true);
     void fetchInternalIdentityReviewItems().then((result) => {
@@ -348,7 +350,7 @@ export function InternalReviewQueuePage() {
       }
       setIdentityLoading(false);
     });
-  }, []);
+  }, [sourceRecordsOnly]);
 
   const filteredClaims = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -526,10 +528,12 @@ export function InternalReviewQueuePage() {
     setActionClaimId(null);
   }
 
+  if (sourceRecordsOnly) return <AppShell><PixelFrame title="本機來源整理"><SourceRecordDisplay /></PixelFrame></AppShell>;
+
   return (
     <AppShell>
       <div className="space-y-4">
-        <PixelFrame title="資料審核工作台">
+        <PixelFrame title="資料審核工作台"><Link className="text-accent underline" to="?sourceRecords=1">開啟既存來源去重檢視（唯讀）</Link>
           {safeProgressReturn && <Link to={safeProgressReturn} className="mb-4 inline-block text-sm text-accent underline">返回資料進度（保留篩選與頁碼）</Link>}
           <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
             <div>

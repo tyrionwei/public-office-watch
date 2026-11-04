@@ -110,7 +110,10 @@ function routeMetadata(pathname: string, language: 'zh-TW' | 'en', t: ReturnType
 
   if (segments[0] === 'elections' && segments[1] === 'races' && segments[2]) {
     const race = publicDataProvider.getRaceById(safeDecode(segments[2]));
-    const name = race?.title ?? (isEnglish ? 'Election district' : '選區資料');
+    const title = race?.title ?? (isEnglish ? 'Election district' : '選區資料');
+    const election = race ? publicDataProvider.getElectionById(race.election_id) : undefined;
+    const year = election?.year ?? race?.voting_date?.slice(0, 4);
+    const name = year && !title.includes(String(year)) ? `${year}${isEnglish ? ' ' : '年'}${title}` : title;
     return {
       title: name,
       description: detailDescription(language, name, 'race'),

@@ -173,6 +173,7 @@ function documentMetadata(pathname, catalog = emptySeoCatalog) {
       description: catalogPage.description,
       type: catalogPage.structuredData?.['@type'] === 'Person' ? 'profile' : 'website',
       structuredData: catalogPage.structuredData,
+      summary: catalogPage.summary,
     };
   }
 
@@ -315,6 +316,16 @@ function documentShareContext(url, pathname, metadata, catalog) {
   return defaultContext;
 }
 
+function renderPublicSummary(summary) {
+  if (!Array.isArray(summary)) return '';
+  const rows = summary.slice(0, 16).filter(row => row && typeof row.text === 'string');
+  return rows.length ? '<section aria-label="公開資料摘要"><ul>' + rows.map(row => {
+    const text = escapeAttribute(row.text);
+    const href = typeof row.href === 'string' && /^\/(?:people|elections)(?:\/[a-zA-Z0-9_%-]+)*$/.test(row.href) ? row.href : null;
+    return '<li>' + (href ? `<a href="${escapeAttribute(href)}">${text}</a>` : text) + '</li>';
+  }).join('') + '</ul></section>' : '';
+}
+
 function injectDocumentMetadata(html, requestUrl, catalog = emptySeoCatalog, siteOrigin = canonicalSiteOrigin) {
   const url = new URL(requestUrl);
   const pathname = url.pathname.replace(/\/$/, '') || '/';
@@ -359,6 +370,7 @@ function injectDocumentMetadata(html, requestUrl, catalog = emptySeoCatalog, sit
     + `<p>${escapeAttribute(siteName)}</p>`
     + `<h1>${escapeAttribute(metadata.title)}</h1>`
     + `<p>${escapeAttribute(metadata.description)}</p>`
+    + renderPublicSummary(metadata.summary)
     + '</main>';
 
   return stripManagedMetadata(html)
@@ -381,7 +393,7 @@ function sitemapXml(origin, entries = staticSitemapPaths) {
 function sitemapEntries(catalog, group) {
   if (group === 'static') return staticSitemapPaths;
   return catalog.pages
-    .filter((page) => page.group === group)
+    .filter((page) => page.group === group && page.sitemapEligible !== false)
     .map((page) => ({ path: page.path, lastModified: page.lastModified }));
 }
 

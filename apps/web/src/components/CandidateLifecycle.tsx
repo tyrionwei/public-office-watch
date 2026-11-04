@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { CourtCandidacyNotice } from './CourtCandidacyNotice';
 import { useI18n } from '../i18n';
 import { publicDataProvider } from '../lib/publicData';
 import type { CandidateLifecycleEvent } from '../types/candidateLifecycle';
@@ -8,6 +9,7 @@ const eventLabels: Record<CandidateLifecycleEvent['event_type'], [string, string
   candidacy_announced: ['宣布參選', 'Candidacy announced'],
   registration_filed: ['申請登記', 'Registration filed'],
   qualification_confirmed: ['資格審定通過', 'Qualification confirmed'],
+  court_provisional_candidacy_allowed: ['法院裁定暫列候選人（非終局）', 'Court-ordered provisional candidacy (not a final judgment)'],
   qualification_rejected: ['資格審定未通過', 'Qualification rejected'],
   withdrawn: ['撤回參選', 'Candidacy withdrawn'],
   ballot_number_assigned: ['抽籤號次', 'Ballot number assigned'],
@@ -43,6 +45,9 @@ export function CandidateLifecycle({ candidateId, registered }: { candidateId: s
                 {event.occurred_on ?? (english ? 'Event date not specified' : '來源未載明事件日期')}
                 {event.source_published_on ? ` · ${english ? 'Source published' : '來源公告'} ${event.source_published_on}` : ''}
               </p>
+              {event.event_type === 'court_provisional_candidacy_allowed' ? (
+                <CourtCandidacyNotice english={english} />
+              ) : null}
               {event.event_type === 'asset_declaration_published' ? (
                 <p className="text-slate-500">{english ? 'Document index only; reported amounts have not been reviewed.' : '目前僅列文件索引，申報金額尚未核對。'}</p>
               ) : null}

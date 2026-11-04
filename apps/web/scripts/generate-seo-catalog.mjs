@@ -1,3 +1,4 @@
+import { enrichSeoPages } from './seo-public-summary.mjs';
 import { electionEventIdentity, initialElectionEventKey } from '../src/data/electionEventIdentity.mjs';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -194,8 +195,10 @@ function electionPage(row) {
 
 function racePage(row) {
   const id = encodePathSegment(row.race_id);
-  const title = cleanText(row.title);
-  if (!id || !title) return null;
+  const rawTitle = cleanText(row.title);
+  const year = cleanText(row.voting_date).slice(0, 4) || cleanText(row.election_name).match(/(?:19|20)\d{2}/)?.[0];
+  const title = year && !rawTitle.includes(year) ? `${year}年${rawTitle}` : rawTitle;
+  if (!id || !rawTitle) return null;
   const electionName = cleanText(row.election_name);
   const regionName = cleanText(row.region_name);
   const context = [electionName, regionName].filter(Boolean).join('・');
@@ -203,7 +206,7 @@ function racePage(row) {
     'races',
     `/elections/races/${id}`,
     title,
-    `查看${context ? `${context}的` : ''}候選人、政黨、得票結果與政見比較。`,
+    `查看${title}${context ? `（${context}）` : ''}的候選人、政黨、得票結果與政見比較。`,
     compactRecord({ '@type': 'WebPage', name: title }),
   );
 }
@@ -241,6 +244,29 @@ function normalizeShareCandidates(value) {
   return candidates.length ? candidates : undefined;
 }
 
+// Scope evidence is separate from public page existence. Missing/unknown evidence includes.
+export function applyPersonSitemapScope(pages, evidence = []) {
+  if (!Array.isArray(evidence)) throw new Error('Person sitemap scope must be an array.');
+  const byId = new Map();
+  for (const row of evidence) {
+    if (!row || typeof row.person_id !== 'string' || byId.has(row.person_id)) {
+      throw new Error('Invalid or duplicate person sitemap scope identity.');
+    }
+    byId.set(row.person_id, row);
+  }
+  return pages.map(page => {
+    if (page.group !== 'people') return page;
+    const row = byId.get(page.path.slice('/people/'.length));
+    const types = row?.public_candidate_race_types;
+    const exclude = row?.public_history_checked === true
+      && row?.office_history_complete === true
+      && row?.known_higher_office === false
+      && Array.isArray(types) && types.length > 0
+      && types.every(type => type === 'village_chief');
+    return exclude ? { ...page, sitemapEligible: false } : page;
+  });
+}
+
 export function createSeoCatalog(datasets, generatedAt = new Date().toISOString()) {
   const pageByPath = new Map();
 
@@ -267,7 +293,7 @@ export function createSeoCatalog(datasets, generatedAt = new Date().toISOString(
     if (page && shareCandidates) page.shareCandidates = shareCandidates;
   }
 
-  const pages = Array.from(pageByPath.values()).sort((left, right) => left.path.localeCompare(right.path, 'zh-TW'));
+  const pages = enrichSeoPages(applyPersonSitemapScope(Array.from(pageByPath.values()), datasets.personSitemapScope ?? []), datasets).sort((left, right) => left.path.localeCompare(right.path, 'zh-TW'));
   for (const group of catalogGroupKeys) {
     const count = pages.filter((page) => page.group === group).length;
     if (count > sitemapPageLimit) {

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### OEN support
+
+- Added one-time TWD support through the hosted OEN checkout above USDT, while retaining the existing USDT transfer and optional message flow.
+- Updated Traditional Chinese and English support copy, with an explicit new-tab notice and no collection of card details on POW.
+- Added responsive, keyboard, outbound-link, and navigation regression coverage, and prevented the existing USDT network selector from overflowing 320px screens.
+
+
 ### 2026-10-20 整理版（尚未發布）
 
 - 整理縣市首長級別及本次候選人的身分核對、已完成本機合併與保留缺證項目；不將「本輪結案」寫成所有人物已釐清。

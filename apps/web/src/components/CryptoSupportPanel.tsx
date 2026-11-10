@@ -151,7 +151,7 @@ export function CryptoSupportPanel({
               value={selected.networkId}
               disabled={saving || networks.length === 1}
               onChange={(event) => selectNetwork(event.target.value)}
-              className="border border-line/70 bg-bg/70 px-3 py-3 text-white outline-none focus:border-accent disabled:cursor-not-allowed disabled:opacity-75"
+              className="min-w-0 w-full border border-line/70 bg-bg/70 px-3 py-3 text-white outline-none focus:border-accent disabled:cursor-not-allowed disabled:opacity-75"
             >
               {networks.map((network) => <option key={network.networkId} value={network.networkId}>{network.displayName}</option>)}
             </select>

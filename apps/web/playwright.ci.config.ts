@@ -6,6 +6,7 @@ const baseURL = `http://127.0.0.1:${port}`;
 export default defineConfig({
   testDir: './tests',
   projects: [
+    { name: 'support', testMatch: 'oenSupport.spec.ts' },
     { name: 'sharing', testMatch: 'sharingCi.pw.ts' },
     { name: 'mobile', testMatch: ['browser-smoke.spec.ts', 'aboutCredits.spec.ts', 'homeAssets.spec.ts'], grep: /@mobile-ci/ },
     { name: 'polling-place-notices', testMatch: 'releaseBallotPolling.spec.ts' },

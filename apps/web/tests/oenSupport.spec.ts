@@ -48,7 +48,7 @@ for (const width of [320, 390, 430, 1440]) {
       await expect(page.getByRole('heading', { name: english ? 'Leave a message after your transfer' : '轉帳後留下留言', exact: true })).toHaveCount(1);
       await expect(page.getByLabel(english ? 'Transaction ID or sending wallet address' : '交易編號或付款錢包地址', { exact: true })).toHaveCount(1);
       await expect(page.locator('body')).not.toContainText(english ? 'Other support methods are being prepared' : '其他支持方式準備中');
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
       const box = (await link.boundingBox())!;
       expect(box.height).toBeGreaterThanOrEqual(44);
       expect(box.width).toBeGreaterThanOrEqual(44);
@@ -123,5 +123,39 @@ test('OEN button and inset keyboard focus retain contrast in both themes', async
     expect(contrast.focus).toBeGreaterThanOrEqual(3);
     expect(contrast.offset).toBeLessThanOrEqual(-4);
     await page.screenshot({ path: test.info().outputPath(`support-focus-${theme}.png`) });
+  }
+});
+
+test('true mobile layout keeps the document inside the device viewport', async ({ browser, baseURL }) => {
+  for (const width of [320, 360, 375, 390, 430]) {
+    const context = await browser.newContext({
+      viewport: { width, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+      deviceScaleFactor: 3,
+      locale: 'zh-TW',
+    });
+    const page = await context.newPage();
+    try {
+      await page.goto(new URL('/support', baseURL).href);
+      await expect(page.getByRole('link', { name: '前往 OEN 支持（新分頁）', exact: true })).toBeVisible();
+      const layout = await page.evaluate(() => ({
+        client: document.documentElement.clientWidth,
+        scroll: document.documentElement.scrollWidth,
+        inner: innerWidth,
+        visual: visualViewport?.width,
+        scale: visualViewport?.scale,
+      }));
+      expect(layout.client).toBe(width);
+      expect(layout.scroll).toBeLessThanOrEqual(width);
+      expect(layout.inner).toBe(width);
+      expect(layout.visual).toBe(width);
+      expect(layout.scale).toBe(1);
+      const select = page.getByRole('combobox', { name: '轉帳網路', exact: true });
+      const bounds = (await select.boundingBox())!;
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
+    } finally {
+      await context.close();
+    }
   }
 });

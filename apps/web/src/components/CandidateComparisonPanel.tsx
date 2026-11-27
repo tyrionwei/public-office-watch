@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { hasCandidatePerson, type PersonLinkedCandidate } from '../lib/candidateIdentity';
-import { platformItemsForCandidate } from '../lib/candidatePlatform';
+import { officialBulletinTextForComparison, platformItemsForCandidate } from '../lib/candidatePlatform';
 import { getPreviousPartyName, normalizePartyLabel, toPartyThemeKey } from '../lib/personData';
 import { buildCandidateComparisonShareUrl, comparisonAnchorId } from '../lib/socialSharing';
 import { personPath } from '../routes/routePaths';
@@ -266,12 +266,18 @@ export function CandidateComparisonPanel({
             <ComparisonRow label={t('race.comparePlatform')} candidates={candidates}>
               {(candidate) => {
                 const profile = profilesByPersonId.get(candidate.person_id) ?? null;
-                return (
-                  <TextList
-                    values={candidatePlatformValues(profile, candidate.candidate_id, currentRaceId)}
-                    emptyLabel={t('race.compareNoData')}
-                  />
+                const items = candidatePlatformValues(profile, candidate.candidate_id, currentRaceId);
+                const bulletin = items.length === 0
+                  ? officialBulletinTextForComparison(profile?.public_claims ?? [], candidate.candidate_id, currentRaceId)
+                  : null;
+                if (bulletin) return (
+                  <details data-compare-bulletin-text className="text-sm leading-6 text-slate-200">
+                    <summary className="cursor-pointer text-accent">{t('race.compareBulletinText')}</summary>
+                    <p className="max-h-48 overflow-auto whitespace-pre-wrap break-words">{bulletin.text}</p>
+                    <a href={bulletin.sourceUrl} target="_blank" rel="noreferrer" className="text-accent underline">{t('race.compareBulletinSource')}</a>
+                  </details>
                 );
+                return <TextList values={items} emptyLabel={t('race.compareNoData')} />;
               }}
             </ComparisonRow>
 
@@ -282,7 +288,8 @@ export function CandidateComparisonPanel({
                   [t('race.compareExperience'), profile?.experience_status === 'available'],
                   [
                     t('race.comparePlatform'),
-                    candidatePlatformValues(profile ?? null, candidate.candidate_id, currentRaceId).length > 0,
+                    candidatePlatformValues(profile ?? null, candidate.candidate_id, currentRaceId).length > 0
+                      || Boolean(officialBulletinTextForComparison(profile?.public_claims ?? [], candidate.candidate_id, currentRaceId)),
                   ],
                   [t('person.financeTitle'), Boolean(profile && profile.contribution_status !== 'todo')],
                   [t('person.legalTitle'), profile?.public_claims.some((claim) => claim.claim_type === 'legal_case')],

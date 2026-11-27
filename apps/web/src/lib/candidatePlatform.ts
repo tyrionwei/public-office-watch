@@ -79,3 +79,24 @@ export function platformItemsForCandidate(
   }
   return items;
 }
+
+export function officialBulletinTextForComparison(
+  claims: PublicPersonClaim[],
+  candidateId: string,
+  raceId: string,
+): { text: string; sourceUrl: string } | null {
+  const scoped = platformClaimsForCandidate(claims, candidateId, raceId);
+  if (scoped.length !== 1) return null;
+  const claim = scoped[0];
+  const context = electionContext(claim);
+  const source = claim.claim_json.sourceDocument;
+  const url = claim.source_url;
+  if (claim.candidate_id !== candidateId || context?.candidateId !== candidateId || context.raceId !== raceId
+      || !source || typeof source !== 'object' || Array.isArray(source) || !url
+      || !/^https:\/\/(?:ee)?bulletin\.cec\.gov\.tw\//i.test(url)) return null;
+  const document = source as Record<string, unknown>;
+  if (document.transcriptionStatus !== 'reviewed_full_text' || document.url !== url
+      || typeof document.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(document.sha256)
+      || !['number', 'string'].includes(typeof document.page) || !String(document.page).trim()) return null;
+  return claim.claim_value?.trim() ? { text: claim.claim_value.trim(), sourceUrl: url } : null;
+}

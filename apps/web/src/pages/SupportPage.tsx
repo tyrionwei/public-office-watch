@@ -1,6 +1,7 @@
 import { AppShell } from '../components/AppShell';
 import { PixelFrame } from '../components/PixelFrame';
 import { SectionPanel } from '../components/SectionPanel';
+import { OenSupportPanel } from '../components/OenSupportPanel';
 import { CryptoSupportPanel } from '../components/CryptoSupportPanel';
 import { useI18n } from '../i18n';
 
@@ -20,6 +21,7 @@ export function SupportPage() {
           </div>
         </PixelFrame>
 
+        <OenSupportPanel />
         <CryptoSupportPanel />
 
         <div className="grid gap-3 xl:grid-cols-2">

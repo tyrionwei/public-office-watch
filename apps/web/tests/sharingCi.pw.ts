@@ -7,6 +7,14 @@ test('mock sharing covers native payload, LINE, image clipboard, and URL restora
     const state = window as Window & {
       __sharePayload?: { title?: string; text?: string; url?: string };
       __copiedTypes?: string[];
+      __comparisonCanvasText?: string[];
+    };
+    state.__comparisonCanvasText = [];
+    const originalFillText = CanvasRenderingContext2D.prototype.fillText;
+    CanvasRenderingContext2D.prototype.fillText = function (text, x, y, maxWidth) {
+      if (this.canvas.width === 1200 && this.canvas.height === 630) state.__comparisonCanvasText?.push(text);
+      if (maxWidth === undefined) return originalFillText.call(this, text, x, y);
+      return originalFillText.call(this, text, x, y, maxWidth);
     };
     Object.defineProperty(navigator, 'share', {
       configurable: true,
@@ -60,6 +68,18 @@ test('mock sharing covers native payload, LINE, image clipboard, and URL restora
   const cardContent = await preview.getAttribute('data-share-card-content');
   expect(cardContent).toContain(names[0]);
   expect(cardContent).toContain(names[1]);
+  expect(await preview.evaluate((image: HTMLImageElement) => [image.naturalWidth, image.naturalHeight])).toEqual([1200, 630]);
+  const canvasText = await page.evaluate(() =>
+    (window as Window & { __comparisonCanvasText?: string[] }).__comparisonCanvasText?.join(' '));
+  expect(canvasText).toContain('2026 年');
+  expect(canvasText).toContain('中部山線');
+  expect(canvasText).toContain('範例議員選舉');
+  expect(canvasText).toContain('號次 2');
+  expect(canvasText).toContain('以官方公報或原始來源為準');
+  expect(canvasText).not.toContain('小人圖：');
+  expect(canvasText).toContain(names[0]);
+  expect(canvasText).toContain(names[1]);
+
 
   const shareText = await dialog.getByLabel('分享文字').inputValue();
   const shareLink = await dialog.getByLabel('分享連結').inputValue();

@@ -608,6 +608,9 @@ export function RacePage() {
             onRetry={() => setComparisonAttempt(value => value + 1)}
             currentRaceId={race.race_id}
             raceTitle={race.title}
+            raceOffice={translateRaceType(race.race_type, t)}
+            raceRegion={race.region_name ?? ''}
+            electionYear={election?.year ?? selectedCandidates[0]?.election_year ?? null}
             onRemove={(personId) => updateComparison(personId, false)}
           />
         ) : null}

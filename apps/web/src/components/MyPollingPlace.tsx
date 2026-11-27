@@ -1,3 +1,4 @@
+import { pollingPlaceVenueNotice } from '../lib/pollingPlaceVenueNotice';
 import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n';
 import { buildCecPollingPlaceLookupUrl } from '../lib/cecPollingPlaceLookup';
@@ -76,8 +77,8 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose, summary = false }
           : localPlaces.length === 0 ? (officialNoticeUrl
             ? <div data-polling-missing-address className="mt-3 border border-amber-300/30 bg-amber-300/5 p-3 text-sm leading-6 text-amber-200">
                 <p>{english
-                  ? `${preference.county.name}: the official list does not include polling-place addresses, so complete station details are not yet available here.`
-                  : `${preference.county.name}官方尚未提供投開票所地址，本站暫未收錄完整場所資料。`}</p>
+                  ? `${preference.county.name}: we cannot confirm the polling-place assignment for this village. Use the official lookup below.`
+                  : `本站目前無法確認這個村里的投開票所，請使用下方官方查詢。`}</p>
                 <p>{english ? 'Please check your voting notice or contact the local election commission.' : '請以投票通知單為準，或向當地選舉委員會確認。'}</p>
                 <a href={officialNoticeUrl} target="_blank" rel="noreferrer" className="mt-1 inline-flex min-h-11 items-center text-accent underline underline-offset-4">
                   {english ? 'View the official announcement' : '查看官方公告'} ↗
@@ -94,13 +95,19 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose, summary = false }
                 : canNarrowByNeighborhood ? (english ? 'Add your neighborhood to narrow these stations:' : '填入鄰別可進一步縮小範圍，目前可能場所：')
                   : (english ? 'Several stations are possible; check the official lookup.' : '可能有多個投開票所，請以官方查詢確認。')}</p>
             <ul className="mt-3 grid max-h-[28rem] gap-3 overflow-y-auto">
-              {(summary ? localPlaces.slice(0, 2) : localPlaces).map((place) => <li key={place.id} className="border border-line/70 bg-bg/45 p-3">
+              {(summary ? localPlaces.slice(0, 2) : localPlaces).map((place) => {
+                const venueNotice = pollingPlaceVenueNotice(eventKey, place);
+                return <li key={place.id} className="border border-line/70 bg-bg/45 p-3">
                 <p className="text-[11px] text-accent">{english ? 'Station ' : '第 '}{place.station_no}{english ? '' : ' 投開票所'}</p>
                 <h4 className="mt-1 text-sm font-semibold text-white">{place.station_name}</h4>
                 <p className="mt-1 text-xs leading-5 text-slate-300">{place.address}</p>
+                {venueNotice && <a href={venueNotice} target="_blank" rel="noreferrer" className="mt-1 inline-flex min-h-11 items-center text-xs text-accent underline underline-offset-4">
+                  {english ? 'Official venue correction' : '官方場所異動資料'} ↗
+                </a>}
                 <p className="mt-1 whitespace-pre-line text-xs leading-5 text-slate-400">{place.village_name} · {place.raw_neighborhoods}</p>
                 <a href={pollingPlaceMapUrl(place)} target="_blank" rel="noreferrer" className="mt-2 inline-flex min-h-11 items-center text-xs text-accent underline underline-offset-4">{english ? 'Open in Google Maps' : '在 Google Maps 開啟'} ↗</a>
-              </li>)}
+              </li>;
+              })}
             </ul>
             {summary && localPlaces.length > 2 ? <p className="mt-2 text-xs text-slate-400">{english ? `${localPlaces.length} possible stations; see the official lookup for the full assignment.` : `共有 ${localPlaces.length} 個可能場所，完整分配請查官方資料。`}</p> : null}
           </>}

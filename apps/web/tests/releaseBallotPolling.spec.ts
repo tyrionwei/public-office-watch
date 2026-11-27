@@ -22,7 +22,7 @@ for (const county of [
     const savedCountyId = await page.evaluate(() => JSON.parse(localStorage.getItem('public-office-watch.voting-region-preference.v1') ?? 'null')?.county.id);
     expect(savedCountyId).toBe(county.slug);
     await expect(page.locator('#my-ballots')).toContainText(county.name);
-    await expect(page.locator('[data-polling-missing-address]')).toContainText('官方尚未提供投開票所地址');
+    await expect(page.locator('[data-polling-missing-address]')).toContainText('本站目前無法確認這個村里的投開票所');
     await expect(page.locator('[data-polling-missing-address] a')).toHaveAttribute('href', county.url);
 
     await page.locator('[data-voting-region-summary]').getByRole('button', { name: '變更', exact: true }).click();

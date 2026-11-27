@@ -13,3 +13,12 @@ test('homepage credit link has no eager complete attribution dependency', () => 
   assert.match(source, /candidateSpriteCreditId/);
   assert.doesNotMatch(source, /candidateSpriteCredits|candidateSpriteSources/);
 });
+
+test('candidate comparison resolves complete credit data only in the opened share flow', () => {
+  const panel = readFileSync(new URL('../src/components/CandidateComparisonPanel.tsx', import.meta.url), 'utf8');
+  const button = readFileSync(new URL('../src/components/ShareButton.tsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(panel, /candidateSpriteCredits|candidateSpriteSources/);
+  assert.doesNotMatch(button, /from ['"][^'"]*candidateSpriteCredits/);
+  assert.match(button, /await import\(['"][^'"]*candidateSpriteCredits['"]\)/);
+  assert.match(button, /if \(!isOpen\) return;[\s\S]+void loadComparisonSprites\(imageRows\)/);
+});

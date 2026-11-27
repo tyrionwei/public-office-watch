@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { getCandidateSpriteCreditId } from '../data/candidateSpriteCreditId';
 import { useI18n } from '../i18n';
-import { createShareCardFile } from '../lib/shareImage';
+import { createShareCardFile, type ShareComparisonRow } from '../lib/shareImage';
 import { buildLineShareUrl, shareClipboardText } from '../lib/socialSharing';
+
+type ShareComparisonPreviewRow = Omit<ShareComparisonRow, 'sprite'> & { spritePersonId?: string };
 
 type ShareButtonProps = {
   title: string;
@@ -10,12 +13,35 @@ type ShareButtonProps = {
   url: string;
   imageEyebrow: string;
   imageBody: string;
+  imageRows?: ShareComparisonPreviewRow[];
+  imageComparisonTitle?: string;
+  imageComparisonContext?: string;
   imageAlt: string;
   imageFileName: string;
   className?: string;
 };
 
 type ActionStatus = 'idle' | 'copied-text' | 'copied-image' | 'copy-image-error' | 'downloaded-image' | 'error';
+
+// The full source manifest is shared with About, but not part of the race route's eager bundle.
+async function loadComparisonSprites(rows?: ShareComparisonPreviewRow[]): Promise<ShareComparisonRow[] | undefined> {
+  if (!rows) return undefined;
+  const ids = rows.map(({ spritePersonId }) => getCandidateSpriteCreditId(spritePersonId));
+  if (!ids.some(Boolean)) return rows;
+  try {
+    const { getCandidateSpriteCredit } = await import('../data/candidateSpriteCredits');
+    return rows.map((row, index) => {
+      const credit = getCandidateSpriteCredit(ids[index]);
+      return credit ? { ...row, sprite: {
+        src: '/assets/characters/candidates/' + credit.file,
+        credit: credit.attribution,
+      } } : row;
+    });
+  } catch {
+    // A failed attribution download must not prevent a text-only share.
+    return rows;
+  }
+}
 
 function isAbortError(error: unknown) {
   return error instanceof DOMException && error.name === 'AbortError';
@@ -47,6 +73,9 @@ export function ShareButton({
   url,
   imageEyebrow,
   imageBody,
+  imageRows,
+  imageComparisonTitle,
+  imageComparisonContext,
   imageAlt,
   imageFileName,
   className = '',
@@ -72,15 +101,19 @@ export function ShareButton({
     setPreviewUrl(null);
     setImageError(false);
     setImageLoading(true);
-    void createShareCardFile({
+    void loadComparisonSprites(imageRows).then((comparisonRows) => active ? createShareCardFile({
       eyebrow: imageEyebrow,
       title,
       body: imageBody,
-      footer: t('share.cardFooter'),
+      comparisonRows,
+      comparisonTitle: imageComparisonTitle,
+      comparisonContext: imageComparisonContext,
+      footer: t(imageRows ? 'share.comparisonSourceNote' : 'share.cardFooter'),
+      comparisonCreditLabel: t('share.comparisonCreditLabel'),
       url,
-    }, imageFileName)
+    }, imageFileName) : null)
       .then((file) => {
-        if (!active) return;
+        if (!active || !file) return;
         generatedPreviewUrl = URL.createObjectURL(file);
         setShareFile(file);
         setPreviewUrl(generatedPreviewUrl);
@@ -96,7 +129,7 @@ export function ShareButton({
       active = false;
       if (generatedPreviewUrl) URL.revokeObjectURL(generatedPreviewUrl);
     };
-  }, [imageBody, imageEyebrow, imageFileName, isOpen, t, title, url]);
+  }, [imageBody, imageEyebrow, imageRows, imageComparisonTitle, imageComparisonContext, imageFileName, isOpen, t, title, url]);
 
   useEffect(() => {
     if (!isOpen) return;

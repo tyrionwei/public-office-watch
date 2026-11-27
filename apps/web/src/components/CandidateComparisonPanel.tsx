@@ -1,6 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { getCandidateSpriteCredit } from '../data/candidateSpriteCredits';
 import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { hasCandidatePerson, type PersonLinkedCandidate } from '../lib/candidateIdentity';
@@ -146,15 +145,10 @@ export function CandidateComparisonPanel({
     const platform = platformByCandidateId.get(candidate.candidate_id);
     const item = platform?.items[0];
     const bulletin = platform?.bulletin;
-    const spriteCredit = getCandidateSpriteCredit(candidate.person_id);
-    const sprite = spriteCredit ? {
-      src: '/assets/characters/candidates/' + spriteCredit.file,
-      credit: spriteCredit.attribution,
-    } : undefined;
     return {
       name: candidate.person_name,
       number: candidate.candidate_no ? t('race.number') + ' ' + candidate.candidate_no : undefined,
-      sprite,
+      spritePersonId: candidate.person_id,
       status: item ? t('race.comparePlatform') : bulletin ? t('race.compareBulletinAvailable') : t('race.compareNoPublicPlatform'),
       excerpt: item ?? bulletin?.text ?? '',
       available: Boolean(item || bulletin),

@@ -13,9 +13,9 @@ BEGIN
              IS DISTINCT FROM m->>'candidate_published_baseline'
        OR NOT EXISTS (SELECT 1 FROM supabase_migrations.schema_migrations WHERE version=m->>'candidate_baseline_schema')
        OR (SELECT count(DISTINCT version) FROM supabase_migrations.schema_migrations
-           WHERE version IN ('20261127055704','20261127094600')) <> 2
+           WHERE version IN ('20261127055704','20261127094600','20261127101444')) <> 3
        OR EXISTS (SELECT 1 FROM supabase_migrations.schema_migrations WHERE version>m->>'candidate_baseline_schema'
-                  AND version NOT IN ('20261127055704','20261127094600'))
+                  AND version NOT IN ('20261127055704','20261127094600','20261127101444'))
        OR EXISTS (SELECT 1 FROM pow_release_20261127.receipt)
     THEN RAISE EXCEPTION 'Baseline or release receipt differs; stop for review'; END IF;
 
@@ -30,6 +30,9 @@ SELECT encode(sha256(convert_to(jsonb_build_object(
 )::text,'UTF8')),'hex')
     ) IS DISTINCT FROM '9a6f7b4e82e72882951f6aa27990ac95b4ef115ecdf8461d74c59a175e34f093'
     THEN RAISE EXCEPTION 'Birthday projection definition drift; stop for review'; END IF;
+    IF encode(sha256(convert_to(pg_get_viewdef('public.public_people_list'::regclass),'UTF8')),'hex')
+        IS DISTINCT FROM '73875e267b0bb05ff6c0a42d7bb9c5bc9a0e2c2b32249a066856eb21516c548a'
+    THEN RAISE EXCEPTION 'Directory projection definition drift; stop for review'; END IF;
 
     IF EXISTS (
       SELECT 1

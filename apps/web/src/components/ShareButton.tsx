@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useI18n } from '../i18n';
-import { createShareCardFile } from '../lib/shareImage';
+import { createShareCardFile, type ShareComparisonRow } from '../lib/shareImage';
 import { buildLineShareUrl, shareClipboardText } from '../lib/socialSharing';
 
 type ShareButtonProps = {
@@ -10,6 +10,9 @@ type ShareButtonProps = {
   url: string;
   imageEyebrow: string;
   imageBody: string;
+  imageRows?: ShareComparisonRow[];
+  imageComparisonTitle?: string;
+  imageComparisonContext?: string;
   imageAlt: string;
   imageFileName: string;
   className?: string;
@@ -47,6 +50,9 @@ export function ShareButton({
   url,
   imageEyebrow,
   imageBody,
+  imageRows,
+  imageComparisonTitle,
+  imageComparisonContext,
   imageAlt,
   imageFileName,
   className = '',
@@ -76,6 +82,9 @@ export function ShareButton({
       eyebrow: imageEyebrow,
       title,
       body: imageBody,
+      comparisonRows: imageRows,
+      comparisonTitle: imageComparisonTitle,
+      comparisonContext: imageComparisonContext,
       footer: t('share.cardFooter'),
       url,
     }, imageFileName)
@@ -96,7 +105,7 @@ export function ShareButton({
       active = false;
       if (generatedPreviewUrl) URL.revokeObjectURL(generatedPreviewUrl);
     };
-  }, [imageBody, imageEyebrow, imageFileName, isOpen, t, title, url]);
+  }, [imageBody, imageEyebrow, imageRows, imageComparisonTitle, imageComparisonContext, imageFileName, isOpen, t, title, url]);
 
   useEffect(() => {
     if (!isOpen) return;

@@ -78,7 +78,7 @@ export function MyPollingPlace({ eventKey, lookupUrl, onClose, summary = false }
             ? <div data-polling-missing-address className="mt-3 border border-amber-300/30 bg-amber-300/5 p-3 text-sm leading-6 text-amber-200">
                 <p>{english
                   ? `${preference.county.name}: we cannot confirm the polling-place assignment for this village. Use the official lookup below.`
-                  : `${preference.county.name}本站目前無法確認這個村里的投開票所，請使用下方官方查詢。`}</p>
+                  : `本站目前無法確認這個村里的投開票所，請使用下方官方查詢。`}</p>
                 <p>{english ? 'Please check your voting notice or contact the local election commission.' : '請以投票通知單為準，或向當地選舉委員會確認。'}</p>
                 <a href={officialNoticeUrl} target="_blank" rel="noreferrer" className="mt-1 inline-flex min-h-11 items-center text-accent underline underline-offset-4">
                   {english ? 'View the official announcement' : '查看官方公告'} ↗

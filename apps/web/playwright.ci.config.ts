@@ -9,7 +9,7 @@ export default defineConfig({
     { name: 'support', testMatch: 'oenSupport.spec.ts' },
     { name: 'sharing', testMatch: 'sharingCi.pw.ts' },
     { name: 'mobile', testMatch: ['browser-smoke.spec.ts', 'aboutCredits.spec.ts', 'homeAssets.spec.ts'], grep: /@mobile-ci/ },
-    { name: 'polling-place-notices', testMatch: 'releaseBallotPolling.spec.ts' },
+    { name: 'polling-place-notices', testMatch: ['releaseBallotPolling.spec.ts', 'releaseYunlinCultureFallback.spec.ts'] },
   ],
   timeout: 30_000,
   expect: {

@@ -22,6 +22,17 @@ BEGIN
               AND (x->>'county',x#>>'{after,station_no}',x#>>'{after,village_code}') IN (('65000','0146','65000100033'),('10013','0705','10013290006'))) <> 2
        OR jsonb_array_length(p->'corrections') <> 2
     THEN RAISE EXCEPTION 'Release payload no longer matches the reviewed scope'; END IF;
+    IF (SELECT count(DISTINCT x->>'county') FROM jsonb_array_elements(p->'corrections') x
+        JOIN (VALUES
+          ('65000','0146','65000100033','亞東科技大學淡水校區','新北市淡水區濱海路三段25號',
+           'https://web.cec.gov.tw/api/file/aa005d85-4b77-47d2-a858-e9a12c52a48b.pdf#page=2','2','fedb5432ab89acd2cf1df9676ef7b982a8cb1bf01111a34b1c279667d32602eb'),
+          ('10013','0705','10013290006','萬安耶穌聖心堂','屏東縣萬巒鄉成志路51之3號',
+           'https://web.cec.gov.tw/api/file/ca55e649-b85e-49ad-a5a8-5fa470ced522.pdf#page=57','57','6dea64b8d18cc33054a44255a1f476a16e36122b15e36f6aa4039f659d1ace8b')
+        ) AS expected(county,station,village,venue,address,url,page,sha256)
+          ON (x->>'county',x#>>'{after,station_no}',x#>>'{after,village_code}',x#>>'{after,station_name}',x#>>'{after,address}',
+              x->>'official_url',x->>'official_page',x->>'official_sha256')
+             = (expected.county,expected.station,expected.village,expected.venue,expected.address,expected.url,expected.page,expected.sha256)
+    ) <> 2 THEN RAISE EXCEPTION 'Reviewed station relocation does not match the pinned venue and evidence'; END IF;
     IF EXISTS (SELECT 1 FROM unnest(ARRAY['anon','authenticated','service_role']) r
       WHERE has_schema_privilege(r,'pow_release_20261127','USAGE')
          OR has_table_privilege(r,'pow_release_20261127.input','SELECT')

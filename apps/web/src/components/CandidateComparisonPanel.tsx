@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { getCandidateSpriteCredit } from '../data/candidateSpriteCredits';
 import { translateElectionResult } from '../data/electionI18n';
 import { useI18n } from '../i18n';
 import { hasCandidatePerson, type PersonLinkedCandidate } from '../lib/candidateIdentity';
@@ -20,6 +21,9 @@ type CandidateComparisonPanelProps = {
   onRetry: () => void;
   currentRaceId: string;
   raceTitle: string;
+  raceOffice: string;
+  raceRegion: string;
+  electionYear: number | null;
   onRemove: (personId: string) => void;
 };
 
@@ -51,15 +55,6 @@ function profileValues(profile: PublicPersonProfile | null, claimType: PublicPer
       .filter((claim) => claim.claim_type === claimType)
       .map(claimText),
   );
-}
-
-function candidatePlatformValues(
-  profile: PublicPersonProfile | null,
-  candidateId: string,
-  raceId: string,
-) {
-  if (!profile) return [];
-  return platformItemsForCandidate(profile.public_claims, candidateId, raceId);
 }
 
 function profileSources(profile: PublicPersonProfile | null) {
@@ -118,6 +113,9 @@ export function CandidateComparisonPanel({
   onRetry,
   currentRaceId,
   raceTitle,
+  raceOffice,
+  raceRegion,
+  electionYear,
   onRemove,
 }: CandidateComparisonPanelProps) {
   const { language, t } = useI18n();
@@ -130,15 +128,41 @@ export function CandidateComparisonPanel({
       ? 'md:grid-cols-3'
       : 'md:grid-cols-2';
   const candidateNames = candidates.map((candidate) => candidate.person_name).join(language === 'en' ? ', ' : '、');
-  const comparisonImageBody = candidates.map((candidate) => {
-    const profile = profilesByPersonId.get(candidate.person_id) ?? null;
-    const platform = candidatePlatformValues(
-      profile,
-      candidate.candidate_id,
-      currentRaceId,
-    )[0] ?? null;
-    return `${candidate.person_name}｜${platform ?? t('race.compareNoData')}`;
-  }).join('\n');
+  const platformByCandidateId = new Map(candidates.map((candidate) => {
+    const claims = profilesByPersonId.get(candidate.person_id)?.public_claims ?? [];
+    const items = platformItemsForCandidate(claims, candidate.candidate_id, currentRaceId);
+    const bulletin = items.length === 0
+      ? officialBulletinTextForComparison(claims, candidate.candidate_id, currentRaceId)
+      : null;
+    return [candidate.candidate_id, { items, bulletin }];
+  }));
+  const comparisonImageContext = [
+    electionYear && (language === 'en' ? String(electionYear) : String(electionYear) + ' 年'),
+    raceRegion && !raceTitle.includes(raceRegion) ? raceRegion : '',
+    raceTitle,
+    raceOffice && !raceTitle.includes(raceOffice) ? raceOffice : '',
+  ].filter(Boolean).join(' · ');
+  const comparisonImageRows = candidates.map((candidate) => {
+    const platform = platformByCandidateId.get(candidate.candidate_id);
+    const item = platform?.items[0];
+    const bulletin = platform?.bulletin;
+    const spriteCredit = getCandidateSpriteCredit(candidate.person_id);
+    const sprite = spriteCredit ? {
+      src: '/assets/characters/candidates/' + spriteCredit.file,
+      credit: spriteCredit.attribution,
+    } : undefined;
+    return {
+      name: candidate.person_name,
+      number: candidate.candidate_no ? t('race.number') + ' ' + candidate.candidate_no : undefined,
+      sprite,
+      status: item ? t('race.comparePlatform') : bulletin ? t('race.compareBulletinAvailable') : t('race.compareNoPublicPlatform'),
+      excerpt: item ?? bulletin?.text ?? '',
+      available: Boolean(item || bulletin),
+    };
+  });
+  const comparisonImageBody = comparisonImageRows.map(({ name, status, excerpt }) => (
+    `${name}｜${status}${excerpt ? `：${excerpt}` : ''}`
+  )).join('\n');
   const shareUrl = candidates.length >= 2
     ? buildCandidateComparisonShareUrl(
         window.location.origin,
@@ -157,8 +181,11 @@ export function CandidateComparisonPanel({
             title={t('share.comparisonTitle', { race: raceTitle })}
             text={t('share.comparisonText', { candidates: candidateNames })}
             url={shareUrl}
-            imageEyebrow={t('share.comparisonEyebrow')}
+            imageEyebrow={t('race.comparePlatform')}
             imageBody={comparisonImageBody}
+            imageRows={comparisonImageRows}
+            imageComparisonTitle={t('race.compareTitle')}
+            imageComparisonContext={comparisonImageContext}
             imageAlt={t('share.comparisonPreviewAlt')}
             imageFileName="candidate-comparison.png"
           />
@@ -265,11 +292,7 @@ export function CandidateComparisonPanel({
 
             <ComparisonRow label={t('race.comparePlatform')} candidates={candidates}>
               {(candidate) => {
-                const profile = profilesByPersonId.get(candidate.person_id) ?? null;
-                const items = candidatePlatformValues(profile, candidate.candidate_id, currentRaceId);
-                const bulletin = items.length === 0
-                  ? officialBulletinTextForComparison(profile?.public_claims ?? [], candidate.candidate_id, currentRaceId)
-                  : null;
+                const { items = [], bulletin } = platformByCandidateId.get(candidate.candidate_id) ?? {};
                 if (bulletin) return (
                   <details data-compare-bulletin-text className="text-sm leading-6 text-slate-200">
                     <summary className="cursor-pointer text-accent">{t('race.compareBulletinText')}</summary>
@@ -284,12 +307,12 @@ export function CandidateComparisonPanel({
             <ComparisonRow label={t('race.compareCoverage')} candidates={candidates}>
               {(candidate) => {
                 const profile = profilesByPersonId.get(candidate.person_id);
+                const platform = platformByCandidateId.get(candidate.candidate_id);
                 const statuses = [
                   [t('race.compareExperience'), profile?.experience_status === 'available'],
                   [
                     t('race.comparePlatform'),
-                    candidatePlatformValues(profile ?? null, candidate.candidate_id, currentRaceId).length > 0
-                      || Boolean(officialBulletinTextForComparison(profile?.public_claims ?? [], candidate.candidate_id, currentRaceId)),
+                    Boolean(platform?.items.length || platform?.bulletin),
                   ],
                   [t('person.financeTitle'), Boolean(profile && profile.contribution_status !== 'todo')],
                   [t('person.legalTitle'), profile?.public_claims.some((claim) => claim.claim_type === 'legal_case')],

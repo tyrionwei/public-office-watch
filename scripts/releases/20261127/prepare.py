@@ -45,6 +45,11 @@ require(collections.Counter(x["county_code"] for x in rows) == {"10009":501,"100
 require(len({(x["county_code"],x["station_no"],x["village_code"]) for x in rows}) == 612
         and len(holds) == 63 and sum(len(x["neighbor_numbers"] or []) for x in rows) == 4152, "polling keys changed")
 require("10009010039" in holds and not any(x["hold"] or x["village_code"] in holds for x in rows), "held polling rows would be staged")
+# Independent record of the exact reviewed artifacts, kept in Git (not generated from staged output).
+for line in pathlib.Path(__file__).with_name("reviewed-relocations.sha256").read_text(encoding="utf-8").splitlines():
+    digest, original = line.split("  ", 1)
+    require(sha(source / original) == digest, f"reviewed relocation digest mismatch: {original}")
+
 meta = json.loads((source/"站所_兩縣現行快照吻合驗證.json").read_text())
 corrections = []
 verify_folder = source.parent/"polling-reconciliation-20261124"/"其餘19縣市"/"公告附件"

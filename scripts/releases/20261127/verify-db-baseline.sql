@@ -2,6 +2,7 @@
 -- Only checks; it does not adopt or approve a row.
 BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;
 SET LOCAL statement_timeout = '90s';
+SET LOCAL search_path = pg_catalog;
 DO $$
 DECLARE stage jsonb; stations jsonb; m jsonb;
 BEGIN
@@ -11,10 +12,24 @@ BEGIN
     IF (SELECT release_id::text FROM published.release_state WHERE state_key='current')
              IS DISTINCT FROM m->>'candidate_published_baseline'
        OR NOT EXISTS (SELECT 1 FROM supabase_migrations.schema_migrations WHERE version=m->>'candidate_baseline_schema')
+       OR (SELECT count(DISTINCT version) FROM supabase_migrations.schema_migrations
+           WHERE version IN ('20261127055704','20261127094600')) <> 2
        OR EXISTS (SELECT 1 FROM supabase_migrations.schema_migrations WHERE version>m->>'candidate_baseline_schema'
-                  AND version<>'20261127055704')
+                  AND version NOT IN ('20261127055704','20261127094600'))
        OR EXISTS (SELECT 1 FROM pow_release_20261127.receipt)
     THEN RAISE EXCEPTION 'Baseline or release receipt differs; stop for review'; END IF;
+
+    IF (
+SELECT encode(sha256(convert_to(jsonb_build_object(
+ 'functions',(SELECT jsonb_agg(jsonb_build_object('definition',pg_get_functiondef(p.oid),'owner',pg_get_userbyid(p.proowner),'acl',p.proacl::text) ORDER BY p.proname)
+ FROM pg_proc p WHERE p.oid IN('public.sync_official_profile_demographics()'::regprocedure,'public.guard_official_demographics()'::regprocedure)),
+ 'triggers',(SELECT jsonb_agg(jsonb_build_array(pg_get_triggerdef(t.oid),t.tgenabled) ORDER BY t.tgname)
+ FROM pg_trigger t WHERE NOT t.tgisinternal AND t.tgrelid IN('public.person_claims'::regclass,'published.person_demographics'::regclass)
+ AND t.tgfoid IN('public.sync_official_profile_demographics()'::regprocedure,'public.guard_official_demographics()'::regprocedure)),
+ 'profile_view',pg_get_viewdef('public.official_profile_values'::regclass)
+)::text,'UTF8')),'hex')
+    ) IS DISTINCT FROM '9a6f7b4e82e72882951f6aa27990ac95b4ef115ecdf8461d74c59a175e34f093'
+    THEN RAISE EXCEPTION 'Birthday projection definition drift; stop for review'; END IF;
 
     IF EXISTS (
       SELECT 1

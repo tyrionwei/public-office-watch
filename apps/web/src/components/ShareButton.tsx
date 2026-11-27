@@ -85,7 +85,8 @@ export function ShareButton({
       comparisonRows: imageRows,
       comparisonTitle: imageComparisonTitle,
       comparisonContext: imageComparisonContext,
-      footer: t('share.cardFooter'),
+      footer: t(imageRows ? 'share.comparisonSourceNote' : 'share.cardFooter'),
+      comparisonCreditLabel: t('share.comparisonCreditLabel'),
       url,
     }, imageFileName)
       .then((file) => {

@@ -75,6 +75,8 @@ test('mock sharing covers native payload, LINE, image clipboard, and URL restora
   expect(canvasText).toContain('中部山線');
   expect(canvasText).toContain('範例議員選舉');
   expect(canvasText).toContain('號次 2');
+  expect(canvasText).toContain('以官方公報或原始來源為準');
+  expect(canvasText).not.toContain('小人圖：');
   expect(canvasText).toContain(names[0]);
   expect(canvasText).toContain(names[1]);
 

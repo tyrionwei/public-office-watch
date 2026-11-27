@@ -91,7 +91,10 @@ export function officialBulletinTextForComparison(
   const context = electionContext(claim);
   const source = claim.claim_json.sourceDocument;
   const url = claim.source_url;
-  if (claim.candidate_id !== candidateId || context?.candidateId !== candidateId || context.raceId !== raceId
+  // The anonymous profile RPC omits candidate_id. A reviewed bulletin must still
+  // carry both election identifiers; a conflicting explicit ID is never accepted.
+  if ((claim.candidate_id != null && claim.candidate_id !== candidateId)
+      || context?.candidateId !== candidateId || context.raceId !== raceId
       || !source || typeof source !== 'object' || Array.isArray(source) || !url
       || !/^https:\/\/(?:ee)?bulletin\.cec\.gov\.tw\//i.test(url)) return null;
   const document = source as Record<string, unknown>;
